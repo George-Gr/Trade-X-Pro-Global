@@ -13,11 +13,11 @@ const Index = () => {
             <span className="text-xl font-bold">TradeX Pro</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link to="/register">
-              <Button variant="ghost">Sign Up</Button>
+            <Link to="/login">
+              <Button variant="ghost">Login</Button>
             </Link>
-            <Link to="/trade">
-              <Button>Launch Platform</Button>
+            <Link to="/register">
+              <Button>Get Started</Button>
             </Link>
           </div>
         </div>
