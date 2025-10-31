@@ -47,15 +47,26 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        buy: {
+          DEFAULT: "hsl(var(--buy))",
+          hover: "hsl(var(--buy-hover))",
+          foreground: "hsl(var(--buy-foreground))",
+        },
+        sell: {
+          DEFAULT: "hsl(var(--sell))",
+          hover: "hsl(var(--sell-hover))",
+          foreground: "hsl(var(--sell-foreground))",
+        },
+        profit: "hsl(var(--profit))",
+        loss: "hsl(var(--loss))",
+        panel: {
+          bg: "hsl(var(--panel-bg))",
+          border: "hsl(var(--panel-border))",
+        },
+        price: {
+          up: "hsl(var(--price-up))",
+          down: "hsl(var(--price-down))",
+          neutral: "hsl(var(--price-neutral))",
         },
       },
       borderRadius: {
