@@ -39,7 +39,7 @@ const Login = () => {
             title: "Login Successful",
             description: "Welcome back to TradeX Pro",
           });
-          navigate("/trade");
+          navigate("/dashboard");
         }
       } else {
         toast({

@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) =>
   }
 
   if (adminOnly && !isAdmin) {
-    return <Navigate to="/trade" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
