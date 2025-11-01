@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import Watchlist from "@/components/trading/Watchlist";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -94,25 +95,33 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
-                    <div>
-                      <p className="font-medium">{activity.action}</p>
-                      <p className="text-sm text-muted-foreground">{activity.time}</p>
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Recent Activity */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
+                      <div>
+                        <p className="font-medium">{activity.action}</p>
+                        <p className="text-sm text-muted-foreground">{activity.time}</p>
+                      </div>
+                      <span className="text-sm font-medium text-profit">{activity.status}</span>
                     </div>
-                    <span className="text-sm font-medium text-profit">{activity.status}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Watchlist */}
+            <div className="lg:col-span-1">
+              <Watchlist />
+            </div>
+          </div>
         </div>
       </div>
     </AuthenticatedLayout>
