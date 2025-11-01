@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { createChart, ColorType } from "lightweight-charts";
+import { createChart, ColorType, CandlestickSeries, Time } from "lightweight-charts";
 
 interface TradingViewChartProps {
   symbol: string;
@@ -37,8 +37,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
     });
 
     // Add candlestick series
-    // @ts-ignore - lightweight-charts type definitions may vary
-    const candlestickSeries = chart.addCandlestickSeries({
+    const candlestickSeries = chart.addSeries(CandlestickSeries, {
       upColor: "#10b981",
       downColor: "#ef4444",
       borderUpColor: "#10b981",
@@ -62,7 +61,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
         const low = Math.min(open, close) - Math.random() * (basePrice * 0.003);
 
         data.push({
-          time,
+          time: time as Time,
           open: parseFloat(open.toFixed(4)),
           high: parseFloat(high.toFixed(4)),
           low: parseFloat(low.toFixed(4)),
@@ -104,7 +103,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
         const newLow = Math.min(lastData.close, newClose) - Math.random() * (lastData.close * 0.001);
 
         const newCandle = {
-          time: now,
+          time: now as Time,
           open: parseFloat(lastData.close.toFixed(4)),
           high: parseFloat(newHigh.toFixed(4)),
           low: parseFloat(newLow.toFixed(4)),
