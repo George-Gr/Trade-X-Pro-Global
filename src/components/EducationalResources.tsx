@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import {
   BookOpen,
   Video,
-  Broadcast,
+  Radio,
   FileText,
   Users,
   Clock,
