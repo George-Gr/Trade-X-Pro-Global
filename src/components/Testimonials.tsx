@@ -11,7 +11,10 @@ import {
   Users,
   Award,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  Headphones,
+  Trophy
 } from 'lucide-react';
 
 interface Testimonial {
