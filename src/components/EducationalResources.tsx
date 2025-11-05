@@ -162,7 +162,7 @@ const EducationalResources: React.FC<EducationalResourcesProps> = ({ className =
       link: '/tutorials'
     },
     {
-      icon: <Broadcast className="h-7 w-7" />,
+      icon: <Radio className="h-7 w-7" />,
       title: 'Live Webinars',
       subtitle: 'Weekly Live Sessions',
       description: 'Interactive live sessions with market experts covering current market analysis, trading strategies, and Q&A sessions.',
