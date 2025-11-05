@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      asset_specs: {
+        Row: {
+          asset_class: string
+          base_commission: number | null
+          commission_type: string | null
+          created_at: string | null
+          is_tradable: boolean | null
+          leverage: number | null
+          max_quantity: number | null
+          min_quantity: number | null
+          pip_size: number | null
+          symbol: string
+        }
+        Insert: {
+          asset_class: string
+          base_commission?: number | null
+          commission_type?: string | null
+          created_at?: string | null
+          is_tradable?: boolean | null
+          leverage?: number | null
+          max_quantity?: number | null
+          min_quantity?: number | null
+          pip_size?: number | null
+          symbol: string
+        }
+        Update: {
+          asset_class?: string
+          base_commission?: number | null
+          commission_type?: string | null
+          created_at?: string | null
+          is_tradable?: boolean | null
+          leverage?: number | null
+          max_quantity?: number | null
+          min_quantity?: number | null
+          pip_size?: number | null
+          symbol?: string
+        }
+        Relationships: []
+      }
       fills: {
         Row: {
           commission: number
@@ -348,6 +387,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      execute_order_atomic: {
+        Args: {
+          p_current_price: number
+          p_idempotency_key: string
+          p_order_type: Database["public"]["Enums"]["order_type"]
+          p_price: number
+          p_quantity: number
+          p_side: Database["public"]["Enums"]["order_side"]
+          p_slippage?: number
+          p_stop_loss: number
+          p_symbol: string
+          p_take_profit: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
