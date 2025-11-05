@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { TrendingUp, LogOut, User, LayoutDashboard, Briefcase, History, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -11,11 +12,10 @@ interface AuthenticatedLayoutProps {
 const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { signOut, user } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("isAdmin");
-    localStorage.removeItem("userEmail");
+  const handleLogout = async () => {
+    await signOut();
     navigate("/login");
   };
 
@@ -63,7 +63,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
         <div className="flex items-center gap-4">
           <div className="text-sm">
             <span className="text-muted-foreground">Account:</span>
-            <span className="ml-2 font-semibold">Demo #12345</span>
+            <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">

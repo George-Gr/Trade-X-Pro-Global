@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { TrendingUp, AlertCircle } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,43 +14,48 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signIn, user, isAdmin } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [user, isAdmin, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Mock login - replace with real authentication
-    setTimeout(() => {
-      if (email && password) {
-        // Check for admin login
-        if (email === "admin@tradexpro.com" && password === "admin123") {
-          localStorage.setItem("isAuthenticated", "true");
-          localStorage.setItem("isAdmin", "true");
-          localStorage.setItem("userEmail", email);
-          toast({
-            title: "Admin Login Successful",
-            description: "Redirecting to admin panel...",
-          });
-          navigate("/admin");
-        } else {
-          localStorage.setItem("isAuthenticated", "true");
-          localStorage.setItem("isAdmin", "false");
-          localStorage.setItem("userEmail", email);
-          toast({
-            title: "Login Successful",
-            description: "Welcome back to TradeX Pro",
-          });
-          navigate("/dashboard");
-        }
-      } else {
+    try {
+      const { error } = await signIn(email, password);
+
+      if (error) {
         toast({
           title: "Login Failed",
-          description: "Please enter valid credentials",
+          description: error.message,
           variant: "destructive",
         });
+      } else {
+        toast({
+          title: "Login Successful",
+          description: "Welcome back to TradePro",
+        });
+        // Navigation handled by useEffect
       }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -59,7 +65,7 @@ const Login = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <TrendingUp className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">TradeX Pro</span>
+            <span className="text-xl font-bold">TradePro</span>
           </Link>
           <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
           <p className="text-muted-foreground">Sign in to your trading account</p>
@@ -76,6 +82,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -96,17 +103,8 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
+                disabled={isLoading}
               />
-            </div>
-
-            {/* Demo credentials hint */}
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex gap-2 text-xs">
-              <AlertCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <p className="font-medium text-primary">Demo Credentials:</p>
-                <p className="text-muted-foreground">User: any email + password</p>
-                <p className="text-muted-foreground">Admin: admin@tradexpro.com / admin123</p>
-              </div>
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
