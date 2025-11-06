@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useOrderExecution } from "@/hooks/useOrderExecution";
+import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react";
+import { Loader2, TrendingUp, TrendingDown } from "lucide-react";
 
 interface TradingPanelProps {
   symbol: string;
@@ -32,18 +33,29 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   
   const { toast } = useToast();
   const { executeOrder, isExecuting } = useOrderExecution();
+  
+  // Get real-time price updates
+  const { getPrice, isLoading: isPriceLoading } = usePriceUpdates({
+    symbols: [symbol],
+    intervalMs: 2000,
+    enabled: true,
+  });
 
-  // Calculate margin required
+  const priceData = getPrice(symbol);
+  const currentPrice = priceData?.currentPrice || 1.0856;
+  const bid = priceData?.bid || currentPrice * 0.9999;
+  const ask = priceData?.ask || currentPrice * 1.0001;
+
+  // Calculate margin required using real price
   const marginRequired = useMemo(() => {
     const qty = parseFloat(volume) || 0;
     const lev = parseFloat(leverage) || 100;
     const contractSize = 100000; // Standard lot
-    const estimatedPrice = 1.0856; // Placeholder - would be from live price
     
     if (qty <= 0 || lev <= 0) return 0;
     
-    return (qty * contractSize * estimatedPrice) / lev;
-  }, [volume, leverage]);
+    return (qty * contractSize * currentPrice) / lev;
+  }, [volume, leverage, currentPrice]);
 
   // Calculate pip value
   const pipValue = useMemo(() => {
@@ -197,6 +209,47 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                   step="0.0001"
                 />
               </div>
+            </div>
+
+            {/* Live Price Display */}
+            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Live Price</span>
+                {isPriceLoading && (
+                  <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">BID</div>
+                  <div className="text-lg font-mono font-semibold text-sell">
+                    {bid.toFixed(5)}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">ASK</div>
+                  <div className="text-lg font-mono font-semibold text-buy">
+                    {ask.toFixed(5)}
+                  </div>
+                </div>
+              </div>
+
+              {priceData && (
+                <div className="flex items-center justify-between pt-2 border-t border-border text-xs">
+                  <span className="text-muted-foreground">Change:</span>
+                  <div className={`flex items-center gap-1 font-semibold ${
+                    priceData.change >= 0 ? 'text-profit' : 'text-loss'
+                  }`}>
+                    {priceData.change >= 0 ? (
+                      <TrendingUp className="h-3 w-3" />
+                    ) : (
+                      <TrendingDown className="h-3 w-3" />
+                    )}
+                    {priceData.change >= 0 ? '+' : ''}{priceData.change.toFixed(5)} ({priceData.changePercent.toFixed(2)}%)
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
