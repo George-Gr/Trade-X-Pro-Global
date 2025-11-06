@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, TrendingUp, Shield, Zap, BarChart3 } from "lucide-react";
+import { ArrowRight, TrendingUp, Shield, Sparkles, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -81,7 +81,7 @@ const Index = () => {
 
           <div className="bg-card border border-border rounded-lg p-6 space-y-3 hover:border-primary/50 transition-colors">
             <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Zap className="h-6 w-6 text-primary" />
+              <Sparkles className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-lg font-semibold">Real-Time Data</h3>
             <p className="text-sm text-muted-foreground">
