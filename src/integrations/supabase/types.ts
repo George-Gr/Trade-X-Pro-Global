@@ -254,6 +254,51 @@ export type Database = {
           },
         ]
       }
+      position_lots: {
+        Row: {
+          commission: number
+          created_at: string | null
+          entry_price: number
+          fill_id: string
+          id: string
+          order_id: string
+          position_id: string
+          quantity: number
+          remaining_quantity: number
+          side: Database["public"]["Enums"]["order_side"]
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          commission?: number
+          created_at?: string | null
+          entry_price: number
+          fill_id: string
+          id?: string
+          order_id: string
+          position_id: string
+          quantity: number
+          remaining_quantity: number
+          side: Database["public"]["Enums"]["order_side"]
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          commission?: number
+          created_at?: string | null
+          entry_price?: number
+          fill_id?: string
+          id?: string
+          order_id?: string
+          position_id?: string
+          quantity?: number
+          remaining_quantity?: number
+          side?: Database["public"]["Enums"]["order_side"]
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       positions: {
         Row: {
           closed_at: string | null
@@ -387,6 +432,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      close_position_atomic: {
+        Args: {
+          p_close_quantity: number
+          p_current_price: number
+          p_idempotency_key: string
+          p_position_id: string
+          p_slippage?: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
       execute_order_atomic: {
         Args: {
           p_current_price: number

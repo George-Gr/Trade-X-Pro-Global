@@ -2,3 +2,6 @@ project_id = "oaegicsinxhpilsihjxv"
 
 [functions.execute-order]
 verify_jwt = true
+
+[functions.close-position]
+verify_jwt = true

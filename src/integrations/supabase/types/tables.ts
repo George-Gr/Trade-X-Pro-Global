@@ -77,10 +77,25 @@ export interface Fill {
   executed_at: string;
 }
 
+export interface PositionLot {
+  id: string;
+  position_id: string;
+  order_id: string;
+  fill_id: string;
+  user_id: string;
+  symbol: string;
+  side: 'buy' | 'sell';
+  quantity: number;
+  remaining_quantity: number;
+  entry_price: number;
+  commission: number;
+  created_at: string;
+}
+
 export interface LedgerEntry {
   id: string;
   user_id: string;
-  transaction_type: 'deposit' | 'withdrawal' | 'commission' | 'profit' | 'loss' | 'swap' | 'adjustment';
+  transaction_type: 'deposit' | 'withdrawal' | 'commission' | 'profit' | 'loss' | 'swap' | 'adjustment' | 'realized_pnl';
   amount: number;
   balance_before: number;
   balance_after: number;
