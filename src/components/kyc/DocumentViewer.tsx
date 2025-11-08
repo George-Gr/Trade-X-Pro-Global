@@ -1,0 +1,109 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Loader2, FileText, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface DocumentViewerProps {
+  filePath: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) => {
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fileType, setFileType] = useState<string>("");
+
+  useEffect(() => {
+    if (open && filePath) {
+      loadDocument();
+    }
+
+    return () => {
+      if (fileUrl) {
+        URL.revokeObjectURL(fileUrl);
+      }
+    };
+  }, [open, filePath]);
+
+  const loadDocument = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.storage
+        .from("kyc-documents")
+        .download(filePath);
+
+      if (error) throw error;
+
+      const url = URL.createObjectURL(data);
+      setFileUrl(url);
+      
+      // Determine file type from extension
+      const ext = filePath.split(".").pop()?.toLowerCase();
+      setFileType(ext || "");
+    } catch (error) {
+      console.error("Error loading document:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (fileUrl) {
+      const a = document.createElement("a");
+      a.href = fileUrl;
+      a.download = filePath.split("/").pop() || "document";
+      a.click();
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl h-[80vh]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center justify-between">
+            <span>Document Preview</span>
+            {fileUrl && (
+              <Button variant="outline" size="sm" onClick={handleDownload}>
+                <Download className="h-4 w-4 mr-2" />
+                Download
+              </Button>
+            )}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex-1 overflow-auto">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : fileUrl ? (
+            <div className="h-full">
+              {fileType === "pdf" ? (
+                <iframe
+                  src={fileUrl}
+                  className="w-full h-full border-0"
+                  title="Document preview"
+                />
+              ) : (
+                <img
+                  src={fileUrl}
+                  alt="Document"
+                  className="max-w-full h-auto mx-auto"
+                />
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+              <FileText className="h-12 w-12 mb-2" />
+              <p>Failed to load document</p>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default DocumentViewer;

@@ -11,6 +11,7 @@ import Trade from "./pages/Trade";
 import Portfolio from "./pages/Portfolio";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
+import KYC from "./pages/KYC";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -64,6 +65,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/kyc"
+            element={
+              <ProtectedRoute>
+                <KYC />
               </ProtectedRoute>
             }
           />

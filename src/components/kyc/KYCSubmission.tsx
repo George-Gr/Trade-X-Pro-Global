@@ -1,0 +1,219 @@
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2, Upload, FileText, CheckCircle } from "lucide-react";
+
+interface KYCSubmissionProps {
+  onSuccess?: () => void;
+}
+
+const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [documentType, setDocumentType] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select a file smaller than 5MB",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select a JPG, PNG, or PDF file",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setSelectedFile(file);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!user || !documentType || !selectedFile) {
+      toast({
+        title: "Missing information",
+        description: "Please select document type and file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Upload file to storage
+      const fileExt = selectedFile.name.split(".").pop();
+      const fileName = `${user.id}/${documentType}_${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from("kyc-documents")
+        .upload(fileName, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      // Create KYC document record
+      const { error: dbError } = await supabase
+        .from("kyc_documents")
+        .insert({
+          user_id: user.id,
+          document_type: documentType,
+          file_path: fileName,
+          status: "pending",
+        });
+
+      if (dbError) throw dbError;
+
+      // Update profile KYC status if first submission
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ kyc_status: "pending" })
+        .eq("id", user.id)
+        .eq("kyc_status", "pending");
+
+      if (profileError) throw profileError;
+
+      setSubmitted(true);
+      toast({
+        title: "Document submitted",
+        description: "Your KYC document has been submitted for review",
+      });
+
+      onSuccess?.();
+    } catch (error: any) {
+      console.error("KYC submission error:", error);
+      toast({
+        title: "Submission failed",
+        description: error.message || "Failed to submit document",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <div className="text-center space-y-4">
+            <div className="flex justify-center">
+              <div className="h-16 w-16 bg-profit/10 rounded-full flex items-center justify-center">
+                <CheckCircle className="h-8 w-8 text-profit" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Document Submitted</h3>
+              <p className="text-sm text-muted-foreground">
+                Your KYC document has been submitted successfully and is pending review.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSubmitted(false);
+                setSelectedFile(null);
+                setDocumentType("");
+              }}
+            >
+              Submit Another Document
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Upload KYC Document</CardTitle>
+        <CardDescription>
+          Submit your identity verification documents for review
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="document-type">Document Type</Label>
+            <Select value={documentType} onValueChange={setDocumentType}>
+              <SelectTrigger id="document-type">
+                <SelectValue placeholder="Select document type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="passport">Passport</SelectItem>
+                <SelectItem value="national_id">National ID Card</SelectItem>
+                <SelectItem value="drivers_license">Driver's License</SelectItem>
+                <SelectItem value="proof_of_address">Proof of Address</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="document-file">Document File</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="document-file"
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                onChange={handleFileSelect}
+                className="cursor-pointer"
+              />
+              {selectedFile && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <FileText className="h-4 w-4" />
+                  <span className="truncate max-w-[200px]">{selectedFile.name}</span>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Accepted formats: JPG, PNG, PDF (max 5MB)
+            </p>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting || !documentType || !selectedFile}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Upload className="h-4 w-4 mr-2" />
+                Submit Document
+              </>
+            )}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default KYCSubmission;

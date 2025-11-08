@@ -1,11 +1,40 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, Loader2 } from "lucide-react";
 
 const Settings = () => {
-  const userEmail = localStorage.getItem("userEmail") || "user@tradexpro.com";
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [kycStatus, setKycStatus] = useState<string>("pending");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchKYCStatus();
+    }
+  }, [user]);
+
+  const fetchKYCStatus = async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("kyc_status")
+      .eq("id", user.id)
+      .single();
+
+    if (data && !error) {
+      setKycStatus(data.kyc_status);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <AuthenticatedLayout>
@@ -27,7 +56,7 @@ const Settings = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Email Address</p>
-                  <p className="font-medium">{userEmail}</p>
+                  <p className="font-medium">{user?.email || "N/A"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Account Number</p>
@@ -52,13 +81,55 @@ const Settings = () => {
               <CardDescription>Identity verification status</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-profit" />
-                <div>
-                  <p className="font-medium">Verified</p>
-                  <p className="text-sm text-muted-foreground">Your identity has been verified</p>
+              {isLoading ? (
+                <div className="flex items-center gap-3">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">Loading status...</p>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      {kycStatus === "approved" ? (
+                        <>
+                          <CheckCircle2 className="h-5 w-5 text-profit" />
+                          <div>
+                            <p className="font-medium">Verified</p>
+                            <p className="text-sm text-muted-foreground">
+                              Your identity has been verified
+                            </p>
+                          </div>
+                        </>
+                      ) : kycStatus === "rejected" ? (
+                        <>
+                          <XCircle className="h-5 w-5 text-loss" />
+                          <div>
+                            <p className="font-medium">Rejected</p>
+                            <p className="text-sm text-muted-foreground">
+                              Please review and resubmit documents
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="h-5 w-5 text-amber-500" />
+                          <div>
+                            <p className="font-medium">Pending Verification</p>
+                            <p className="text-sm text-muted-foreground">
+                              Submit your documents to get verified
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    {kycStatus !== "approved" && (
+                      <Button onClick={() => navigate("/kyc")}>
+                        {kycStatus === "rejected" ? "Resubmit" : "Submit Documents"}
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
