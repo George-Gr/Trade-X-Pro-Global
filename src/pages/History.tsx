@@ -1,137 +1,463 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, Search, Filter, RefreshCw } from "lucide-react";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import { useTradingHistory } from "@/hooks/useTradingHistory";
+import TradeStatisticsCards from "@/components/history/TradeStatisticsCards";
+import ExportButtons from "@/components/history/ExportButtons";
 
 const History = () => {
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("trades");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [symbolFilter, setSymbolFilter] = useState<string>("all");
+  const [sideFilter, setSideFilter] = useState<string>("all");
+  const [dateRange, setDateRange] = useState<string>("all");
 
-  const orders = [
-    // Mock data - will be populated with real order history
-  ];
+  const { closedPositions, orders, ledger, statistics, loading, refresh } = useTradingHistory();
 
-  const transactions = [
-    {
-      date: new Date().toLocaleDateString(),
-      type: "Deposit",
-      amount: "$50,000.00",
-      balance: "$50,000.00",
-      description: "Initial virtual balance",
-    },
-  ];
+  // Get unique symbols for filter
+  const uniqueSymbols = useMemo(() => {
+    const symbols = new Set(closedPositions.map((p) => p.symbol));
+    return Array.from(symbols).sort();
+  }, [closedPositions]);
+
+  // Filter trades based on search and filters
+  const filteredTrades = useMemo(() => {
+    let filtered = [...closedPositions];
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter((trade) =>
+        trade.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Symbol filter
+    if (symbolFilter !== "all") {
+      filtered = filtered.filter((trade) => trade.symbol === symbolFilter);
+    }
+
+    // Side filter
+    if (sideFilter !== "all") {
+      filtered = filtered.filter((trade) => trade.side === sideFilter);
+    }
+
+    // Date range filter
+    if (dateRange !== "all") {
+      const now = new Date();
+      const filterDate = new Date();
+
+      switch (dateRange) {
+        case "today":
+          filterDate.setHours(0, 0, 0, 0);
+          break;
+        case "week":
+          filterDate.setDate(now.getDate() - 7);
+          break;
+        case "month":
+          filterDate.setMonth(now.getMonth() - 1);
+          break;
+        case "year":
+          filterDate.setFullYear(now.getFullYear() - 1);
+          break;
+      }
+
+      filtered = filtered.filter((trade) => new Date(trade.closed_at) >= filterDate);
+    }
+
+    return filtered;
+  }, [closedPositions, searchQuery, symbolFilter, sideFilter, dateRange]);
+
+  // Filter orders
+  const filteredOrders = useMemo(() => {
+    let filtered = [...orders];
+
+    if (searchQuery) {
+      filtered = filtered.filter((order) =>
+        order.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (symbolFilter !== "all") {
+      filtered = filtered.filter((order) => order.symbol === symbolFilter);
+    }
+
+    return filtered;
+  }, [orders, searchQuery, symbolFilter]);
+
+  // Filter ledger entries
+  const filteredLedger = useMemo(() => {
+    let filtered = [...ledger];
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (entry) =>
+          entry.transaction_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          entry.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    return filtered;
+  }, [ledger, searchQuery]);
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
+
+  const formatPrice = (value: number, symbol: string) => {
+    const isJpy = symbol.includes("JPY");
+    return value.toFixed(isJpy ? 3 : 5);
+  };
+
+  const formatDateTime = (dateString: string) => {
+    return new Date(dateString).toLocaleString();
+  };
 
   return (
     <AuthenticatedLayout>
       <div className="h-full overflow-auto p-6">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Trading History</h1>
-            <p className="text-muted-foreground">View your complete trading activity and transactions</p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Trading History & Reports</h1>
+              <p className="text-muted-foreground">
+                Comprehensive view of your trading activity with advanced analytics
+              </p>
+            </div>
+            <Button variant="outline" onClick={refresh} disabled={loading}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
           </div>
+
+          {/* Statistics Cards */}
+          {!loading && <TradeStatisticsCards statistics={statistics} />}
+
+          {/* Search and Filters */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                Filters & Search
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex-1 min-w-[200px]">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search by symbol..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-8"
+                    />
+                  </div>
+                </div>
+
+                <Select value={symbolFilter} onValueChange={setSymbolFilter}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="All Symbols" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Symbols</SelectItem>
+                    {uniqueSymbols.map((symbol) => (
+                      <SelectItem key={symbol} value={symbol}>
+                        {symbol}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={sideFilter} onValueChange={setSideFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="All Sides" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Sides</SelectItem>
+                    <SelectItem value="buy">Buy Only</SelectItem>
+                    <SelectItem value="sell">Sell Only</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={dateRange} onValueChange={setDateRange}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="All Time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Time</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="week">Last 7 Days</SelectItem>
+                    <SelectItem value="month">Last 30 Days</SelectItem>
+                    <SelectItem value="year">Last Year</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSymbolFilter("all");
+                    setSideFilter("all");
+                    setDateRange("all");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Export Buttons */}
+          <ExportButtons trades={filteredTrades} orders={filteredOrders} ledger={filteredLedger} />
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
+              <TabsTrigger value="trades">Closed Positions</TabsTrigger>
               <TabsTrigger value="orders">Order History</TabsTrigger>
-              <TabsTrigger value="transactions">Transactions</TabsTrigger>
+              <TabsTrigger value="ledger">Account Ledger</TabsTrigger>
             </TabsList>
 
-            {/* Order History Tab */}
-            <TabsContent value="orders" className="mt-6">
+            {/* Closed Positions Tab */}
+            <TabsContent value="trades" className="mt-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Order History</CardTitle>
+                  <CardTitle>Closed Positions ({filteredTrades.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {orders.length === 0 ? (
+                  {loading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : filteredTrades.length === 0 ? (
                     <div className="text-center py-12 text-muted-foreground">
-                      <p className="text-lg">No order history</p>
-                      <p className="text-sm mt-2">Your completed trades will appear here</p>
+                      <p className="text-lg">No closed positions</p>
+                      <p className="text-sm mt-2">
+                        {closedPositions.length === 0
+                          ? "Your closed trades will appear here"
+                          : "No trades match your filters"}
+                      </p>
                     </div>
                   ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Date/Time</TableHead>
-                          <TableHead>Symbol</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Volume</TableHead>
-                          <TableHead>Open Price</TableHead>
-                          <TableHead>Close Price</TableHead>
-                          <TableHead>S/L</TableHead>
-                          <TableHead>T/P</TableHead>
-                          <TableHead>P&L</TableHead>
-                          <TableHead>Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {orders.map((order: any, index: number) => (
-                          <TableRow key={index}>
-                            <TableCell>{order.timestamp}</TableCell>
-                            <TableCell className="font-medium">{order.symbol}</TableCell>
-                            <TableCell>
-                              <Badge variant={order.type === "BUY" ? "default" : "destructive"}>
-                                {order.type}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>{order.volume}</TableCell>
-                            <TableCell>{order.openPrice}</TableCell>
-                            <TableCell>{order.closePrice}</TableCell>
-                            <TableCell>{order.stopLoss || "-"}</TableCell>
-                            <TableCell>{order.takeProfit || "-"}</TableCell>
-                            <TableCell className={order.pnl >= 0 ? "text-profit" : "text-loss"}>
-                              ${order.pnl.toFixed(2)}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline">{order.status}</Badge>
-                            </TableCell>
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Closed At</TableHead>
+                            <TableHead>Symbol</TableHead>
+                            <TableHead>Side</TableHead>
+                            <TableHead>Volume</TableHead>
+                            <TableHead>Entry Price</TableHead>
+                            <TableHead>Exit Price</TableHead>
+                            <TableHead>P&L</TableHead>
+                            <TableHead>Margin Used</TableHead>
+                            <TableHead>Duration</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredTrades.map((trade) => {
+                            const duration = Math.floor(
+                              (new Date(trade.closed_at).getTime() -
+                                new Date(trade.opened_at).getTime()) /
+                                (1000 * 60)
+                            );
+                            return (
+                              <TableRow key={trade.id}>
+                                <TableCell className="text-sm">
+                                  {formatDateTime(trade.closed_at)}
+                                </TableCell>
+                                <TableCell className="font-medium">{trade.symbol}</TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant={trade.side === "buy" ? "default" : "destructive"}
+                                  >
+                                    {trade.side.toUpperCase()}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>{trade.quantity.toFixed(2)}</TableCell>
+                                <TableCell>{formatPrice(trade.entry_price, trade.symbol)}</TableCell>
+                                <TableCell>{formatPrice(trade.exit_price, trade.symbol)}</TableCell>
+                                <TableCell
+                                  className={`font-semibold ${
+                                    trade.realized_pnl >= 0 ? "text-profit" : "text-loss"
+                                  }`}
+                                >
+                                  {trade.realized_pnl >= 0 ? "+" : ""}
+                                  {formatCurrency(trade.realized_pnl)}
+                                </TableCell>
+                                <TableCell>{formatCurrency(trade.margin_used)}</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
+                                  {duration < 60
+                                    ? `${duration}m`
+                                    : `${Math.floor(duration / 60)}h ${duration % 60}m`}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
                   )}
                 </CardContent>
               </Card>
             </TabsContent>
 
-            {/* Transactions Tab */}
-            <TabsContent value="transactions" className="mt-6">
+            {/* Order History Tab */}
+            <TabsContent value="orders" className="mt-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Account Transactions</CardTitle>
+                  <CardTitle>All Orders ({filteredOrders.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Balance</TableHead>
-                        <TableHead>Description</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {transactions.map((transaction, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{transaction.date}</TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{transaction.type}</Badge>
-                          </TableCell>
-                          <TableCell className="text-profit font-medium">
-                            {transaction.amount}
-                          </TableCell>
-                          <TableCell className="font-medium">{transaction.balance}</TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {transaction.description}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  {loading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : filteredOrders.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p className="text-lg">No orders</p>
+                      <p className="text-sm mt-2">Your order history will appear here</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Created At</TableHead>
+                            <TableHead>Symbol</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Side</TableHead>
+                            <TableHead>Quantity</TableHead>
+                            <TableHead>Limit Price</TableHead>
+                            <TableHead>Fill Price</TableHead>
+                            <TableHead>Commission</TableHead>
+                            <TableHead>Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredOrders.map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className="text-sm">
+                                {formatDateTime(order.created_at)}
+                              </TableCell>
+                              <TableCell className="font-medium">{order.symbol}</TableCell>
+                              <TableCell>
+                                <Badge variant="outline">
+                                  {order.order_type.toUpperCase()}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={order.side === "buy" ? "default" : "destructive"}>
+                                  {order.side.toUpperCase()}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>{order.quantity.toFixed(2)}</TableCell>
+                              <TableCell>
+                                {order.price ? formatPrice(order.price, order.symbol) : "-"}
+                              </TableCell>
+                              <TableCell>
+                                {order.fill_price
+                                  ? formatPrice(order.fill_price, order.symbol)
+                                  : "-"}
+                              </TableCell>
+                              <TableCell>{formatCurrency(order.commission)}</TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant={
+                                    order.status === "filled"
+                                      ? "default"
+                                      : order.status === "cancelled"
+                                      ? "destructive"
+                                      : "secondary"
+                                  }
+                                >
+                                  {order.status.toUpperCase()}
+                                </Badge>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Ledger Tab */}
+            <TabsContent value="ledger" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Account Ledger ({filteredLedger.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {loading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : filteredLedger.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p className="text-lg">No ledger entries</p>
+                      <p className="text-sm mt-2">Account transactions will appear here</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Date/Time</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Balance Before</TableHead>
+                            <TableHead>Balance After</TableHead>
+                            <TableHead>Description</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredLedger.map((entry) => (
+                            <TableRow key={entry.id}>
+                              <TableCell className="text-sm">
+                                {formatDateTime(entry.created_at)}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="outline">
+                                  {entry.transaction_type.toUpperCase().replace("_", " ")}
+                                </Badge>
+                              </TableCell>
+                              <TableCell
+                                className={`font-semibold ${
+                                  entry.amount >= 0 ? "text-profit" : "text-loss"
+                                }`}
+                              >
+                                {entry.amount >= 0 ? "+" : ""}
+                                {formatCurrency(entry.amount)}
+                              </TableCell>
+                              <TableCell>{formatCurrency(entry.balance_before)}</TableCell>
+                              <TableCell className="font-medium">
+                                {formatCurrency(entry.balance_after)}
+                              </TableCell>
+                              <TableCell className="text-sm text-muted-foreground">
+                                {entry.description || "-"}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
