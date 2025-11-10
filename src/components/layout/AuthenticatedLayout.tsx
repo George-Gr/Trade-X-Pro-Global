@@ -81,9 +81,9 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-hidden">
         {children}
-      </div>
+      </main>
     </div>
   );
 };

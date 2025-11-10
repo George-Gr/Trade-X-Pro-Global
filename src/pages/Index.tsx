@@ -23,8 +23,9 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20">
+      <main>
+        {/* Hero Section */}
+        <section className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="inline-block px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-4">
             <span className="text-primary text-sm font-medium">Risk-Free Paper Trading</span>
@@ -157,7 +158,8 @@ const Index = () => {
             </Button>
           </Link>
         </div>
-      </section>
+        </section>
+      </main>
 
       {/* Footer */}
       <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
