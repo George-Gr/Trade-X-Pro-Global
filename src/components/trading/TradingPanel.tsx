@@ -4,9 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useOrderExecution } from "@/hooks/useOrderExecution";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
+import { OrderTemplatesDialog } from "./OrderTemplatesDialog";
+import { OrderTemplate } from "@/hooks/useOrderTemplates";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, TrendingUp, TrendingDown } from "lucide-react";
+import { Loader2, TrendingUp, TrendingDown, Zap } from "lucide-react";
 
 interface TradingPanelProps {
   symbol: string;
@@ -34,6 +37,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   const [takeProfit, setTakeProfit] = useState("");
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<{ side: "buy" | "sell" } | null>(null);
+  const [oneClickMode, setOneClickMode] = useState(false);
+  const [quickVolumes] = useState([0.01, 0.1, 0.5, 1.0]);
   
   const { toast } = useToast();
   const { executeOrder, isExecuting } = useOrderExecution();
@@ -142,13 +147,43 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       return;
     }
     
-    // Open confirmation dialog
-    setPendingOrder({ side });
-    setConfirmDialogOpen(true);
+    // In one-click mode, execute immediately
+    if (oneClickMode) {
+      handleConfirmOrder({ side });
+    } else {
+      // Open confirmation dialog
+      setPendingOrder({ side });
+      setConfirmDialogOpen(true);
+    }
   };
 
-  const handleConfirmOrder = async () => {
-    if (!pendingOrder) return;
+  const handleQuickTrade = (side: "buy" | "sell", quickVolume: number) => {
+    const tempVolume = volume;
+    setVolume(quickVolume.toString());
+    
+    handleConfirmOrder({ side });
+    
+    // Restore original volume after trade
+    setTimeout(() => setVolume(tempVolume), 100);
+  };
+
+  const handleApplyTemplate = (template: OrderTemplate) => {
+    setVolume(template.volume.toString());
+    setLeverage(template.leverage.toString());
+    setOrderType(template.order_type);
+    
+    if (template.stop_loss) setStopLoss(template.stop_loss.toString());
+    if (template.take_profit) setTakeProfit(template.take_profit.toString());
+    
+    toast({
+      title: "Template applied",
+      description: `"${template.name}" settings loaded.`,
+    });
+  };
+
+  const handleConfirmOrder = async (order?: { side: "buy" | "sell" }) => {
+    const orderToExecute = order || pendingOrder;
+    if (!orderToExecute) return;
     
     setConfirmDialogOpen(false);
     
@@ -165,7 +200,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     const result = await executeOrder({
       symbol,
       order_type: orderType,
-      side: pendingOrder.side,
+      side: orderToExecute.side,
       quantity: parseFloat(volume),
       price: orderPrice,
       stop_loss: stopLoss ? parseFloat(stopLoss) : undefined,
@@ -192,9 +227,67 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
 
   return (
     <div className="bg-card">
-      <div className="p-4 border-b border-border">
-        <h2 className="font-semibold">Trade {symbol}</h2>
-        <p className="text-xs text-muted-foreground mt-1">Place order</p>
+      <div className="p-4 border-b border-border space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-semibold">Trade {symbol}</h2>
+            <p className="text-xs text-muted-foreground mt-1">Place order</p>
+          </div>
+          <OrderTemplatesDialog
+            onApplyTemplate={handleApplyTemplate}
+            currentValues={{
+              symbol,
+              order_type: orderType,
+              volume,
+              leverage,
+              stopLoss,
+              takeProfit,
+            }}
+          />
+        </div>
+        
+        {/* One-Click Trading Toggle */}
+        <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-lg border border-border">
+          <div className="flex items-center gap-2">
+            <Zap className="h-4 w-4 text-primary" />
+            <div>
+              <div className="text-sm font-semibold">One-Click Trading</div>
+              <div className="text-xs text-muted-foreground">Execute instantly without confirmation</div>
+            </div>
+          </div>
+          <Switch checked={oneClickMode} onCheckedChange={setOneClickMode} />
+        </div>
+
+        {/* Quick Volume Buttons - Only show in one-click mode */}
+        {oneClickMode && (
+          <div className="space-y-2">
+            <Label className="text-xs">Quick Trade Volumes</Label>
+            <div className="grid grid-cols-4 gap-2">
+              {quickVolumes.map((vol) => (
+                <div key={vol} className="space-y-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleQuickTrade("buy", vol)}
+                    disabled={isExecuting}
+                    className="w-full bg-buy/10 hover:bg-buy/20 text-buy border-buy/20"
+                  >
+                    {vol}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleQuickTrade("sell", vol)}
+                    disabled={isExecuting}
+                    className="w-full bg-sell/10 hover:bg-sell/20 text-sell border-sell/20"
+                  >
+                    {vol}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="p-4 space-y-4">
@@ -844,7 +937,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
           <AlertDialogFooter>
             <AlertDialogCancel onClick={handleCancelOrder}>Cancel</AlertDialogCancel>
             <AlertDialogAction 
-              onClick={handleConfirmOrder}
+              onClick={() => handleConfirmOrder()}
               className={pendingOrder?.side === 'buy' ? 'bg-buy hover:bg-buy-hover' : 'bg-sell hover:bg-sell-hover'}
             >
               Confirm {pendingOrder?.side === 'buy' ? 'Buy' : 'Sell'}

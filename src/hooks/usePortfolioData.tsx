@@ -13,6 +13,11 @@ interface ProfileData {
 
 interface PositionWithPnL extends Position {
   unrealized_pnl: number;
+  trailing_stop_enabled?: boolean;
+  trailing_stop_distance?: number | null;
+  trailing_stop_price?: number | null;
+  highest_price?: number | null;
+  lowest_price?: number | null;
 }
 
 export const usePortfolioData = () => {

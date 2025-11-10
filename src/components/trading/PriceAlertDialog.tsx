@@ -11,9 +11,10 @@ import { useToast } from "@/hooks/use-toast";
 interface PriceAlertDialogProps {
   symbol: string;
   currentPrice: number;
+  onAlertCreated?: () => void;
 }
 
-export const PriceAlertDialog = ({ symbol, currentPrice }: PriceAlertDialogProps) => {
+export const PriceAlertDialog = ({ symbol, currentPrice, onAlertCreated }: PriceAlertDialogProps) => {
   const [open, setOpen] = useState(false);
   const [targetPrice, setTargetPrice] = useState("");
   const [condition, setCondition] = useState<"above" | "below">("above");
@@ -55,6 +56,7 @@ export const PriceAlertDialog = ({ symbol, currentPrice }: PriceAlertDialogProps
 
       setOpen(false);
       setTargetPrice("");
+      if (onAlertCreated) onAlertCreated();
     } catch (error: any) {
       toast({
         title: "Error creating alert",

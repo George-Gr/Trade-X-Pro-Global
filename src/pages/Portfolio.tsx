@@ -9,6 +9,8 @@ import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { usePositionClose } from "@/hooks/usePositionClose";
 import { useToast } from "@/hooks/use-toast";
+import { TrailingStopDialog } from "@/components/trading/TrailingStopDialog";
+import { PriceAlertsManager } from "@/components/trading/PriceAlertsManager";
 
 const Portfolio = () => {
   const { toast } = useToast();
@@ -172,7 +174,7 @@ const Portfolio = () => {
                       <TableHead>Current Price</TableHead>
                       <TableHead>Unrealized P&L</TableHead>
                       <TableHead>Margin Used</TableHead>
-                      <TableHead className="text-right">Action</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -205,21 +207,31 @@ const Portfolio = () => {
                           </TableCell>
                           <TableCell>{formatCurrency(position.margin_used)}</TableCell>
                           <TableCell className="text-right">
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleClosePosition(position.id, position.symbol)}
-                              disabled={isPositionClosing || isClosing}
-                            >
-                              {isPositionClosing ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <>
-                                  <X className="h-4 w-4 mr-1" />
-                                  Close
-                                </>
-                              )}
-                            </Button>
+                            <div className="flex items-center gap-2 justify-end">
+                              <TrailingStopDialog
+                                positionId={position.id}
+                                symbol={position.symbol}
+                                side={position.side}
+                                currentPrice={position.current_price || position.entry_price}
+                                trailingStopEnabled={position.trailing_stop_enabled}
+                                trailingStopDistance={position.trailing_stop_distance}
+                              />
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleClosePosition(position.id, position.symbol)}
+                                disabled={isPositionClosing || isClosing}
+                              >
+                                {isPositionClosing ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <>
+                                    <X className="h-4 w-4 mr-1" />
+                                    Close
+                                  </>
+                                )}
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       );
@@ -231,47 +243,52 @@ const Portfolio = () => {
           </Card>
 
           {/* Trading Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Trading Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <div className="text-sm text-muted-foreground">Open Positions</div>
-                  <div className="text-2xl font-bold">{positions.length}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Total Volume</div>
-                  <div className="text-2xl font-bold">
-                    {positions.reduce((sum, p) => sum + p.quantity, 0).toFixed(2)}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Trading Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Open Positions</div>
+                    <div className="text-2xl font-bold">{positions.length}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Total Volume</div>
+                    <div className="text-2xl font-bold">
+                      {positions.reduce((sum, p) => sum + p.quantity, 0).toFixed(2)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Avg Margin per Position</div>
+                    <div className="text-2xl font-bold">
+                      {positions.length > 0
+                        ? formatCurrency(marginUsed / positions.length)
+                        : "$0.00"}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Risk Level</div>
+                    <div
+                      className={`text-2xl font-bold ${
+                        marginLevel > 300
+                          ? "text-profit"
+                          : marginLevel > 150
+                          ? "text-yellow-500"
+                          : "text-loss"
+                      }`}
+                    >
+                      {marginLevel > 300 ? "Low" : marginLevel > 150 ? "Medium" : "High"}
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Avg Margin per Position</div>
-                  <div className="text-2xl font-bold">
-                    {positions.length > 0
-                      ? formatCurrency(marginUsed / positions.length)
-                      : "$0.00"}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Risk Level</div>
-                  <div
-                    className={`text-2xl font-bold ${
-                      marginLevel > 300
-                        ? "text-profit"
-                        : marginLevel > 150
-                        ? "text-yellow-500"
-                        : "text-loss"
-                    }`}
-                  >
-                    {marginLevel > 300 ? "Low" : marginLevel > 150 ? "Medium" : "High"}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Price Alerts */}
+            <PriceAlertsManager />
+          </div>
         </div>
       </div>
     </AuthenticatedLayout>

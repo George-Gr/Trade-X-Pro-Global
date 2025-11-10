@@ -339,6 +339,51 @@ export type Database = {
         }
         Relationships: []
       }
+      order_templates: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          leverage: number
+          name: string
+          order_type: Database["public"]["Enums"]["order_type"]
+          stop_loss: number | null
+          symbol: string | null
+          take_profit: number | null
+          updated_at: string
+          user_id: string
+          volume: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          leverage?: number
+          name: string
+          order_type: Database["public"]["Enums"]["order_type"]
+          stop_loss?: number | null
+          symbol?: string | null
+          take_profit?: number | null
+          updated_at?: string
+          user_id: string
+          volume: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          leverage?: number
+          name?: string
+          order_type?: Database["public"]["Enums"]["order_type"]
+          stop_loss?: number | null
+          symbol?: string | null
+          take_profit?: number | null
+          updated_at?: string
+          user_id?: string
+          volume?: number
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           commission: number | null
@@ -451,7 +496,9 @@ export type Database = {
           closed_at: string | null
           current_price: number | null
           entry_price: number
+          highest_price: number | null
           id: string
+          lowest_price: number | null
           margin_used: number
           opened_at: string | null
           quantity: number
@@ -459,6 +506,9 @@ export type Database = {
           side: Database["public"]["Enums"]["order_side"]
           status: Database["public"]["Enums"]["position_status"] | null
           symbol: string
+          trailing_stop_distance: number | null
+          trailing_stop_enabled: boolean
+          trailing_stop_price: number | null
           unrealized_pnl: number | null
           user_id: string
         }
@@ -466,7 +516,9 @@ export type Database = {
           closed_at?: string | null
           current_price?: number | null
           entry_price: number
+          highest_price?: number | null
           id?: string
+          lowest_price?: number | null
           margin_used: number
           opened_at?: string | null
           quantity: number
@@ -474,6 +526,9 @@ export type Database = {
           side: Database["public"]["Enums"]["order_side"]
           status?: Database["public"]["Enums"]["position_status"] | null
           symbol: string
+          trailing_stop_distance?: number | null
+          trailing_stop_enabled?: boolean
+          trailing_stop_price?: number | null
           unrealized_pnl?: number | null
           user_id: string
         }
@@ -481,7 +536,9 @@ export type Database = {
           closed_at?: string | null
           current_price?: number | null
           entry_price?: number
+          highest_price?: number | null
           id?: string
+          lowest_price?: number | null
           margin_used?: number
           opened_at?: string | null
           quantity?: number
@@ -489,6 +546,9 @@ export type Database = {
           side?: Database["public"]["Enums"]["order_side"]
           status?: Database["public"]["Enums"]["position_status"] | null
           symbol?: string
+          trailing_stop_distance?: number | null
+          trailing_stop_enabled?: boolean
+          trailing_stop_price?: number | null
           unrealized_pnl?: number | null
           user_id?: string
         }
