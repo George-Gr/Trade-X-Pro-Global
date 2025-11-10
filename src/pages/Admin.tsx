@@ -218,34 +218,45 @@ const Admin = () => {
       return;
     }
 
-    try {
-      const amount = Number(fundAmount);
-      const account = userAccounts.find((a) => a.id === fundDialog.userId);
-      if (!account) return;
+    const amount = Number(fundAmount);
+    
+    if (amount <= 0) {
+      toast({
+        title: "Invalid amount",
+        description: "Amount must be positive",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          balance: account.balance + amount,
-          equity: account.equity + amount,
-        })
-        .eq("id", fundDialog.userId);
+    if (amount > 100000) {
+      toast({
+        title: "Amount too large",
+        description: "Maximum funding amount is $100,000 per operation",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Call secure edge function instead of direct database access
+      const { data, error } = await supabase.functions.invoke('admin-fund-account', {
+        body: {
+          user_id: fundDialog.userId,
+          amount: amount,
+          description: 'Admin manual funding'
+        }
+      });
 
       if (error) throw error;
 
-      // Create ledger entry
-      await supabase.from("ledger").insert({
-        user_id: fundDialog.userId,
-        transaction_type: "deposit",
-        amount: amount,
-        balance_before: account.balance,
-        balance_after: account.balance + amount,
-        description: "Admin funding",
-      });
+      if (data?.error) {
+        throw new Error(data.error);
+      }
 
       toast({
         title: "Account Funded",
-        description: `Added $${amount} to account`,
+        description: `Added $${amount.toFixed(2)} to account`,
       });
 
       setFundDialog({ open: false, userId: null });
@@ -254,7 +265,7 @@ const Admin = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to fund account",
         variant: "destructive",
       });
     }
