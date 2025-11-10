@@ -16,6 +16,18 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Validate CRON_SECRET for security
+  const CRON_SECRET = Deno.env.get("CRON_SECRET");
+  const providedSecret = req.headers.get("X-Cron-Secret");
+
+  if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+    console.error("Unauthorized access attempt to check-price-alerts");
+    return new Response(
+      JSON.stringify({ error: "Unauthorized" }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
+    );
+  }
+
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;

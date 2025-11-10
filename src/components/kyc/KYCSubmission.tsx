@@ -64,27 +64,27 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     setIsSubmitting(true);
 
     try {
-      // Upload file to storage
-      const fileExt = selectedFile.name.split(".").pop();
-      const fileName = `${user.id}/${documentType}_${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from("kyc-documents")
-        .upload(fileName, selectedFile);
+      // Create FormData for server-side validation
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("documentType", documentType);
 
-      if (uploadError) throw uploadError;
+      // Get auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("Not authenticated");
+      }
 
-      // Create KYC document record
-      const { error: dbError } = await supabase
-        .from("kyc_documents")
-        .insert({
-          user_id: user.id,
-          document_type: documentType,
-          file_path: fileName,
-          status: "pending",
-        });
+      // Call server-side validation function
+      const { data, error } = await supabase.functions.invoke("validate-kyc-upload", {
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
 
-      if (dbError) throw dbError;
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error || "Upload failed");
 
       // Update profile KYC status if first submission
       const { error: profileError } = await supabase
@@ -93,7 +93,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
         .eq("id", user.id)
         .eq("kyc_status", "pending");
 
-      if (profileError) throw profileError;
+      if (profileError) console.warn("Profile update warning:", profileError);
 
       setSubmitted(true);
       toast({
