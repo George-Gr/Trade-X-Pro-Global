@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import Watchlist from "@/components/trading/Watchlist";
+import TradingViewWatchlist from "@/components/trading/TradingViewWatchlist";
 import { RiskAlerts } from "@/components/risk/RiskAlerts";
 import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
 
@@ -127,10 +127,15 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Watchlist */}
-            <div className="lg:col-span-1">
-              <Watchlist />
-            </div>
+            {/* Market Watchlist */}
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle>Market Watch</CardTitle>
+              </CardHeader>
+              <CardContent className="h-[500px]">
+                <TradingViewWatchlist />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

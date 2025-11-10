@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Maximize2 } from "lucide-react";
-import TradingViewChart from "./TradingViewChart";
+import TradingViewAdvancedChart from "./TradingViewAdvancedChart";
 
 interface ChartPanelProps {
   symbol: string;
@@ -39,7 +39,7 @@ const ChartPanel = ({ symbol }: ChartPanelProps) => {
       </div>
       
       <div className="flex-1 overflow-hidden">
-        <TradingViewChart symbol={symbol} />
+        <TradingViewAdvancedChart symbol={symbol} />
       </div>
     </div>
   );
