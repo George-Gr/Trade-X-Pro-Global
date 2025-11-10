@@ -17,7 +17,6 @@ const Trade = () => {
 
   return (
     <AuthenticatedLayout>
-      {/* Main Trading Area */}
       <div className="flex-1 flex overflow-hidden h-full">
         {/* Left Sidebar - Market Watch */}
         <div className="w-80 border-r border-border flex-shrink-0 overflow-hidden">

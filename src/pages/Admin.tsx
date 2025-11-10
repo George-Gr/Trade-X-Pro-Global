@@ -301,7 +301,7 @@ const Admin = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto p-6 max-w-7xl">
+      <div className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-muted-foreground">Manage KYC submissions and user accounts</p>

@@ -59,10 +59,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md space-y-6">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <TrendingUp className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">TradePro</span>

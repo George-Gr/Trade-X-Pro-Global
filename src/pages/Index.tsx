@@ -25,7 +25,7 @@ const Index = () => {
 
       <main>
         {/* Hero Section */}
-        <section className="container mx-auto px-4 py-20">
+        <section className="container mx-auto px-4 py-16 md:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="inline-block px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-4">
             <span className="text-primary text-sm font-medium">Risk-Free Paper Trading</span>
@@ -58,7 +58,7 @@ const Index = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="container mx-auto px-4 py-20">
+      <section className="container mx-auto px-4 py-12 md:py-20">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-card border border-border rounded-lg p-6 space-y-3 hover:border-primary/50 transition-colors">
             <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -103,7 +103,7 @@ const Index = () => {
       </section>
 
       {/* Trading Features */}
-      <section className="container mx-auto px-4 py-20">
+      <section className="container mx-auto px-4 py-12 md:py-20">
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold">Professional Trading Tools</h2>
           <p className="text-lg text-muted-foreground">
@@ -145,7 +145,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="container mx-auto px-4 py-20">
+      <section className="container mx-auto px-4 py-12 md:py-20">
         <div className="max-w-3xl mx-auto bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-12 text-center space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold">Ready to Start Trading?</h2>
           <p className="text-lg text-muted-foreground">

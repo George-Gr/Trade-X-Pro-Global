@@ -120,7 +120,8 @@ export default function RiskManagement() {
 
   return (
     <AuthenticatedLayout>
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="h-full overflow-auto">
+        <div className="container mx-auto px-4 py-6 space-y-6 max-w-7xl">
         <div className="flex items-center gap-2">
           <Shield className="h-8 w-8 text-primary" />
           <div>
@@ -294,6 +295,7 @@ export default function RiskManagement() {
             {saving ? "Saving..." : "Save Settings"}
           </Button>
         </div>
+      </div>
       </div>
     </AuthenticatedLayout>
   );

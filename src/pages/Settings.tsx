@@ -38,8 +38,8 @@ const Settings = () => {
 
   return (
     <AuthenticatedLayout>
-      <div className="h-full overflow-auto p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="h-full overflow-auto">
+        <div className="container mx-auto px-4 py-6 space-y-6 max-w-4xl">
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold mb-2">Settings</h1>

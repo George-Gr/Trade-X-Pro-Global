@@ -2,7 +2,8 @@ import { NotificationPreferences } from "@/components/notifications/Notification
 
 export default function Notifications() {
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="h-full overflow-auto">
+      <div className="container mx-auto px-4 py-6 space-y-6 max-w-4xl">
       <div>
         <h1 className="text-3xl font-bold">Notifications</h1>
         <p className="text-muted-foreground mt-2">
@@ -10,7 +11,8 @@ export default function Notifications() {
         </p>
       </div>
 
-      <NotificationPreferences />
+        <NotificationPreferences />
+      </div>
     </div>
   );
 }

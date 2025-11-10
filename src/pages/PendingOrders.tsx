@@ -92,7 +92,8 @@ const PendingOrders = () => {
 
   return (
     <AuthenticatedLayout>
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="h-full overflow-auto">
+        <div className="container mx-auto px-4 py-6 space-y-6 max-w-7xl">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">Pending Orders</h1>
@@ -264,6 +265,7 @@ const PendingOrders = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        </div>
       </div>
     </AuthenticatedLayout>
   );
