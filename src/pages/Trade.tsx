@@ -1,5 +1,5 @@
-import { useState } from "react";
-import MarketWatch from "@/components/trading/MarketWatch";
+import { useState, useRef } from "react";
+import EnhancedWatchlist from "@/components/trading/EnhancedWatchlist";
 import AssetTree from "@/components/trading/AssetTree";
 import TradingPanel from "@/components/trading/TradingPanel";
 import PortfolioDashboard from "@/components/trading/PortfolioDashboard";
@@ -11,16 +11,38 @@ import MarketSentiment from "@/components/trading/MarketSentiment";
 import TradingSignals from "@/components/trading/TradingSignals";
 import EconomicCalendar from "@/components/trading/EconomicCalendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 const Trade = () => {
   const [selectedSymbol, setSelectedSymbol] = useState("EURUSD");
+  const [activeTab, setActiveTab] = useState("trade");
+  const tradingPanelRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  const handleQuickTrade = (symbol: string, side: "buy" | "sell") => {
+    setSelectedSymbol(symbol);
+    setActiveTab("trade");
+    
+    // Scroll to trading panel
+    setTimeout(() => {
+      tradingPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 100);
+
+    toast({
+      title: "Symbol selected",
+      description: `${symbol} is ready for ${side === "buy" ? "buying" : "selling"}`,
+    });
+  };
 
   return (
     <AuthenticatedLayout>
       <div className="flex-1 flex overflow-hidden h-full">
-        {/* Left Sidebar - Market Watch (hidden on mobile) */}
+        {/* Left Sidebar - Enhanced Watchlist (hidden on mobile) */}
         <div className="hidden lg:block w-80 border-r border-border flex-shrink-0 overflow-hidden">
-          <MarketWatch onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
+          <EnhancedWatchlist 
+            onSelectSymbol={setSelectedSymbol} 
+            onQuickTrade={handleQuickTrade}
+          />
         </div>
 
         {/* Center - Chart & Trading */}
@@ -38,7 +60,7 @@ const Trade = () => {
 
         {/* Right Sidebar - Analysis Tools & Trading Panel (hidden on mobile/tablet) */}
         <div className="hidden md:flex w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden">
-          <Tabs defaultValue="trade" className="flex-1 flex flex-col overflow-hidden">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
             <TabsList className="w-full">
               <TabsTrigger value="trade" className="flex-1">Trade</TabsTrigger>
               <TabsTrigger value="analysis" className="flex-1">Analysis</TabsTrigger>
@@ -49,7 +71,7 @@ const Trade = () => {
               <div className="flex-1 overflow-auto">
                 <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
               </div>
-              <div className="border-t border-border">
+              <div ref={tradingPanelRef} className="border-t border-border">
                 <TradingPanel symbol={selectedSymbol} />
               </div>
             </TabsContent>

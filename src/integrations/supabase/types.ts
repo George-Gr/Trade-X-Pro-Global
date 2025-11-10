@@ -715,6 +715,65 @@ export type Database = {
         }
         Relationships: []
       }
+      watchlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_index: number
+          symbol: string
+          watchlist_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_index?: number
+          symbol: string
+          watchlist_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_index?: number
+          symbol?: string
+          watchlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_items_watchlist_id_fkey"
+            columns: ["watchlist_id"]
+            isOneToOne: false
+            referencedRelation: "watchlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watchlists: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
