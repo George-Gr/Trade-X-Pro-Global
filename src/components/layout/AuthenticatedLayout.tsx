@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { TrendingUp, LogOut, User, LayoutDashboard, Briefcase, History, Settings } from "lucide-react";
+import { TrendingUp, LogOut, User, LayoutDashboard, Briefcase, History, Settings, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,6 +24,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
     { path: "/trade", icon: TrendingUp, label: "Trade" },
     { path: "/portfolio", icon: Briefcase, label: "Portfolio" },
     { path: "/history", icon: History, label: "History" },
+    { path: "/pending-orders", icon: Clock, label: "Pending Orders" },
     { path: "/settings", icon: Settings, label: "Settings" },
   ];
 

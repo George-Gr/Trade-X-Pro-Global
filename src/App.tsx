@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Trade from "./pages/Trade";
 import Portfolio from "./pages/Portfolio";
 import History from "./pages/History";
+import PendingOrders from "./pages/PendingOrders";
 import Settings from "./pages/Settings";
 import KYC from "./pages/KYC";
 import Admin from "./pages/Admin";
@@ -57,6 +58,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <History />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pending-orders"
+            element={
+              <ProtectedRoute>
+                <PendingOrders />
               </ProtectedRoute>
             }
           />
