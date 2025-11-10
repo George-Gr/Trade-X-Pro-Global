@@ -86,6 +86,66 @@ export type Database = {
         }
         Relationships: []
       }
+      crypto_transactions: {
+        Row: {
+          actual_amount_received: number | null
+          amount: number
+          completed_at: string | null
+          confirmations: number | null
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json | null
+          network_fee: number | null
+          payment_address: string | null
+          payment_id: string | null
+          payment_url: string | null
+          status: string
+          transaction_type: string
+          updated_at: string
+          usd_amount: number | null
+          user_id: string
+        }
+        Insert: {
+          actual_amount_received?: number | null
+          amount: number
+          completed_at?: string | null
+          confirmations?: number | null
+          created_at?: string
+          currency: string
+          id?: string
+          metadata?: Json | null
+          network_fee?: number | null
+          payment_address?: string | null
+          payment_id?: string | null
+          payment_url?: string | null
+          status?: string
+          transaction_type: string
+          updated_at?: string
+          usd_amount?: number | null
+          user_id: string
+        }
+        Update: {
+          actual_amount_received?: number | null
+          amount?: number
+          completed_at?: string | null
+          confirmations?: number | null
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          network_fee?: number | null
+          payment_address?: string | null
+          payment_id?: string | null
+          payment_url?: string | null
+          status?: string
+          transaction_type?: string
+          updated_at?: string
+          usd_amount?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_pnl_tracking: {
         Row: {
           breached_daily_limit: boolean

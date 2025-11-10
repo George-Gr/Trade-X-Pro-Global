@@ -29,3 +29,12 @@ verify_jwt = false
 
 [functions.validate-kyc-upload]
 verify_jwt = true
+
+[functions.create-crypto-payment]
+verify_jwt = true
+
+[functions.verify-crypto-payment]
+verify_jwt = true
+
+[functions.handle-payment-callback]
+verify_jwt = false

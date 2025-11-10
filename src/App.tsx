@@ -16,6 +16,7 @@ import KYC from "./pages/KYC";
 import Admin from "./pages/Admin";
 import RiskManagement from "./pages/RiskManagement";
 import Notifications from "./pages/Notifications";
+import Wallet from "./pages/Wallet";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { NotificationProvider } from "@/contexts/NotificationContext";
@@ -70,6 +71,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <PendingOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet"
+            element={
+              <ProtectedRoute>
+                <Wallet />
               </ProtectedRoute>
             }
           />

@@ -7,7 +7,8 @@ import {
   Clock, 
   Shield, 
   Settings,
-  Bell
+  Bell,
+  Wallet
 } from "lucide-react";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ const navItems = [
   { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { path: "/trade", icon: TrendingUp, label: "Trade" },
   { path: "/portfolio", icon: Briefcase, label: "Portfolio" },
+  { path: "/wallet", icon: Wallet, label: "Wallet" },
   { path: "/history", icon: History, label: "History" },
   { path: "/pending-orders", icon: Clock, label: "Pending Orders" },
   { path: "/risk-management", icon: Shield, label: "Risk Management" },
