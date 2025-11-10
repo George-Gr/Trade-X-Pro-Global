@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { CheckCircle2, Clock, XCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, Loader2, Bell } from "lucide-react";
 
 const Settings = () => {
   const { user } = useAuth();
@@ -177,6 +177,42 @@ const Settings = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Stop Out Level</p>
                 <p className="font-medium">20%</p>
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">Advanced Risk Settings</p>
+                  <p className="text-sm text-muted-foreground">
+                    Configure position limits, daily loss limits, and more
+                  </p>
+                </div>
+                <Button onClick={() => navigate("/risk-management")} variant="outline">
+                  Manage
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Notification Preferences */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="h-5 w-5" />
+                Notification Preferences
+              </CardTitle>
+              <CardDescription>Configure how you receive notifications</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">Manage Notifications</p>
+                  <p className="text-sm text-muted-foreground">
+                    Set up email and in-app notification preferences
+                  </p>
+                </div>
+                <Button onClick={() => navigate("/notifications")} variant="outline">
+                  Configure
+                </Button>
               </div>
             </CardContent>
           </Card>

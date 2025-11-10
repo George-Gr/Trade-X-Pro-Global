@@ -258,6 +258,87 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_enabled: boolean
+          id: string
+          kyc_notifications: boolean
+          margin_notifications: boolean
+          order_notifications: boolean
+          pnl_notifications: boolean
+          price_alert_notifications: boolean
+          risk_notifications: boolean
+          toast_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_enabled?: boolean
+          id?: string
+          kyc_notifications?: boolean
+          margin_notifications?: boolean
+          order_notifications?: boolean
+          pnl_notifications?: boolean
+          price_alert_notifications?: boolean
+          risk_notifications?: boolean
+          toast_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_enabled?: boolean
+          id?: string
+          kyc_notifications?: boolean
+          margin_notifications?: boolean
+          order_notifications?: boolean
+          pnl_notifications?: boolean
+          price_alert_notifications?: boolean
+          risk_notifications?: boolean
+          toast_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          message: string
+          read: boolean
+          sent_email: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message: string
+          read?: boolean
+          sent_email?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message?: string
+          read?: boolean
+          sent_email?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           commission: number | null
@@ -420,6 +501,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      price_alerts: {
+        Row: {
+          condition: string
+          created_at: string
+          id: string
+          symbol: string
+          target_price: number
+          triggered: boolean
+          triggered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          condition: string
+          created_at?: string
+          id?: string
+          symbol: string
+          target_price: number
+          triggered?: boolean
+          triggered_at?: string | null
+          user_id: string
+        }
+        Update: {
+          condition?: string
+          created_at?: string
+          id?: string
+          symbol?: string
+          target_price?: number
+          triggered?: boolean
+          triggered_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

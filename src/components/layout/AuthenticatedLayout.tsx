@@ -4,6 +4,7 @@ import { TrendingUp, LogOut, User, LayoutDashboard, Briefcase, History, Settings
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -68,6 +69,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
             <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
           </div>
           <div className="flex items-center gap-2">
+            <NotificationCenter />
             <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">
               <User className="h-4 w-4 text-primary" />
             </div>
