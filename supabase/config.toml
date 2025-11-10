@@ -5,3 +5,18 @@ verify_jwt = true
 
 [functions.close-position]
 verify_jwt = true
+
+[functions.check-risk-levels]
+verify_jwt = false
+
+[functions.update-daily-pnl]
+verify_jwt = false
+
+[functions.admin-fund-account]
+verify_jwt = true
+
+[functions.cancel-order]
+verify_jwt = true
+
+[functions.modify-order]
+verify_jwt = true
