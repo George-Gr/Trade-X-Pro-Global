@@ -70,8 +70,6 @@ serve(async (req) => {
         order_id: `${user.id}-${Date.now()}`,
         order_description: 'Trading Account Deposit',
         ipn_callback_url: `${supabaseUrl}/functions/v1/handle-payment-callback`,
-        success_url: `${Deno.env.get('VITE_SUPABASE_URL')}/dashboard?payment=success`,
-        cancel_url: `${Deno.env.get('VITE_SUPABASE_URL')}/dashboard?payment=cancelled`,
       }),
     });
 
