@@ -33,14 +33,13 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
-      console.error('Authentication error:', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Closing position for user:', user.id);
+    console.log('Processing position closure');
 
     // Get request body
     const { position_id, quantity, idempotency_key }: ClosePositionRequest = await req.json();
@@ -60,7 +59,6 @@ serve(async (req) => {
       .single();
 
     if (profileError) {
-      console.error('Profile fetch error:', profileError);
       return new Response(
         JSON.stringify({ error: 'Failed to fetch user profile' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -112,7 +110,6 @@ serve(async (req) => {
       .maybeSingle();
 
     if (positionError || !position) {
-      console.error('Position fetch error:', positionError);
       return new Response(
         JSON.stringify({ error: 'Position not found or already closed' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -122,12 +119,11 @@ serve(async (req) => {
     // Determine close quantity (full or partial)
     const closeQuantity = quantity && quantity > 0 ? Math.min(quantity, position.quantity) : position.quantity;
 
-    console.log(`Closing position ${position_id}: ${closeQuantity} of ${position.quantity} lots`);
+    console.log('Processing position closure request');
 
     // Get current market price from Finnhub
     const finnhubApiKey = Deno.env.get('FINNHUB_API_KEY');
     if (!finnhubApiKey) {
-      console.error('FINNHUB_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'Market data service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -148,7 +144,6 @@ serve(async (req) => {
     );
 
     if (!priceResponse.ok) {
-      console.error('Failed to fetch market price from Finnhub');
       return new Response(
         JSON.stringify({ error: 'Market data unavailable' }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -159,14 +154,13 @@ serve(async (req) => {
     const currentPrice = priceData.c; // Current price
 
     if (!currentPrice || currentPrice <= 0) {
-      console.error('Invalid price data:', priceData);
       return new Response(
         JSON.stringify({ error: 'Invalid market price' }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`Current price for ${position.symbol}: ${currentPrice}`);
+    console.log('Market price fetched successfully');
 
     // Call the atomic close function
     const { data: closeResult, error: closeError } = await supabase
@@ -180,7 +174,7 @@ serve(async (req) => {
       });
 
     if (closeError) {
-      console.error('Close position error:', closeError);
+      console.error('Close position failed');
       
       // Handle specific error messages
       const errorMessage = typeof closeError === 'object' && closeError !== null && 'message' in closeError
@@ -200,7 +194,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Position closed successfully:', closeResult);
+    console.log('Position closed successfully');
 
     return new Response(
       JSON.stringify({ 
@@ -211,11 +205,11 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Unexpected error in close-position:', error);
+    console.error('Unexpected error in close-position');
     const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
     
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

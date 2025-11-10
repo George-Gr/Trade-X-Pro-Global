@@ -34,7 +34,6 @@ serve(async (req) => {
     // Get user from JWT
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      console.error('Missing Authorization header');
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -45,18 +44,17 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      console.error('Auth error:', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('User authenticated:', user.id);
+    console.log('User authenticated');
 
     // Parse request body
     const orderRequest: OrderRequest = await req.json();
-    console.log('Order request:', orderRequest);
+    console.log('Order request received:', orderRequest.order_type, orderRequest.side);
 
     // =========================================
     // VALIDATION STEP 1: Check user profile and KYC status
@@ -68,7 +66,6 @@ serve(async (req) => {
       .single();
 
     if (profileError || !profile) {
-      console.error('Profile fetch error:', profileError);
       return new Response(
         JSON.stringify({ error: 'User profile not found' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -77,7 +74,6 @@ serve(async (req) => {
 
     // Check KYC status
     if (profile.kyc_status !== 'approved') {
-      console.error('KYC not approved:', profile.kyc_status);
       return new Response(
         JSON.stringify({ error: 'KYC verification required', kyc_status: profile.kyc_status }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -86,7 +82,6 @@ serve(async (req) => {
 
     // Check account status
     if (profile.account_status !== 'active') {
-      console.error('Account not active:', profile.account_status);
       return new Response(
         JSON.stringify({ error: 'Account suspended or closed' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -106,7 +101,7 @@ serve(async (req) => {
       .maybeSingle();
 
     if (existingOrder) {
-      console.log('Duplicate order detected:', existingOrder.id);
+      console.log('Duplicate order detected');
       return new Response(
         JSON.stringify({ 
           error: 'Duplicate order', 
@@ -128,21 +123,19 @@ serve(async (req) => {
       .maybeSingle();
 
     if (assetError || !assetSpec) {
-      console.error('Asset validation error:', assetError);
       return new Response(
         JSON.stringify({ error: 'Invalid or untradable symbol' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Asset validated:', assetSpec.symbol);
+    console.log('Asset validated');
 
     // =========================================
     // VALIDATION STEP 4: Validate quantity
     // =========================================
     if (orderRequest.quantity < assetSpec.min_quantity || 
         orderRequest.quantity > assetSpec.max_quantity) {
-      console.error('Invalid quantity:', orderRequest.quantity);
       return new Response(
         JSON.stringify({ 
           error: 'Invalid quantity',
@@ -170,7 +163,7 @@ serve(async (req) => {
         finnhubSymbol = `OANDA:${base}_${quote}`;
       }
       
-      console.log('Fetching price for:', finnhubSymbol);
+      console.log('Fetching market price');
       
       const priceResponse = await fetch(
         `https://finnhub.io/api/v1/quote?symbol=${finnhubSymbol}&token=${finnhubApiKey}`
@@ -189,9 +182,9 @@ serve(async (req) => {
         throw new Error('Invalid price data received');
       }
 
-      console.log('Current price fetched:', currentPrice);
+      console.log('Market price fetched successfully');
     } catch (error) {
-      console.error('Market data error:', error);
+      console.error('Market data unavailable');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return new Response(
         JSON.stringify({ error: 'Market data unavailable', details: errorMessage }),
@@ -207,14 +200,9 @@ serve(async (req) => {
     const marginRequired = (orderRequest.quantity * contractSize * currentPrice) / leverage;
     const freeMargin = profile.equity - profile.margin_used;
 
-    console.log('Margin calculation:', {
-      marginRequired,
-      freeMargin,
-      leverage
-    });
+    console.log('Margin validation completed');
 
     if (freeMargin < marginRequired) {
-      console.error('Insufficient margin');
       return new Response(
         JSON.stringify({ 
           error: 'Insufficient margin',
@@ -245,14 +233,14 @@ serve(async (req) => {
     });
 
     if (execError) {
-      console.error('Order execution error:', execError);
+      console.error('Order execution failed');
       return new Response(
         JSON.stringify({ error: execError.message }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Order executed successfully:', result);
+    console.log('Order executed successfully');
 
     // =========================================
     // STEP 8: Return success response

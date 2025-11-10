@@ -1,10 +1,15 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const CancelOrderSchema = z.object({
+  order_id: z.string().uuid('Invalid order ID format')
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -22,23 +27,27 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      console.error('Authentication error:', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const { order_id } = await req.json();
-
-    if (!order_id) {
+    const body = await req.json();
+    const validation = CancelOrderSchema.safeParse(body);
+    
+    if (!validation.success) {
       return new Response(
-        JSON.stringify({ error: 'order_id is required' }),
+        JSON.stringify({ 
+          error: 'Invalid input', 
+          details: validation.error.format() 
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`Cancelling order ${order_id} for user ${user.id}`);
+    const { order_id } = validation.data;
+    console.log('Processing order cancellation');
 
     // Verify order belongs to user and is pending
     const { data: order, error: fetchError } = await supabase
@@ -50,7 +59,6 @@ serve(async (req) => {
       .single();
 
     if (fetchError || !order) {
-      console.error('Order fetch error:', fetchError);
       return new Response(
         JSON.stringify({ error: 'Order not found or cannot be cancelled' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -64,14 +72,14 @@ serve(async (req) => {
       .eq('id', order_id);
 
     if (updateError) {
-      console.error('Order update error:', updateError);
+      console.error('Failed to cancel order');
       return new Response(
         JSON.stringify({ error: 'Failed to cancel order' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`Order ${order_id} cancelled successfully`);
+    console.log('Order cancelled successfully');
 
     return new Response(
       JSON.stringify({ 
@@ -83,9 +91,9 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error in cancel-order');
     return new Response(
-      JSON.stringify({ error: error.message || 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
