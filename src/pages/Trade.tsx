@@ -18,8 +18,8 @@ const Trade = () => {
   return (
     <AuthenticatedLayout>
       <div className="flex-1 flex overflow-hidden h-full">
-        {/* Left Sidebar - Market Watch */}
-        <div className="w-80 border-r border-border flex-shrink-0 overflow-hidden">
+        {/* Left Sidebar - Market Watch (hidden on mobile) */}
+        <div className="hidden lg:block w-80 border-r border-border flex-shrink-0 overflow-hidden">
           <MarketWatch onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
         </div>
 
@@ -36,8 +36,8 @@ const Trade = () => {
           </div>
         </div>
 
-        {/* Right Sidebar - Analysis Tools & Trading Panel */}
-        <div className="w-96 border-l border-border flex flex-col flex-shrink-0 overflow-hidden">
+        {/* Right Sidebar - Analysis Tools & Trading Panel (hidden on mobile/tablet) */}
+        <div className="hidden md:flex w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden">
           <Tabs defaultValue="trade" className="flex-1 flex flex-col overflow-hidden">
             <TabsList className="w-full">
               <TabsTrigger value="trade" className="flex-1">Trade</TabsTrigger>

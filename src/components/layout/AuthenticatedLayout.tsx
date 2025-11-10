@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { TrendingUp, LogOut, User, LayoutDashboard, Briefcase, History, Settings, Clock, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { TrendingUp, LogOut, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "./AppSidebar";
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -12,7 +13,6 @@ interface AuthenticatedLayoutProps {
 
 const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { signOut, user } = useAuth();
 
   const handleLogout = async () => {
@@ -20,71 +20,48 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
     navigate("/login");
   };
 
-  const navItems = [
-    { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/trade", icon: TrendingUp, label: "Trade" },
-    { path: "/portfolio", icon: Briefcase, label: "Portfolio" },
-    { path: "/history", icon: History, label: "History" },
-    { path: "/pending-orders", icon: Clock, label: "Pending Orders" },
-    { path: "/risk-management", icon: Shield, label: "Risk Management" },
-    { path: "/settings", icon: Settings, label: "Settings" },
-  ];
-
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
-      {/* Top Navigation Bar */}
-      <div className="h-14 bg-card border-b border-border flex items-center justify-between px-4 flex-shrink-0">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
-            <span className="font-bold">TradeX Pro</span>
-          </div>
-          
-          <nav className="flex items-center gap-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              return (
-                <Button
-                  key={item.path}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate(item.path)}
-                  className={cn(
-                    "gap-2",
-                    isActive && "bg-primary/10 text-primary"
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Button>
-              );
-            })}
-          </nav>
-        </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        {/* Sidebar */}
+        <AppSidebar />
 
-        <div className="flex items-center gap-4">
-          <div className="text-sm">
-            <span className="text-muted-foreground">Account:</span>
-            <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <NotificationCenter />
-            <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">
-              <User className="h-4 w-4 text-primary" />
+        {/* Main Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Top Header */}
+          <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4 flex-shrink-0">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger>
+                <Menu className="h-5 w-5" />
+              </SidebarTrigger>
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                <span className="font-bold">TradeX Pro</span>
+              </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
+
+            <div className="flex items-center gap-3">
+              <div className="hidden md:block text-sm">
+                <span className="text-muted-foreground">Account:</span>
+                <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
+              </div>
+              <NotificationCenter />
+              <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <User className="h-4 w-4 text-primary" />
+              </div>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex-1 overflow-hidden">
+            {children}
+          </main>
         </div>
       </div>
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-hidden">
-        {children}
-      </main>
-    </div>
+    </SidebarProvider>
   );
 };
 
