@@ -196,6 +196,16 @@ serve(async (req) => {
 
     console.log('Position closed successfully');
 
+    // Update daily PnL tracking (async, don't await)
+    if (closeResult.realized_pnl !== 0) {
+      supabase.functions.invoke('update-daily-pnl', {
+        body: {
+          user_id: user.id,
+          realized_pnl: closeResult.realized_pnl
+        }
+      }).catch(err => console.error('Failed to update daily PnL:', err));
+    }
+
     return new Response(
       JSON.stringify({ 
         data: closeResult,

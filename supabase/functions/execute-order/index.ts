@@ -147,6 +147,74 @@ serve(async (req) => {
     }
 
     // =========================================
+    // VALIDATION STEP 5: Check Risk Limits
+    // =========================================
+    const { data: riskSettings } = await supabase
+      .from('risk_settings')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+
+    if (riskSettings) {
+      // Check position size limit
+      if (orderRequest.quantity > riskSettings.max_position_size) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Position size exceeds risk limit',
+            max_allowed: riskSettings.max_position_size,
+            requested: orderRequest.quantity
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Check max open positions
+      const { count: openPositionsCount } = await supabase
+        .from('positions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'open');
+
+      if (openPositionsCount !== null && openPositionsCount >= riskSettings.max_positions) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Maximum number of open positions reached',
+            max_positions: riskSettings.max_positions,
+            current: openPositionsCount
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Check daily trade limit
+      const { data: dailyPnl } = await supabase
+        .from('daily_pnl_tracking')
+        .select('trade_count, breached_daily_limit')
+        .eq('user_id', user.id)
+        .eq('trading_date', new Date().toISOString().split('T')[0])
+        .single();
+
+      if (dailyPnl?.breached_daily_limit) {
+        return new Response(
+          JSON.stringify({ error: 'Daily loss limit breached. Trading suspended for today.' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (dailyPnl && dailyPnl.trade_count >= riskSettings.daily_trade_limit) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Daily trade limit reached',
+            max_trades: riskSettings.daily_trade_limit
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    console.log('Risk limits validated');
+
+    // =========================================
     // STEP 5: Fetch current market price from Finnhub
     // =========================================
     const finnhubApiKey = Deno.env.get('FINNHUB_API_KEY');

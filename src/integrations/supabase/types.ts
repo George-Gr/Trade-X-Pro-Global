@@ -86,6 +86,39 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_pnl_tracking: {
+        Row: {
+          breached_daily_limit: boolean
+          created_at: string
+          id: string
+          realized_pnl: number
+          trade_count: number
+          trading_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          breached_daily_limit?: boolean
+          created_at?: string
+          id?: string
+          realized_pnl?: number
+          trade_count?: number
+          trading_date?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          breached_daily_limit?: boolean
+          created_at?: string
+          id?: string
+          realized_pnl?: number
+          trade_count?: number
+          trading_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       fills: {
         Row: {
           commission: number
@@ -436,6 +469,87 @@ export type Database = {
           margin_used?: number
           phone?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      risk_events: {
+        Row: {
+          created_at: string
+          description: string
+          details: Json | null
+          event_type: string
+          id: string
+          resolved: boolean
+          severity: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          details?: Json | null
+          event_type: string
+          id?: string
+          resolved?: boolean
+          severity: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          details?: Json | null
+          event_type?: string
+          id?: string
+          resolved?: boolean
+          severity?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      risk_settings: {
+        Row: {
+          created_at: string
+          daily_loss_limit: number
+          daily_trade_limit: number
+          enforce_stop_loss: boolean
+          id: string
+          margin_call_level: number
+          max_position_size: number
+          max_positions: number
+          max_total_exposure: number
+          min_stop_loss_distance: number
+          stop_out_level: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_loss_limit?: number
+          daily_trade_limit?: number
+          enforce_stop_loss?: boolean
+          id?: string
+          margin_call_level?: number
+          max_position_size?: number
+          max_positions?: number
+          max_total_exposure?: number
+          min_stop_loss_distance?: number
+          stop_out_level?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_loss_limit?: number
+          daily_trade_limit?: number
+          enforce_stop_loss?: boolean
+          id?: string
+          margin_call_level?: number
+          max_position_size?: number
+          max_positions?: number
+          max_total_exposure?: number
+          min_stop_loss_distance?: number
+          stop_out_level?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

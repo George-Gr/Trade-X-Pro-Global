@@ -14,6 +14,7 @@ import PendingOrders from "./pages/PendingOrders";
 import Settings from "./pages/Settings";
 import KYC from "./pages/KYC";
 import Admin from "./pages/Admin";
+import RiskManagement from "./pages/RiskManagement";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -90,6 +91,14 @@ const App = () => (
             element={
               <ProtectedRoute adminOnly>
                 <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/risk-management"
+            element={
+              <ProtectedRoute>
+                <RiskManagement />
               </ProtectedRoute>
             }
           />

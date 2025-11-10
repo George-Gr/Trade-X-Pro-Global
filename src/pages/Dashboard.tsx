@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import Watchlist from "@/components/trading/Watchlist";
+import { RiskAlerts } from "@/components/risk/RiskAlerts";
+import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -76,6 +78,14 @@ const Dashboard = () => {
                 </Card>
               );
             })}
+          </div>
+
+          {/* Risk Management Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <MarginLevelIndicator />
+            <div>
+              <RiskAlerts />
+            </div>
           </div>
 
           {/* Quick Actions */}
