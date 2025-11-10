@@ -74,6 +74,22 @@ serve(async (req) => {
 
     console.log('User authenticated');
 
+    // Check rate limit: 10 requests per minute
+    const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
+      p_user_id: user.id,
+      p_endpoint: 'execute-order',
+      p_max_requests: 10,
+      p_window_seconds: 60
+    });
+
+    if (!rateLimitOk) {
+      console.log('Rate limit exceeded for user');
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait before placing another order.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } }
+      );
+    }
+
     // Parse and validate request body
     const body = await req.json();
     const validation = OrderRequestSchema.safeParse(body);

@@ -59,6 +59,22 @@ serve(async (req) => {
       );
     }
 
+    // Check rate limit: 3 requests per 5 minutes for admin operations
+    const { data: rateLimitOk } = await supabaseClient.rpc('check_rate_limit', {
+      p_user_id: user.id,
+      p_endpoint: 'admin-fund-account',
+      p_max_requests: 3,
+      p_window_seconds: 300
+    });
+
+    if (!rateLimitOk) {
+      console.log('Rate limit exceeded for admin user');
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait before performing another funding operation.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '300' } }
+      );
+    }
+
     // Parse and validate request body
     const body = await req.json();
     const validation = FundAccountSchema.safeParse(body);

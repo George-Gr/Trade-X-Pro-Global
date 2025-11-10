@@ -45,6 +45,22 @@ serve(async (req) => {
       );
     }
 
+    // Check rate limit: 5 requests per minute
+    const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
+      p_user_id: user.id,
+      p_endpoint: 'send-notification',
+      p_max_requests: 5,
+      p_window_seconds: 60
+    });
+
+    if (!rateLimitOk) {
+      console.log('Rate limit exceeded for user');
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait before sending another notification.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } }
+      );
+    }
+
     // Parse and validate request body
     const body = await req.json();
     const validation = NotificationRequestSchema.safeParse(body);
