@@ -24,8 +24,12 @@ interface TradingPanelProps {
 }
 
 const TradingPanel = ({ symbol }: TradingPanelProps) => {
+  const [orderType, setOrderType] = useState<'market' | 'limit' | 'stop' | 'stop_limit'>('market');
   const [volume, setVolume] = useState("0.01");
   const [leverage, setLeverage] = useState("100");
+  const [limitPrice, setLimitPrice] = useState("");
+  const [stopPrice, setStopPrice] = useState("");
+  const [stopLimitPrice, setStopLimitPrice] = useState("");
   const [stopLoss, setStopLoss] = useState("");
   const [takeProfit, setTakeProfit] = useState("");
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -81,6 +85,34 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       return "Maximum volume is 1000 lots";
     }
     
+    // Validate limit price for limit orders
+    if (orderType === 'limit') {
+      const price = parseFloat(limitPrice);
+      if (isNaN(price) || price <= 0) {
+        return "Please enter a valid limit price";
+      }
+    }
+    
+    // Validate stop price for stop orders
+    if (orderType === 'stop') {
+      const price = parseFloat(stopPrice);
+      if (isNaN(price) || price <= 0) {
+        return "Please enter a valid stop price";
+      }
+    }
+    
+    // Validate stop limit order prices
+    if (orderType === 'stop_limit') {
+      const sPrice = parseFloat(stopPrice);
+      const lPrice = parseFloat(stopLimitPrice);
+      if (isNaN(sPrice) || sPrice <= 0) {
+        return "Please enter a valid stop price";
+      }
+      if (isNaN(lPrice) || lPrice <= 0) {
+        return "Please enter a valid limit price";
+      }
+    }
+    
     if (stopLoss) {
       const sl = parseFloat(stopLoss);
       if (isNaN(sl) || sl <= 0) {
@@ -120,11 +152,22 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     
     setConfirmDialogOpen(false);
     
+    // Determine price based on order type
+    let orderPrice: number | undefined;
+    if (orderType === 'limit') {
+      orderPrice = parseFloat(limitPrice);
+    } else if (orderType === 'stop') {
+      orderPrice = parseFloat(stopPrice);
+    } else if (orderType === 'stop_limit') {
+      orderPrice = parseFloat(stopLimitPrice);
+    }
+    
     const result = await executeOrder({
       symbol,
-      order_type: 'market',
+      order_type: orderType,
       side: pendingOrder.side,
       quantity: parseFloat(volume),
+      price: orderPrice,
       stop_loss: stopLoss ? parseFloat(stopLoss) : undefined,
       take_profit: takeProfit ? parseFloat(takeProfit) : undefined,
     });
@@ -132,6 +175,9 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     if (result) {
       // Clear form on success
       setVolume("0.01");
+      setLimitPrice("");
+      setStopPrice("");
+      setStopLimitPrice("");
       setStopLoss("");
       setTakeProfit("");
     }
@@ -152,11 +198,12 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       </div>
 
       <div className="p-4 space-y-4">
-        <Tabs defaultValue="market" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="market" className="w-full" onValueChange={(v) => setOrderType(v as any)}>
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="market">Market</TabsTrigger>
             <TabsTrigger value="limit">Limit</TabsTrigger>
             <TabsTrigger value="stop">Stop</TabsTrigger>
+            <TabsTrigger value="stop_limit">Stop Limit</TabsTrigger>
           </TabsList>
 
           <TabsContent value="market" className="space-y-4 mt-4">
@@ -296,16 +343,418 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
           </TabsContent>
 
           <TabsContent value="limit" className="space-y-4 mt-4">
-            <div className="text-center py-8 text-muted-foreground">
-              <p className="text-sm">Limit order functionality</p>
-              <p className="text-xs mt-1">Coming soon</p>
+            <div className="space-y-2">
+              <Label>Limit Price</Label>
+              <Input
+                type="number"
+                value={limitPrice}
+                onChange={(e) => setLimitPrice(e.target.value)}
+                step="0.0001"
+                placeholder={`e.g., ${currentPrice.toFixed(5)}`}
+              />
+              <p className="text-xs text-muted-foreground">
+                Order will execute when market reaches this price
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Volume (Lots)</Label>
+              <Input
+                type="number"
+                value={volume}
+                onChange={(e) => setVolume(e.target.value)}
+                step="0.01"
+                min="0.01"
+                placeholder="0.01"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Leverage</Label>
+              <Select value={leverage} onValueChange={setLeverage}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">1:30</SelectItem>
+                  <SelectItem value="50">1:50</SelectItem>
+                  <SelectItem value="100">1:100</SelectItem>
+                  <SelectItem value="200">1:200</SelectItem>
+                  <SelectItem value="500">1:500</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label>Stop Loss</Label>
+                <Input
+                  type="number"
+                  value={stopLoss}
+                  onChange={(e) => setStopLoss(e.target.value)}
+                  placeholder="Optional"
+                  step="0.0001"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Take Profit</Label>
+                <Input
+                  type="number"
+                  value={takeProfit}
+                  onChange={(e) => setTakeProfit(e.target.value)}
+                  placeholder="Optional"
+                  step="0.0001"
+                />
+              </div>
+            </div>
+
+            {/* Live Price Display */}
+            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Current Market Price</span>
+                {isPriceLoading && (
+                  <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">BID</div>
+                  <div className="text-lg font-mono font-semibold text-sell">
+                    {bid.toFixed(5)}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">ASK</div>
+                  <div className="text-lg font-mono font-semibold text-buy">
+                    {ask.toFixed(5)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Margin Required:</span>
+                <span className="font-semibold">${marginRequired.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Pip Value:</span>
+                <span className="font-semibold">${pipValue.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Button
+                onClick={() => handleTrade("sell")}
+                disabled={isExecuting}
+                className="bg-sell hover:bg-sell-hover text-sell-foreground h-12 font-semibold"
+              >
+                {isExecuting && pendingOrder?.side === "sell" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Placing...
+                  </>
+                ) : (
+                  "SELL LIMIT"
+                )}
+              </Button>
+              <Button
+                onClick={() => handleTrade("buy")}
+                disabled={isExecuting}
+                className="bg-buy hover:bg-buy-hover text-buy-foreground h-12 font-semibold"
+              >
+                {isExecuting && pendingOrder?.side === "buy" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Placing...
+                  </>
+                ) : (
+                  "BUY LIMIT"
+                )}
+              </Button>
             </div>
           </TabsContent>
 
           <TabsContent value="stop" className="space-y-4 mt-4">
-            <div className="text-center py-8 text-muted-foreground">
-              <p className="text-sm">Stop order functionality</p>
-              <p className="text-xs mt-1">Coming soon</p>
+            <div className="space-y-2">
+              <Label>Stop Price</Label>
+              <Input
+                type="number"
+                value={stopPrice}
+                onChange={(e) => setStopPrice(e.target.value)}
+                step="0.0001"
+                placeholder={`e.g., ${currentPrice.toFixed(5)}`}
+              />
+              <p className="text-xs text-muted-foreground">
+                Market order triggers when price reaches this level
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Volume (Lots)</Label>
+              <Input
+                type="number"
+                value={volume}
+                onChange={(e) => setVolume(e.target.value)}
+                step="0.01"
+                min="0.01"
+                placeholder="0.01"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Leverage</Label>
+              <Select value={leverage} onValueChange={setLeverage}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">1:30</SelectItem>
+                  <SelectItem value="50">1:50</SelectItem>
+                  <SelectItem value="100">1:100</SelectItem>
+                  <SelectItem value="200">1:200</SelectItem>
+                  <SelectItem value="500">1:500</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label>Stop Loss</Label>
+                <Input
+                  type="number"
+                  value={stopLoss}
+                  onChange={(e) => setStopLoss(e.target.value)}
+                  placeholder="Optional"
+                  step="0.0001"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Take Profit</Label>
+                <Input
+                  type="number"
+                  value={takeProfit}
+                  onChange={(e) => setTakeProfit(e.target.value)}
+                  placeholder="Optional"
+                  step="0.0001"
+                />
+              </div>
+            </div>
+
+            {/* Live Price Display */}
+            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Current Market Price</span>
+                {isPriceLoading && (
+                  <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">BID</div>
+                  <div className="text-lg font-mono font-semibold text-sell">
+                    {bid.toFixed(5)}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">ASK</div>
+                  <div className="text-lg font-mono font-semibold text-buy">
+                    {ask.toFixed(5)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Margin Required:</span>
+                <span className="font-semibold">${marginRequired.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Pip Value:</span>
+                <span className="font-semibold">${pipValue.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Button
+                onClick={() => handleTrade("sell")}
+                disabled={isExecuting}
+                className="bg-sell hover:bg-sell-hover text-sell-foreground h-12 font-semibold"
+              >
+                {isExecuting && pendingOrder?.side === "sell" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Placing...
+                  </>
+                ) : (
+                  "SELL STOP"
+                )}
+              </Button>
+              <Button
+                onClick={() => handleTrade("buy")}
+                disabled={isExecuting}
+                className="bg-buy hover:bg-buy-hover text-buy-foreground h-12 font-semibold"
+              >
+                {isExecuting && pendingOrder?.side === "buy" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Placing...
+                  </>
+                ) : (
+                  "BUY STOP"
+                )}
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="stop_limit" className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label>Stop Price</Label>
+              <Input
+                type="number"
+                value={stopPrice}
+                onChange={(e) => setStopPrice(e.target.value)}
+                step="0.0001"
+                placeholder={`e.g., ${currentPrice.toFixed(5)}`}
+              />
+              <p className="text-xs text-muted-foreground">
+                Limit order triggers when price reaches this level
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Limit Price</Label>
+              <Input
+                type="number"
+                value={stopLimitPrice}
+                onChange={(e) => setStopLimitPrice(e.target.value)}
+                step="0.0001"
+                placeholder={`e.g., ${currentPrice.toFixed(5)}`}
+              />
+              <p className="text-xs text-muted-foreground">
+                Order executes at this price once triggered
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Volume (Lots)</Label>
+              <Input
+                type="number"
+                value={volume}
+                onChange={(e) => setVolume(e.target.value)}
+                step="0.01"
+                min="0.01"
+                placeholder="0.01"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Leverage</Label>
+              <Select value={leverage} onValueChange={setLeverage}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">1:30</SelectItem>
+                  <SelectItem value="50">1:50</SelectItem>
+                  <SelectItem value="100">1:100</SelectItem>
+                  <SelectItem value="200">1:200</SelectItem>
+                  <SelectItem value="500">1:500</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label>Stop Loss</Label>
+                <Input
+                  type="number"
+                  value={stopLoss}
+                  onChange={(e) => setStopLoss(e.target.value)}
+                  placeholder="Optional"
+                  step="0.0001"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Take Profit</Label>
+                <Input
+                  type="number"
+                  value={takeProfit}
+                  onChange={(e) => setTakeProfit(e.target.value)}
+                  placeholder="Optional"
+                  step="0.0001"
+                />
+              </div>
+            </div>
+
+            {/* Live Price Display */}
+            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Current Market Price</span>
+                {isPriceLoading && (
+                  <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">BID</div>
+                  <div className="text-lg font-mono font-semibold text-sell">
+                    {bid.toFixed(5)}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">ASK</div>
+                  <div className="text-lg font-mono font-semibold text-buy">
+                    {ask.toFixed(5)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Margin Required:</span>
+                <span className="font-semibold">${marginRequired.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Pip Value:</span>
+                <span className="font-semibold">${pipValue.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Button
+                onClick={() => handleTrade("sell")}
+                disabled={isExecuting}
+                className="bg-sell hover:bg-sell-hover text-sell-foreground h-12 font-semibold"
+              >
+                {isExecuting && pendingOrder?.side === "sell" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Placing...
+                  </>
+                ) : (
+                  "SELL STOP LIMIT"
+                )}
+              </Button>
+              <Button
+                onClick={() => handleTrade("buy")}
+                disabled={isExecuting}
+                className="bg-buy hover:bg-buy-hover text-buy-foreground h-12 font-semibold"
+              >
+                {isExecuting && pendingOrder?.side === "buy" ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Placing...
+                  </>
+                ) : (
+                  "BUY STOP LIMIT"
+                )}
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
@@ -336,8 +785,32 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Order Type:</span>
-                    <span className="font-semibold">Market</span>
+                    <span className="font-semibold capitalize">{orderType.replace('_', ' ')}</span>
                   </div>
+                  {orderType === 'limit' && limitPrice && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Limit Price:</span>
+                      <span className="font-semibold">{limitPrice}</span>
+                    </div>
+                  )}
+                  {orderType === 'stop' && stopPrice && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Stop Price:</span>
+                      <span className="font-semibold">{stopPrice}</span>
+                    </div>
+                  )}
+                  {orderType === 'stop_limit' && (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Stop Price:</span>
+                        <span className="font-semibold">{stopPrice}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Limit Price:</span>
+                        <span className="font-semibold">{stopLimitPrice}</span>
+                      </div>
+                    </>
+                  )}
                   {stopLoss && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Stop Loss:</span>
@@ -356,7 +829,14 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  This order will be executed at the current market price. Are you sure you want to proceed?
+                  {orderType === 'market' 
+                    ? 'This order will be executed at the current market price.'
+                    : orderType === 'limit'
+                    ? 'This limit order will execute when the market reaches your specified price.'
+                    : orderType === 'stop'
+                    ? 'This stop order will trigger a market order when the stop price is reached.'
+                    : 'This stop limit order will trigger a limit order when the stop price is reached.'}
+                  {' '}Are you sure you want to proceed?
                 </p>
               </div>
             </AlertDialogDescription>
