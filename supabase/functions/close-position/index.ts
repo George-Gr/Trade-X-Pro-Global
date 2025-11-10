@@ -1,17 +1,24 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface ClosePositionRequest {
-  position_id: string;
-  quantity?: number; // Optional - if not provided, closes entire position
-  idempotency_key: string;
-}
+const ClosePositionSchema = z.object({
+  position_id: z.string()
+    .uuid('Invalid position ID format'),
+  quantity: z.number()
+    .positive('Quantity must be positive')
+    .finite('Quantity must be finite')
+    .max(10000, 'Quantity too large')
+    .optional(),
+  idempotency_key: z.string()
+    .min(1, 'Idempotency key required')
+});
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -41,15 +48,22 @@ serve(async (req) => {
 
     console.log('Processing position closure');
 
-    // Get request body
-    const { position_id, quantity, idempotency_key }: ClosePositionRequest = await req.json();
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = ClosePositionSchema.safeParse(body);
 
-    if (!position_id || !idempotency_key) {
+    if (!validation.success) {
+      console.error('Input validation failed:', validation.error);
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: position_id, idempotency_key' }),
+        JSON.stringify({ 
+          error: 'Invalid input', 
+          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { position_id, quantity, idempotency_key } = validation.data;
 
     // Check user's KYC and account status
     const { data: profile, error: profileError } = await supabase

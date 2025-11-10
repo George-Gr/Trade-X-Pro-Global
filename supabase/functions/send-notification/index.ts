@@ -1,22 +1,20 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { Resend } from "npm:resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface NotificationRequest {
-  user_id: string;
-  type: string;
-  title: string;
-  message: string;
-  data?: Record<string, any>;
-  send_email?: boolean;
-}
+const NotificationRequestSchema = z.object({
+  user_id: z.string().uuid('Invalid user ID format'),
+  type: z.string().min(1, 'Type required').max(50, 'Type too long'),
+  title: z.string().min(1, 'Title required').max(200, 'Title too long'),
+  message: z.string().min(1, 'Message required').max(2000, 'Message too long'),
+  data: z.record(z.any()).optional(),
+  send_email: z.boolean().optional().default(true)
+});
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -28,7 +26,58 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { user_id, type, title, message, data, send_email = true }: NotificationRequest = await req.json();
+    // Authenticate the request
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = NotificationRequestSchema.safeParse(body);
+
+    if (!validation.success) {
+      console.error('Input validation failed:', validation.error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid input', 
+          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { user_id, type, title, message, data, send_email } = validation.data;
+
+    // Ensure caller can only send to themselves (unless admin)
+    if (user_id !== user.id) {
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .single();
+        
+      if (!roleData) {
+        return new Response(
+          JSON.stringify({ error: 'Forbidden: Can only send notifications to yourself' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
 
     console.log("Creating notification:", { user_id, type, title });
 
@@ -80,19 +129,36 @@ serve(async (req) => {
       throw notificationError;
     }
 
-    // Send email if enabled
+    // Send email if enabled using Resend API directly
     if (send_email && preferences?.email_enabled) {
       try {
-        const emailHtml = generateEmailHtml(title, message, data);
-        
-        await resend.emails.send({
-          from: "Trading Platform <notifications@resend.dev>",
-          to: [profile.email],
-          subject: title,
-          html: emailHtml,
-        });
+        const resendApiKey = Deno.env.get("RESEND_API_KEY");
+        if (!resendApiKey) {
+          console.warn("RESEND_API_KEY not configured, skipping email");
+        } else {
+          const emailHtml = generateEmailHtml(title, message, data);
+          
+          const emailResponse = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${resendApiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: "Trading Platform <notifications@resend.dev>",
+              to: [profile.email],
+              subject: title,
+              html: emailHtml,
+            }),
+          });
 
-        console.log("Email sent successfully to:", profile.email);
+          if (!emailResponse.ok) {
+            const errorData = await emailResponse.text();
+            console.error("Error sending email:", errorData);
+          } else {
+            console.log("Email sent successfully to:", profile.email);
+          }
+        }
       } catch (emailError) {
         console.error("Error sending email:", emailError);
         // Don't throw - notification was created, email is optional
@@ -133,6 +199,19 @@ function checkNotificationEnabled(type: string, preferences: any): boolean {
 }
 
 function generateEmailHtml(title: string, message: string, data?: Record<string, any>): string {
+  // Escape HTML to prevent XSS
+  const escapeHtml = (unsafe: string) => {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+  const safeTitle = escapeHtml(title);
+  const safeMessage = escapeHtml(message);
+
   return `
     <!DOCTYPE html>
     <html>
@@ -152,16 +231,16 @@ function generateEmailHtml(title: string, message: string, data?: Record<string,
       <body>
         <div class="container">
           <div class="header">
-            <h1 style="margin: 0;">${title}</h1>
+            <h1 style="margin: 0;">${safeTitle}</h1>
           </div>
           <div class="content">
-            <p>${message}</p>
+            <p>${safeMessage}</p>
             ${data ? `
               <div class="data">
                 <h3 style="margin-top: 0;">Details:</h3>
                 ${Object.entries(data).map(([key, value]) => `
                   <div class="data-item">
-                    <span class="label">${formatLabel(key)}:</span> ${formatValue(value)}
+                    <span class="label">${escapeHtml(formatLabel(key))}:</span> ${escapeHtml(formatValue(value))}
                   </div>
                 `).join('')}
               </div>

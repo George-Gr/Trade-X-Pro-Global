@@ -1,21 +1,43 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface OrderRequest {
-  symbol: string;
-  order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
-  side: 'buy' | 'sell';
-  quantity: number;
-  price?: number;
-  stop_loss?: number;
-  take_profit?: number;
-  idempotency_key: string;
-}
+const OrderRequestSchema = z.object({
+  symbol: z.string()
+    .trim()
+    .min(1, 'Symbol required')
+    .max(20, 'Symbol too long')
+    .regex(/^[A-Z0-9_]+$/, 'Invalid symbol format'),
+  order_type: z.enum(['market', 'limit', 'stop', 'stop_limit'], {
+    errorMap: () => ({ message: 'Invalid order type' })
+  }),
+  side: z.enum(['buy', 'sell'], {
+    errorMap: () => ({ message: 'Invalid side' })
+  }),
+  quantity: z.number()
+    .positive('Quantity must be positive')
+    .finite('Quantity must be finite')
+    .max(10000, 'Quantity too large'),
+  price: z.number()
+    .positive('Price must be positive')
+    .finite('Price must be finite')
+    .optional(),
+  stop_loss: z.number()
+    .positive('Stop loss must be positive')
+    .finite('Stop loss must be finite')
+    .optional(),
+  take_profit: z.number()
+    .positive('Take profit must be positive')
+    .finite('Take profit must be finite')
+    .optional(),
+  idempotency_key: z.string()
+    .min(1, 'Idempotency key required')
+});
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -52,9 +74,23 @@ serve(async (req) => {
 
     console.log('User authenticated');
 
-    // Parse request body
-    const orderRequest: OrderRequest = await req.json();
-    console.log('Order request received:', orderRequest.order_type, orderRequest.side);
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = OrderRequestSchema.safeParse(body);
+
+    if (!validation.success) {
+      console.error('Input validation failed:', validation.error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid input', 
+          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const orderRequest = validation.data;
+    console.log('Order request validated:', orderRequest.order_type, orderRequest.side);
 
     // =========================================
     // VALIDATION STEP 1: Check user profile and KYC status
