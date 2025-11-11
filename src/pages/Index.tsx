@@ -15,7 +15,8 @@ import {
   ArrowRight,
   Users
 } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { PublicHeader } from "@/components/layout/PublicHeader";
+import { PublicFooter } from "@/components/layout/PublicFooter";
 import heroImage from "@/assets/hero-trading.jpg";
 import securityBg from "@/assets/security-bg.jpg";
 import globalMarketsMap from "@/assets/global-markets-map.jpg";
@@ -23,45 +24,7 @@ import globalMarketsMap from "@/assets/global-markets-map.jpg";
 export default function Index() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                TradeX Pro
-              </span>
-            </div>
-            
-            <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Features
-              </a>
-              <a href="#advantages" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Advantages
-              </a>
-              <a href="#security" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Security
-              </a>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
-              <Link to="/login">
-                <Button variant="ghost" size="sm">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button size="sm" className="bg-gradient-to-r from-primary to-primary-glow">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <PublicHeader />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">

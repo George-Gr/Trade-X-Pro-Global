@@ -21,6 +21,16 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 
+// Legal Pages
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import Terms from "./pages/legal/Terms";
+import RiskDisclosure from "./pages/legal/RiskDisclosure";
+import CookiePolicy from "./pages/legal/CookiePolicy";
+import AMLPolicy from "./pages/legal/AMLPolicy";
+
+// Trading Pages
+import TradingInstruments from "./pages/trading/TradingInstruments";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -34,6 +44,16 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          
+          {/* Legal Pages */}
+          <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/legal/terms" element={<Terms />} />
+          <Route path="/legal/risk-disclosure" element={<RiskDisclosure />} />
+          <Route path="/legal/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/legal/aml-policy" element={<AMLPolicy />} />
+          
+          {/* Public Trading Pages */}
+          <Route path="/trading/instruments" element={<TradingInstruments />} />
           <Route
             path="/dashboard"
             element={
