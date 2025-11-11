@@ -18,6 +18,7 @@ import {
 import { ThemeToggle } from "@/components/ThemeToggle";
 import heroImage from "@/assets/hero-trading.jpg";
 import securityBg from "@/assets/security-bg.jpg";
+import globalMarketsMap from "@/assets/global-markets-map.jpg";
 
 export default function Index() {
   return (
@@ -72,7 +73,7 @@ export default function Index() {
             backgroundPosition: 'center',
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/90 to-primary-glow/90 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/60 to-primary-glow/65" />
         </div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -257,6 +258,78 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Global Markets Section */}
+      <section 
+        className="py-20 relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${globalMarketsMap})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              Trade Global Markets
+              <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                Across 5 Asset Classes
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Access 500+ instruments across forex, stocks, indices, commodities, and cryptocurrencies
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-5 gap-6 max-w-5xl mx-auto">
+            {[
+              {
+                title: "Forex",
+                description: "Major, minor & exotic currency pairs",
+                instruments: "50+ Pairs",
+                icon: Globe
+              },
+              {
+                title: "Stocks",
+                description: "Global equities from major exchanges",
+                instruments: "200+ Stocks",
+                icon: TrendingUp
+              },
+              {
+                title: "Indices",
+                description: "Major stock market indices worldwide",
+                instruments: "20+ Indices",
+                icon: BarChart3
+              },
+              {
+                title: "Commodities",
+                description: "Precious metals, energy & agriculture",
+                instruments: "30+ Commodities",
+                icon: LineChart
+              },
+              {
+                title: "Crypto",
+                description: "Major cryptocurrencies & tokens",
+                instruments: "50+ Cryptos",
+                icon: Zap
+              }
+            ].map((asset, index) => (
+              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card/80 backdrop-blur-sm">
+                <CardContent className="p-6 text-center">
+                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
+                    <asset.icon className="h-7 w-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{asset.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{asset.description}</p>
+                  <div className="text-sm font-semibold text-primary">{asset.instruments}</div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Trust & Security Section */}
       <section 
         id="security" 
@@ -336,6 +409,89 @@ export default function Index() {
             <p className="text-white/70 mt-6 text-sm">
               No credit card required • Setup in 2 minutes • Start trading immediately
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Partners Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              Our
+              <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent"> Partners</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Trusted integrations powering your trading experience
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto">
+            {/* Payment Partners */}
+            <div className="mb-12">
+              <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Payment Methods</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {[
+                  { name: "Visa", icon: "💳" },
+                  { name: "Mastercard", icon: "💳" },
+                  { name: "Google Pay", icon: "📱" },
+                  { name: "PhonePe", icon: "📱" },
+                  { name: "UPI", icon: "💸" },
+                  { name: "NowPayments", icon: "🔐" }
+                ].map((partner, index) => (
+                  <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card">
+                    <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
+                      <div className="text-4xl mb-2">{partner.icon}</div>
+                      <p className="text-sm font-semibold text-center">{partner.name}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Crypto Partners */}
+            <div className="mb-12">
+              <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Cryptocurrency</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+                {[
+                  { name: "Bitcoin", icon: "₿", color: "from-orange-500 to-orange-600" },
+                  { name: "Ethereum", icon: "Ξ", color: "from-blue-500 to-purple-600" },
+                  { name: "Tether", icon: "₮", color: "from-green-500 to-green-600" }
+                ].map((partner, index) => (
+                  <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card">
+                    <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
+                      <div className={`text-4xl font-bold bg-gradient-to-r ${partner.color} bg-clip-text text-transparent mb-2`}>
+                        {partner.icon}
+                      </div>
+                      <p className="text-sm font-semibold text-center">{partner.name}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Trading Platforms */}
+            <div>
+              <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Trading Platforms</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                {[
+                  { name: "TradingView", icon: LineChart, description: "Advanced charting & analysis" },
+                  { name: "MetaTrader", icon: BarChart3, description: "Professional trading platform" }
+                ].map((partner, index) => (
+                  <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card">
+                    <CardContent className="p-6 flex items-center gap-4">
+                      <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center flex-shrink-0">
+                        <partner.icon className="h-7 w-7 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-lg">{partner.name}</p>
+                        <p className="text-sm text-muted-foreground">{partner.description}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
