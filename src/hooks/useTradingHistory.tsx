@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 
@@ -63,7 +63,7 @@ export const useTradingHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTradingHistory = async () => {
+  const fetchTradingHistory = useCallback(async () => {
     if (!user) {
       setLoading(false);
       return;
@@ -127,7 +127,7 @@ export const useTradingHistory = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   const calculateStatistics = (trades: TradeHistoryItem[]): TradeStatistics => {
     if (trades.length === 0) {
@@ -209,7 +209,7 @@ export const useTradingHistory = () => {
       supabase.removeChannel(positionsChannel);
       supabase.removeChannel(ordersChannel);
     };
-  }, [user]);
+  }, [user, fetchTradingHistory]);
 
   return {
     closedPositions,

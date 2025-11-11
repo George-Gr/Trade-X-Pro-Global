@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useNotifications } from "@/contexts/NotificationContext";
+import { useNotifications } from "@/contexts/notificationContextHelpers";
 import { formatDistanceToNow } from "date-fns";
 
 interface Notification {
@@ -19,7 +19,7 @@ interface Notification {
   type: string;
   title: string;
   message: string;
-  data: any;
+  data: unknown;
   read: boolean;
   created_at: string;
 }
@@ -29,6 +29,22 @@ export function NotificationCenter() {
   const { unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const fetchNotifications = useCallback(async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (!error && data) {
+      setNotifications(data);
+    }
+    setLoading(false);
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -54,23 +70,7 @@ export function NotificationCenter() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user]);
-
-  const fetchNotifications = async () => {
-    if (!user) return;
-
-    const { data, error } = await supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    if (!error && data) {
-      setNotifications(data);
-    }
-    setLoading(false);
-  };
+  }, [user, fetchNotifications]);
 
   const handleMarkAsRead = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();

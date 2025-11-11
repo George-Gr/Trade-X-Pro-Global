@@ -1,15 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
-interface NotificationContextType {
-  unreadCount: number;
-  markAsRead: (id: string) => Promise<void>;
-  markAllAsRead: () => Promise<void>;
-}
-
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+import { NotificationContext } from "./notificationContextHelpers";
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
@@ -32,6 +26,48 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     fetchUnreadCount();
 
+    // Types for Supabase payloads we consume. Keep these minimal and optional
+    // so they cover the fields we access without being overly strict.
+    type SupabaseNotification = {
+      id?: string;
+      title?: string;
+      message?: string;
+      read?: boolean;
+      created_at?: string;
+    };
+
+    type SupabaseOrder = {
+      id?: string;
+      status?: string;
+      side?: string;
+      quantity?: number | string;
+      symbol?: string;
+      fill_price?: number | string;
+    };
+
+    type SupabasePosition = {
+      id?: string;
+      status?: string;
+      side?: string;
+      symbol?: string;
+      realized_pnl?: number;
+    };
+
+    type SupabaseKycDoc = {
+      id?: string;
+      status?: string;
+      document_type?: string;
+      rejection_reason?: string;
+    };
+
+    type SupabaseRiskEvent = {
+      id?: string;
+      event_type?: string;
+      description?: string;
+      severity?: string;
+      details?: unknown;
+    };
+
     // Subscribe to new notifications
     const channel = supabase
       .channel("notifications-channel")
@@ -44,7 +80,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          const notification = payload.new as any;
+          const notification = payload.new as SupabaseNotification;
           
           // Show toast notification
           toast({
@@ -65,7 +101,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          const notification = payload.new as any;
+          const notification = payload.new as SupabaseNotification;
           if (notification.read) {
             setUnreadCount((prev) => Math.max(0, prev - 1));
           }
@@ -85,7 +121,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
-          const order = payload.new as any;
+          const order = payload.new as SupabaseOrder;
           if (order.status === "filled") {
             await supabase.functions.invoke("send-notification", {
               body: {
@@ -119,8 +155,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
-          const position = payload.new as any;
-          const oldPosition = payload.old as any;
+          const position = payload.new as SupabasePosition;
+          const oldPosition = payload.old as SupabasePosition;
 
           // Notify on position close
           if (oldPosition.status === "open" && position.status === "closed") {
@@ -155,8 +191,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
-          const doc = payload.new as any;
-          const oldDoc = payload.old as any;
+          const doc = payload.new as SupabaseKycDoc;
+          const oldDoc = payload.old as SupabaseKycDoc;
 
           if (oldDoc.status !== doc.status) {
             await supabase.functions.invoke("send-notification", {
@@ -190,7 +226,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
-          const event = payload.new as any;
+          const event = payload.new as SupabaseRiskEvent;
           
           await supabase.functions.invoke("send-notification", {
             body: {
@@ -248,10 +284,10 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   );
 }
 
-export function useNotifications() {
-  const context = useContext(NotificationContext);
-  if (context === undefined) {
-    throw new Error("useNotifications must be used within a NotificationProvider");
-  }
-  return context;
-}
+// The `useNotifications` hook is exported from `notificationContextHelpers.tsx`.
+
+// Re-export for backwards compatibility so imports from
+// `@/contexts/NotificationContext` continue to work.
+// NOTE: `useNotifications` is exported from `notificationContextHelpers.tsx`.
+// We intentionally do NOT re-export it here to keep this file exporting only
+// the React provider component (avoids react-refresh warnings).

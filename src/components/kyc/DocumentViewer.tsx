@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, FileText, Download } from "lucide-react";
@@ -15,19 +15,7 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
   const [isLoading, setIsLoading] = useState(true);
   const [fileType, setFileType] = useState<string>("");
 
-  useEffect(() => {
-    if (open && filePath) {
-      loadDocument();
-    }
-
-    return () => {
-      if (fileUrl) {
-        URL.revokeObjectURL(fileUrl);
-      }
-    };
-  }, [open, filePath]);
-
-  const loadDocument = async () => {
+  const loadDocument = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.storage
@@ -38,7 +26,7 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
 
       const url = URL.createObjectURL(data);
       setFileUrl(url);
-      
+
       // Determine file type from extension
       const ext = filePath.split(".").pop()?.toLowerCase();
       setFileType(ext || "");
@@ -47,7 +35,22 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filePath]);
+
+  useEffect(() => {
+    // Only load when dialog is open and we don't already have the file URL
+    if (open && filePath && !fileUrl) {
+      loadDocument();
+    }
+
+    // Capture the current fileUrl for cleanup to avoid stale-ref warnings
+    const currentUrl = fileUrl;
+    return () => {
+      if (currentUrl) {
+        URL.revokeObjectURL(currentUrl);
+      }
+    };
+  }, [open, filePath, fileUrl, loadDocument]);
 
   const handleDownload = () => {
     if (fileUrl) {

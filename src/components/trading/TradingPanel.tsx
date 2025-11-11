@@ -291,7 +291,11 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       </div>
 
       <div className="p-4 space-y-4">
-        <Tabs defaultValue="market" className="w-full" onValueChange={(v) => setOrderType(v as any)}>
+          <Tabs
+            defaultValue="market"
+            className="w-full"
+            onValueChange={(v) => setOrderType(v as 'market' | 'limit' | 'stop' | 'stop_limit')}
+          >
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="market">Market</TabsTrigger>
             <TabsTrigger value="limit">Limit</TabsTrigger>

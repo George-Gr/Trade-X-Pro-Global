@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import type { Position } from "@/integrations/supabase/types/tables";
@@ -27,7 +27,7 @@ export const usePortfolioData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPortfolioData = async () => {
+  const fetchPortfolioData = useCallback(async () => {
     if (!user) {
       setLoading(false);
       return;
@@ -62,7 +62,7 @@ export const usePortfolioData = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchPortfolioData();
@@ -82,7 +82,7 @@ export const usePortfolioData = () => {
           fetchPortfolioData();
         }
       )
-      .subscribe();
+  .subscribe();
 
     // Set up real-time subscription for profile updates
     const profileChannel = supabase
@@ -99,24 +99,24 @@ export const usePortfolioData = () => {
           fetchPortfolioData();
         }
       )
-      .subscribe();
+  .subscribe();
 
     return () => {
       supabase.removeChannel(positionsChannel);
       supabase.removeChannel(profileChannel);
     };
-  }, [user]);
+  }, [user, fetchPortfolioData]);
 
-  const calculateUnrealizedPnL = (position: Position, currentPrice: number): number => {
+  const calculateUnrealizedPnL = useCallback((position: Position, currentPrice: number): number => {
     const contractSize = 100000;
     const priceDiff = position.side === "buy"
       ? currentPrice - position.entry_price
       : position.entry_price - currentPrice;
-    
-    return priceDiff * position.quantity * contractSize;
-  };
 
-  const updatePositionPrices = (pricesMap: Map<string, { currentPrice: number }>) => {
+    return priceDiff * position.quantity * contractSize;
+  }, []);
+
+  const updatePositionPrices = useCallback((pricesMap: Map<string, { currentPrice: number }>) => {
     setPositions((prevPositions) =>
       prevPositions.map((position) => {
         const priceData = pricesMap.get(position.symbol);
@@ -127,7 +127,7 @@ export const usePortfolioData = () => {
         return position;
       })
     );
-  };
+  }, [calculateUnrealizedPnL]);
 
   const getTotalUnrealizedPnL = (): number => {
     return positions.reduce((sum, pos) => sum + (pos.unrealized_pnl || 0), 0);

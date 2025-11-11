@@ -4,9 +4,10 @@ const TradingViewWatchlist = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    containerRef.current.innerHTML = "";
+    container.innerHTML = "";
 
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
@@ -53,11 +54,11 @@ const TradingViewWatchlist = () => {
       backgroundColor: "hsl(var(--card))"
     });
 
-    containerRef.current.appendChild(script);
+    container.appendChild(script);
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = "";
+      if (container) {
+        container.innerHTML = "";
       }
     };
   }, []);

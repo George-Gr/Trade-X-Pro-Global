@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -76,25 +76,7 @@ const Admin = () => {
   });
   const [fundAmount, setFundAmount] = useState("");
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    if (!isAdmin) {
-      navigate("/dashboard");
-      return;
-    }
-    fetchData();
-  }, [user, isAdmin]);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    await Promise.all([fetchKYCDocuments(), fetchUserAccounts()]);
-    setIsLoading(false);
-  };
-
-  const fetchKYCDocuments = async () => {
+  const fetchKYCDocuments = useCallback(async () => {
     const { data, error } = await supabase
       .from("kyc_documents")
       .select(`
@@ -110,9 +92,9 @@ const Admin = () => {
     if (data && !error) {
       setKycDocuments(data as any);
     }
-  };
+  }, []);
 
-  const fetchUserAccounts = async () => {
+  const fetchUserAccounts = useCallback(async () => {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -121,7 +103,25 @@ const Admin = () => {
     if (data && !error) {
       setUserAccounts(data);
     }
-  };
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    await Promise.all([fetchKYCDocuments(), fetchUserAccounts()]);
+    setIsLoading(false);
+  }, [fetchKYCDocuments, fetchUserAccounts]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    if (!isAdmin) {
+      navigate("/dashboard");
+      return;
+    }
+    fetchData();
+  }, [user, isAdmin, fetchData, navigate]);
 
   const handleApprove = async (docId: string, userId: string) => {
     try {

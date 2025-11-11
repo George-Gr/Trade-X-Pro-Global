@@ -63,6 +63,8 @@ export default memo(TradingViewAdvancedChart);
 
 declare global {
   interface Window {
-    TradingView: any;
+    TradingView?: {
+      widget: (opts: Record<string, unknown>) => void;
+    };
   }
 }

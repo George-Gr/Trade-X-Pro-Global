@@ -40,7 +40,7 @@ const Portfolio = () => {
     if (prices.size > 0) {
       updatePositionPrices(prices);
     }
-  }, [prices]);
+  }, [prices, updatePositionPrices]);
 
   const handleClosePosition = async (positionId: string, symbol: string) => {
     setClosingPositions((prev) => new Set(prev).add(positionId));

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,14 +26,7 @@ const KYC = () => {
   const [documents, setDocuments] = useState<KYCDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      fetchKYCStatus();
-      fetchDocuments();
-    }
-  }, [user]);
-
-  const fetchKYCStatus = async () => {
+  const fetchKYCStatus = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -45,9 +38,9 @@ const KYC = () => {
     if (data && !error) {
       setKycStatus(data.kyc_status);
     }
-  };
+  }, [user]);
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     if (!user) return;
 
     setIsLoading(true);
@@ -61,7 +54,14 @@ const KYC = () => {
       setDocuments(data);
     }
     setIsLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchKYCStatus();
+      fetchDocuments();
+    }
+  }, [user, fetchKYCStatus, fetchDocuments]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

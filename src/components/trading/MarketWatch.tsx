@@ -17,29 +17,28 @@ interface MarketData {
   changePercent: number;
 }
 
-const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
-  // Define symbols to watch
-  const watchedSymbols = [
-    { symbol: "EURUSD", name: "Euro vs US Dollar" },
-    { symbol: "GBPUSD", name: "British Pound vs US Dollar" },
-    { symbol: "USDJPY", name: "US Dollar vs Japanese Yen" },
-    { symbol: "XAUUSD", name: "Gold vs US Dollar" },
-    { symbol: "AAPL", name: "Apple Inc" },
-    { symbol: "TSLA", name: "Tesla Inc" },
-    { symbol: "GOOGL", name: "Alphabet Inc" },
-    { symbol: "MSFT", name: "Microsoft Corp" },
-  ];
+const DEFAULT_WATCHED_SYMBOLS = [
+  { symbol: "EURUSD", name: "Euro vs US Dollar" },
+  { symbol: "GBPUSD", name: "British Pound vs US Dollar" },
+  { symbol: "USDJPY", name: "US Dollar vs Japanese Yen" },
+  { symbol: "XAUUSD", name: "Gold vs US Dollar" },
+  { symbol: "AAPL", name: "Apple Inc" },
+  { symbol: "TSLA", name: "Tesla Inc" },
+  { symbol: "GOOGL", name: "Alphabet Inc" },
+  { symbol: "MSFT", name: "Microsoft Corp" },
+];
 
+const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
   // Get real-time prices for all symbols
   const { prices, isLoading } = usePriceUpdates({
-    symbols: watchedSymbols.map(s => s.symbol),
+    symbols: DEFAULT_WATCHED_SYMBOLS.map(s => s.symbol),
     intervalMs: 3000, // Update every 3 seconds
     enabled: true,
   });
 
   // Combine symbol info with price data
   const marketData = useMemo(() => {
-    return watchedSymbols.map(item => {
+    return DEFAULT_WATCHED_SYMBOLS.map(item => {
       const priceData = prices.get(item.symbol);
       return {
         symbol: item.symbol,

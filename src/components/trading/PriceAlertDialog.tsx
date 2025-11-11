@@ -57,10 +57,11 @@ export const PriceAlertDialog = ({ symbol, currentPrice, onAlertCreated }: Price
       setOpen(false);
       setTargetPrice("");
       if (onAlertCreated) onAlertCreated();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error creating alert",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {

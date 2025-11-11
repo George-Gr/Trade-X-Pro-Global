@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,7 +23,7 @@ export const useWatchlists = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchWatchlists = async () => {
+  const fetchWatchlists = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -53,18 +53,19 @@ export const useWatchlists = () => {
           setActiveWatchlistId(newList.id);
         }
       }
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error loading watchlists",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
-  const fetchWatchlistItems = async (watchlistId: string) => {
+  const fetchWatchlistItems = useCallback(async (watchlistId: string) => {
     try {
       const { data, error } = await supabase
         .from("watchlist_items")
@@ -85,7 +86,7 @@ export const useWatchlists = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   const createWatchlist = async (name: string) => {
     try {
@@ -107,10 +108,11 @@ export const useWatchlists = () => {
       });
 
       return data;
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error creating watchlist",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
       return null;
@@ -136,10 +138,11 @@ export const useWatchlists = () => {
         title: "Watchlist deleted",
         description: "Watchlist has been removed successfully.",
       });
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error deleting watchlist",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -180,10 +183,11 @@ export const useWatchlists = () => {
         title: "Symbol added",
         description: `${symbol} has been added to your watchlist.`,
       });
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error adding symbol",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -202,10 +206,11 @@ export const useWatchlists = () => {
         ...prev,
         [watchlistId]: (prev[watchlistId] || []).filter((item) => item.id !== itemId),
       }));
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error removing symbol",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -213,13 +218,13 @@ export const useWatchlists = () => {
 
   useEffect(() => {
     fetchWatchlists();
-  }, []);
+  }, [fetchWatchlists]);
 
   useEffect(() => {
     if (activeWatchlistId) {
       fetchWatchlistItems(activeWatchlistId);
     }
-  }, [activeWatchlistId]);
+  }, [activeWatchlistId, fetchWatchlistItems]);
 
   return {
     watchlists,

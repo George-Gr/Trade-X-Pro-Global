@@ -21,9 +21,9 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
-      // Temporarily relax strict typing rules to reduce noise during iterative fixes.
-      // These can be re-enabled and addressed incrementally.
-      "@typescript-eslint/no-explicit-any": "off",
+  // Re-enable stricter typing rules incrementally. Start with warning so we can
+  // address usages progressively without failing CI locally.
+  "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-object-type": "off",
     },
   },

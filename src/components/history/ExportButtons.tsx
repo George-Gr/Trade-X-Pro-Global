@@ -12,7 +12,7 @@ interface ExportButtonsProps {
 const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
   const { toast } = useToast();
 
-  const exportToCSV = (data: any[], filename: string) => {
+  const exportToCSV = (data: unknown[], filename: string) => {
     if (data.length === 0) {
       toast({
         title: "No data to export",
@@ -22,13 +22,15 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
       return;
     }
 
-    // Get headers from first object
-    const headers = Object.keys(data[0]);
+    // Get headers from first object (cast to a string-indexed record)
+    const first = data[0] as Record<string, unknown>;
+    const headers = Object.keys(first);
     const csvContent = [
       headers.join(","),
-      ...data.map((row) =>
-        headers.map((header) => JSON.stringify(row[header] || "")).join(",")
-      ),
+      ...data.map((row) => {
+        const r = row as Record<string, unknown>;
+        return headers.map((header) => JSON.stringify(r[header] ?? "")).join(",");
+      }),
     ].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });

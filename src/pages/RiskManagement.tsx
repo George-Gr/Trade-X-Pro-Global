@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
@@ -41,11 +41,7 @@ export default function RiskManagement() {
     min_stop_loss_distance: 10,
   });
 
-  useEffect(() => {
-    fetchSettings();
-  }, [user]);
-
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -79,7 +75,11 @@ export default function RiskManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, toast]);
+
+  useEffect(() => {
+    fetchSettings();
+  }, [user, fetchSettings]);
 
   const handleSave = async () => {
     if (!user) return;

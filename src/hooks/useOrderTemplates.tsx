@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,7 +20,7 @@ export const useOrderTemplates = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchTemplates = async () => {
+  const fetchTemplates = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -33,16 +33,17 @@ export const useOrderTemplates = () => {
 
       if (error) throw error;
       setTemplates(data || []);
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error loading templates",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   const createTemplate = async (template: Omit<OrderTemplate, "id" | "created_at">) => {
     try {
@@ -67,10 +68,11 @@ export const useOrderTemplates = () => {
       });
 
       return data;
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error creating template",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
       return null;
@@ -94,10 +96,11 @@ export const useOrderTemplates = () => {
         title: "Template updated",
         description: "Changes have been saved.",
       });
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error updating template",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -117,10 +120,11 @@ export const useOrderTemplates = () => {
         title: "Template deleted",
         description: "Template has been removed.",
       });
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error deleting template",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -128,7 +132,7 @@ export const useOrderTemplates = () => {
 
   useEffect(() => {
     fetchTemplates();
-  }, []);
+  }, [fetchTemplates]);
 
   return {
     templates,

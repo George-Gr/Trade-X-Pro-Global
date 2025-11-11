@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,7 +22,7 @@ export const PriceAlertsManager = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchAlerts = async () => {
+  const fetchAlerts = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -34,16 +34,17 @@ export const PriceAlertsManager = () => {
 
       if (error) throw error;
       setAlerts(data || []);
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error loading alerts",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const handleDeleteAlert = async (id: string) => {
     try {
@@ -59,10 +60,11 @@ export const PriceAlertsManager = () => {
         title: "Alert deleted",
         description: "Price alert has been removed.",
       });
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error deleting alert",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -90,7 +92,7 @@ export const PriceAlertsManager = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchAlerts]);
 
   if (loading) {
     return (

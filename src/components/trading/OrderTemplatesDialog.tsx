@@ -32,7 +32,7 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
     await createTemplate({
       name: templateName,
       symbol: currentValues.symbol,
-      order_type: currentValues.order_type as any,
+  order_type: currentValues.order_type as OrderTemplate["order_type"],
       volume: parseFloat(currentValues.volume),
       leverage: parseFloat(currentValues.leverage),
       stop_loss: currentValues.stopLoss ? parseFloat(currentValues.stopLoss) : null,

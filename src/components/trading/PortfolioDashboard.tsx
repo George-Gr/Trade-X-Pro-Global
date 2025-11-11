@@ -26,7 +26,7 @@ const PortfolioDashboard = () => {
     if (prices.size > 0) {
       updatePositionPrices(prices);
     }
-  }, [prices]);
+  }, [prices, updatePositionPrices]);
 
   if (loading) {
     return (

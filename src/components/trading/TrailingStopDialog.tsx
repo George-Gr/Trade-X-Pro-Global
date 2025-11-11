@@ -45,7 +45,13 @@ export const TrailingStopDialog = ({
         return;
       }
 
-      const updates: any = {
+      const updates: {
+        trailing_stop_enabled: boolean;
+        trailing_stop_distance: number | null;
+        highest_price?: number | null;
+        lowest_price?: number | null;
+        trailing_stop_price?: number | null;
+      } = {
         trailing_stop_enabled: enabled,
         trailing_stop_distance: enabled ? distanceValue : null,
       };
@@ -74,10 +80,11 @@ export const TrailingStopDialog = ({
       });
 
       setOpen(false);
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error updating trailing stop",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {

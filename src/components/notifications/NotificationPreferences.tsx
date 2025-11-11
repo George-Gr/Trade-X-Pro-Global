@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -32,12 +32,7 @@ export function NotificationPreferences() {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
-    fetchPreferences();
-  }, [user]);
-
-  const fetchPreferences = async () => {
+  const fetchPreferences = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -50,7 +45,12 @@ export function NotificationPreferences() {
       setPreferences(data);
     }
     setLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchPreferences();
+  }, [user, fetchPreferences]);
 
   const updatePreference = async (key: keyof Preferences, value: boolean) => {
     if (!user) return;

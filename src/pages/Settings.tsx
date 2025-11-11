@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,13 +15,7 @@ const Settings = () => {
   const [kycStatus, setKycStatus] = useState<string>("pending");
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      fetchKYCStatus();
-    }
-  }, [user]);
-
-  const fetchKYCStatus = async () => {
+  const fetchKYCStatus = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -34,7 +28,13 @@ const Settings = () => {
       setKycStatus(data.kyc_status);
     }
     setIsLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchKYCStatus();
+    }
+  }, [user, fetchKYCStatus]);
 
   return (
     <AuthenticatedLayout>
