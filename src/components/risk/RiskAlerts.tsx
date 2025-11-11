@@ -9,7 +9,7 @@ interface RiskEvent {
   event_type: string;
   severity: string;
   description: string;
-  details: any;
+  details: unknown;
   resolved: boolean;
   created_at: string;
 }

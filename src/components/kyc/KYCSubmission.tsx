@@ -102,11 +102,12 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       });
 
       onSuccess?.();
-    } catch (error: any) {
-      console.error("KYC submission error:", error);
+    } catch (err: unknown) {
+      console.error("KYC submission error:", err);
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Submission failed",
-        description: error.message || "Failed to submit document",
+        description: message || "Failed to submit document",
         variant: "destructive",
       });
     } finally {
