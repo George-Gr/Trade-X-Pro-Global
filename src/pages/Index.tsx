@@ -20,6 +20,7 @@ import { PublicFooter } from "@/components/layout/PublicFooter";
 import heroImage from "@/assets/hero-trading.jpg";
 import securityBg from "@/assets/security-bg.jpg";
 import globalMarketsMap from "@/assets/global-markets-map.jpg";
+import { SectionHeader } from "@/components/common";
 
 export default function Index() {
   return (
@@ -41,7 +42,7 @@ export default function Index() {
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
               Master CFD Trading
               <span className="block mt-2 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
                 Without the Risk
@@ -55,13 +56,13 @@ export default function Index() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link to="/register">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6">
+                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
                   Start Trading Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Button>
               </Link>
               <Link to="/dashboard">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white" aria-label="View platform demo">
                   View Platform
                 </Button>
               </Link>
@@ -88,17 +89,11 @@ export default function Index() {
       {/* Features Section */}
       <section id="features" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
-              Everything You Need to
-              <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                Become a Better Trader
-              </span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Professional-grade tools and features designed for serious traders
-            </p>
-          </div>
+            <SectionHeader
+              title="Everything You Need to"
+              subtitle="Become a Better Trader"
+              description="Professional-grade tools and features designed for serious traders"
+            />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
@@ -133,10 +128,10 @@ export default function Index() {
                 description: "Save and reuse your favorite trading setups for consistent execution"
               }
             ].map((feature, index) => (
-              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card backdrop-blur-sm">
+              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6">
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-white" />
+                    <feature.icon className="h-6 w-6 text-white" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
@@ -150,14 +145,10 @@ export default function Index() {
       {/* Trading Advantages */}
       <section id="advantages" className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
-              Why Choose
-              <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                TradeX Pro?
-              </span>
-            </h2>
-          </div>
+            <SectionHeader
+              title="Why Choose"
+              subtitle="TradeX Pro?"
+            />
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -183,10 +174,10 @@ export default function Index() {
                   description: "Completely free platform with no subscriptions or trading fees"
                 }
               ].map((advantage, index) => (
-                <div key={index} className="flex gap-4">
+                <div key={index} className="flex gap-4 group">
                   <div className="flex-shrink-0">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <advantage.icon className="h-6 w-6 text-white" />
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center group-focus-within:ring-2 group-focus-within:ring-primary transition-all">
+                      <advantage.icon className="h-6 w-6 text-white" aria-hidden="true" />
                     </div>
                   </div>
                   <div>
@@ -233,17 +224,11 @@ export default function Index() {
         <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
-              Trade Global Markets
-              <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                Across 5 Asset Classes
-              </span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Access 500+ instruments across forex, stocks, indices, commodities, and cryptocurrencies
-            </p>
-          </div>
+            <SectionHeader
+              title="Trade Global Markets"
+              subtitle="Across 5 Asset Classes"
+              description="Access 500+ instruments across forex, stocks, indices, commodities, and cryptocurrencies"
+            />
 
           <div className="grid md:grid-cols-5 gap-6 max-w-5xl mx-auto">
             {[
@@ -278,10 +263,10 @@ export default function Index() {
                 icon: Zap
               }
             ].map((asset, index) => (
-              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card/80 backdrop-blur-sm">
+              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card/80 backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6 text-center">
                   <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                    <asset.icon className="h-7 w-7 text-white" />
+                    <asset.icon className="h-7 w-7 text-white" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{asset.title}</h3>
                   <p className="text-sm text-muted-foreground mb-3">{asset.description}</p>
@@ -296,26 +281,22 @@ export default function Index() {
       {/* Trust & Security Section */}
       <section 
         id="security" 
-        className="py-20 relative overflow-hidden"
+        className="py-20 relative overflow-hidden bg-foreground"
         style={{
           backgroundImage: `url(${securityBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-foreground/95 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-foreground/90 backdrop-blur-sm" />
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-4 text-background">
-              Your Security is Our
-              <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                Top Priority
-              </span>
-            </h2>
-            <p className="text-xl text-background/80 mb-12">
-              Enterprise-grade security protecting your data and trading activity
-            </p>
+          <div className="max-w-4xl mx-auto">
+            <SectionHeader
+              title="Your Security is Our"
+              subtitle="Top Priority"
+              description="Enterprise-grade security protecting your data and trading activity"
+            />
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
@@ -335,13 +316,13 @@ export default function Index() {
                   description: "Safe environment for learning without financial risk"
                 }
               ].map((item, index) => (
-                <Card key={index} className="bg-background/10 backdrop-blur-md border-background/20">
+                <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:shadow-lg transition-all hover:-translate-y-1">
                   <CardContent className="p-6 text-center">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                      <item.icon className="h-8 w-8 text-white" />
+                      <item.icon className="h-8 w-8 text-white" aria-hidden="true" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 text-background">{item.title}</h3>
-                    <p className="text-background/70">{item.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-white">{item.title}</h3>
+                    <p className="text-white/80">{item.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -363,9 +344,9 @@ export default function Index() {
             </p>
             
             <Link to="/register">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6">
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Create free account now">
                 Create Free Account
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
               </Button>
             </Link>
 
@@ -379,15 +360,11 @@ export default function Index() {
       {/* Our Partners Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
-              Our
-              <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent"> Partners</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Trusted integrations powering your trading experience
-            </p>
-          </div>
+            <SectionHeader
+              title="Our"
+              subtitle="Partners"
+              description="Trusted integrations powering your trading experience"
+            />
 
           <div className="max-w-6xl mx-auto">
             {/* Payment Partners */}
@@ -395,16 +372,18 @@ export default function Index() {
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Payment Methods</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 {[
-                  { name: "Visa", icon: "💳" },
-                  { name: "Mastercard", icon: "💳" },
-                  { name: "Google Pay", icon: "📱" },
-                  { name: "PhonePe", icon: "📱" },
-                  { name: "UPI", icon: "💸" },
-                  { name: "NowPayments", icon: "🔐" }
+                    { name: "Visa", icon: "💳", color: "from-blue-600 to-blue-700" },
+                    { name: "Mastercard", icon: "💳", color: "from-orange-600 to-red-600" },
+                    { name: "Google Pay", icon: "📱", color: "from-blue-500 to-green-500" },
+                    { name: "PhonePe", icon: "📱", color: "from-purple-600 to-purple-700" },
+                    { name: "UPI", icon: "💸", color: "from-blue-600 to-teal-600" },
+                    { name: "NowPayments", icon: "🔐", color: "from-indigo-600 to-purple-600" }
                 ].map((partner, index) => (
-                  <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card">
+                    <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
-                      <div className="text-4xl mb-2">{partner.icon}</div>
+                        <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl mb-2`}>
+                          <span role="img" aria-label={partner.name}>{partner.icon}</span>
+                        </div>
                       <p className="text-sm font-semibold text-center">{partner.name}</p>
                     </CardContent>
                   </Card>
@@ -417,16 +396,17 @@ export default function Index() {
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Cryptocurrency</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
                 {[
-                  { name: "Bitcoin", icon: "₿", color: "from-orange-500 to-orange-600" },
-                  { name: "Ethereum", icon: "Ξ", color: "from-blue-500 to-purple-600" },
-                  { name: "Tether", icon: "₮", color: "from-green-500 to-green-600" }
+                    { name: "Bitcoin", icon: "₿", color: "from-orange-500 to-orange-600", description: "BTC" },
+                    { name: "Ethereum", icon: "Ξ", color: "from-blue-500 to-purple-600", description: "ETH" },
+                    { name: "Tether", icon: "₮", color: "from-green-500 to-green-600", description: "USDT" }
                 ].map((partner, index) => (
-                  <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card">
+                    <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
-                      <div className={`text-4xl font-bold bg-gradient-to-r ${partner.color} bg-clip-text text-transparent mb-2`}>
-                        {partner.icon}
+                        <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl font-bold text-white mb-2`}>
+                          <span role="img" aria-label={partner.name}>{partner.icon}</span>
                       </div>
                       <p className="text-sm font-semibold text-center">{partner.name}</p>
+                        <p className="text-xs text-muted-foreground">{partner.description}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -438,13 +418,13 @@ export default function Index() {
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Trading Platforms</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 {[
-                  { name: "TradingView", icon: LineChart, description: "Advanced charting & analysis" },
-                  { name: "MetaTrader", icon: BarChart3, description: "Professional trading platform" }
+                    { name: "TradingView", icon: LineChart, description: "Advanced charting & analysis", color: "from-indigo-600 to-indigo-700" },
+                    { name: "MetaTrader", icon: BarChart3, description: "Professional trading platform", color: "from-slate-700 to-slate-800" }
                 ].map((partner, index) => (
-                  <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card">
+                    <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex items-center gap-4">
-                      <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center flex-shrink-0">
-                        <partner.icon className="h-7 w-7 text-white" />
+                        <div className={`h-14 w-14 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center flex-shrink-0`}>
+                          <partner.icon className="h-7 w-7 text-white" aria-hidden="true" />
                       </div>
                       <div>
                         <p className="font-semibold text-lg">{partner.name}</p>
@@ -459,43 +439,8 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-card border-t border-border py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <span className="text-lg font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                TradeX Pro
-              </span>
-            </div>
-            
-            <p className="text-sm text-muted-foreground text-center">
-              © 2024 TradeX Pro. All rights reserved.
-            </p>
-
-            <div className="flex gap-6">
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Privacy
-              </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Terms
-              </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Contact
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-border">
-            <p className="text-xs text-muted-foreground text-center max-w-4xl mx-auto">
-              <strong>Risk Disclaimer:</strong> TradeX Pro is a paper trading platform for educational purposes only. 
-              All trading is simulated with virtual funds. Past performance does not guarantee future results. 
-              CFD trading involves significant risk of loss. Please ensure you fully understand the risks before trading with real capital.
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Reusable footer component (single source of truth) */}
+      <PublicFooter />
     </div>
   );
 }

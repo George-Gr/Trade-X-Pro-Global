@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils";
 
 export const PublicHeader = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg" aria-label="Main navigation">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <TrendingUp className="h-8 w-8 text-primary" />
+          <Link to="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-2" aria-label="TradeX Pro - Home">
+            <TrendingUp className="h-8 w-8 text-primary" aria-hidden="true" />
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
               TradeX Pro
             </span>
@@ -74,6 +74,16 @@ export const PublicHeader = () => {
                           </Link>
                         </NavigationMenuLink>
                       </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/trading/tools" className={linkClassName}>
+                            <div className="text-sm font-medium">Trading Tools</div>
+                            <p className="text-xs text-muted-foreground">
+                              Analysis, Signals, Calculators, Alerts
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
@@ -122,42 +132,43 @@ export const PublicHeader = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* Tools & Education */}
+                {/* Education Menu */}
                 <NavigationMenuItem>
-                  <Link to="/tools" className="text-sm font-medium text-muted-foreground hover:text-foreground px-4 py-2">
-                    Tools
-                  </Link>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <Link to="/education" className="text-sm font-medium text-muted-foreground hover:text-foreground px-4 py-2">
-                    Education
-                  </Link>
-                </NavigationMenuItem>
-
-                {/* About Menu */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>About</NavigationMenuTrigger>
+                  <NavigationMenuTrigger>Education</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[300px] gap-3 p-4">
                       <li>
                         <NavigationMenuLink asChild>
-                          <Link to="/about/company" className={linkClassName}>
-                            <div className="text-sm font-medium">Company</div>
+                          <Link to="/education/webinar" className={linkClassName}>
+                            <div className="text-sm font-medium">Webinar</div>
                           </Link>
                         </NavigationMenuLink>
                       </li>
                       <li>
                         <NavigationMenuLink asChild>
-                          <Link to="/about/regulation" className={linkClassName}>
-                            <div className="text-sm font-medium">Regulation</div>
+                          <Link to="/education/certifications" className={linkClassName}>
+                            <div className="text-sm font-medium">Certifications</div>
                           </Link>
                         </NavigationMenuLink>
                       </li>
                       <li>
                         <NavigationMenuLink asChild>
-                          <Link to="/about/security" className={linkClassName}>
-                            <div className="text-sm font-medium">Security</div>
+                          <Link to="/education/tutorials" className={linkClassName}>
+                            <div className="text-sm font-medium">Tutorials & E-Book</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/education/mentorship" className={linkClassName}>
+                            <div className="text-sm font-medium">Mentorship</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/education/glossary" className={linkClassName}>
+                            <div className="text-sm font-medium">Glossary</div>
                           </Link>
                         </NavigationMenuLink>
                       </li>
@@ -165,16 +176,92 @@ export const PublicHeader = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
+                {/* Company Menu */}
                 <NavigationMenuItem>
-                  <Link to="/partners" className="text-sm font-medium text-muted-foreground hover:text-foreground px-4 py-2">
-                    Partners
-                  </Link>
+                  <NavigationMenuTrigger>Company</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[300px] gap-3 p-4">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/company/about" className={linkClassName}>
+                            <div className="text-sm font-medium">About Us</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/company/regulation" className={linkClassName}>
+                            <div className="text-sm font-medium">Regulation</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/company/security" className={linkClassName}>
+                            <div className="text-sm font-medium">Security</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/company/partners" className={linkClassName}>
+                            <div className="text-sm font-medium">Partners</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/company/contact" className={linkClassName}>
+                            <div className="text-sm font-medium">Contact Us</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
 
+                {/* Legal Menu */}
                 <NavigationMenuItem>
-                  <Link to="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground px-4 py-2">
-                    Contact
-                  </Link>
+                  <NavigationMenuTrigger>Legal</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[300px] gap-3 p-4">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/legal/privacy" className={linkClassName}>
+                            <div className="text-sm font-medium">Privacy Policy</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/legal/terms" className={linkClassName}>
+                            <div className="text-sm font-medium">Terms & Conditions</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/legal/risk-disclosure" className={linkClassName}>
+                            <div className="text-sm font-medium">Risk Disclosure</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/legal/cookie-policy" className={linkClassName}>
+                            <div className="text-sm font-medium">Cookie Policy</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/legal/aml-policy" className={linkClassName}>
+                            <div className="text-sm font-medium">AML Policy</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
@@ -184,12 +271,12 @@ export const PublicHeader = () => {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Link to="/login">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="focus-visible:ring-2 focus-visible:ring-primary" aria-label="Login to your account">
                 Login
               </Button>
             </Link>
             <Link to="/register">
-              <Button size="sm" className="bg-gradient-to-r from-primary to-primary-glow">
+              <Button size="sm" className="bg-gradient-to-r from-primary to-primary-glow focus-visible:ring-2 focus-visible:ring-primary" aria-label="Create new account">
                 Get Started
               </Button>
             </Link>

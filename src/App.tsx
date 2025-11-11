@@ -30,6 +30,32 @@ import AMLPolicy from "./pages/legal/AMLPolicy";
 
 // Trading Pages
 import TradingInstruments from "./pages/trading/TradingInstruments";
+// Trading Pages (Additional)
+import TradingPlatforms from "./pages/trading/TradingPlatforms";
+import AccountTypes from "./pages/trading/AccountTypes";
+import TradingConditions from "./pages/trading/TradingConditions";
+import TradingTools from "./pages/trading/TradingTools";
+
+// Markets Pages
+import Forex from "./pages/markets/Forex";
+import Stocks from "./pages/markets/Stocks";
+import Indices from "./pages/markets/Indices";
+import Commodities from "./pages/markets/Commodities";
+import Cryptocurrencies from "./pages/markets/Cryptocurrencies";
+
+// Education Pages
+import Webinar from "./pages/education/Webinar";
+import Certifications from "./pages/education/Certifications";
+import Tutorials from "./pages/education/Tutorials";
+import Mentorship from "./pages/education/Mentorship";
+import Glossary from "./pages/education/Glossary";
+
+// Company Pages
+import AboutUs from "./pages/company/AboutUs";
+import Regulation from "./pages/company/Regulation";
+import Security from "./pages/company/Security";
+import Partners from "./pages/company/Partners";
+import ContactUs from "./pages/company/ContactUs";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +80,32 @@ const App = () => (
           
           {/* Public Trading Pages */}
           <Route path="/trading/instruments" element={<TradingInstruments />} />
+            <Route path="/trading/platforms" element={<TradingPlatforms />} />
+            <Route path="/trading/account-types" element={<AccountTypes />} />
+            <Route path="/trading/conditions" element={<TradingConditions />} />
+            <Route path="/trading/tools" element={<TradingTools />} />
+          
+            {/* Markets Pages */}
+            <Route path="/markets/forex" element={<Forex />} />
+            <Route path="/markets/stocks" element={<Stocks />} />
+            <Route path="/markets/indices" element={<Indices />} />
+            <Route path="/markets/commodities" element={<Commodities />} />
+            <Route path="/markets/cryptocurrencies" element={<Cryptocurrencies />} />
+          
+            {/* Education Pages */}
+            <Route path="/education/webinar" element={<Webinar />} />
+            <Route path="/education/certifications" element={<Certifications />} />
+            <Route path="/education/tutorials" element={<Tutorials />} />
+            <Route path="/education/mentorship" element={<Mentorship />} />
+            <Route path="/education/glossary" element={<Glossary />} />
+          
+            {/* Company Pages */}
+            <Route path="/company/about" element={<AboutUs />} />
+            <Route path="/company/regulation" element={<Regulation />} />
+            <Route path="/company/security" element={<Security />} />
+            <Route path="/company/partners" element={<Partners />} />
+            <Route path="/company/contact" element={<ContactUs />} />
+          
           <Route
             path="/dashboard"
             element={

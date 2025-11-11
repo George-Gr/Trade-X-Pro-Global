@@ -12,32 +12,32 @@ export default function CookiePolicy() {
           <h1 className="text-4xl font-bold mb-8">Cookie Policy</h1>
           
           <Card>
-            <CardContent className="p-8 space-y-6">
+              <CardContent className="p-8 space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. What Are Cookies?</h2>
-                <p className="text-muted-foreground">
+                  <p className="text-foreground/90 leading-relaxed">
                   Cookies are small text files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work more efficiently and provide information to website owners.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold mb-4">2. How We Use Cookies</h2>
-                <p className="text-muted-foreground mb-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">
                   TradeX Pro uses cookies for various purposes to enhance your experience:
                 </p>
                 
                 <h3 className="text-xl font-semibold mb-2">Essential Cookies</h3>
-                <p className="text-muted-foreground mb-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">
                   These cookies are necessary for the website to function and cannot be disabled. They include:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4 mb-4">
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 ml-4 mb-4">
                   <li>Authentication cookies to keep you logged in</li>
                   <li>Security cookies to protect against fraud</li>
                   <li>Session cookies for platform functionality</li>
                 </ul>
 
                 <h3 className="text-xl font-semibold mb-2">Performance Cookies</h3>
-                <p className="text-muted-foreground mb-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">
                   These cookies help us understand how visitors interact with our website:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4 mb-4">

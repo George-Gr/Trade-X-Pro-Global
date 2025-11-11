@@ -22,20 +22,20 @@ export default function RiskDisclosure() {
           </Alert>
           
           <Card>
-            <CardContent className="p-8 space-y-6">
+              <CardContent className="p-8 space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. General Risk Warning</h2>
-                <p className="text-muted-foreground">
+                  <p className="text-foreground/90 leading-relaxed">
                   Trading Contracts for Difference (CFDs) involves substantial risk of loss and is not suitable for all investors. The high degree of leverage that is often obtainable in CFD trading can work against you as well as for you. You should carefully consider your investment objectives, level of experience, and risk appetite before deciding to trade CFDs.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold mb-4">2. Leverage Risk</h2>
-                <p className="text-muted-foreground mb-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">
                   CFDs are leveraged products, meaning you can gain exposure to large positions with a relatively small initial investment. While leverage magnifies potential profits, it equally magnifies potential losses:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 ml-4">
                   <li>You can lose more than your initial deposit</li>
                   <li>Small market movements can result in proportionately larger losses</li>
                   <li>Leverage ratios vary by instrument (up to 1:500 for forex, 1:20 for stocks)</li>

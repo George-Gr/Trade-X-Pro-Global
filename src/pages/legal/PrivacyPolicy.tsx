@@ -12,10 +12,10 @@ export default function PrivacyPolicy() {
           <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
           
           <Card>
-            <CardContent className="p-8 space-y-6">
+              <CardContent className="p-8 space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
-                <p className="text-muted-foreground">
+                  <p className="text-foreground/90 leading-relaxed">
                   TradeX Pro ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
                 </p>
               </section>
@@ -23,10 +23,10 @@ export default function PrivacyPolicy() {
               <section>
                 <h2 className="text-2xl font-semibold mb-4">2. Information We Collect</h2>
                 <h3 className="text-xl font-semibold mb-2">2.1 Personal Information</h3>
-                <p className="text-muted-foreground mb-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">
                   We collect personal information that you voluntarily provide when registering for an account, including:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 ml-4">
                   <li>Full name and contact details (email, phone number, address)</li>
                   <li>Date of birth and identification documents</li>
                   <li>Financial information (bank account details, transaction history)</li>

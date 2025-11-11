@@ -18,19 +18,19 @@ export const PublicFooter = () => {
               Professional CFD trading platform with advanced tools and risk management features.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://facebook.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://twitter.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on Twitter" target="_blank" rel="noopener noreferrer">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://linkedin.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on LinkedIn" target="_blank" rel="noopener noreferrer">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://youtube.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Subscribe on YouTube" target="_blank" rel="noopener noreferrer">
                 <Youtube className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://instagram.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
                 <Instagram className="h-5 w-5" />
               </a>
             </div>

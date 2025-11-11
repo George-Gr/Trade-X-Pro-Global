@@ -12,18 +12,18 @@ export default function Terms() {
           <h1 className="text-4xl font-bold mb-8">Terms and Conditions</h1>
           
           <Card>
-            <CardContent className="p-8 space-y-6">
+              <CardContent className="p-8 space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. Agreement to Terms</h2>
-                <p className="text-muted-foreground">
+                  <p className="text-foreground/90 leading-relaxed">
                   By accessing and using TradeX Pro's website and services, you agree to be bound by these Terms and Conditions, all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold mb-4">2. Eligibility</h2>
-                <p className="text-muted-foreground mb-4">To use our services, you must:</p>
-                <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">To use our services, you must:</p>
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 ml-4">
                   <li>Be at least 18 years of age (or the age of majority in your jurisdiction)</li>
                   <li>Have the legal capacity to enter into binding contracts</li>
                   <li>Not be a resident of a restricted jurisdiction</li>

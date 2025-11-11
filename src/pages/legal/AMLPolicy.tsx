@@ -12,22 +12,22 @@ export default function AMLPolicy() {
           <h1 className="text-4xl font-bold mb-8">Anti-Money Laundering (AML) Policy</h1>
           
           <Card>
-            <CardContent className="p-8 space-y-6">
+              <CardContent className="p-8 space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. Policy Statement</h2>
-                <p className="text-muted-foreground">
+                  <p className="text-foreground/90 leading-relaxed">
                   TradeX Pro is committed to preventing money laundering and terrorist financing. We have implemented robust AML procedures in compliance with international standards and the regulations of our licensing jurisdiction. This policy applies to all clients, employees, and business relationships.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold mb-4">2. Know Your Customer (KYC)</h2>
-                <p className="text-muted-foreground mb-4">
+                  <p className="text-foreground/90 leading-relaxed mb-4">
                   All clients must complete our KYC verification process before trading. We collect and verify:
                 </p>
                 
                 <h3 className="text-xl font-semibold mb-2">Personal Information</h3>
-                <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4 mb-4">
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 ml-4 mb-4">
                   <li>Full legal name as appears on government-issued ID</li>
                   <li>Date of birth and nationality</li>
                   <li>Current residential address</li>
@@ -36,7 +36,7 @@ export default function AMLPolicy() {
                 </ul>
 
                 <h3 className="text-xl font-semibold mb-2">Required Documentation</h3>
-                <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 ml-4">
                   <li><strong>Proof of Identity:</strong> Passport, national ID card, or driver's license</li>
                   <li><strong>Proof of Address:</strong> Utility bill, bank statement, or government document (dated within last 3 months)</li>
                   <li><strong>Source of Funds:</strong> For large deposits, we may request documentation proving the origin of funds</li>
