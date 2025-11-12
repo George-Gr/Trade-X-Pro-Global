@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-    process.env.ANALYZE && visualizer({ open: true, gzipSize: true }),
-  ].filter(Boolean) as any,
+    process.env.ANALYZE && visualizer({ filename: 'dist/bundle-analysis.html', open: false, gzipSize: true }),
+  ].filter(Boolean) as unknown as (import("vite").Plugin)[],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

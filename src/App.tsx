@@ -1,24 +1,25 @@
+import React, { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Index from "./pages/Index";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Trade from "./pages/Trade";
-import Portfolio from "./pages/Portfolio";
-import History from "./pages/History";
-import PendingOrders from "./pages/PendingOrders";
-import Settings from "./pages/Settings";
-import KYC from "./pages/KYC";
-import Admin from "./pages/Admin";
-import RiskManagement from "./pages/RiskManagement";
-import Notifications from "./pages/Notifications";
-import Wallet from "./pages/Wallet";
-import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+const Index = lazy(() => import("./pages/Index"));
+const Register = lazy(() => import("./pages/Register"));
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Trade = lazy(() => import("./pages/Trade"));
+const Portfolio = lazy(() => import("./pages/Portfolio"));
+const History = lazy(() => import("./pages/History"));
+const PendingOrders = lazy(() => import("./pages/PendingOrders"));
+const Settings = lazy(() => import("./pages/Settings"));
+const KYC = lazy(() => import("./pages/KYC"));
+const Admin = lazy(() => import("./pages/Admin"));
+const RiskManagement = lazy(() => import("./pages/RiskManagement"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const Wallet = lazy(() => import("./pages/Wallet"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
 import { NotificationProvider } from "@/contexts/NotificationContext";
 
 // Legal Pages
@@ -66,6 +67,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/register" element={<Register />} />
@@ -196,7 +198,8 @@ const App = () => (
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
+          </Routes>
+          </Suspense>
       </BrowserRouter>
       </NotificationProvider>
     </TooltipProvider>
