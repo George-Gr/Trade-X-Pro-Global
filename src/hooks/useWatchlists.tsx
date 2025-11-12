@@ -79,10 +79,11 @@ export const useWatchlists = () => {
         ...prev,
         [watchlistId]: data || [],
       }));
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error loading watchlist items",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }

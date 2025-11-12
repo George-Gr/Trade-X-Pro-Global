@@ -28,7 +28,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("BTC");
   const [loading, setLoading] = useState(false);
-  const [paymentData, setPaymentData] = useState<any>(null);
+  const [paymentData, setPaymentData] = useState<{ amount?: number; currency?: string; payment_address?: string; payment_url?: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -58,11 +58,12 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
         title: "Payment Created",
         description: "Send crypto to the address below to complete your deposit",
       });
-    } catch (error: any) {
-      console.error('Error creating payment:', error);
+    } catch (err: unknown) {
+      console.error('Error creating payment:', err);
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Payment Failed",
-        description: error.message || "Failed to create payment. Please try again.",
+        description: message || "Failed to create payment. Please try again.",
         variant: "destructive",
       });
     } finally {

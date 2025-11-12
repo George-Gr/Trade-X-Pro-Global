@@ -90,7 +90,7 @@ const Admin = () => {
       .order("created_at", { ascending: false });
 
     if (data && !error) {
-      setKycDocuments(data as any);
+      setKycDocuments(data as KYCDocument[]);
     }
   }, []);
 
@@ -149,10 +149,11 @@ const Admin = () => {
       });
 
       fetchData();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -199,10 +200,11 @@ const Admin = () => {
       setRejectionDialog({ open: false, docId: null });
       setRejectionReason("");
       fetchData();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     }
@@ -262,10 +264,11 @@ const Admin = () => {
       setFundDialog({ open: false, userId: null });
       setFundAmount("");
       fetchData();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error",
-        description: error.message || "Failed to fund account",
+        description: message || "Failed to fund account",
         variant: "destructive",
       });
     }

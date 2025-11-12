@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
@@ -16,7 +16,7 @@ const NotificationRequestSchema = z.object({
   send_email: z.boolean().optional().default(true)
 });
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -70,7 +70,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
+           details: validation.error.issues.map((i: Record<string, unknown>) => `${(i.path as unknown[]).join('.')}: ${i.message}`).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -185,16 +185,17 @@ serve(async (req) => {
       JSON.stringify({ message: "Notification created successfully" }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );
-  } catch (error: any) {
-    console.error("Error in send-notification function:", error);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Error in send-notification function:", err);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: message }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
 });
 
-function checkNotificationEnabled(type: string, preferences: any): boolean {
+function checkNotificationEnabled(type: string, preferences: unknown): boolean {
   if (!preferences) return true;
 
   const typeMap: Record<string, string> = {
@@ -211,10 +212,11 @@ function checkNotificationEnabled(type: string, preferences: any): boolean {
   };
 
   const prefKey = typeMap[type];
-  return !prefKey || preferences[prefKey] !== false;
+  const prefs = preferences as Record<string, unknown>;
+  return !prefKey || prefs[prefKey] !== false;
 }
 
-function generateEmailHtml(title: string, message: string, data?: Record<string, any>): string {
+function generateEmailHtml(title: string, message: string, data?: Record<string, unknown>): string {
   // Escape HTML to prevent XSS
   const escapeHtml = (unsafe: string) => {
     return unsafe
@@ -276,7 +278,7 @@ function formatLabel(key: string): string {
   return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-function formatValue(value: any): string {
+function formatValue(value: unknown): string {
   if (typeof value === 'number') {
     return value.toFixed(2);
   }

@@ -37,7 +37,12 @@ const PendingOrders = () => {
   const handleModifySubmit = async () => {
     if (!selectedOrder) return;
 
-    const updates: any = {};
+    const updates: {
+      quantity?: number;
+      price?: number;
+      stop_loss?: number | null;
+      take_profit?: number | null;
+    } = {};
     if (modifyQuantity !== selectedOrder.quantity.toString()) {
       updates.quantity = parseFloat(modifyQuantity);
     }

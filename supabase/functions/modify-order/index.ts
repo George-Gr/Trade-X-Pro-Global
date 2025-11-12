@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
@@ -7,19 +7,27 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const ModifyOrderSchema = z.object({
+const ModifyOrderSchemaBase = z.object({
   order_id: z.string().uuid('Invalid order ID format'),
   quantity: z.number().positive('Quantity must be positive').max(1000, 'Quantity too large').optional(),
   price: z.number().positive('Price must be positive').max(1000000, 'Price too large').optional(),
   stop_loss: z.number().positive('Stop loss must be positive').max(1000000, 'Stop loss too large').optional(),
   take_profit: z.number().positive('Take profit must be positive').max(1000000, 'Take profit too large').optional()
-}).refine(
-  (data) => data.quantity !== undefined || data.price !== undefined || 
-            data.stop_loss !== undefined || data.take_profit !== undefined,
-  { message: 'At least one field must be provided for modification' }
-);
+});
 
-serve(async (req) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ModifyOrderSchema = ModifyOrderSchemaBase.refine((data: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = data as any;
+  return d.quantity !== undefined || d.price !== undefined || d.stop_loss !== undefined || d.take_profit !== undefined;
+}, { message: 'At least one field must be provided for modification' });
+
+// z.infer is a type helper from Zod. The editor may not have full zod types available here,
+// so use a permissive unknown to keep type-safety at runtime via safeParse.
+type ModifyOrderInput = unknown;
+
+
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -57,7 +65,7 @@ serve(async (req) => {
       );
     }
 
-    const body = await req.json();
+    const body: unknown = await req.json();
     const validation = ModifyOrderSchema.safeParse(body);
     
     if (!validation.success) {
@@ -90,7 +98,12 @@ serve(async (req) => {
     }
 
     // Build update object
-    const updates: any = {};
+    const updates: {
+      quantity?: number;
+      price?: number;
+      stop_loss?: number | null;
+      take_profit?: number | null;
+    } = {};
     if (quantity !== undefined) updates.quantity = quantity;
     if (price !== undefined) updates.price = price;
     if (stop_loss !== undefined) updates.stop_loss = stop_loss;

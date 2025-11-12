@@ -66,10 +66,11 @@ export default function RiskManagement() {
           min_stop_loss_distance: data.min_stop_loss_distance,
         });
       }
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -97,10 +98,11 @@ export default function RiskManagement() {
         title: "Settings Saved",
         description: "Your risk management settings have been updated",
       });
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Error",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
