@@ -3,7 +3,7 @@
   "compilerOptions": {
     "lib": ["es2021", "dom"],
     "jsx": "react-jsx",
-    "types": ["https://deno.land/x/types/index.d.ts"]
+    "types": ["https://deno.land/std@0.190.0/types.d.ts"]
   },
   "imports": {
     "std/": "https://deno.land/std@0.190.0/",

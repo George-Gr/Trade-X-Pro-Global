@@ -1,10 +1,44 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import {
+  detectMarginCall,
+  classifyMarginCallSeverity,
+  shouldEscalateToLiquidation,
+  MarginCallStatus,
+} from "../lib/marginCallDetection.ts";
+import { calculateMarginLevel } from "../lib/marginCalculations.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+/**
+ * Risk check result for a single user
+ */
+interface UserRiskCheckResult {
+  userId: string;
+  marginLevel: number;
+  hasMarginCall: boolean;
+  severity: string | null;
+  marginCallCreated: boolean;
+  escalatedToLiquidation: boolean;
+  error?: string;
+}
+
+/**
+ * Overall function result
+ */
+interface RiskCheckResult {
+  success: boolean;
+  timestamp: string;
+  usersChecked: number;
+  newMarginCalls: number;
+  escalations: number;
+  errors: number;
+  results: UserRiskCheckResult[];
+  message: string;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -23,198 +57,183 @@ serve(async (req) => {
     );
   }
 
+  const startTime = Date.now();
+
   try {
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    console.log('Starting risk level check...');
+    console.log('Starting margin call detection check...');
 
     // Get all active users with open positions
-    const { data: users, error: usersError } = await supabaseClient
-      .from('profiles')
-      .select('id, balance, equity, margin_used, account_status')
+    const { data: accounts, error: accountsError } = await supabaseClient
+      .from('accounts')
+      .select('id, user_id, equity, margin_used, account_status')
       .eq('account_status', 'active')
       .gt('margin_used', 0);
 
-    if (usersError) {
-      console.error('Error fetching users:', usersError);
-      throw usersError;
+    if (accountsError) {
+      console.error('Error fetching accounts:', accountsError);
+      throw accountsError;
     }
 
-    console.log(`Checking ${users?.length || 0} users with active positions`);
+    console.log(`Checking ${accounts?.length || 0} users with active positions`);
 
-    let marginCallsTriggered = 0;
-    let stopOutsExecuted = 0;
-    let stopLossesExecuted = 0;
+    const results: UserRiskCheckResult[] = [];
+    let newMarginCalls = 0;
+    let escalations = 0;
 
-    for (const user of users || []) {
-      // Calculate margin level
-      const marginLevel = user.margin_used > 0 
-        ? (user.equity / user.margin_used) * 100 
-        : 0;
+    // Process each account
+    for (const account of accounts || []) {
+      try {
+        const { user_id, equity, margin_used } = account;
 
-      // Get user's risk settings
-      const { data: riskSettings } = await supabaseClient
-        .from('risk_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+        // Calculate margin level
+        const marginLevel = calculateMarginLevel(equity, margin_used);
 
-      if (!riskSettings) continue;
+        // Detect if margin call is triggered
+        const detection = detectMarginCall(equity, margin_used);
 
-      // Check for stop-out level (critical)
-      if (marginLevel < riskSettings.stop_out_level && marginLevel > 0) {
-        console.log(`Stop-out triggered for user ${user.id}. Margin level: ${marginLevel.toFixed(2)}%`);
-        
-        // Get all open positions
-        const { data: positions } = await supabaseClient
-          .from('positions')
-          .select('id, symbol, quantity')
-          .eq('user_id', user.id)
-          .eq('status', 'open');
-
-        // Close all positions
-        for (const position of positions || []) {
-          try {
-            // Call close-position function
-            const { error: closeError } = await supabaseClient.functions.invoke('close-position', {
-              body: {
-                position_id: position.id,
-                idempotency_key: `stopout_${Date.now()}_${position.id}`
-              }
-            });
-
-            if (closeError) {
-              console.error(`Failed to close position ${position.id}:`, closeError);
-            } else {
-              stopOutsExecuted++;
-            }
-          } catch (error) {
-            console.error(`Error closing position ${position.id}:`, error);
-          }
-        }
-
-        // Create risk event
-        await supabaseClient.from('risk_events').insert({
-          user_id: user.id,
-          event_type: 'stop_out',
-          severity: 'critical',
-          description: `Stop-out executed. Margin level: ${marginLevel.toFixed(2)}%`,
-          details: {
-            margin_level: marginLevel,
-            threshold: riskSettings.stop_out_level,
-            positions_closed: positions?.length || 0
-          }
-        });
-
-      } 
-      // Check for margin call (warning)
-      else if (marginLevel < riskSettings.margin_call_level && marginLevel > 0) {
-        console.log(`Margin call for user ${user.id}. Margin level: ${marginLevel.toFixed(2)}%`);
-        
-        // Check if we already have an unresolved margin call event
-        const { data: existingEvents } = await supabaseClient
-          .from('risk_events')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('event_type', 'margin_call')
-          .eq('resolved', false)
+        // Check if user already has an active margin call
+        const { data: existingCalls } = await supabaseClient
+          .from('margin_call_events')
+          .select('id, status, triggered_at')
+          .eq('user_id', user_id)
+          .in('status', ['pending', 'notified', 'escalated'])
+          .order('triggered_at', { ascending: false })
           .limit(1);
 
-        if (!existingEvents || existingEvents.length === 0) {
-          // Create margin call event
-          await supabaseClient.from('risk_events').insert({
-            user_id: user.id,
-            event_type: 'margin_call',
-            severity: 'warning',
-            description: `Margin call alert. Margin level: ${marginLevel.toFixed(2)}%`,
-            details: {
-              margin_level: marginLevel,
-              threshold: riskSettings.margin_call_level,
-              equity: user.equity,
-              margin_used: user.margin_used
-            }
-          });
-          
-          marginCallsTriggered++;
-        }
-      }
+        const activeCall = existingCalls?.[0];
 
-      // Check positions for stop-loss enforcement
-      if (riskSettings.enforce_stop_loss) {
-        const { data: positions } = await supabaseClient
-          .from('positions')
-          .select('id, symbol, side, quantity, entry_price, current_price, stop_loss')
-          .eq('user_id', user.id)
-          .eq('status', 'open')
-          .not('stop_loss', 'is', null);
+        let marginCallCreated = false;
+        let shouldEscalate = false;
 
-        for (const position of positions || []) {
-          if (!position.stop_loss || !position.current_price) continue;
+        // If not triggered, check for resolving existing call
+        if (!detection.isTriggered) {
+          if (activeCall && activeCall.status !== MarginCallStatus.RESOLVED) {
+            await supabaseClient
+              .from('margin_call_events')
+              .update({
+                status: MarginCallStatus.RESOLVED,
+                resolved_at: new Date().toISOString(),
+                resolution_type: 'manual_deposit',
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', activeCall.id);
+          }
+        } else {
+          // Margin call IS triggered
+          if (!activeCall) {
+            // Create new margin call event
+            const severity = classifyMarginCallSeverity(marginLevel);
 
-          // Check if stop-loss should be triggered
-          const shouldTrigger = position.side === 'buy'
-            ? position.current_price <= position.stop_loss
-            : position.current_price >= position.stop_loss;
-
-          if (shouldTrigger) {
-            console.log(`Stop-loss triggered for position ${position.id}`);
-            
-            try {
-              // Close position
-              const { error: closeError } = await supabaseClient.functions.invoke('close-position', {
-                body: {
-                  position_id: position.id,
-                  idempotency_key: `stoploss_${Date.now()}_${position.id}`
-                }
+            const { error: insertError } = await supabaseClient
+              .from('margin_call_events')
+              .insert({
+                user_id,
+                triggered_at: new Date().toISOString(),
+                margin_level_at_trigger: marginLevel,
+                status: MarginCallStatus.NOTIFIED,
+                severity,
+                positions_at_risk: 0,
+                recommended_actions: [],
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
               });
 
-              if (!closeError) {
-                stopLossesExecuted++;
-                
-                // Create risk event
-                await supabaseClient.from('risk_events').insert({
-                  user_id: user.id,
-                  event_type: 'stop_loss',
-                  severity: 'info',
-                  description: `Stop-loss executed for ${position.symbol}`,
-                  details: {
-                    position_id: position.id,
-                    symbol: position.symbol,
-                    side: position.side,
-                    stop_loss: position.stop_loss,
-                    close_price: position.current_price
-                  }
-                });
-              }
-            } catch (error) {
-              console.error(`Error executing stop-loss for position ${position.id}:`, error);
+            if (!insertError) {
+              marginCallCreated = true;
+              newMarginCalls++;
+
+              // Send notification via realtime
+              await supabaseClient.realtime.broadcast(`notifications:${user_id}`, {
+                type: 'MARGIN_CALL',
+                priority: severity === 'critical' ? 'CRITICAL' : 'HIGH',
+                severity,
+                message: `Your account margin level is ${marginLevel.toFixed(2)}%. Add funds or close positions immediately.`,
+                marginLevel,
+                timestamp: new Date().toISOString(),
+              });
+            }
+          }
+
+          // Check if should escalate to liquidation
+          if (detection.shouldEscalate && activeCall) {
+            const timeSinceCreation = Math.floor(
+              (Date.now() - new Date(activeCall.triggered_at).getTime()) / (1000 * 60),
+            );
+
+            if (shouldEscalateToLiquidation(marginLevel, timeSinceCreation)) {
+              // Mark as escalated
+              await supabaseClient
+                .from('margin_call_events')
+                .update({
+                  status: MarginCallStatus.ESCALATED,
+                  escalated_to_liquidation_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString(),
+                })
+                .eq('id', activeCall.id);
+
+              shouldEscalate = true;
+              escalations++;
+
+              // Send escalation notification
+              await supabaseClient.realtime.broadcast(`notifications:${user_id}`, {
+                type: 'LIQUIDATION_WARNING',
+                priority: 'CRITICAL',
+                message: `CRITICAL: Account margin level at ${marginLevel.toFixed(2)}%. Liquidation will begin immediately.`,
+                timestamp: new Date().toISOString(),
+              });
             }
           }
         }
+
+        results.push({
+          userId: user_id,
+          marginLevel,
+          hasMarginCall: detection.isTriggered,
+          severity: detection.isTriggered ? classifyMarginCallSeverity(marginLevel) : null,
+          marginCallCreated,
+          escalatedToLiquidation: shouldEscalate,
+        });
+      } catch (error) {
+        console.error(`Error processing account ${account.id}:`, error);
+        results.push({
+          userId: account.user_id,
+          marginLevel: 0,
+          hasMarginCall: false,
+          severity: null,
+          marginCallCreated: false,
+          escalatedToLiquidation: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
       }
     }
 
-    const summary = {
-      checked_users: users?.length || 0,
-      margin_calls: marginCallsTriggered,
-      stop_outs: stopOutsExecuted,
-      stop_losses: stopLossesExecuted,
-      timestamp: new Date().toISOString()
+    const duration = Date.now() - startTime;
+
+    const summary: RiskCheckResult = {
+      success: true,
+      timestamp: new Date().toISOString(),
+      usersChecked: results.length,
+      newMarginCalls,
+      escalations,
+      errors: results.filter((r) => !!r.error).length,
+      results,
+      message: `Risk check completed in ${duration}ms. Checked ${results.length} users, created ${newMarginCalls} new margin calls, escalated ${escalations} to liquidation.`,
     };
 
     console.log('Risk check complete:', summary);
 
     return new Response(
       JSON.stringify(summary),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
-
   } catch (error) {
     console.error('Risk check error:', error);
     return new Response(

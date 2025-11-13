@@ -75,3 +75,20 @@ commissionCalcContent = commissionCalcContent.replace(
 );
 fs.writeFileSync(commissionCalcDest, commissionCalcContent, 'utf8');
 console.log('Commission calculations synchronized to', commissionCalcDest);
+
+// Sync pnlCalculation
+const pnlCalcSrc = path.resolve(__dirname, '../src/lib/trading/pnlCalculation.ts');
+const pnlCalcDest = path.join(destDir, 'pnlCalculation.ts');
+
+if (!fs.existsSync(pnlCalcSrc)) {
+  console.error('Source P&L calculations not found:', pnlCalcSrc);
+  process.exit(1);
+}
+
+let pnlCalcContent = fs.readFileSync(pnlCalcSrc, 'utf8');
+pnlCalcContent = pnlCalcContent.replace(
+  "import { z } from 'zod';",
+  "import { z } from \"https://deno.land/x/zod@v3.22.4/mod.ts\";"
+);
+fs.writeFileSync(pnlCalcDest, pnlCalcContent, 'utf8');
+console.log('P&L calculations synchronized to', pnlCalcDest);

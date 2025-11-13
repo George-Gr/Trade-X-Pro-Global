@@ -133,7 +133,7 @@ export const CommissionCalculationSchema = z.object({
   accountTier: z.nativeEnum(AccountTier).default(AccountTier.Standard),
 });
 
-export type CommissionCalculationInput = typeof CommissionCalculationSchema extends { _type: infer T } ? T : never;
+export type CommissionCalculationInput = z.infer<typeof CommissionCalculationSchema>;
 
 /**
  * Commission calculation result
@@ -316,7 +316,7 @@ export function calculateCommission(input: CommissionCalculationInput): Commissi
   const validation = CommissionCalculationSchema.safeParse(input);
   if (!validation.success) {
     const details = validation.error.issues
-      .map((issue: { path: PropertyKey[]; message: string }) => `${issue.path.join('.')}: ${issue.message}`)
+      .map((i: z.ZodIssue) => `${i.path.join('.')}: ${i.message}`)
       .join(', ');
     throw new CommissionCalculationError(400, 'Invalid commission input', details);
   }
