@@ -92,10 +92,39 @@ async function executeLiquidationForEvent(
   const liquidationEventId = crypto.randomUUID();
 
   try {
-    // 1. Validate preconditions
+    // 0. Fetch margin call duration to validate time-in-critical (30+ minutes)
+    const { data: marginCall, error: callError } = await supabaseClient
+      .from('margin_call_events')
+      .select('triggered_at')
+      .eq('id', marginCallEvent.id)
+      .single();
+
+    if (callError || !marginCall) {
+      return {
+        success: false,
+        liquidationEventId,
+        totalPositionsClosed: 0,
+        totalPositionsFailed: 0,
+        initialMarginLevel: marginCallEvent.marginLevel,
+        finalMarginLevel: marginCallEvent.marginLevel,
+        totalLossRealized: 0,
+        totalSlippageApplied: 0,
+        averageLiquidationPrice: 0,
+        executionTimeMs: performance.now() - startTime,
+        closedPositions: [],
+        failedPositions: [],
+        message: `Failed to fetch margin call event: ${callError?.message || 'Unknown'}`,
+      };
+    }
+
+    const timeInCriticalMinutes = Math.floor(
+      (Date.now() - new Date(marginCall.triggered_at).getTime()) / (1000 * 60)
+    );
+
+    // 1. Validate preconditions (including time-in-critical check)
     const preconditionCheck = validateLiquidationPreConditions(
       marginCallEvent.marginLevel,
-      0, // Will check after fetching positions
+      timeInCriticalMinutes,
       marginCallEvent.accountEquity,
     );
 
@@ -191,12 +220,8 @@ async function executeLiquidationForEvent(
       };
     }
 
-    // 5. Execute liquidation for each position
-    const closedPositions = [];
-    const failedPositions = [];
-    let totalLoss = 0;
-    let totalSlippage = 0;
-    let currentMarginUsed = marginCallEvent.marginUsed;
+    // 5. Prepare positions data for atomic execution via stored procedure
+    const positionsToClose = [];
 
     for (const position of selectedPositions) {
       try {
@@ -232,119 +257,99 @@ async function executeLiquidationForEvent(
           executionPrice,
         );
 
-        // Create closed position record
-        const { error: closeError } = await supabaseClient
-          .from('positions')
-          .update({
-            status: 'closed',
-            closedAt: new Date().toISOString(),
-            closedPrice: executionPrice,
-            realizedPnL: pnl.amount,
-          })
-          .eq('id', position.id);
-
-        if (closeError) throw new Error(`Failed to close position: ${closeError.message}`);
-
-        // Record liquidation details
-        closedPositions.push({
-          positionId: position.id,
+        positionsToClose.push({
+          position_id: position.id,
           symbol: position.symbol,
-          closedAt: Date.now(),
-          executionPrice,
-          realizedPnL: pnl.amount,
+          side: position.side,
+          quantity: position.quantity,
+          entry_price: position.entryPrice,
+          liquidation_price: executionPrice,
           slippage: slippagePercent,
+          realized_pnl: pnl.amount,
         });
-
-        totalLoss += pnl.amount;
-        totalSlippage += slippagePercent;
-        currentMarginUsed -= position.marginRequired;
-
       } catch (error) {
-        failedPositions.push({
-          positionId: position.id,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
-      }
-
-      // Check if we've freed enough margin
-      if (currentMarginUsed <= liquidationNeeded.targetMarginLevel) {
-        break;
+        console.warn(`Failed to prepare position ${position.id} for liquidation: ${error}`);
       }
     }
 
-    // 6. Calculate final margin level
-    const finalEquity = marginCallEvent.accountEquity + totalLoss;
-    const finalMarginLevel = currentMarginUsed > 0 
-      ? (finalEquity / currentMarginUsed) * 100 
-      : Infinity;
+    if (positionsToClose.length === 0) {
+      return {
+        success: false,
+        liquidationEventId,
+        totalPositionsClosed: 0,
+        totalPositionsFailed: 0,
+        initialMarginLevel: marginCallEvent.marginLevel,
+        finalMarginLevel: marginCallEvent.marginLevel,
+        totalLossRealized: 0,
+        totalSlippageApplied: 0,
+        averageLiquidationPrice: 0,
+        executionTimeMs: performance.now() - startTime,
+        closedPositions: [],
+        failedPositions: [],
+        message: 'No positions could be prepared for liquidation',
+      };
+    }
 
-    // 7. Create liquidation event record
-    const { error: eventError } = await supabaseClient
-      .from('liquidation_events')
-      .insert({
-        id: liquidationEventId,
+    // 6. Call atomic stored procedure to execute liquidation in single transaction
+    const { data: atomicResult, error: atomicError } = await supabaseClient.rpc(
+      'execute_liquidation_atomic',
+      {
         user_id: marginCallEvent.userId,
         margin_call_event_id: marginCallEvent.id,
-        reason: 'margin_call_timeout',
-        status: closedPositions.length > 0 ? 'completed' : 'failed',
-        initiated_at: new Date().toISOString(),
-        completed_at: new Date().toISOString(),
-        initial_margin_level: marginCallEvent.marginLevel,
-        final_margin_level: finalMarginLevel,
-        initial_equity: marginCallEvent.accountEquity,
-        final_equity: finalEquity,
-        positions_liquidated: closedPositions.length,
-        total_realized_pnl: totalLoss,
-        total_slippage_applied: totalSlippage,
-      });
-
-    if (eventError && eventError.code !== 'PGRST116') { // Ignore duplicate errors
-      throw new Error(`Failed to create liquidation event: ${eventError.message}`);
-    }
-
-    // 8. Record closed positions
-    if (closedPositions.length > 0) {
-      const { error: recordError } = await supabaseClient
-        .from('liquidation_closed_positions')
-        .insert(
-          closedPositions.map(cp => ({
-            liquidation_event_id: liquidationEventId,
-            position_id: cp.positionId,
-            symbol: cp.symbol,
-            execution_price: cp.executionPrice,
-            realized_pnl: cp.realizedPnL,
-            slippage_percent: cp.slippage,
-            closed_at: new Date(cp.closedAt).toISOString(),
-          }))
-        );
-
-      if (recordError) {
-        console.warn(`Failed to record closed positions: ${recordError.message}`);
+        positions_to_liquidate: positionsToClose,
       }
+    );
+
+    if (atomicError) {
+      console.error('Atomic liquidation failed:', atomicError);
+      return {
+        success: false,
+        liquidationEventId,
+        totalPositionsClosed: 0,
+        totalPositionsFailed: selectedPositions.length,
+        initialMarginLevel: marginCallEvent.marginLevel,
+        finalMarginLevel: marginCallEvent.marginLevel,
+        totalLossRealized: 0,
+        totalSlippageApplied: 0,
+        averageLiquidationPrice: 0,
+        executionTimeMs: performance.now() - startTime,
+        closedPositions: [],
+        failedPositions: selectedPositions.map(p => ({ positionId: p.id, error: atomicError.message })),
+        message: `Atomic liquidation execution failed: ${atomicError.message}`,
+      };
     }
 
-    // 9. Record failed positions
-    if (failedPositions.length > 0) {
-      const { error: failError } = await supabaseClient
-        .from('liquidation_failed_attempts')
-        .insert(
-          failedPositions.map(fp => ({
-            liquidation_event_id: liquidationEventId,
-            position_id: fp.positionId,
-            error_message: fp.error,
-            attempted_at: new Date().toISOString(),
-          }))
-        );
-
-      if (failError) {
-        console.warn(`Failed to record failed positions: ${failError.message}`);
-      }
+    if (!atomicResult || !atomicResult.success) {
+      return {
+        success: false,
+        liquidationEventId,
+        totalPositionsClosed: atomicResult?.total_positions_closed || 0,
+        totalPositionsFailed: atomicResult?.total_positions_failed || 0,
+        initialMarginLevel: marginCallEvent.marginLevel,
+        finalMarginLevel: atomicResult?.final_margin_level || marginCallEvent.marginLevel,
+        totalLossRealized: atomicResult?.total_loss || 0,
+        totalSlippageApplied: atomicResult?.total_slippage || 0,
+        averageLiquidationPrice: positionsToClose.length > 0
+          ? positionsToClose.reduce((sum, p) => sum + p.liquidation_price, 0) / positionsToClose.length
+          : 0,
+        executionTimeMs: performance.now() - startTime,
+        closedPositions: positionsToClose.map(p => ({
+          positionId: p.position_id,
+          symbol: p.symbol,
+          closedAt: Date.now(),
+          executionPrice: p.liquidation_price,
+          realizedPnL: p.realized_pnl,
+          slippage: p.slippage,
+        })),
+        failedPositions: [],
+        message: `Liquidation partially failed: ${atomicResult?.message || 'Unknown error'}`,
+      };
     }
 
-    // 10. Send notifications
+    // 7. Send notifications
     const notification = generateLiquidationNotification(
       {
-        id: liquidationEventId,
+        id: atomicResult.liquidation_event_id,
         userId: marginCallEvent.userId,
         marginCallEventId: marginCallEvent.id,
         reason: LiquidationReason.MARGIN_CALL_TIMEOUT,
@@ -352,39 +357,43 @@ async function executeLiquidationForEvent(
         initiatedAt: new Date(),
         completedAt: new Date(),
         initialMarginLevel: marginCallEvent.marginLevel,
-        finalMarginLevel,
+        finalMarginLevel: atomicResult.final_margin_level,
         initialEquity: marginCallEvent.accountEquity,
-        finalEquity,
-        positionsLiquidated: closedPositions.length,
-        total_realized_pnl: totalLoss,
-        totalSlippageApplied: totalSlippage,
+        finalEquity: marginCallEvent.accountEquity + atomicResult.total_loss,
+        positionsLiquidated: atomicResult.total_positions_closed,
+        total_realized_pnl: atomicResult.total_loss,
+        totalSlippageApplied: atomicResult.total_slippage,
         details: {
-          closedPositions: closedPositions as any,
-          failedPositions: failedPositions.map(fp => ({
-            positionId: fp.positionId,
-            error: fp.error,
-          })),
+          closedPositions: positionsToClose as any,
+          failedPositions: [],
         },
         notes: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        success: closedPositions.length > 0,
-        liquidationEventId,
-        totalPositionsClosed: closedPositions.length,
-        totalPositionsFailed: failedPositions.length,
+        success: true,
+        liquidationEventId: atomicResult.liquidation_event_id,
+        totalPositionsClosed: atomicResult.total_positions_closed,
+        totalPositionsFailed: atomicResult.total_positions_failed,
         initialMarginLevel: marginCallEvent.marginLevel,
-        finalMarginLevel,
-        totalLossRealized: totalLoss,
-        totalSlippageApplied: totalSlippage,
-        averageLiquidationPrice: closedPositions.length > 0
-          ? closedPositions.reduce((sum, cp) => sum + cp.executionPrice, 0) / closedPositions.length
+        finalMarginLevel: atomicResult.final_margin_level,
+        totalLossRealized: atomicResult.total_loss,
+        totalSlippageApplied: atomicResult.total_slippage,
+        averageLiquidationPrice: positionsToClose.length > 0
+          ? positionsToClose.reduce((sum, p) => sum + p.liquidation_price, 0) / positionsToClose.length
           : 0,
         executionTimeMs: performance.now() - startTime,
-        closedPositions,
-        failedPositions,
-        message: `Liquidation executed: ${closedPositions.length} positions closed`,
+        closedPositions: positionsToClose.map(p => ({
+          positionId: p.position_id,
+          symbol: p.symbol,
+          closedAt: Date.now(),
+          executionPrice: p.liquidation_price,
+          realizedPnL: p.realized_pnl,
+          slippage: p.slippage,
+        })),
+        failedPositions: [],
+        message: `Liquidation executed: ${atomicResult.total_positions_closed} positions closed`,
       }
     );
 
@@ -403,21 +412,28 @@ async function executeLiquidationForEvent(
       });
 
     return {
-      success: closedPositions.length > 0,
-      liquidationEventId,
-      totalPositionsClosed: closedPositions.length,
-      totalPositionsFailed: failedPositions.length,
+      success: true,
+      liquidationEventId: atomicResult.liquidation_event_id,
+      totalPositionsClosed: atomicResult.total_positions_closed,
+      totalPositionsFailed: atomicResult.total_positions_failed,
       initialMarginLevel: marginCallEvent.marginLevel,
-      finalMarginLevel,
-      totalLossRealized: totalLoss,
-      totalSlippageApplied: totalSlippage,
-      averageLiquidationPrice: closedPositions.length > 0
-        ? closedPositions.reduce((sum, cp) => sum + cp.executionPrice, 0) / closedPositions.length
+      finalMarginLevel: atomicResult.final_margin_level,
+      totalLossRealized: atomicResult.total_loss,
+      totalSlippageApplied: atomicResult.total_slippage,
+      averageLiquidationPrice: positionsToClose.length > 0
+        ? positionsToClose.reduce((sum, p) => sum + p.liquidation_price, 0) / positionsToClose.length
         : 0,
       executionTimeMs: performance.now() - startTime,
-      closedPositions,
-      failedPositions,
-      message: `Liquidation completed: ${closedPositions.length}/${selectedPositions.length} positions closed`,
+      closedPositions: positionsToClose.map(p => ({
+        positionId: p.position_id,
+        symbol: p.symbol,
+        closedAt: Date.now(),
+        executionPrice: p.liquidation_price,
+        realizedPnL: p.realized_pnl,
+        slippage: p.slippage,
+      })),
+      failedPositions: [],
+      message: `Liquidation completed: ${atomicResult.total_positions_closed} positions closed`,
     };
 
   } catch (error) {

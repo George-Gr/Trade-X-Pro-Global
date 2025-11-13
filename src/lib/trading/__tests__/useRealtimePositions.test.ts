@@ -95,7 +95,7 @@ describe("useRealtimePositions: Initialization", () => {
   });
 
   it("should handle load error gracefully", () => {
-    let error: Error | null = new Error("Network error");
+    const error: Error | null = new Error("Network error");
     expect(error).toBeDefined();
     expect(error?.message).toBe("Network error");
   });
@@ -115,12 +115,12 @@ describe("useRealtimePositions: Initialization", () => {
 
 describe("useRealtimePositions: Subscription", () => {
   it("should auto-subscribe when autoSubscribe=true", () => {
-    let isSubscribed = true;
+    const isSubscribed = true;
     expect(isSubscribed).toBe(true);
   });
 
   it("should not auto-subscribe when autoSubscribe=false", () => {
-    let isSubscribed = false;
+    const isSubscribed = false;
     expect(isSubscribed).toBe(false);
   });
 
@@ -394,7 +394,7 @@ describe("useRealtimePositions: Auto-Reconnection", () => {
 
   it("should give up after max reconnection attempts", () => {
     const maxAttempts = 5;
-    let attempts = 5;
+    const attempts = 5;
 
     const shouldGiveUp = attempts >= maxAttempts;
     expect(shouldGiveUp).toBe(true);
@@ -415,22 +415,22 @@ describe("useRealtimePositions: Auto-Reconnection", () => {
 
 describe("useRealtimePositions: Connection Status", () => {
   it("should track connecting status", () => {
-    let status = "connecting" as const;
+    const status = "connecting" as const;
     expect(status).toBe("connecting");
   });
 
   it("should track connected status", () => {
-    let status = "connected" as const;
+    const status = "connected" as const;
     expect(status).toBe("connected");
   });
 
   it("should track disconnected status", () => {
-    let status = "disconnected" as const;
+    const status = "disconnected" as const;
     expect(status).toBe("disconnected");
   });
 
   it("should track error status", () => {
-    let status = "error" as const;
+    const status = "error" as const;
     expect(status).toBe("error");
   });
 
@@ -483,7 +483,7 @@ describe("useRealtimePositions: Lifecycle & Cleanup", () => {
 
   it("should handle unmount while reconnecting", () => {
     let isReconnecting = true;
-    let shouldCleanup = true;
+    const shouldCleanup = true;
 
     if (shouldCleanup) {
       isReconnecting = false;
@@ -593,7 +593,7 @@ describe("useRealtimePositions: Callbacks", () => {
 
   it("should not call callbacks after unmount", () => {
     const onUpdate = vi.fn();
-    let shouldUpdate = false;
+    const shouldUpdate = false;
 
     if (shouldUpdate) {
       onUpdate([]);

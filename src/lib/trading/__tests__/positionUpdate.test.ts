@@ -396,7 +396,7 @@ describe("Position Update: Atomic Operations", () => {
     let updateSuccessful = true;
 
     // Simulate validation failure
-    if (typeof 40000 !== "number") {
+    if (typeof originalPrice !== "number") {
       updateSuccessful = false;
     }
 
@@ -405,7 +405,7 @@ describe("Position Update: Atomic Operations", () => {
       position.current_price = originalPrice;
     }
 
-    expect(position.current_price).toBe(40000);
+    expect(position.current_price).toBe(originalPrice);
   });
 
   it("should handle concurrent updates sequentially", async () => {

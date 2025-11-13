@@ -11,7 +11,7 @@
  * - Realtime subscriptions for UI broadcast
  */
 
-// @ts-ignore - Deno import, TypeScript cannot resolve ESM URL imports
+// @ts-expect-error - Deno import, TypeScript cannot resolve ESM URL imports
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 // Deno global declaration for TypeScript support

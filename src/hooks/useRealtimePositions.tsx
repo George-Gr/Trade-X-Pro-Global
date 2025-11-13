@@ -89,6 +89,7 @@ export function useRealtimePositions(
 
   const { user } = useAuth();
   const [positions, setPositions] = useState<Position[]>([]);
+  const positionsRef = useRef<Position[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -146,6 +147,7 @@ export function useRealtimePositions(
       }));
 
       setPositions(loadedPositions);
+      positionsRef.current = loadedPositions;
       setConnectionStatus("connected");
       setError(null);
       setIsLoading(false);
@@ -206,7 +208,7 @@ export function useRealtimePositions(
               }
 
               debounceTimerRef.current = setTimeout(() => {
-                handlePositionUpdate(payload, filter);
+                handlePositionUpdateRef.current(payload, filter);
               }, debounceMs);
             }
           )
@@ -217,7 +219,7 @@ export function useRealtimePositions(
               setIsSubscribed(true);
               setError(null);
             } else if (status === "CHANNEL_ERROR") {
-              handleSubscriptionError();
+              handleSubscriptionErrorRef.current();
             }
           });
 
@@ -236,6 +238,15 @@ export function useRealtimePositions(
     },
     [userId, debounceMs, onError]
   );
+
+  // Create refs for callbacks to avoid circular dependencies
+  const handlePositionUpdateRef = useRef(handlePositionUpdate);
+  const handleSubscriptionErrorRef = useRef(handleSubscriptionError);
+
+  useEffect(() => {
+    handlePositionUpdateRef.current = handlePositionUpdate;
+    handleSubscriptionErrorRef.current = handleSubscriptionError;
+  }, [handlePositionUpdate, handleSubscriptionError]);
 
   // =========================================================================
   // HANDLE POSITION UPDATES
@@ -275,14 +286,15 @@ export function useRealtimePositions(
             break;
         }
 
+        positionsRef.current = updated;
         return updated;
       });
 
       if (onUpdate) {
-        onUpdate(positions);
+        onUpdate(positionsRef.current);
       }
     },
-    [onUpdate, positions]
+    [onUpdate]
   );
 
   // =========================================================================

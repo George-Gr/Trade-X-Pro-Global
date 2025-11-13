@@ -92,3 +92,20 @@ pnlCalcContent = pnlCalcContent.replace(
 );
 fs.writeFileSync(pnlCalcDest, pnlCalcContent, 'utf8');
 console.log('P&L calculations synchronized to', pnlCalcDest);
+
+// Sync liquidationEngine
+const liqEngineSrc = path.resolve(__dirname, '../src/lib/trading/liquidationEngine.ts');
+const liqEngineDest = path.join(destDir, 'liquidationEngine.ts');
+
+if (!fs.existsSync(liqEngineSrc)) {
+  console.error('Source liquidation engine not found:', liqEngineSrc);
+} else {
+  let liqEngineContent = fs.readFileSync(liqEngineSrc, 'utf8');
+  // Replace zod import for Deno runtime if present
+  liqEngineContent = liqEngineContent.replace(
+    "import { z } from 'zod';",
+    "import { z } from \"https://deno.land/x/zod@v3.22.4/mod.ts\";"
+  );
+  fs.writeFileSync(liqEngineDest, liqEngineContent, 'utf8');
+  console.log('Liquidation engine synchronized to', liqEngineDest);
+}
