@@ -1,6 +1,15 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import {
+  validateOrderInput,
+  validateAssetExists,
+  validateQuantity,
+  validateAccountStatus,
+  validateKYCStatus,
+  validateMarketHours,
+  ValidationError,
+} from "../lib/orderValidation.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,23 +99,22 @@ serve(async (req) => {
       );
     }
 
-    // Parse and validate request body
+    // Parse and validate request body using shared validators
     const body = await req.json();
-    const validation = OrderRequestSchema.safeParse(body);
-
-    if (!validation.success) {
-      console.error('Input validation failed:', validation.error);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Invalid input', 
-          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    let orderRequest: any;
+    try {
+      orderRequest = await validateOrderInput(body);
+      console.log('Order request validated:', orderRequest.order_type, orderRequest.side);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        console.error('Order input validation failed:', err.details || err.message);
+        return new Response(
+          JSON.stringify({ error: err.message, details: err.details }),
+          { status: err.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      throw err;
     }
-
-    const orderRequest = validation.data;
-    console.log('Order request validated:', orderRequest.order_type, orderRequest.side);
 
     // =========================================
     // VALIDATION STEP 1: Check user profile and KYC status
@@ -124,23 +132,22 @@ serve(async (req) => {
       );
     }
 
-    // Check KYC status
-    if (profile.kyc_status !== 'approved') {
-      return new Response(
-        JSON.stringify({ error: 'KYC verification required', kyc_status: profile.kyc_status }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Validate profile (KYC and account status) via shared validators
+    try {
+      validateKYCStatus(profile);
+      validateAccountStatus(profile);
+      console.log('User profile validated');
+    } catch (err: unknown) {
+      if (err instanceof ValidationError) {
+        const ve = err as ValidationError;
+        return new Response(
+          JSON.stringify({ error: ve.message, details: ve.details }),
+          { status: ve.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      // Re-throw non-validation errors to outer handler
+      throw err;
     }
-
-    // Check account status
-    if (profile.account_status !== 'active') {
-      return new Response(
-        JSON.stringify({ error: 'Account suspended or closed' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    console.log('User profile validated');
 
     // =========================================
     // VALIDATION STEP 2: Check idempotency
@@ -165,37 +172,25 @@ serve(async (req) => {
     }
 
     // =========================================
-    // VALIDATION STEP 3: Validate asset
+    // VALIDATION STEP 3: Validate asset and quantity using shared validators
     // =========================================
-    const { data: assetSpec, error: assetError } = await supabase
-      .from('asset_specs')
-      .select('*')
-      .eq('symbol', orderRequest.symbol)
-      .eq('is_tradable', true)
-      .maybeSingle();
-
-    if (assetError || !assetSpec) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid or untradable symbol' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    console.log('Asset validated');
-
-    // =========================================
-    // VALIDATION STEP 4: Validate quantity
-    // =========================================
-    if (orderRequest.quantity < assetSpec.min_quantity || 
-        orderRequest.quantity > assetSpec.max_quantity) {
-      return new Response(
-        JSON.stringify({ 
-          error: 'Invalid quantity',
-          min_quantity: assetSpec.min_quantity,
-          max_quantity: assetSpec.max_quantity
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    let assetSpec: any;
+    try {
+      assetSpec = await validateAssetExists(supabase, orderRequest.symbol);
+      validateQuantity(orderRequest, assetSpec);
+      // Check market hours and leverage if assetSpec provides data
+      validateMarketHours(assetSpec);
+      // validateLeverage(profile, assetSpec); // optional - uncomment if profile provides leverage caps
+      console.log('Asset & quantity validated');
+    } catch (err: unknown) {
+      if (err instanceof ValidationError) {
+        const ve = err as ValidationError;
+        return new Response(
+          JSON.stringify({ error: ve.message, details: ve.details }),
+          { status: ve.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      throw err;
     }
 
     // =========================================
@@ -293,19 +288,19 @@ serve(async (req) => {
         throw new Error('Failed to fetch market price');
       }
 
-      const priceData = await priceResponse.json();
-      
-      // Use current price (c) or fallback to previous close (pc)
-      currentPrice = priceData.c || priceData.pc;
+  const priceData: any = await priceResponse.json();
+
+  // Use current price (c) or fallback to previous close (pc)
+  currentPrice = priceData.c || priceData.pc;
       
       if (!currentPrice || currentPrice === 0) {
         throw new Error('Invalid price data received');
       }
 
       console.log('Market price fetched successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Market data unavailable');
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return new Response(
         JSON.stringify({ error: 'Market data unavailable', details: errorMessage }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
