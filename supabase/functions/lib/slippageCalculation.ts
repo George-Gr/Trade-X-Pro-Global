@@ -528,7 +528,7 @@ export function calculateSlippage(input: SlippageCalculationInput): SlippageResu
   const validation = SlippageCalculationSchema.safeParse(input);
   if (!validation.success) {
     const details = validation.error.issues
-      .map((i: any) => `${i.path.join('.')}: ${i.message}`)
+      .map((issue: { path: PropertyKey[]; message: string }) => `${issue.path.join('.')}: ${issue.message}`)
       .join(', ');
     throw new SlippageCalculationError(400, 'Invalid slippage input', details);
   }

@@ -21,6 +21,32 @@ export class ValidationError extends Error {
   }
 }
 
+// Type definitions for database objects
+interface AssetSpec {
+  symbol: string;
+  min_quantity: number;
+  max_quantity: number;
+  is_tradable: boolean;
+  trading_hours?: { open: string; close: string };
+  leverage?: number;
+}
+
+interface UserProfile {
+  account_status: string;
+  kyc_status: string;
+  max_leverage?: number;
+}
+
+interface SupabaseClient {
+  from(table: string): {
+    select(columns: string): {
+      eq(column: string, value: string | boolean): {
+        maybeSingle(): Promise<{ data: AssetSpec | null; error: Error | null }>;
+      };
+    };
+  };
+}
+
 export const OrderRequestSchema = z.object({
   symbol: z.string()
     .trim()
@@ -39,13 +65,13 @@ export const OrderRequestSchema = z.object({
 export function validateOrderInput(body: unknown) {
   const validation = OrderRequestSchema.safeParse(body);
   if (!validation.success) {
-    const details = validation.error.issues.map((i: any) => `${i.path.join('.')}: ${i.message}`).join(', ');
+    const details = validation.error.issues.map((issue: { path: PropertyKey[]; message: string }) => `${issue.path.join('.')}: ${issue.message}`).join(', ');
     throw new ValidationError(400, 'Invalid input', details);
   }
   return validation.data;
 }
 
-export async function validateAssetExists(db: any, symbol: string) {
+export async function validateAssetExists(db: SupabaseClient, symbol: string) {
   const { data: assetSpec, error } = await db
     .from('asset_specs')
     .select('*')
@@ -60,7 +86,7 @@ export async function validateAssetExists(db: any, symbol: string) {
   return assetSpec;
 }
 
-export function validateQuantity(orderRequest: any, assetSpec: any) {
+export function validateQuantity(orderRequest: { quantity: number }, assetSpec: AssetSpec) {
   const minQ = typeof assetSpec.min_quantity === 'number' ? assetSpec.min_quantity : 0;
   const maxQ = typeof assetSpec.max_quantity === 'number' ? assetSpec.max_quantity : Number.MAX_SAFE_INTEGER;
 
@@ -69,7 +95,7 @@ export function validateQuantity(orderRequest: any, assetSpec: any) {
   }
 }
 
-export function validateAccountStatus(profile: any) {
+export function validateAccountStatus(profile: UserProfile | null) {
   if (!profile) {
     throw new ValidationError(404, 'User profile not found');
   }
@@ -78,7 +104,7 @@ export function validateAccountStatus(profile: any) {
   }
 }
 
-export function validateKYCStatus(profile: any) {
+export function validateKYCStatus(profile: UserProfile | null) {
   if (!profile) {
     throw new ValidationError(404, 'User profile not found');
   }
@@ -87,7 +113,7 @@ export function validateKYCStatus(profile: any) {
   }
 }
 
-export function validateMarketHours(assetSpec: any, now = new Date()) {
+export function validateMarketHours(assetSpec: AssetSpec | null, now = new Date()) {
   const hours = assetSpec?.trading_hours;
   if (!hours) return true;
   try {
@@ -105,7 +131,7 @@ export function validateMarketHours(assetSpec: any, now = new Date()) {
   }
 }
 
-export function validateLeverage(profile: any, assetSpec: any) {
+export function validateLeverage(profile: UserProfile | null, assetSpec: AssetSpec | null) {
   const assetLeverage = assetSpec?.leverage ?? null;
   const userMax = profile?.max_leverage ?? null;
   if (assetLeverage && userMax && assetLeverage > userMax) {

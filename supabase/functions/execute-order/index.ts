@@ -10,6 +10,32 @@ import {
   validateMarketHours,
   ValidationError,
 } from "../lib/orderValidation.ts";
+import {
+  calculateMarginRequired,
+  calculateFreeMargin,
+  calculateMarginLevel,
+  MarginCalculationError,
+} from "../lib/marginCalculations.ts";
+import {
+  calculateSlippage,
+  getExecutionPrice,
+  SlippageCalculationError,
+  SlippageResult,
+} from "../lib/slippageCalculation.ts";
+import {
+  calculateCommission,
+  CommissionCalculationError,
+  CommissionResult,
+  AssetClass,
+  AccountTier,
+} from "../lib/commissionCalculation.ts";
+import {
+  shouldOrderExecute,
+  calculateExecutionPrice as calcExecPrice,
+  calculateUnrealizedPnL,
+  validateExecutionPreConditions,
+  ExecutionError,
+} from "../lib/orderMatching.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -47,6 +73,23 @@ const OrderRequestSchema = z.object({
   idempotency_key: z.string()
     .min(1, 'Idempotency key required')
 });
+
+// Type extraction from schema
+type OrderRequest = z.infer<typeof OrderRequestSchema>;
+
+interface PriceData {
+  c?: number;
+  pc?: number;
+}
+
+interface AssetSpec {
+  symbol: string;
+  min_quantity: number;
+  max_quantity: number;
+  is_tradable: boolean;
+  trading_hours?: { open: string; close: string };
+  leverage?: number;
+}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -101,7 +144,7 @@ serve(async (req) => {
 
     // Parse and validate request body using shared validators
     const body = await req.json();
-    let orderRequest: any;
+    let orderRequest: OrderRequest;
     try {
       orderRequest = await validateOrderInput(body);
       console.log('Order request validated:', orderRequest.order_type, orderRequest.side);
@@ -174,7 +217,7 @@ serve(async (req) => {
     // =========================================
     // VALIDATION STEP 3: Validate asset and quantity using shared validators
     // =========================================
-    let assetSpec: any;
+    let assetSpec: AssetSpec;
     try {
       assetSpec = await validateAssetExists(supabase, orderRequest.symbol);
       validateQuantity(orderRequest, assetSpec);
@@ -288,7 +331,7 @@ serve(async (req) => {
         throw new Error('Failed to fetch market price');
       }
 
-  const priceData: any = await priceResponse.json();
+  const priceData: PriceData = await priceResponse.json();
 
   // Use current price (c) or fallback to previous close (pc)
   currentPrice = priceData.c || priceData.pc;
@@ -308,28 +351,153 @@ serve(async (req) => {
     }
 
     // =========================================
-    // STEP 6: Calculate margin requirement (pre-check)
+    // STEP 6: Calculate margin requirement using margin calculation module
     // =========================================
-    const contractSize = 100000; // Standard lot size
-    const leverage = assetSpec.leverage;
-    const marginRequired = (orderRequest.quantity * contractSize * currentPrice) / leverage;
-    const freeMargin = profile.equity - profile.margin_used;
+    console.log('Calculating margin requirements');
+    
+    try {
+      const marginRequired = calculateMarginRequired(
+        orderRequest.quantity,
+        currentPrice,
+        assetSpec.leverage || 1
+      );
+      
+      const freeMargin = calculateFreeMargin(
+        profile.equity,
+        profile.margin_used
+      );
+      
+      const marginLevel = calculateMarginLevel(
+        profile.equity,
+        profile.margin_used
+      );
 
-    console.log('Margin validation completed');
+      console.log(`Margin: required=${marginRequired}, free=${freeMargin}, level=${marginLevel}%`);
 
-    if (freeMargin < marginRequired) {
+      if (freeMargin < marginRequired) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Insufficient margin',
+            required: marginRequired.toFixed(2),
+            available: freeMargin.toFixed(2),
+            margin_level: marginLevel.toFixed(2)
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    } catch (err) {
+      if (err instanceof MarginCalculationError) {
+        console.error('Margin calculation error:', err.details);
+        return new Response(
+          JSON.stringify({ error: 'Margin calculation failed', details: err.details }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      throw err;
+    }
+
+    // =========================================
+    // STEP 7: Calculate slippage using slippage calculation module
+    // =========================================
+    console.log('Calculating order slippage');
+    
+    let slippageResult: SlippageResult;
+    try {
+      slippageResult = calculateSlippage({
+        symbol: orderRequest.symbol,
+        assetClass: assetSpec.asset_class.toLowerCase(),
+        side: orderRequest.side,
+        quantity: orderRequest.quantity,
+        currentPrice: currentPrice,
+        currentVolatility: assetSpec.volatility || 20, // Default 20% volatility
+        averageVolatility: assetSpec.avg_volatility || 20,
+        liquidity: assetSpec.liquidity_base || 1000000,
+        isAfterHours: false, // TODO: Implement market hours check
+      });
+
+      console.log(`Slippage calculated: ${slippageResult.totalSlippage.toFixed(6)} (base: ${slippageResult.baseSlippage.toFixed(6)})`);
+    } catch (err) {
+      if (err instanceof SlippageCalculationError) {
+        console.error('Slippage calculation error:', err.details);
+        return new Response(
+          JSON.stringify({ error: 'Slippage calculation failed', details: err.details }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      throw err;
+    }
+
+    // =========================================
+    // STEP 8: Calculate execution price with slippage
+    // =========================================
+    const executionPrice = calcExecPrice(currentPrice, orderRequest.side, slippageResult.totalSlippage);
+    console.log(`Execution price: ${executionPrice.toFixed(4)} (market: ${currentPrice.toFixed(4)})`);
+
+    // =========================================
+    // STEP 9: Calculate commission using commission calculation module
+    // =========================================
+    console.log('Calculating order commission');
+    
+    let commissionResult: CommissionResult;
+    try {
+      // Map asset class string to enum
+      const assetClassMap: Record<string, AssetClass> = {
+        'forex': AssetClass.Forex,
+        'stock': AssetClass.Stock,
+        'index': AssetClass.Index,
+        'commodity': AssetClass.Commodity,
+        'crypto': AssetClass.Crypto,
+        'etf': AssetClass.ETF,
+        'bond': AssetClass.Bond,
+      };
+
+      const commissionAssetClass = assetClassMap[assetSpec.asset_class.toLowerCase()] || AssetClass.Forex;
+      
+      commissionResult = calculateCommission({
+        symbol: orderRequest.symbol,
+        assetClass: commissionAssetClass,
+        side: orderRequest.side,
+        quantity: orderRequest.quantity,
+        executionPrice: executionPrice,
+        accountTier: AccountTier.Standard, // TODO: Get from user profile tier
+      });
+
+      console.log(`Commission calculated: $${commissionResult.totalCommission.toFixed(2)}`);
+    } catch (err) {
+      if (err instanceof CommissionCalculationError) {
+        console.error('Commission calculation error:', err.details);
+        return new Response(
+          JSON.stringify({ error: 'Commission calculation failed', details: err.details }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      throw err;
+    }
+
+    // =========================================
+    // STEP 10: Calculate total order cost including commission
+    // =========================================
+    const orderValue = orderRequest.quantity * executionPrice;
+    const totalOrderCost = orderRequest.side === 'buy' 
+      ? orderValue + commissionResult.totalCommission
+      : orderValue - commissionResult.totalCommission;
+    
+    console.log(`Total order cost: $${totalOrderCost.toFixed(2)} (value: $${orderValue.toFixed(2)}, commission: $${commissionResult.totalCommission.toFixed(2)})`);
+
+    // Verify sufficient balance for buy orders
+    if (orderRequest.side === 'buy' && profile.balance < totalOrderCost) {
       return new Response(
         JSON.stringify({ 
-          error: 'Insufficient margin',
-          required: marginRequired.toFixed(2),
-          available: freeMargin.toFixed(2)
+          error: 'Insufficient balance',
+          required: totalOrderCost.toFixed(2),
+          available: profile.balance.toFixed(2)
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // =========================================
-    // STEP 7: Execute order atomically via stored procedure
+    // STEP 11: Execute order atomically via stored procedure
     // =========================================
     console.log('Calling execute_order_atomic stored procedure');
     
@@ -344,7 +512,9 @@ serve(async (req) => {
       p_take_profit: orderRequest.take_profit || null,
       p_idempotency_key: orderRequest.idempotency_key,
       p_current_price: currentPrice,
-      p_slippage: 0.0005 // 0.05% default slippage for market orders
+      p_execution_price: executionPrice,
+      p_slippage: slippageResult.totalSlippage,
+      p_commission: commissionResult.totalCommission,
     });
 
     if (execError) {
@@ -358,12 +528,18 @@ serve(async (req) => {
     console.log('Order executed successfully');
 
     // =========================================
-    // STEP 8: Return success response
+    // STEP 12: Return success response
     // =========================================
     return new Response(
       JSON.stringify({
         success: true,
-        data: result
+        data: result,
+        execution_details: {
+          execution_price: executionPrice.toFixed(4),
+          slippage: slippageResult.totalSlippage.toFixed(6),
+          commission: commissionResult.totalCommission.toFixed(2),
+          total_cost: totalOrderCost.toFixed(2),
+        }
       }),
       { 
         status: 200, 

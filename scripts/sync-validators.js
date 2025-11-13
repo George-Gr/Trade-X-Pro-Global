@@ -58,3 +58,20 @@ slippageCalcContent = slippageCalcContent.replace(
 );
 fs.writeFileSync(slippageCalcDest, slippageCalcContent, 'utf8');
 console.log('Slippage calculations synchronized to', slippageCalcDest);
+
+// Sync commissionCalculation
+const commissionCalcSrc = path.resolve(__dirname, '../src/lib/trading/commissionCalculation.ts');
+const commissionCalcDest = path.join(destDir, 'commissionCalculation.ts');
+
+if (!fs.existsSync(commissionCalcSrc)) {
+  console.error('Source commission calculations not found:', commissionCalcSrc);
+  process.exit(1);
+}
+
+let commissionCalcContent = fs.readFileSync(commissionCalcSrc, 'utf8');
+commissionCalcContent = commissionCalcContent.replace(
+  "import { z } from 'zod';",
+  "import { z } from \"https://deno.land/x/zod@v3.22.4/mod.ts\";"
+);
+fs.writeFileSync(commissionCalcDest, commissionCalcContent, 'utf8');
+console.log('Commission calculations synchronized to', commissionCalcDest);
