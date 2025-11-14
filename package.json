@@ -11,7 +11,13 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "sync-validators": "node ./scripts/sync-validators.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "supabase:link": "supabase link",
+    "supabase:status": "supabase status",
+    "supabase:push": "supabase push",
+    "supabase:pull": "supabase pull",
+    "supabase:migrations": "supabase migrations list",
+    "supabase:functions:deploy": "supabase functions deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -88,6 +94,7 @@
     "lovable-tagger": "^1.1.11",
     "postcss": "^8.5.6",
     "rollup-plugin-visualizer": "^5.14.0",
+    "supabase": "^2.58.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
