@@ -1,0 +1,589 @@
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {
+  PositionCard,
+  PositionMetrics,
+  PositionsGrid,
+  calculateUnrealizedPnL,
+  calculatePnLPercentage,
+  getPositionColor,
+  type Position,
+  type PositionMetricsData,
+} from '../PositionsGrid';
+
+// ============================================================================
+// PositionCard Tests
+// ============================================================================
+
+describe('PositionCard', () => {
+  const mockPosition: Position = {
+    id: 'pos-123',
+    symbol: 'EURUSD',
+    quantity: 100,
+    entry_price: 1.0850,
+    current_price: 1.0900,
+    side: 'long',
+    opened_at: new Date('2025-11-10T10:00:00'),
+    leverage: 10,
+    margin_used: 1000,
+  };
+
+  it('should render position symbol', () => {
+    render(<PositionCard position={mockPosition} />);
+    expect(screen.getByText('EURUSD')).toBeInTheDocument();
+  });
+
+  it('should display position size and side', () => {
+    render(<PositionCard position={mockPosition} />);
+    expect(screen.getByText('100')).toBeInTheDocument();
+    expect(screen.getByText(/LONG/)).toBeInTheDocument();
+  });
+
+  it('should show entry and current price', () => {
+    render(<PositionCard position={mockPosition} />);
+    expect(screen.getByText('1.0850')).toBeInTheDocument();
+    expect(screen.getByText('1.0900')).toBeInTheDocument();
+  });
+
+  it('should display leverage', () => {
+    render(<PositionCard position={mockPosition} />);
+    expect(screen.getByText('10x')).toBeInTheDocument();
+  });
+
+  it('should calculate and show unrealized P&L', () => {
+    render(<PositionCard position={mockPosition} />);
+    // (1.0900 - 1.0850) * 100 = 0.5
+    expect(screen.getByText(/\$0.50/)).toBeInTheDocument();
+  });
+
+  it('should show P&L in green for profitable position', () => {
+    render(<PositionCard position={mockPosition} />);
+    const pnlElement = screen.getByText(/\$0.50/);
+    expect(pnlElement).toHaveClass('text-green-600');
+  });
+
+  it('should show P&L in red for losing position', () => {
+    const losingPosition: Position = {
+      ...mockPosition,
+      current_price: 1.0800,
+    };
+    render(<PositionCard position={losingPosition} />);
+    const pnlElement = screen.getByText(/-\$0.50/);
+    expect(pnlElement).toHaveClass('text-red-600');
+  });
+
+  it('should display short position correctly', () => {
+    const shortPosition: Position = {
+      ...mockPosition,
+      side: 'short',
+    };
+    render(<PositionCard position={shortPosition} />);
+    expect(screen.getByText(/SHORT/)).toBeInTheDocument();
+    expect(screen.getByText(/SHORT/)).toHaveClass('text-orange-600');
+  });
+
+  it('should show position duration', () => {
+    render(<PositionCard position={mockPosition} />);
+    expect(screen.getByText(/Opened:/)).toBeInTheDocument();
+  });
+
+  it('should display margin usage', () => {
+    render(<PositionCard position={mockPosition} />);
+    expect(screen.getByText(/\$1,000.00/)).toBeInTheDocument();
+  });
+
+  it('should show RRR (Risk-Reward Ratio) when available', () => {
+    const positionWithRRR: Position = {
+      ...mockPosition,
+      risk_reward_ratio: 1.5,
+    };
+    render(<PositionCard position={positionWithRRR} />);
+    expect(screen.getByText('1.5:1')).toBeInTheDocument();
+  });
+
+  it('should display stop loss level if set', () => {
+    const positionWithSL: Position = {
+      ...mockPosition,
+      stop_loss: 1.0800,
+    };
+    render(<PositionCard position={positionWithSL} />);
+    expect(screen.getByText('SL: 1.0800')).toBeInTheDocument();
+  });
+
+  it('should display take profit level if set', () => {
+    const positionWithTP: Position = {
+      ...mockPosition,
+      take_profit: 1.1000,
+    };
+    render(<PositionCard position={positionWithTP} />);
+    expect(screen.getByText('TP: 1.1000')).toBeInTheDocument();
+  });
+
+  it('should call onClose callback when close button clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnClose = vi.fn();
+    render(<PositionCard position={mockPosition} onClose={mockOnClose} />);
+
+    const closeButton = screen.getByRole('button', { name: /Close/i });
+    await user.click(closeButton);
+    expect(mockOnClose).toHaveBeenCalledWith(mockPosition.id);
+  });
+
+  it('should call onModify callback when modify button clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnModify = vi.fn();
+    render(<PositionCard position={mockPosition} onModify={mockOnModify} />);
+
+    const modifyButton = screen.getByRole('button', { name: /Modify/i });
+    await user.click(modifyButton);
+    expect(mockOnModify).toHaveBeenCalledWith(mockPosition.id);
+  });
+
+  it('should have loading state for price updates', () => {
+    render(
+      <PositionCard position={mockPosition} isUpdating={true} />
+    );
+    expect(screen.getByRole('status')).toHaveClass('animate-spin');
+  });
+
+  it('should show close button only when position is not locked', () => {
+    render(<PositionCard position={mockPosition} isLocked={false} />);
+    expect(screen.getByRole('button', { name: /Close/i })).not.toBeDisabled();
+
+    const { unmount } = render(
+      <PositionCard position={mockPosition} isLocked={true} />
+    );
+    expect(screen.getByRole('button', { name: /Close/i })).toBeDisabled();
+    unmount();
+  });
+
+  it('should format large numbers with commas', () => {
+    const largePosition: Position = {
+      ...mockPosition,
+      quantity: 10000,
+      margin_used: 100000,
+    };
+    render(<PositionCard position={largePosition} />);
+    expect(screen.getByText('10,000')).toBeInTheDocument();
+    expect(screen.getByText('$100,000.00')).toBeInTheDocument();
+  });
+});
+
+// ============================================================================
+// PositionMetrics Tests
+// ============================================================================
+
+describe('PositionMetrics', () => {
+  const mockMetrics: PositionMetricsData = {
+    totalPositions: 5,
+    openPositions: 3,
+    totalMarginUsed: 50000,
+    availableMargin: 30000,
+    marginLevel: 160,
+    totalUnrealizedPnL: 1500.50,
+    averageLeverage: 8,
+  };
+
+  it('should render total positions count', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    expect(screen.getByText('Total Positions')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+
+  it('should show open positions count', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    expect(screen.getByText('Open Positions')).toBeInTheDocument();
+    expect(screen.getByText('3')).toBeInTheDocument();
+  });
+
+  it('should display margin utilization percentage', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    const marginPercent = (50000 / (50000 + 30000)) * 100;
+    expect(screen.getByText(new RegExp(`${marginPercent.toFixed(1)}%`))).toBeInTheDocument();
+  });
+
+  it('should show margin level with color indicator', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    expect(screen.getByText('Margin Level')).toBeInTheDocument();
+    expect(screen.getByText('160%')).toBeInTheDocument();
+  });
+
+  it('should color margin level green when above 100%', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    const marginLevel = screen.getByText('160%');
+    expect(marginLevel).toHaveClass('text-green-600');
+  });
+
+  it('should color margin level red when below 100%', () => {
+    const lowMarginMetrics: PositionMetricsData = {
+      ...mockMetrics,
+      marginLevel: 80,
+    };
+    render(<PositionMetrics metrics={lowMarginMetrics} />);
+    const marginLevel = screen.getByText('80%');
+    expect(marginLevel).toHaveClass('text-red-600');
+  });
+
+  it('should display unrealized P&L', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    expect(screen.getByText(/Unrealized P&L/)).toBeInTheDocument();
+    expect(screen.getByText(/\$1,500.50/)).toBeInTheDocument();
+  });
+
+  it('should show P&L in green for positive values', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    const pnlElement = screen.getByText(/\$1,500.50/);
+    expect(pnlElement).toHaveClass('text-green-600');
+  });
+
+  it('should show P&L in red for negative values', () => {
+    const negativeMetrics: PositionMetricsData = {
+      ...mockMetrics,
+      totalUnrealizedPnL: -750.25,
+    };
+    render(<PositionMetrics metrics={negativeMetrics} />);
+    const pnlElement = screen.getByText(/-\$750.25/);
+    expect(pnlElement).toHaveClass('text-red-600');
+  });
+
+  it('should display available margin', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    expect(screen.getByText(/Available Margin/)).toBeInTheDocument();
+    expect(screen.getByText(/\$30,000.00/)).toBeInTheDocument();
+  });
+
+  it('should display average leverage', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    expect(screen.getByText(/Average Leverage/)).toBeInTheDocument();
+    expect(screen.getByText('8x')).toBeInTheDocument();
+  });
+
+  it('should show warning when margin level is low', () => {
+    const criticalMetrics: PositionMetricsData = {
+      ...mockMetrics,
+      marginLevel: 50,
+    };
+    render(<PositionMetrics metrics={criticalMetrics} />);
+    expect(screen.getByText(/Margin call/)).toBeInTheDocument();
+  });
+
+  it('should display margin breakdown chart', () => {
+    const { container } = render(<PositionMetrics metrics={mockMetrics} />);
+    const chart = container.querySelector('[data-testid="margin-breakdown"]');
+    expect(chart).toBeInTheDocument();
+  });
+
+  it('should format all monetary values with USD currency', () => {
+    render(<PositionMetrics metrics={mockMetrics} />);
+    const elements = screen.getAllByText(/\$/);
+    expect(elements.length).toBeGreaterThan(0);
+  });
+});
+
+// ============================================================================
+// PositionsGrid Tests
+// ============================================================================
+
+describe('PositionsGrid', () => {
+  const mockPositions: Position[] = [
+    {
+      id: 'pos-1',
+      symbol: 'EURUSD',
+      quantity: 100,
+      entry_price: 1.0850,
+      current_price: 1.0900,
+      side: 'long',
+      opened_at: new Date('2025-11-10T10:00:00'),
+      leverage: 10,
+      margin_used: 1000,
+    },
+    {
+      id: 'pos-2',
+      symbol: 'GBPUSD',
+      quantity: 50,
+      entry_price: 1.2800,
+      current_price: 1.2750,
+      side: 'short',
+      opened_at: new Date('2025-11-11T14:30:00'),
+      leverage: 5,
+      margin_used: 2000,
+    },
+  ];
+
+  it('should render all positions in grid', () => {
+    render(<PositionsGrid positions={mockPositions} />);
+    expect(screen.getByText('EURUSD')).toBeInTheDocument();
+    expect(screen.getByText('GBPUSD')).toBeInTheDocument();
+  });
+
+  it('should display position metrics summary', () => {
+    render(<PositionsGrid positions={mockPositions} />);
+    expect(screen.getByText(/Total Positions/)).toBeInTheDocument();
+  });
+
+  it('should show loading state', () => {
+    render(<PositionsGrid positions={[]} isLoading={true} />);
+    expect(screen.getByText(/Loading positions/)).toBeInTheDocument();
+  });
+
+  it('should show empty state when no positions', () => {
+    render(<PositionsGrid positions={[]} />);
+    expect(screen.getByText(/No open positions/)).toBeInTheDocument();
+  });
+
+  it('should show error state', () => {
+    const error = new Error('Failed to load positions');
+    render(<PositionsGrid positions={[]} error={error} />);
+    expect(screen.getByText(/Error loading positions/)).toBeInTheDocument();
+  });
+
+  it('should filter positions by symbol', async () => {
+    const user = userEvent.setup();
+    render(<PositionsGrid positions={mockPositions} />);
+
+    const searchInput = screen.getByPlaceholderText('Search by symbol...');
+    await user.type(searchInput, 'EUR');
+
+    expect(screen.getByText('EURUSD')).toBeInTheDocument();
+    expect(screen.queryByText('GBPUSD')).not.toBeInTheDocument();
+  });
+
+  it('should filter positions by side (long/short)', async () => {
+    const user = userEvent.setup();
+    render(<PositionsGrid positions={mockPositions} />);
+
+    const sideSelect = screen.getByDisplayValue('All Sides');
+    await user.click(sideSelect);
+    const longOption = await screen.findByText(/Long/);
+    await user.click(longOption);
+
+    expect(screen.getByText('EURUSD')).toBeInTheDocument();
+    expect(screen.queryByText('GBPUSD')).not.toBeInTheDocument();
+  });
+
+  it('should filter positions by profitability', async () => {
+    const user = userEvent.setup();
+    render(<PositionsGrid positions={mockPositions} />);
+
+    const filterSelect = screen.getByDisplayValue('All Positions');
+    await user.click(filterSelect);
+    const profitableOption = await screen.findByText(/Profitable/);
+    await user.click(profitableOption);
+
+    // Only EURUSD is profitable (1.0900 > 1.0850)
+    expect(screen.getByText('EURUSD')).toBeInTheDocument();
+    expect(screen.queryByText('GBPUSD')).not.toBeInTheDocument();
+  });
+
+  it('should sort positions by different criteria', async () => {
+    const user = userEvent.setup();
+    render(<PositionsGrid positions={mockPositions} />);
+
+    const sortSelect = screen.getByDisplayValue('Recent');
+    await user.click(sortSelect);
+    const pnlOption = await screen.findByText(/P&L/);
+    await user.click(pnlOption);
+
+    // Positions should be sorted by P&L
+  });
+
+  it('should call onClose callback when closing position', async () => {
+    const user = userEvent.setup();
+    const mockOnClose = vi.fn();
+    render(<PositionsGrid positions={mockPositions} onClose={mockOnClose} />);
+
+    const closeButtons = screen.getAllByRole('button', { name: /Close/i });
+    await user.click(closeButtons[0]);
+
+    // Confirmation dialog might appear
+    const confirmButton = await screen.findByRole('button', { name: /Confirm/ });
+    await user.click(confirmButton);
+    expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it('should call onModify callback when modifying position', async () => {
+    const user = userEvent.setup();
+    const mockOnModify = vi.fn();
+    render(<PositionsGrid positions={mockPositions} onModify={mockOnModify} />);
+
+    const modifyButtons = screen.getAllByRole('button', { name: /Modify/i });
+    await user.click(modifyButtons[0]);
+    expect(mockOnModify).toHaveBeenCalled();
+  });
+
+  it('should refresh positions when refresh button clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnRefresh = vi.fn();
+    render(<PositionsGrid positions={mockPositions} onRefresh={mockOnRefresh} />);
+
+    const refreshButton = screen.getByRole('button', { name: /Refresh/i });
+    await user.click(refreshButton);
+    expect(mockOnRefresh).toHaveBeenCalled();
+  });
+
+  it('should show total statistics across all positions', () => {
+    render(<PositionsGrid positions={mockPositions} />);
+    expect(screen.getByText(/Total Positions: 2/)).toBeInTheDocument();
+  });
+
+  it('should update real-time price changes', async () => {
+    const { rerender } = render(
+      <PositionsGrid positions={mockPositions} />
+    );
+
+    const updatedPosition: Position = {
+      ...mockPositions[0],
+      current_price: 1.0920,
+    };
+
+    rerender(
+      <PositionsGrid positions={[updatedPosition, mockPositions[1]]} />
+    );
+
+    expect(screen.getByText('1.0920')).toBeInTheDocument();
+  });
+
+  it('should display responsive grid layout', () => {
+    const { container } = render(<PositionsGrid positions={mockPositions} />);
+    const grid = container.querySelector('[class*="grid-cols"]');
+    expect(grid).toBeInTheDocument();
+  });
+
+  it('should show confirmation dialog before closing position', async () => {
+    const user = userEvent.setup();
+    render(<PositionsGrid positions={mockPositions} />);
+
+    const closeButtons = screen.getAllByRole('button', { name: /Close/i });
+    await user.click(closeButtons[0]);
+
+    expect(screen.getByText(/Close position/)).toBeInTheDocument();
+  });
+
+  it('should handle mass close with multi-select', async () => {
+    const user = userEvent.setup();
+    render(<PositionsGrid positions={mockPositions} allowMassClose={true} />);
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(checkboxes[1]);
+
+    const closeAllButton = screen.getByRole('button', { name: /Close All/ });
+    expect(closeAllButton).not.toBeDisabled();
+  });
+});
+
+// ============================================================================
+// Utility Function Tests
+// ============================================================================
+
+describe('Position Utility Functions', () => {
+  describe('calculateUnrealizedPnL', () => {
+    it('should calculate positive P&L for long positions', () => {
+      const pnl = calculateUnrealizedPnL({
+        side: 'long',
+        quantity: 100,
+        entry_price: 1.0850,
+        current_price: 1.0900,
+      });
+      expect(pnl).toBe(0.5); // (1.0900 - 1.0850) * 100
+    });
+
+    it('should calculate positive P&L for short positions', () => {
+      const pnl = calculateUnrealizedPnL({
+        side: 'short',
+        quantity: 100,
+        entry_price: 1.0900,
+        current_price: 1.0850,
+      });
+      expect(pnl).toBe(0.5); // (1.0900 - 1.0850) * 100
+    });
+
+    it('should calculate negative P&L correctly', () => {
+      const pnl = calculateUnrealizedPnL({
+        side: 'long',
+        quantity: 100,
+        entry_price: 1.0900,
+        current_price: 1.0850,
+      });
+      expect(pnl).toBe(-0.5);
+    });
+
+    it('should return zero for no price change', () => {
+      const pnl = calculateUnrealizedPnL({
+        side: 'long',
+        quantity: 100,
+        entry_price: 1.0850,
+        current_price: 1.0850,
+      });
+      expect(pnl).toBe(0);
+    });
+  });
+
+  describe('calculatePnLPercentage', () => {
+    it('should calculate P&L percentage correctly', () => {
+      const percentage = calculatePnLPercentage({
+        entry_price: 1.0850,
+        current_price: 1.0900,
+        leverage: 1,
+      });
+      expect(percentage).toBeCloseTo(0.46, 1);
+    });
+
+    it('should account for leverage in calculation', () => {
+      const percentage = calculatePnLPercentage({
+        entry_price: 1.0850,
+        current_price: 1.0900,
+        leverage: 10,
+      });
+      expect(percentage).toBeGreaterThan(4.6);
+    });
+
+    it('should handle negative percentages', () => {
+      const percentage = calculatePnLPercentage({
+        entry_price: 1.0900,
+        current_price: 1.0850,
+        leverage: 1,
+      });
+      expect(percentage).toBeLessThan(0);
+    });
+  });
+
+  describe('getPositionColor', () => {
+    it('should return green for profitable long positions', () => {
+      const color = getPositionColor({
+        side: 'long',
+        entry_price: 1.0850,
+        current_price: 1.0900,
+      });
+      expect(color).toBe('green');
+    });
+
+    it('should return red for losing long positions', () => {
+      const color = getPositionColor({
+        side: 'long',
+        entry_price: 1.0900,
+        current_price: 1.0850,
+      });
+      expect(color).toBe('red');
+    });
+
+    it('should return green for profitable short positions', () => {
+      const color = getPositionColor({
+        side: 'short',
+        entry_price: 1.0900,
+        current_price: 1.0850,
+      });
+      expect(color).toBe('green');
+    });
+
+    it('should return gray for breakeven positions', () => {
+      const color = getPositionColor({
+        side: 'long',
+        entry_price: 1.0850,
+        current_price: 1.0850,
+      });
+      expect(color).toBe('gray');
+    });
+  });
+});

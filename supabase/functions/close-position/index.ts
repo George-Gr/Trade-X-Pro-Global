@@ -8,9 +8,31 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+enum ClosureReason {
+  TAKE_PROFIT = "take_profit",
+  STOP_LOSS = "stop_loss",
+  TRAILING_STOP = "trailing_stop",
+  TIME_EXPIRY = "time_expiry",
+  MANUAL_USER = "manual_user",
+  MARGIN_CALL = "margin_call",
+  LIQUIDATION = "liquidation",
+  ADMIN_FORCED = "admin_forced",
+}
+
 const ClosePositionSchema = z.object({
   position_id: z.string()
     .uuid('Invalid position ID format'),
+  reason: z.enum([
+    'take_profit',
+    'stop_loss',
+    'trailing_stop',
+    'time_expiry',
+    'manual_user',
+    'margin_call',
+    'liquidation',
+    'admin_forced'
+  ] as const)
+    .default('manual_user'),
   quantity: z.number()
     .positive('Quantity must be positive')
     .finite('Quantity must be finite')
@@ -18,6 +40,11 @@ const ClosePositionSchema = z.object({
     .optional(),
   idempotency_key: z.string()
     .min(1, 'Idempotency key required')
+    .optional(),
+  notes: z.string()
+    .optional(),
+  force: z.boolean()
+    .optional(),
 });
 
 serve(async (req) => {
@@ -111,19 +138,20 @@ serve(async (req) => {
 
     // Check for idempotency - prevent duplicate closes
     const { data: existingOrder } = await supabase
-      .from('orders')
-      .select('id, status, fill_price')
-      .eq('idempotency_key', idempotency_key)
+      .from('position_closures')
+      .select('id, status')
+      .eq('position_id', position_id)
+      .eq('user_id', user.id)
       .maybeSingle();
 
-    if (existingOrder) {
-      console.log('Idempotent request detected, returning existing order');
+    if (existingOrder && idempotency_key) {
+      console.log('Idempotent request detected, returning existing closure');
       return new Response(
         JSON.stringify({ 
           data: {
-            order_id: existingOrder.id,
+            closure_id: existingOrder.id,
             status: existingOrder.status,
-            message: 'Position already closed with this idempotency key'
+            message: 'Position already being closed or previously closed'
           }
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -148,8 +176,9 @@ serve(async (req) => {
 
     // Determine close quantity (full or partial)
     const closeQuantity = quantity && quantity > 0 ? Math.min(quantity, position.quantity) : position.quantity;
+    const isPartialClose = closeQuantity < position.quantity;
 
-    console.log('Processing position closure request');
+    console.log('Processing position closure request:', { position_id, closeQuantity, isPartialClose });
 
     // Get current market price from Finnhub
     const finnhubApiKey = Deno.env.get('FINNHUB_API_KEY');
@@ -190,33 +219,70 @@ serve(async (req) => {
       );
     }
 
-    console.log('Market price fetched successfully');
+    console.log('Market price fetched:', currentPrice);
 
-    // Call the atomic close function
+    // Calculate closure price with slippage (worst-case pricing for forced closures)
+    const normalSlippage = 0.1; // 0.1%
+    let slippagePercent = normalSlippage;
+    
+    const reason: ClosureReason = (validation.data as any).reason || ClosureReason.MANUAL_USER;
+    
+    if (reason === ClosureReason.LIQUIDATION || reason === ClosureReason.MARGIN_CALL) {
+      slippagePercent = normalSlippage * 1.5; // 1.5x worse
+    } else if (reason === ClosureReason.STOP_LOSS) {
+      slippagePercent = normalSlippage * 1.2; // 1.2x worse
+    }
+
+    const slippageAmount = currentPrice * (slippagePercent / 100);
+    const exitPrice = position.side === 'long'
+      ? Math.max(0, currentPrice - slippageAmount)
+      : currentPrice + slippageAmount;
+
+    console.log('Exit price calculated:', { currentPrice, exitPrice, slippageAmount });
+
+    // Calculate P&L
+    const priceDifference = exitPrice - position.entry_price;
+    let grossPnL = 0;
+    let pnlPercentage = 0;
+
+    if (position.side === 'long') {
+      grossPnL = priceDifference * closeQuantity;
+      pnlPercentage = (priceDifference / position.entry_price) * 100;
+    } else {
+      grossPnL = (position.entry_price - exitPrice) * closeQuantity;
+      pnlPercentage = ((position.entry_price - exitPrice) / position.entry_price) * 100;
+    }
+
+    // Calculate commission
+    const notionalValue = closeQuantity * exitPrice;
+    const commission = (notionalValue * 0.1) / 100; // 0.1% commission
+
+    const netPnL = grossPnL - commission;
+
+    console.log('P&L calculated:', { grossPnL, pnlPercentage, commission, netPnL });
+
+    // Call the atomic closure stored procedure
     const { data: closeResult, error: closeError } = await supabase
-      .rpc('close_position_atomic', {
-        p_user_id: user.id,
+      .rpc('execute_position_closure', {
         p_position_id: position_id,
-        p_close_quantity: closeQuantity,
-        p_current_price: currentPrice,
-        p_idempotency_key: idempotency_key,
-        p_slippage: 0.0005, // 0.05% slippage
+        p_user_id: user.id,
+        p_reason: reason,
+        p_entry_price: position.entry_price,
+        p_exit_price: exitPrice,
+        p_quantity: closeQuantity,
+        p_partial_quantity: isPartialClose ? closeQuantity : null,
+        p_realized_pnl: netPnL,
+        p_pnl_percentage: pnlPercentage,
+        p_commission: commission,
+        p_slippage: (slippageAmount / closeQuantity),
       });
 
     if (closeError) {
-      console.error('Close position failed');
+      console.error('Close position failed:', closeError);
       
-      // Handle specific error messages
       const errorMessage = typeof closeError === 'object' && closeError !== null && 'message' in closeError
         ? (closeError as { message: string }).message
         : 'Failed to close position';
-
-      if (errorMessage.includes('Insufficient margin') || errorMessage.includes('Insufficient balance')) {
-        return new Response(
-          JSON.stringify({ error: errorMessage }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
 
       return new Response(
         JSON.stringify({ error: errorMessage }),
@@ -224,22 +290,68 @@ serve(async (req) => {
       );
     }
 
-    console.log('Position closed successfully');
+    console.log('Position closure executed successfully');
+
+    // Extract closure ID from result
+    const closureId = closeResult && Array.isArray(closeResult) && closeResult[0]?.closure_id
+      ? closeResult[0].closure_id
+      : null;
+
+    // Create notification for successful closure
+    if (closureId) {
+      const reasonLabel = {
+        [ClosureReason.TAKE_PROFIT]: 'Take Profit',
+        [ClosureReason.STOP_LOSS]: 'Stop Loss',
+        [ClosureReason.TRAILING_STOP]: 'Trailing Stop',
+        [ClosureReason.TIME_EXPIRY]: 'Position Expired',
+        [ClosureReason.MANUAL_USER]: 'Manual Close',
+        [ClosureReason.MARGIN_CALL]: 'Margin Call',
+        [ClosureReason.LIQUIDATION]: 'Liquidation',
+        [ClosureReason.ADMIN_FORCED]: 'Admin Forced',
+      }[reason];
+
+      await supabase.from('notifications').insert({
+        user_id: user.id,
+        type: 'position_closure',
+        title: `Position ${isPartialClose ? 'Partially' : ''} Closed - ${reasonLabel}`,
+        message: `Closed ${closeQuantity} units at $${exitPrice.toFixed(8)}. P&L: $${netPnL.toFixed(2)} (${pnlPercentage.toFixed(2)}%)`,
+        metadata: {
+          position_id,
+          closure_id: closureId,
+          realized_pnl: netPnL,
+          pnl_percentage: pnlPercentage,
+        },
+        read: false,
+      }).catch(err => console.error('Failed to create notification:', err));
+    }
 
     // Update daily PnL tracking (async, don't await)
-    if (closeResult.realized_pnl !== 0) {
+    if (netPnL !== 0) {
       supabase.functions.invoke('update-daily-pnl', {
         body: {
           user_id: user.id,
-          realized_pnl: closeResult.realized_pnl
+          realized_pnl: netPnL
         }
       }).catch(err => console.error('Failed to update daily PnL:', err));
     }
 
     return new Response(
       JSON.stringify({ 
-        data: closeResult,
-        message: `Successfully closed ${closeQuantity} lots`
+        data: {
+          closure_id: closureId,
+          position_id,
+          reason,
+          status: isPartialClose ? 'partial' : 'completed',
+          entry_price: position.entry_price,
+          exit_price: exitPrice,
+          quantity_closed: closeQuantity,
+          quantity_remaining: isPartialClose ? position.quantity - closeQuantity : 0,
+          realized_pnl: netPnL,
+          pnl_percentage: pnlPercentage,
+          commission,
+          slippage: slippageAmount / closeQuantity,
+        },
+        message: `Successfully closed ${closeQuantity} lots. P&L: $${netPnL.toFixed(2)}`
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

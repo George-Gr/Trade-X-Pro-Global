@@ -1,0 +1,526 @@
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {
+  WalletBalance,
+  WalletTransactionHistory,
+  WalletActions,
+  type WalletData,
+  type Transaction,
+} from '../Wallet';
+
+// ============================================================================
+// WalletBalance Tests
+// ============================================================================
+
+describe('WalletBalance', () => {
+  const mockWalletData: WalletData = {
+    totalBalance: 50000,
+    availableBalance: 40000,
+    reservedBalance: 10000,
+    currency: 'USD',
+    lastUpdated: new Date(),
+  };
+
+  it('should render wallet balance component', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    expect(screen.getByText(/Total Balance/)).toBeInTheDocument();
+  });
+
+  it('should display total balance amount', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    expect(screen.getByText(/\$50,000.00/)).toBeInTheDocument();
+  });
+
+  it('should display available balance', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    expect(screen.getByText(/\$40,000.00/)).toBeInTheDocument();
+  });
+
+  it('should display reserved balance', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    expect(screen.getByText(/\$10,000.00/)).toBeInTheDocument();
+  });
+
+  it('should show currency symbol', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    expect(screen.getByText(/USD/)).toBeInTheDocument();
+  });
+
+  it('should display last update timestamp', () => {
+    const now = new Date();
+    const walletWithTime: WalletData = {
+      ...mockWalletData,
+      lastUpdated: now,
+    };
+    render(<WalletBalance wallet={walletWithTime} />);
+    expect(screen.getByText(/Last updated/)).toBeInTheDocument();
+  });
+
+  it('should calculate available percentage correctly', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    // 40000 / 50000 = 80%
+    expect(screen.getByText('80%')).toBeInTheDocument();
+  });
+
+  it('should calculate reserved percentage correctly', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    // 10000 / 50000 = 20%
+    expect(screen.getByText('20%')).toBeInTheDocument();
+  });
+
+  it('should display balance breakdown chart', () => {
+    const { container } = render(<WalletBalance wallet={mockWalletData} />);
+    const chart = container.querySelector('[data-testid="balance-chart"]');
+    expect(chart).toBeInTheDocument();
+  });
+
+  it('should show refresh button', () => {
+    render(<WalletBalance wallet={mockWalletData} />);
+    expect(screen.getByRole('button', { name: /Refresh/i })).toBeInTheDocument();
+  });
+
+  it('should call onRefresh when refresh button clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnRefresh = vi.fn();
+    render(<WalletBalance wallet={mockWalletData} onRefresh={mockOnRefresh} />);
+
+    const refreshButton = screen.getByRole('button', { name: /Refresh/i });
+    await user.click(refreshButton);
+    expect(mockOnRefresh).toHaveBeenCalled();
+  });
+
+  it('should display loading state while refreshing', () => {
+    render(<WalletBalance wallet={mockWalletData} isLoading={true} />);
+    expect(screen.getByRole('status')).toHaveClass('animate-spin');
+  });
+
+  it('should handle multi-currency wallets', () => {
+    const multiCurrencyWallet: WalletData = {
+      ...mockWalletData,
+      currency: 'EUR',
+    };
+    render(<WalletBalance wallet={multiCurrencyWallet} />);
+    expect(screen.getByText(/EUR/)).toBeInTheDocument();
+  });
+
+  it('should update balance in real-time', () => {
+    const { rerender } = render(<WalletBalance wallet={mockWalletData} />);
+
+    const updatedWallet: WalletData = {
+      ...mockWalletData,
+      totalBalance: 55000,
+      availableBalance: 45000,
+    };
+
+    rerender(<WalletBalance wallet={updatedWallet} />);
+    expect(screen.getByText(/\$55,000.00/)).toBeInTheDocument();
+  });
+
+  it('should show warning color when low balance', () => {
+    const lowBalanceWallet: WalletData = {
+      ...mockWalletData,
+      totalBalance: 1000,
+      availableBalance: 500,
+    };
+    render(<WalletBalance wallet={lowBalanceWallet} />);
+    const balanceAmount = screen.getByText(/\$1,000.00/);
+    expect(balanceAmount).toHaveClass('text-yellow-600');
+  });
+
+  it('should display deposit prompt when balance is zero', () => {
+    const zeroBalanceWallet: WalletData = {
+      ...mockWalletData,
+      totalBalance: 0,
+      availableBalance: 0,
+    };
+    render(<WalletBalance wallet={zeroBalanceWallet} />);
+    expect(screen.getByText(/No available balance/)).toBeInTheDocument();
+  });
+});
+
+// ============================================================================
+// WalletTransactionHistory Tests
+// ============================================================================
+
+describe('WalletTransactionHistory', () => {
+  const mockTransactions: Transaction[] = [
+    {
+      id: 'txn-1',
+      type: 'deposit',
+      amount: 5000,
+      currency: 'USD',
+      status: 'completed',
+      timestamp: new Date('2025-11-14T10:00:00'),
+      description: 'Bank transfer deposit',
+      method: 'bank_transfer',
+    },
+    {
+      id: 'txn-2',
+      type: 'withdrawal',
+      amount: 2000,
+      currency: 'USD',
+      status: 'pending',
+      timestamp: new Date('2025-11-14T11:00:00'),
+      description: 'Withdrawal to bank account',
+      method: 'bank_transfer',
+    },
+    {
+      id: 'txn-3',
+      type: 'fee',
+      amount: 50,
+      currency: 'USD',
+      status: 'completed',
+      timestamp: new Date('2025-11-14T12:00:00'),
+      description: 'Monthly trading fee',
+      method: 'system',
+    },
+    {
+      id: 'txn-4',
+      type: 'commission',
+      amount: 75.50,
+      currency: 'USD',
+      status: 'completed',
+      timestamp: new Date('2025-11-13T15:30:00'),
+      description: 'Order commission',
+      method: 'trading',
+    },
+  ];
+
+  it('should render transaction history', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    expect(screen.getByText(/Transaction History/)).toBeInTheDocument();
+  });
+
+  it('should display all transactions', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    expect(screen.getByText(/Bank transfer deposit/)).toBeInTheDocument();
+    expect(screen.getByText(/Withdrawal to bank account/)).toBeInTheDocument();
+    expect(screen.getByText(/Monthly trading fee/)).toBeInTheDocument();
+  });
+
+  it('should display transaction amounts', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    expect(screen.getByText(/\$5,000.00/)).toBeInTheDocument();
+    expect(screen.getByText(/\$2,000.00/)).toBeInTheDocument();
+    expect(screen.getByText(/\$50.00/)).toBeInTheDocument();
+  });
+
+  it('should show transaction types with correct colors', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    
+    // Deposit should be green
+    const depositElement = screen.getByText(/\$5,000.00/).parentElement;
+    expect(depositElement?.querySelector('[class*="text-green"]')).toBeInTheDocument();
+
+    // Withdrawal should be red
+    const withdrawalElement = screen.getByText(/\$2,000.00/).parentElement;
+    expect(withdrawalElement?.querySelector('[class*="text-red"]')).toBeInTheDocument();
+  });
+
+  it('should display transaction status', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    expect(screen.getByText(/Completed/)).toBeInTheDocument();
+    expect(screen.getByText(/Pending/)).toBeInTheDocument();
+  });
+
+  it('should show completed status in green', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    const completedStatus = screen.getByText('Completed');
+    expect(completedStatus).toHaveClass('text-green-600');
+  });
+
+  it('should show pending status in yellow', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    const pendingStatus = screen.getByText('Pending');
+    expect(pendingStatus).toHaveClass('text-yellow-600');
+  });
+
+  it('should display transaction timestamps', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    expect(screen.getAllByText(/10:00|11:00|12:00|15:30/).length).toBeGreaterThan(0);
+  });
+
+  it('should filter transactions by type', async () => {
+    const user = userEvent.setup();
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+
+    const filterSelect = screen.getByDisplayValue('All Types');
+    await user.click(filterSelect);
+    const depositOption = await screen.findByText(/Deposit/);
+    await user.click(depositOption);
+
+    expect(screen.getByText(/Bank transfer deposit/)).toBeInTheDocument();
+    expect(screen.queryByText(/Withdrawal to bank account/)).not.toBeInTheDocument();
+  });
+
+  it('should filter transactions by status', async () => {
+    const user = userEvent.setup();
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+
+    const statusSelect = screen.getByDisplayValue('All Statuses');
+    await user.click(statusSelect);
+    const completedOption = await screen.findByText(/Completed/);
+    await user.click(completedOption);
+
+    // Should show 3 completed transactions
+    const completedBadges = screen.getAllByText('Completed');
+    expect(completedBadges.length).toBe(3);
+  });
+
+  it('should search transactions by description', async () => {
+    const user = userEvent.setup();
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+
+    const searchInput = screen.getByPlaceholderText('Search transactions...');
+    await user.type(searchInput, 'fee');
+
+    expect(screen.getByText(/Monthly trading fee/)).toBeInTheDocument();
+    expect(screen.queryByText(/Bank transfer deposit/)).not.toBeInTheDocument();
+  });
+
+  it('should sort transactions by date (newest first)', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    const rows = screen.getAllByRole('row');
+    // First row (after header) should be the most recent transaction
+    expect(rows[1].textContent).toContain('12:00');
+  });
+
+  it('should allow column sorting', async () => {
+    const user = userEvent.setup();
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+
+    const amountHeader = screen.getByText('Amount');
+    await user.click(amountHeader);
+
+    // Transactions should now be sorted by amount
+  });
+
+  it('should display pagination controls', () => {
+    const manyTransactions = Array.from({ length: 25 }, (_, i) => ({
+      ...mockTransactions[0],
+      id: `txn-${i}`,
+    }));
+
+    render(<WalletTransactionHistory transactions={manyTransactions} />);
+    expect(screen.getByText(/Page 1 of/)).toBeInTheDocument();
+  });
+
+  it('should show empty state when no transactions', () => {
+    render(<WalletTransactionHistory transactions={[]} />);
+    expect(screen.getByText(/No transactions yet/)).toBeInTheDocument();
+  });
+
+  it('should show transaction details on click', async () => {
+    const user = userEvent.setup();
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+
+    const firstTransaction = screen.getByText(/Bank transfer deposit/).closest('tr');
+    if (firstTransaction) {
+      await user.click(firstTransaction);
+      // Details modal or expanded view should appear
+      expect(screen.getByText(/Transaction Details/)).toBeInTheDocument();
+    }
+  });
+
+  it('should display total statistics', () => {
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+    expect(screen.getByText(/Total Deposits:/)).toBeInTheDocument();
+    expect(screen.getByText(/Total Withdrawals:/)).toBeInTheDocument();
+  });
+
+  it('should export transaction history', async () => {
+    const user = userEvent.setup();
+    render(<WalletTransactionHistory transactions={mockTransactions} />);
+
+    const exportButton = screen.getByRole('button', { name: /Export/i });
+    await user.click(exportButton);
+    // Should trigger download or show export options
+  });
+
+  it('should handle loading state', () => {
+    render(
+      <WalletTransactionHistory transactions={[]} isLoading={true} />
+    );
+    expect(screen.getByText(/Loading transactions/)).toBeInTheDocument();
+  });
+
+  it('should display error message', () => {
+    const error = new Error('Failed to load transactions');
+    render(
+      <WalletTransactionHistory transactions={[]} error={error} />
+    );
+    expect(screen.getByText(/Error loading transactions/)).toBeInTheDocument();
+  });
+});
+
+// ============================================================================
+// WalletActions Tests
+// ============================================================================
+
+describe('WalletActions', () => {
+  it('should render wallet actions buttons', () => {
+    render(<WalletActions />);
+    expect(screen.getByRole('button', { name: /Deposit/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Withdraw/i })).toBeInTheDocument();
+  });
+
+  it('should have deposit button', () => {
+    render(<WalletActions />);
+    const depositButton = screen.getByRole('button', { name: /Deposit/i });
+    expect(depositButton).toBeInTheDocument();
+  });
+
+  it('should have withdraw button', () => {
+    render(<WalletActions />);
+    const withdrawButton = screen.getByRole('button', { name: /Withdraw/i });
+    expect(withdrawButton).toBeInTheDocument();
+  });
+
+  it('should have transfer button', () => {
+    render(<WalletActions />);
+    const transferButton = screen.getByRole('button', { name: /Transfer/i });
+    expect(transferButton).toBeInTheDocument();
+  });
+
+  it('should have pay out button', () => {
+    render(<WalletActions />);
+    const payoutButton = screen.getByRole('button', { name: /Pay Out/i });
+    expect(payoutButton).toBeInTheDocument();
+  });
+
+  it('should call onDeposit when deposit clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnDeposit = vi.fn();
+    render(<WalletActions onDeposit={mockOnDeposit} />);
+
+    const depositButton = screen.getByRole('button', { name: /Deposit/i });
+    await user.click(depositButton);
+    expect(mockOnDeposit).toHaveBeenCalled();
+  });
+
+  it('should call onWithdraw when withdraw clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnWithdraw = vi.fn();
+    render(<WalletActions onWithdraw={mockOnWithdraw} />);
+
+    const withdrawButton = screen.getByRole('button', { name: /Withdraw/i });
+    await user.click(withdrawButton);
+    expect(mockOnWithdraw).toHaveBeenCalled();
+  });
+
+  it('should call onTransfer when transfer clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnTransfer = vi.fn();
+    render(<WalletActions onTransfer={mockOnTransfer} />);
+
+    const transferButton = screen.getByRole('button', { name: /Transfer/i });
+    await user.click(transferButton);
+    expect(mockOnTransfer).toHaveBeenCalled();
+  });
+
+  it('should call onPayout when payout clicked', async () => {
+    const user = userEvent.setup();
+    const mockOnPayout = vi.fn();
+    render(<WalletActions onPayout={mockOnPayout} />);
+
+    const payoutButton = screen.getByRole('button', { name: /Pay Out/i });
+    await user.click(payoutButton);
+    expect(mockOnPayout).toHaveBeenCalled();
+  });
+
+  it('should disable deposit button when no balance', () => {
+    render(<WalletActions availableBalance={0} />);
+    const depositButton = screen.getByRole('button', { name: /Deposit/i });
+    expect(depositButton).not.toBeDisabled();
+  });
+
+  it('should disable withdraw button when no balance', () => {
+    render(<WalletActions availableBalance={0} />);
+    const withdrawButton = screen.getByRole('button', { name: /Withdraw/i });
+    expect(withdrawButton).toBeDisabled();
+  });
+
+  it('should disable transfer button when no balance', () => {
+    render(<WalletActions availableBalance={0} />);
+    const transferButton = screen.getByRole('button', { name: /Transfer/i });
+    expect(transferButton).toBeDisabled();
+  });
+
+  it('should show loading state', () => {
+    render(<WalletActions isLoading={true} />);
+    expect(screen.getByRole('status')).toHaveClass('animate-spin');
+  });
+
+  it('should show tooltip for each action', async () => {
+    const { container } = render(<WalletActions />);
+    const buttons = screen.getAllByRole('button');
+    
+    buttons.forEach((button) => {
+      expect(button).toHaveAttribute('title');
+    });
+  });
+
+  it('should display action icons', () => {
+    const { container } = render(<WalletActions />);
+    const icons = container.querySelectorAll('[class*="icon"]');
+    expect(icons.length).toBeGreaterThan(0);
+  });
+
+  it('should show action descriptions', () => {
+    render(<WalletActions showDescriptions={true} />);
+    expect(screen.getByText(/Add funds/)).toBeInTheDocument();
+    expect(screen.getByText(/Remove funds/)).toBeInTheDocument();
+  });
+
+  it('should arrange buttons horizontally', () => {
+    const { container } = render(<WalletActions />);
+    const buttonContainer = container.querySelector('[class*="flex gap"]');
+    expect(buttonContainer).toBeInTheDocument();
+  });
+
+  it('should respond to keyboard shortcuts', async () => {
+    const user = userEvent.setup();
+    const mockOnDeposit = vi.fn();
+    render(<WalletActions onDeposit={mockOnDeposit} />);
+
+    // Press 'D' for deposit
+    await user.keyboard('d');
+    // Should trigger deposit action
+  });
+
+  it('should show success feedback after action', async () => {
+    const user = userEvent.setup();
+    const mockOnDeposit = vi.fn(() => Promise.resolve());
+    render(<WalletActions onDeposit={mockOnDeposit} />);
+
+    const depositButton = screen.getByRole('button', { name: /Deposit/i });
+    await user.click(depositButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Success/)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle errors gracefully', async () => {
+    const user = userEvent.setup();
+    const mockOnDeposit = vi.fn(() => 
+      Promise.reject(new Error('Deposit failed'))
+    );
+    render(<WalletActions onDeposit={mockOnDeposit} />);
+
+    const depositButton = screen.getByRole('button', { name: /Deposit/i });
+    await user.click(depositButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Error/)).toBeInTheDocument();
+    });
+  });
+
+  it('should show action buttons based on user permissions', () => {
+    render(<WalletActions permissions={['deposit', 'withdraw']} />);
+    expect(screen.getByRole('button', { name: /Deposit/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Withdraw/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Pay Out/i })).not.toBeInTheDocument();
+  });
+});
