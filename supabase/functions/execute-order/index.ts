@@ -29,13 +29,6 @@ import {
   AssetClass,
   AccountTier,
 } from "../lib/commissionCalculation.ts";
-import {
-  shouldOrderExecute,
-  calculateExecutionPrice as calcExecPrice,
-  calculateUnrealizedPnL,
-  validateExecutionPreConditions,
-  ExecutionError,
-} from "../lib/orderMatching.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -430,7 +423,9 @@ serve(async (req) => {
     // =========================================
     // STEP 8: Calculate execution price with slippage
     // =========================================
-    const executionPrice = calcExecPrice(currentPrice, orderRequest.side, slippageResult.totalSlippage);
+    const executionPrice = orderRequest.side === 'buy'
+      ? currentPrice * (1 + slippageResult.totalSlippage)
+      : currentPrice * (1 - slippageResult.totalSlippage);
     console.log(`Execution price: ${executionPrice.toFixed(4)} (market: ${currentPrice.toFixed(4)})`);
 
     // =========================================
