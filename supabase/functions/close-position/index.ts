@@ -59,9 +59,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const authHeader = req.headers.get('Authorization')!;
     
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -100,7 +98,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
+          details: validation.error.issues.map((i: any) => `${i.path.join('.')}: ${i.message}`).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

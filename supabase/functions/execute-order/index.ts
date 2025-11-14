@@ -77,11 +77,15 @@ interface PriceData {
 
 interface AssetSpec {
   symbol: string;
+  asset_class: string;
   min_quantity: number;
   max_quantity: number;
   is_tradable: boolean;
   trading_hours?: { open: string; close: string };
   leverage?: number;
+  base_commission?: number;
+  commission_type?: string;
+  pip_size?: number;
 }
 
 serve(async (req) => {
@@ -327,7 +331,7 @@ serve(async (req) => {
   const priceData: PriceData = await priceResponse.json();
 
   // Use current price (c) or fallback to previous close (pc)
-  currentPrice = priceData.c || priceData.pc;
+  currentPrice = priceData.c || priceData.pc || 0;
       
       if (!currentPrice || currentPrice === 0) {
         throw new Error('Invalid price data received');
@@ -402,9 +406,9 @@ serve(async (req) => {
         side: orderRequest.side,
         quantity: orderRequest.quantity,
         currentPrice: currentPrice,
-        currentVolatility: assetSpec.volatility || 20, // Default 20% volatility
-        averageVolatility: assetSpec.avg_volatility || 20,
-        liquidity: assetSpec.liquidity_base || 1000000,
+        currentVolatility: 20, // Default 20% volatility
+        averageVolatility: 20,
+        liquidity: 1000000,
         isAfterHours: false, // TODO: Implement market hours check
       });
 
