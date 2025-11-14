@@ -20,7 +20,8 @@ interface UsePriceUpdatesOptions {
   enabled?: boolean;
 }
 
-const FINNHUB_API_KEY = 'ct71o69r01qnhvhktu60ct71o69r01qnhvhktu6g'; // Public demo key
+import { supabase } from '@/integrations/supabase/client';
+
 const CACHE_DURATION_MS = 1000; // Cache prices for 1 second to avoid excessive API calls
 
 // Price cache to prevent duplicate requests
@@ -51,16 +52,14 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
 
   try {
     const finnhubSymbol = mapSymbolToFinnhub(symbol);
-    const response = await fetch(
-      `https://finnhub.io/api/v1/quote?symbol=${finnhubSymbol}&token=${FINNHUB_API_KEY}`
-    );
+    const { data, error } = await supabase.functions.invoke('get-stock-price', {
+      body: { symbol: finnhubSymbol }
+    });
 
-    if (!response.ok) {
-      console.error(`Failed to fetch price for ${symbol}:`, response.statusText);
+    if (error || !data) {
+      console.error(`Failed to fetch price for ${symbol}:`, error);
       return null;
     }
-
-    const data = await response.json();
 
     // Finnhub returns: c (current), h (high), l (low), o (open), pc (previous close)
     if (!data.c || data.c <= 0) {
