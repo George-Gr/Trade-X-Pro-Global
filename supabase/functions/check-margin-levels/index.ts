@@ -356,4 +356,10 @@ async function checkMarginLevels(
   }
 }
 
-serve(checkMarginLevels);
+serve(async (req) => {
+  const result = await checkMarginLevels(req);
+  return new Response(JSON.stringify(result), {
+    headers: { 'Content-Type': 'application/json' },
+    status: result.success ? 200 : 500
+  });
+});

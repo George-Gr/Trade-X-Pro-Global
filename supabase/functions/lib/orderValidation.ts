@@ -41,7 +41,9 @@ interface SupabaseClient {
   from(table: string): {
     select(columns: string): {
       eq(column: string, value: string | boolean): {
-        maybeSingle(): Promise<{ data: AssetSpec | null; error: Error | null }>;
+        eq(column: string, value: string | boolean): {
+          maybeSingle(): Promise<{ data: AssetSpec | null; error: Error | null }>;
+        };
       };
     };
   };
