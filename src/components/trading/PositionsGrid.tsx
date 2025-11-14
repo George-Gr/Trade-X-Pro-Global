@@ -1,29 +1,5 @@
 import React from 'react';
-
-export type Position = {
-  id: string;
-  symbol: string;
-  quantity: number;
-  entry_price: number;
-  current_price: number;
-  side: 'long' | 'short';
-  opened_at: Date;
-  leverage: number;
-  margin_used: number;
-  risk_reward_ratio?: number;
-  stop_loss?: number;
-  take_profit?: number;
-};
-
-export type PositionMetricsData = {
-  totalPositions: number;
-  openPositions: number;
-  totalMarginUsed: number;
-  availableMargin: number;
-  marginLevel: number;
-  totalUnrealizedPnL: number;
-  averageLeverage: number;
-};
+import type { Position, PositionMetricsData } from '@/types/position';
 
 export function calculateUnrealizedPnL({ side, quantity, entry_price, current_price }: Pick<Position, 'side' | 'quantity' | 'entry_price' | 'current_price'>): number {
   if (side === 'long') {

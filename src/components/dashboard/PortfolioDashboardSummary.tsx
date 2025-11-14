@@ -3,11 +3,17 @@ import AccountSummary from './AccountSummary';
 import EquityChart from './EquityChart';
 import AssetAllocation from './AssetAllocation';
 import PerformanceMetrics from './PerformanceMetrics';
-import { Card } from '@/components/ui/card';
+import RecentPnLChart from './RecentPnLChart';
+import ExportToolbar from './ExportToolbar';
 
 export const PortfolioDashboardSummary: React.FC = () => {
   return (
     <div className="space-y-6">
+      {/* Export toolbar */}
+      <div className="flex justify-end">
+        <ExportToolbar />
+      </div>
+
       <AccountSummary />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -20,10 +26,7 @@ export const PortfolioDashboardSummary: React.FC = () => {
         </div>
       </div>
 
-      <Card className="p-4 bg-card">
-        <h3 className="font-semibold">Recent P&L</h3>
-        <p className="text-sm text-muted-foreground">Recent P&L chart coming soon</p>
-      </Card>
+      <RecentPnLChart />
     </div>
   );
 };

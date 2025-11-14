@@ -21,26 +21,13 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "./useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import type { Position } from '@/types/position';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-export interface Position {
-  id: string;
-  user_id: string;
-  symbol: string;
-  side: "long" | "short";
-  quantity: number;
-  entry_price: number;
-  current_price: number;
-  unrealized_pnl: number;
-  margin_used: number;
-  margin_level: number;
-  status: "open" | "closing" | "closed";
-  created_at: string;
-  updated_at: string;
-}
+// Use shared Position type from `src/types/position`
 
 export interface RealtimePositionUpdate {
   type: "INSERT" | "UPDATE" | "DELETE";
@@ -142,7 +129,11 @@ export function useRealtimePositions(
         margin_used: row.margin_used || 0,
         margin_level: row.margin_level || 0,
         status: row.status,
-        created_at: row.opened_at || new Date().toISOString(),
+        // Normalize opened_at to Date (PositionsGrid expects Date)
+        opened_at: row.opened_at ? new Date(row.opened_at) : new Date(row.created_at || Date.now()),
+        // Ensure leverage is always a number
+        leverage: typeof row.leverage === 'number' ? row.leverage : 1,
+        created_at: row.created_at || row.opened_at || new Date().toISOString(),
         updated_at: row.updated_at || new Date().toISOString(),
       }));
 
