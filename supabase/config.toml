@@ -38,3 +38,33 @@ verify_jwt = true
 
 [functions.handle-payment-callback]
 verify_jwt = false
+
+[functions.get-stock-price]
+verify_jwt = false
+
+[functions.execute-pending-orders]
+verify_jwt = false
+
+[functions.modify-position]
+verify_jwt = true
+
+[functions.calculate-swap-fees]
+verify_jwt = false
+
+[functions.execute-stop-loss-take-profit]
+verify_jwt = false
+
+[functions.check-margin-levels]
+verify_jwt = false
+
+[functions.update-positions]
+verify_jwt = false
+
+[functions.update-trailing-stops]
+verify_jwt = false
+
+[functions.execute-liquidation]
+verify_jwt = false
+
+[functions.check-portfolio-risk]
+verify_jwt = false

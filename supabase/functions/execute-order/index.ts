@@ -512,7 +512,70 @@ serve(async (req) => {
     }
 
     // =========================================
-    // STEP 11: Execute order atomically via stored procedure
+    // STEP 10.5: Handle pending orders (limit, stop, stop_limit)
+    // =========================================
+    if (orderRequest.order_type !== 'market') {
+      console.log(`Creating pending ${orderRequest.order_type} order for ${orderRequest.symbol}`);
+      
+      const { data: pendingOrder, error: pendingError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: user.id,
+          symbol: orderRequest.symbol,
+          order_type: orderRequest.order_type,
+          side: orderRequest.side,
+          quantity: orderRequest.quantity,
+          price: orderRequest.price || currentPrice,
+          stop_loss: orderRequest.stop_loss || null,
+          take_profit: orderRequest.take_profit || null,
+          status: 'pending',
+          idempotency_key: orderRequest.idempotency_key,
+          commission: commissionResult.totalCommission
+        })
+        .select()
+        .single();
+
+      if (pendingError) {
+        console.error('Error creating pending order:', pendingError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to create pending order', details: pendingError }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Create notification
+      await supabase.from('notifications').insert({
+        user_id: user.id,
+        type: 'order',
+        title: 'Order Placed',
+        message: `Your ${orderRequest.order_type} ${orderRequest.side} order for ${orderRequest.symbol} has been placed and is pending execution at ${orderRequest.price || currentPrice}`,
+        data: { 
+          order_id: pendingOrder.id, 
+          order_type: orderRequest.order_type, 
+          symbol: orderRequest.symbol, 
+          quantity: orderRequest.quantity, 
+          price: orderRequest.price || currentPrice 
+        }
+      });
+
+      console.log(`Pending order created: ${pendingOrder.id}`);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Pending order created',
+          order: pendingOrder,
+          execution_details: {
+            estimated_execution_price: orderRequest.price || currentPrice,
+            estimated_commission: commissionResult.totalCommission.toFixed(2)
+          }
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // =========================================
+    // STEP 11: Execute order atomically via stored procedure (market orders only)
     // =========================================
     console.log('Calling execute_order_atomic stored procedure');
     
