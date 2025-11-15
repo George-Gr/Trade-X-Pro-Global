@@ -64,16 +64,65 @@ serve(async (req: Request) => {
       );
     }
 
-    // Get file from request
+    // Support two modes:
+    // 1) form upload (file + documentType) -> upload to storage and create record (backward compatible)
+    // 2) JSON body with { filePath } -> validate existing uploaded file (signed upload flow)
+
+    const contentType = req.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      const body = await req.json();
+      const filePath = body.filePath;
+      if (!filePath) {
+        return new Response(JSON.stringify({ error: 'Missing filePath in JSON body' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      // Download file from storage
+      const { data: fileStream, error: dlError } = await supabase.storage.from('kyc-documents').download(filePath);
+      if (dlError) {
+        return new Response(JSON.stringify({ error: 'Failed to download file', details: dlError.message }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      const arrayBuffer = await fileStream.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      if (bytes.length > 5 * 1024 * 1024) {
+        return new Response(JSON.stringify({ error: 'File too large. Maximum size is 5MB.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      const validation = validateFileType(bytes);
+      if (!validation.valid) {
+        return new Response(JSON.stringify({ error: 'Invalid file type. Only JPEG, PNG, and PDF files are allowed.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      // Find document record by url or file_path
+      const { data: docs, error: qErr } = await supabase
+        .from('kyc_documents')
+        .select('*')
+        .or(`url.eq.${filePath},file_path.eq.${filePath}`)
+        .limit(1);
+      if (qErr) {
+        return new Response(JSON.stringify({ error: 'DB query error', details: qErr.message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+      if (!docs || docs.length === 0) {
+        return new Response(JSON.stringify({ error: 'Document record not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+      const doc = docs[0];
+
+      // Update document status to validated
+      const { error: updErr } = await supabase.from('kyc_documents').update({ status: 'validated', reviewed_at: new Date().toISOString() }).eq('id', doc.id);
+      if (updErr) {
+        return new Response(JSON.stringify({ error: 'Failed to update document status', details: updErr.message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      return new Response(JSON.stringify({ success: true, documentId: doc.id, filePath }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // Fallback to form upload path (original implementation)
     const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const documentType = formData.get("documentType") as string;
+    const file = formData.get('file') as File;
+    const documentType = formData.get('documentType') as string;
 
     if (!file || !documentType) {
-      return new Response(
-        JSON.stringify({ error: "Missing file or document type" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: 'Missing file or document type' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // Read file bytes for validation
@@ -82,19 +131,13 @@ serve(async (req: Request) => {
 
     // Validate file size (max 5MB)
     if (bytes.length > 5 * 1024 * 1024) {
-      return new Response(
-        JSON.stringify({ error: "File too large. Maximum size is 5MB." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: 'File too large. Maximum size is 5MB.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // Validate file type using magic numbers
     const validation = validateFileType(bytes);
     if (!validation.valid) {
-      return new Response(
-        JSON.stringify({ error: "Invalid file type. Only JPEG, PNG, and PDF files are allowed." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: 'Invalid file type. Only JPEG, PNG, and PDF files are allowed.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     console.log(`File validated: ${validation.type}, size: ${bytes.length} bytes`);
@@ -106,49 +149,28 @@ serve(async (req: Request) => {
 
     // Upload to storage
     const { error: uploadError } = await supabase.storage
-      .from("kyc-documents")
+      .from('kyc-documents')
       .upload(filePath, file, {
         contentType: file.type,
         upsert: false,
       });
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
-      return new Response(
-        JSON.stringify({ error: "Failed to upload file" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      console.error('Upload error:', uploadError);
+      return new Response(JSON.stringify({ error: 'Failed to upload file' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // Create database record
-    const { error: dbError } = await supabase
-      .from("kyc_documents")
-      .insert({
-        user_id: user.id,
-        document_type: documentType,
-        file_path: filePath,
-        status: "pending",
-      });
+    // Create database record (try to support both schema variants)
+    const { error: dbError } = await supabase.from('kyc_documents').insert({ user_id: user.id, document_type: documentType, file_path: filePath, url: filePath, type: documentType, status: 'pending' });
 
     if (dbError) {
-      console.error("Database error:", dbError);
+      console.error('Database error:', dbError);
       // Clean up uploaded file if database insert fails
-      await supabase.storage.from("kyc-documents").remove([filePath]);
-      
-      return new Response(
-        JSON.stringify({ error: "Failed to save document record" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      await supabase.storage.from('kyc-documents').remove([filePath]);
+      return new Response(JSON.stringify({ error: 'Failed to save document record' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: "Document uploaded and validated successfully",
-        filePath 
-      }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true, message: 'Document uploaded and validated successfully', filePath }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
