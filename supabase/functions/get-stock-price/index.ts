@@ -43,6 +43,10 @@ function generateForexPrice(symbol: string): any {
   };
 }
 
+// In-memory cache to reduce rate limiting for stock symbols
+const STOCK_CACHE_TTL_MS = 5000; // 5 seconds
+const stockCache = new Map<string, { data: any; timestamp: number }>();
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -77,7 +81,7 @@ serve(async (req) => {
       );
     }
 
-    // For stocks, use Finnhub API
+    // For stocks, use Finnhub API with server-side caching to avoid rate limits
     const FINNHUB_API_KEY = Deno.env.get('FINNHUB_API_KEY');
     
     if (!FINNHUB_API_KEY) {
@@ -88,25 +92,71 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Fetching stock price from Finnhub: ${symbol}`);
-    const response = await fetch(
-      `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(symbol)}&token=${FINNHUB_API_KEY}`
-    );
-
-    if (!response.ok) {
-      console.error(`Finnhub API error: ${response.status} for ${symbol}`);
+    const now = Date.now();
+    const cached = stockCache.get(symbol);
+    if (cached && (now - cached.timestamp) < STOCK_CACHE_TTL_MS) {
+      console.log(`Cache hit for ${symbol}`);
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch stock price' }),
-        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify(cached.data),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'hit' } }
       );
     }
 
-    const data = await response.json();
+    try {
+      console.log(`Fetching stock price from Finnhub: ${symbol}`);
+      const response = await fetch(
+        `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(symbol)}&token=${FINNHUB_API_KEY}`
+      );
 
-    return new Response(
-      JSON.stringify(data),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+      if (!response.ok) {
+        console.error(`Finnhub API error: ${response.status} for ${symbol}`);
+        if (response.status === 429 && cached) {
+          console.warn(`Returning stale cache for ${symbol} due to 429`);
+          return new Response(
+            JSON.stringify(cached.data),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'stale' } }
+          );
+        }
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch stock price' }),
+          { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const data = await response.json();
+      // Basic validation
+      if (typeof data?.c !== 'number' || data.c <= 0) {
+        console.warn(`Invalid quote payload for ${symbol}:`, data);
+        if (cached) {
+          return new Response(
+            JSON.stringify(cached.data),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'stale' } }
+          );
+        }
+        return new Response(
+          JSON.stringify({ error: 'Invalid provider response' }),
+          { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      stockCache.set(symbol, { data, timestamp: now });
+      return new Response(
+        JSON.stringify(data),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'miss' } }
+      );
+    } catch (e) {
+      console.error('Network error calling Finnhub:', e);
+      if (cached) {
+        return new Response(
+          JSON.stringify(cached.data),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'stale' } }
+        );
+      }
+      return new Response(
+        JSON.stringify({ error: 'Failed to fetch stock price' }),
+        { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
   } catch (error) {
     console.error('Error in get-stock-price:', error);
     return new Response(
