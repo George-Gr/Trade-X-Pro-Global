@@ -318,6 +318,173 @@ export type Database = {
           },
         ]
       }
+      liquidation_events: {
+        Row: {
+          closed_positions: Json | null
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          execution_time_ms: number | null
+          failed_positions: Json | null
+          final_equity: number | null
+          final_margin_level: number | null
+          id: string
+          initial_equity: number
+          initial_margin_level: number
+          initiated_at: string
+          margin_call_event_id: string | null
+          reason: string
+          slippage_multiplier: number | null
+          status: string
+          total_loss_realized: number | null
+          total_positions_closed: number | null
+          total_positions_failed: number | null
+          total_slippage_applied: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          closed_positions?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          execution_time_ms?: number | null
+          failed_positions?: Json | null
+          final_equity?: number | null
+          final_margin_level?: number | null
+          id?: string
+          initial_equity: number
+          initial_margin_level: number
+          initiated_at?: string
+          margin_call_event_id?: string | null
+          reason: string
+          slippage_multiplier?: number | null
+          status?: string
+          total_loss_realized?: number | null
+          total_positions_closed?: number | null
+          total_positions_failed?: number | null
+          total_slippage_applied?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          closed_positions?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          execution_time_ms?: number | null
+          failed_positions?: Json | null
+          final_equity?: number | null
+          final_margin_level?: number | null
+          id?: string
+          initial_equity?: number
+          initial_margin_level?: number
+          initiated_at?: string
+          margin_call_event_id?: string | null
+          reason?: string
+          slippage_multiplier?: number | null
+          status?: string
+          total_loss_realized?: number | null
+          total_positions_closed?: number | null
+          total_positions_failed?: number | null
+          total_slippage_applied?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "liquidation_events_margin_call_event_id_fkey"
+            columns: ["margin_call_event_id"]
+            isOneToOne: false
+            referencedRelation: "margin_call_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "liquidation_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      margin_call_events: {
+        Row: {
+          account_equity: number
+          created_at: string
+          details: Json | null
+          email_sent: boolean | null
+          escalated_at: string | null
+          escalation_count: number | null
+          grace_period_expires_at: string | null
+          id: string
+          liquidated_at: string | null
+          margin_level: number
+          margin_used: number
+          notification_sent: boolean | null
+          notified_at: string | null
+          resolution_type: string | null
+          resolved_at: string | null
+          severity: string
+          status: string
+          triggered_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_equity: number
+          created_at?: string
+          details?: Json | null
+          email_sent?: boolean | null
+          escalated_at?: string | null
+          escalation_count?: number | null
+          grace_period_expires_at?: string | null
+          id?: string
+          liquidated_at?: string | null
+          margin_level: number
+          margin_used: number
+          notification_sent?: boolean | null
+          notified_at?: string | null
+          resolution_type?: string | null
+          resolved_at?: string | null
+          severity: string
+          status?: string
+          triggered_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_equity?: number
+          created_at?: string
+          details?: Json | null
+          email_sent?: boolean | null
+          escalated_at?: string | null
+          escalation_count?: number | null
+          grace_period_expires_at?: string | null
+          id?: string
+          liquidated_at?: string | null
+          margin_level?: number
+          margin_used?: number
+          notification_sent?: boolean | null
+          notified_at?: string | null
+          resolution_type?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          triggered_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "margin_call_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           created_at: string
