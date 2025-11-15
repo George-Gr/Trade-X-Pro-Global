@@ -70,7 +70,7 @@ serve(async (req: Request) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-           details: validation.error.issues.map((i: Record<string, unknown>) => `${(i.path as unknown[]).join('.')}: ${i.message}`).join(', ')
+           details: validation.error.issues.map((i: any) => `${(i.path as unknown[]).join('.')}: ${i.message}`).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

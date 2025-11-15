@@ -147,14 +147,14 @@ serve(async (req) => {
               marginCallCreated = true;
               newMarginCalls++;
 
-              // Send notification via realtime
-              await supabaseClient.realtime.broadcast(`notifications:${user_id}`, {
+              // Send notification via insert
+              await supabaseClient.from('notifications').insert({
+                user_id,
                 type: 'MARGIN_CALL',
-                priority: severity === 'critical' ? 'CRITICAL' : 'HIGH',
-                severity,
+                title: 'Margin Call Alert',
                 message: `Your account margin level is ${marginLevel.toFixed(2)}%. Add funds or close positions immediately.`,
-                marginLevel,
-                timestamp: new Date().toISOString(),
+                data: { marginLevel, severity, priority: severity === 'critical' ? 'CRITICAL' : 'HIGH' },
+                read: false,
               });
             }
           }
@@ -180,11 +180,13 @@ serve(async (req) => {
               escalations++;
 
               // Send escalation notification
-              await supabaseClient.realtime.broadcast(`notifications:${user_id}`, {
+              await supabaseClient.from('notifications').insert({
+                user_id,
                 type: 'LIQUIDATION_WARNING',
-                priority: 'CRITICAL',
+                title: 'Critical Liquidation Warning',
                 message: `CRITICAL: Account margin level at ${marginLevel.toFixed(2)}%. Liquidation will begin immediately.`,
-                timestamp: new Date().toISOString(),
+                data: { marginLevel, priority: 'CRITICAL' },
+                read: false,
               });
             }
           }
