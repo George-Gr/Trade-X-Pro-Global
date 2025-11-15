@@ -16,6 +16,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const KYC = lazy(() => import("./pages/KYC"));
 const Admin = lazy(() => import("./pages/Admin"));
 const RiskManagement = lazy(() => import("./pages/RiskManagement"));
+const AdminRiskDashboard = lazy(() => import("./pages/AdminRiskDashboard"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -177,6 +178,14 @@ const App = () => (
             element={
               <ProtectedRoute adminOnly>
                 <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/risk"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminRiskDashboard />
               </ProtectedRoute>
             }
           />
