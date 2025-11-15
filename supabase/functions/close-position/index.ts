@@ -308,19 +308,23 @@ serve(async (req) => {
         [ClosureReason.ADMIN_FORCED]: 'Admin Forced',
       }[reason];
 
-      await supabase.from('notifications').insert({
+      const { error: notifError } = await supabase.from('notifications').insert({
         user_id: user.id,
         type: 'position_closure',
         title: `Position ${isPartialClose ? 'Partially' : ''} Closed - ${reasonLabel}`,
         message: `Closed ${closeQuantity} units at $${exitPrice.toFixed(8)}. P&L: $${netPnL.toFixed(2)} (${pnlPercentage.toFixed(2)}%)`,
-        metadata: {
+        data: {
           position_id,
           closure_id: closureId,
           realized_pnl: netPnL,
           pnl_percentage: pnlPercentage,
         },
         read: false,
-      }).catch(err => console.error('Failed to create notification:', err));
+      });
+      
+      if (notifError) {
+        console.error('Failed to create notification:', notifError);
+      }
     }
 
     // Update daily PnL tracking (async, don't await)

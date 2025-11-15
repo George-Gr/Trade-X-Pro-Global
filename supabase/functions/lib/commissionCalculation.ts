@@ -126,8 +126,8 @@ export const COMMISSION_CONFIG: Record<AssetClass, CommissionConfig> = {
  */
 export const CommissionCalculationSchema = z.object({
   symbol: z.string().min(1, 'Symbol required'),
-  assetClass: z.nativeEnum(AssetClass, { message: 'Invalid asset class' }),
-  side: z.enum(['buy', 'sell'], { message: 'Side must be buy or sell' }),
+  assetClass: z.nativeEnum(AssetClass),
+  side: z.enum(['buy', 'sell']),
   quantity: z.number().positive('Quantity must be positive'),
   executionPrice: z.number().positive('Execution price must be positive'),
   accountTier: z.nativeEnum(AccountTier).default(AccountTier.Standard),

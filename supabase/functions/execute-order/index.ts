@@ -216,7 +216,19 @@ serve(async (req) => {
     // =========================================
     let assetSpec: AssetSpec;
     try {
-      assetSpec = await validateAssetExists(supabase, orderRequest.symbol);
+      // Fetch asset directly from asset_specs
+      const { data: asset, error: assetError } = await supabase
+        .from('asset_specs')
+        .select('*')
+        .eq('symbol', orderRequest.symbol)
+        .eq('is_tradable', true)
+        .maybeSingle();
+      
+      if (assetError || !asset) {
+        throw new Error('Invalid or untradable symbol');
+      }
+      
+      assetSpec = asset as AssetSpec;
       validateQuantity(orderRequest, assetSpec);
       // Check market hours and leverage if assetSpec provides data
       validateMarketHours(assetSpec);
@@ -402,14 +414,18 @@ serve(async (req) => {
     try {
       slippageResult = calculateSlippage({
         symbol: orderRequest.symbol,
-        assetClass: assetSpec.asset_class.toLowerCase(),
         side: orderRequest.side,
-        quantity: orderRequest.quantity,
-        currentPrice: currentPrice,
-        currentVolatility: 20, // Default 20% volatility
-        averageVolatility: 20,
-        liquidity: 1000000,
-        isAfterHours: false, // TODO: Implement market hours check
+        marketPrice: currentPrice,
+        orderQuantity: orderRequest.quantity,
+        conditions: {
+          currentVolatility: 20, // Default 20% volatility
+          averageVolatility: 20,
+          dailyVolume: 1000000,
+          isHighVolatility: false,
+          isLowLiquidity: false,
+          orderSizePercentage: 0.1,
+          isAfterHours: false, // TODO: Implement market hours check
+        },
       });
 
       console.log(`Slippage calculated: ${slippageResult.totalSlippage.toFixed(6)} (base: ${slippageResult.baseSlippage.toFixed(6)})`);

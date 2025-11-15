@@ -118,7 +118,7 @@ async function executeLiquidationForEvent(
     }
 
     const timeInCriticalMinutes = Math.floor(
-      (Date.now() - new Date(marginCall.triggered_at).getTime()) / (1000 * 60)
+      (Date.now() - new Date((marginCall as any).triggered_at).getTime()) / (1000 * 60)
     );
 
     // 1. Validate preconditions (including time-in-critical check)
@@ -234,8 +234,8 @@ async function executeLiquidationForEvent(
 
         if (priceError) throw new Error(`Market data unavailable for ${position.symbol}`);
 
-        const bid = priceData.bid || position.currentPrice;
-        const ask = priceData.ask || position.currentPrice;
+        const bid = (priceData as any).bid || position.currentPrice;
+        const ask = (priceData as any).ask || position.currentPrice;
         
         // Calculate slippage based on spread
         const spread = ask - bid;
@@ -291,12 +291,12 @@ async function executeLiquidationForEvent(
     }
 
     // 6. Call atomic stored procedure to execute liquidation in single transaction
-    const { data: atomicResult, error: atomicError } = await supabaseClient.rpc(
+    const { data: atomicResult, error: atomicError } = await (supabaseClient as any).rpc(
       'execute_liquidation_atomic',
       {
-        user_id: marginCallEvent.userId,
-        margin_call_event_id: marginCallEvent.id,
-        positions_to_liquidate: positionsToClose,
+        p_user_id: marginCallEvent.userId,
+        p_margin_call_event_id: marginCallEvent.id,
+        p_positions_to_liquidate: positionsToClose,
       }
     );
 
@@ -398,7 +398,7 @@ async function executeLiquidationForEvent(
     );
 
     // Send via Supabase Realtime
-    await supabaseClient
+    const { error: notifError } = await supabaseClient
       .from('notifications')
       .insert({
         user_id: marginCallEvent.userId,
@@ -406,10 +406,14 @@ async function executeLiquidationForEvent(
         priority: notification.priority,
         title: notification.title,
         message: notification.message,
-        data: notification.metadata,
+        data: notification.metadata as any,
         read: false,
         created_at: new Date().toISOString(),
-      });
+      } as any);
+    
+    if (notifError) {
+      console.error('Failed to send notification:', notifError);
+    }
 
     return {
       success: true,
@@ -492,7 +496,7 @@ serve(async (req: Request): Promise<Response> => {
     // 1. If POST request, process single event
     if (req.method === 'POST') {
       const marginCallEvent = await req.json() as MarginCallEvent;
-      const result = await executeLiquidationForEvent(supabaseClient, marginCallEvent);
+      const result = await executeLiquidationForEvent(supabaseClient as any, marginCallEvent);
       
       return new Response(
         JSON.stringify(result),
@@ -530,7 +534,7 @@ serve(async (req: Request): Promise<Response> => {
 
     // Process all pending events
     const results = await Promise.all(
-      pendingEvents.map((event: any) => executeLiquidationForEvent(supabaseClient, event as MarginCallEvent))
+      pendingEvents.map((event: any) => executeLiquidationForEvent(supabaseClient as any, event as MarginCallEvent))
     );
 
     const successCount = results.filter(r => r.success).length;

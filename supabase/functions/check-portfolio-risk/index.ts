@@ -87,7 +87,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         return new Response('Internal server error', { status: 500 });
       }
 
-      usersToCheck = (users || []).map((u: Profile) => u.id);
+      usersToCheck = (users || []).map((u: { id: string }) => u.id);
     }
 
     const results: any[] = [];

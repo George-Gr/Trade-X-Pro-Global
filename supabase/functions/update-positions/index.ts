@@ -11,7 +11,6 @@
  * - Realtime subscriptions for UI broadcast
  */
 
-// @ts-expect-error - Deno import, TypeScript cannot resolve ESM URL imports
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 // Deno global declaration for TypeScript support
@@ -291,20 +290,20 @@ Deno.serve(async (req: Request) => {
 
     for (const metric of updated) {
       // Broadcast to Realtime subscribers
-      await supabase
-        .channel(`positions:${user_id}`)
-        .send("broadcast", {
-          event: "position:updated",
-          payload: {
-            id: metric.position_id,
-            symbol: metric.symbol,
-            current_price: metric.current_price,
-            unrealized_pnl: metric.unrealized_pnl,
-            margin_level: metric.margin_level,
-            margin_status: metric.margin_status,
-            updated_at: new Date().toISOString(),
-          },
-        });
+      const channel = supabase.channel(`positions:${user_id}`);
+      await channel.send({
+        type: "broadcast",
+        event: "position:updated",
+        payload: {
+          id: metric.position_id,
+          symbol: metric.symbol,
+          current_price: metric.current_price,
+          unrealized_pnl: metric.unrealized_pnl,
+          margin_level: metric.margin_level,
+          margin_status: metric.margin_status,
+          updated_at: new Date().toISOString(),
+        },
+      });
     }
 
     // =====================================================================

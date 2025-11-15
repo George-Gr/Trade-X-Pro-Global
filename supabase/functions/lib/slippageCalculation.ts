@@ -318,7 +318,7 @@ export const SlippageCalculationSchema = z.object({
   symbol: z.string().min(1, 'Symbol required'),
   marketPrice: z.number().positive('Market price must be positive'),
   orderQuantity: z.number().positive('Order quantity must be positive'),
-  side: z.enum(['buy', 'sell'], { message: 'Side must be buy or sell' }),
+  side: z.enum(['buy', 'sell']),
   conditions: z.object({
     currentVolatility: z.number().nonnegative('Current volatility cannot be negative'),
     averageVolatility: z.number().positive('Average volatility must be positive'),
