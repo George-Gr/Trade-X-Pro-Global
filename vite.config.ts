@@ -30,39 +30,48 @@ export default defineConfig(({ mode }) => ({
     include: ["react", "react-dom", "react/jsx-runtime", "@radix-ui/react-tooltip"],
   },
   build: {
-    // Increase or lower as needed; this only controls the warning threshold.
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        // Split large node_modules dependencies into smaller vendor chunks to
-        // avoid a single large JS chunk. Tune groups as project libs change.
         manualChunks(id: string) {
           if (id.includes('node_modules')) {
-            // Core React bundle - must be separate and loaded first
+            // Core React - MUST be in its own chunk and loaded first
             if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('scheduler')) {
               return 'vendor-react';
             }
-            // React ecosystem - depends on React but can be bundled together
-            if (id.includes('@radix-ui') || id.includes('react-router') || 
-                id.includes('@tanstack') || id.includes('react-query') ||
-                id.includes('lucide-react') || id.includes('cmdk') || 
-                id.includes('sonner') || id.includes('embla-carousel') ||
-                id.includes('react-hook-form') || id.includes('@hookform') ||
-                id.includes('next-themes')) {
-              return 'vendor-react-ecosystem';
+            // Radix UI - all Radix components together
+            if (id.includes('@radix-ui')) {
+              return 'vendor-radix';
+            }
+            // React Router
+            if (id.includes('react-router')) {
+              return 'vendor-router';
+            }
+            // TanStack Query
+            if (id.includes('@tanstack') || id.includes('react-query')) {
+              return 'vendor-query';
             }
             // Chart libraries
             if (id.includes('lightweight-charts') || id.includes('recharts')) {
               return 'vendor-charts';
             }
-            // Supabase client
+            // Supabase
             if (id.includes('@supabase') || id.includes('supabase')) {
               return 'vendor-supabase';
             }
-            // Utilities and other libraries
-            if (id.includes('date-fns') || id.includes('zod') || 
-                id.includes('class-variance-authority') || id.includes('clsx') || 
-                id.includes('tailwind-merge')) {
+            // Forms
+            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
+              return 'vendor-forms';
+            }
+            // UI utilities
+            if (id.includes('lucide-react') || id.includes('cmdk') || 
+                id.includes('sonner') || id.includes('embla-carousel') ||
+                id.includes('next-themes')) {
+              return 'vendor-ui';
+            }
+            // Other utilities
+            if (id.includes('date-fns') || id.includes('class-variance-authority') || 
+                id.includes('clsx') || id.includes('tailwind-merge')) {
               return 'vendor-utils';
             }
             // Everything else
