@@ -132,8 +132,57 @@ export function useRealtimePositions(
 
   const handlePositionUpdate = useCallback(
     (payload: RealtimePositionUpdate, filter?: string) => {
-      const { type, new: newRecord } = payload;
+      const { type, new: newRecord, old: oldRecord } = payload;
 
+      // Calculate position delta for UPDATE events
+      const calculateDelta = (oldPos: any, newPos: any) => {
+        if (!oldPos || !newPos) return null;
+        
+        return {
+          pnl_change: (newPos.unrealized_pnl || 0) - (oldPos.unrealized_pnl || 0),
+          price_change: (newPos.current_price || 0) - (oldPos.current_price || 0),
+          margin_change: (newPos.margin_used || 0) - (oldPos.margin_used || 0),
+        };
+      };
+
+      // Debounce rapid updates for UPDATE events
+      if (type === "UPDATE" && newRecord) {
+        const delta = calculateDelta(oldRecord, newRecord);
+        
+        // Only process significant updates (> 0.01% PnL change or > 0.1% price change)
+        const shouldUpdate = !delta || 
+          Math.abs(delta.pnl_change) > 0.01 || 
+          Math.abs(delta.price_change / (oldRecord?.current_price || 1)) > 0.001;
+        
+        if (!shouldUpdate) {
+          return; // Skip insignificant updates
+        }
+        
+        // Clear existing debounce timer
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        
+        // Debounce the update
+        debounceTimerRef.current = setTimeout(() => {
+          setPositions((prev) => {
+            const updated = [...prev];
+            const index = updated.findIndex((p) => p.id === newRecord.id);
+            if (index >= 0) {
+              updated[index] = newRecord;
+            }
+            positionsRef.current = updated;
+            if (onUpdate) {
+              onUpdate(updated);
+            }
+            return updated;
+          });
+        }, debounceMs);
+        
+        return;
+      }
+
+      // Handle INSERT and DELETE immediately (no debouncing)
       setPositions((prev) => {
         let updated = [...prev];
 
@@ -143,15 +192,6 @@ export function useRealtimePositions(
               const exists = updated.some((p) => p.id === newRecord.id);
               if (!exists) {
                 updated = [newRecord, ...updated];
-              }
-            }
-            break;
-
-          case "UPDATE":
-            if (newRecord && (!filter || newRecord.symbol === filter)) {
-              const index = updated.findIndex((p) => p.id === newRecord.id);
-              if (index >= 0) {
-                updated[index] = newRecord;
               }
             }
             break;
@@ -171,7 +211,7 @@ export function useRealtimePositions(
         onUpdate(positionsRef.current);
       }
     },
-    [onUpdate]
+    [onUpdate, debounceMs]
   );
 
   const handleSubscriptionError = useCallback(() => {

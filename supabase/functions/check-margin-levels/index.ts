@@ -318,6 +318,49 @@ async function checkMarginLevels(
               action_url: "/risk-management",
               read: false,
             });
+            
+            // Send critical email notification
+            try {
+              await supabase.functions.invoke('send-critical-email', {
+                body: {
+                  to: user.email,
+                  type: currentStatus === "LIQUIDATION" ? 'liquidation' : 'margin_critical',
+                  data: {
+                    user_name: user.email.split('@')[0],
+                    margin_level: currentMarginLevel,
+                    equity: user.equity,
+                    margin_used: user.margin_used,
+                    actions: actionRequired,
+                    time_to_liquidation: timeToLiquidation,
+                  },
+                },
+              });
+              console.log(`Critical email sent to ${user.email} for ${currentStatus}`);
+            } catch (emailError) {
+              console.error('Failed to send critical email:', emailError);
+            }
+          }
+          
+          // Send warning email for WARNING status on first trigger
+          if (currentStatus === "WARNING" && previousStatus === "SAFE") {
+            try {
+              await supabase.functions.invoke('send-critical-email', {
+                body: {
+                  to: user.email,
+                  type: 'margin_warning',
+                  data: {
+                    user_name: user.email.split('@')[0],
+                    margin_level: currentMarginLevel,
+                    equity: user.equity,
+                    margin_used: user.margin_used,
+                    actions: actionRequired,
+                  },
+                },
+              });
+              console.log(`Warning email sent to ${user.email}`);
+            } catch (emailError) {
+              console.error('Failed to send warning email:', emailError);
+            }
           }
         }
       } catch (userError) {
