@@ -1,6 +1,9 @@
 import React from 'react';
 import type { Position, PositionMetricsData } from '@/types/position';
 
+// Re-export Position type for components that import from PositionsGrid
+export type { Position, PositionMetricsData } from '@/types/position';
+
 export function calculateUnrealizedPnL({ side, quantity, entry_price, current_price }: Pick<Position, 'side' | 'quantity' | 'entry_price' | 'current_price'>): number {
   if (side === 'long') {
     return +(quantity * (current_price - entry_price)).toFixed(2);

@@ -89,8 +89,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   /**
    * Handle form submission - opens confirmation dialog
    */
-  const handleFormSubmit = (data: OrderFormData) => {
-    setPendingOrder(data);
+  const handleFormSubmit = async (data: OrderFormData, side: 'buy' | 'sell') => {
+    setPendingOrder({ ...data, side });
     setConfirmDialogOpen(true);
   };
 
@@ -114,7 +114,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
 
     const result = await executeOrder({
       symbol: pendingOrder.symbol,
-      order_type: pendingOrder.type,
+      order_type: pendingOrder.type as 'market' | 'limit' | 'stop' | 'stop_limit',
       side: pendingOrder.side,
       quantity: pendingOrder.quantity,
       price: orderPrice,
@@ -181,7 +181,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                 Current Price: <span className="font-mono font-semibold text-foreground">${currentPrice.toFixed(5)}</span>
               </p>
             </div>
-            <OrderTemplatesDialog symbol={symbol} onApplyTemplate={handleApplyTemplate} />
+            <OrderTemplatesDialog onApplyTemplate={handleApplyTemplate} />
           </div>
         </div>
 

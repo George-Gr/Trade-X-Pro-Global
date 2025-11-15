@@ -71,13 +71,13 @@ export const OrdersTable = ({
   // Sort orders
   const sortedOrders = useMemo(() => {
     const sorted = [...filteredOrders].sort((a, b) => {
-      let aValue: string | number | undefined = a[sortKey];
-      let bValue: string | number | undefined = b[sortKey];
+      let aValue: string | number = a[sortKey] as string | number;
+      let bValue: string | number = b[sortKey] as string | number;
 
       // Handle different data types
       if (sortKey === 'created_at') {
-        aValue = new Date(aValue as string).getTime();
-        bValue = new Date(bValue as string).getTime();
+        aValue = new Date(a[sortKey] as string).getTime();
+        bValue = new Date(b[sortKey] as string).getTime();
       }
 
       if (aValue === undefined || aValue === null) return 1;

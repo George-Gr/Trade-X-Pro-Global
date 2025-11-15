@@ -13,6 +13,7 @@ interface ProfileData {
 
 interface PositionWithPnL extends Position {
   unrealized_pnl: number;
+  asset_class?: string;
   trailing_stop_enabled?: boolean;
   trailing_stop_distance?: number | null;
   trailing_stop_price?: number | null;

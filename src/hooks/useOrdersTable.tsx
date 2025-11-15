@@ -51,7 +51,28 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
 
       if (fetchError) throw fetchError;
 
-      setOrders((data as OrderTableItem[]) || []);
+      // Map database orders to OrderTableItem format
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: any) => ({
+        id: order.id,
+        user_id: order.user_id,
+        symbol: order.symbol,
+        type: order.order_type as OrderType,
+        side: order.side as OrderSide,
+        quantity: order.quantity,
+        filled_quantity: 0, // TODO: Calculate from fills table
+        price: order.price,
+        limit_price: order.price,
+        stop_price: order.price,
+        status: order.status,
+        created_at: order.created_at,
+        updated_at: order.created_at, // Use created_at as fallback
+        average_fill_price: order.fill_price,
+        commission: order.commission,
+        slippage: null,
+        realized_pnl: null,
+      }));
+
+      setOrders(mappedOrders);
     } catch (err) {
       console.error('useOrdersTable.fetchOrders error', err);
       setError(err instanceof Error ? err : new Error('Failed to fetch orders'));
