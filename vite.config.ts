@@ -27,56 +27,22 @@ export default defineConfig(({ mode }) => ({
   },
   // Ensure a single prebundled copy in dev server
   optimizeDeps: {
-    include: ["react", "react-dom", "react/jsx-runtime", "@radix-ui/react-tooltip"],
+    include: [
+      "react", 
+      "react-dom", 
+      "react/jsx-runtime",
+      "@radix-ui/react-tooltip",
+      "@radix-ui/react-hover-card",
+    ],
   },
   build: {
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks(id: string) {
-          if (id.includes('node_modules')) {
-            // Core React - MUST be in its own chunk and loaded first
-            if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('scheduler')) {
-              return 'vendor-react';
-            }
-            // Radix UI - all Radix components together
-            if (id.includes('@radix-ui')) {
-              return 'vendor-radix';
-            }
-            // React Router
-            if (id.includes('react-router')) {
-              return 'vendor-router';
-            }
-            // TanStack Query
-            if (id.includes('@tanstack') || id.includes('react-query')) {
-              return 'vendor-query';
-            }
-            // Chart libraries
-            if (id.includes('lightweight-charts') || id.includes('recharts')) {
-              return 'vendor-charts';
-            }
-            // Supabase
-            if (id.includes('@supabase') || id.includes('supabase')) {
-              return 'vendor-supabase';
-            }
-            // Forms
-            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
-              return 'vendor-forms';
-            }
-            // UI utilities
-            if (id.includes('lucide-react') || id.includes('cmdk') || 
-                id.includes('sonner') || id.includes('embla-carousel') ||
-                id.includes('next-themes')) {
-              return 'vendor-ui';
-            }
-            // Other utilities
-            if (id.includes('date-fns') || id.includes('class-variance-authority') || 
-                id.includes('clsx') || id.includes('tailwind-merge')) {
-              return 'vendor-utils';
-            }
-            // Everything else
-            return 'vendor-other';
-          }
+        // Simplified chunking - let Vite handle React dependencies automatically
+        manualChunks: {
+          'vendor-charts': ['lightweight-charts', 'recharts'],
+          'vendor-supabase': ['@supabase/supabase-js'],
         },
       },
     },
