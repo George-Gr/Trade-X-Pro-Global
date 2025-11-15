@@ -18,9 +18,16 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      react: path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
+      "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
     },
-    // Force single React instance
-    dedupe: ['react', 'react-dom'],
+    // Force single React instance across app and deps
+    dedupe: ["react", "react-dom", "react/jsx-runtime"],
+  },
+  // Ensure a single prebundled copy in dev server
+  optimizeDeps: {
+    include: ["react", "react-dom", "react/jsx-runtime", "@radix-ui/react-tooltip"],
   },
   build: {
     // Increase or lower as needed; this only controls the warning threshold.
