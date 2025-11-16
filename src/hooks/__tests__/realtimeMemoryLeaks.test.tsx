@@ -43,7 +43,7 @@ function verifyCleanupPattern(filePath: string, channelNames: string[] = []): bo
 
   // For each named channel, verify pattern
   for (const name of channelNames) {
-    const channelCreation = new RegExp(`\.channel\\s*\\(\\s*['"\`]${name}`, 'g');
+    const channelCreation = new RegExp(`\\.channel\\s*\\(\\s*['"\`]${name}`, 'g');
     const matches = content.match(channelCreation);
     if (!matches) {
       console.log(`❌ ${filePath}: Channel '${name}' not found`);
