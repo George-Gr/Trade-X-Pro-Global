@@ -21,10 +21,10 @@ The global CFD trading market exceeds **$200 billion in daily volume** with grow
 
 To empower global traders through a **unified, professional-grade CFD simulation platform** that combines:
 
-- **Multi-asset trading** (10,000+ CFDs: forex, stocks, commodities, indices, crypto, ETFs, bonds)
+- **Multi-asset trading** (150-200 premium CFDs: forex, stocks, commodities, indices, crypto, ETFs, bonds)
 - **AI-driven insights** and social copy trading
 - **Unlimited practice** with zero forced resets
-- **Transparent, broker-defined parameters** (fixed leverage, spreads, commissions)
+- **Transparent, broker-defined parameters** (fixed leverage per asset, spreads, commissions)
 - **Enterprise-level compliance** and security
 
 ### **1.0.3 Business Goals**
@@ -58,7 +58,7 @@ To empower global traders through a **unified, professional-grade CFD simulation
 | **Unlimited Free Demo**    | ✅ Yes, forever         | ⚠️ 30 days          | ✅ Yes      | ⚠️ Limited     | ❌ No          |
 | **Social Copy Trading**    | ✅ Built-in             | ❌ No               | ⚠️ Premium  | ⚠️ Premium     | ⚠️ Third-party |
 | **Broker Independent**     | ✅ Full control         | ❌ Broker-dependent | ⚠️ Hybrid   | ❌ Broker-tied | ❌ No          |
-| **10,000+ Assets**         | ✅ Yes                  | ⚠️ Broker-dependent | ✅ Yes      | ⚠️ Limited     | ⚠️ Limited     |
+| **150-200 Premium Assets** | ✅ Curated selection    | ⚠️ Broker-dependent | ✅ Yes      | ⚠️ Limited     | ⚠️ Limited     |
 | **AI Insights**            | ✅ Behavioral \+ Risk   | ❌ No               | ⚠️ Premium  | ❌ No          | ❌ No          |
 | **Mobile Native**          | ✅ Full parity          | ⚠️ Limited          | ⚠️ Limited  | ⚠️ Limited     | ⚠️ Limited     |
 | **Community Gamification** | ✅ Badges, Leaderboards | ❌ No               | ⚠️ Ideas    | ❌ No          | ❌ No          |

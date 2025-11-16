@@ -82,10 +82,10 @@ describe('OrderForm', () => {
   };
 
   it('should render all main form elements', () => {
-    render(<OrderForm {...defaultProps} />);
+    render(<OrderForm {...defaultProps} assetLeverage={500} />);
 
     expect(screen.getByLabelText(/volume/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/leverage/i)).toBeInTheDocument();
+    expect(screen.getByText(/leverage.*fixed by broker/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /buy/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sell/i })).toBeInTheDocument();
   });
@@ -99,10 +99,13 @@ describe('OrderForm', () => {
   });
 
   it('should have leverage selector', () => {
-    render(<OrderForm {...defaultProps} />);
+    render(<OrderForm {...defaultProps} assetLeverage={500} />);
 
-    const leverageSelect = screen.getByLabelText(/leverage/i);
-    expect(leverageSelect).toBeInTheDocument();
+    // Leverage is now read-only display (not a selector)
+    expect(screen.getByText(/leverage.*fixed by broker/i)).toBeInTheDocument();
+    expect(screen.getByText('1:500')).toBeInTheDocument();
+    // Verify no combobox selector exists for leverage
+    expect(screen.queryByRole('combobox', { name: /leverage/i })).not.toBeInTheDocument();
   });
 
   it('should show loading state on buttons when isLoading is true', () => {
@@ -129,10 +132,12 @@ describe('OrderForm', () => {
   });
 
   it('should have proper ARIA labels for all inputs', () => {
-    render(<OrderForm {...defaultProps} />);
+    render(<OrderForm {...defaultProps} assetLeverage={500} />);
 
     expect(screen.getByLabelText(/volume/i)).toHaveAccessibleName();
-    expect(screen.getByLabelText(/leverage/i)).toHaveAccessibleName();
+    // Leverage is now read-only display, check it's present
+    expect(screen.getByText(/leverage.*fixed by broker/i)).toBeInTheDocument();
+    expect(screen.getByText('1:500')).toBeInTheDocument();
   });
 
   it('should render limit price input for limit orders', () => {

@@ -3,10 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wallet as WalletIcon, TrendingUp, History, Plus, RefreshCw } from "lucide-react";
+import { Wallet as WalletIcon, TrendingUp, History, Plus, RefreshCw, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { DepositCryptoDialog } from "@/components/wallet/DepositCryptoDialog";
+import { WithdrawalDialog } from "@/components/wallet/WithdrawalDialog";
 import { TransactionHistory } from "@/components/wallet/TransactionHistory";
 import { Skeleton } from "@/components/ui/skeleton";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
@@ -15,9 +16,11 @@ import { useAuth } from "@/hooks/useAuth";
 const Wallet = () => {
   const { user } = useAuth();
   const [depositDialogOpen, setDepositDialogOpen] = useState(false);
+  const [withdrawalDialogOpen, setWithdrawalDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("deposits");
 
   // Fetch user profile
-  const { data: profile, isLoading: profileLoading } = useQuery({
+  const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -33,7 +36,7 @@ const Wallet = () => {
   });
 
   // Fetch crypto transactions
-  const { data: transactions, isLoading: transactionsLoading, refetch } = useQuery({
+  const { data: transactions, isLoading: transactionsLoading, refetch: refetchTransactions } = useQuery({
     queryKey: ['crypto_transactions', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -48,9 +51,35 @@ const Wallet = () => {
     enabled: !!user?.id,
   });
 
+  // Fetch withdrawal requests
+  const { data: withdrawals, isLoading: withdrawalsLoading, refetch: refetchWithdrawals } = useQuery({
+    queryKey: ['withdrawal_requests', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('withdrawal_requests')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
   const pendingTransactions = transactions?.filter(t => 
     ['pending', 'confirming'].includes(t.status)
   ).length || 0;
+
+  const pendingWithdrawals = withdrawals?.filter(w => 
+    ['pending', 'approved', 'processing'].includes(w.status)
+  ).length || 0;
+
+  const handleRefresh = () => {
+    refetchProfile();
+    refetchTransactions();
+    refetchWithdrawals();
+  };
 
   return (
     <AuthenticatedLayout>
@@ -59,15 +88,24 @@ const Wallet = () => {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-4xl font-bold gradient-text mb-2">Crypto Wallet</h1>
-              <p className="text-muted-foreground">Manage your cryptocurrency deposits and balance</p>
+              <p className="text-muted-foreground">Manage your cryptocurrency deposits and withdrawals</p>
             </div>
-            <Button 
-              onClick={() => setDepositDialogOpen(true)}
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Deposit Crypto
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline"
+                onClick={handleRefresh}
+                className="gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+              <Button 
+                onClick={() => setDepositDialogOpen(true)}
+                className="gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Deposit
+              </Button>
+            </div>
           </div>
 
           {/* Balance Cards */}
@@ -93,7 +131,7 @@ const Wallet = () => {
             <Card className="glass-card">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Equity
+                  Held Balance
                 </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -102,81 +140,179 @@ const Wallet = () => {
                   <Skeleton className="h-8 w-32" />
                 ) : (
                   <div className="text-3xl font-bold gradient-text">
-                    ${profile?.equity?.toFixed(2) || '0.00'}
+                    ${profile?.held_balance?.toFixed(2) || '0.00'}
                   </div>
                 )}
+                <p className="text-xs text-muted-foreground mt-1">In pending withdrawals</p>
               </CardContent>
             </Card>
 
             <Card className="glass-card">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Pending Deposits
+                  Pending Operations
                 </CardTitle>
                 <History className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">
-                  {transactionsLoading ? (
-                    <Skeleton className="h-8 w-16" />
-                  ) : (
-                    <Badge variant={pendingTransactions > 0 ? "default" : "secondary"}>
-                      {pendingTransactions}
+                <div className="flex gap-4">
+                  <div>
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <ArrowDownLeft className="h-3 w-3" />
+                      {transactionsLoading ? '...' : pendingTransactions}
                     </Badge>
-                  )}
+                    <p className="text-xs text-muted-foreground mt-1">Deposits</p>
+                  </div>
+                  <div>
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <ArrowUpRight className="h-3 w-3" />
+                      {withdrawalsLoading ? '...' : pendingWithdrawals}
+                    </Badge>
+                    <p className="text-xs text-muted-foreground mt-1">Withdrawals</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Transactions */}
+          {/* Deposit & Withdrawal Forms */}
+          <div className="grid gap-6 mb-8 lg:grid-cols-2">
+            {/* Deposit Section */}
+            <Card className="glass-card">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <ArrowDownLeft className="h-5 w-5 text-green-500" />
+                      Deposit Crypto
+                    </CardTitle>
+                    <CardDescription>Add cryptocurrency to your account</CardDescription>
+                  </div>
+                  <Button 
+                    onClick={() => setDepositDialogOpen(true)}
+                    size="sm"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    New Deposit
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Supported cryptocurrencies: BTC, ETH, USDT, USDC, LTC, BNB
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Minimum deposit: $10 USD
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Deposits confirmed within 15-30 minutes
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Withdrawal Section */}
+            <Card className="glass-card">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <ArrowUpRight className="h-5 w-5 text-red-500" />
+                      Withdraw Crypto
+                    </CardTitle>
+                    <CardDescription>Withdraw to external wallet</CardDescription>
+                  </div>
+                  <Button 
+                    onClick={() => setWithdrawalDialogOpen(true)}
+                    size="sm"
+                    variant="outline"
+                  >
+                    <ArrowUpRight className="h-4 w-4 mr-1" />
+                    Withdraw
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Daily limit: $10,000 USD
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Per-transaction limit: $5,000 USD
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Network fees may apply
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Tabs for Forms and History */}
           <Card className="glass-card">
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Transaction History</CardTitle>
-                  <CardDescription>View all your crypto deposits and withdrawals</CardDescription>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => refetch()}
-                  className="gap-2"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  Refresh
-                </Button>
-              </div>
+              <CardTitle>Manage Funds</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="all" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="completed">Completed</TabsTrigger>
-                  <TabsTrigger value="pending">Pending</TabsTrigger>
-                  <TabsTrigger value="failed">Failed</TabsTrigger>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="deposits">Recent Deposits</TabsTrigger>
+                  <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
+                  <TabsTrigger value="all">Transaction History</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="deposits" className="mt-6">
+                  <TransactionHistory 
+                    transactions={transactions?.filter(t => t.transaction_type === 'deposit') || []} 
+                    isLoading={transactionsLoading}
+                  />
+                </TabsContent>
+
+                <TabsContent value="withdrawals" className="mt-6">
+                  <div className="space-y-4">
+                    {withdrawalsLoading ? (
+                      <div className="space-y-4">
+                        {[...Array(3)].map((_, i) => (
+                          <Skeleton key={i} className="h-16 w-full" />
+                        ))}
+                      </div>
+                    ) : withdrawals && withdrawals.length > 0 ? (
+                      <div className="space-y-2">
+                        {withdrawals.map((w) => (
+                          <Card key={w.id} className="p-4 bg-muted/50 border-0">
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-1">
+                                <p className="font-semibold">{w.amount} {w.currency}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {w.destination_address.slice(0, 10)}...{w.destination_address.slice(-10)}
+                                </p>
+                              </div>
+                              <div className="text-right space-y-1">
+                                <Badge variant={
+                                  w.status === 'completed' ? 'default' :
+                                  w.status === 'failed' ? 'destructive' :
+                                  'secondary'
+                                }>
+                                  {w.status}
+                                </Badge>
+                                <p className="text-xs text-muted-foreground">
+                                  {new Date(w.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-center text-muted-foreground py-8">No withdrawals yet</p>
+                    )}
+                  </div>
+                </TabsContent>
+
                 <TabsContent value="all" className="mt-6">
                   <TransactionHistory 
                     transactions={transactions || []} 
-                    isLoading={transactionsLoading}
-                  />
-                </TabsContent>
-                <TabsContent value="completed" className="mt-6">
-                  <TransactionHistory 
-                    transactions={transactions?.filter(t => t.status === 'completed') || []} 
-                    isLoading={transactionsLoading}
-                  />
-                </TabsContent>
-                <TabsContent value="pending" className="mt-6">
-                  <TransactionHistory 
-                    transactions={transactions?.filter(t => ['pending', 'confirming'].includes(t.status)) || []} 
-                    isLoading={transactionsLoading}
-                  />
-                </TabsContent>
-                <TabsContent value="failed" className="mt-6">
-                  <TransactionHistory 
-                    transactions={transactions?.filter(t => ['failed', 'expired'].includes(t.status)) || []} 
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>
@@ -187,7 +323,14 @@ const Wallet = () => {
           <DepositCryptoDialog 
             open={depositDialogOpen}
             onOpenChange={setDepositDialogOpen}
-            onSuccess={() => refetch()}
+            onSuccess={() => refetchTransactions()}
+          />
+
+          <WithdrawalDialog
+            open={withdrawalDialogOpen}
+            onOpenChange={setWithdrawalDialogOpen}
+            onSuccess={() => refetchWithdrawals()}
+            balance={profile?.balance || 0}
           />
         </div>
       </div>

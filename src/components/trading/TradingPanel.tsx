@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useOrderExecution } from "@/hooks/useOrderExecution";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
+import { useAssetSpecs } from "@/hooks/useAssetSpecs";
 import { OrderTemplatesDialog } from "./OrderTemplatesDialog";
 import { OrderTemplate } from "@/hooks/useOrderTemplates";
 import { OrderForm, type OrderFormData } from "./OrderForm";
@@ -45,7 +46,6 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     symbol,
     side: 'buy',
     quantity: 0.01,
-    leverage: 100,
     type: 'market',
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -54,6 +54,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   // Hooks
   const { toast } = useToast();
   const { executeOrder, isExecuting } = useOrderExecution();
+  const { leverage: assetLeverage, isLoading: isAssetLoading } = useAssetSpecs(symbol);
   
   // Real-time price updates
   const { getPrice } = usePriceUpdates({
@@ -128,7 +129,6 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         symbol,
         side: 'buy',
         quantity: 0.01,
-        leverage: 100,
         type: 'market',
       });
       toast({
@@ -155,7 +155,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     setFormData(prev => ({
       ...prev,
       quantity: template.volume,
-      leverage: template.leverage,
+      // NOTE: Leverage is now fixed per asset - template.leverage is ignored
       type: template.order_type as OrderType,
       stopLossPrice: template.stop_loss,
       takeProfitPrice: template.take_profit,
@@ -164,7 +164,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     
     toast({
       title: "Template Applied",
-      description: `"${template.name}" settings loaded.`,
+      description: `"${template.name}" settings loaded. (Leverage is set per asset: 1:${assetLeverage})`,
     });
   };
 
@@ -207,7 +207,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                 currentPrice={currentPrice}
                 onOrderTypeChange={handleOrderTypeChange}
                 onSubmit={handleFormSubmit}
-                isLoading={isExecuting}
+                isLoading={isExecuting || isAssetLoading}
+                assetLeverage={assetLeverage}
               />
             </div>
 
@@ -216,6 +217,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               <OrderPreview
                 formData={formData}
                 currentPrice={currentPrice}
+                assetLeverage={assetLeverage}
                 commission={0.0005}
                 slippage={orderType === 'market' ? 0.0001 : 0}
               />
@@ -246,8 +248,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                       <p className="font-semibold capitalize">{pendingOrder.type}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Leverage</p>
-                      <p className="font-semibold">1:{pendingOrder.leverage}</p>
+                      <p className="text-muted-foreground">Leverage (Fixed)</p>
+                      <p className="font-semibold">1:{assetLeverage}</p>
                     </div>
                   </div>
                 </div>

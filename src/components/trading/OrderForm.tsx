@@ -16,7 +16,6 @@ export interface OrderFormData {
   symbol: string;
   side: 'buy' | 'sell';
   quantity: number;
-  leverage: number;
   type: OrderType;
   limitPrice?: number;
   stopPrice?: number;
@@ -34,6 +33,7 @@ interface OrderFormProps {
   isLoading?: boolean;
   error?: string | null;
   currentPrice: number;
+  assetLeverage?: number; // Fixed broker-set leverage for this asset
 }
 
 /**
@@ -50,9 +50,9 @@ export const OrderForm = ({
   isLoading = false,
   error = null,
   currentPrice,
+  assetLeverage = 500, // Default to max if not provided
 }: OrderFormProps) => {
   const [volume, setVolume] = useState("0.01");
-  const [leverage, setLeverage] = useState("100");
   const [limitPrice, setLimitPrice] = useState("");
   const [stopPrice, setStopPrice] = useState("");
   const [trailingDistance, setTrailingDistance] = useState("");
@@ -61,15 +61,14 @@ export const OrderForm = ({
   const [timeInForce, setTimeInForce] = useState<'GTC' | 'GTD' | 'FOK' | 'IOC'>('GTC');
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Margin calculation
+  // Margin calculation using FIXED asset leverage (not user-customizable)
   const marginRequired = useMemo(() => {
     const qty = parseFloat(volume) || 0;
-    const lev = parseFloat(leverage) || 100;
     const contractSize = 100000;
 
-    if (qty <= 0 || lev <= 0) return 0;
-    return (qty * contractSize * currentPrice) / lev;
-  }, [volume, leverage, currentPrice]);
+    if (qty <= 0 || assetLeverage <= 0) return 0;
+    return (qty * contractSize * currentPrice) / assetLeverage;
+  }, [volume, assetLeverage, currentPrice]);
 
   // Pip value calculation
   const pipValue = useMemo(() => {
@@ -150,7 +149,6 @@ export const OrderForm = ({
       symbol,
       side,
       quantity: parseFloat(volume),
-      leverage: parseFloat(leverage),
       type: orderType,
       limitPrice: limitPrice ? parseFloat(limitPrice) : undefined,
       stopPrice: stopPrice ? parseFloat(stopPrice) : undefined,
@@ -210,23 +208,19 @@ export const OrderForm = ({
         </p>
       </div>
 
-      {/* Leverage Selector */}
+      {/* Fixed Asset Leverage Display (Read-Only) */}
       <div className="space-y-2">
-        <Label htmlFor="leverage" className="text-sm font-semibold">
-          Leverage
+        <Label className="text-sm font-semibold">
+          Leverage (Fixed by Broker)
         </Label>
-        <Select value={leverage} onValueChange={setLeverage} disabled={isLoading}>
-          <SelectTrigger id="leverage" aria-label="Select leverage">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="30">1:30</SelectItem>
-            <SelectItem value="50">1:50</SelectItem>
-            <SelectItem value="100">1:100</SelectItem>
-            <SelectItem value="200">1:200</SelectItem>
-            <SelectItem value="500">1:500</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="bg-muted/50 border border-border rounded-md p-3 flex items-center justify-between">
+          <span className="font-mono font-semibold text-foreground">
+            1:{assetLeverage.toFixed(0)}
+          </span>
+          <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+            Fixed
+          </span>
+        </div>
         <p className="text-xs text-muted-foreground">
           Margin required: ${marginRequired.toFixed(2)}
         </p>

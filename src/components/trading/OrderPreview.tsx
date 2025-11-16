@@ -6,6 +6,7 @@ import { OrderFormData } from "./OrderForm";
 interface OrderPreviewProps {
   formData: Partial<OrderFormData>;
   currentPrice: number;
+  assetLeverage?: number; // Fixed broker-set leverage for this asset
   commission?: number; // as percentage
   slippage?: number; // as percentage
 }
@@ -22,11 +23,11 @@ interface OrderPreviewProps {
 export const OrderPreview = ({
   formData,
   currentPrice,
+  assetLeverage = 500, // Fixed broker-set leverage
   commission = 0.0005, // 0.05% default
   slippage = 0.0001, // 0.01% default
 }: OrderPreviewProps) => {
   const quantity = formData.quantity || 0;
-  const leverage = formData.leverage || 100;
   const side = formData.side || 'buy';
 
   // Calculate execution price with slippage
@@ -54,8 +55,8 @@ export const OrderPreview = ({
   // Calculate commission
   const commissionAmount = positionValue * commission;
   
-  // Calculate margin requirement
-  const marginRequired = positionValue / leverage;
+  // Calculate margin requirement using FIXED asset leverage
+  const marginRequired = positionValue / assetLeverage;
 
   // Calculate P&L at take profit
   const tpPnL = useMemo(() => {
@@ -115,7 +116,7 @@ export const OrderPreview = ({
           <p className="text-muted-foreground">Position Value</p>
           <p className="font-mono font-semibold">${positionValue.toFixed(2)}</p>
           <p className="text-muted-foreground text-xs">
-            {quantity} lots @ {leverageLabelify(leverage)}
+            {quantity} lots @ {leverageLabelify(assetLeverage)}
           </p>
         </div>
 
