@@ -43,12 +43,12 @@ jobs:
           name: site-dist
           path: dist
       - name: Notify
-        if: ${{ secrets.VITE_SENTRY_DSN }}
+        if: secrets.VITE_SENTRY_DSN != ''
         run: |
           echo "Sentry DSN is configured in secrets; builds will include Sentry configuration."
 
       - name: Create Sentry release (optional)
-        if: ${{ secrets.SENTRY_AUTH_TOKEN && secrets.SENTRY_ORG && secrets.SENTRY_PROJECT }}
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
         uses: getsentry/action-release@v1
         with:
           version: ${{ steps.get_version.outputs.version }}
@@ -58,8 +58,8 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Upload source maps to Sentry (optional)
-        if: ${{ secrets.SENTRY_AUTH_TOKEN && secrets.SENTRY_ORG && secrets.SENTRY_PROJECT }}
-        uses: getsentry/sentry-cli-action@v1
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+        uses: getsentry/sentry-cli-action@v2
         with:
           args: releases files ${{ steps.get_version.outputs.version }} upload-sourcemaps ./dist --url-prefix "~/" --rewrite
         env:
