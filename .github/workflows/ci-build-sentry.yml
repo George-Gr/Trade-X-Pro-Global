@@ -12,13 +12,12 @@ jobs:
     env:
       VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
       VITE_APP_VERSION: ${{ github.sha }}
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
     
     steps:
-      - name: Checkout
+      - name: Checkout with full history
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,6 +35,7 @@ jobs:
         run: |
           VERSION=$(node -e "try{const p=require('./package.json'); console.log(p.version || process.env.GITHUB_SHA);}catch(e){console.log(process.env.GITHUB_SHA);}")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -44,25 +44,46 @@ jobs:
           path: dist
 
       - name: Notify Sentry configuration
-        if: env.VITE_SENTRY_DSN != ''
+        if: secrets.VITE_SENTRY_DSN != ''
         run: echo "Sentry DSN is configured - builds will include error tracking."
 
+      - name: Install Sentry CLI
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+        run: |
+          echo "Installing Sentry CLI..."
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli --version
+
       - name: Create Sentry release
-        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
-        uses: getsentry/action-release@v1
-        with:
-          environment: production
-          version: ${{ steps.get_version.outputs.version }}
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+        run: |
+          echo "Creating Sentry release: ${{ steps.get_version.outputs.version }}"
+          sentry-cli releases new ${{ steps.get_version.outputs.version }}
+          sentry-cli releases set-commits ${{ steps.get_version.outputs.version }} --auto --ignore-missing
+          sentry-cli releases finalize ${{ steps.get_version.outputs.version }}
+          echo "Sentry release created successfully"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Upload source maps to Sentry
-        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
         run: |
-          curl -sL https://sentry.io/get-cli/ | bash
+          echo "Uploading source maps to Sentry..."
           sentry-cli releases files ${{ steps.get_version.outputs.version }} upload-sourcemaps ./dist --url-prefix "~/" --rewrite
+          echo "Source maps uploaded successfully"
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+      - name: Deploy Sentry release
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+        run: |
+          echo "Deploying Sentry release to production environment..."
+          sentry-cli releases deploys ${{ steps.get_version.outputs.version }} new -e production
+          echo "Sentry release deployed"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
