@@ -11,9 +11,9 @@ jobs:
     env:
       VITE_APP_VERSION: ${{ github.sha }}
       # Sentry configuration
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_AUTH_TOKEN: ${{ env.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ env.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
