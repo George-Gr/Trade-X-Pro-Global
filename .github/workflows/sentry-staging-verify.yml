@@ -8,11 +8,6 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    env:
-      VITE_APP_VERSION: ${{ github.sha }}
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
     steps:
       - name: Checkout repository
@@ -29,14 +24,18 @@ jobs:
           echo "================================================"
 
       - name: Install Sentry CLI
-        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
         run: |
           echo "Installing Sentry CLI..."
           curl -sL https://sentry.io/get-cli/ | bash
           sentry-cli --version
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Send test event to Sentry
-        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
         run: |
           echo "Sending test event to Sentry..."
           sentry-cli send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
@@ -47,13 +46,11 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Verify event ingestion
-        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
+        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          GITHUB_SHA: ${{ github.sha }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
           
@@ -61,7 +58,7 @@ jobs:
           echo "Verifying Sentry Event Ingestion"
           echo "================================================"
           
-          QUERY="Staging smoke test: commit=${GITHUB_SHA} run=${GITHUB_RUN_ID}"
+          QUERY="Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
           ENCODED_QUERY=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
           AUTH="Authorization: Bearer ${SENTRY_AUTH_TOKEN}"
           URL="https://sentry.io/api/0/projects/${SENTRY_ORG}/${SENTRY_PROJECT}/events/?query=${ENCODED_QUERY}"
@@ -106,9 +103,5 @@ jobs:
           echo "================================================"
           echo "Sentry Staging Verification Complete"
           echo "================================================"
-          if [ "${{ env.SENTRY_AUTH_TOKEN }}" = "" ]; then
-            echo "⚠️  Sentry secrets not configured - verification skipped"
-          else
-            echo "Status: Check above for results"
-          fi
+          echo "Status: Check above for results"
           echo "================================================"
