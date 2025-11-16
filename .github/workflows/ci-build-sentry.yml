@@ -9,9 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
-      VITE_APP_VERSION: ${{ github.sha }}
     
     steps:
       - name: Checkout with full history
@@ -27,7 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build application
+        env:
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_APP_VERSION: ${{ github.sha }}
         run: npm run build
 
       - name: Get release version
@@ -35,7 +35,7 @@ jobs:
         run: |
           VERSION=$(node -e "try{const p=require('./package.json'); console.log(p.version || process.env.GITHUB_SHA);}catch(e){console.log(process.env.GITHUB_SHA);}")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Release version: $VERSION"
+          echo "📦 Release version: $VERSION"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -45,46 +45,66 @@ jobs:
 
       - name: Notify Sentry configuration
         if: secrets.VITE_SENTRY_DSN != ''
-        run: echo "Sentry DSN is configured - builds will include error tracking."
+        run: echo "✓ Sentry DSN configured - error tracking enabled"
 
       - name: Install Sentry CLI
         if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
         run: |
-          echo "Installing Sentry CLI..."
+          echo "📥 Installing Sentry CLI..."
           curl -sL https://sentry.io/get-cli/ | bash
           sentry-cli --version
 
       - name: Create Sentry release
         if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        run: |
-          echo "Creating Sentry release: ${{ steps.get_version.outputs.version }}"
-          sentry-cli releases new ${{ steps.get_version.outputs.version }}
-          sentry-cli releases set-commits ${{ steps.get_version.outputs.version }} --auto --ignore-missing
-          sentry-cli releases finalize ${{ steps.get_version.outputs.version }}
-          echo "Sentry release created successfully"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          echo "🚀 Creating Sentry release: $VERSION"
+          
+          # Create new release
+          sentry-cli releases new "$VERSION"
+          
+          # Associate commits (ignore missing to prevent errors)
+          sentry-cli releases set-commits "$VERSION" --auto --ignore-missing || echo "⚠️  Could not associate commits, continuing..."
+          
+          # Finalize release
+          sentry-cli releases finalize "$VERSION"
+          
+          echo "✓ Sentry release created successfully"
 
       - name: Upload source maps to Sentry
         if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        run: |
-          echo "Uploading source maps to Sentry..."
-          sentry-cli releases files ${{ steps.get_version.outputs.version }} upload-sourcemaps ./dist --url-prefix "~/" --rewrite
-          echo "Source maps uploaded successfully"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          echo "📤 Uploading source maps to Sentry..."
+          
+          sentry-cli releases files "$VERSION" upload-sourcemaps ./dist --url-prefix "~/" --rewrite
+          
+          echo "✓ Source maps uploaded successfully"
 
       - name: Deploy Sentry release
         if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        run: |
-          echo "Deploying Sentry release to production environment..."
-          sentry-cli releases deploys ${{ steps.get_version.outputs.version }} new -e production
-          echo "Sentry release deployed"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          echo "🌐 Deploying Sentry release to production..."
+          
+          sentry-cli releases deploys "$VERSION" new -e production
+          
+          echo "✓ Sentry release deployed to production"
+
+      - name: Workflow complete
+        run: |
+          echo "================================================"
+          echo "✓ CI Build completed successfully"
+          echo "================================================"
