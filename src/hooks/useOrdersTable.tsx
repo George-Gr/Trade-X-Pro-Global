@@ -74,14 +74,11 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
 
       setOrders(mappedOrders);
     } catch (err) {
-      console.error('useOrdersTable.fetchOrders error', err);
-      setError(err instanceof Error ? err : new Error('Failed to fetch orders'));
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const cancelOrder = useCallback(async (orderId: string) => {
+       setError(err instanceof Error ? err : new Error('Failed to fetch orders'));
+     } finally {
+       setLoading(false);
+     }
+   }, []);  const cancelOrder = useCallback(async (orderId: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('cancel-order', {
         body: { order_id: orderId },
@@ -93,18 +90,16 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       toast({ title: 'Order cancelled', description: 'Order cancelled successfully' });
       await fetchOrders();
       return true;
-    } catch (err) {
-      console.error('cancelOrder error', err);
-      toast({
-        title: 'Cancellation failed',
-        description: err instanceof Error ? err.message : 'Failed to cancel order',
-        variant: 'destructive',
-      });
-      return false;
-    }
-  }, [fetchOrders, toast]);
-
-  const modifyOrder = useCallback(async (orderId: string, updates: Record<string, unknown>) => {
+     } catch (err) {
+       // Cancel error silently handled
+       toast({
+         title: 'Cancellation failed',
+         description: err instanceof Error ? err.message : 'Failed to cancel order',
+         variant: 'destructive',
+       });
+       return false;
+     }
+   }, [fetchOrders, toast]);  const modifyOrder = useCallback(async (orderId: string, updates: Record<string, unknown>) => {
     try {
       const { data, error } = await supabase.functions.invoke('modify-order', {
         body: { order_id: orderId, ...updates },
@@ -116,18 +111,16 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       toast({ title: 'Order modified', description: 'Order updated successfully' });
       await fetchOrders();
       return true;
-    } catch (err) {
-      console.error('modifyOrder error', err);
-      toast({
-        title: 'Modification failed',
-        description: err instanceof Error ? err.message : 'Failed to modify order',
-        variant: 'destructive',
-      });
-      return false;
-    }
-  }, [fetchOrders, toast]);
-
-  useEffect(() => {
+     } catch (err) {
+       // Modify error silently handled
+       toast({
+         title: 'Modification failed',
+         description: err instanceof Error ? err.message : 'Failed to modify order',
+         variant: 'destructive',
+       });
+       return false;
+     }
+   }, [fetchOrders, toast]);  useEffect(() => {
     fetchOrders();
 
     // subscribe to real-time changes on orders for current user
@@ -140,6 +133,8 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       .subscribe();
 
     return () => {
+      // Properly unsubscribe from channel before removing to prevent memory leaks
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, [fetchOrders]);

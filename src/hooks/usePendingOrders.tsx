@@ -43,7 +43,7 @@ export const usePendingOrders = () => {
 
       setOrders(data || []);
     } catch (err) {
-      console.error("Error fetching pending orders:", err);
+      // Error fetching pending orders
       setError(err instanceof Error ? err.message : "Failed to fetch pending orders");
     } finally {
       setLoading(false);
@@ -67,7 +67,7 @@ export const usePendingOrders = () => {
       await fetchPendingOrders();
       return true;
     } catch (err) {
-      console.error("Error cancelling order:", err);
+      // Error cancelling order
       toast({
         title: "Cancellation Failed",
         description: err instanceof Error ? err.message : "Failed to cancel order",
@@ -94,7 +94,7 @@ export const usePendingOrders = () => {
       await fetchPendingOrders();
       return true;
     } catch (err) {
-      console.error("Error modifying order:", err);
+      // Error modifying order
       toast({
         title: "Modification Failed",
         description: err instanceof Error ? err.message : "Failed to modify order",
@@ -124,6 +124,8 @@ export const usePendingOrders = () => {
       .subscribe();
 
     return () => {
+      // Properly unsubscribe from channel before removing to prevent memory leaks
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, []);

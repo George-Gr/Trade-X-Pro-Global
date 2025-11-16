@@ -1,0 +1,69 @@
+name: Sentry Staging Verification
+
+on:
+  push:
+    branches: [ staging ]
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      VITE_APP_VERSION: ${{ github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Notify intent
+        run: echo "Running Sentry staging verification (will fire a test event)"
+
+      - name: Send staging smoke event to Sentry (optional)
+        if: ${{ secrets.SENTRY_AUTH_TOKEN && secrets.SENTRY_ORG && secrets.SENTRY_PROJECT }}
+        uses: getsentry/sentry-cli-action@v1
+        with:
+          args: |
+            send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+      - name: Verify Sentry ingestion (poll API)
+        if: ${{ secrets.SENTRY_AUTH_TOKEN && secrets.SENTRY_ORG && secrets.SENTRY_PROJECT }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          QUERY="Staging smoke test: commit=${GITHUB_SHA} run=${GITHUB_RUN_ID}"
+          ENCODED_QUERY=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
+          ORG=${SENTRY_ORG}
+          PROJECT=${SENTRY_PROJECT}
+          AUTH="Authorization: Bearer ${SENTRY_AUTH_TOKEN}"
+          URL="https://sentry.io/api/0/projects/${ORG}/${PROJECT}/events/?query=${ENCODED_QUERY}"
+          echo "Polling Sentry for test event (url=${URL})"
+          FOUND=0
+          for i in {1..12}; do
+            echo "Attempt $i"
+            resp=$(curl -s -H "$AUTH" "$URL")
+            # resp should be a JSON array of events
+            count=$(echo "$resp" | python3 -c "import sys,json; data=sys.stdin.read(); arr=json.loads(data) if data.strip() else []; print(len(arr))") || count=0
+            echo "Found $count matching events"
+            if [ "$count" -gt 0 ]; then
+              FOUND=1
+              break
+            fi
+            sleep 5
+          done
+          if [ "$FOUND" -eq 1 ]; then
+            echo "Sentry ingestion verified: test event found"
+          else
+            echo "Sentry ingestion check failed: no matching event found after polling"
+            exit 2
+          fi
+
+      - name: Complete
+        run: echo "Sentry staging verification complete (if Sentry secrets were present, a test event was sent)."

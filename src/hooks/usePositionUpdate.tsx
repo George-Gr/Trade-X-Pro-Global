@@ -150,7 +150,7 @@ export function usePositionUpdate(
           }
 
           if (data.errors && data.errors.length > 0) {
-            console.warn("Some positions failed to update:", data.errors);
+            // Additional errors recorded in response for monitoring
           }
 
           return data.updated;
@@ -225,15 +225,17 @@ export function usePositionUpdate(
       )
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
-          console.log("Position realtime subscription established");
+          // Subscription established successfully
         } else if (status === "CHANNEL_ERROR") {
-          console.error("Position realtime subscription error");
+          // Subscription error - automatic retry will occur
         }
       });
 
     realtimeChannelRef.current = channel;
 
     return () => {
+      // Properly unsubscribe from channel before removing to prevent memory leaks
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, [enabled, user]);
@@ -250,7 +252,7 @@ export function usePositionUpdate(
       try {
         await fetchPositions();
       } catch (err) {
-        console.error("Auto-refresh failed:", err);
+        // Auto-refresh error silently handled - will retry next interval
       } finally {
         setIsRefreshing(false);
       }

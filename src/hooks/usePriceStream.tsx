@@ -64,43 +64,31 @@ export const usePriceStream = ({
     }
 
     try {
-      // Use the full WebSocket URL
       const projectRef = 'oaegicsinxhpilsihjxv';
       const wsUrl = `wss://${projectRef}.supabase.co/functions/v1/price-stream`;
-      
-      console.log('Connecting to price stream:', wsUrl);
-      
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
         setIsConnected(true);
         setIsLoading(false);
         setError(null);
         reconnectAttemptsRef.current = 0;
-        
-        // Subscribe to symbols
         ws.send(JSON.stringify({
           type: 'subscribe',
           symbols,
         }));
-        
         onConnected?.();
       };
 
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          
           if (message.type === 'prices' && message.data) {
             const newPrices = new Map<string, PriceData>();
-            
             for (const [symbol, data] of Object.entries(message.data)) {
               const priceInfo = data as any;
-              
               if (priceInfo.error) {
-                console.error(`Error for ${symbol}:`, priceInfo.error);
                 continue;
               }
               
@@ -124,26 +112,21 @@ export const usePriceStream = ({
             setPrices(newPrices);
           }
         } catch (err) {
-          console.error('Error parsing message:', err);
+          // Error parsing price message - logged internally, update skipped
         }
       };
 
-      ws.onerror = (event) => {
-        console.error('WebSocket error:', event);
+      ws.onerror = () => {
         setError('Connection error');
         onError?.(new Error('WebSocket connection error'));
       };
 
       ws.onclose = () => {
-        console.log('WebSocket disconnected');
         setIsConnected(false);
         setIsLoading(false);
         onDisconnected?.();
-        
-        // Attempt reconnection
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
-          console.log(`Reconnecting... Attempt ${reconnectAttemptsRef.current}`);
           
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
@@ -153,7 +136,6 @@ export const usePriceStream = ({
         }
       };
     } catch (err) {
-      console.error('Error creating WebSocket:', err);
       setError(err instanceof Error ? err.message : 'Connection failed');
       setIsLoading(false);
     }

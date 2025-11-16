@@ -22,7 +22,7 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
     const { closePosition } = await import('@/hooks/usePositionClose').then((m) => m.usePositionClose());
 
     for (const id of ids) {
-      // eslint-disable-next-line no-await-in-loop
+       
       await closePosition({ position_id: id });
     }
 

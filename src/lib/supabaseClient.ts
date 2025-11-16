@@ -5,7 +5,7 @@ const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABA
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   // In runtime environments this should be provided; for tests it's okay to continue.
-  // eslint-disable-next-line no-console
+   
   console.warn('Supabase client initialized without URL/KEY from env');
 }
 

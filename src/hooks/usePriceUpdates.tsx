@@ -57,13 +57,13 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
     });
 
     if (error || !data) {
-      console.error(`Failed to fetch price for ${symbol}:`, error);
+      // Price fetch error - will use cached data or return null
       return null;
     }
 
     // Finnhub returns: c (current), h (high), l (low), o (open), pc (previous close)
     if (!data.c || data.c <= 0) {
-      console.warn(`Invalid price data for ${symbol}:`, data);
+      // Invalid price data - will use cached or skip
       return null;
     }
 
@@ -86,7 +86,7 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
 
     return priceData;
   } catch (error) {
-    console.error(`Error fetching price for ${symbol}:`, error);
+    // Price fetch error silently handled - will retry or use cache
     return null;
   }
 };
@@ -123,7 +123,7 @@ export const usePriceUpdates = ({
         setError(null);
         setIsLoading(false);
       } catch (err) {
-        console.error('Error updating prices:', err);
+        // Price update error - will retry next interval
         setError(err instanceof Error ? err.message : 'Failed to fetch prices');
         setIsLoading(false);
       }

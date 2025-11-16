@@ -221,13 +221,11 @@ export function useRealtimePositions(
       reconnectAttemptsRef.current = attempts + 1;
       const backoffMs = Math.min(1000 * Math.pow(2, attempts), 30000);
 
-      console.warn(
-        `Subscription error. Reconnecting in ${backoffMs}ms (attempt ${attempts + 1})`
-      );
+      // Subscription error - will attempt reconnection
 
       setTimeout(() => {
         subscribe().catch((err: Error) => {
-          console.error("Reconnection failed:", err);
+          // Reconnection failed
           setConnectionStatus("error");
         });
       }, backoffMs);
@@ -280,7 +278,7 @@ export function useRealtimePositions(
           )
           .subscribe((status) => {
             if (status === "SUBSCRIBED") {
-              console.log("Position realtime subscription established");
+              // Position realtime subscription established
               setConnectionStatus("connected");
               setIsSubscribed(true);
               setError(null);
@@ -332,14 +330,14 @@ export function useRealtimePositions(
     loadPositions().then(() => {
       if (autoSubscribe) {
         subscribe().catch((err) => {
-          console.error("Failed to subscribe to realtime updates:", err);
+          // Failed to subscribe to realtime updates
         });
       }
     });
 
     return () => {
       unsubscribe().catch((err) => {
-        console.error("Error during cleanup:", err);
+        // Error during cleanup
       });
     };
   }, [userId, user, autoSubscribe, loadPositions, subscribe, unsubscribe]);

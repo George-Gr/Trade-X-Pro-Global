@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import {
   validateOrderInput,
   validateAssetExists,
@@ -35,40 +34,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const OrderRequestSchema = z.object({
-  symbol: z.string()
-    .trim()
-    .min(1, 'Symbol required')
-    .max(20, 'Symbol too long')
-    .regex(/^[A-Z0-9_]+$/, 'Invalid symbol format'),
-  order_type: z.enum(['market', 'limit', 'stop', 'stop_limit'], {
-    errorMap: () => ({ message: 'Invalid order type' })
-  }),
-  side: z.enum(['buy', 'sell'], {
-    errorMap: () => ({ message: 'Invalid side' })
-  }),
-  quantity: z.number()
-    .positive('Quantity must be positive')
-    .finite('Quantity must be finite')
-    .max(10000, 'Quantity too large'),
-  price: z.number()
-    .positive('Price must be positive')
-    .finite('Price must be finite')
-    .optional(),
-  stop_loss: z.number()
-    .positive('Stop loss must be positive')
-    .finite('Stop loss must be finite')
-    .optional(),
-  take_profit: z.number()
-    .positive('Take profit must be positive')
-    .finite('Take profit must be finite')
-    .optional(),
-  idempotency_key: z.string()
-    .min(1, 'Idempotency key required')
-});
-
-// Type extraction from schema
-type OrderRequest = z.infer<typeof OrderRequestSchema>;
+// Type definition for order request
+interface OrderRequest {
+  symbol: string;
+  order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
+  side: 'buy' | 'sell';
+  quantity: number;
+  price?: number;
+  stop_loss?: number;
+  take_profit?: number;
+  idempotency_key: string;
+}
 
 interface PriceData {
   c?: number;
@@ -95,8 +71,6 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Execute Order Function: Starting request processing');
-
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -121,10 +95,8 @@ serve(async (req) => {
       );
     }
 
-    console.log('User authenticated');
-
     // Check rate limit: 10 requests per minute
-    const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
+    const { data: rateLimitOk } = await (supabase as any).rpc('check_rate_limit', {
       p_user_id: user.id,
       p_endpoint: 'execute-order',
       p_max_requests: 10,
@@ -132,7 +104,6 @@ serve(async (req) => {
     });
 
     if (!rateLimitOk) {
-      console.log('Rate limit exceeded for user');
       return new Response(
         JSON.stringify({ error: 'Too many requests. Please wait before placing another order.' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } }
@@ -144,10 +115,8 @@ serve(async (req) => {
     let orderRequest: OrderRequest;
     try {
       orderRequest = await validateOrderInput(body);
-      console.log('Order request validated:', orderRequest.order_type, orderRequest.side);
     } catch (err) {
       if (err instanceof ValidationError) {
-        console.error('Order input validation failed:', err.details || err.message);
         return new Response(
           JSON.stringify({ error: err.message, details: err.details }),
           { status: err.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -176,7 +145,6 @@ serve(async (req) => {
     try {
       validateKYCStatus(profile);
       validateAccountStatus(profile);
-      console.log('User profile validated');
     } catch (err: unknown) {
       if (err instanceof ValidationError) {
         const ve = err as ValidationError;
@@ -200,7 +168,6 @@ serve(async (req) => {
       .maybeSingle();
 
     if (existingOrder) {
-      console.log('Duplicate order detected');
       return new Response(
         JSON.stringify({ 
           error: 'Duplicate order', 
@@ -233,7 +200,6 @@ serve(async (req) => {
       // Check market hours and leverage if assetSpec provides data
       validateMarketHours(assetSpec);
       // validateLeverage(profile, assetSpec); // optional - uncomment if profile provides leverage caps
-      console.log('Asset & quantity validated');
     } catch (err: unknown) {
       if (err instanceof ValidationError) {
         const ve = err as ValidationError;
@@ -268,7 +234,7 @@ serve(async (req) => {
       }
 
       // Check max open positions
-      const { count: openPositionsCount } = await supabase
+      const { count: openPositionsCount } = await (supabase as any)
         .from('positions')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id)
@@ -311,8 +277,6 @@ serve(async (req) => {
       }
     }
 
-    console.log('Risk limits validated');
-
     // =========================================
     // STEP 5: Fetch current market price from Finnhub
     // =========================================
@@ -329,8 +293,6 @@ serve(async (req) => {
         const quote = orderRequest.symbol.substring(3, 6);
         finnhubSymbol = `OANDA:${base}_${quote}`;
       }
-      
-      console.log('Fetching market price');
       
       const priceResponse = await fetch(
         `https://finnhub.io/api/v1/quote?symbol=${finnhubSymbol}&token=${finnhubApiKey}`
@@ -349,9 +311,7 @@ serve(async (req) => {
         throw new Error('Invalid price data received');
       }
 
-      console.log('Market price fetched successfully');
     } catch (error: unknown) {
-      console.error('Market data unavailable');
       const errorMessage = error instanceof Error ? error.message : String(error);
       return new Response(
         JSON.stringify({ error: 'Market data unavailable', details: errorMessage }),
@@ -362,7 +322,6 @@ serve(async (req) => {
     // =========================================
     // STEP 6: Calculate margin requirement using margin calculation module
     // =========================================
-    console.log('Calculating margin requirements');
     
     try {
       const marginRequired = calculateMarginRequired(
@@ -381,7 +340,6 @@ serve(async (req) => {
         profile.margin_used
       );
 
-      console.log(`Margin: required=${marginRequired}, free=${freeMargin}, level=${marginLevel}%`);
 
       if (freeMargin < marginRequired) {
         return new Response(
@@ -396,7 +354,6 @@ serve(async (req) => {
       }
     } catch (err) {
       if (err instanceof MarginCalculationError) {
-        console.error('Margin calculation error:', err.details);
         return new Response(
           JSON.stringify({ error: 'Margin calculation failed', details: err.details }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -408,7 +365,6 @@ serve(async (req) => {
     // =========================================
     // STEP 7: Calculate slippage using slippage calculation module
     // =========================================
-    console.log('Calculating order slippage');
     
     let slippageResult: SlippageResult;
     try {
@@ -428,10 +384,8 @@ serve(async (req) => {
         },
       });
 
-      console.log(`Slippage calculated: ${slippageResult.totalSlippage.toFixed(6)} (base: ${slippageResult.baseSlippage.toFixed(6)})`);
     } catch (err) {
       if (err instanceof SlippageCalculationError) {
-        console.error('Slippage calculation error:', err.details);
         return new Response(
           JSON.stringify({ error: 'Slippage calculation failed', details: err.details }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -446,12 +400,10 @@ serve(async (req) => {
     const executionPrice = orderRequest.side === 'buy'
       ? currentPrice * (1 + slippageResult.totalSlippage)
       : currentPrice * (1 - slippageResult.totalSlippage);
-    console.log(`Execution price: ${executionPrice.toFixed(4)} (market: ${currentPrice.toFixed(4)})`);
 
     // =========================================
     // STEP 9: Calculate commission using commission calculation module
     // =========================================
-    console.log('Calculating order commission');
     
     let commissionResult: CommissionResult;
     try {
@@ -477,10 +429,8 @@ serve(async (req) => {
         accountTier: AccountTier.Standard, // TODO: Get from user profile tier
       });
 
-      console.log(`Commission calculated: $${commissionResult.totalCommission.toFixed(2)}`);
     } catch (err) {
       if (err instanceof CommissionCalculationError) {
-        console.error('Commission calculation error:', err.details);
         return new Response(
           JSON.stringify({ error: 'Commission calculation failed', details: err.details }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -497,7 +447,6 @@ serve(async (req) => {
       ? orderValue + commissionResult.totalCommission
       : orderValue - commissionResult.totalCommission;
     
-    console.log(`Total order cost: $${totalOrderCost.toFixed(2)} (value: $${orderValue.toFixed(2)}, commission: $${commissionResult.totalCommission.toFixed(2)})`);
 
     // Verify sufficient balance for buy orders
     if (orderRequest.side === 'buy' && profile.balance < totalOrderCost) {
@@ -515,9 +464,8 @@ serve(async (req) => {
     // STEP 10.5: Handle pending orders (limit, stop, stop_limit)
     // =========================================
     if (orderRequest.order_type !== 'market') {
-      console.log(`Creating pending ${orderRequest.order_type} order for ${orderRequest.symbol}`);
       
-      const { data: pendingOrder, error: pendingError } = await supabase
+      const { data: pendingOrder, error: pendingError } = await (supabase as any)
         .from('orders')
         .insert({
           user_id: user.id,
@@ -536,7 +484,6 @@ serve(async (req) => {
         .single();
 
       if (pendingError) {
-        console.error('Error creating pending order:', pendingError);
         return new Response(
           JSON.stringify({ error: 'Failed to create pending order', details: pendingError }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -558,7 +505,6 @@ serve(async (req) => {
         }
       });
 
-      console.log(`Pending order created: ${pendingOrder.id}`);
 
       return new Response(
         JSON.stringify({
@@ -577,9 +523,8 @@ serve(async (req) => {
     // =========================================
     // STEP 11: Execute order atomically via stored procedure (market orders only)
     // =========================================
-    console.log('Calling execute_order_atomic stored procedure');
     
-    const { data: result, error: execError } = await supabase.rpc('execute_order_atomic', {
+    const { data: result, error: execError } = await (supabase as any).rpc('execute_order_atomic', {
       p_user_id: user.id,
       p_symbol: orderRequest.symbol,
       p_order_type: orderRequest.order_type,
@@ -596,14 +541,12 @@ serve(async (req) => {
     });
 
     if (execError) {
-      console.error('Order execution failed');
       return new Response(
         JSON.stringify({ error: execError.message }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Order executed successfully');
 
     // =========================================
     // STEP 12: Return success response
@@ -626,7 +569,6 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Unexpected error in execute-order function:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ 

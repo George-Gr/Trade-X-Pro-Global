@@ -8,6 +8,7 @@ import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { usePositionClose } from "@/hooks/usePositionClose";
+import { usePnLCalculations } from "@/hooks/usePnLCalculations";
 import { useToast } from "@/hooks/use-toast";
 import { TrailingStopDialog } from "@/components/trading/TrailingStopDialog";
 import { PriceAlertsManager } from "@/components/trading/PriceAlertsManager";
@@ -36,11 +37,22 @@ const Portfolio = () => {
     enabled: symbols.length > 0,
   });
 
-  useEffect(() => {
-    if (prices.size > 0) {
-      updatePositionPrices(prices);
-    }
-  }, [prices, updatePositionPrices]);
+  // Initialize P&L calculations with memoization
+  // Convert prices Map to extract just the numeric values
+  const pricesMap = new Map<string, number>(
+    Array.from(prices.entries()).map(([symbol, priceData]) => [
+      symbol,
+      typeof priceData === 'number' ? priceData : (priceData as any)?.c || 0,
+    ])
+  );
+
+  const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor, getPnLStatus } =
+    usePnLCalculations(
+      positions as any,
+      pricesMap,
+      undefined,  // profileData - hook doesn't use it currently
+      { enabled: positions.length > 0 }
+    );
 
   const handleClosePosition = async (positionId: string, symbol: string) => {
     setClosingPositions((prev) => new Set(prev).add(positionId));
@@ -101,17 +113,21 @@ const Portfolio = () => {
   const floatingPnL = getTotalUnrealizedPnL();
   const marginLevel = calculateMarginLevel();
 
+  // Use memoized P&L calculations for portfolio metrics
+  const realizedPnL = portfolioPnL.totalRealizedPnL || 0;
+  const unrealizedPnL = portfolioPnL.totalUnrealizedPnL || 0;
+  const totalPnL = unrealizedPnL + realizedPnL;
+  const pnLColor = getPnLColor(totalPnL);
+  const pnLStatus = getPnLStatus(totalPnL);
+
   const portfolioMetrics = [
     { label: "Balance", value: formatCurrency(balance) },
     { label: "Equity", value: formatCurrency(equity) },
+    { label: "Unrealized P&L", value: formatPnL(unrealizedPnL), color: getPnLColor(unrealizedPnL) },
+    { label: "Realized P&L", value: formatPnL(realizedPnL), color: getPnLColor(realizedPnL) },
     { label: "Margin Used", value: formatCurrency(marginUsed) },
     { label: "Free Margin", value: formatCurrency(freeMargin) },
     { label: "Margin Level", value: formatMarginLevel(marginLevel) },
-    {
-      label: "Floating P&L",
-      value: formatCurrency(floatingPnL),
-      color: floatingPnL >= 0 ? "text-profit" : "text-loss",
-    },
   ];
 
   return (
@@ -130,7 +146,7 @@ const Portfolio = () => {
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {portfolioMetrics.map((metric) => (
                 <Card key={metric.label}>
                   <CardHeader className="pb-2">
@@ -180,6 +196,12 @@ const Portfolio = () => {
                   <TableBody>
                     {positions.map((position) => {
                       const isPositionClosing = closingPositions.has(position.id);
+                      const positionPnL = positionPnLMap.get(position.id);
+                      const pnLValue = positionPnL?.unrealizedPnL || 0;
+                      const pnLPercentage = positionPnL?.unrealizedPnLPercentage || 0;
+                      const pnLColor = positionPnL ? getPnLColor(pnLValue) : "";
+                      const currentPrice = positionPnL?.currentPrice || position.current_price || position.entry_price;
+
                       return (
                         <TableRow key={position.id}>
                           <TableCell className="font-medium">{position.symbol}</TableCell>
@@ -193,17 +215,11 @@ const Portfolio = () => {
                           <TableCell>{position.quantity.toFixed(2)}</TableCell>
                           <TableCell>{formatPrice(position.entry_price, position.symbol)}</TableCell>
                           <TableCell>
-                            {position.current_price
-                              ? formatPrice(position.current_price, position.symbol)
-                              : "-"}
+                            {formatPrice(currentPrice, position.symbol)}
                           </TableCell>
-                          <TableCell
-                            className={
-                              (position.unrealized_pnl || 0) >= 0 ? "text-profit" : "text-loss"
-                            }
-                          >
-                            {(position.unrealized_pnl || 0) >= 0 ? "+" : ""}
-                            {formatCurrency(position.unrealized_pnl || 0)}
+                          <TableCell className={pnLColor}>
+                            <div className="font-medium">{formatPnL(pnLValue)}</div>
+                            <div className="text-xs opacity-75">{pnLPercentage.toFixed(2)}%</div>
                           </TableCell>
                           <TableCell>{formatCurrency(position.margin_used)}</TableCell>
                           <TableCell className="text-right">
@@ -212,7 +228,7 @@ const Portfolio = () => {
                                 positionId={position.id}
                                 symbol={position.symbol}
                                 side={position.side}
-                                currentPrice={position.current_price || position.entry_price}
+                                currentPrice={currentPrice}
                                 trailingStopEnabled={position.trailing_stop_enabled}
                                 trailingStopDistance={position.trailing_stop_distance}
                               />
@@ -243,7 +259,7 @@ const Portfolio = () => {
           </Card>
 
           {/* Trading Summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Trading Summary</CardTitle>
@@ -280,6 +296,69 @@ const Portfolio = () => {
                       }`}
                     >
                       {marginLevel > 300 ? "Low" : marginLevel > 150 ? "Medium" : "High"}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* P&L Summary Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>P&L Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Unrealized P&L</div>
+                    <div className={`text-2xl font-bold ${getPnLColor(unrealizedPnL)}`}>
+                      {formatPnL(unrealizedPnL)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Realized P&L</div>
+                    <div className={`text-2xl font-bold ${getPnLColor(realizedPnL)}`}>
+                      {formatPnL(realizedPnL)}
+                    </div>
+                  </div>
+                  <div className="pt-2 border-t">
+                    <div className="text-sm text-muted-foreground">Total P&L</div>
+                    <div className={`text-2xl font-bold ${pnLColor}`}>
+                      {formatPnL(totalPnL)}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Performance Metrics Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Metrics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Win Rate</div>
+                    <div className="text-xl font-bold">
+                      {portfolioPnL.positionCount > 0
+                        ? ((portfolioPnL.profitablePositions / portfolioPnL.positionCount) * 100).toFixed(1)
+                        : "0"}
+                      %
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Profit Factor</div>
+                    <div className="text-xl font-bold">
+                      {portfolioPnL.profitFactor > 0 ? portfolioPnL.profitFactor.toFixed(2) : "0.00"}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Largest Win / Loss</div>
+                    <div className="flex gap-2 text-sm font-medium">
+                      <span className="text-profit">{formatPnL(portfolioPnL.largestWin)}</span>
+                      <span className="text-muted-foreground">/</span>
+                      <span className="text-loss">{formatPnL(portfolioPnL.largestLoss)}</span>
                     </div>
                   </div>
                 </div>
