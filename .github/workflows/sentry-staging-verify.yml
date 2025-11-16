@@ -3,36 +3,50 @@ name: Sentry Staging Verification
 on:
   push:
     branches: [ staging ]
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     env:
       VITE_APP_VERSION: ${{ github.sha }}
-      # Sentry configuration
-      SENTRY_AUTH_TOKEN: ${{ env.SENTRY_AUTH_TOKEN }}
-      SENTRY_ORG: ${{ env.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Notify intent
-        run: echo "Running Sentry staging verification (will fire a test event)"
+      - name: Initialize verification
+        run: |
+          echo "================================================"
+          echo "Sentry Staging Verification Starting"
+          echo "================================================"
+          echo "Commit: ${{ github.sha }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "================================================"
 
-      - name: Send staging smoke event to Sentry (optional)
+      - name: Install Sentry CLI
         if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
-        uses: getsentry/sentry-cli-action@v2
-        with:
-          args: |
-            send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
+        run: |
+          echo "Installing Sentry CLI..."
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli --version
+
+      - name: Send test event to Sentry
+        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
+        run: |
+          echo "Sending test event to Sentry..."
+          sentry-cli send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
+          echo "Test event sent successfully"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
-      - name: Verify Sentry ingestion (poll API)
+      - name: Verify event ingestion
         if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -42,32 +56,59 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
+          
+          echo "================================================"
+          echo "Verifying Sentry Event Ingestion"
+          echo "================================================"
+          
           QUERY="Staging smoke test: commit=${GITHUB_SHA} run=${GITHUB_RUN_ID}"
           ENCODED_QUERY=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
-          ORG=${SENTRY_ORG}
-          PROJECT=${SENTRY_PROJECT}
           AUTH="Authorization: Bearer ${SENTRY_AUTH_TOKEN}"
-          URL="https://sentry.io/api/0/projects/${ORG}/${PROJECT}/events/?query=${ENCODED_QUERY}"
-          echo "Polling Sentry for test event (url=${URL})"
+          URL="https://sentry.io/api/0/projects/${SENTRY_ORG}/${SENTRY_PROJECT}/events/?query=${ENCODED_QUERY}"
+          
+          echo "Polling Sentry API..."
+          echo "Max attempts: 12 (60 seconds total)"
+          echo ""
+          
           FOUND=0
           for i in {1..12}; do
-            echo "Attempt $i"
+            printf "Attempt %2d/12: " "$i"
+            
             resp=$(curl -s -H "$AUTH" "$URL")
-            # resp should be a JSON array of events
             count=$(echo "$resp" | python3 -c "import sys,json; data=sys.stdin.read(); arr=json.loads(data) if data.strip() else []; print(len(arr))") || count=0
-            echo "Found $count matching events"
+            
             if [ "$count" -gt 0 ]; then
+              echo "✓ Event found!"
               FOUND=1
               break
+            else
+              echo "⏳ Waiting..."
             fi
+            
             sleep 5
           done
+          
+          echo ""
+          echo "================================================"
           if [ "$FOUND" -eq 1 ]; then
-            echo "Sentry ingestion verified: test event found"
+            echo "✓ SUCCESS: Sentry ingestion verified"
+            echo "================================================"
+            exit 0
           else
-            echo "Sentry ingestion check failed: no matching event found after polling"
+            echo "✗ FAILURE: Event not found after 60 seconds"
+            echo "================================================"
             exit 2
           fi
 
-      - name: Complete
-        run: echo "Sentry staging verification complete (if Sentry secrets were present, a test event was sent)."
+      - name: Verification summary
+        if: always()
+        run: |
+          echo "================================================"
+          echo "Sentry Staging Verification Complete"
+          echo "================================================"
+          if [ "${{ env.SENTRY_AUTH_TOKEN }}" = "" ]; then
+            echo "⚠️  Sentry secrets not configured - verification skipped"
+          else
+            echo "Status: Check above for results"
+          fi
+          echo "================================================"
