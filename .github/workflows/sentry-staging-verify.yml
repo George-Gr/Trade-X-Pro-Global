@@ -8,6 +8,10 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
     steps:
       - name: Checkout repository
@@ -23,34 +27,33 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
           echo "================================================"
 
-      - name: Install Sentry CLI
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+      - name: Check Sentry configuration
+        id: check_sentry
         run: |
-          echo "Installing Sentry CLI..."
+          if [ -n "${{ secrets.SENTRY_AUTH_TOKEN }}" ] && [ -n "${{ secrets.SENTRY_ORG }}" ] && [ -n "${{ secrets.SENTRY_PROJECT }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+            echo "✓ Sentry secrets are configured"
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "⚠️  Sentry secrets not configured - skipping verification"
+          fi
+
+      - name: Install Sentry CLI
+        if: steps.check_sentry.outputs.configured == 'true'
+        run: |
+          echo "📥 Installing Sentry CLI..."
           curl -sL https://sentry.io/get-cli/ | bash
           sentry-cli --version
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Send test event to Sentry
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+        if: steps.check_sentry.outputs.configured == 'true'
         run: |
-          echo "Sending test event to Sentry..."
+          echo "📤 Sending test event to Sentry..."
           sentry-cli send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
-          echo "Test event sent successfully"
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          echo "✓ Test event sent successfully"
 
       - name: Verify event ingestion
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        if: steps.check_sentry.outputs.configured == 'true'
         run: |
           set -euo pipefail
           
@@ -103,5 +106,9 @@ jobs:
           echo "================================================"
           echo "Sentry Staging Verification Complete"
           echo "================================================"
-          echo "Status: Check above for results"
+          if [ "${{ steps.check_sentry.outputs.configured }}" = "true" ]; then
+            echo "✓ Verification executed - check results above"
+          else
+            echo "⚠️  Verification skipped - Sentry secrets not configured"
+          fi
           echo "================================================"
