@@ -10,14 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # The Sentry DSN should be stored in repository secrets as VITE_SENTRY_DSN
       VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
-      # Optional app version for Sentry release grouping
       VITE_APP_VERSION: ${{ github.sha }}
-      # Sentry configuration
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,7 +34,6 @@ jobs:
       - name: Get release version
         id: get_version
         run: |
-          # Prefer package.json version; fallback to commit SHA
           VERSION=$(node -e "try{const p=require('./package.json'); console.log(p.version || process.env.GITHUB_SHA);}catch(e){console.log(process.env.GITHUB_SHA);}")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -46,26 +43,26 @@ jobs:
           name: site-dist
           path: dist
 
-      - name: Notify
+      - name: Notify Sentry configuration
         if: env.VITE_SENTRY_DSN != ''
-        run: |
-          echo "Sentry DSN is configured in secrets; builds will include Sentry configuration."
+        run: echo "Sentry DSN is configured - builds will include error tracking."
 
-      - name: Create Sentry release (optional)
+      - name: Create Sentry release
         if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
         uses: getsentry/action-release@v1
         with:
+          environment: production
           version: ${{ steps.get_version.outputs.version }}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
-      - name: Upload source maps to Sentry (optional)
+      - name: Upload source maps to Sentry
         if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
-        uses: getsentry/sentry-cli-action@v2
-        with:
-          args: releases files ${{ steps.get_version.outputs.version }} upload-sourcemaps ./dist --url-prefix "~/" --rewrite
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli releases files ${{ steps.get_version.outputs.version }} upload-sourcemaps ./dist --url-prefix "~/" --rewrite
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
