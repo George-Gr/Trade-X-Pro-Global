@@ -706,6 +706,81 @@ These are recommended to fully operationalize error monitoring and ensure quick 
 - ✅ Production builds have no console logs
 - ✅ Silent errors become trackable once DSN is provided
 
+**Final Completion Status:**
+
+Task 0.6 is **100% COMPLETE** as of November 16, 2025.
+
+**What was implemented:**
+1. ✅ Sentry client initialization in `src/main.tsx` with BrowserTracing for performance monitoring
+2. ✅ Centralized logger at `src/lib/logger.ts` routes errors/warnings/breadcrumbs to Sentry in production
+3. ✅ Error boundaries wrap all major routes and the app root for graceful error handling
+4. ✅ Development test page at `src/pages/DevSentryTest.tsx` (route: `/dev/sentry-test`) for manual testing
+5. ✅ CI/CD workflow at `.github/workflows/ci-build-sentry.yml` that:
+   - Discovers release version from `package.json` (fallback to commit SHA)
+   - Creates Sentry releases automatically
+   - Uploads source maps for readable stack traces in Sentry
+6. ✅ Staging verification workflow at `.github/workflows/sentry-staging-verify.yml` that:
+   - Sends a smoke test event to Sentry
+   - Polls Sentry API to confirm event ingestion
+   - Enables end-to-end validation of monitoring
+7. ✅ Incident response runbook at `docs/tasks_and_implementations/TASK_0_6_INCIDENT_RESPONSE_RUNBOOK.md` for on-call engineers
+8. ✅ `.env.local` placeholder with `VITE_SENTRY_DSN` and `VITE_APP_VERSION` for local development
+
+**GitHub Secrets Configuration (User Set):**
+- [x] `VITE_SENTRY_DSN` — Sentry public DSN for client-side event capture
+- [x] `SENTRY_AUTH_TOKEN` — Sentry private token for API access (releases, sourcemaps)
+- [x] `SENTRY_ORG` — Sentry organization slug
+- [x] `SENTRY_PROJECT` — Sentry project slug
+
+**Sentry Configuration (User Set):**
+- [x] Sentry alert created for "New issues" or custom threshold
+- [x] (Optional) Slack integration enabled for notifications
+
+**Production Readiness Checklist:**
+- [x] Logger ↔ Sentry wiring complete and tested
+- [x] Error boundaries prevent app crashes
+- [x] No console.log in production builds
+- [x] CI automatically creates releases with semantic versioning
+- [x] Source maps uploaded for readable stack traces
+- [x] Staging verification workflow confirms end-to-end ingestion
+- [x] Incident response runbook available for on-call
+- [x] Build succeeds without warnings
+
+**How to use in production:**
+1. Push to `main` — CI automatically builds + creates Sentry release + uploads source maps
+2. Deploy the built artifact to production
+3. Errors automatically ingested by Sentry with:
+   - Full stack trace (readable via source maps)
+   - User context (user ID from `logger.setGlobalContext()`)
+   - Breadcrumbs (user action sequence leading to error)
+   - Release correlation (see which version introduced the error)
+4. Sentry alerts trigger in Slack/email for new issues
+5. On-call engineer follows the incident response runbook
+
+**How to test locally:**
+```bash
+npm run dev
+# Open http://localhost:5173/dev/sentry-test
+# Click buttons to trigger errors, see console output in dev mode
+```
+
+**How to test in staging:**
+1. Push to `staging` branch or manually trigger `.github/workflows/sentry-staging-verify.yml`
+2. Workflow sends a test event and polls Sentry API
+3. If successful: "Sentry ingestion verified: test event found"
+4. If failed: workflow exits non-zero, check logs for API errors
+
+**References:**
+- Incident Response Runbook: `docs/tasks_and_implementations/TASK_0_6_INCIDENT_RESPONSE_RUNBOOK.md`
+- Logger implementation: `src/lib/logger.ts` (280+ lines, prod-clean, context-aware)
+- Error Boundary: `src/components/ErrorBoundary.tsx` (React error catching + Sentry reporting)
+- CI workflow: `.github/workflows/ci-build-sentry.yml` (auto-release + sourcemaps)
+- Staging verification: `.github/workflows/sentry-staging-verify.yml` (smoke test + API polling)
+
+**Blockers Removed:** None ✅  
+**Production Ready:** Yes ✅  
+**Phase 0 Task 0.6 Status:** 100% Complete ✅
+
 ---
 
 ---
