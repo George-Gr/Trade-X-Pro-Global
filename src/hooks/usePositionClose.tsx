@@ -49,8 +49,6 @@ export const usePositionClose = () => {
         return null;
       }
 
-      console.log('Closing position:', request);
-
       // Call edge function
       const { data, error } = await supabase.functions.invoke('close-position', {
         body: {
@@ -60,7 +58,6 @@ export const usePositionClose = () => {
       });
 
       if (error) {
-        console.error('Position close error:', error);
         toast({
           title: "Close Failed",
           description: error.message || "Failed to close position",
@@ -70,7 +67,6 @@ export const usePositionClose = () => {
       }
 
       if (data.error) {
-        console.error('Position close error from server:', data.error);
         toast({
           title: "Close Failed",
           description: data.error,
@@ -78,8 +74,6 @@ export const usePositionClose = () => {
         });
         return null;
       }
-
-      console.log('Position closed successfully:', data.data);
 
       const result = data.data as ClosePositionResult;
       const pnlText = result.realized_pnl >= 0 
@@ -94,7 +88,6 @@ export const usePositionClose = () => {
 
       return result;
     } catch (error) {
-      console.error('Unexpected error closing position:', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred",

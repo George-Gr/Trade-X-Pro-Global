@@ -121,7 +121,7 @@ serve(async (req: Request) => {
     );
 
     // 2. Update user profile KYC status
-    let profileUpdate: any = { kyc_status: statusAfter };
+    const profileUpdate: any = { kyc_status: statusAfter };
     if (action === 'approve') {
       // On approval, unlock trading and set initial balance if not already set
       profileUpdate.kyc_status = 'approved';

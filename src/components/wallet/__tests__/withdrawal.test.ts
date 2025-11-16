@@ -374,7 +374,7 @@ describe('Payment Integration - Withdrawal Tests', () => {
     });
 
     it('should prevent overdraft on withdrawals', () => {
-      let balance = 100;
+      const balance = 100;
       const withdrawal = 150;
       const fees = 5;
 

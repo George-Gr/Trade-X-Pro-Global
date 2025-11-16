@@ -14,13 +14,16 @@ export interface OrderRequest {
 
 export interface OrderResult {
   order_id: string;
-  position_id: string;
-  fill_id: string;
+  symbol: string;
+  side: 'buy' | 'sell';
+  quantity: number;
+  execution_price: number;
   fill_price: number;
-  slippage: number;
   commission: number;
   margin_required: number;
   status: string;
+  new_balance: number;
+  new_margin_level: number;
 }
 
 export const useOrderExecution = () => {
@@ -46,8 +49,6 @@ export const useOrderExecution = () => {
         return null;
       }
 
-      console.log('Executing order:', orderRequest);
-
       // Call edge function
       const { data, error } = await supabase.functions.invoke('execute-order', {
         body: {
@@ -57,7 +58,6 @@ export const useOrderExecution = () => {
       });
 
       if (error) {
-        console.error('Order execution error:', error);
         toast({
           title: "Order Failed",
           description: error.message || "Failed to execute order",
@@ -67,7 +67,6 @@ export const useOrderExecution = () => {
       }
 
       if (data.error) {
-        console.error('Order execution error from server:', data.error);
         toast({
           title: "Order Failed",
           description: data.error,
@@ -76,16 +75,36 @@ export const useOrderExecution = () => {
         return null;
       }
 
-      console.log('Order executed successfully:', data.data);
+      // Extract order data from edge function response
+      const orderData = data.data;
+      if (!orderData || !orderData.success) {
+        toast({
+          title: "Order Failed",
+          description: orderData?.error || "Order execution failed",
+          variant: "destructive",
+        });
+        return null;
+      }
 
       toast({
         title: "Order Executed",
-        description: `${orderRequest.side.toUpperCase()} ${orderRequest.quantity} ${orderRequest.symbol} at ${data.data.fill_price}`,
+        description: `${orderRequest.side.toUpperCase()} ${orderRequest.quantity} ${orderRequest.symbol} at ${orderData.execution_price.toFixed(4)}`,
       });
 
-      return data.data as OrderResult;
+      return {
+        order_id: orderData.order_id,
+        symbol: orderData.symbol,
+        side: orderData.side,
+        quantity: orderData.quantity,
+        execution_price: parseFloat(orderData.execution_price),
+        fill_price: parseFloat(orderData.fill_price),
+        commission: parseFloat(orderData.commission),
+        margin_required: parseFloat(orderData.margin_required),
+        status: orderData.status,
+        new_balance: parseFloat(orderData.new_balance),
+        new_margin_level: parseFloat(orderData.new_margin_level),
+      } as OrderResult;
     } catch (error) {
-      console.error('Unexpected error executing order:', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred",

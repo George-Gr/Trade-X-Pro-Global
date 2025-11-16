@@ -165,7 +165,7 @@ export function useMarginMonitoring(
         });
       }
     } catch (error) {
-      console.error("Error fetching margin data:", error);
+      // Error silently handled - UI shows error state
       setState((prev) => ({
         ...prev,
         isLoading: false,
@@ -271,6 +271,8 @@ export function useMarginMonitoring(
       .subscribe();
 
     return () => {
+      // Properly unsubscribe from channel before removing to prevent memory leaks
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, [user?.id, enabled, onStatusChange, onCritical, onLiquidationRisk]);
@@ -297,9 +299,9 @@ export function useMarginMonitoring(
     async (alertId: string) => {
       try {
         // Alert acknowledgment will be implemented after schema migration
-        console.log("Alert acknowledgment not yet available:", alertId);
+        // Feature flagged for future release
       } catch (error) {
-        console.error("Error acknowledging alert:", error);
+        // Acknowledgment error silently handled
         throw error;
       }
     },

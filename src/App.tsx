@@ -1,9 +1,12 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { ErrorContextProvider } from "@/hooks/useErrorContext";
+import { logger, initializeSentry } from "@/lib/logger";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
@@ -20,6 +23,7 @@ const AdminRiskDashboard = lazy(() => import("./pages/AdminRiskDashboard"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const DevSentryTest = lazy(() => import("./pages/DevSentryTest"));
 const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
 import { NotificationProvider } from "@/contexts/NotificationContext";
 
@@ -61,15 +65,37 @@ import ContactUs from "./pages/company/ContactUs";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <NotificationProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-          <Routes>
+const App = () => {
+  // Initialize Sentry on app load (production only)
+  useEffect(() => {
+    initializeSentry();
+    logger.info("App initialized", { action: "app_startup" });
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ErrorContextProvider>
+        <TooltipProvider>
+          <NotificationProvider>
+            <Toaster />
+            <Sonner />
+            <ErrorBoundary
+              componentName="App"
+              onError={(error, errorInfo) => {
+                // Log to logger with context
+                logger.error("Root app error boundary caught", error, {
+                  action: "app_error_boundary",
+                  component: "App",
+                  metadata: {
+                    componentStack: errorInfo?.componentStack,
+                  },
+                });
+                // Sentry integration would be handled by logger in production
+              }}
+            >
+              <BrowserRouter>
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
@@ -112,107 +138,135 @@ const App = () => (
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/trade"
             element={
-              <ProtectedRoute>
-                <Trade />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <Trade />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/portfolio"
             element={
-              <ProtectedRoute>
-                <Portfolio />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <Portfolio />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/history"
             element={
-              <ProtectedRoute>
-                <History />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <History />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/pending-orders"
             element={
-              <ProtectedRoute>
-                <PendingOrders />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <PendingOrders />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/wallet"
             element={
-              <ProtectedRoute>
-                <Wallet />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <Wallet />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/settings"
             element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/kyc"
             element={
-              <ProtectedRoute>
-                <KYC />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <KYC />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/admin"
             element={
-              <ProtectedRoute adminOnly>
-                <Admin />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute adminOnly>
+                  <Admin />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/admin/risk"
             element={
-              <ProtectedRoute adminOnly>
-                <AdminRiskDashboard />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute adminOnly>
+                  <AdminRiskDashboard />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/risk-management"
             element={
-              <ProtectedRoute>
-                <RiskManagement />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <RiskManagement />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           <Route
             path="/notifications"
             element={
-              <ProtectedRoute>
-                <Notifications />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              </ErrorBoundary>
             }
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
           <Route path="*" element={<NotFound />} />
-          </Routes>
-          </Suspense>
-      </BrowserRouter>
-      </NotificationProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+              </Routes>
+              </Suspense>
+            </BrowserRouter>
+            </ErrorBoundary>
+          </NotificationProvider>
+        </TooltipProvider>
+      </ErrorContextProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

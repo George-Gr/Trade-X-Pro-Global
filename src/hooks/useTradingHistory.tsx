@@ -122,7 +122,7 @@ export const useTradingHistory = () => {
       setStatistics(stats);
       setError(null);
     } catch (err) {
-      console.error("Error fetching trading history:", err);
+      // Error fetching trading history
       setError(err instanceof Error ? err.message : "Failed to fetch trading history");
     } finally {
       setLoading(false);
@@ -206,6 +206,9 @@ export const useTradingHistory = () => {
       .subscribe();
 
     return () => {
+      // Properly unsubscribe from channels before removing to prevent memory leaks
+      positionsChannel.unsubscribe();
+      ordersChannel.unsubscribe();
       supabase.removeChannel(positionsChannel);
       supabase.removeChannel(ordersChannel);
     };

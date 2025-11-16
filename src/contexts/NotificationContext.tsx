@@ -247,6 +247,15 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       .subscribe();
 
     return () => {
+      // Properly unsubscribe from all channels before removing them
+      // This prevents WebSocket connection leaks and memory accumulation
+      channel.unsubscribe();
+      ordersChannel.unsubscribe();
+      positionsChannel.unsubscribe();
+      kycChannel.unsubscribe();
+      riskChannel.unsubscribe();
+      
+      // Then remove channel references from Supabase client
       supabase.removeChannel(channel);
       supabase.removeChannel(ordersChannel);
       supabase.removeChannel(positionsChannel);

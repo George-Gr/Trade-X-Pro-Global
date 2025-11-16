@@ -45,7 +45,7 @@ export const useAuth = () => {
 
       setIsAdmin(!!data && !error);
     } catch (error) {
-      console.error("Error checking admin role:", error);
+      // Error silently handled - will return isAdmin as false
       setIsAdmin(false);
     } finally {
       setLoading(false);

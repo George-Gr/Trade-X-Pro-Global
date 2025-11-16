@@ -58,7 +58,7 @@ export const usePortfolioData = () => {
       setPositions(positionsData || []);
       setError(null);
     } catch (err) {
-      console.error("Error fetching portfolio data:", err);
+      // Error fetching portfolio data
       setError(err instanceof Error ? err.message : "Failed to fetch portfolio data");
     } finally {
       setLoading(false);
@@ -103,6 +103,9 @@ export const usePortfolioData = () => {
   .subscribe();
 
     return () => {
+      // Properly unsubscribe from channels before removing to prevent memory leaks
+      positionsChannel.unsubscribe();
+      profileChannel.unsubscribe();
       supabase.removeChannel(positionsChannel);
       supabase.removeChannel(profileChannel);
     };

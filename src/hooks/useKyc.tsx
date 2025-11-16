@@ -69,7 +69,7 @@ export function useKyc(userId?: string) {
         setDocuments([]);
       }
     } catch (err: any) {
-      console.error('Failed to fetch KYC status', err);
+      // Failed to fetch KYC status
       setError(err?.message || 'Failed to fetch KYC status');
     } finally {
       setLoading(false);
@@ -105,7 +105,7 @@ export function useKyc(userId?: string) {
       setKycStatus('submitted');
       return result;
     } catch (err: any) {
-      console.error('Submit KYC error', err);
+      // Submit KYC error
       setError(err?.message || 'Failed to submit KYC request');
       throw err;
     }
@@ -127,7 +127,7 @@ export function useKyc(userId?: string) {
 
       return { success: true };
     } catch (err: any) {
-      console.error('Upload document error', err);
+      // Upload document error
       setError(err?.message || 'Failed to upload document');
       throw err;
     }
@@ -156,7 +156,7 @@ export function useKyc(userId?: string) {
 
       return await resp.json();
     } catch (err: any) {
-      console.error('Validate document error', err);
+      // Validate document error
       setError(err?.message || 'Failed to validate document');
       throw err;
     }
