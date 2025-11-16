@@ -1,69 +1,72 @@
-name: Sentry Staging Verification
+name: CI Build (with optional Sentry DSN)
 
 on:
   push:
-    branches: [ staging ]
-  workflow_dispatch: {}
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
     env:
+      # The Sentry DSN should be stored in repository secrets as VITE_SENTRY_DSN
+      VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+      # Optional app version for Sentry release grouping
       VITE_APP_VERSION: ${{ github.sha }}
+      # Sentry configuration
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Notify intent
-        run: echo "Running Sentry staging verification (will fire a test event)"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      - name: Send staging smoke event to Sentry (optional)
-        if: ${{ secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != '' }}
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Get release version
+        id: get_version
+        run: |
+          # Prefer package.json version; fallback to commit SHA
+          VERSION=$(node -e "try{const p=require('./package.json'); console.log(p.version || process.env.GITHUB_SHA);}catch(e){console.log(process.env.GITHUB_SHA);}")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+
+      - name: Notify
+        if: env.VITE_SENTRY_DSN != ''
+        run: |
+          echo "Sentry DSN is configured in secrets; builds will include Sentry configuration."
+
+      - name: Create Sentry release (optional)
+        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
+        uses: getsentry/action-release@v1
+        with:
+          version: ${{ steps.get_version.outputs.version }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+      - name: Upload source maps to Sentry (optional)
+        if: env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != ''
         uses: getsentry/sentry-cli-action@v2
         with:
-          args: |
-            send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
+          args: releases files ${{ steps.get_version.outputs.version }} upload-sourcemaps ./dist --url-prefix "~/" --rewrite
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-
-      - name: Verify Sentry ingestion (poll API)
-        if: ${{ secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != '' }}
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          GITHUB_SHA: ${{ github.sha }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-        run: |
-          set -euo pipefail
-          QUERY="Staging smoke test: commit=${GITHUB_SHA} run=${GITHUB_RUN_ID}"
-          ENCODED_QUERY=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
-          ORG=${SENTRY_ORG}
-          PROJECT=${SENTRY_PROJECT}
-          AUTH="Authorization: Bearer ${SENTRY_AUTH_TOKEN}"
-          URL="https://sentry.io/api/0/projects/${ORG}/${PROJECT}/events/?query=${ENCODED_QUERY}"
-          echo "Polling Sentry for test event (url=${URL})"
-          FOUND=0
-          for i in {1..12}; do
-            echo "Attempt $i"
-            resp=$(curl -s -H "$AUTH" "$URL")
-            # resp should be a JSON array of events
-            count=$(echo "$resp" | python3 -c "import sys,json; data=sys.stdin.read(); arr=json.loads(data) if data.strip() else []; print(len(arr))") || count=0
-            echo "Found $count matching events"
-            if [ "$count" -gt 0 ]; then
-              FOUND=1
-              break
-            fi
-            sleep 5
-          done
-          if [ "$FOUND" -eq 1 ]; then
-            echo "Sentry ingestion verified: test event found"
-          else
-            echo "Sentry ingestion check failed: no matching event found after polling"
-            exit 2
-          fi
-
-      - name: Complete
-        run: echo "Sentry staging verification complete (if Sentry secrets were present, a test event was sent)."
