@@ -47,7 +47,7 @@ const KYC = () => {
 
     setIsLoading(true);
     try {
-      // @ts-ignore - Supabase type inference issue with kyc_documents
+      // @ts-expect-error - Supabase type inference issue with kyc_documents
       const { data, error } = await supabase
         .from("kyc_documents")
         .select("*")
@@ -76,7 +76,7 @@ const KYC = () => {
           "postgres_changes",
           { event: "*", schema: "public", table: "profiles", filter: `id=eq.${user.id}` },
           (payload) => {
-            setKycStatus((payload.new as any).kyc_status);
+            setKycStatus(((payload.new as unknown) as Record<string, unknown>).kyc_status as string);
           }
         )
         .subscribe();

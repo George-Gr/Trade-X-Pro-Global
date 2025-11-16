@@ -19,6 +19,8 @@ interface PositionWithPnL extends Position {
   trailing_stop_price?: number | null;
   highest_price?: number | null;
   lowest_price?: number | null;
+  entry_price: number; // Added to align with PnLPosition
+  current_price: number; // Added to align with PnLPosition
 }
 
 export const usePortfolioData = () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { ErrorContextProvider, useErrorContext } from '@/hooks/useErrorContext';
+import { ErrorContextProvider } from '@/components/ErrorContextProvider';
+import { useErrorContext } from '@/hooks/useErrorContext';
 import { logger } from '@/lib/logger';
 
 /**

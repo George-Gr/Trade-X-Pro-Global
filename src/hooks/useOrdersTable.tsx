@@ -52,7 +52,7 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
-      const mappedOrders: OrderTableItem[] = (data || []).map((order: any) => ({
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: unknown) => ({
         id: order.id,
         user_id: order.user_id,
         symbol: order.symbol,

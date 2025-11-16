@@ -42,17 +42,21 @@ const Portfolio = () => {
   const pricesMap = new Map<string, number>(
     Array.from(prices.entries()).map(([symbol, priceData]) => [
       symbol,
-      typeof priceData === 'number' ? priceData : (priceData as any)?.c || 0,
+      typeof priceData === 'number' ? priceData : ((priceData as unknown as Record<string, unknown>)?.c as number) || 0,
     ])
   );
 
+  const mappedPositions = positions.map((position) => ({
+    ...position,
+    entryPrice: position.entry_price,
+    currentPrice: position.current_price,
+    side: (position.side === "buy" ? "long" : "short") as "long" | "short", // Explicit type assertion
+  }));
+
+  const priceMap = new Map(mappedPositions.map((p) => [p.symbol, p.currentPrice]));
+
   const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor, getPnLStatus } =
-    usePnLCalculations(
-      positions as any,
-      pricesMap,
-      undefined,  // profileData - hook doesn't use it currently
-      { enabled: positions.length > 0 }
-    );
+    usePnLCalculations(mappedPositions, priceMap, undefined, { enabled: positions.length > 0 });
 
   const handleClosePosition = async (positionId: string, symbol: string) => {
     setClosingPositions((prev) => new Set(prev).add(positionId));

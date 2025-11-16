@@ -222,8 +222,8 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       );
 
       return true;
-    } catch (err: any) {
-      const errorMsg = err?.message || 'Upload failed';
+    } catch (err: unknown) {
+      const errorMsg = (err as Record<string, unknown> | null)?.message || 'Upload failed';
       setUploads(prev =>
         prev.map(u =>
           u.id === upload.id ? { ...u, status: 'error' as const, error: errorMsg } : u
@@ -269,8 +269,8 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       if (onSuccess) {
         setTimeout(onSuccess, 2000);
       }
-    } catch (err: any) {
-      setGlobalError(err?.message || 'Submission failed');
+    } catch (err: unknown) {
+      setGlobalError((err as Record<string, unknown> | null)?.message || 'Submission failed');
     } finally {
       setSubmitting(false);
     }
@@ -409,7 +409,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                           fileInputRef.current?.click();
                           // Store which doc type was clicked
                           if (fileInputRef.current) {
-                            (fileInputRef.current as any).dataset.docType = doc.type;
+                            (fileInputRef.current as unknown as Record<string, unknown>).dataset = { docType: doc.type };
                           }
                         }}
                         className="cursor-pointer"
@@ -485,9 +485,9 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            const docType = (e.target as any).dataset.docType || 'id_front';
+            const docType = ((e.target as unknown as Record<string, unknown>).dataset as Record<string, unknown>)?.docType || 'id_front';
             if (file) {
-              handleFileSelect(file, docType);
+              handleFileSelect(file, docType as string);
             }
           }}
         />

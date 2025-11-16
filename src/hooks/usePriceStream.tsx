@@ -87,7 +87,7 @@ export const usePriceStream = ({
           if (message.type === 'prices' && message.data) {
             const newPrices = new Map<string, PriceData>();
             for (const [symbol, data] of Object.entries(message.data)) {
-              const priceInfo = data as any;
+              const priceInfo = data as Record<string, unknown>;
               if (priceInfo.error) {
                 continue;
               }

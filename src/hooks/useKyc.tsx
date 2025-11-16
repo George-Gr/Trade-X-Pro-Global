@@ -37,7 +37,7 @@ export function useKyc(userId?: string) {
     setError(null);
     try {
       const { data: requestData, error: reqErr } = await supabase
-        .from('kyc_requests' as any)
+        .from('kyc_requests' as any) // Table exists but not in current Supabase types
         .select('*')
         .eq('user_id', uid)
         .order('created_at', { ascending: false })
@@ -57,7 +57,7 @@ export function useKyc(userId?: string) {
 
         // Fetch documents
         const { data: docs, error: docsErr } = await supabase
-          .from('kyc_documents' as any)
+          .from('kyc_documents' as any) // Table exists but not in current Supabase types
           .select('*')
           .eq('kyc_request_id', request.id)
           .order('uploaded_at', { ascending: false });
@@ -68,9 +68,9 @@ export function useKyc(userId?: string) {
         setKycStatus('pending');
         setDocuments([]);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Failed to fetch KYC status
-      setError(err?.message || 'Failed to fetch KYC status');
+      setError(err instanceof Error ? err.message : 'Failed to fetch KYC status');
     } finally {
       setLoading(false);
     }
@@ -104,9 +104,9 @@ export function useKyc(userId?: string) {
       setKycRequest(result.kycRequest);
       setKycStatus('submitted');
       return result;
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Submit KYC error
-      setError(err?.message || 'Failed to submit KYC request');
+      setError(err instanceof Error ? err.message : 'Failed to submit KYC request');
       throw err;
     }
   }, [userId]);
@@ -126,9 +126,9 @@ export function useKyc(userId?: string) {
       }
 
       return { success: true };
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Upload document error
-      setError(err?.message || 'Failed to upload document');
+      setError(err instanceof Error ? err.message : 'Failed to upload document');
       throw err;
     }
   }, []);
@@ -155,9 +155,9 @@ export function useKyc(userId?: string) {
       }
 
       return await resp.json();
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Validate document error
-      setError(err?.message || 'Failed to validate document');
+      setError(err instanceof Error ? err.message : 'Failed to validate document');
       throw err;
     }
   }, [userId, fetchKycStatus]);

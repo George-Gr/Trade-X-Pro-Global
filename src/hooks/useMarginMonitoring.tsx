@@ -220,7 +220,7 @@ export function useMarginMonitoring(
         },
         (payload) => {
           if (payload.new) {
-            const newData = payload.new as any;
+            const newData = payload.new as Record<string, unknown>;
             let currentMarginLevel = newData.margin_level;
 
             if (
@@ -297,13 +297,8 @@ export function useMarginMonitoring(
    */
   const acknowledgeAlert = useCallback(
     async (alertId: string) => {
-      try {
-        // Alert acknowledgment will be implemented after schema migration
-        // Feature flagged for future release
-      } catch (error) {
-        // Acknowledgment error silently handled
-        throw error;
-      }
+      // Alert acknowledgment will be implemented after schema migration
+      // Feature flagged for future release
     },
     []
   );

@@ -86,11 +86,12 @@ const KycAdminDashboard: React.FC = () => {
 
       // Fetch user profiles for each request
       const enrichedRequests = await Promise.all(
-        (requestsData || []).map(async (req: any) => {
+        (requestsData || []).map(async (req: unknown) => {
+          const r = req as Record<string, unknown>;
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('id, email, full_name, phone, kyc_status')
-            .eq('id', req.user_id)
+            .eq('id', r.user_id)
             .single();
 
           return {
@@ -102,9 +103,9 @@ const KycAdminDashboard: React.FC = () => {
       );
 
       setRequests(enrichedRequests);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to fetch kyc requests', err);
-      setError(err?.message || 'Failed to fetch requests');
+      setError((err as Record<string, unknown> | null)?.message || 'Failed to fetch requests');
     } finally {
       setLoadingRequests(false);
     }
@@ -173,9 +174,9 @@ const KycAdminDashboard: React.FC = () => {
       setSelectedRequest(null);
       setRejectionReason('');
       setAdminNotes('');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Admin action error', err);
-      setError(err?.message || 'Action failed');
+      setError((err as Record<string, unknown> | null)?.message || 'Action failed');
     } finally {
       setActionLoading(null);
     }

@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { ErrorContextProvider } from "@/hooks/useErrorContext";
+import { ErrorContextProvider } from "@/components/ErrorContextProvider";
 import { logger, initializeSentry } from "@/lib/logger";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));

@@ -92,7 +92,7 @@ export function usePositionUpdate(
   const [error, setError] = useState<Error | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const realtimeChannelRef = useRef<any>(null);
+  const realtimeChannelRef = useRef<unknown>(null);
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // =========================================================================

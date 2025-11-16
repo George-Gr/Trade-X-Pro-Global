@@ -87,23 +87,25 @@ export function useRealtimePositions(
 
       if (queryError) throw queryError;
 
-      const loadedPositions: Position[] = (data || []).map((row: any) => ({
-        id: row.id,
-        user_id: row.user_id,
-        symbol: row.symbol,
-        side: row.side,
-        quantity: row.quantity,
-        entry_price: row.entry_price,
-        current_price: row.current_price,
-        unrealized_pnl: row.unrealized_pnl || 0,
-        margin_used: row.margin_used || 0,
-        margin_level: row.margin_level || 0,
-        status: row.status,
-        opened_at: row.opened_at ? new Date(row.opened_at) : new Date(row.created_at || Date.now()),
-        leverage: typeof row.leverage === 'number' ? row.leverage : 1,
-        created_at: row.created_at || row.opened_at || new Date().toISOString(),
-        updated_at: row.updated_at || new Date().toISOString(),
-      }));
+      const loadedPositions: Position[] = (data || []).map((row: unknown) => {
+        const r = row as Record<string, unknown>;
+        return {
+        id: r.id as string,
+        user_id: r.user_id as string,
+        symbol: r.symbol as string,
+        side: r.side as 'long' | 'short',
+        quantity: r.quantity as number,
+        entry_price: r.entry_price as number,
+        current_price: r.current_price as number,
+        unrealized_pnl: (r.unrealized_pnl as number) || 0,
+        margin_used: (r.margin_used as number) || 0,
+        margin_level: (r.margin_level as number) || 0,
+        status: r.status as string,
+        opened_at: r.opened_at ? new Date(r.opened_at as string) : new Date((r.created_at as string) || Date.now()),
+        leverage: typeof r.leverage === 'number' ? (r.leverage as number) : 1,
+        created_at: (r.created_at as string) || (r.opened_at as string) || new Date().toISOString(),
+        updated_at: (r.updated_at as string) || new Date().toISOString(),
+      };
 
       setPositions(loadedPositions);
       positionsRef.current = loadedPositions;
@@ -135,13 +137,15 @@ export function useRealtimePositions(
       const { type, new: newRecord, old: oldRecord } = payload;
 
       // Calculate position delta for UPDATE events
-      const calculateDelta = (oldPos: any, newPos: any) => {
-        if (!oldPos || !newPos) return null;
+      const calculateDelta = (oldPos: unknown, newPos: unknown) => {
+        const old = oldPos as Record<string, unknown>;
+        const newP = newPos as Record<string, unknown>;
+        if (!old || !newP) return null;
         
         return {
-          pnl_change: (newPos.unrealized_pnl || 0) - (oldPos.unrealized_pnl || 0),
-          price_change: (newPos.current_price || 0) - (oldPos.current_price || 0),
-          margin_change: (newPos.margin_used || 0) - (oldPos.margin_used || 0),
+          pnl_change: ((newP.unrealized_pnl as number) || 0) - ((old.unrealized_pnl as number) || 0),
+          price_change: ((newP.current_price as number) || 0) - ((old.current_price as number) || 0),
+          margin_change: ((newP.margin_used as number) || 0) - ((old.margin_used as number) || 0),
         };
       };
 
@@ -240,7 +244,7 @@ export function useRealtimePositions(
         onError(error);
       }
     }
-  }, [onError]);
+  }, [onError, subscribe]);
 
   const subscribe = useCallback(
     async (filter?: string) => {
@@ -259,7 +263,7 @@ export function useRealtimePositions(
         const channel = supabase
           .channel(`positions:${userId}`)
           .on(
-            "postgres_changes" as any,
+            "postgres_changes" as unknown as 'postgres_changes',
             {
               event: "*",
               schema: "public",

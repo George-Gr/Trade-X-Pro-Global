@@ -16,7 +16,7 @@ const DevSentryTest: React.FC = () => {
 
   const sendMessage = () => {
     logger.info('Sending test message to Sentry via logger', { action: 'dev_sentry_test', component: 'DevSentryTest' });
-    if ((import.meta as any).env.PROD && (import.meta as any).env.VITE_SENTRY_DSN) {
+    if ((import.meta as unknown as Record<string, unknown>).env?.PROD && (import.meta as unknown as Record<string, unknown>).env?.VITE_SENTRY_DSN) {
       Sentry.captureMessage('Test message from DevSentryTest');
       alert('Sentry.captureMessage called (production mode)');
     } else {
