@@ -288,7 +288,7 @@ const Admin = () => {
     <div className="min-h-screen bg-background">
       {/* Top Bar */}
       <div className="h-14 bg-card border-b border-border flex items-center justify-between px-6">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <TrendingUp className="h-5 w-5 text-primary" />
           <span className="font-bold">TradeX Pro</span>
           <Badge variant="outline" className="ml-2 text-xs">
@@ -319,7 +319,7 @@ const Admin = () => {
           <>
             <div className="grid md:grid-cols-4 gap-4 mb-6">
               <Card className="p-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <FileCheck className="h-5 w-5 text-primary" />
                   </div>
@@ -333,7 +333,7 @@ const Admin = () => {
               </Card>
 
               <Card className="p-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <Users className="h-5 w-5 text-primary" />
                   </div>
@@ -345,7 +345,7 @@ const Admin = () => {
               </Card>
 
               <Card className="p-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <DollarSign className="h-5 w-5 text-primary" />
                   </div>
@@ -359,7 +359,7 @@ const Admin = () => {
               </Card>
 
               <Card className="p-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-profit/10 rounded-lg flex items-center justify-center">
                     <TrendingUp className="h-5 w-5 text-profit" />
                   </div>
@@ -432,13 +432,13 @@ const Admin = () => {
                                 </Badge>
                               </TableCell>
                               <TableCell className="text-right">
-                                <div className="flex items-center justify-end gap-2">
+                                <div className="flex items-center justify-end gap-4">
                                   <Button
                                     size="sm"
                                     variant="outline"
                                     onClick={() => handleViewDocument(doc.file_path)}
                                   >
-                                    <Eye className="h-3 w-3 mr-1" />
+                                    <Eye className="h-3 w-3 mr-2" />
                                     View
                                   </Button>
                                   {doc.status === "pending" && (
@@ -538,7 +538,7 @@ const Admin = () => {
                                   variant="outline"
                                   onClick={() => setFundDialog({ open: true, userId: account.id })}
                                 >
-                                  <DollarSign className="h-3 w-3 mr-1" />
+                                  <DollarSign className="h-3 w-3 mr-2" />
                                   Fund
                                 </Button>
                               </TableCell>

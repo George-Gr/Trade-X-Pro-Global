@@ -227,11 +227,11 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
 
   return (
     <div className="bg-card">
-      <div className="p-4 border-b border-border space-y-3">
+      <div className="p-4 border-b border-border space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-semibold">Trade {symbol}</h2>
-            <p className="text-xs text-muted-foreground mt-1">Place order</p>
+            <p className="text-xs text-muted-foreground mt-2">Place order</p>
           </div>
           <OrderTemplatesDialog
             onApplyTemplate={handleApplyTemplate}
@@ -247,8 +247,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         </div>
         
         {/* One-Click Trading Toggle */}
-        <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-lg border border-border">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-lg border border-border">
+          <div className="flex items-center gap-4">
             <Zap className="h-4 w-4 text-primary" />
             <div>
               <div className="text-sm font-semibold">One-Click Trading</div>
@@ -262,9 +262,9 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         {oneClickMode && (
           <div className="space-y-2">
             <Label className="text-xs">Quick Trade Volumes</Label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-4">
               {quickVolumes.map((vol) => (
-                <div key={vol} className="space-y-1">
+                <div key={vol} className="space-y-2">
                   <Button
                     variant="outline"
                     size="sm"
@@ -332,7 +332,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Stop Loss</Label>
                 <Input
@@ -356,7 +356,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             </div>
 
             {/* Live Price Display */}
-            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+            <div className="bg-card border border-border rounded-lg p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Live Price</span>
                 {isPriceLoading && (
@@ -364,14 +364,14 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">BID</div>
                   <div className="text-lg font-mono font-semibold text-sell">
                     {bid.toFixed(5)}
                   </div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">ASK</div>
                   <div className="text-lg font-mono font-semibold text-buy">
                     {ask.toFixed(5)}
@@ -380,9 +380,9 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
 
               {priceData && (
-                <div className="flex items-center justify-between pt-2 border-t border-border text-xs">
+                <div className="flex items-center justify-between pt-4 border-t border-border text-xs">
                   <span className="text-muted-foreground">Change:</span>
-                  <div className={`flex items-center gap-1 font-semibold ${
+                  <div className={`flex items-center gap-4 font-semibold ${
                     priceData.change >= 0 ? 'text-profit' : 'text-loss'
                   }`}>
                     {priceData.change >= 0 ? (
@@ -396,7 +396,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               )}
             </div>
 
-            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+            <div className="bg-secondary/30 rounded-lg p-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Margin Required:</span>
                 <span className="font-semibold">${marginRequired.toFixed(2)}</span>
@@ -407,7 +407,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-2">
+            <div className="grid grid-cols-2 gap-4 pt-4">
               <Button
                 onClick={() => handleTrade("sell")}
                 disabled={isExecuting}
@@ -482,7 +482,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Stop Loss</Label>
                 <Input
@@ -506,7 +506,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             </div>
 
             {/* Live Price Display */}
-            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+            <div className="bg-card border border-border rounded-lg p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Current Market Price</span>
                 {isPriceLoading && (
@@ -514,14 +514,14 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">BID</div>
                   <div className="text-lg font-mono font-semibold text-sell">
                     {bid.toFixed(5)}
                   </div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">ASK</div>
                   <div className="text-lg font-mono font-semibold text-buy">
                     {ask.toFixed(5)}
@@ -530,7 +530,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+            <div className="bg-secondary/30 rounded-lg p-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Margin Required:</span>
                 <span className="font-semibold">${marginRequired.toFixed(2)}</span>
@@ -541,7 +541,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-2">
+            <div className="grid grid-cols-2 gap-4 pt-4">
               <Button
                 onClick={() => handleTrade("sell")}
                 disabled={isExecuting}
@@ -616,7 +616,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Stop Loss</Label>
                 <Input
@@ -640,7 +640,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             </div>
 
             {/* Live Price Display */}
-            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+            <div className="bg-card border border-border rounded-lg p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Current Market Price</span>
                 {isPriceLoading && (
@@ -648,14 +648,14 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">BID</div>
                   <div className="text-lg font-mono font-semibold text-sell">
                     {bid.toFixed(5)}
                   </div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">ASK</div>
                   <div className="text-lg font-mono font-semibold text-buy">
                     {ask.toFixed(5)}
@@ -664,7 +664,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+            <div className="bg-secondary/30 rounded-lg p-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Margin Required:</span>
                 <span className="font-semibold">${marginRequired.toFixed(2)}</span>
@@ -675,7 +675,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-2">
+            <div className="grid grid-cols-2 gap-4 pt-4">
               <Button
                 onClick={() => handleTrade("sell")}
                 disabled={isExecuting}
@@ -764,7 +764,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Stop Loss</Label>
                 <Input
@@ -788,7 +788,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             </div>
 
             {/* Live Price Display */}
-            <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+            <div className="bg-card border border-border rounded-lg p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Current Market Price</span>
                 {isPriceLoading && (
@@ -796,14 +796,14 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">BID</div>
                   <div className="text-lg font-mono font-semibold text-sell">
                     {bid.toFixed(5)}
                   </div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="text-xs text-muted-foreground">ASK</div>
                   <div className="text-lg font-mono font-semibold text-buy">
                     {ask.toFixed(5)}
@@ -812,7 +812,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="bg-secondary/30 rounded-lg p-3 space-y-1 text-sm">
+            <div className="bg-secondary/30 rounded-lg p-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Margin Required:</span>
                 <span className="font-semibold">${marginRequired.toFixed(2)}</span>
@@ -823,7 +823,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-2">
+            <div className="grid grid-cols-2 gap-4 pt-4">
               <Button
                 onClick={() => handleTrade("sell")}
                 disabled={isExecuting}
@@ -863,7 +863,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Order</AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <p>Please review your order details:</p>
                 <div className="bg-secondary/50 rounded-lg p-4 space-y-2">
                   <div className="flex justify-between">
@@ -920,7 +920,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                       <span className="font-semibold">{takeProfit}</span>
                     </div>
                   )}
-                  <div className="flex justify-between pt-2 border-t border-border">
+                  <div className="flex justify-between pt-4 border-t border-border">
                     <span className="text-muted-foreground">Margin Required:</span>
                     <span className="font-semibold">${marginRequired.toFixed(2)}</span>
                   </div>

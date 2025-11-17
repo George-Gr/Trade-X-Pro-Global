@@ -20,7 +20,7 @@ const NotFound = () => {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Link to="/">
-          <Button className="gap-2">
+          <Button className="gap-4">
             <Home className="h-4 w-4" />
             Return to Home
           </Button>

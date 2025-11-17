@@ -63,7 +63,7 @@ const Login = () => {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+          <Link to="/" className="inline-flex items-center gap-4 mb-6">
             <TrendingUp className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">TradePro</span>
           </Link>
@@ -71,7 +71,7 @@ const Login = () => {
           <p className="text-muted-foreground">Sign in to your trading account</p>
         </div>
 
-        <Card className="p-6 md:p-8">
+        <Card className="p-6 md:p-6">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>

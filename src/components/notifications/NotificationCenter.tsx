@@ -110,7 +110,7 @@ export function NotificationCenter() {
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+              className="absolute -top-4 -right-1 h-5 w-5 flex items-center justify-center p-4 text-xs"
             >
               {unreadCount > 9 ? "9+" : unreadCount}
             </Badge>
@@ -118,7 +118,7 @@ export function NotificationCenter() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <div className="flex items-center justify-between px-4 py-2 border-b">
+        <div className="flex items-center justify-between px-4 py-4 border-b">
           <h3 className="font-semibold">Notifications</h3>
           {unreadCount > 0 && (
             <Button
@@ -127,7 +127,7 @@ export function NotificationCenter() {
               onClick={markAllAsRead}
               className="h-8 text-xs"
             >
-              <CheckCheck className="h-4 w-4 mr-1" />
+              <CheckCheck className="h-4 w-4 mr-2" />
               Mark all read
             </Button>
           )}
@@ -149,10 +149,10 @@ export function NotificationCenter() {
                   !notification.read ? "bg-accent/50" : ""
                 }`}
               >
-                <div className="flex items-start gap-3 w-full">
+                <div className="flex items-start gap-4 w-full">
                   <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-start justify-between gap-4">
                       <p className="font-medium text-sm leading-tight">
                         {notification.title}
                       </p>
@@ -167,7 +167,7 @@ export function NotificationCenter() {
                         </Button>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2">
+                    <p className="text-xs text-muted-foreground line-clamp-4">
                       {notification.message}
                     </p>
                     <p className="text-xs text-muted-foreground">

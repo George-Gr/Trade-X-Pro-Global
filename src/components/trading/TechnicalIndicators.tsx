@@ -70,16 +70,16 @@ const TechnicalIndicators = ({ symbol }: TechnicalIndicatorsProps) => {
   };
 
   return (
-    <Card className="p-4 space-y-3">
+    <Card className="p-4 space-y-4">
       <h3 className="font-semibold text-sm">Technical Indicators</h3>
       <div className="space-y-2">
         {indicators.map((indicator, index) => (
-          <div key={index} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+          <div key={index} className="flex items-center justify-between py-4 border-b border-border last:border-0">
             <div className="flex-1">
               <p className="text-xs font-medium">{indicator.name}</p>
               <p className="text-xs text-muted-foreground">{indicator.value.toFixed(2)}</p>
             </div>
-            <Badge variant={getSignalColor(indicator.signal)} className="flex items-center gap-1">
+            <Badge variant={getSignalColor(indicator.signal)} className="flex items-center gap-4">
               {getSignalIcon(indicator.signal)}
               {indicator.signal}
             </Badge>

@@ -112,12 +112,12 @@ const Watchlist = () => {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">My Watchlist</CardTitle>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2 top-4.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search symbols..."
                 value={searchQuery}
@@ -129,9 +129,9 @@ const Watchlist = () => {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 pb-3 pt-0 overflow-hidden">
+      <CardContent className="flex-1 pb-4 pt-0 overflow-hidden">
         <ScrollArea className="h-[400px] pr-4">
-          <div className="space-y-1">
+          <div className="space-y-2">
             {filteredWatchlist.map((item) => {
               const isPositive = item.change >= 0;
               const TrendIcon = isPositive ? TrendingUp : TrendingDown;
@@ -139,7 +139,7 @@ const Watchlist = () => {
               return (
                 <div
                   key={item.symbol}
-                  className="group relative flex items-center gap-3 p-3 rounded-md bg-secondary/50 hover:bg-secondary transition-colors border border-border/50 hover:border-border"
+                  className="group relative flex items-center gap-4 p-4 rounded-md bg-secondary/50 hover:bg-secondary transition-colors border border-border/50 hover:border-border"
                 >
                   {/* Favorite Star */}
                   <button
@@ -158,7 +158,7 @@ const Watchlist = () => {
 
                   {/* Symbol & Name */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                       <span className="font-semibold text-sm">{item.symbol}</span>
                       <TrendIcon
                         className={cn(
@@ -174,7 +174,7 @@ const Watchlist = () => {
 
                   {/* Prices */}
                   <div className="text-right">
-                    <div className="flex items-center gap-2 text-sm">
+                    <div className="flex items-center gap-4 text-sm">
                       <div>
                         <div className="text-xs text-muted-foreground">Bid</div>
                         <div className="font-mono font-semibold">
@@ -189,7 +189,7 @@ const Watchlist = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-xs text-muted-foreground mt-2">
                       Spread: {getSpread(item.bid, item.ask, item.symbol)}
                     </div>
                   </div>
@@ -219,7 +219,7 @@ const Watchlist = () => {
                   {/* Remove button (visible on hover) */}
                   <button
                     onClick={() => removeFromWatchlist(item.symbol)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 rounded p-1"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 rounded p-4"
                   >
                     <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                   </button>
@@ -234,7 +234,7 @@ const Watchlist = () => {
           <div className="text-xs font-medium text-muted-foreground mb-2">
             Quick Add
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-4">
             {availableSymbols
               .filter((s) => !watchlist.find((w) => w.symbol === s.symbol))
               .map((s) => (
@@ -243,7 +243,7 @@ const Watchlist = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => addToWatchlist(s.symbol, s.name)}
-                  className="h-7 text-xs gap-1"
+                  className="h-7 text-xs gap-4"
                 >
                   <Plus className="h-3 w-3" />
                   {s.symbol}

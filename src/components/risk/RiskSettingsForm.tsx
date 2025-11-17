@@ -101,7 +101,7 @@ export const RiskSettingsForm = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-4">
               <Shield className="h-5 w-5" />
               Risk Management Settings
             </CardTitle>
@@ -109,7 +109,7 @@ export const RiskSettingsForm = () => {
               Configure your account risk parameters and limits
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <AlertTriangle className="h-4 w-4 text-orange-500" />
             Changes take effect immediately
           </div>
@@ -253,7 +253,7 @@ export const RiskSettingsForm = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Stop Loss Protection</h3>
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+              <div className="space-y-2.5">
                 <Label htmlFor="enforce_stop_loss">Enforce Stop Loss</Label>
                 <p className="text-sm text-muted-foreground">
                   Require stop loss on all new positions
@@ -283,7 +283,7 @@ export const RiskSettingsForm = () => {
             )}
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-4 pt-4">
             <Button type="submit" disabled={updateMutation.isPending}>
               <Save className="h-4 w-4 mr-2" />
               {updateMutation.isPending ? "Saving..." : "Save Settings"}

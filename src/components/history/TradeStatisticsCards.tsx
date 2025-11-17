@@ -25,36 +25,36 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-4">
             <Target className="h-4 w-4" />
             Total Trades
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{statistics.totalTrades}</div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-2">
             {statistics.winningTrades}W / {statistics.losingTrades}L
           </p>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-4">
             <TrendingUp className="h-4 w-4" />
             Win Rate
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{formatPercent(statistics.winRate)}</div>
-          <p className="text-xs text-muted-foreground mt-1">Success rate</p>
+          <p className="text-xs text-muted-foreground mt-2">Success rate</p>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-4">
             <DollarSign className="h-4 w-4" />
             Total P&L
           </CardTitle>
@@ -68,13 +68,13 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
             {statistics.totalPnL >= 0 ? "+" : ""}
             {formatCurrency(statistics.totalPnL)}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Net profit/loss</p>
+          <p className="text-xs text-muted-foreground mt-2">Net profit/loss</p>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-4">
             <TrendingDown className="h-4 w-4" />
             Avg Trade
           </CardTitle>
@@ -88,7 +88,7 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
             {statistics.averagePnL >= 0 ? "+" : ""}
             {formatCurrency(statistics.averagePnL)}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Per trade</p>
+          <p className="text-xs text-muted-foreground mt-2">Per trade</p>
         </CardContent>
       </Card>
     </div>

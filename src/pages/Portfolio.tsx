@@ -153,7 +153,7 @@ const Portfolio = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {portfolioMetrics.map((metric) => (
                 <Card key={metric.label}>
-                  <CardHeader className="pb-2">
+                  <CardHeader className="pb-4">
                     <CardTitle className="text-xs font-medium text-muted-foreground">
                       {metric.label}
                     </CardTitle>
@@ -227,7 +227,7 @@ const Portfolio = () => {
                           </TableCell>
                           <TableCell>{formatCurrency(position.margin_used)}</TableCell>
                           <TableCell className="text-right">
-                            <div className="flex items-center gap-2 justify-end">
+                            <div className="flex items-center gap-4 justify-end">
                               <TrailingStopDialog
                                 positionId={position.id}
                                 symbol={position.symbol}
@@ -246,7 +246,7 @@ const Portfolio = () => {
                                   <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
                                   <>
-                                    <X className="h-4 w-4 mr-1" />
+                                    <X className="h-4 w-4 mr-2" />
                                     Close
                                   </>
                                 )}
@@ -325,7 +325,7 @@ const Portfolio = () => {
                       {formatPnL(realizedPnL)}
                     </div>
                   </div>
-                  <div className="pt-2 border-t">
+                  <div className="pt-4 border-t">
                     <div className="text-sm text-muted-foreground">Total P&L</div>
                     <div className={`text-2xl font-bold ${pnLColor}`}>
                       {formatPnL(totalPnL)}
@@ -341,7 +341,7 @@ const Portfolio = () => {
                 <CardTitle>Performance Metrics</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
                     <div className="text-sm text-muted-foreground">Win Rate</div>
                     <div className="text-xl font-bold">
@@ -359,7 +359,7 @@ const Portfolio = () => {
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Largest Win / Loss</div>
-                    <div className="flex gap-2 text-sm font-medium">
+                    <div className="flex gap-4 text-sm font-medium">
                       <span className="text-profit">{formatPnL(portfolioPnL.largestWin)}</span>
                       <span className="text-muted-foreground">/</span>
                       <span className="text-loss">{formatPnL(portfolioPnL.largestLoss)}</span>

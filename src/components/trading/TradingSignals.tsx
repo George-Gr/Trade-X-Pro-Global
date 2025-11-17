@@ -58,13 +58,13 @@ const TradingSignals = ({ symbol }: TradingSignalsProps) => {
   };
 
   return (
-    <Card className="p-4 space-y-3">
+    <Card className="p-4 space-y-4">
       <h3 className="font-semibold text-sm">Trading Signals</h3>
-      <div className="space-y-3">
+      <div className="space-y-4">
         {signals.map((signal, index) => (
-          <div key={index} className="p-3 rounded-lg border border-border space-y-2">
+          <div key={index} className="p-4 rounded-lg border border-border space-y-2">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 {signal.type === "buy" ? (
                   <TrendingUp className="h-4 w-4 text-primary" />
                 ) : (
@@ -82,13 +82,13 @@ const TradingSignals = ({ symbol }: TradingSignalsProps) => {
               </Badge>
             </div>
             
-            <div className="grid grid-cols-3 gap-2 text-xs">
+            <div className="grid grid-cols-3 gap-4 text-xs">
               <div>
                 <p className="text-muted-foreground">Entry</p>
                 <p className="font-semibold">{signal.entry}</p>
               </div>
               <div>
-                <p className="text-muted-foreground flex items-center gap-1">
+                <p className="text-muted-foreground flex items-center gap-4">
                   <Target className="h-3 w-3" />
                   Target
                 </p>
@@ -100,7 +100,7 @@ const TradingSignals = ({ symbol }: TradingSignalsProps) => {
               </div>
             </div>
             
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />
               {signal.time}
             </div>

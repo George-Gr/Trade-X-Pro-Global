@@ -104,7 +104,7 @@ class TradingViewErrorBoundary extends React.Component<
               The {this.props.widgetType || 'chart widget'} encountered an error and has been temporarily disabled.
             </p>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Button 
                 variant="outline" 
                 className="w-full"
@@ -126,7 +126,7 @@ class TradingViewErrorBoundary extends React.Component<
 
             {/* Error tracking ID */}
             {this.state.errorId && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono text-center mt-3">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono text-center mt-4">
                 Error ID: {this.state.errorId}
               </p>
             )}
@@ -137,7 +137,7 @@ class TradingViewErrorBoundary extends React.Component<
                 <summary className="cursor-pointer text-red-600 dark:text-red-300 font-semibold">
                   Technical Details
                 </summary>
-                <div className="bg-red-50 dark:bg-red-950 rounded-lg p-3 mt-2">
+                <div className="bg-red-50 dark:bg-red-950 rounded-lg p-4 mt-2">
                   <p className="font-mono text-red-700 dark:text-red-200 break-words">
                     <strong>Error:</strong> {this.state.error.toString()}
                   </p>

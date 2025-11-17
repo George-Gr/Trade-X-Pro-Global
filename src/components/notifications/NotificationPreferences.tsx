@@ -91,7 +91,7 @@ export function NotificationPreferences() {
         <div className="space-y-4">
           <h4 className="font-medium">Delivery Methods</h4>
           <div className="flex items-center justify-between">
-            <Label htmlFor="email_enabled" className="flex flex-col space-y-1">
+            <Label htmlFor="email_enabled" className="flex flex-col space-y-2">
               <span>Email Notifications</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Receive notifications via email
@@ -104,7 +104,7 @@ export function NotificationPreferences() {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="toast_enabled" className="flex flex-col space-y-1">
+            <Label htmlFor="toast_enabled" className="flex flex-col space-y-2">
               <span>In-App Notifications</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Show toast notifications in the app
@@ -121,7 +121,7 @@ export function NotificationPreferences() {
         <div className="space-y-4">
           <h4 className="font-medium">Notification Types</h4>
           <div className="flex items-center justify-between">
-            <Label htmlFor="order_notifications" className="flex flex-col space-y-1">
+            <Label htmlFor="order_notifications" className="flex flex-col space-y-2">
               <span>Order & Position Updates</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Filled orders and position changes
@@ -134,7 +134,7 @@ export function NotificationPreferences() {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="margin_notifications" className="flex flex-col space-y-1">
+            <Label htmlFor="margin_notifications" className="flex flex-col space-y-2">
               <span>Margin Alerts</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Margin calls and warnings
@@ -147,7 +147,7 @@ export function NotificationPreferences() {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="pnl_notifications" className="flex flex-col space-y-1">
+            <Label htmlFor="pnl_notifications" className="flex flex-col space-y-2">
               <span>P&L Milestones</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Profit and loss achievements
@@ -160,7 +160,7 @@ export function NotificationPreferences() {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="kyc_notifications" className="flex flex-col space-y-1">
+            <Label htmlFor="kyc_notifications" className="flex flex-col space-y-2">
               <span>KYC Updates</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Document verification status
@@ -173,7 +173,7 @@ export function NotificationPreferences() {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="price_alert_notifications" className="flex flex-col space-y-1">
+            <Label htmlFor="price_alert_notifications" className="flex flex-col space-y-2">
               <span>Price Alerts</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Custom price target notifications
@@ -186,7 +186,7 @@ export function NotificationPreferences() {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="risk_notifications" className="flex flex-col space-y-1">
+            <Label htmlFor="risk_notifications" className="flex flex-col space-y-2">
               <span>Risk Events</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Critical account and risk alerts

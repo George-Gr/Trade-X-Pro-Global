@@ -123,7 +123,7 @@ export const OrdersTable = ({
           <CardDescription>Recent orders and their status</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 text-red-600 bg-red-50 p-4 rounded-lg">
+          <div className="flex items-center gap-4 text-red-600 bg-red-50 p-4 rounded-lg">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>Error loading orders: {error.message}</span>
           </div>
@@ -140,14 +140,14 @@ export const OrdersTable = ({
             <CardTitle>Orders</CardTitle>
             <CardDescription>Recent orders and their status</CardDescription>
           </div>
-          <div className="flex gap-2 text-sm">
-            <div className="flex items-center gap-1 px-3 py-1 bg-blue-50 rounded text-blue-700">
+          <div className="flex gap-4 text-sm">
+            <div className="flex items-center gap-4 px-4 py-4 bg-blue-50 rounded text-blue-700">
               Open: <strong>{stats.open}</strong>
             </div>
-            <div className="flex items-center gap-1 px-3 py-1 bg-green-50 rounded text-green-700">
+            <div className="flex items-center gap-4 px-4 py-4 bg-green-50 rounded text-green-700">
               Filled: <strong>{stats.filled}</strong>
             </div>
-            <div className="flex items-center gap-1 px-3 py-1 bg-gray-50 rounded text-gray-700">
+            <div className="flex items-center gap-4 px-4 py-4 bg-gray-50 rounded text-gray-700">
               Cancelled: <strong>{stats.cancelled}</strong>
             </div>
           </div>
@@ -179,11 +179,11 @@ export const OrdersTable = ({
         </div>
 
         {/* Table Header */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 text-sm font-semibold text-gray-700">
+        <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200 text-sm font-semibold text-gray-700">
           <div className="col-span-2">
             <button
               onClick={() => handleSort('symbol')}
-              className="hover:text-gray-900 flex items-center gap-1"
+              className="hover:text-gray-900 flex items-center gap-4"
             >
               Order
               {sortKey === 'symbol' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
@@ -194,7 +194,7 @@ export const OrdersTable = ({
           <div className="col-span-1">
             <button
               onClick={() => handleSort('quantity')}
-              className="hover:text-gray-900 flex items-center gap-1"
+              className="hover:text-gray-900 flex items-center gap-4"
             >
               Quantity
               {sortKey === 'quantity' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
@@ -204,7 +204,7 @@ export const OrdersTable = ({
           <div className="col-span-1">
             <button
               onClick={() => handleSort('status')}
-              className="hover:text-gray-900 flex items-center gap-1"
+              className="hover:text-gray-900 flex items-center gap-4"
             >
               Status
               {sortKey === 'status' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
@@ -214,7 +214,7 @@ export const OrdersTable = ({
           <div className="col-span-1">
             <button
               onClick={() => handleSort('realized_pnl')}
-              className="hover:text-gray-900 flex items-center gap-1"
+              className="hover:text-gray-900 flex items-center gap-4"
             >
               P&L {sortKey === 'realized_pnl' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
             </button>

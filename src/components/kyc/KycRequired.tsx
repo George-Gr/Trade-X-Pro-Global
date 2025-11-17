@@ -103,7 +103,7 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className={`rounded-full p-3 ${
+            <div className={`rounded-full p-4 ${
               config.severity === 'default' ? 'bg-profit/10' :
               config.severity === 'warning' ? 'bg-amber-500/10' :
               config.severity === 'destructive' ? 'bg-destructive/10' :
@@ -183,7 +183,7 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
           </div>
 
           {/* Info Text */}
-          <div className="text-xs text-muted-foreground text-center space-y-1">
+          <div className="text-xs text-muted-foreground text-center space-y-2">
             <p>Questions? Contact our support team</p>
             <p>Email: support@tradepro.com</p>
           </div>

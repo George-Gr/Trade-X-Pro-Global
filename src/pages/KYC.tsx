@@ -219,7 +219,7 @@ const KYC = () => {
                             {new Date(doc.created_at).toLocaleString()}
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-4">
                               {getStatusIcon(doc.status)}
                               {getStatusBadge(doc.status)}
                             </div>
@@ -248,16 +248,16 @@ const KYC = () => {
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-sm">
-                <li className="flex gap-2">
-                  <CheckCircle className="h-4 w-4 text-profit mt-0.5 flex-shrink-0" />
+                <li className="flex gap-4">
+                  <CheckCircle className="h-4 w-4 text-profit mt-2.5 flex-shrink-0" />
                   <span>Valid government-issued ID (front and back)</span>
                 </li>
-                <li className="flex gap-2">
-                  <CheckCircle className="h-4 w-4 text-profit mt-0.5 flex-shrink-0" />
+                <li className="flex gap-4">
+                  <CheckCircle className="h-4 w-4 text-profit mt-2.5 flex-shrink-0" />
                   <span>Proof of address (utility bill or bank statement, less than 3 months old)</span>
                 </li>
-                <li className="flex gap-2">
-                  <CheckCircle className="h-4 w-4 text-profit mt-0.5 flex-shrink-0" />
+                <li className="flex gap-4">
+                  <CheckCircle className="h-4 w-4 text-profit mt-2.5 flex-shrink-0" />
                   <span>Selfie holding your ID document</span>
                 </li>
               </ul>

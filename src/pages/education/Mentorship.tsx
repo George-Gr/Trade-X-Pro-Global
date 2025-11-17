@@ -11,7 +11,7 @@ export default function Mentorship() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,16 +28,16 @@ export default function Mentorship() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Users className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Mentorship Benefits</h2>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
                     "One-on-one guidance from experienced traders",
                     "Personalized trading strategy development",
@@ -48,8 +48,8 @@ export default function Mentorship() {
                     "Priority email and chat support",
                     "Access to mentor's trading journal"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-4">
+                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-sm text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -58,7 +58,7 @@ export default function Mentorship() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-6">Mentorship Packages</h2>
                 <div className="space-y-4">
                   {[
@@ -80,8 +80,8 @@ export default function Mentorship() {
             </Card>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Meet Our Mentors</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {[
@@ -106,8 +106,8 @@ export default function Mentorship() {
                 ].map((mentor, i) => (
                   <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all">
                     <CardContent className="p-6">
-                      <h3 className="font-bold text-lg mb-1">{mentor.name}</h3>
-                      <p className="text-primary text-sm font-semibold mb-3">{mentor.specialty}</p>
+                      <h3 className="font-bold text-lg mb-2">{mentor.name}</h3>
+                      <p className="text-primary text-sm font-semibold mb-4">{mentor.specialty}</p>
                       <div className="space-y-2 text-xs text-muted-foreground mb-4">
                         <p>Experience: {mentor.experience}</p>
                         <p>Students Mentored: {mentor.students}</p>
@@ -122,8 +122,8 @@ export default function Mentorship() {
             </CardContent>
           </Card>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">How It Works</h2>
               <div className="grid md:grid-cols-4 gap-6">
                 {[
@@ -146,7 +146,7 @@ export default function Mentorship() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Start Your Mentorship Journey</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Get paired with an expert mentor today

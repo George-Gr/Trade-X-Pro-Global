@@ -11,7 +11,7 @@ export default function Partners() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,9 +28,9 @@ export default function Partners() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16">
+          <div className="mb-8">
             <h2 className="text-3xl font-bold mb-8 text-center">Trading Platform Partners</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6">
               {[
                 {
                   partner: "MetaTrader 5",
@@ -42,7 +42,7 @@ export default function Partners() {
                 }
               ].map((item, i) => (
                 <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
-                  <CardContent className="p-8">
+                  <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                       <Handshake className="h-7 w-7 text-white" />
                     </div>
@@ -54,7 +54,7 @@ export default function Partners() {
             </div>
           </div>
 
-          <div className="mb-16">
+          <div className="mb-8">
             <h2 className="text-3xl font-bold mb-8 text-center">Payment Partners</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -69,14 +69,14 @@ export default function Partners() {
                 "Crypto Payment Gateways"
               ].map((partner, i) => (
                 <Card key={i} className="p-6 text-center hover:shadow-md transition-all hover:-translate-y-1">
-                  <CheckCircle2 className="h-8 w-8 text-accent mx-auto mb-3" />
+                  <CheckCircle2 className="h-8 w-8 text-accent mx-auto mb-4" />
                   <p className="font-semibold">{partner}</p>
                 </Card>
               ))}
             </div>
           </div>
 
-          <div className="mb-16">
+          <div className="mb-8">
             <h2 className="text-3xl font-bold mb-8 text-center">Technology Partners</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -88,17 +88,17 @@ export default function Partners() {
                 { name: "DataDog", service: "Monitoring" }
               ].map((tech, i) => (
                 <Card key={i} className="p-6 hover:shadow-md transition-all hover:-translate-y-1">
-                  <h3 className="font-bold mb-1">{tech.name}</h3>
+                  <h3 className="font-bold mb-2">{tech.name}</h3>
                   <p className="text-sm text-muted-foreground">{tech.service}</p>
                 </Card>
               ))}
             </div>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Partnership Benefits</h2>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {[
                   "Best-in-class trading tools and technology",
                   "Multiple payment options for convenience",
@@ -108,8 +108,8 @@ export default function Partners() {
                   "Global reach and support",
                   "Continuous innovation and updates"
                 ].map((benefit, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-0.5" />
+                  <div key={i} className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
+                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-2.5" />
                     <span className="text-muted-foreground">{benefit}</span>
                   </div>
                 ))}
@@ -119,7 +119,7 @@ export default function Partners() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Interested in Partnership?</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Let's work together to enhance the trading experience

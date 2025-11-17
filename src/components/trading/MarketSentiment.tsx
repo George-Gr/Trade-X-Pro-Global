@@ -33,7 +33,7 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-4">
             <TrendingUp className="h-3 w-3 text-primary" />
             Bullish
           </span>
@@ -44,7 +44,7 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-4">
             <TrendingDown className="h-3 w-3 text-destructive" />
             Bearish
           </span>
@@ -53,14 +53,14 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
         <Progress value={sentimentData.bearish} className="h-2" />
       </div>
 
-      <div className="pt-2 border-t border-border">
+      <div className="pt-4 border-t border-border">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Active Traders</span>
           <span className="font-semibold">{sentimentData.volume.toLocaleString()}</span>
         </div>
       </div>
 
-      <div className="pt-2 border-t border-border">
+      <div className="pt-4 border-t border-border">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Overall Sentiment</span>
           <span className={`font-semibold capitalize ${

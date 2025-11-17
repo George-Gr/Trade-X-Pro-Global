@@ -72,12 +72,12 @@ export const OrderRow = ({
 
   return (
     <div className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
-      <div className="px-4 py-3">
+      <div className="px-4 py-4">
         {/* Main row */}
         <div className="flex items-center justify-between gap-4">
           {/* Order ID and Symbol */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-gray-900 truncate">
                   {order.symbol}
@@ -89,7 +89,7 @@ export const OrderRow = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-0"
+                className="h-6 w-6 p-4"
                 onClick={copyOrderId}
                 title="Copy order ID"
               >
@@ -117,7 +117,7 @@ export const OrderRow = ({
                 {order.filled_quantity} / {order.quantity}
               </span>
               {fillPercentage > 0 && fillPercentage < 100 && (
-                <div className="w-12 h-1 bg-gray-200 rounded-full mt-1 overflow-hidden">
+                <div className="w-12 h-1 bg-gray-200 rounded-full mt-2 overflow-hidden">
                   <div
                     className="h-full bg-indigo-500"
                     style={{ width: `${fillPercentage}%` }}
@@ -187,7 +187,7 @@ export const OrderRow = ({
           )}
 
           {/* Actions */}
-          <div className="flex-shrink-0 flex items-center gap-2">
+          <div className="flex-shrink-0 flex items-center gap-4">
             {onViewDetails && (
               <Button
                 variant="outline"
@@ -201,7 +201,7 @@ export const OrderRow = ({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-4">
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>

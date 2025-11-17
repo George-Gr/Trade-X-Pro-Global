@@ -108,7 +108,7 @@ export const PriceAlertsManager = () => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-4">
             <Bell className="h-5 w-5" />
             Price Alerts
           </CardTitle>
@@ -118,19 +118,19 @@ export const PriceAlertsManager = () => {
       <CardContent>
         {alerts.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            <Bell className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No price alerts set</p>
             <p className="text-sm">Create alerts to get notified when prices reach your target</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {alerts.map((alert) => (
               <div
                 key={alert.id}
-                className="flex items-center justify-between p-3 bg-secondary/20 rounded-lg border border-border"
+                className="flex items-center justify-between p-4 bg-secondary/20 rounded-lg border border-border"
               >
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-4 mb-2">
                     <span className="font-semibold">{alert.symbol}</span>
                     {alert.condition === "above" ? (
                       <TrendingUp className="h-4 w-4 text-profit" />
@@ -146,7 +146,7 @@ export const PriceAlertsManager = () => {
                     <span className="font-mono font-semibold">{alert.target_price.toFixed(5)}</span>
                   </div>
                   {alert.triggered && alert.triggered_at && (
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-xs text-muted-foreground mt-2">
                       Triggered {new Date(alert.triggered_at).toLocaleString()}
                     </div>
                   )}

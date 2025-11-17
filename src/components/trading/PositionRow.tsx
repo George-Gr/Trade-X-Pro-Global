@@ -14,7 +14,7 @@ export const PositionRow: React.FC<{ position: Position; onView?: () => void; se
   const onCloseClicked = () => setOpenClose(true);
 
   return (
-    <div role="row" className="grid grid-cols-6 gap-2 items-center py-2 border-b">
+    <div role="row" className="grid grid-cols-6 gap-4 items-center py-4 border-b">
       {selectable ? (
         <div role="cell"><input aria-label={`select-${position.id}`} type="checkbox" checked={selected} onChange={(e) => onSelect && onSelect(position.id, e.target.checked)} /></div>
       ) : null}
@@ -28,7 +28,7 @@ export const PositionRow: React.FC<{ position: Position; onView?: () => void; se
         {pnl.toFixed(2)}
       </div>
 
-      <div className="col-span-6 mt-1">
+      <div className="col-span-6 mt-2">
         <button onClick={onCloseClicked} disabled={isClosing} className="btn btn-sm mr-2">Close</button>
         <button onClick={onView} className="btn btn-ghost btn-sm">Details</button>
       </div>

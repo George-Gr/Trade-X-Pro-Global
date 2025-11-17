@@ -54,7 +54,7 @@ export default function Index() {
               Professional trading terminal with real-time data and zero risk.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link to="/register">
                 <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
                   Start Trading Free
@@ -68,16 +68,16 @@ export default function Index() {
               </Link>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-8 text-white/90">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-4">
                 <CheckCircle2 className="h-5 w-5 text-accent" />
                 <span>$50,000 Virtual Capital</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <CheckCircle2 className="h-5 w-5 text-accent" />
                 <span>Real-Time Market Data</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <CheckCircle2 className="h-5 w-5 text-accent" />
                 <span>5 Asset Classes</span>
               </div>
@@ -95,7 +95,7 @@ export default function Index() {
               description="Professional-grade tools and features designed for serious traders"
             />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 icon: LineChart,
@@ -150,7 +150,7 @@ export default function Index() {
               subtitle="TradeX Pro?"
             />
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-6 items-center">
             <div className="space-y-6">
               {[
                 {
@@ -188,7 +188,7 @@ export default function Index() {
               ))}
             </div>
 
-            <Card className="p-8 bg-gradient-to-br from-card to-muted border-border">
+            <Card className="p-6 bg-gradient-to-br from-card to-muted border-border">
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-border">
                   <span className="text-muted-foreground">Starting Balance</span>
@@ -269,7 +269,7 @@ export default function Index() {
                     <asset.icon className="h-7 w-7 text-white" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{asset.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{asset.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{asset.description}</p>
                   <div className="text-sm font-semibold text-primary">{asset.instruments}</div>
                 </CardContent>
               </Card>
@@ -298,7 +298,7 @@ export default function Index() {
               description="Enterprise-grade security protecting your data and trading activity"
             />
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
                 {
                   icon: Lock,
@@ -368,7 +368,7 @@ export default function Index() {
 
           <div className="max-w-6xl mx-auto">
             {/* Payment Partners */}
-            <div className="mb-12">
+            <div className="mb-8">
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Payment Methods</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 {[
@@ -392,7 +392,7 @@ export default function Index() {
             </div>
 
             {/* Crypto Partners */}
-            <div className="mb-12">
+            <div className="mb-8">
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Cryptocurrency</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
                 {[

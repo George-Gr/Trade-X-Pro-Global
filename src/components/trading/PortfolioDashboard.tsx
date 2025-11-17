@@ -139,7 +139,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
 
   if (loading) {
     return (
-      <Card className="p-8 bg-card">
+      <Card className="p-6 bg-card">
         <div className="text-center text-muted-foreground">Loading portfolio...</div>
       </Card>
     );
@@ -168,7 +168,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
         <Card className="p-4 bg-card">
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Total P&L</p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               {metrics.totalPnL >= 0 ? (
                 <TrendingUp className="h-5 w-5 text-profit" />
               ) : (
@@ -229,7 +229,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
         {/* Unrealized vs Realized */}
         <Card className="p-4 bg-card">
           <h3 className="font-semibold mb-4">P&L Breakdown</h3>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Unrealized P&L</span>
               <span className={`font-semibold ${metrics.unrealizedPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
@@ -242,7 +242,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 {metrics.realizedPnL >= 0 ? '+' : ''}${metrics.realizedPnL.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </span>
             </div>
-            <div className="border-t border-border pt-3 flex items-center justify-between">
+            <div className="border-t border-border pt-4 flex items-center justify-between">
               <span className="text-sm font-semibold">Total P&L</span>
               <span className={`font-bold text-lg ${metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
                 {metrics.totalPnL >= 0 ? '+' : ''}${metrics.totalPnL.toLocaleString(undefined, { maximumFractionDigits: 2 })}
@@ -254,7 +254,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
         {/* Performance Metrics */}
         <Card className="p-4 bg-card">
           <h3 className="font-semibold mb-4">Performance</h3>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-4 text-sm">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Win Rate</span>
               <span className="font-semibold">
@@ -274,7 +274,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
               <span className="text-muted-foreground">Sharpe Ratio</span>
               <span className="font-semibold font-mono">{performanceMetrics.sharpeRatio.toFixed(2)}</span>
             </div>
-            <div className="border-t border-border pt-3 space-y-2">
+            <div className="border-t border-border pt-4 space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Best Trade</span>
                 <span className="text-profit font-semibold">+{performanceMetrics.bestTrade.toFixed(2)}%</span>
@@ -299,12 +299,12 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 text-muted-foreground font-medium">Symbol</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">Qty</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">Entry</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">Current</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">P&L</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">ROI%</th>
+                      <th className="text-left py-4 text-muted-foreground font-medium">Symbol</th>
+                      <th className="text-right py-4 text-muted-foreground font-medium">Qty</th>
+                      <th className="text-right py-4 text-muted-foreground font-medium">Entry</th>
+                      <th className="text-right py-4 text-muted-foreground font-medium">Current</th>
+                      <th className="text-right py-4 text-muted-foreground font-medium">P&L</th>
+                      <th className="text-right py-4 text-muted-foreground font-medium">ROI%</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -316,9 +316,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                       
                       return (
                         <tr key={pos.id} className="border-b border-border/50 hover:bg-secondary/30">
-                          <td className="py-2">
+                          <td className="py-4">
                             <span className="font-semibold">{pos.symbol}</span>
-                            <span className="text-xs text-muted-foreground ml-1">({pos.side})</span>
+                            <span className="text-xs text-muted-foreground ml-2">({pos.side})</span>
                           </td>
                           <td className="text-right font-mono text-xs">{pos.quantity}</td>
                           <td className="text-right font-mono text-xs">{pos.entry_price.toFixed(5)}</td>
@@ -343,15 +343,15 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
 
         {/* Asset Allocation Summary */}
         <Card className="p-4 bg-card">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-4 mb-4">
             <PieChart className="h-4 w-4" />
             <h3 className="font-semibold">Asset Allocation</h3>
           </div>
           {assetAllocation.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {assetAllocation.map(asset => (
                 <div key={asset.symbol}>
-                  <div className="flex items-center justify-between text-sm mb-1">
+                  <div className="flex items-center justify-between text-sm mb-2">
                     <span className="text-muted-foreground">{asset.symbol}</span>
                     <span className="font-semibold">{asset.percentage.toFixed(1)}%</span>
                   </div>

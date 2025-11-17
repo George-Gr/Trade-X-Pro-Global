@@ -112,7 +112,7 @@ const PendingOrders = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-4">
               <Clock className="h-5 w-5" />
               Active Orders ({orders.length})
             </CardTitle>
@@ -162,7 +162,7 @@ const PendingOrders = () => {
                         {format(new Date(order.created_at), 'MMM dd, HH:mm')}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-4">
                           <Button
                             size="sm"
                             variant="ghost"

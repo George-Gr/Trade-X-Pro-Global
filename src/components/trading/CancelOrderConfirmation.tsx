@@ -76,8 +76,8 @@ export const CancelOrderConfirmation = ({
     <AlertDialog open={isOpen} onOpenChange={onCancel}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="flex items-start gap-3">
-            <div className="rounded-full bg-yellow-100 p-2 mt-0.5">
+          <div className="flex items-start gap-4">
+            <div className="rounded-full bg-yellow-100 p-4 mt-2.5">
               <AlertTriangle className="w-5 h-5 text-yellow-700" />
             </div>
             <div>
@@ -90,7 +90,7 @@ export const CancelOrderConfirmation = ({
         </AlertDialogHeader>
 
         {/* Order Details */}
-        <div className="bg-gray-50 rounded-lg p-4 space-y-3 my-4">
+        <div className="bg-gray-50 rounded-lg p-4 space-y-4 my-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">Symbol</span>
             <span className="text-sm font-semibold text-gray-900">{order.symbol}</span>
@@ -118,7 +118,7 @@ export const CancelOrderConfirmation = ({
             <span className="text-sm font-semibold text-gray-900">{order.filled_quantity}</span>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
             <span className="text-sm font-medium text-gray-700">Remaining to Cancel</span>
             <span className="text-sm font-bold text-red-600">{remainingQuantity}</span>
           </div>
@@ -126,7 +126,7 @@ export const CancelOrderConfirmation = ({
 
         {/* Warnings */}
         {isMostlyFilled && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-xs text-blue-700">
               <strong>Note:</strong> This order is mostly filled ({(order.filled_quantity / order.quantity * 100).toFixed(0)}%).
               Cancelling will only affect the remaining {remainingQuantity} units.
@@ -135,7 +135,7 @@ export const CancelOrderConfirmation = ({
         )}
 
         {order.status === 'partially_filled' && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-xs text-amber-700">
               <strong>Partial Fill:</strong> Existing filled quantity will remain as a position. Only
               the pending quantity will be cancelled.
@@ -144,7 +144,7 @@ export const CancelOrderConfirmation = ({
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-3 justify-end mt-6">
+        <div className="flex gap-4 justify-end mt-6">
           <AlertDialogCancel disabled={isLoading}>
             Keep Order
           </AlertDialogCancel>

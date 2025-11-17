@@ -82,14 +82,14 @@ const Settings = () => {
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">Loading status...</p>
                 </div>
               ) : (
                 <>
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
                       {kycStatus === "approved" ? (
                         <>
                           <CheckCircle2 className="h-5 w-5 text-profit" />
@@ -196,7 +196,7 @@ const Settings = () => {
           {/* Notification Preferences */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-4">
                 <Bell className="h-5 w-5" />
                 Notification Preferences
               </CardTitle>

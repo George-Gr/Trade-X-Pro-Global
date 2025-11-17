@@ -137,9 +137,9 @@ export const TrailingStopDialog = ({
                 </p>
               </div>
 
-              <div className="bg-secondary/30 rounded-lg p-3 text-sm space-y-1">
+              <div className="bg-secondary/30 rounded-lg p-4 text-sm space-y-2">
                 <div className="font-semibold">How it works:</div>
-                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                   <li>
                     {side === "buy" 
                       ? "As price rises, stop loss moves up to lock in profits"

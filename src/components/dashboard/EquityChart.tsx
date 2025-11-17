@@ -107,9 +107,9 @@ export const EquityChart: React.FC = () => {
     <Card className="p-4 bg-card">
       <div className="space-y-4">
         {/* Header with controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h3 className="font-semibold">Equity Curve</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-4">
             {(Object.keys(TIMEFRAME_CONFIG) as Timeframe[]).map((tf) => (
               <Button
                 key={tf}
@@ -165,27 +165,27 @@ export const EquityChart: React.FC = () => {
         </div>
 
         {/* Statistics row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-          <div className="p-2 bg-secondary/50 rounded">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Min Equity</p>
             <p className="font-semibold">${stats.minEquity.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Max Equity</p>
             <p className="font-semibold">${stats.maxEquity.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Avg Equity</p>
             <p className="font-semibold">${stats.avgEquity.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
           </div>
-          <div className={`p-2 bg-secondary/50 rounded ${stats.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
+          <div className={`p-4 bg-secondary/50 rounded ${stats.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
             <p className="text-muted-foreground">Total P&L</p>
             <p className="font-semibold">${stats.totalPnL.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
           </div>
         </div>
 
         {/* Zoom controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Button variant="outline" size="sm" onClick={handleZoomOut} disabled={zoomLevel <= 1}>
             <ZoomOut className="h-4 w-4" />
           </Button>
@@ -207,7 +207,7 @@ export const EquityChart: React.FC = () => {
 
         {/* Pan slider */}
         {zoomLevel > 1 && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <span className="text-xs text-muted-foreground">Pan:</span>
             <input
               type="range"

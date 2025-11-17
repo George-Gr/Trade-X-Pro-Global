@@ -105,7 +105,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader className="border-b">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <AlertTriangle className="w-6 h-6 text-red-500" />
                 <CardTitle className="text-red-600 dark:text-red-400">
                   Something went wrong
@@ -127,7 +127,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
                 {/* Error details in development */}
                 {import.meta.env.MODE === "development" && this.state.error && (
-                  <div className="bg-red-50 dark:bg-red-950 rounded-lg p-3 space-y-2">
+                  <div className="bg-red-50 dark:bg-red-950 rounded-lg p-4 space-y-2">
                     <p className="text-xs font-mono text-red-700 dark:text-red-200 break-words">
                       <strong>Error:</strong> {this.state.error.toString()}
                     </p>
@@ -144,10 +144,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
                   </div>
                 )}
 
-                <div className="flex gap-2 pt-2">
+                <div className="flex gap-4 pt-4">
                   <Button
                     onClick={this.handleReset}
-                    className="flex-1 gap-2"
+                    className="flex-1 gap-4"
                     size="sm"
                   >
                     <RotateCcw className="w-4 h-4" />
@@ -163,7 +163,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                   </Button>
                 </div>
 
-                <p className="text-xs text-slate-500 dark:text-slate-400 text-center pt-2">
+                <p className="text-xs text-slate-500 dark:text-slate-400 text-center pt-4">
                   If this error persists, please contact support.
                 </p>
               </div>

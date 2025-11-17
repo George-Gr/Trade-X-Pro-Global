@@ -22,7 +22,7 @@ export const PerformanceMetrics: React.FC = () => {
   return (
     <Card className="p-4 bg-card">
       <h3 className="font-semibold mb-4">Performance Metrics</h3>
-      <div className="grid grid-cols-2 gap-2 text-sm">
+      <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-muted-foreground">Total Trades</p>
           <p className="font-semibold">{totalTrades}</p>

@@ -86,10 +86,10 @@ export function KYCStatusBanner() {
   return (
     <Alert variant={config.variant} className="mb-4 border-l-4">
       <div className="flex items-start gap-4">
-        <StatusIcon className="h-5 w-5 mt-0.5" />
+        <StatusIcon className="h-5 w-5 mt-2.5" />
         <div className="flex-1 space-y-2">
-          <div className="flex items-center gap-2">
-            <AlertTitle className="mb-0">{config.title}</AlertTitle>
+          <div className="flex items-center gap-4">
+            <AlertTitle className="mb-2">{config.title}</AlertTitle>
             <Badge variant={config.badgeVariant}>{config.badgeLabel}</Badge>
           </div>
           <AlertDescription className="text-sm">
@@ -106,7 +106,7 @@ export function KYCStatusBanner() {
             variant={config.variant === 'destructive' ? 'default' : 'outline'}
             size="sm"
             onClick={() => navigate('/kyc')}
-            className="gap-2 whitespace-nowrap"
+            className="gap-4 whitespace-nowrap"
           >
             {config.actionLabel}
             <ArrowRight className="h-4 w-4" />

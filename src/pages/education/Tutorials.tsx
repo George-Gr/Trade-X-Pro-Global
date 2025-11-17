@@ -11,7 +11,7 @@ export default function Tutorials() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,16 +28,16 @@ export default function Tutorials() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <BookOpen className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Available Resources</h2>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {[
                     { resource: "Video Tutorials", count: "100+" },
                     { resource: "E-Books", count: "25+" },
@@ -46,7 +46,7 @@ export default function Tutorials() {
                     { resource: "Case Studies", count: "40+" },
                     { resource: "Template Collections", count: "15+" }
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                       <span className="font-medium">{item.resource}</span>
                       <span className="text-primary font-semibold text-sm">{item.count}</span>
                     </div>
@@ -56,9 +56,9 @@ export default function Tutorials() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-6">Featured E-Books</h2>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {[
                     "The Complete Forex Trading Guide",
                     "Technical Analysis Masterclass",
@@ -77,8 +77,8 @@ export default function Tutorials() {
             </Card>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Video Tutorial Series</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {[
@@ -91,7 +91,7 @@ export default function Tutorials() {
                 ].map((series, i) => (
                   <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all">
                     <CardContent className="p-6">
-                      <h3 className="font-semibold text-lg mb-3">{series.title}</h3>
+                      <h3 className="font-semibold text-lg mb-4">{series.title}</h3>
                       <div className="space-y-2 text-sm text-muted-foreground mb-4">
                         <p>📚 {series.lessons}</p>
                         <p>⏱️ {series.duration}</p>
@@ -106,8 +106,8 @@ export default function Tutorials() {
             </CardContent>
           </Card>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Learning Paths</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {[
@@ -131,9 +131,9 @@ export default function Tutorials() {
                     <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-2">{path.path}</h3>
                       <p className="text-sm text-muted-foreground mb-4">{path.description}</p>
-                      <div className="space-y-1 mb-4">
+                      <div className="space-y-2 mb-4">
                         {path.modules.map((module, j) => (
-                          <div key={j} className="flex items-center gap-2 text-xs">
+                          <div key={j} className="flex items-center gap-4 text-xs">
                             <CheckCircle2 className="h-4 w-4 text-accent" />
                             <span>{module}</span>
                           </div>
@@ -151,7 +151,7 @@ export default function Tutorials() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Start Learning Today</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access all tutorials and e-books for free with your account

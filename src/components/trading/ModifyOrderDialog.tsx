@@ -172,8 +172,8 @@ export const ModifyOrderDialog = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Error Alert */}
           {error && (
-            <div className="flex gap-2 items-start p-3 bg-red-50 border border-red-200 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="flex gap-4 items-start p-4 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-2.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
@@ -184,7 +184,7 @@ export const ModifyOrderDialog = ({
               <Label htmlFor="quantity" className="text-sm font-medium">
                 Quantity
               </Label>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-gray-600 mt-2">
                 Current: {order.quantity} | Filled: {order.filled_quantity} | Remaining:{' '}
                 {remainingQuantity}
               </p>
@@ -199,7 +199,7 @@ export const ModifyOrderDialog = ({
                 disabled={isLoading}
                 className="mt-2"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-2">
                 You can modify the total order quantity (max: {maxQuantity})
               </p>
             </div>
@@ -211,7 +211,7 @@ export const ModifyOrderDialog = ({
               <Label htmlFor="limitPrice" className="text-sm font-medium">
                 Limit Price
               </Label>
-              <p className="text-xs text-gray-600 mt-1">Current: {order.limit_price?.toFixed(4)}</p>
+              <p className="text-xs text-gray-600 mt-2">Current: {order.limit_price?.toFixed(4)}</p>
               <Input
                 id="limitPrice"
                 type="number"
@@ -223,7 +223,7 @@ export const ModifyOrderDialog = ({
                 disabled={isLoading}
                 className="mt-2"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-2">
                 Price level at which limit order will execute
               </p>
             </div>
@@ -235,7 +235,7 @@ export const ModifyOrderDialog = ({
               <Label htmlFor="stopPrice" className="text-sm font-medium">
                 Stop Price
               </Label>
-              <p className="text-xs text-gray-600 mt-1">Current: {order.stop_price?.toFixed(4)}</p>
+              <p className="text-xs text-gray-600 mt-2">Current: {order.stop_price?.toFixed(4)}</p>
               <Input
                 id="stopPrice"
                 type="number"
@@ -247,14 +247,14 @@ export const ModifyOrderDialog = ({
                 disabled={isLoading}
                 className="mt-2"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-2">
                 Price level at which stop order will trigger
               </p>
             </div>
           )}
 
           {/* Info Box */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-xs text-blue-700">
               <strong>Note:</strong> You can only modify open or partially filled orders. Market
               orders cannot be modified.
@@ -262,7 +262,7 @@ export const ModifyOrderDialog = ({
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 justify-end pt-4">
+          <div className="flex gap-4 justify-end pt-4">
             <Button onClick={handleClose} variant="outline" disabled={isLoading}>
               Cancel
             </Button>

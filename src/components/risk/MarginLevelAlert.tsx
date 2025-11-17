@@ -142,7 +142,7 @@ export function MarginLevelAlert({
 
   if (compact) {
     return (
-      <div className={cn("flex items-center gap-2 px-3 py-2 rounded-md border", getAlertClass(), className)}>
+      <div className={cn("flex items-center gap-4 px-4 py-4 rounded-md border", getAlertClass(), className)}>
         {getStatusIcon()}
         <span className={cn("text-sm font-medium", getStatusColor())}>
           {formatMarginStatus(marginStatus)}: {marginLevel ? formatMarginLevel(marginLevel) : "—"}
@@ -163,11 +163,11 @@ export function MarginLevelAlert({
     <div className={className}>
       {/* Main Alert Card */}
       <Card className={cn("border-2", getAlertClass())}>
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-4">
               {getStatusIcon()}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <CardTitle className={getStatusColor()}>
                   {formatMarginStatus(marginStatus)}
                 </CardTitle>
@@ -197,7 +197,7 @@ export function MarginLevelAlert({
               </span>
             </div>
             {marginLevel && (
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <Progress
                   value={Math.min(marginLevel, 300)}
                   max={300}
@@ -213,13 +213,13 @@ export function MarginLevelAlert({
           {/* Account Details */}
           {accountEquity && marginUsed && (
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <p className="text-gray-600 dark:text-gray-400">Account Equity</p>
                 <p className="font-semibold">
                   ${(accountEquity / 100).toFixed(2)}
                 </p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <p className="text-gray-600 dark:text-gray-400">Margin Used</p>
                 <p className="font-semibold">
                   ${(marginUsed / 100).toFixed(2)}
@@ -231,7 +231,7 @@ export function MarginLevelAlert({
           {/* Time to Liquidation */}
           {timeToLiquidation !== null && timeToLiquidation < Infinity && (
             <div className={cn(
-              "flex items-center gap-2 p-2 rounded-md",
+              "flex items-center gap-4 p-4 rounded-md",
               timeToLiquidation <= 30
                 ? "bg-red-100 dark:bg-red-900"
                 : "bg-orange-100 dark:bg-orange-900"
@@ -254,11 +254,11 @@ export function MarginLevelAlert({
           {showDetails && recommendedActions.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-semibold">Recommended Actions:</p>
-              <ul className="space-y-1">
+              <ul className="space-y-2">
                 {recommendedActions.map((action) => (
-                  <li key={action.action} className="text-sm flex items-start gap-2">
+                  <li key={action.action} className="text-sm flex items-start gap-4">
                     <span className={cn(
-                      "mt-1.5 h-2 w-2 rounded-full flex-shrink-0",
+                      "mt-2.5 h-2 w-2 rounded-full flex-shrink-0",
                       action.urgency === "emergency" ? "bg-red-500" :
                       action.urgency === "critical" ? "bg-orange-500" :
                       action.urgency === "warning" ? "bg-yellow-500" :
@@ -303,7 +303,7 @@ export function MarginLevelAlert({
           )}
 
           {/* Action Buttons */}
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-4 pt-4">
             <Button
               onClick={refresh}
               variant="outline"
@@ -329,7 +329,7 @@ export function MarginLevelAlert({
       {/* Status Change Notification */}
       {prevStatus && prevStatus !== marginStatus && (
         <div className={cn(
-          "mt-2 p-3 rounded-md text-sm font-medium animate-in fade-in",
+          "mt-2 p-4 rounded-md text-sm font-medium animate-in fade-in",
           marginStatus === MarginStatus.LIQUIDATION
             ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
             : marginStatus === MarginStatus.CRITICAL

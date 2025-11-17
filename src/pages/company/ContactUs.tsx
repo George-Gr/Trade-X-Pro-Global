@@ -11,7 +11,7 @@ export default function ContactUs() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,9 +28,9 @@ export default function ContactUs() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
-              <CardContent className="p-8 text-center">
+              <CardContent className="text-center">
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <Mail className="h-7 w-7 text-white" />
                 </div>
@@ -41,7 +41,7 @@ export default function ContactUs() {
             </Card>
 
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
-              <CardContent className="p-8 text-center">
+              <CardContent className="text-center">
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <Phone className="h-7 w-7 text-white" />
                 </div>
@@ -52,27 +52,27 @@ export default function ContactUs() {
             </Card>
 
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
-              <CardContent className="p-8 text-center">
+              <CardContent className="text-center">
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <MapPin className="h-7 w-7 text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Address</h3>
-                <p className="text-muted-foreground mb-1">123 Finance Street</p>
+                <p className="text-muted-foreground mb-2">123 Finance Street</p>
                 <p className="text-sm text-muted-foreground">Trading District, TD 12345</p>
               </CardContent>
             </Card>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-8">Send us a Message</h2>
                 <form className="space-y-6">
                   <div>
                     <label className="block text-sm font-semibold mb-2">Name</label>
                     <input
                       type="text"
-                      className="w-full px-4 py-2 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors"
+                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors"
                       placeholder="Your name"
                     />
                   </div>
@@ -80,13 +80,13 @@ export default function ContactUs() {
                     <label className="block text-sm font-semibold mb-2">Email</label>
                     <input
                       type="email"
-                      className="w-full px-4 py-2 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors"
+                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors"
                       placeholder="your@email.com"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold mb-2">Subject</label>
-                    <select className="w-full px-4 py-2 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors">
+                    <select className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors">
                       <option>General Inquiry</option>
                       <option>Support</option>
                       <option>Partnership</option>
@@ -97,11 +97,11 @@ export default function ContactUs() {
                     <label className="block text-sm font-semibold mb-2">Message</label>
                     <textarea
                       rows={5}
-                      className="w-full px-4 py-2 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors resize-none"
+                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors resize-none"
                       placeholder="Your message..."
                     />
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-primary to-primary-glow flex items-center justify-center gap-2">
+                  <Button className="w-full bg-gradient-to-r from-primary to-primary-glow flex items-center justify-center gap-4">
                     <Send className="h-5 w-5" />
                     Send Message
                   </Button>
@@ -110,7 +110,7 @@ export default function ContactUs() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-8">Departments</h2>
                 <div className="space-y-6">
                   {[
@@ -122,8 +122,8 @@ export default function ContactUs() {
                     { dept: "General", email: "hello@tradexpro.com", hours: "Mon-Fri 09:00-18:00" }
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg border border-border">
-                      <p className="font-semibold mb-1">{item.dept}</p>
-                      <p className="text-sm text-primary mb-1">{item.email}</p>
+                      <p className="font-semibold mb-2">{item.dept}</p>
+                      <p className="text-sm text-primary mb-2">{item.email}</p>
                       <p className="text-xs text-muted-foreground">{item.hours}</p>
                     </div>
                   ))}
@@ -132,8 +132,8 @@ export default function ContactUs() {
             </Card>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">FAQ</h2>
               <div className="space-y-6">
                 {[
@@ -153,7 +153,7 @@ export default function ContactUs() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Create your account today and join our trading community

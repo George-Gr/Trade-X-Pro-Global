@@ -82,7 +82,7 @@ export const PositionsTableVirtualized: React.FC<{ userId: string | null }> = ({
         </div>
       </div>
 
-      <div className="header-row grid grid-cols-7 gap-2 font-semibold text-sm mb-2 sticky top-0 bg-white z-10">
+      <div className="header-row grid grid-cols-7 gap-4 font-semibold text-sm mb-2 sticky top-4 bg-white z-10">
         <div />
         <div>Symbol</div>
         <div>Side</div>

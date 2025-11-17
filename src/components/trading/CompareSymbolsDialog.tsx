@@ -35,7 +35,7 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
           <DialogTitle>Compare Symbols</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[500px] pr-4">
-          <div className="space-y-3">
+          <div className="space-y-4">
             {sortedByChange.map((price) => {
               if (!price) return null;
               const isPositive = price.change >= 0;
@@ -44,8 +44,8 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
                   key={price.symbol}
                   className="border border-border rounded-lg p-4 bg-card"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
                       <span className="font-semibold text-lg">{price.symbol}</span>
                       {isPositive ? (
                         <TrendingUp className="h-4 w-4 text-profit" />
@@ -60,46 +60,46 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
                   
                   <div className="grid grid-cols-4 gap-4 text-sm">
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Current</div>
+                      <div className="text-muted-foreground text-xs mb-2">Current</div>
                       <div className="font-mono font-semibold">{price.currentPrice.toFixed(5)}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Bid</div>
+                      <div className="text-muted-foreground text-xs mb-2">Bid</div>
                       <div className="font-mono">{price.bid.toFixed(5)}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Ask</div>
+                      <div className="text-muted-foreground text-xs mb-2">Ask</div>
                       <div className="font-mono">{price.ask.toFixed(5)}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Change</div>
+                      <div className="text-muted-foreground text-xs mb-2">Change</div>
                       <div className={cn("font-mono font-medium", isPositive ? "text-profit" : "text-loss")}>
                         {isPositive ? "+" : ""}{price.change.toFixed(5)}
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-4 gap-4 text-sm mt-3 pt-3 border-t border-border">
+                  <div className="grid grid-cols-4 gap-4 text-sm mt-4 pt-4 border-t border-border">
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Open</div>
+                      <div className="text-muted-foreground text-xs mb-2">Open</div>
                       <div className="font-mono text-xs">{price.open?.toFixed(5) || "N/A"}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">High</div>
+                      <div className="text-muted-foreground text-xs mb-2">High</div>
                       <div className="font-mono text-xs text-profit">{price.high?.toFixed(5) || "N/A"}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Low</div>
+                      <div className="text-muted-foreground text-xs mb-2">Low</div>
                       <div className="font-mono text-xs text-loss">{price.low?.toFixed(5) || "N/A"}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-1">Prev Close</div>
+                      <div className="text-muted-foreground text-xs mb-2">Prev Close</div>
                       <div className="font-mono text-xs">{price.previousClose?.toFixed(5) || "N/A"}</div>
                     </div>
                   </div>
 
                   {/* Performance bar */}
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <div className="h-2 bg-secondary rounded-full overflow-hidden">
                       <div
                         className={cn("h-full transition-all", isPositive ? "bg-profit" : "bg-loss")}

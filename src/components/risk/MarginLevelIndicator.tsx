@@ -83,8 +83,8 @@ export const MarginLevelIndicator = () => {
 
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium flex items-center gap-2">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-sm font-medium flex items-center gap-4">
           Margin Level
           {marginLevel < marginCallLevel && (
             <AlertTriangle className="h-4 w-4 text-warning" />

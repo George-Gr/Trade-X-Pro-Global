@@ -169,7 +169,7 @@ const EnhancedPositionsTable: React.FC = () => {
     return (
       <button
         onClick={() => handleSort(sortKey)}
-        className="flex items-center gap-2 hover:text-primary transition-colors"
+        className="flex items-center gap-4 hover:text-primary transition-colors"
         aria-label={`Sort by ${label}, currently ${isActive ? sortConfig.direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
         aria-pressed={isActive}
       >
@@ -191,26 +191,26 @@ const EnhancedPositionsTable: React.FC = () => {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left py-3 px-4 font-semibold">
+            <th className="text-left py-4 px-4 font-semibold">
               <SortHeader label="Symbol" sortKey="symbol" />
             </th>
-            <th className="text-left py-3 px-4 font-semibold">
+            <th className="text-left py-4 px-4 font-semibold">
               <SortHeader label="Side" sortKey="side" />
             </th>
-            <th className="text-right py-3 px-4 font-semibold">
+            <th className="text-right py-4 px-4 font-semibold">
               <SortHeader label="Qty" sortKey="quantity" />
             </th>
-            <th className="text-right py-3 px-4 font-semibold">
+            <th className="text-right py-4 px-4 font-semibold">
               <SortHeader label="Entry" sortKey="entry_price" />
             </th>
-            <th className="text-right py-3 px-4 font-semibold">
+            <th className="text-right py-4 px-4 font-semibold">
               <SortHeader label="Current" sortKey="current_price" />
             </th>
-            <th className="text-right py-3 px-4 font-semibold">
+            <th className="text-right py-4 px-4 font-semibold">
               <SortHeader label="P&L" sortKey="pnl" />
             </th>
-            <th className="text-right py-3 px-4 font-semibold">Margin</th>
-            <th className="text-center py-3 px-4 font-semibold">Actions</th>
+            <th className="text-right py-4 px-4 font-semibold">Margin</th>
+            <th className="text-center py-4 px-4 font-semibold">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -224,8 +224,8 @@ const EnhancedPositionsTable: React.FC = () => {
                   className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
                   onClick={() => setExpandedPositionId(isExpanded ? null : position.id)}
                 >
-                  <td className="py-3 px-4 font-medium">{position.symbol}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-4 px-4 font-medium">{position.symbol}</td>
+                  <td className="py-4 px-4">
                     <Badge
                       variant={position.side === 'long' ? 'default' : 'secondary'}
                       className={position.side === 'long' ? 'bg-buy text-white' : 'bg-sell text-white'}
@@ -233,17 +233,17 @@ const EnhancedPositionsTable: React.FC = () => {
                       {position.side.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="py-3 px-4 text-right font-mono">{position.quantity.toFixed(2)}</td>
-                  <td className="py-3 px-4 text-right font-mono">${position.entry_price.toFixed(5)}</td>
-                  <td className="py-3 px-4 text-right font-mono">${position.current_price.toFixed(5)}</td>
-                  <td className={`py-3 px-4 text-right font-mono font-semibold`}>
+                  <td className="py-4 px-4 text-right font-mono">{position.quantity.toFixed(2)}</td>
+                  <td className="py-4 px-4 text-right font-mono">${position.entry_price.toFixed(5)}</td>
+                  <td className="py-4 px-4 text-right font-mono">${position.current_price.toFixed(5)}</td>
+                  <td className={`py-4 px-4 text-right font-mono font-semibold`}>
                     <div style={{ color: getPnLColor(pnlData?.unrealizedPnL || 0) }}>
                       ${(pnlData?.unrealizedPnL || 0).toFixed(2)} ({(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%)
                     </div>
                   </td>
-                  <td className="py-3 px-4 text-right">${position.margin_used?.toFixed(2) || '0.00'}</td>
-                  <td className="py-3 px-4 text-center">
-                  <div className="flex items-center justify-center gap-2">
+                  <td className="py-4 px-4 text-right">${position.margin_used?.toFixed(2) || '0.00'}</td>
+                  <td className="py-4 px-4 text-center">
+                  <div className="flex items-center justify-center gap-4">
                       <Button
                         size="sm"
                         variant="ghost"
@@ -251,7 +251,7 @@ const EnhancedPositionsTable: React.FC = () => {
                           e.stopPropagation();
                           handleEditPosition(position);
                         }}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-4"
                         aria-label={`Edit stop loss and take profit for ${position.symbol} position`}
                         title="Edit Stop Loss & Take Profit"
                       >
@@ -265,7 +265,7 @@ const EnhancedPositionsTable: React.FC = () => {
                           setSelectedForClose(position.id);
                           setShowConfirmClose(true);
                         }}
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        className="h-8 w-8 p-4 text-destructive hover:text-destructive"
                         disabled={isClosing}
                         aria-label={`Close ${position.symbol} position`}
                         title="Close Position"
@@ -295,7 +295,7 @@ const EnhancedPositionsTable: React.FC = () => {
   );
 
   const renderMobileCards = () => (
-    <div className="md:hidden space-y-3">
+    <div className="md:hidden space-y-4">
       {sortedPositions.map((position) => {
         const pnlData = getPositionPnL(position);
         const isExpanded = expandedPositionId === position.id;
@@ -306,14 +306,14 @@ const EnhancedPositionsTable: React.FC = () => {
             className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
             onClick={() => setExpandedPositionId(isExpanded ? null : position.id)}
           >
-            <div className="space-y-3">
+            <div className="space-y-4">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-lg">{position.symbol}</h3>
                   <Badge
                     variant={position.side === 'long' ? 'default' : 'secondary'}
-                    className={`mt-1 ${position.side === 'long' ? 'bg-buy text-white' : 'bg-sell text-white'}`}
+                    className={`mt-2 ${position.side === 'long' ? 'bg-buy text-white' : 'bg-sell text-white'}`}
                   >
                     {position.side.toUpperCase()}
                   </Badge>
@@ -330,7 +330,7 @@ const EnhancedPositionsTable: React.FC = () => {
               </div>
 
               {/* Prices */}
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">Entry:</span>
                   <div className="font-mono font-semibold">${position.entry_price.toFixed(5)}</div>
@@ -343,13 +343,13 @@ const EnhancedPositionsTable: React.FC = () => {
 
               {/* Expanded Details */}
               {isExpanded && (
-                <div className="border-t border-border pt-3 mt-3">
+                <div className="border-t border-border pt-4 mt-4">
                   <PositionDetails position={position} pnlData={pnlData} />
                 </div>
               )}
 
               {/* Actions */}
-              <div className="flex gap-2 pt-3 border-t border-border">
+              <div className="flex gap-4 pt-4 border-t border-border">
                 <Button
                   size="sm"
                   variant="outline"
@@ -406,7 +406,7 @@ const EnhancedPositionsTable: React.FC = () => {
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <AlertCircle className="h-8 w-8 text-muted-foreground mb-2" />
         <p className="text-muted-foreground">No open positions</p>
-        <p className="text-xs text-muted-foreground mt-1">Place a trade to get started</p>
+        <p className="text-xs text-muted-foreground mt-2">Place a trade to get started</p>
       </div>
     );
   }
@@ -414,11 +414,11 @@ const EnhancedPositionsTable: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Header with Filters */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h3 className="font-semibold text-lg">Open Positions ({sortedPositions.length})</h3>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
           {(['all', 'long', 'short', 'profit', 'loss'] as FilterType[]).map((filter) => (
             <Button
               key={filter}
@@ -457,7 +457,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   type="number"
                   step="0.00001"
                   defaultValue={editingPosition.stop_loss}
-                  className="w-full mt-1 px-3 py-2 border border-border rounded-md bg-background"
+                  className="w-full mt-2 px-4 py-4 border border-border rounded-md bg-background"
                   placeholder="Stop Loss Price"
                 />
               </div>
@@ -467,11 +467,11 @@ const EnhancedPositionsTable: React.FC = () => {
                   type="number"
                   step="0.00001"
                   defaultValue={editingPosition.take_profit}
-                  className="w-full mt-1 px-3 py-2 border border-border rounded-md bg-background"
+                  className="w-full mt-2 px-4 py-4 border border-border rounded-md bg-background"
                   placeholder="Take Profit Price"
                 />
               </div>
-              <div className="flex gap-3 justify-end pt-4">
+              <div className="flex gap-4 justify-end pt-4">
                 <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
                   Cancel
                 </Button>

@@ -109,10 +109,10 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between mb-3">
+      <CardHeader className="pb-4">
+        <div className="flex items-center justify-between mb-4">
           <CardTitle className="text-lg">Watchlists</CardTitle>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <CompareSymbolsDialog symbols={activeSymbols} />
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
@@ -144,7 +144,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
         </div>
 
         <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2 top-4.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search symbols..."
             value={searchQuery}
@@ -154,14 +154,14 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 pb-3 pt-0 overflow-hidden flex flex-col">
+      <CardContent className="flex-1 pb-4 pt-0 overflow-hidden flex flex-col">
         {watchlists.length > 0 && (
           <Tabs
             value={activeWatchlistId || undefined}
             onValueChange={setActiveWatchlistId}
             className="flex-1 flex flex-col overflow-hidden"
           >
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-4 mb-4">
               <ScrollArea className="flex-1">
                 <TabsList className="w-full justify-start">
                   {watchlists.map((list) => (
@@ -172,7 +172,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                           <AlertDialogTrigger asChild>
                             <button
                               onClick={(e) => e.stopPropagation()}
-                              className="ml-1 opacity-0 group-hover:opacity-100 hover:text-destructive"
+                              className="ml-2 opacity-0 group-hover:opacity-100 hover:text-destructive"
                             >
                               <X className="h-3 w-3" />
                             </button>
@@ -220,7 +220,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                     </div>
                     <div className="space-y-2">
                       <Label className="text-xs text-muted-foreground">Popular Symbols</Label>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-4">
                         {POPULAR_SYMBOLS.map((s) => (
                           <Button
                             key={s.symbol}
@@ -246,7 +246,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
             </div>
 
             {watchlists.map((list) => (
-              <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-0">
+              <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
                 <ScrollArea className="h-full pr-4">
                   <div className="space-y-2">
                     {filteredItems.length === 0 ? (
@@ -271,11 +271,11 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                           <div
                             key={item.id}
                             onClick={() => handleSymbolClick(item.symbol)}
-                            className="group relative flex items-center gap-3 p-3 rounded-md bg-secondary/50 hover:bg-secondary transition-colors border border-border/50 hover:border-border cursor-pointer"
+                            className="group relative flex items-center gap-4 p-4 rounded-md bg-secondary/50 hover:bg-secondary transition-colors border border-border/50 hover:border-border cursor-pointer"
                           >
                             {/* Symbol & Name */}
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-4">
                                 <span className="font-semibold text-sm">{item.symbol}</span>
                                 <TrendIcon
                                   className={cn("h-3 w-3", isPositive ? "text-profit" : "text-loss")}
@@ -302,12 +302,12 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                             </div>
 
                             {/* Quick Actions */}
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={(e) => handleQuickTrade(item.symbol, "buy", e)}
-                                className="h-7 px-2 text-xs bg-buy/10 hover:bg-buy/20 text-buy-foreground"
+                                className="h-7 px-4 text-xs bg-buy/10 hover:bg-buy/20 text-buy-foreground"
                               >
                                 Buy
                               </Button>
@@ -315,7 +315,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                                 variant="ghost"
                                 size="sm"
                                 onClick={(e) => handleQuickTrade(item.symbol, "sell", e)}
-                                className="h-7 px-2 text-xs bg-sell/10 hover:bg-sell/20 text-sell-foreground"
+                                className="h-7 px-4 text-xs bg-sell/10 hover:bg-sell/20 text-sell-foreground"
                               >
                                 Sell
                               </Button>
@@ -330,7 +330,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                                   e.stopPropagation();
                                   removeSymbolFromWatchlist(list.id, item.id);
                                 }}
-                                className="hover:bg-destructive/20 rounded p-1"
+                                className="hover:bg-destructive/20 rounded p-4"
                               >
                                 <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                               </button>

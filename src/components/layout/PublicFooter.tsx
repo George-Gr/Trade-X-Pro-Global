@@ -7,30 +7,30 @@ export const PublicFooter = () => {
   return (
     <footer className="bg-muted/30 border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-4 mb-4">
               <TrendingUp className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold">TradeX Pro</span>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
               Professional CFD trading platform with advanced tools and risk management features.
             </p>
-            <div className="flex gap-3">
-              <a href="https://facebook.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
+            <div className="flex gap-4">
+              <a href="https://facebook.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="https://twitter.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on Twitter" target="_blank" rel="noopener noreferrer">
+              <a href="https://twitter.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Twitter" target="_blank" rel="noopener noreferrer">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="https://linkedin.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on LinkedIn" target="_blank" rel="noopener noreferrer">
+              <a href="https://linkedin.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on LinkedIn" target="_blank" rel="noopener noreferrer">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="https://youtube.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Subscribe on YouTube" target="_blank" rel="noopener noreferrer">
+              <a href="https://youtube.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Subscribe on YouTube" target="_blank" rel="noopener noreferrer">
                 <Youtube className="h-5 w-5" />
               </a>
-              <a href="https://instagram.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
+              <a href="https://instagram.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
                 <Instagram className="h-5 w-5" />
               </a>
             </div>

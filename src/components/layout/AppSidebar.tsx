@@ -62,7 +62,7 @@ export function AppSidebar() {
                       isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       className={cn(
-                        "gap-3",
+                        "gap-4",
                         active && "bg-primary/10 text-primary font-medium"
                       )}
                     >

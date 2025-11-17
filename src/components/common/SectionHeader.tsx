@@ -38,7 +38,7 @@ export const SectionHeader = ({
   const descriptionMaxWidth = align === "center" ? "max-w-2xl mx-auto" : "";
 
   return (
-    <div className={`${alignClass} mb-16`}>
+    <div className={`${alignClass} mb-8`}>
       <h2 className={`${titleSize} font-bold mb-4`}>
         {title}
         {subtitle && (

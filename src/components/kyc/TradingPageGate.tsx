@@ -30,7 +30,7 @@ export const TradingPageGate: React.FC<TradingPageGateProps> = ({ children }) =>
   if (kycState.isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           <p className="text-muted-foreground">Checking KYC status...</p>
         </div>

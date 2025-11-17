@@ -223,8 +223,8 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
       {/* Info Cards */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="glass-card">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-4">
               <Shield className="h-4 w-4" />
               Available Balance
             </CardTitle>
@@ -235,15 +235,15 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
         </Card>
 
         <Card className="glass-card">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-4">
               <Clock className="h-4 w-4" />
               Today's Remaining
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold gradient-text">${remainingDailyLimit.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground mt-1">Daily limit: ${WITHDRAWAL_LIMITS.daily}</p>
+            <p className="text-xs text-muted-foreground mt-2">Daily limit: ${WITHDRAWAL_LIMITS.daily}</p>
           </CardContent>
         </Card>
       </div>
@@ -299,7 +299,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
           <div className="space-y-2">
             <Label htmlFor="amount">Amount ({currency})</Label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <DollarSign className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
               <Input
                 id="amount"
                 type="number"
@@ -323,7 +323,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
           {/* Fee Breakdown */}
           {amount && (
             <Card className="bg-muted/50 border-0">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-4">
                 <CardTitle className="text-sm">Fee Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
@@ -335,7 +335,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                   <span className="text-muted-foreground">Network Fee:</span>
                   <span className="font-semibold">{networkFee} {currency}</span>
                 </div>
-                <div className="border-t pt-2 flex justify-between">
+                <div className="border-t pt-4 flex justify-between">
                   <span className="font-semibold">You'll receive:</span>
                   <span className="font-bold text-primary">{(parseFloat(amount) - networkFee).toFixed(8)} {currency}</span>
                 </div>
@@ -373,7 +373,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
           </AlertDialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="bg-muted p-4 rounded-lg space-y-3">
+            <div className="bg-muted p-4 rounded-lg space-y-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Currency:</span>
                 <span className="font-semibold">{currency}</span>
@@ -386,7 +386,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                 <span className="text-muted-foreground">Network Fee:</span>
                 <span className="font-semibold">{networkFee} {currency}</span>
               </div>
-              <div className="border-t pt-3 flex justify-between">
+              <div className="border-t pt-4 flex justify-between">
                 <span className="font-semibold">You'll receive:</span>
                 <span className="font-bold text-primary">{(parseFloat(amount) - networkFee).toFixed(8)} {currency}</span>
               </div>
@@ -412,7 +412,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
             </Alert>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmWithdrawal}

@@ -12,7 +12,7 @@ export default function TradingConditions() {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -30,9 +30,9 @@ export default function TradingConditions() {
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Spreads Section */}
-          <div className="mb-16">
+          <div className="mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <TrendingUp className="h-7 w-7 text-white" />
@@ -80,9 +80,9 @@ export default function TradingConditions() {
           </div>
 
           {/* Leverage Section */}
-          <div className="mb-16">
+          <div className="mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Zap className="h-7 w-7 text-white" />
@@ -93,10 +93,10 @@ export default function TradingConditions() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-xl font-semibold mb-4">Maximum Leverage by Asset</h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {[
                         { asset: "Forex", leverage: "1:500" },
                         { asset: "Indices", leverage: "1:500" },
@@ -104,7 +104,7 @@ export default function TradingConditions() {
                         { asset: "Stocks", leverage: "1:20" },
                         { asset: "Cryptocurrencies", leverage: "1:100" }
                       ].map((item, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                        <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                           <span className="font-medium">{item.asset}</span>
                           <span className="text-primary font-semibold">{item.leverage}</span>
                         </div>
@@ -127,9 +127,9 @@ export default function TradingConditions() {
           </div>
 
           {/* Trading Hours Section */}
-          <div className="mb-16">
+          <div className="mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Clock className="h-7 w-7 text-white" />
@@ -140,7 +140,7 @@ export default function TradingConditions() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   {[
                     {
                       market: "Forex",
@@ -174,9 +174,9 @@ export default function TradingConditions() {
                     }
                   ].map((item, i) => (
                     <Card key={i} className="bg-muted/50 border-border">
-                      <CardContent className="p-4">
+                      <CardContent>
                         <h3 className="font-semibold mb-2">{item.market}</h3>
-                        <p className="text-sm text-primary font-semibold mb-1">{item.hours}</p>
+                        <p className="text-sm text-primary font-semibold mb-2">{item.hours}</p>
                         <p className="text-xs text-muted-foreground">{item.detail}</p>
                       </CardContent>
                     </Card>
@@ -187,9 +187,9 @@ export default function TradingConditions() {
           </div>
 
           {/* Fees Section */}
-          <div className="mb-16">
+          <div className="mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <DollarSign className="h-7 w-7 text-white" />
@@ -200,10 +200,10 @@ export default function TradingConditions() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-xl font-semibold mb-4">What We Charge</h3>
-                    <ul className="space-y-3">
+                    <ul className="space-y-4">
                       {[
                         { item: "Spread on Forex", price: "Included in price" },
                         { item: "Commission on Stocks", price: "From $0.02/share" },
@@ -212,7 +212,7 @@ export default function TradingConditions() {
                         { item: "Deposit Fee", price: "Free" },
                         { item: "Account Fee", price: "Free" }
                       ].map((fee, i) => (
-                        <li key={i} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                        <li key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                           <span className="text-muted-foreground">{fee.item}</span>
                           <span className="font-semibold text-sm">{fee.price}</span>
                         </li>
@@ -222,7 +222,7 @@ export default function TradingConditions() {
 
                   <div>
                     <h3 className="text-xl font-semibold mb-4">What We Don't Charge</h3>
-                    <ul className="space-y-3">
+                    <ul className="space-y-4">
                       {[
                         "Account maintenance fees",
                         "Inactivity fees",
@@ -231,8 +231,8 @@ export default function TradingConditions() {
                         "Data feed charges",
                         "Educational materials"
                       ].map((item, i) => (
-                        <li key={i} className="flex items-start gap-3 p-3 bg-accent/10 rounded-lg">
-                          <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                        <li key={i} className="flex items-start gap-4 p-4 bg-accent/10 rounded-lg">
+                          <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                           <span className="text-muted-foreground">{item}</span>
                         </li>
                       ))}
@@ -246,7 +246,7 @@ export default function TradingConditions() {
           {/* CTA Section */}
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Start Trading with Professional Conditions</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access competitive spreads, flexible leverage, and transparent pricing

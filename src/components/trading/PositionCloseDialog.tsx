@@ -23,10 +23,10 @@ export const PositionCloseDialog: React.FC<{ position: Position; onClose: () => 
           value={quantity ?? ''}
           onChange={(e) => setQuantity(e.target.value ? Number(e.target.value) : undefined)}
           type="number"
-          className="border rounded w-full p-2 my-2"
+          className="border rounded w-full p-4 my-2"
           placeholder={`${position.quantity}`}
         />
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-4">
           <button className="btn" onClick={onClose} disabled={loading}>Cancel</button>
           <button className="btn btn-primary" onClick={submit} disabled={loading}>{loading ? 'Closing...' : 'Confirm Close'}</button>
         </div>

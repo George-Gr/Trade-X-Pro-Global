@@ -174,7 +174,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
 
           <div className="space-y-2">
             <Label htmlFor="document-file">Document File</Label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Input
                 id="document-file"
                 type="file"
@@ -183,7 +183,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
                 className="cursor-pointer"
               />
               {selectedFile && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <FileText className="h-4 w-4" />
                   <span className="truncate max-w-[200px]">{selectedFile.name}</span>
                 </div>

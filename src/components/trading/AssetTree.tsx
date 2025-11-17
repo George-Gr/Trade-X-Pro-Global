@@ -79,7 +79,7 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
     <div className="h-full bg-card">
       <div className="p-4 border-b border-border">
         <h2 className="font-semibold">Asset Navigator</h2>
-        <p className="text-xs text-muted-foreground mt-1">5 asset classes</p>
+        <p className="text-xs text-muted-foreground mt-2">5 asset classes</p>
       </div>
       <div className="overflow-auto">
         {categories.map((category) => {
@@ -88,7 +88,7 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
             <div key={category.name} className="border-b border-border">
               <button
                 onClick={() => toggleCategory(category.name)}
-                className="w-full flex items-center gap-2 p-3 hover:bg-secondary/50 transition-colors"
+                className="w-full flex items-center gap-4 p-4 hover:bg-secondary/50 transition-colors"
               >
                 {isExpanded ? (
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -106,7 +106,7 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
                     <button
                       key={asset.symbol}
                       onClick={() => onSelectSymbol(asset.symbol)}
-                      className={`w-full flex items-center justify-between px-6 py-2 hover:bg-secondary/50 transition-colors text-left ${
+                      className={`w-full flex items-center justify-between px-6 py-4 hover:bg-secondary/50 transition-colors text-left ${
                         selectedSymbol === asset.symbol ? "bg-primary/10 border-l-2 border-l-primary" : ""
                       }`}
                     >

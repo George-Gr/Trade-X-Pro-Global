@@ -77,30 +77,30 @@ export const RecentPnLChart: React.FC = () => {
         </div>
 
         {/* Statistics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-          <div className="p-2 bg-secondary/50 rounded">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Total P&L</p>
             <p className={`font-semibold ${stats.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
               ${stats.totalPnL.toLocaleString()}
             </p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Win Rate</p>
             <p className="font-semibold">{stats.winRate.toFixed(1)}%</p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Max Profit</p>
             <p className="font-semibold text-profit">${stats.maxProfit.toLocaleString()}</p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Profit Days</p>
             <p className="font-semibold">{stats.profitDays}</p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Loss Days</p>
             <p className="font-semibold">{stats.lossDays}</p>
           </div>
-          <div className="p-2 bg-secondary/50 rounded">
+          <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Max Loss</p>
             <p className="font-semibold text-loss">${stats.maxLoss.toLocaleString()}</p>
           </div>

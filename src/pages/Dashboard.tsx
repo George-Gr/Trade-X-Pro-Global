@@ -64,7 +64,7 @@ const Dashboard = () => {
               const Icon = stat.icon;
               return (
                 <Card key={stat.title}>
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardHeader className="flex flex-row items-center justify-between pb-4">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {stat.title}
                     </CardTitle>
@@ -72,7 +72,7 @@ const Dashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-2">
                       {stat.change}
                     </p>
                   </CardContent>
@@ -95,11 +95,11 @@ const Dashboard = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="flex gap-4">
-              <Button onClick={() => navigate("/trade")} className="gap-2">
+              <Button onClick={() => navigate("/trade")} className="gap-4">
                 <TrendingUp className="h-4 w-4" />
                 Start Trading
               </Button>
-              <Button variant="outline" onClick={() => navigate("/portfolio")} className="gap-2">
+              <Button variant="outline" onClick={() => navigate("/portfolio")} className="gap-4">
                 <Activity className="h-4 w-4" />
                 View Portfolio
               </Button>

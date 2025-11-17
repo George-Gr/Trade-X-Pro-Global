@@ -11,7 +11,7 @@ export default function Regulation() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,16 +28,16 @@ export default function Regulation() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Shield className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Regulatory Status</h2>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
                     "Fully licensed and regulated",
                     "Compliant with international standards",
@@ -47,8 +47,8 @@ export default function Regulation() {
                     "Data protection compliant",
                     "Financial reporting transparent"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-4">
+                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -57,7 +57,7 @@ export default function Regulation() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-6">Licenses & Certifications</h2>
                 <div className="space-y-4">
                   {[
@@ -67,7 +67,7 @@ export default function Regulation() {
                     { license: "ISO 27001 Certified", country: "Information Security" }
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
-                      <p className="font-semibold mb-1">{item.license}</p>
+                      <p className="font-semibold mb-2">{item.license}</p>
                       <p className="text-xs text-muted-foreground">{item.country}</p>
                     </div>
                   ))}
@@ -76,10 +76,10 @@ export default function Regulation() {
             </Card>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Compliance Commitments</h2>
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-xl font-semibold mb-4">Anti-Money Laundering (AML)</h3>
                   <p className="text-muted-foreground mb-4">
@@ -109,10 +109,10 @@ export default function Regulation() {
             </CardContent>
           </Card>
 
-          <Card className="mb-16 p-6 bg-warning/10 border border-warning/20">
-            <CardContent className="p-8">
+          <Card className="mb-8 p-6 bg-warning/10 border border-warning/20">
+            <CardContent>
               <div className="flex items-start gap-4">
-                <AlertCircle className="h-8 w-8 text-warning flex-shrink-0 mt-0.5" />
+                <AlertCircle className="h-8 w-8 text-warning flex-shrink-0 mt-2.5" />
                 <div>
                   <h3 className="text-lg font-semibold mb-2 text-warning">Important Notice</h3>
                   <p className="text-sm text-muted-foreground mb-4">
@@ -128,7 +128,7 @@ export default function Regulation() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Learn More About Our Compliance</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   For detailed compliance information, contact our legal team

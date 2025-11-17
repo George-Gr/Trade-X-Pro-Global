@@ -129,7 +129,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
                 <SelectContent>
                   {SUPPORTED_CRYPTOS.map((crypto) => (
                     <SelectItem key={crypto.value} value={crypto.value}>
-                      <span className="flex items-center gap-2">
+                      <span className="flex items-center gap-4">
                         <span className="text-lg">{crypto.icon}</span>
                         {crypto.label}
                       </span>
@@ -165,7 +165,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
 
             <div className="space-y-2">
               <Label>Payment Address</Label>
-              <div className="flex gap-2">
+              <div className="flex gap-4">
                 <Input
                   value={paymentData.payment_address}
                   readOnly

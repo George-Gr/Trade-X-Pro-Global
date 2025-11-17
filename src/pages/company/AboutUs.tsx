@@ -11,7 +11,7 @@ export default function AboutUs() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,9 +28,9 @@ export default function AboutUs() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Globe className="h-7 w-7 text-white" />
@@ -47,7 +47,7 @@ export default function AboutUs() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <TrendingUp className="h-7 w-7 text-white" />
@@ -64,7 +64,7 @@ export default function AboutUs() {
             </Card>
           </div>
 
-          <div className="mb-16">
+          <div className="mb-8">
             <h2 className="text-3xl font-bold mb-8 text-center">Why Choose TradeX Pro?</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -85,11 +85,11 @@ export default function AboutUs() {
                 }
               ].map((item, i) => (
                 <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
-                  <CardContent className="p-8">
+                  <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                       <item.icon className="h-7 w-7 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                    <h3 className="text-xl font-bold mb-4">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
                   </CardContent>
                 </Card>
@@ -97,8 +97,8 @@ export default function AboutUs() {
             </div>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Company Facts</h2>
               <div className="grid md:grid-cols-4 gap-6">
                 {[
@@ -116,8 +116,8 @@ export default function AboutUs() {
             </CardContent>
           </Card>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Our Core Values</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {[
@@ -129,9 +129,9 @@ export default function AboutUs() {
                   { value: "Community", description: "Supporting traders and building relationships" }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4 p-6 bg-muted/50 rounded-lg">
-                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-2" />
                     <div>
-                      <h3 className="font-bold text-lg mb-1">{item.value}</h3>
+                      <h3 className="font-bold text-lg mb-2">{item.value}</h3>
                       <p className="text-sm text-muted-foreground">{item.description}</p>
                     </div>
                   </div>
@@ -142,7 +142,7 @@ export default function AboutUs() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Start your trading journey with TradeX Pro today

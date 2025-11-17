@@ -12,7 +12,7 @@ export default function TradingTools() {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -29,7 +29,7 @@ export default function TradingTools() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             {[
               {
                 icon: BarChart3,
@@ -111,7 +111,7 @@ export default function TradingTools() {
               }
             ].map((tool, index) => (
               <Card key={index} className="hover:shadow-lg transition-all hover:-translate-y-1">
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <tool.icon className="h-8 w-8 text-white" />
                   </div>
@@ -120,8 +120,8 @@ export default function TradingTools() {
                   
                   <ul className="space-y-2">
                     {tool.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-4">
+                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                         <span className="text-sm text-muted-foreground">{feature}</span>
                       </li>
                     ))}
@@ -132,15 +132,15 @@ export default function TradingTools() {
           </div>
 
           {/* Tools Details Section */}
-          <div className="space-y-12 mb-16">
+          <div className="space-y-6 mb-8">
             {/* Technical Analysis */}
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-6">Technical Analysis Tools</h2>
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-xl font-semibold mb-4">Available Indicators</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                       {[
                         "Moving Averages",
                         "RSI",
@@ -155,7 +155,7 @@ export default function TradingTools() {
                         "Pivot Points",
                         "Volume Profile"
                       ].map((indicator, i) => (
-                        <div key={i} className="flex items-center gap-2 p-2 bg-muted/50 rounded">
+                        <div key={i} className="flex items-center gap-4 p-4 bg-muted/50 rounded">
                           <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0" />
                           <span className="text-sm">{indicator}</span>
                         </div>
@@ -164,13 +164,13 @@ export default function TradingTools() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-4">Chart Timeframes</h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {[
                         { tf: "1M, 5M, 15M, 30M", type: "Scalping" },
                         { tf: "1H, 4H", type: "Day Trading" },
                         { tf: "1D, 1W, 1M", type: "Swing Trading" }
                       ].map((item, i) => (
-                        <div key={i} className="p-3 bg-muted/50 rounded">
+                        <div key={i} className="p-4 bg-muted/50 rounded">
                           <p className="text-sm font-semibold">{item.type}</p>
                           <p className="text-xs text-muted-foreground">{item.tf}</p>
                         </div>
@@ -183,7 +183,7 @@ export default function TradingTools() {
 
             {/* Trading Signals */}
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-6">AI-Powered Trading Signals</h2>
                 <div className="grid md:grid-cols-3 gap-6">
                   {[
@@ -214,8 +214,8 @@ export default function TradingTools() {
                     }
                   ].map((signal, i) => (
                     <Card key={i} className="bg-muted/50 border-border">
-                      <CardContent className="p-4">
-                        <p className="font-semibold text-lg mb-1">{signal.level}</p>
+                      <CardContent>
+                        <p className="font-semibold text-lg mb-2">{signal.level}</p>
                         <p className="text-sm text-primary font-bold mb-2">Strength: {signal.strength}</p>
                         <p className="text-xs text-muted-foreground">{signal.description}</p>
                       </CardContent>
@@ -227,15 +227,15 @@ export default function TradingTools() {
 
             {/* Calculators */}
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <h2 className="text-3xl font-bold mb-6">Essential Calculators</h2>
                 <p className="text-muted-foreground mb-6">
                   All our calculators are integrated into the trading platform and are accessible with one click.
                 </p>
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Position Size Calculator</h3>
-                    <div className="space-y-3 p-4 bg-muted/50 rounded">
+                    <div className="space-y-4 p-4 bg-muted/50 rounded">
                       <div className="flex justify-between text-sm">
                         <span>Account Balance</span>
                         <span>$10,000</span>
@@ -248,7 +248,7 @@ export default function TradingTools() {
                         <span>Stop Loss Pips</span>
                         <span>50</span>
                       </div>
-                      <div className="border-t border-border pt-3 flex justify-between font-semibold">
+                      <div className="border-t border-border pt-4 flex justify-between font-semibold">
                         <span>Position Size</span>
                         <span className="text-primary">40 lots</span>
                       </div>
@@ -257,7 +257,7 @@ export default function TradingTools() {
 
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Pip Value Calculator</h3>
-                    <div className="space-y-3 p-4 bg-muted/50 rounded">
+                    <div className="space-y-4 p-4 bg-muted/50 rounded">
                       <div className="flex justify-between text-sm">
                         <span>Currency Pair</span>
                         <span>EUR/USD</span>
@@ -270,7 +270,7 @@ export default function TradingTools() {
                         <span>Account Currency</span>
                         <span>USD</span>
                       </div>
-                      <div className="border-t border-border pt-3 flex justify-between font-semibold">
+                      <div className="border-t border-border pt-4 flex justify-between font-semibold">
                         <span>Pip Value</span>
                         <span className="text-primary">$10</span>
                       </div>
@@ -284,7 +284,7 @@ export default function TradingTools() {
           {/* CTA Section */}
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Supercharge Your Trading</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access all these powerful tools immediately upon account opening

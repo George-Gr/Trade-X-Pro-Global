@@ -92,16 +92,16 @@ export const OrderPreview = ({
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-sm">Order Preview</h3>
         {!hasRiskManagement && (
-          <div className="flex items-center gap-1 text-xs text-amber-500">
+          <div className="flex items-center gap-4 text-xs text-amber-500">
             <AlertCircle className="h-3 w-3" />
             <span>No TP/SL set</span>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 text-xs">
+      <div className="grid grid-cols-2 gap-4 text-xs">
         {/* Entry Price */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <p className="text-muted-foreground">Entry Price</p>
           <p className="font-mono font-semibold">{executionPrice.toFixed(5)}</p>
           {formData.type === 'market' && (
@@ -112,7 +112,7 @@ export const OrderPreview = ({
         </div>
 
         {/* Position Value */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <p className="text-muted-foreground">Position Value</p>
           <p className="font-mono font-semibold">${positionValue.toFixed(2)}</p>
           <p className="text-muted-foreground text-xs">
@@ -121,7 +121,7 @@ export const OrderPreview = ({
         </div>
 
         {/* Commission */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <p className="text-muted-foreground">Commission</p>
           <p className="font-mono font-semibold text-loss">${commissionAmount.toFixed(2)}</p>
           <p className="text-muted-foreground text-xs">
@@ -130,7 +130,7 @@ export const OrderPreview = ({
         </div>
 
         {/* Margin Required */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <p className="text-muted-foreground">Margin Required</p>
           <p className="font-mono font-semibold">${marginRequired.toFixed(2)}</p>
         </div>
@@ -138,12 +138,12 @@ export const OrderPreview = ({
 
       {/* Risk/Reward if TP and SL are set */}
       {tpPnL !== null && slPnL !== null && (
-        <div className="border-t border-border pt-3 space-y-2">
-          <div className="grid grid-cols-2 gap-3 text-xs">
+        <div className="border-t border-border pt-4 space-y-2">
+          <div className="grid grid-cols-2 gap-4 text-xs">
             {/* Take Profit P&L */}
-            <div className="space-y-1 bg-profit/5 rounded p-2">
+            <div className="space-y-2 bg-profit/5 rounded p-4">
               <p className="text-muted-foreground">At Take Profit</p>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-4">
                 <TrendingUp className="h-3 w-3 text-profit" />
                 <p className="font-mono font-semibold text-profit">
                   +${tpPnL.toFixed(2)}
@@ -155,9 +155,9 @@ export const OrderPreview = ({
             </div>
 
             {/* Stop Loss P&L */}
-            <div className="space-y-1 bg-loss/5 rounded p-2">
+            <div className="space-y-2 bg-loss/5 rounded p-4">
               <p className="text-muted-foreground">At Stop Loss</p>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-4">
                 <TrendingDown className="h-3 w-3 text-loss" />
                 <p className="font-mono font-semibold text-loss">
                   ${slPnL.toFixed(2)}
@@ -171,7 +171,7 @@ export const OrderPreview = ({
 
           {/* Risk/Reward Ratio */}
           {riskRewardRatio && (
-            <div className="bg-card border border-border rounded p-2">
+            <div className="bg-card border border-border rounded p-4">
               <div className="flex items-center justify-between text-xs">
                 <p className="text-muted-foreground">Risk/Reward Ratio</p>
                 <p className={`font-mono font-semibold ${
@@ -181,7 +181,7 @@ export const OrderPreview = ({
                 </p>
               </div>
               {riskRewardRatio < 1 && (
-                <p className="text-muted-foreground text-xs mt-1">
+                <p className="text-muted-foreground text-xs mt-2">
                   ⚠️ Risk exceeds reward
                 </p>
               )}
@@ -191,13 +191,13 @@ export const OrderPreview = ({
       )}
 
       {/* Order Type Info */}
-      <div className="border-t border-border pt-3 text-xs">
+      <div className="border-t border-border pt-4 text-xs">
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground">Order Type</p>
           <p className="font-semibold capitalize">{formatOrderType(formData.type)}</p>
         </div>
         {formData.type !== 'market' && (
-          <div className="mt-2 p-2 bg-card rounded text-muted-foreground text-xs">
+          <div className="mt-2 p-4 bg-card rounded text-muted-foreground text-xs">
             <p>
               {getOrderTypeDescription(
                 formData.type,

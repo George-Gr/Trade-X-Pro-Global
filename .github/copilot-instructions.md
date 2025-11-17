@@ -3,13 +3,14 @@
 ## Project Overview
 
 **TradePro v10** is a broker-independent CFD trading platform with paper trading, social copy trading, and educational features. The stack is:
-- **Frontend**: React 18 + TypeScript + Vite
-- **UI**: shadcn-ui (Radix UI + Tailwind CSS)
+- **Frontend**: React 18 + TypeScript + Vite (loose type-checking for incremental adoption)
+- **UI**: shadcn-ui (Radix UI + Tailwind CSS v4)
 - **Backend/Database**: Supabase (PostgreSQL, Auth, Realtime, Edge Functions)
-- **State Management**: React Context + React Query
-- **Routing**: React Router v6
+- **State Management**: React Context + React Query + React Router v6
 - **Charts**: TradingView Lightweight Charts + Recharts
 - **Forms**: React Hook Form + Zod validation
+- **Error Tracking**: Sentry (optional, dev-controlled via `VITE_SENTRY_DSN`)
+- **Build**: Vite with SWC transpilation and bundle analysis support
 
 ## Architecture Patterns
 
@@ -34,11 +35,15 @@ src/
 
 ### Data Flow & State Management
 
-1. **Global Auth State**: `useAuth()` hook manages user session and admin role via Supabase Auth
-2. **Notifications**: `NotificationContext` provides unread count and toast notifications via Supabase Realtime
-3. **Real-time Data**: Custom hooks (`usePriceStream`, `useRealtimePositions`) subscribe to Supabase changes
-4. **API Queries**: React Query handles fetching and caching via `QueryClient` (initialized in `App.tsx`)
-5. **Local Component State**: Use `useState` for UI-only state; avoid redundant global state
+1. **Global Auth State**: `useAuth()` from `@/hooks/useAuth` manages user session and admin role via Supabase Auth
+2. **Notifications**: `useNotifications()` from `@/contexts/notificationContextHelpers` provides unread count; wrapped by `NotificationProvider` at root level
+   - Subscribes to `notifications` table via Supabase Realtime
+   - Also listens to order/position events and translates them into toasts
+3. **Real-time Data**: Custom hooks subscribe to Supabase via `.channel().on()` pattern
+   - Examples: `usePriceStream`, `useRealtimePositions`, `usePendingOrders`
+   - All subscriptions must unsubscribe in cleanup to prevent memory leaks
+4. **API Queries**: React Query (`@tanstack/react-query`) handles fetching and caching via `QueryClient` (initialized in `App.tsx`)
+5. **Local Component State**: Use `useState` for UI-only state; extract to hooks if needed by multiple components
 
 ### Key Integration Points
 
@@ -46,9 +51,12 @@ src/
 |--------|---------|------------|
 | Supabase Client | Database, Auth, Realtime | `@/integrations/supabase/client` |
 | Supabase Types | Auto-generated DB schema | `@/integrations/supabase/types` |
-| Notifications | Global toast messages | `useToast()` from `@/hooks/use-toast` |
+| Auth Hook | User session and admin role | `@/hooks/useAuth` |
+| Notifications | Global toast + unread count | `useNotifications()` from `@/contexts/notificationContextHelpers` |
+| Toast Notifications | User-facing alerts | `useToast()` from `@/hooks/use-toast` |
 | Forms | React Hook Form + Zod | `react-hook-form` + `zod` |
 | UI Components | shadcn-ui primitives | `@/components/ui/*` |
+| Error Logging | Sentry integration | `@/lib/logger` (call `initializeSentry()` in App.tsx) |
 
 ## Developer Workflows
 
@@ -67,8 +75,8 @@ npm run supabase:functions:deploy  # Deploy Edge Functions
 
 ### Development Setup
 
-1. **Environment Variables**: 
-   - **Required** (app won't load without these):
+1. **Environment Variables** (CRITICAL - app will not load without these):
+   - **Required**:
      - `VITE_SUPABASE_URL` — Supabase project URL
      - `VITE_SUPABASE_PUBLISHABLE_KEY` — Supabase anon/public key
    - **Optional** (for specific features):
@@ -109,9 +117,11 @@ describe('KycService', () => {
 ### TypeScript & Typing
 
 - **Path alias**: Use `@/` prefix (e.g., `@/components/ui/button`)
-- **Strict typing**: Optional via `tsconfig.json` (currently loose for incremental adoption)
-- **No explicit `any`**: Use `unknown` then narrow; ESLint warns on `@typescript-eslint/no-explicit-any`
+- **Strict typing**: Intentionally loose for incremental adoption (`noImplicitAny: false`, `strictNullChecks: false` in `tsconfig.json`)
+  - Use `unknown` then narrow when dealing with uncertain types
+  - ESLint warns on `@typescript-eslint/no-explicit-any` but doesn't block it
 - **Database types**: Import auto-generated types from `@/integrations/supabase/types`
+  - Never manually edit Supabase type files; regenerate after schema changes with `npm run supabase:pull`
 
 ### React Components
 
@@ -198,6 +208,7 @@ All trading logic is documented with references to PRD sections and includes com
 - **Type safety**: Import DB types: `import type { Database } from '@/integrations/supabase/types'`
 - **Row-level security**: Policies enforce user isolation; queries auto-filter by auth user
 - **Realtime**: Enable via `.on()` subscription; remember to unsubscribe in cleanup
+- **Realtime pattern**: Use minimal type definitions for Realtime payloads (optional fields to handle partial data)
 
 Example:
 ```typescript
@@ -210,7 +221,7 @@ const { data: orders } = await supabase
   .eq("user_id", user.id)
   .order("created_at", { ascending: false });
 
-// Realtime subscription
+// Realtime subscription with cleanup
 const subscription = supabase
   .channel("positions")
   .on("postgres_changes", { event: "*", schema: "public", table: "positions" }, (payload) => {
@@ -218,14 +229,17 @@ const subscription = supabase
   })
   .subscribe();
 
-// Cleanup
+// CRITICAL: Cleanup subscription
 return () => subscription.unsubscribe();
 ```
 
 ### Error Handling
 
-- **Async operations**: Wrap in try-catch; log errors via `console.error()`
-- **Toast notifications**: Use `useToast()` for user-facing errors
+- **Error Boundaries**: App-level boundary in `src/components/ErrorBoundary.tsx` catches render errors
+  - Also `ErrorContextProvider` for error state management across routes
+  - All page routes already wrapped; add custom boundaries for complex feature areas
+- **Async operations**: Wrap in try-catch; log errors via `console.error()` or Sentry via `logger.error()`
+- **Toast notifications**: Use `useToast()` for user-facing errors (e.g., failed order submission)
 - **API errors**: Supabase returns `{ data, error }` tuple; check `error` before using `data`
 - **Network fallback**: Optional fields in types to handle partial data
 
@@ -302,11 +316,19 @@ export const usePriceStream = (symbols: string[]) => {
 1. **Multiple React instances**: Vite config dedups React via `resolve.dedupe` — don't install React separately in subdependencies
 2. **Stale auth state**: Always use `useAuth()` hook; don't cache `user` outside React context
 3. **Forgetting RLS policies**: Supabase policies filter all queries; ensure policies exist for new tables
-4. **Unsubscribed Realtime**: Always unsubscribe from Supabase channels in cleanup
+4. **Unsubscribed Realtime**: Always unsubscribe from Supabase channels in cleanup to prevent memory leaks:
+   ```typescript
+   useEffect(() => {
+     const subscription = supabase.channel("positions").on(...).subscribe();
+     return () => subscription.unsubscribe(); // CRITICAL
+   }, []);
+   ```
 5. **Hardcoded values**: Use environment variables or config constants
 6. **Prop drilling**: Extract to Context/hook if passing through 3+ levels
 7. **Missing error boundaries**: Wrap page routes with error handling
 8. **Race conditions in async state**: Use refs to track component mount status in cleanup
+9. **Incorrectly importing Supabase**: Use `@/integrations/supabase/client` (NOT `@/lib/supabaseClient`)
+10. **Manually editing Supabase types**: Auto-generated types in `@/integrations/supabase/types.ts` must be regenerated via `npm run supabase:pull`
 
 ## Debugging Tips
 

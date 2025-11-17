@@ -22,7 +22,7 @@ export default function RiskDisclosure() {
           </Alert>
           
           <Card>
-              <CardContent className="p-8 space-y-6 prose prose-invert">
+              <CardContent className=" space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. General Risk Warning</h2>
                   <p className="text-foreground/90 leading-relaxed">

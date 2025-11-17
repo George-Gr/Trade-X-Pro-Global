@@ -136,7 +136,7 @@ export default function RiskManagement() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
                 <CardTitle className="text-sm font-medium">Margin Level</CardTitle>
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -146,7 +146,7 @@ export default function RiskManagement() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
                 <CardTitle className="text-sm font-medium">Daily P&L</CardTitle>
                 <TrendingDown className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -159,7 +159,7 @@ export default function RiskManagement() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
                 <CardTitle className="text-sm font-medium">Max Positions</CardTitle>
                 <Lock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -172,7 +172,7 @@ export default function RiskManagement() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
                 <CardTitle className="text-sm font-medium">Stop Loss</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>

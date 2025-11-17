@@ -119,11 +119,11 @@ export const OrderDetailDialog = ({
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className={`text-2xl font-bold ${sideTextColor}`}>{order.symbol}</h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-gray-600 mt-2">
                   Order ID: {order.id}
                   <button
                     onClick={copyOrderId}
-                    className="ml-2 inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
+                    className="ml-2 inline-flex items-center gap-4 text-xs text-blue-600 hover:text-blue-800"
                   >
                     <Copy className="w-3 h-3" />
                     Copy
@@ -172,7 +172,7 @@ export const OrderDetailDialog = ({
             <div className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <h4 className="font-semibold text-gray-900 mb-4">Order Quantities</h4>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Total Quantity</span>
                     <span className="font-medium text-gray-900">{order.quantity}</span>
@@ -198,7 +198,7 @@ export const OrderDetailDialog = ({
 
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <h4 className="font-semibold text-gray-900 mb-4">Price Levels</h4>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {order.type === 'market' && (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Market Order</span>
@@ -224,7 +224,7 @@ export const OrderDetailDialog = ({
                     </div>
                   )}
                   {order.average_fill_price && (
-                    <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                    <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                       <span className="text-gray-600 font-medium">Average Fill Price</span>
                       <span className="font-bold text-gray-900">{order.average_fill_price.toFixed(4)}</span>
                     </div>
@@ -237,7 +237,7 @@ export const OrderDetailDialog = ({
             <div className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <h4 className="font-semibold text-gray-900 mb-4">Execution Costs</h4>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Total Cost</span>
                     <span className="font-medium text-gray-900">${stats.totalCost.toFixed(2)}</span>
@@ -254,7 +254,7 @@ export const OrderDetailDialog = ({
                       <span className="font-medium text-gray-900">{order.slippage.toFixed(2)}%</span>
                     </div>
                   )}
-                  <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                  <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                     <span className="text-gray-600 font-medium">Net Cost</span>
                     <span className="font-bold text-gray-900">${stats.netCost.toFixed(2)}</span>
                   </div>
@@ -263,7 +263,7 @@ export const OrderDetailDialog = ({
 
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <h4 className="font-semibold text-gray-900 mb-4">Timestamps</h4>
-                <div className="space-y-3 text-sm">
+                <div className="space-y-4 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Created</span>
                     <span className="font-medium text-gray-900">
@@ -283,7 +283,7 @@ export const OrderDetailDialog = ({
 
           {/* Actions */}
           {(canModify || canCancel) && (
-            <div className="flex gap-2 justify-end pt-4 border-t border-gray-200">
+            <div className="flex gap-4 justify-end pt-4 border-t border-gray-200">
               {canModify && onModify && (
                 <Button onClick={() => onModify(order)} variant="default">
                   Modify Order

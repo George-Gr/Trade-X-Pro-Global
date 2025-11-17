@@ -12,7 +12,7 @@ export default function TradingPlatforms() {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -29,7 +29,7 @@ export default function TradingPlatforms() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             {[
               {
                 icon: Monitor,
@@ -72,17 +72,17 @@ export default function TradingPlatforms() {
               }
             ].map((platform, index) => (
               <Card key={index} className="hover:shadow-lg transition-all hover:-translate-y-1">
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <platform.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold mb-2">{platform.title}</h3>
                   <p className="text-muted-foreground mb-6">{platform.description}</p>
                   
-                  <ul className="space-y-3 mb-8">
+                  <ul className="space-y-4 mb-8">
                     {platform.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-4">
+                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                         <span className="text-sm text-muted-foreground">{feature}</span>
                       </li>
                     ))}
@@ -97,8 +97,8 @@ export default function TradingPlatforms() {
           </div>
 
           {/* Platform Comparison */}
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Platform Comparison</h2>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
@@ -155,7 +155,7 @@ export default function TradingPlatforms() {
           {/* CTA Section */}
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Start Trading Today</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Choose your platform and begin trading with professional tools

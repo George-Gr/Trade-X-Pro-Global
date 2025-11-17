@@ -176,8 +176,8 @@ export const OrderForm = ({
     <div className="space-y-4">
       {/* Error Display */}
       {(error || validationError) && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3 flex gap-2">
-          <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex gap-4">
+          <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-2.5" />
           <div>
             <p className="text-sm font-medium text-destructive">
               {error || validationError}
@@ -213,11 +213,11 @@ export const OrderForm = ({
         <Label className="text-sm font-semibold">
           Leverage (Fixed by Broker)
         </Label>
-        <div className="bg-muted/50 border border-border rounded-md p-3 flex items-center justify-between">
+        <div className="bg-muted/50 border border-border rounded-md p-4 flex items-center justify-between">
           <span className="font-mono font-semibold text-foreground">
             1:{assetLeverage.toFixed(0)}
           </span>
-          <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+          <span className="text-xs bg-primary/10 text-primary px-4 py-4 rounded">
             Fixed
           </span>
         </div>
@@ -289,7 +289,7 @@ export const OrderForm = ({
       )}
 
       {/* Take Profit & Stop Loss */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="takeProfit" className="text-sm font-semibold">
             Take Profit (Optional)
@@ -346,7 +346,7 @@ export const OrderForm = ({
       </div>
 
       {/* Buy/Sell Buttons */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-4">
         <Button
           onClick={() => handleSubmit('buy')}
           disabled={isLoading}

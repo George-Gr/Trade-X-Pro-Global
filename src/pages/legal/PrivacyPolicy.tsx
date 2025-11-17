@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
           <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
           
           <Card>
-              <CardContent className="p-8 space-y-6 prose prose-invert">
+              <CardContent className=" space-y-6 prose prose-invert">
               <section>
                 <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
                   <p className="text-foreground/90 leading-relaxed">

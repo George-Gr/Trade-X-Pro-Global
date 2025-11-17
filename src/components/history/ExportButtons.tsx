@@ -132,7 +132,7 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-4">
       <Button variant="outline" onClick={() => exportToCSV(trades, "trades_history")}>
         <Download className="h-4 w-4 mr-2" />
         Export Trades CSV

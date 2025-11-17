@@ -42,7 +42,7 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
 
       <div role="table" className="w-full">
         <div role="rowgroup">
-          <div role="row" className="grid grid-cols-7 gap-2 font-semibold text-sm mb-2">
+          <div role="row" className="grid grid-cols-7 gap-4 font-semibold text-sm mb-2">
             <div />
             <div>Symbol</div>
             <div>Side</div>

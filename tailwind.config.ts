@@ -17,6 +17,15 @@ const config: Config = {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
+      spacing: {
+        // Standard spacing scale (4px baseline)
+        'xs': '4px',   // Use for minimal gaps
+        'sm': '8px',   // Use for component gaps
+        'md': '16px',  // Use for section gaps
+        'lg': '24px',  // Use for major sections
+        'xl': '32px',  // Use for page padding
+        'xxl': '48px', // Use for hero sections
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

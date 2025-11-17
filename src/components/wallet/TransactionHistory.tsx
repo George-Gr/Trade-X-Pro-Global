@@ -47,27 +47,27 @@ export function TransactionHistory({ transactions, isLoading }: TransactionHisto
       pending: { 
         label: "Pending", 
         variant: "secondary",
-        icon: <Clock className="h-3 w-3 mr-1" />
+        icon: <Clock className="h-3 w-3 mr-2" />
       },
       confirming: { 
         label: "Confirming", 
         variant: "default",
-        icon: <AlertCircle className="h-3 w-3 mr-1" />
+        icon: <AlertCircle className="h-3 w-3 mr-2" />
       },
       completed: { 
         label: "Completed", 
         variant: "default",
-        icon: <CheckCircle2 className="h-3 w-3 mr-1" />
+        icon: <CheckCircle2 className="h-3 w-3 mr-2" />
       },
       failed: { 
         label: "Failed", 
         variant: "destructive",
-        icon: <XCircle className="h-3 w-3 mr-1" />
+        icon: <XCircle className="h-3 w-3 mr-2" />
       },
       expired: { 
         label: "Expired", 
         variant: "outline",
-        icon: <XCircle className="h-3 w-3 mr-1" />
+        icon: <XCircle className="h-3 w-3 mr-2" />
       },
     };
 
@@ -98,7 +98,7 @@ export function TransactionHistory({ transactions, isLoading }: TransactionHisto
         {transactions.map((transaction) => (
           <TableRow key={transaction.id}>
             <TableCell>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 {transaction.transaction_type === 'deposit' ? (
                   <ArrowDownRight className="h-4 w-4 text-green-500" />
                 ) : (

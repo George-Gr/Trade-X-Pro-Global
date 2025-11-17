@@ -78,12 +78,12 @@ export const ExportToolbar: React.FC = () => {
   }, [profile, positions, calculateEquity, calculateMarginLevel]);
 
   return (
-    <div className="flex gap-2">
-      <Button variant="outline" size="sm" onClick={handleExportCSV} className="gap-2">
+    <div className="flex gap-4">
+      <Button variant="outline" size="sm" onClick={handleExportCSV} className="gap-4">
         <Download className="h-4 w-4" />
         Export CSV
       </Button>
-      <Button variant="outline" size="sm" onClick={handleExportPDF} className="gap-2">
+      <Button variant="outline" size="sm" onClick={handleExportPDF} className="gap-4">
         <FileText className="h-4 w-4" />
         Export PDF
       </Button>

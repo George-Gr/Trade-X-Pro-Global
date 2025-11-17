@@ -175,10 +175,10 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   return (
     <div className="space-y-4">
       {/* Trading Panel Container */}
-      <Card className="bg-card border-border p-0">
+      <Card className="bg-card border-border p-4">
         {/* SL/TP Monitoring Status Badge */}
         {isMonitoring && pricesConnected && (
-          <div className="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800 px-4 py-2">
+          <div className="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800 px-4 py-4">
             <p className="text-sm text-blue-700 dark:text-blue-300">
               ✓ Monitoring SL/TP for {monitoredCount} position{monitoredCount !== 1 ? 's' : ''}
             </p>
@@ -186,7 +186,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         )}
         
         {/* Header with Symbol and Current Price */}
-        <div className="border-b border-border px-4 py-3">
+        <div className="border-b border-border px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-lg">{symbol}</h3>
@@ -247,7 +247,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             <AlertDialogDescription>
               {pendingOrder && (
                 <div className="space-y-2 text-sm mt-2">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-muted-foreground">Side</p>
                       <p className="font-semibold capitalize">{pendingOrder.side}</p>

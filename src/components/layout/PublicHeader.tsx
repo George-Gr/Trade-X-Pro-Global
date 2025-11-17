@@ -14,11 +14,11 @@ import { cn } from "@/lib/utils";
 
 export const PublicHeader = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg" aria-label="Main navigation">
+    <nav className="fixed top-4 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg" aria-label="Main navigation">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-2" aria-label="TradeX Pro - Home">
+          <Link to="/" className="flex items-center gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-4" aria-label="TradeX Pro - Home">
             <TrendingUp className="h-8 w-8 text-primary" aria-hidden="true" />
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
               TradeX Pro
@@ -33,7 +33,7 @@ export const PublicHeader = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Trading</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4">
+                    <ul className="grid w-[400px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/trading/instruments" className={linkClassName}>
@@ -92,7 +92,7 @@ export const PublicHeader = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Markets</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-3 p-4">
+                    <ul className="grid w-[300px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/markets/forex" className={linkClassName}>
@@ -136,7 +136,7 @@ export const PublicHeader = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Education</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-3 p-4">
+                    <ul className="grid w-[300px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/education/webinar" className={linkClassName}>
@@ -180,7 +180,7 @@ export const PublicHeader = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Company</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-3 p-4">
+                    <ul className="grid w-[300px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/company/about" className={linkClassName}>
@@ -224,7 +224,7 @@ export const PublicHeader = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Legal</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-3 p-4">
+                    <ul className="grid w-[300px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/legal/privacy" className={linkClassName}>
@@ -288,5 +288,5 @@ export const PublicHeader = () => {
 };
 
 const linkClassName = cn(
-  "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+  "block select-none space-y-2 rounded-md p-4 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
 );

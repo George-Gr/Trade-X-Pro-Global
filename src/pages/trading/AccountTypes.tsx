@@ -12,7 +12,7 @@ export default function AccountTypes() {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -29,7 +29,7 @@ export default function AccountTypes() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             {[
               {
                 icon: Zap,
@@ -118,10 +118,10 @@ export default function AccountTypes() {
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <account.icon className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-1">{account.name}</h3>
+                  <h3 className="text-xl font-bold mb-2">{account.name}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{account.description}</p>
                   
-                  <div className="space-y-3 mb-6 p-4 bg-muted/50 rounded-lg">
+                  <div className="space-y-4 mb-6 p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Min Deposit</span>
                       <span className="font-semibold">{account.minDeposit}</span>
@@ -138,8 +138,8 @@ export default function AccountTypes() {
                   
                   <ul className="space-y-2 mb-6">
                     {account.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-4">
+                        <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                         <span className="text-xs text-muted-foreground">{feature}</span>
                       </li>
                     ))}
@@ -154,8 +154,8 @@ export default function AccountTypes() {
           </div>
 
           {/* Comparison Table */}
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Detailed Comparison</h2>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
@@ -227,7 +227,7 @@ export default function AccountTypes() {
           {/* CTA Section */}
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Choose your preferred account type and start trading with TradeX Pro

@@ -114,7 +114,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent className="max-w-2xl">
         <AlertDialogHeader>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-4 mb-2">
             {getSeverityIcon()}
             <AlertDialogTitle>{getSeverityTitle()}</AlertDialogTitle>
           </div>
@@ -134,7 +134,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
         {/* Time Information */}
         {timeInCallMinutes !== null && (
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2 p-2 bg-blue-50 rounded">
+            <div className="flex items-center gap-4 p-4 bg-blue-50 rounded">
               <Clock className="w-4 h-4 text-blue-600" />
               <div>
                 <div className="font-semibold text-blue-900">Time in Call</div>
@@ -143,7 +143,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
             </div>
 
             {timeToLiquidationMinutes && (
-              <div className="flex items-center gap-2 p-2 bg-red-50 rounded">
+              <div className="flex items-center gap-4 p-4 bg-red-50 rounded">
                 <TrendingDown className="w-4 h-4 text-red-600" />
                 <div>
                   <div className="font-semibold text-red-900">Est. Time to Liquidation</div>
@@ -160,9 +160,9 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
         {recommendedActions.length > 0 && (
           <div className="space-y-2">
             <h4 className="font-semibold text-sm">Recommended Actions:</h4>
-            <ul className="space-y-1">
+            <ul className="space-y-2">
               {recommendedActions.map((action, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm">
+                <li key={idx} className="flex items-start gap-4 text-sm">
                   <span className="text-red-600 font-bold">•</span>
                   <div>
                     <div className="font-medium capitalize">{action.action.replace(/_/g, ' ')}</div>
@@ -187,7 +187,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-4 justify-end">
           <Button
             variant="outline"
             onClick={onViewRisk}

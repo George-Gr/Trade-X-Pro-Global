@@ -169,7 +169,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
           <h1 className="text-3xl font-bold">Risk Dashboard</h1>
           <p className="text-muted-foreground">Real-time risk monitoring and analysis</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <Button
             variant="outline"
             size="sm"
@@ -210,9 +210,9 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
               : 'border-green-500 bg-green-50'
           }`}
         >
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 {riskMetrics?.riskLevel === 'liquidation' && (
                   <AlertTriangle className="h-6 w-6 text-red-600" />
                 )}
@@ -243,7 +243,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
           {riskLevelDetails.warningMessage && (
             <CardContent>
               <p className="text-sm font-medium">{riskLevelDetails.warningMessage}</p>
-              <p className="text-sm mt-1">{riskLevelDetails.recommendedAction}</p>
+              <p className="text-sm mt-2">{riskLevelDetails.recommendedAction}</p>
             </CardContent>
           )}
         </Card>
@@ -253,7 +253,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
       <div className="grid gap-4 md:grid-cols-4">
         {/* Margin Level */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
             <CardTitle className="text-sm font-medium">Margin Level</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -261,7 +261,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
             <div className="text-2xl font-bold">
               {riskMetrics ? formatMarginLevel(riskMetrics.currentMarginLevel) : "N/A"}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-2">
               Call: {riskMetrics?.marginCallThreshold}% | Liquidation: {riskMetrics?.liquidationThreshold}%
             </p>
             {riskMetrics && (
@@ -285,7 +285,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
 
         {/* Equity */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
             <CardTitle className="text-sm font-medium">Total Equity</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -293,7 +293,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
             <div className="text-2xl font-bold">
               {formatCurrency(portfolioMetrics?.currentEquity || 0)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-2">
               Capital: {formatCurrency(portfolioMetrics?.totalCapital || 0)}
             </p>
           </CardContent>
@@ -301,7 +301,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
 
         {/* Total P&L */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
             <CardTitle className="text-sm font-medium">Total P&L</CardTitle>
             {(portfolioMetrics?.totalPnL || 0) >= 0 ? (
               <TrendingUp className="h-4 w-4 text-green-600" />
@@ -317,7 +317,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
             >
               {formatCurrency(portfolioMetrics?.totalPnL || 0)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-2">
               ROI: {portfolioMetrics?.roi.toFixed(2)}%
             </p>
           </CardContent>
@@ -325,7 +325,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
 
         {/* Capital at Risk */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
             <CardTitle className="text-sm font-medium">Capital at Risk</CardTitle>
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -333,7 +333,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
             <div className="text-2xl font-bold">
               {formatCurrency(riskMetrics?.capitalAtRisk || 0)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-2">
               {riskMetrics?.capitalAtRiskPercentage.toFixed(2)}% of Equity
             </p>
           </CardContent>
@@ -449,8 +449,8 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
               <CardContent>
                 <ul className="space-y-2">
                   {portfolioRiskAssessment.recommendedActions.map((action, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                    <li key={idx} className="flex items-start gap-4">
+                      <AlertCircle className="h-4 w-4 text-yellow-600 mt-2.5 flex-shrink-0" />
                       <span className="text-sm">{action}</span>
                     </li>
                   ))}
@@ -543,7 +543,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
                     <p className="text-sm font-medium">
                       Worst Case: {formatCurrency(stressTests.maxPossibleLoss)}
                     </p>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-2">
                       Survival Rate: {stressTests.survivalRate.toFixed(2)}%
                     </p>
                   </div>
@@ -618,9 +618,9 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
                   <CardTitle className="text-base">Top Positions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {concentration.topPositions.map(pos => (
-                      <div key={pos.symbol} className="space-y-1">
+                      <div key={pos.symbol} className="space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="font-medium">{pos.symbol}</span>
                           <Badge variant="outline">{pos.risk}</Badge>

@@ -34,13 +34,13 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
               <SidebarTrigger>
                 <Menu className="h-5 w-5" />
               </SidebarTrigger>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <TrendingUp className="h-5 w-5 text-primary" />
                 <span className="font-bold">TradeX Pro</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <div className="hidden md:block text-sm">
                 <span className="text-muted-foreground">Account:</span>
                 <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>

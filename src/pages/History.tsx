@@ -148,7 +148,7 @@ const History = () => {
           {/* Search and Filters */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className="text-base flex items-center gap-4">
                 <Filter className="h-4 w-4" />
                 Filters & Search
               </CardTitle>
@@ -157,7 +157,7 @@ const History = () => {
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1 min-w-[200px]">
                   <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-2 top-4.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search by symbol..."
                       value={searchQuery}

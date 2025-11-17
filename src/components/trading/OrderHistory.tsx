@@ -141,7 +141,7 @@ const OrderHistory: React.FC = () => {
     return (
       <button
         onClick={() => handleSort(sortKey)}
-        className="flex items-center gap-2 hover:text-primary transition-colors text-sm"
+        className="flex items-center gap-4 hover:text-primary transition-colors text-sm"
         aria-label={`Sort by ${label}, currently ${isActive ? sortConfig.direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
         aria-pressed={isActive}
       >
@@ -172,23 +172,23 @@ const OrderHistory: React.FC = () => {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left py-3 px-4 font-semibold">
+            <th className="text-left py-4 px-4 font-semibold">
               <SortHeader label="Date" sortKey="created_at" />
             </th>
-            <th className="text-left py-3 px-4 font-semibold">
+            <th className="text-left py-4 px-4 font-semibold">
               <SortHeader label="Symbol" sortKey="symbol" />
             </th>
-            <th className="text-center py-3 px-4 font-semibold">Type</th>
-            <th className="text-left py-3 px-4 font-semibold">Side</th>
-            <th className="text-right py-3 px-4 font-semibold">
+            <th className="text-center py-4 px-4 font-semibold">Type</th>
+            <th className="text-left py-4 px-4 font-semibold">Side</th>
+            <th className="text-right py-4 px-4 font-semibold">
               <SortHeader label="Qty" sortKey="quantity" />
             </th>
-            <th className="text-right py-3 px-4 font-semibold">
+            <th className="text-right py-4 px-4 font-semibold">
               <SortHeader label="Price" sortKey="price" />
             </th>
-            <th className="text-center py-3 px-4 font-semibold">Status</th>
-            <th className="text-right py-3 px-4 font-semibold">Comm.</th>
-            <th className="text-center py-3 px-4 font-semibold">Actions</th>
+            <th className="text-center py-4 px-4 font-semibold">Status</th>
+            <th className="text-right py-4 px-4 font-semibold">Comm.</th>
+            <th className="text-center py-4 px-4 font-semibold">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -201,14 +201,14 @@ const OrderHistory: React.FC = () => {
                   className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
                   onClick={() => setExpandedOrderId(isExpanded ? null : order.id)}
                 >
-                  <td className="py-3 px-4 text-xs">{formatDate(order.created_at)}</td>
-                  <td className="py-3 px-4 font-medium">{order.symbol}</td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-4 px-4 text-xs">{formatDate(order.created_at)}</td>
+                  <td className="py-4 px-4 font-medium">{order.symbol}</td>
+                  <td className="py-4 px-4 text-center">
                     <Badge variant="outline" className="text-xs">
                       {order.type.replace('_', ' ').toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-4 px-4">
                     <Badge
                       variant={order.side === 'buy' ? 'default' : 'secondary'}
                       className={order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'}
@@ -216,11 +216,11 @@ const OrderHistory: React.FC = () => {
                       {order.side.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="py-3 px-4 text-right font-mono">{order.quantity.toFixed(2)}</td>
-                  <td className="py-3 px-4 text-right font-mono">
+                  <td className="py-4 px-4 text-right font-mono">{order.quantity.toFixed(2)}</td>
+                  <td className="py-4 px-4 text-right font-mono">
                     {order.limit_price || order.price ? `$${(order.limit_price || order.price || 0).toFixed(5)}` : '-'}
                   </td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-4 px-4 text-center">
                     <Badge
                       style={{
                         backgroundColor: getStatusColor(order.status),
@@ -231,8 +231,8 @@ const OrderHistory: React.FC = () => {
                       {getStatusLabel(order.status)}
                     </Badge>
                   </td>
-                  <td className="py-3 px-4 text-right font-mono">${(order.commission || 0).toFixed(2)}</td>
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-4 px-4 text-right font-mono">${(order.commission || 0).toFixed(2)}</td>
+                  <td className="py-4 px-4 text-center">
                     {order.status === 'cancelled' || order.status === 'rejected' ? (
                       <Button
                         size="sm"
@@ -244,7 +244,7 @@ const OrderHistory: React.FC = () => {
                           setShowReorderConfirm(true);
                         }}
                       >
-                        <RotateCcw className="h-3 w-3 mr-1" />
+                        <RotateCcw className="h-3 w-3 mr-2" />
                         Reorder
                       </Button>
                     ) : (
@@ -268,7 +268,7 @@ const OrderHistory: React.FC = () => {
   );
 
   const renderMobileCards = () => (
-    <div className="md:hidden space-y-3">
+    <div className="md:hidden space-y-4">
       {sortedOrders.map((order) => {
         const isExpanded = expandedOrderId === order.id;
 
@@ -278,7 +278,7 @@ const OrderHistory: React.FC = () => {
             className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
             onClick={() => setExpandedOrderId(isExpanded ? null : order.id)}
           >
-            <div className="space-y-3">
+            <div className="space-y-4">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
@@ -296,26 +296,26 @@ const OrderHistory: React.FC = () => {
               </div>
 
               {/* Details */}
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">Side</span>
                   <Badge
                     variant={order.side === 'buy' ? 'default' : 'secondary'}
-                    className={`mt-1 ${order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'}`}
+                    className={`mt-2 ${order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'}`}
                   >
                     {order.side.toUpperCase()}
                   </Badge>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Type</span>
-                  <Badge variant="outline" className="mt-1 text-xs">
+                  <Badge variant="outline" className="mt-2 text-xs">
                     {order.type.toUpperCase()}
                   </Badge>
                 </div>
               </div>
 
               {/* Quantity and Price */}
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground text-xs">Quantity</span>
                   <div className="font-mono font-semibold">{order.quantity.toFixed(2)}</div>
@@ -330,7 +330,7 @@ const OrderHistory: React.FC = () => {
 
               {/* Expanded Details */}
               {isExpanded && (
-                <div className="border-t border-border pt-3 mt-3">
+                <div className="border-t border-border pt-4 mt-4">
                   <OrderDetails order={order} />
                 </div>
               )}
@@ -371,7 +371,7 @@ const OrderHistory: React.FC = () => {
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <AlertCircle className="h-8 w-8 text-muted-foreground mb-2" />
         <p className="text-muted-foreground">No orders found</p>
-        <p className="text-xs text-muted-foreground mt-1">Your order history will appear here</p>
+        <p className="text-xs text-muted-foreground mt-2">Your order history will appear here</p>
       </div>
     );
   }
@@ -379,11 +379,11 @@ const OrderHistory: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Header with Filters */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h3 className="font-semibold text-lg">Order History ({sortedOrders.length})</h3>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
           {(['all', 'pending', 'filled', 'cancelled'] as OrderFilterType[]).map((filter) => (
             <Button
               key={filter}

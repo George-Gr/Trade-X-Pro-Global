@@ -13,7 +13,7 @@ export default function TradingInstruments() {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -43,7 +43,7 @@ export default function TradingInstruments() {
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Tabs defaultValue="forex" className="w-full">
-            <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-5 mb-12">
+            <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-5 mb-8">
               <TabsTrigger value="forex">Forex</TabsTrigger>
               <TabsTrigger value="stocks">Stocks</TabsTrigger>
               <TabsTrigger value="indices">Indices</TabsTrigger>
@@ -54,7 +54,7 @@ export default function TradingInstruments() {
             {/* Forex Tab */}
             <TabsContent value="forex">
               <Card>
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                       <Globe className="h-8 w-8 text-white" />
@@ -65,10 +65,10 @@ export default function TradingInstruments() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div>
                       <h3 className="text-xl font-semibold mb-4">Why Trade Forex with Us?</h3>
-                      <ul className="space-y-3">
+                      <ul className="space-y-4">
                         {[
                           "Spreads from 0.0 pips on ECN accounts",
                           "Leverage up to 1:500",
@@ -77,8 +77,8 @@ export default function TradingInstruments() {
                           "Instant execution with no requotes",
                           "Deep liquidity from tier-1 providers"
                         ].map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex items-start gap-4">
+                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                             <span className="text-muted-foreground">{item}</span>
                           </li>
                         ))}
@@ -109,10 +109,10 @@ export default function TradingInstruments() {
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left p-3">Pair</th>
-                          <th className="text-left p-3">Typical Spread</th>
-                          <th className="text-left p-3">Max Leverage</th>
-                          <th className="text-left p-3">Trading Hours</th>
+                          <th className="text-left p-4">Pair</th>
+                          <th className="text-left p-4">Typical Spread</th>
+                          <th className="text-left p-4">Max Leverage</th>
+                          <th className="text-left p-4">Trading Hours</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -124,10 +124,10 @@ export default function TradingInstruments() {
                           { pair: "USD/CAD", spread: "0.3 pips", leverage: "1:500", hours: "24/5" }
                         ].map((row, i) => (
                           <tr key={i} className="border-b border-border hover:bg-muted/50">
-                            <td className="p-3 font-medium">{row.pair}</td>
-                            <td className="p-3 text-muted-foreground">{row.spread}</td>
-                            <td className="p-3 text-muted-foreground">{row.leverage}</td>
-                            <td className="p-3 text-muted-foreground">{row.hours}</td>
+                            <td className="p-4 font-medium">{row.pair}</td>
+                            <td className="p-4 text-muted-foreground">{row.spread}</td>
+                            <td className="p-4 text-muted-foreground">{row.leverage}</td>
+                            <td className="p-4 text-muted-foreground">{row.hours}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -140,7 +140,7 @@ export default function TradingInstruments() {
             {/* Stocks Tab */}
             <TabsContent value="stocks">
               <Card>
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                       <TrendingUp className="h-8 w-8 text-white" />
@@ -151,10 +151,10 @@ export default function TradingInstruments() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div>
                       <h3 className="text-xl font-semibold mb-4">Why Trade Stocks with Us?</h3>
-                      <ul className="space-y-3">
+                      <ul className="space-y-4">
                         {[
                           "Commission from $0.02 per share",
                           "Leverage up to 1:20",
@@ -163,8 +163,8 @@ export default function TradingInstruments() {
                           "Dividend adjustments on long positions",
                           "Access to US, UK, EU markets"
                         ].map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex items-start gap-4">
+                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                             <span className="text-muted-foreground">{item}</span>
                           </li>
                         ))}
@@ -195,10 +195,10 @@ export default function TradingInstruments() {
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left p-3">Stock</th>
-                          <th className="text-left p-3">Commission</th>
-                          <th className="text-left p-3">Max Leverage</th>
-                          <th className="text-left p-3">Market Hours</th>
+                          <th className="text-left p-4">Stock</th>
+                          <th className="text-left p-4">Commission</th>
+                          <th className="text-left p-4">Max Leverage</th>
+                          <th className="text-left p-4">Market Hours</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -209,10 +209,10 @@ export default function TradingInstruments() {
                           { stock: "Amazon (AMZN)", commission: "$0.02/share", leverage: "1:20", hours: "14:30-21:00 GMT" }
                         ].map((row, i) => (
                           <tr key={i} className="border-b border-border hover:bg-muted/50">
-                            <td className="p-3 font-medium">{row.stock}</td>
-                            <td className="p-3 text-muted-foreground">{row.commission}</td>
-                            <td className="p-3 text-muted-foreground">{row.leverage}</td>
-                            <td className="p-3 text-muted-foreground">{row.hours}</td>
+                            <td className="p-4 font-medium">{row.stock}</td>
+                            <td className="p-4 text-muted-foreground">{row.commission}</td>
+                            <td className="p-4 text-muted-foreground">{row.leverage}</td>
+                            <td className="p-4 text-muted-foreground">{row.hours}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -225,7 +225,7 @@ export default function TradingInstruments() {
             {/* Indices Tab */}
             <TabsContent value="indices">
               <Card>
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                       <BarChart3 className="h-8 w-8 text-white" />
@@ -236,10 +236,10 @@ export default function TradingInstruments() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div>
                       <h3 className="text-xl font-semibold mb-4">Why Trade Indices with Us?</h3>
-                      <ul className="space-y-3">
+                      <ul className="space-y-4">
                         {[
                           "Tight spreads from 0.4 points",
                           "Leverage up to 1:500",
@@ -248,8 +248,8 @@ export default function TradingInstruments() {
                           "Diversified market exposure",
                           "Lower volatility than individual stocks"
                         ].map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex items-start gap-4">
+                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                             <span className="text-muted-foreground">{item}</span>
                           </li>
                         ))}
@@ -280,10 +280,10 @@ export default function TradingInstruments() {
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left p-3">Index</th>
-                          <th className="text-left p-3">Typical Spread</th>
-                          <th className="text-left p-3">Max Leverage</th>
-                          <th className="text-left p-3">Trading Hours</th>
+                          <th className="text-left p-4">Index</th>
+                          <th className="text-left p-4">Typical Spread</th>
+                          <th className="text-left p-4">Max Leverage</th>
+                          <th className="text-left p-4">Trading Hours</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -294,10 +294,10 @@ export default function TradingInstruments() {
                           { index: "FTSE 100", spread: "1.0 points", leverage: "1:500", hours: "07:00-21:00 GMT" }
                         ].map((row, i) => (
                           <tr key={i} className="border-b border-border hover:bg-muted/50">
-                            <td className="p-3 font-medium">{row.index}</td>
-                            <td className="p-3 text-muted-foreground">{row.spread}</td>
-                            <td className="p-3 text-muted-foreground">{row.leverage}</td>
-                            <td className="p-3 text-muted-foreground">{row.hours}</td>
+                            <td className="p-4 font-medium">{row.index}</td>
+                            <td className="p-4 text-muted-foreground">{row.spread}</td>
+                            <td className="p-4 text-muted-foreground">{row.leverage}</td>
+                            <td className="p-4 text-muted-foreground">{row.hours}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -310,7 +310,7 @@ export default function TradingInstruments() {
             {/* Commodities Tab */}
             <TabsContent value="commodities">
               <Card>
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                       <LineChart className="h-8 w-8 text-white" />
@@ -321,10 +321,10 @@ export default function TradingInstruments() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div>
                       <h3 className="text-xl font-semibold mb-4">Why Trade Commodities with Us?</h3>
-                      <ul className="space-y-3">
+                      <ul className="space-y-4">
                         {[
                           "Competitive spreads on gold and oil",
                           "Leverage up to 1:500",
@@ -333,8 +333,8 @@ export default function TradingInstruments() {
                           "Hedge against inflation",
                           "No physical delivery required"
                         ].map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex items-start gap-4">
+                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                             <span className="text-muted-foreground">{item}</span>
                           </li>
                         ))}
@@ -365,10 +365,10 @@ export default function TradingInstruments() {
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left p-3">Commodity</th>
-                          <th className="text-left p-3">Typical Spread</th>
-                          <th className="text-left p-3">Max Leverage</th>
-                          <th className="text-left p-3">Trading Hours</th>
+                          <th className="text-left p-4">Commodity</th>
+                          <th className="text-left p-4">Typical Spread</th>
+                          <th className="text-left p-4">Max Leverage</th>
+                          <th className="text-left p-4">Trading Hours</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -379,10 +379,10 @@ export default function TradingInstruments() {
                           { commodity: "Natural Gas", spread: "$0.01", leverage: "1:100", hours: "24/5" }
                         ].map((row, i) => (
                           <tr key={i} className="border-b border-border hover:bg-muted/50">
-                            <td className="p-3 font-medium">{row.commodity}</td>
-                            <td className="p-3 text-muted-foreground">{row.spread}</td>
-                            <td className="p-3 text-muted-foreground">{row.leverage}</td>
-                            <td className="p-3 text-muted-foreground">{row.hours}</td>
+                            <td className="p-4 font-medium">{row.commodity}</td>
+                            <td className="p-4 text-muted-foreground">{row.spread}</td>
+                            <td className="p-4 text-muted-foreground">{row.leverage}</td>
+                            <td className="p-4 text-muted-foreground">{row.hours}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -395,7 +395,7 @@ export default function TradingInstruments() {
             {/* Crypto Tab */}
             <TabsContent value="crypto">
               <Card>
-                <CardContent className="p-8">
+                <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                       <Zap className="h-8 w-8 text-white" />
@@ -406,10 +406,10 @@ export default function TradingInstruments() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div>
                       <h3 className="text-xl font-semibold mb-4">Why Trade Crypto with Us?</h3>
-                      <ul className="space-y-3">
+                      <ul className="space-y-4">
                         {[
                           "24/7 trading including weekends",
                           "Leverage up to 1:100",
@@ -418,8 +418,8 @@ export default function TradingInstruments() {
                           "Competitive spreads on majors",
                           "No exchange or custody fees"
                         ].map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex items-start gap-4">
+                            <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                             <span className="text-muted-foreground">{item}</span>
                           </li>
                         ))}
@@ -450,10 +450,10 @@ export default function TradingInstruments() {
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left p-3">Cryptocurrency</th>
-                          <th className="text-left p-3">Typical Spread</th>
-                          <th className="text-left p-3">Max Leverage</th>
-                          <th className="text-left p-3">Trading Hours</th>
+                          <th className="text-left p-4">Cryptocurrency</th>
+                          <th className="text-left p-4">Typical Spread</th>
+                          <th className="text-left p-4">Max Leverage</th>
+                          <th className="text-left p-4">Trading Hours</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -464,10 +464,10 @@ export default function TradingInstruments() {
                           { crypto: "LTC/USD", spread: "$0.50", leverage: "1:50", hours: "24/7" }
                         ].map((row, i) => (
                           <tr key={i} className="border-b border-border hover:bg-muted/50">
-                            <td className="p-3 font-medium">{row.crypto}</td>
-                            <td className="p-3 text-muted-foreground">{row.spread}</td>
-                            <td className="p-3 text-muted-foreground">{row.leverage}</td>
-                            <td className="p-3 text-muted-foreground">{row.hours}</td>
+                            <td className="p-4 font-medium">{row.crypto}</td>
+                            <td className="p-4 text-muted-foreground">{row.spread}</td>
+                            <td className="p-4 text-muted-foreground">{row.leverage}</td>
+                            <td className="p-4 text-muted-foreground">{row.hours}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -485,9 +485,9 @@ export default function TradingInstruments() {
           </Tabs>
 
           {/* CTA Section */}
-          <div className="mt-16 text-center">
+          <div className="mt-8 text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Ready to Start Trading?</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Open an account today and access 500+ instruments with professional trading conditions

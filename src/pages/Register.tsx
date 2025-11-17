@@ -81,7 +81,7 @@ const Register = () => {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+          <Link to="/" className="inline-flex items-center gap-4 mb-6">
             <TrendingUp className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">TradePro</span>
           </Link>
@@ -89,7 +89,7 @@ const Register = () => {
           <p className="text-muted-foreground">Create your free trading account</p>
         </div>
 
-        <Card className="p-6 md:p-8">
+        <Card className="p-6 md:p-6">
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
@@ -148,15 +148,15 @@ const Register = () => {
 
             {/* Benefits */}
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-4 text-sm">
                 <CheckCircle className="h-4 w-4 text-primary" />
                 <span>$10,000 virtual capital to start</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-4 text-sm">
                 <CheckCircle className="h-4 w-4 text-primary" />
                 <span>Access to 10,000+ trading instruments</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-4 text-sm">
                 <CheckCircle className="h-4 w-4 text-primary" />
                 <span>Real-time market data and analytics</span>
               </div>

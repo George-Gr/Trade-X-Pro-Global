@@ -65,7 +65,7 @@ export const RiskAlerts = () => {
         <Alert
           key={event.id}
           variant={event.severity === 'critical' ? 'destructive' : 'default'}
-          className="animate-in slide-in-from-top-2"
+          className="animate-in slide-in-from-top-4"
         >
           {event.severity === 'critical' && <AlertTriangle className="h-4 w-4" />}
           {event.severity === 'warning' && <AlertCircle className="h-4 w-4" />}
