@@ -1,9 +1,8 @@
 import React from 'react';
 import type { Position, PositionMetricsData } from '@/types/position';
-import { calculateUnrealizedPnL, calculatePnLPercentage, getPositionColor } from '@/lib/trading/positionCalculations';
 
-// Re-export Position type for components that import from PositionsGrid
-export type { Position, PositionMetricsData } from '@/types/position';
+// Note: Import utility functions directly from '@/lib/trading/positionCalculations'
+// Do not export them from this component file to maintain Fast Refresh compatibility
 
 export const PositionCard: React.FC<{ position: Position; onClose?: (id: string) => void; onModify?: (id: string) => void; isUpdating?: boolean; isLocked?: boolean }> = ({ position, onClose, onModify, isUpdating, isLocked }) => {
   // Minimal stub for test compatibility

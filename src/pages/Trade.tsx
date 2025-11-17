@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import EnhancedWatchlist from "@/components/trading/EnhancedWatchlist";
 import AssetTree from "@/components/trading/AssetTree";
 import TradingPanel from "@/components/trading/TradingPanel";
-import PortfolioDashboard from "@/components/trading/PortfolioDashboard";
+import EnhancedPortfolioDashboard from "@/components/trading/EnhancedPortfolioDashboard";
 import ChartPanel from "@/components/trading/ChartPanel";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import TradingViewMarketsWidget from "@/components/trading/TradingViewMarketsWidget";
@@ -60,8 +60,8 @@ const Trade = () => {
             </div>
 
             {/* Portfolio Dashboard */}
-            <div className="h-24 border-t border-border flex-shrink-0">
-              <PortfolioDashboard />
+            <div className="h-96 border-t border-border flex-shrink-0 overflow-hidden">
+              <EnhancedPortfolioDashboard />
             </div>
           </div>
 

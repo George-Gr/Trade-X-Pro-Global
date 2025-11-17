@@ -1,6 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
-import { OrderStatus, classifyOrderStatus, calculateFillPercentage } from '@/lib/trading/orderStatusUtils';
+import type { OrderStatus } from '@/lib/trading/orderStatusUtils';
+
+// Note: Import utility functions directly from '@/lib/trading/orderStatusUtils'
+// Do not export them from this component file to maintain Fast Refresh compatibility
 
 interface OrderStatusBadgeProps {
   status: OrderStatus;

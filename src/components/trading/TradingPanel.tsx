@@ -3,6 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useOrderExecution } from "@/hooks/useOrderExecution";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { useAssetSpecs } from "@/hooks/useAssetSpecs";
+import { useSLTPMonitoring } from "@/hooks/useSLTPMonitoring";
 import { OrderTemplatesDialog } from "./OrderTemplatesDialog";
 import { OrderTemplate } from "@/hooks/useOrderTemplates";
 import { OrderForm, type OrderFormData } from "./OrderForm";
@@ -55,6 +56,9 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   const { toast } = useToast();
   const { executeOrder, isExecuting } = useOrderExecution();
   const { leverage: assetLeverage, isLoading: isAssetLoading } = useAssetSpecs(symbol);
+  
+  // SL/TP Monitoring
+  const { isMonitoring, monitoredCount, pricesConnected } = useSLTPMonitoring();
   
   // Real-time price updates
   const { getPrice } = usePriceUpdates({
@@ -172,6 +176,15 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     <div className="space-y-4">
       {/* Trading Panel Container */}
       <Card className="bg-card border-border p-0">
+        {/* SL/TP Monitoring Status Badge */}
+        {isMonitoring && pricesConnected && (
+          <div className="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800 px-4 py-2">
+            <p className="text-sm text-blue-700 dark:text-blue-300">
+              ✓ Monitoring SL/TP for {monitoredCount} position{monitoredCount !== 1 ? 's' : ''}
+            </p>
+          </div>
+        )}
+        
         {/* Header with Symbol and Current Price */}
         <div className="border-b border-border px-4 py-3">
           <div className="flex items-center justify-between">

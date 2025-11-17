@@ -90,22 +90,23 @@ export function useRealtimePositions(
       const loadedPositions: Position[] = (data || []).map((row: unknown) => {
         const r = row as Record<string, unknown>;
         return {
-        id: r.id as string,
-        user_id: r.user_id as string,
-        symbol: r.symbol as string,
-        side: r.side as 'long' | 'short',
-        quantity: r.quantity as number,
-        entry_price: r.entry_price as number,
-        current_price: r.current_price as number,
-        unrealized_pnl: (r.unrealized_pnl as number) || 0,
-        margin_used: (r.margin_used as number) || 0,
-        margin_level: (r.margin_level as number) || 0,
-        status: r.status as string,
-        opened_at: r.opened_at ? new Date(r.opened_at as string) : new Date((r.created_at as string) || Date.now()),
-        leverage: typeof r.leverage === 'number' ? (r.leverage as number) : 1,
-        created_at: (r.created_at as string) || (r.opened_at as string) || new Date().toISOString(),
-        updated_at: (r.updated_at as string) || new Date().toISOString(),
-      };
+          id: r.id as string,
+          user_id: r.user_id as string,
+          symbol: r.symbol as string,
+          side: r.side as 'long' | 'short',
+          quantity: r.quantity as number,
+          entry_price: r.entry_price as number,
+          current_price: r.current_price as number,
+          unrealized_pnl: (r.unrealized_pnl as number) || 0,
+          margin_used: (r.margin_used as number) || 0,
+          margin_level: (r.margin_level as number) || 0,
+          status: r.status as string,
+          opened_at: r.opened_at ? new Date(r.opened_at as string) : new Date((r.created_at as string) || Date.now()),
+          leverage: typeof r.leverage === 'number' ? (r.leverage as number) : 1,
+          created_at: (r.created_at as string) || (r.opened_at as string) || new Date().toISOString(),
+          updated_at: (r.updated_at as string) || new Date().toISOString(),
+        };
+      });
 
       setPositions(loadedPositions);
       positionsRef.current = loadedPositions;

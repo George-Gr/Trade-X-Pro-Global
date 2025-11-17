@@ -9,6 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
     
     steps:
       - name: Checkout with full history
@@ -26,7 +31,6 @@ jobs:
 
       - name: Build application
         env:
-          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
           VITE_APP_VERSION: ${{ github.sha }}
         run: npm run build
 
@@ -44,22 +48,18 @@ jobs:
           path: dist
 
       - name: Notify Sentry configuration
-        if: secrets.VITE_SENTRY_DSN != ''
+        if: ${{ env.VITE_SENTRY_DSN != '' }}
         run: echo "✓ Sentry DSN configured - error tracking enabled"
 
       - name: Install Sentry CLI
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
+        if: ${{ env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != '' }}
         run: |
           echo "📥 Installing Sentry CLI..."
           curl -sL https://sentry.io/get-cli/ | bash
           sentry-cli --version
 
       - name: Create Sentry release
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        if: ${{ env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != '' }}
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
           echo "🚀 Creating Sentry release: $VERSION"
@@ -76,11 +76,7 @@ jobs:
           echo "✓ Sentry release created successfully"
 
       - name: Upload source maps to Sentry
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        if: ${{ env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != '' }}
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
           echo "📤 Uploading source maps to Sentry..."
@@ -90,11 +86,7 @@ jobs:
           echo "✓ Source maps uploaded successfully"
 
       - name: Deploy Sentry release
-        if: secrets.SENTRY_AUTH_TOKEN != '' && secrets.SENTRY_ORG != '' && secrets.SENTRY_PROJECT != ''
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        if: ${{ env.SENTRY_AUTH_TOKEN != '' && env.SENTRY_ORG != '' && env.SENTRY_PROJECT != '' }}
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
           echo "🌐 Deploying Sentry release to production..."

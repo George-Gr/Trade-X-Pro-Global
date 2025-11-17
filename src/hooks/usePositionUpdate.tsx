@@ -31,6 +31,8 @@ export interface PositionMetrics {
   margin_used: number;
   margin_level: number;
   margin_status: "SAFE" | "WARNING" | "CRITICAL" | "LIQUIDATION";
+  stop_loss?: number;
+  take_profit?: number;
 }
 
 export interface PositionUpdate {

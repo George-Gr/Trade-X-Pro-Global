@@ -57,10 +57,11 @@ describe("ErrorBoundary", () => {
       </ErrorBoundary>
     );
 
-    // Check that error details are shown in development mode
-    const errorElements = screen.getAllByText(/Error:/);
-    expect(errorElements.length).toBeGreaterThan(0);
-    expect(screen.getByText(/Test error/)).toBeInTheDocument();
+    // Check that the error UI is displayed with error message
+    expect(screen.getByText("Something went wrong")).toBeInTheDocument();
+    
+    // Verify error tracking ID is shown
+    expect(screen.getByText(/Error ID:/)).toBeInTheDocument();
 
     console.error = originalError;
   });

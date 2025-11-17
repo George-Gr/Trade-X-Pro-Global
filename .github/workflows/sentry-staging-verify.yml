@@ -39,21 +39,21 @@ jobs:
           fi
 
       - name: Install Sentry CLI
-        if: steps.check_sentry.outputs.configured == 'true'
+        if: ${{ steps.check_sentry.outputs.configured == 'true' }}
         run: |
           echo "📥 Installing Sentry CLI..."
           curl -sL https://sentry.io/get-cli/ | bash
           sentry-cli --version
 
       - name: Send test event to Sentry
-        if: steps.check_sentry.outputs.configured == 'true'
+        if: ${{ steps.check_sentry.outputs.configured == 'true' }}
         run: |
           echo "📤 Sending test event to Sentry..."
           sentry-cli send-event -m "Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
           echo "✓ Test event sent successfully"
 
       - name: Verify event ingestion
-        if: steps.check_sentry.outputs.configured == 'true'
+        if: ${{ steps.check_sentry.outputs.configured == 'true' }}
         run: |
           set -euo pipefail
           
