@@ -11,10 +11,29 @@ export const PositionDetailDialog: React.FC<{ position: Position; onClose: () =>
   const save = async () => {
     setSaving(true);
     try {
-      // Cast payload to any to avoid strict table typings in this context;
-      // table columns `stop_loss`/`take_profit` exist in DB but may not be present
-      // in generated TypeScript defs used by Supabase client here.
-      await supabase.from('positions').update({ stop_loss: sl, take_profit: tp } as Record<string, Json | null>).eq('id', position.id);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await supabase.functions.invoke('modify-position', {
+        body: {
+          position_id: position.id,
+          stop_loss: sl,
+          take_profit: tp,
+        },
+      });
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Failed to update position');
+      }
+    } catch (error) {
+      console.error('Failed to update position:', error);
+      alert(error instanceof Error ? error.message : 'Failed to update position');
     } finally {
       setSaving(false);
       onClose();
