@@ -73,7 +73,7 @@ export function AssetSearchDialog({
     new Set(JSON.parse(localStorage.getItem('favoriteAssets') || '[]'))
   );
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Initialize Supabase client
   const supabase = useMemo(() => {
