@@ -119,7 +119,7 @@ export const useKycNotifications = () => {
 };
 
 /**
- * Create an in-app notification in the notifications table
+ * Create an in-app notification via edge function
  */
 async function createKycNotification(
   userId: string,
@@ -128,15 +128,15 @@ async function createKycNotification(
   type: 'approval' | 'rejection' | 'info'
 ) {
   try {
-    await supabase.from('notifications').insert({
-      user_id: userId,
-      title,
-      message,
-      type: `kyc_${type}`,
-      read: false,
-      created_at: new Date().toISOString(),
+    await supabase.functions.invoke('send-notification', {
+      body: {
+        user_id: userId,
+        title,
+        message,
+        type: `kyc_${type}`,
+      }
     });
   } catch (err) {
-    // Silently fail - notifications are non-critical
+    console.error('Failed to create KYC notification:', err);
   }
 }
