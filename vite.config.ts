@@ -2,7 +2,18 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
-import { componentTagger } from "lovable-tagger";
+
+// Safely load lovable-tagger plugin - fails gracefully if not available
+let componentTaggerPlugin: any = undefined;
+(async () => {
+  try {
+    const lovableTagger = await import("lovable-tagger");
+    componentTaggerPlugin = lovableTagger.componentTagger();
+  } catch (e) {
+    // lovable-tagger not available - component tagging will be disabled
+    // This is expected in some environments
+  }
+})();
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -12,7 +23,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    componentTagger(),
+    componentTaggerPlugin,
     process.env.ANALYZE && visualizer({ filename: 'dist/bundle-analysis.html', open: false, gzipSize: true }),
   ].filter(Boolean) as unknown as (import("vite").Plugin)[],
   resolve: {
