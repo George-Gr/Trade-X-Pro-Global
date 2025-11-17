@@ -40,7 +40,7 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.get-stock-price]
-verify_jwt = false
+verify_jwt = true
 
 [functions.execute-pending-orders]
 verify_jwt = false
@@ -70,7 +70,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.price-stream]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-critical-email]
 verify_jwt = false
