@@ -85,12 +85,12 @@ const AdminRiskDashboard = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  marginCalls?.map((call: unknown) => (
+                  marginCalls?.map((call: any) => (
                     <TableRow key={call.id}>
                       <TableCell>
                         <div className="font-medium">{call.profiles?.full_name || "Unknown"}</div>
                       </TableCell>
-                      <TableCell>{call.margin_level.toFixed(2)}%</TableCell>
+                      <TableCell>{Number(call.margin_level).toFixed(2)}%</TableCell>
                       <TableCell>
                         <Badge variant={call.severity === "CRITICAL" ? "destructive" : "outline"}>
                           {call.severity}
