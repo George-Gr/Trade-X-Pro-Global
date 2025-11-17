@@ -175,49 +175,6 @@ export function AssetSearchDialog({
     }, 500);
   }, [selectedClass, selectedLiquidity, filterAssets]);
 
-  // Filter assets based on search and filters
-  const filterAssets = useCallback(
-    (query: string, assetClass: string, liquidity: string) => {
-      let filtered = [...assets];
-
-      // Text search on symbol, name, country
-      if (query.trim()) {
-        const lowerQuery = query.toLowerCase();
-        filtered = filtered.filter(
-          (asset) =>
-            asset.symbol.toLowerCase().includes(lowerQuery) ||
-            asset.name?.toLowerCase().includes(lowerQuery) ||
-            asset.country?.toLowerCase().includes(lowerQuery)
-        );
-      }
-
-      // Asset class filter
-      if (assetClass) {
-        filtered = filtered.filter(
-          (asset) => asset.asset_class.toLowerCase() === assetClass.toLowerCase()
-        );
-      }
-
-      // Liquidity filter
-      if (liquidity) {
-        filtered = filtered.filter(
-          (asset) => asset.liquidity_tier?.toLowerCase() === liquidity.toLowerCase()
-        );
-      }
-
-      // Sort: favorites first, then by symbol
-      filtered.sort((a, b) => {
-        const aFav = favorites.has(a.symbol) ? 0 : 1;
-        const bFav = favorites.has(b.symbol) ? 0 : 1;
-        if (aFav !== bFav) return aFav - bFav;
-        return a.symbol.localeCompare(b.symbol);
-      });
-
-      setFilteredAssets(filtered);
-    },
-    [assets, favorites]
-  );
-
   // Apply filters when they change
   useEffect(() => {
     filterAssets(searchQuery, selectedClass, selectedLiquidity);

@@ -223,7 +223,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
       return true;
     } catch (err: unknown) {
-      const errorMsg = (err as Record<string, unknown> | null)?.message || 'Upload failed';
+      const errorMsg = err instanceof Error ? err.message : String(err) || 'Upload failed';
       setUploads(prev =>
         prev.map(u =>
           u.id === upload.id ? { ...u, status: 'error' as const, error: errorMsg } : u
@@ -270,7 +270,8 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         setTimeout(onSuccess, 2000);
       }
     } catch (err: unknown) {
-      setGlobalError((err as Record<string, unknown> | null)?.message || 'Submission failed');
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setGlobalError(errorMessage || 'Submission failed');
     } finally {
       setSubmitting(false);
     }
