@@ -173,10 +173,9 @@ serve(async (req: Request) => {
     return new Response(JSON.stringify({ success: true, message: 'Document uploaded and validated successfully', filePath }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
     console.error("Error in validate-kyc-upload:", err);
     return new Response(
-      JSON.stringify({ error: message || "Internal server error" }),
+      JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
