@@ -13,6 +13,7 @@ import EconomicCalendar from "@/components/trading/EconomicCalendar";
 import { KYCStatusBanner } from "@/components/trading/KYCStatusBanner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 
 const Trade = () => {
   const [selectedSymbol, setSelectedSymbol] = useState("EURUSD");
@@ -87,11 +88,15 @@ const Trade = () => {
                 <TechnicalIndicators symbol={selectedSymbol} />
                 <MarketSentiment symbol={selectedSymbol} />
                 <TradingSignals symbol={selectedSymbol} />
-                <EconomicCalendar />
+                <TradingViewErrorBoundary widgetType="Economic Calendar">
+                  <EconomicCalendar />
+                </TradingViewErrorBoundary>
               </TabsContent>
               
               <TabsContent value="markets" className="flex-1 overflow-hidden mt-0">
-                <TradingViewMarketsWidget />
+                <TradingViewErrorBoundary widgetType="Markets Widget">
+                  <TradingViewMarketsWidget />
+                </TradingViewErrorBoundary>
               </TabsContent>
             </Tabs>
           </div>

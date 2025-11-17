@@ -37,7 +37,7 @@ export function useKyc(userId?: string) {
     setError(null);
     try {
       const { data: requestData, error: reqErr } = await supabase
-        .from('kyc_requests' as any) // Table exists but not in current Supabase types
+        .from('kyc_requests' as unknown as string) // Table exists but not in current Supabase types
         .select('*')
         .eq('user_id', uid)
         .order('created_at', { ascending: false })
@@ -57,7 +57,7 @@ export function useKyc(userId?: string) {
 
         // Fetch documents
         const { data: docs, error: docsErr } = await supabase
-          .from('kyc_documents' as any) // Table exists but not in current Supabase types
+          .from('kyc_documents' as unknown as string) // Table exists but not in current Supabase types
           .select('*')
           .eq('kyc_request_id', request.id)
           .order('uploaded_at', { ascending: false });

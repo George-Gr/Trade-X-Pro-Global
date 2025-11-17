@@ -142,6 +142,8 @@ const OrderHistory: React.FC = () => {
       <button
         onClick={() => handleSort(sortKey)}
         className="flex items-center gap-2 hover:text-primary transition-colors text-sm"
+        aria-label={`Sort by ${label}, currently ${isActive ? sortConfig.direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
+        aria-pressed={isActive}
       >
         {label}
         {isActive && (
@@ -149,6 +151,7 @@ const OrderHistory: React.FC = () => {
             className={`h-3 w-3 transition-transform ${
               sortConfig.direction === 'asc' ? 'rotate-180' : ''
             }`}
+            aria-hidden="true"
           />
         )}
       </button>
@@ -387,6 +390,8 @@ const OrderHistory: React.FC = () => {
               size="sm"
               variant={filterStatus === filter ? 'default' : 'outline'}
               onClick={() => setFilterStatus(filter)}
+              aria-label={`Filter orders by ${filter === 'all' ? 'all statuses' : filter}`}
+              aria-pressed={filterStatus === filter}
             >
               {filter.charAt(0).toUpperCase() + filter.slice(1)}
             </Button>

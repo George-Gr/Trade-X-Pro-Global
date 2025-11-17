@@ -60,7 +60,10 @@ export function useRealtimePositions(
     "connected" | "connecting" | "disconnected" | "error"
   >("disconnected");
 
-  const subscriptionRef = useRef<any>(null);
+  const subscriptionRef = useRef<unknown>(null);
+  // Mutable ref to hold a reference to the subscribe function. This
+  // helps break circular dependencies when other callbacks need to call subscribe
+  const subscribeRef = useRef<((filter?: string) => Promise<void>) | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttemptsRef = useRef(5);
@@ -229,10 +232,23 @@ export function useRealtimePositions(
       // Subscription error - will attempt reconnection
 
       setTimeout(() => {
-        subscribe().catch((err: Error) => {
-          // Reconnection failed
-          setConnectionStatus("error");
-        });
+        const fn = subscribeRef.current;
+        if (fn) {
+          fn().catch((err: Error) => {
+            // Reconnection failed
+            setConnectionStatus("error");
+          });
+        } else {
+          // If subscribe is not initialized yet, try again after a short delay.
+          setTimeout(() => {
+            const fn2 = subscribeRef.current;
+            if (fn2) {
+              fn2().catch(() => setConnectionStatus("error"));
+            } else {
+              setConnectionStatus("error");
+            }
+          }, 500);
+        }
       }, backoffMs);
     } else {
       const error = new Error(
@@ -245,7 +261,7 @@ export function useRealtimePositions(
         onError(error);
       }
     }
-  }, [onError, subscribe]);
+  }, [onError]);
 
   const subscribe = useCallback(
     async (filter?: string) => {
@@ -308,6 +324,10 @@ export function useRealtimePositions(
     [userId, debounceMs, onError, handlePositionUpdate, handleSubscriptionError]
   );
 
+  // Assign the concrete `subscribe` function to the ref so it can be referenced
+  // from handleSubscriptionError callback (breaking circular deps).
+  subscribeRef.current = subscribe;
+
   const unsubscribe = useCallback(async () => {
     if (subscriptionRef.current) {
       try {
@@ -334,9 +354,12 @@ export function useRealtimePositions(
 
     loadPositions().then(() => {
       if (autoSubscribe) {
-        subscribe().catch((err) => {
-          // Failed to subscribe to realtime updates
-        });
+        const fn = subscribeRef.current;
+        if (fn) {
+          fn().catch((err) => {
+            // Failed to subscribe to realtime updates
+          });
+        }
       }
     });
 
@@ -345,7 +368,7 @@ export function useRealtimePositions(
         // Error during cleanup
       });
     };
-  }, [userId, user, autoSubscribe, loadPositions, subscribe, unsubscribe]);
+  }, [userId, user, autoSubscribe, loadPositions, unsubscribe]);
 
   return {
     positions,

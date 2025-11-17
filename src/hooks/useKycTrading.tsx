@@ -99,7 +99,7 @@ export const useKycTrading = (): KycTradingState => {
       }
 
       // Defensive: Only access properties if profile is not an error
-      const kycStatus = (profile as any).kyc_status || 'pending';
+      const kycStatus = (profile as unknown as Record<string, unknown>).kyc_status || 'pending';
       const isApproved = kycStatus === 'approved';
       const isRejected = kycStatus === 'rejected' || kycStatus === 'requires_resubmit';
       const isUnderReview = kycStatus === 'under_review' || kycStatus === 'submitted';
@@ -109,8 +109,8 @@ export const useKycTrading = (): KycTradingState => {
       let canResubmit = false;
       let daysUntilResubmit: number | null = null;
 
-      if (isRejected && (profile as any).kyc_rejected_at) {
-        const rejectedDate = new Date((profile as any).kyc_rejected_at);
+      if (isRejected && (profile as unknown as Record<string, unknown>).kyc_rejected_at) {
+        const rejectedDate = new Date((profile as unknown as Record<string, unknown>).kyc_rejected_at as string);
         const resubmitDate = new Date(rejectedDate.getTime() + 7 * 24 * 60 * 60 * 1000);
         const now = new Date();
 
@@ -131,9 +131,9 @@ export const useKycTrading = (): KycTradingState => {
         isUnderReview,
         canResubmit,
         daysUntilResubmit,
-        rejectionReason: (profile as any).kyc_rejection_reason || null,
-        rejectedAt: (profile as any).kyc_rejected_at || null,
-        approvedAt: (profile as any).kyc_approved_at || null,
+        rejectionReason: ((profile as unknown as Record<string, unknown>).kyc_rejection_reason as string) || null,
+        rejectedAt: ((profile as unknown as Record<string, unknown>).kyc_rejected_at as string) || null,
+        approvedAt: ((profile as unknown as Record<string, unknown>).kyc_approved_at as string) || null,
         isLoading: false,
         error: null,
       });

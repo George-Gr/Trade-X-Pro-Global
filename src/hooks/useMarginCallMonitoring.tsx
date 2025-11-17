@@ -264,7 +264,7 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
         clearInterval(escalationCheckTimeoutRef.current);
       }
     };
-  }, [enabled, marginLevel, escalationCheckInterval, getTimeInCall, toast, onEscalation, onLiquidationRisk]);
+  }, [enabled, marginLevel, escalationCheckInterval, getTimeInCall, toast, onEscalation, onLiquidationRisk, shouldEscalateToLiquidation]);
 
   /**
    * Send notifications (rate-limited)

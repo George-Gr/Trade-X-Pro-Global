@@ -432,7 +432,7 @@ export function shouldEnforceCloseOnly(marginCallStatus: MarginCallStatus): bool
  * //   ...
  * // }
  */
-export function generateMarginCallNotification(call: MarginCallEvent): Record<string, any> {
+export function generateMarginCallNotification(call: MarginCallEvent): Record<string, unknown> {
   const urgencyMap = {
     [MarginCallSeverity.STANDARD]: { priority: 'HIGH', icon: '⚠️' },
     [MarginCallSeverity.URGENT]: { priority: 'CRITICAL', icon: '🔴' },

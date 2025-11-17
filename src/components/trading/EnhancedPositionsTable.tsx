@@ -170,6 +170,8 @@ const EnhancedPositionsTable: React.FC = () => {
       <button
         onClick={() => handleSort(sortKey)}
         className="flex items-center gap-2 hover:text-primary transition-colors"
+        aria-label={`Sort by ${label}, currently ${isActive ? sortConfig.direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
+        aria-pressed={isActive}
       >
         {label}
         {isActive && (
@@ -177,6 +179,7 @@ const EnhancedPositionsTable: React.FC = () => {
             className={`h-4 w-4 transition-transform ${
               sortConfig.direction === 'asc' ? 'rotate-180' : ''
             }`}
+            aria-hidden="true"
           />
         )}
       </button>
@@ -240,7 +243,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   </td>
                   <td className="py-3 px-4 text-right">${position.margin_used?.toFixed(2) || '0.00'}</td>
                   <td className="py-3 px-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                       <Button
                         size="sm"
                         variant="ghost"
@@ -249,8 +252,10 @@ const EnhancedPositionsTable: React.FC = () => {
                           handleEditPosition(position);
                         }}
                         className="h-8 w-8 p-0"
+                        aria-label={`Edit stop loss and take profit for ${position.symbol} position`}
+                        title="Edit Stop Loss & Take Profit"
                       >
-                        <Edit2 className="h-4 w-4" />
+                        <Edit2 className="h-4 w-4" aria-hidden="true" />
                       </Button>
                       <Button
                         size="sm"
@@ -262,11 +267,13 @@ const EnhancedPositionsTable: React.FC = () => {
                         }}
                         className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                         disabled={isClosing}
+                        aria-label={`Close ${position.symbol} position`}
+                        title="Close Position"
                       >
                         {isClosing ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                         ) : (
-                          <X className="h-4 w-4" />
+                          <X className="h-4 w-4" aria-hidden="true" />
                         )}
                       </Button>
                     </div>
@@ -412,14 +419,16 @@ const EnhancedPositionsTable: React.FC = () => {
           <h3 className="font-semibold text-lg">Open Positions ({sortedPositions.length})</h3>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {(['all', 'buy', 'sell', 'profit', 'loss'] as FilterType[]).map((filter) => (
+          {(['all', 'long', 'short', 'profit', 'loss'] as FilterType[]).map((filter) => (
             <Button
               key={filter}
               size="sm"
               variant={filterType === filter ? 'default' : 'outline'}
               onClick={() => setFilterType(filter)}
+              aria-label={`Filter positions by ${filter.charAt(0).toUpperCase() + filter.slice(1)}`}
+              aria-pressed={filterType === filter}
             >
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
+              {filter === 'long' ? 'Buy' : filter === 'short' ? 'Sell' : filter.charAt(0).toUpperCase() + filter.slice(1)}
             </Button>
           ))}
         </div>

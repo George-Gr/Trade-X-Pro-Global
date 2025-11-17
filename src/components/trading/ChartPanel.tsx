@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Maximize2 } from "lucide-react";
 import TradingViewAdvancedChart from "./TradingViewAdvancedChart";
+import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 
 interface ChartPanelProps {
   symbol: string;
@@ -23,6 +24,9 @@ const ChartPanel = ({ symbol }: ChartPanelProps) => {
               15m
             </Button>
             <Button variant="ghost" size="sm" className="h-7 px-2">
+              30m
+            </Button>
+            <Button variant="ghost" size="sm" className="h-7 px-2">
               1h
             </Button>
             <Button variant="ghost" size="sm" className="h-7 px-2">
@@ -39,7 +43,9 @@ const ChartPanel = ({ symbol }: ChartPanelProps) => {
       </div>
       
       <div className="flex-1 overflow-hidden">
-        <TradingViewAdvancedChart symbol={symbol} />
+        <TradingViewErrorBoundary widgetType="Advanced Chart">
+          <TradingViewAdvancedChart symbol={symbol} />
+        </TradingViewErrorBoundary>
       </div>
     </div>
   );

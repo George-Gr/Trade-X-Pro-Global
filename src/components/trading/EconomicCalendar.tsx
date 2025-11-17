@@ -1,10 +1,14 @@
 import { useEffect, useRef, memo } from "react";
 import { Card } from "@/components/ui/card";
+import { initTradingViewCompatibility } from "@/lib/tradingview-compatibility";
 
 const EconomicCalendar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Initialize TradingView compatibility fixes
+    initTradingViewCompatibility();
+    
     const container = containerRef.current;
     if (!container) return;
 

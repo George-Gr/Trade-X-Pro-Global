@@ -1,8 +1,18 @@
 declare module 'vitest' {
-  export const describe: any;
-  export const it: any;
-  export const expect: any;
-  export const beforeAll: any;
-  export const afterAll: any;
-  export const vi: any;
+  import type { 
+    Suite, 
+    Test, 
+    ExpectStatic, 
+    Assertion,
+    AsymmetricMatchersContaining,
+    Vi
+  } from 'vitest';
+
+  export const describe: typeof Suite;
+  export const it: typeof Test;
+  export const expect: ExpectStatic;
+  export const beforeAll: (fn: () => void | Promise<void>) => void;
+  export const afterAll: (fn: () => void | Promise<void>) => void;
+  export const vi: typeof Vi;
 }
+

@@ -6,6 +6,7 @@ import { usePortfolioData } from '@/hooks/usePortfolioData';
 import { usePnLCalculations } from '@/hooks/usePnLCalculations';
 import EnhancedPositionsTable from './EnhancedPositionsTable';
 import OrderHistory from './OrderHistory';
+import type { Position } from '@/types/position';
 
 interface PortfolioMetrics {
   totalEquity: number;
@@ -41,7 +42,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     });
     return map;
   }, [positions]);
-  const { positionPnLMap } = usePnLCalculations(positions as any, priceMap, undefined, {});
+  const { positionPnLMap } = usePnLCalculations(positions as Position[], priceMap, undefined, {});
 
   // Calculate comprehensive portfolio metrics
   const metrics = useMemo((): PortfolioMetrics => {

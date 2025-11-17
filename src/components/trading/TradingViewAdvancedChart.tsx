@@ -1,4 +1,5 @@
 import { useEffect, useRef, memo } from "react";
+import { initTradingViewCompatibility } from "@/lib/tradingview-compatibility";
 
 interface TradingViewAdvancedChartProps {
   symbol: string;
@@ -8,6 +9,9 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Initialize TradingView compatibility fixes
+    initTradingViewCompatibility();
+    
     if (!containerRef.current) return;
 
     // Clear previous widget

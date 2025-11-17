@@ -6,6 +6,7 @@ import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import TradingViewWatchlist from "@/components/trading/TradingViewWatchlist";
 import { RiskAlerts } from "@/components/risk/RiskAlerts";
 import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
+import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -133,7 +134,9 @@ const Dashboard = () => {
                 <CardTitle>Market Watch</CardTitle>
               </CardHeader>
               <CardContent className="h-[500px]">
-                <TradingViewWatchlist />
+                <TradingViewErrorBoundary widgetType="Watchlist">
+                  <TradingViewWatchlist />
+                </TradingViewErrorBoundary>
               </CardContent>
             </Card>
           </div>

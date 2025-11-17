@@ -455,7 +455,7 @@ export function checkLiquidationSafety(
 export function generateLiquidationNotification(
   event: LiquidationEvent,
   result: LiquidationExecutionResult,
-): Record<string, any> {
+): Record<string, unknown> {
   return {
     type: 'LIQUIDATION',
     priority: 'CRITICAL',

@@ -1,8 +1,6 @@
 /* stylelint-disable at-rule-no-unknown */
-/* Tailwind directives — processed by PostCSS/Tailwind */
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+/* Tailwind directives — processed by PostCSS/Tailwind (v4) */
+@import "tailwindcss";
 /* stylelint-enable at-rule-no-unknown */
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
