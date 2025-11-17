@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-nowpayments-sig',
 };
 
 serve(async (req) => {
@@ -15,12 +15,60 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const nowpaymentsApiKey = Deno.env.get('NOWPAYMENTS_API_KEY')!;
+    const ipnSecret = Deno.env.get('NOWPAYMENTS_IPN_SECRET');
+
+    if (!ipnSecret) {
+      console.error('CRITICAL: NOWPAYMENTS_IPN_SECRET not configured');
+      return new Response(
+        JSON.stringify({ error: 'Server configuration error' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Verify IPN signature
+    const receivedSig = req.headers.get('x-nowpayments-sig');
+    if (!receivedSig) {
+      console.error('Missing x-nowpayments-sig header - potential attack');
+      return new Response(
+        JSON.stringify({ error: 'Missing signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Read body for signature verification
+    const body = await req.text();
+    
+    // Verify HMAC-SHA512 signature
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(ipnSecret);
+    const messageData = encoder.encode(body);
+    
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-512' },
+      false,
+      ['sign']
+    );
+    
+    const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+    const expectedSig = Array.from(new Uint8Array(signature))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    if (receivedSig !== expectedSig) {
+      console.error('Invalid signature - potential attack attempt');
+      return new Response(
+        JSON.stringify({ error: 'Invalid signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Get IPN data from NowPayments
-    const ipnData = await req.json();
-    console.log('Received IPN:', ipnData);
+    // Parse verified IPN data
+    const ipnData = JSON.parse(body);
+    console.log('Verified IPN received:', { payment_id: ipnData.payment_id, status: ipnData.payment_status });
 
     const paymentId = ipnData.payment_id;
     const paymentStatus = ipnData.payment_status;
