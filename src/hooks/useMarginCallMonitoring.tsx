@@ -279,8 +279,8 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
       const notification = generateMarginCallNotification(detectMarginCallEvent());
 
       toast({
-        title: notification.title,
-        description: notification.message,
+        title: String(notification.title || ''),
+        description: String(notification.message || ''),
         variant: notification.priority === 'CRITICAL' ? 'destructive' : 'default',
       });
 
