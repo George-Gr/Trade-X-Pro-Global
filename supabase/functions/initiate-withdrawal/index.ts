@@ -60,13 +60,7 @@ serve(async (req: Request) => {
     const validation = InitiateWithdrawalSchema.safeParse(body);
     if (!validation.success) {
       return new Response(
-        JSON.stringify({ error: 'Invalid input', details: validation.error.issues }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-    if (!validation.success) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid input', details: validation.error.issues }),
+        JSON.stringify({ error: 'Invalid input', details: validation.error?.issues || [] }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
