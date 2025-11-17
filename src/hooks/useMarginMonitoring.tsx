@@ -231,10 +231,10 @@ export function useMarginMonitoring(
               currentMarginLevel = calculateMarginLevel(
                 Number(newData.equity),
                 Number(newData.margin_used)
-              );
+              ) as number;
             }
 
-            const status = getMarginStatus(currentMarginLevel ?? 0);
+            const status = getMarginStatus(Number(currentMarginLevel ?? 0));
             const previousStatus = previousStatusRef.current;
 
             if (status !== previousStatus) {
@@ -250,15 +250,15 @@ export function useMarginMonitoring(
             }
 
             setState({
-              marginLevel: currentMarginLevel,
+              marginLevel: Number(currentMarginLevel ?? 0),
               marginStatus: status,
               accountEquity: Number(newData.equity),
               marginUsed: Number(newData.margin_used),
-              isWarning: isMarginWarning(currentMarginLevel ?? 0),
-              isCritical: isMarginCritical(currentMarginLevel ?? 0),
-              isLiquidationRisk: isLiquidationRisk(currentMarginLevel ?? 0),
+              isWarning: isMarginWarning(Number(currentMarginLevel ?? 0)),
+              isCritical: isMarginCritical(Number(currentMarginLevel ?? 0)),
+              isLiquidationRisk: isLiquidationRisk(Number(currentMarginLevel ?? 0)),
               timeToLiquidation: estimateTimeToLiquidation(
-                currentMarginLevel ?? 0
+                Number(currentMarginLevel ?? 0)
               ),
               recommendedActions: getMarginActionRequired(status),
               isLoading: false,

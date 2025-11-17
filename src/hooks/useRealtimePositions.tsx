@@ -96,14 +96,14 @@ export function useRealtimePositions(
           id: r.id as string,
           user_id: r.user_id as string,
           symbol: r.symbol as string,
-          side: r.side as 'long' | 'short',
+          side: (r.side as string) === 'buy' ? 'long' : 'short',
           quantity: r.quantity as number,
           entry_price: r.entry_price as number,
           current_price: r.current_price as number,
           unrealized_pnl: (r.unrealized_pnl as number) || 0,
           margin_used: (r.margin_used as number) || 0,
           margin_level: (r.margin_level as number) || 0,
-          status: r.status as string,
+          status: (r.status as 'open' | 'closed' | 'closing') || 'open',
           opened_at: r.opened_at ? new Date(r.opened_at as string) : new Date((r.created_at as string) || Date.now()),
           leverage: typeof r.leverage === 'number' ? (r.leverage as number) : 1,
           created_at: (r.created_at as string) || (r.opened_at as string) || new Date().toISOString(),
@@ -271,7 +271,7 @@ export function useRealtimePositions(
 
       try {
         if (subscriptionRef.current) {
-          await supabase.removeChannel(subscriptionRef.current);
+          await supabase.removeChannel(subscriptionRef.current as any);
         }
 
         setConnectionStatus("connecting");
@@ -280,7 +280,7 @@ export function useRealtimePositions(
         const channel = supabase
           .channel(`positions:${userId}`)
           .on(
-            "postgres_changes" as unknown as 'postgres_changes',
+            "postgres_changes" as any,
             {
               event: "*",
               schema: "public",
@@ -331,7 +331,7 @@ export function useRealtimePositions(
   const unsubscribe = useCallback(async () => {
     if (subscriptionRef.current) {
       try {
-        await supabase.removeChannel(subscriptionRef.current);
+        await supabase.removeChannel(subscriptionRef.current as any);
         subscriptionRef.current = null;
         setIsSubscribed(false);
         setConnectionStatus("disconnected");

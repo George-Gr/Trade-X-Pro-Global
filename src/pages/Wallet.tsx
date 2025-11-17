@@ -52,33 +52,34 @@ const Wallet = () => {
   });
 
   // Fetch withdrawal requests
-  const { data: withdrawals, isLoading: withdrawalsLoading, refetch: refetchWithdrawals } = useQuery({
-    queryKey: ['withdrawal_requests', user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('withdrawal_requests')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id,
-  });
+  // Withdrawal requests - feature disabled (table does not exist in current schema)
+  // const { data: withdrawals, isLoading: withdrawalsLoading, refetch: refetchWithdrawals } = useQuery({
+  //   queryKey: ['withdrawal_requests', user?.id],
+  //   queryFn: async () => {
+  //     const { data, error } = await supabase
+  //       .from('withdrawal_requests')
+  //       .select('*')
+  //       .eq('user_id', user?.id)
+  //       .order('created_at', { ascending: false });
+  //     
+  //     if (error) throw error;
+  //     return data;
+  //   },
+  //   enabled: !!user?.id,
+  // });
 
   const pendingTransactions = transactions?.filter(t => 
     ['pending', 'confirming'].includes(t.status)
   ).length || 0;
 
-  const pendingWithdrawals = withdrawals?.filter(w => 
-    ['pending', 'approved', 'processing'].includes(w.status)
-  ).length || 0;
+  // const pendingWithdrawals = withdrawals?.filter((w: any) => 
+  //   ['pending', 'approved', 'processing'].includes(w.status)
+  // ).length || 0;
 
   const handleRefresh = () => {
     refetchProfile();
     refetchTransactions();
-    refetchWithdrawals();
+    // refetchWithdrawals(); // Feature disabled
   };
 
   return (
@@ -140,10 +141,10 @@ const Wallet = () => {
                   <Skeleton className="h-8 w-32" />
                 ) : (
                   <div className="text-3xl font-bold gradient-text">
-                    ${profile?.held_balance?.toFixed(2) || '0.00'}
+                    ${(0).toFixed(2)}
                   </div>
                 )}
-                <p className="text-xs text-muted-foreground mt-1">In pending withdrawals</p>
+                <p className="text-xs text-muted-foreground mt-1">In pending withdrawals (feature disabled)</p>
               </CardContent>
             </Card>
 
@@ -166,9 +167,9 @@ const Wallet = () => {
                   <div>
                     <Badge variant="secondary" className="flex items-center gap-1">
                       <ArrowUpRight className="h-3 w-3" />
-                      {withdrawalsLoading ? '...' : pendingWithdrawals}
+                      {0}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">Withdrawals</p>
+                    <p className="text-xs text-muted-foreground mt-1">Withdrawals (disabled)</p>
                   </div>
                 </div>
               </CardContent>
@@ -271,42 +272,9 @@ const Wallet = () => {
 
                 <TabsContent value="withdrawals" className="mt-6">
                   <div className="space-y-4">
-                    {withdrawalsLoading ? (
-                      <div className="space-y-4">
-                        {[...Array(3)].map((_, i) => (
-                          <Skeleton key={i} className="h-16 w-full" />
-                        ))}
-                      </div>
-                    ) : withdrawals && withdrawals.length > 0 ? (
-                      <div className="space-y-2">
-                        {withdrawals.map((w) => (
-                          <Card key={w.id} className="p-4 bg-muted/50 border-0">
-                            <div className="flex items-center justify-between">
-                              <div className="space-y-1">
-                                <p className="font-semibold">{w.amount} {w.currency}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  {w.destination_address.slice(0, 10)}...{w.destination_address.slice(-10)}
-                                </p>
-                              </div>
-                              <div className="text-right space-y-1">
-                                <Badge variant={
-                                  w.status === 'completed' ? 'default' :
-                                  w.status === 'failed' ? 'destructive' :
-                                  'secondary'
-                                }>
-                                  {w.status}
-                                </Badge>
-                                <p className="text-xs text-muted-foreground">
-                                  {new Date(w.created_at).toLocaleDateString()}
-                                </p>
-                              </div>
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">No withdrawals yet</p>
-                    )}
+                    <div className="space-y-4">
+                      <p className="text-center text-muted-foreground py-8">Withdrawals feature temporarily disabled</p>
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -329,7 +297,7 @@ const Wallet = () => {
           <WithdrawalDialog
             open={withdrawalDialogOpen}
             onOpenChange={setWithdrawalDialogOpen}
-            onSuccess={() => refetchWithdrawals()}
+            onSuccess={() => { /* Feature disabled */ }}
             balance={profile?.balance || 0}
           />
         </div>
