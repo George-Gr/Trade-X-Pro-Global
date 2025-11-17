@@ -383,8 +383,8 @@ describe('Margin Call Detection - Notifications', () => {
     const notification = generateMarginCallNotification(marginCall);
 
     expect(notification.metadata).toBeDefined();
-    expect(notification.metadata.marginLevel).toBe(100);
-    expect(notification.metadata.severity).toBe(MarginCallSeverity.URGENT);
+    expect((notification.metadata as any).marginLevel).toBe(100);
+    expect((notification.metadata as any).severity).toBe(MarginCallSeverity.URGENT);
   });
 });
 

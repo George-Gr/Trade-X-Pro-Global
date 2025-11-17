@@ -99,7 +99,7 @@ export const usePriceUpdates = ({
   const [prices, setPrices] = useState<Map<string, PriceData>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!enabled || symbols.length === 0) {

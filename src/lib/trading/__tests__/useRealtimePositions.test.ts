@@ -272,7 +272,7 @@ describe("useRealtimePositions: Debouncing", () => {
   });
 
   it("should cancel pending debounce on unmount", () => {
-    let debounceTimer: NodeJS.Timeout | null = null;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     debounceTimer = setTimeout(() => {
       // Update logic
     }, 100);
@@ -458,7 +458,7 @@ describe("useRealtimePositions: Lifecycle & Cleanup", () => {
   });
 
   it("should clear debounce timer on unmount", () => {
-    let debounceTimer: NodeJS.Timeout | null = setTimeout(() => {}, 100);
+    let debounceTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {}, 100);
     if (debounceTimer) {
       clearTimeout(debounceTimer);
       debounceTimer = null;

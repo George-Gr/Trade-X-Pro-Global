@@ -97,7 +97,7 @@ export function useMarginMonitoring(
   });
 
   const previousStatusRef = useRef<MarginStatus>(MarginStatus.SAFE);
-  const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
    * Fetch current user profile with margin data

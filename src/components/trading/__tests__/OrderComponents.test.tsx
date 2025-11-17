@@ -462,9 +462,8 @@ describe('OrderForm and OrderPreview Integration', () => {
             symbol: 'EURUSD',
             side: 'buy',
             quantity: 1,
-            leverage: 100,
             type: 'market',
-          }}
+          } as any}
           currentPrice={1.0950}
         />
       </div>

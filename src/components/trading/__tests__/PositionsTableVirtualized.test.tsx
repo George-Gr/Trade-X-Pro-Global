@@ -48,7 +48,8 @@ describe('PositionsTableVirtualized - Performance Tests', () => {
 
   beforeAll(() => {
     // Mock ResizeObserver for react-window
-    global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    const globalObj = globalThis as any;
+    globalObj.ResizeObserver = vi.fn().mockImplementation(() => ({
       observe: vi.fn(),
       unobserve: vi.fn(),
       disconnect: vi.fn(),

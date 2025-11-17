@@ -95,7 +95,7 @@ export function usePositionUpdate(
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const realtimeChannelRef = useRef<unknown>(null);
-  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // =========================================================================
   // FETCH POSITIONS FROM EDGE FUNCTION
