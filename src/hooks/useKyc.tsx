@@ -36,37 +36,34 @@ export function useKyc(userId?: string) {
     setLoading(true);
     setError(null);
     try {
-      const { data: requestData, error: reqErr } = await supabase
-        .from('kyc_requests' as unknown as string) // Table exists but not in current Supabase types
+      // Fetch documents from kyc_documents table
+      const { data: docs, error: docsErr } = await supabase
+        .from('kyc_documents')
         .select('*')
         .eq('user_id', uid)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+        .order('created_at', { ascending: false });
 
-      if (reqErr && reqErr.code !== 'PGRST116') {
-        throw reqErr;
-      }
-
-      // supabase client returns a complex typed result; cast via unknown first
-      const request = (requestData as unknown) as KycRequestData | null;
-
-      if (request && request.id) {
-        setKycRequest(request);
-        setKycStatus(request.status || 'pending');
-
-        // Fetch documents
-        const { data: docs, error: docsErr } = await supabase
-          .from('kyc_documents' as unknown as string) // Table exists but not in current Supabase types
-          .select('*')
-          .eq('kyc_request_id', request.id)
-          .order('uploaded_at', { ascending: false });
-
-        if (docsErr) throw docsErr;
-        setDocuments(((docs ?? []) as unknown) as KycDocumentData[]);
+      if (docsErr) throw docsErr;
+      
+      // Map database documents to KycDocumentData format
+      const mappedDocs = (docs || []).map((doc: any) => ({
+        id: doc.id,
+        kyc_request_id: doc.id,
+        type: doc.document_type,
+        url: doc.file_path,
+        status: doc.status,
+        uploaded_at: doc.created_at,
+        reviewed_at: doc.reviewed_at
+      })) as KycDocumentData[];
+      
+      setDocuments(mappedDocs);
+      
+      // Set status based on documents
+      if (docs && docs.length > 0) {
+        const latestDoc = docs[0] as any;
+        setKycStatus(latestDoc.status || 'pending');
       } else {
         setKycStatus('pending');
-        setDocuments([]);
       }
     } catch (err: unknown) {
       // Failed to fetch KYC status

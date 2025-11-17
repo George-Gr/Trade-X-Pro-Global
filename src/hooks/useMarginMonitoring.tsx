@@ -229,8 +229,8 @@ export function useMarginMonitoring(
               newData.margin_used
             ) {
               currentMarginLevel = calculateMarginLevel(
-                newData.equity,
-                newData.margin_used
+                Number(newData.equity),
+                Number(newData.margin_used)
               );
             }
 
@@ -252,8 +252,8 @@ export function useMarginMonitoring(
             setState({
               marginLevel: currentMarginLevel,
               marginStatus: status,
-              accountEquity: newData.equity,
-              marginUsed: newData.margin_used,
+              accountEquity: Number(newData.equity),
+              marginUsed: Number(newData.margin_used),
               isWarning: isMarginWarning(currentMarginLevel ?? 0),
               isCritical: isMarginCritical(currentMarginLevel ?? 0),
               isLiquidationRisk: isLiquidationRisk(currentMarginLevel ?? 0),

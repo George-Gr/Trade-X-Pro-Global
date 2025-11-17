@@ -87,25 +87,25 @@ export const usePriceStream = ({
           if (message.type === 'prices' && message.data) {
             const newPrices = new Map<string, PriceData>();
             for (const [symbol, data] of Object.entries(message.data)) {
-              const priceInfo = data as Record<string, unknown>;
+              const priceInfo = data as any;
               if (priceInfo.error) {
                 continue;
               }
               
               newPrices.set(symbol, {
                 symbol,
-                currentPrice: priceInfo.c,
-                bid: priceInfo.c * 0.9999,
-                ask: priceInfo.c * 1.0001,
-                change: priceInfo.d,
-                changePercent: priceInfo.dp,
-                high: priceInfo.h,
-                low: priceInfo.l,
-                open: priceInfo.o,
-                previousClose: priceInfo.pc,
+                currentPrice: Number(priceInfo.c) || 0,
+                bid: Number(priceInfo.c) * 0.9999 || 0,
+                ask: Number(priceInfo.c) * 1.0001 || 0,
+                change: Number(priceInfo.d) || 0,
+                changePercent: Number(priceInfo.dp) || 0,
+                high: Number(priceInfo.h) || 0,
+                low: Number(priceInfo.l) || 0,
+                open: Number(priceInfo.o) || 0,
+                previousClose: Number(priceInfo.pc) || 0,
                 timestamp: message.timestamp,
-                provider: priceInfo.provider,
-                cached: priceInfo.cached,
+                provider: String(priceInfo.provider || ''),
+                cached: Boolean(priceInfo.cached),
               });
             }
             
