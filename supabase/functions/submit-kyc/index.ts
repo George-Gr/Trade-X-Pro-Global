@@ -122,7 +122,7 @@ serve(async (req: Request) => {
     const expiresIn = 60 * 60;
     const { data: signedData, error: signError } = await supabase.storage
       .from("kyc-documents")
-      .createSignedUploadUrl(filePath, expiresIn);
+      .createSignedUploadUrl(filePath, { upsert: false });
 
     if (signError || !signedData?.signedUrl) {
       return new Response(

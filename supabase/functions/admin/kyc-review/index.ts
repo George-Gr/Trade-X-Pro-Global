@@ -91,70 +91,75 @@ serve(async (req: Request) => {
     const previousStatus = kycRequest.status;
 
     // Get user profile for notifications
-    const { data: userProfile, error: profileError } = await supabase
+    const { data: userProfile, error: fetchProfileError } = await supabase
       .from('profiles')
       .select('id, email, full_name, kyc_status')
       .eq('id', userId)
       .single();
 
-    if (profileError || !userProfile) {
+    if (fetchProfileError || !userProfile) {
       return new Response(
         JSON.stringify({ error: 'User profile not found' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Start transaction-like operations
-    const updates: Promise<any>[] = [];
+    // Update KYC request status
+    const { error: updateError } = await supabase
+      .from('kyc_requests')
+      .update({
+        status: statusAfter,
+        reviewed_at: new Date().toISOString(),
+        notes: notes || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', kycRequestId);
 
-    // 1. Update KYC request status
-    updates.push(
-      supabase
-        .from('kyc_requests')
-        .update({
-          status: statusAfter,
-          reviewed_at: new Date().toISOString(),
-          notes: notes || null,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', kycRequestId)
-    );
+    if (updateError) {
+      console.error('Failed to update KYC request:', updateError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to update KYC request' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
-    // 2. Update user profile KYC status
+    // Update user profile KYC status
     const profileUpdate: any = { kyc_status: statusAfter };
     if (action === 'approve') {
-      // On approval, unlock trading and set initial balance if not already set
       profileUpdate.kyc_status = 'approved';
       profileUpdate.kyc_verified_at = new Date().toISOString();
     } else if (action === 'reject') {
       profileUpdate.kyc_status = 'rejected';
     }
 
-    updates.push(
-      supabase
-        .from('profiles')
-        .update(profileUpdate)
-        .eq('id', userId)
-    );
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update(profileUpdate)
+      .eq('id', userId);
 
-    // 3. Create audit log entry
-    updates.push(
-      supabase
-        .from('kyc_audit')
-        .insert({
-          kyc_request_id: kycRequestId,
-          actor_id: user.id,
-          action: action,
-          status_before: previousStatus,
-          status_after: statusAfter,
-          notes: notes || null,
-          created_at: new Date().toISOString(),
-        })
-    );
+    if (profileError) {
+      console.error('Failed to update profile KYC status:', profileError);
+    }
 
-    // 4. If approved, create welcome balance entry
+    // Create audit log entry
+    const { error: auditError } = await supabase
+      .from('kyc_audit')
+      .insert({
+        kyc_request_id: kycRequestId,
+        actor_id: user.id,
+        action: action,
+        status_before: previousStatus,
+        status_after: statusAfter,
+        notes: notes || null,
+        created_at: new Date().toISOString(),
+      });
+
+    if (auditError) {
+      console.error('Failed to create audit log:', auditError);
+    }
+
+    // If approved, give initial balance if needed
     if (action === 'approve') {
-      // Check if user has initial balance
       const { data: balanceData } = await supabase
         .from('profiles')
         .select('balance')
@@ -162,32 +167,20 @@ serve(async (req: Request) => {
         .single();
 
       if (!balanceData?.balance || balanceData.balance === 0) {
-        updates.push(
-          supabase
-            .from('profiles')
-            .update({
-              balance: 10000, // Initial $10K balance on KYC approval
-            })
-            .eq('id', userId)
-        );
+        const { error: balanceError } = await supabase
+          .from('profiles')
+          .update({
+            balance: 10000,
+          })
+          .eq('id', userId);
+
+        if (balanceError) {
+          console.error('Failed to set initial balance:', balanceError);
+        }
       }
     }
 
-    // Execute all updates
-    const results = await Promise.all(updates);
-
-    // Check for errors in any update
-    for (const result of results) {
-      if (result.error) {
-        console.error('Update error:', result.error);
-        return new Response(
-          JSON.stringify({ error: 'Failed to process KYC decision', details: result.error.message }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    }
-
-    // 5. Create notification for user
+    // Create notification for user
     const notificationMessages: Record<string, string> = {
       approve: `✅ Congratulations! Your KYC has been approved. You now have full access to trading with an initial balance of $10,000.`,
       reject: `❌ Your KYC submission was rejected. Reason: ${notes || 'Document verification failed'}. You can resubmit in 7 days.`,
