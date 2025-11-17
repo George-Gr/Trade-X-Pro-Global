@@ -39,13 +39,10 @@ export default function Security() {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "256-bit SSL/TLS encryption",
-                    "Military-grade data protection",
-                    "End-to-end encrypted communications",
-                    "Secure password hashing (bcrypt)",
-                    "Encrypted database storage",
-                    "Regular security audits",
-                    "Penetration testing"
+                    "SSL/TLS encryption for all connections",
+                    "Secure password hashing with bcrypt",
+                    "Encrypted data transmission",
+                    "Secure database storage"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
@@ -66,13 +63,10 @@ export default function Security() {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "Multi-factor authentication (2FA)",
-                    "Biometric login options",
-                    "Session timeout protection",
-                    "IP address whitelisting",
-                    "Login attempt monitoring",
-                    "Suspicious activity alerts",
-                    "Account recovery options"
+                    "JWT-based authentication",
+                    "Server-side role verification",
+                    "Session management via secure tokens",
+                    "Email verification for new accounts"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
@@ -91,17 +85,15 @@ export default function Security() {
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Eye className="h-7 w-7 text-white" />
                   </div>
-                  <h2 className="text-3xl font-bold">Monitoring & Detection</h2>
+                  <h2 className="text-3xl font-bold">Platform Protection</h2>
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "24/7 security monitoring",
-                    "Fraud detection systems",
-                    "Anomaly detection AI",
-                    "Real-time threat analysis",
-                    "Automated response systems",
-                    "Incident response team",
-                    "Continuous threat assessment"
+                    "Rate limiting on critical endpoints",
+                    "Row-level security policies on database",
+                    "Server-side authorization checks",
+                    "Input validation on all requests",
+                    "Audit logging for sensitive operations"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
@@ -118,17 +110,14 @@ export default function Security() {
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Shield className="h-7 w-7 text-white" />
                   </div>
-                  <h2 className="text-3xl font-bold">Compliance Standards</h2>
+                  <h2 className="text-3xl font-bold">Payment Security</h2>
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "GDPR compliant",
-                    "PCI DSS certified",
-                    "ISO 27001 certified",
-                    "SOC 2 Type II audited",
-                    "CCPA compliant",
-                    "HIPAA standards adopted",
-                    "Regular security training"
+                    "Secure payment processing via third-party providers",
+                    "HMAC signature verification for webhooks",
+                    "No storage of payment card details",
+                    "Encrypted transaction data"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
@@ -150,8 +139,8 @@ export default function Security() {
                     tips: "Use 12+ characters with uppercase, lowercase, numbers, and symbols"
                   },
                   {
-                    practice: "Enable 2FA",
-                    tips: "Always activate two-factor authentication for your account"
+                    practice: "Email Verification",
+                    tips: "Keep your email address verified to ensure account recovery"
                   },
                   {
                     practice: "Secure Connection",
