@@ -11,7 +11,7 @@ export default function Security() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-12">
+        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">
@@ -28,24 +28,24 @@ export default function Security() {
         </section>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Lock className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Data Encryption</h2>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
                     "SSL/TLS encryption for all connections",
                     "Secure password hashing with bcrypt",
                     "Encrypted data transmission",
                     "Secure database storage"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-4">
+                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -54,22 +54,22 @@ export default function Security() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Shield className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Account Security</h2>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
                     "JWT-based authentication",
                     "Server-side role verification",
                     "Session management via secure tokens",
                     "Email verification for new accounts"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-4">
+                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -78,16 +78,16 @@ export default function Security() {
             </Card>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Eye className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Platform Protection</h2>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
                     "Rate limiting on critical endpoints",
                     "Row-level security policies on database",
@@ -95,8 +95,8 @@ export default function Security() {
                     "Input validation on all requests",
                     "Audit logging for sensitive operations"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-4">
+                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -105,22 +105,22 @@ export default function Security() {
             </Card>
 
             <Card>
-              <CardContent className="p-8">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
                     <Shield className="h-7 w-7 text-white" />
                   </div>
                   <h2 className="text-3xl font-bold">Payment Security</h2>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
                     "Secure payment processing via third-party providers",
                     "HMAC signature verification for webhooks",
                     "No storage of payment card details",
                     "Encrypted transaction data"
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-4">
+                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -129,10 +129,10 @@ export default function Security() {
             </Card>
           </div>
 
-          <Card className="mb-16">
-            <CardContent className="p-8">
+          <Card className="mb-8">
+            <CardContent>
               <h2 className="text-3xl font-bold mb-8">Security Best Practices for Users</h2>
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-6">
                 {[
                   {
                     practice: "Strong Passwords",
@@ -170,7 +170,7 @@ export default function Security() {
 
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Your Security Matters</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Trade with confidence knowing your data is protected

@@ -318,7 +318,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               const uploaded = uploads.find(u => u.type === doc.type);
               return (
                 <TabsTrigger key={doc.type} value={doc.type} className="text-xs">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-4">
                     {uploaded?.status === 'validated' && (
                       <CheckCircle className="h-3 w-3 text-profit" />
                     )}
@@ -339,11 +339,11 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-sm font-medium">
                       {doc.label}
-                      {isRequired && <span className="text-destructive ml-1">*</span>}
+                      {isRequired && <span className="text-destructive ml-2">*</span>}
                     </label>
                     {upload?.status === 'validated' && (
                       <Badge className="bg-profit">
-                        <CheckCircle className="h-3 w-3 mr-1" />
+                        <CheckCircle className="h-3 w-3 mr-2" />
                         Uploaded
                       </Badge>
                     )}
@@ -399,7 +399,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                             onClick={() => removeDocument(upload.id)}
                             className="mt-2"
                           >
-                            <X className="h-4 w-4 mr-1" />
+                            <X className="h-4 w-4 mr-2" />
                             Remove
                           </Button>
                         )}
@@ -416,7 +416,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                         className="cursor-pointer"
                       >
                         <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm font-medium mb-1">
+                        <p className="text-sm font-medium mb-2">
                           Drag and drop or click to select
                         </p>
                         <p className="text-xs text-muted-foreground">
@@ -434,11 +434,11 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         {/* Submission Info */}
         <div className="bg-muted/50 rounded-lg p-4 space-y-2">
           <h4 className="text-sm font-medium">Upload Status</h4>
-          <ul className="text-sm space-y-1">
+          <ul className="text-sm space-y-2">
             {REQUIRED_DOCUMENTS.map(doc => {
               const uploaded = uploads.find(u => u.type === doc.type);
               return (
-                <li key={doc.type} className="flex items-center gap-2">
+                <li key={doc.type} className="flex items-center gap-4">
                   {uploaded?.status === 'validated' ? (
                     <CheckCircle className="h-4 w-4 text-profit" />
                   ) : uploaded?.status === 'uploading' ? (
@@ -450,7 +450,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                   )}
                   <span>
                     {doc.label}
-                    {doc.required && <span className="text-destructive ml-1">*</span>}
+                    {doc.required && <span className="text-destructive ml-2">*</span>}
                   </span>
                 </li>
               );

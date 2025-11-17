@@ -224,9 +224,9 @@ export function AssetSearchDialog({
         </DialogHeader>
 
         {/* Search Bar */}
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
             <Input
               ref={searchInputRef}
               placeholder="Search by symbol, name, or country..."
@@ -237,7 +237,7 @@ export function AssetSearchDialog({
             {searchQuery && (
               <button
                 onClick={() => handleSearch('')}
-                className="absolute right-3 top-3"
+                className="absolute right-3 top-4"
               >
                 <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
               </button>
@@ -278,7 +278,7 @@ export function AssetSearchDialog({
               variant="outline"
               size="sm"
               onClick={resetFilters}
-              className="gap-2"
+              className="gap-4"
             >
               <Filter className="h-4 w-4" />
               Clear
@@ -288,7 +288,7 @@ export function AssetSearchDialog({
 
         {/* Error Display */}
         {error && (
-          <div className="bg-destructive/10 border border-destructive text-destructive-foreground px-4 py-3 rounded-md">
+          <div className="bg-destructive/10 border border-destructive text-destructive-foreground px-4 py-4 rounded-md">
             <p className="text-sm">{error}</p>
           </div>
         )}
@@ -311,12 +311,12 @@ export function AssetSearchDialog({
                 <button
                   key={asset.id}
                   onClick={() => handleSelectAsset(asset)}
-                  className="w-full p-3 hover:bg-secondary/50 transition-colors text-left"
+                  className="w-full p-4 hover:bg-secondary/50 transition-colors text-left"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       {/* Symbol and Name */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-4">
                         <span className="font-semibold">{asset.symbol}</span>
                         <span className="text-sm text-muted-foreground">
                           {asset.name}
@@ -336,7 +336,7 @@ export function AssetSearchDialog({
                       </div>
 
                       {/* Asset Details */}
-                      <div className="mt-2 flex flex-wrap gap-2">
+                      <div className="mt-2 flex flex-wrap gap-4">
                         <Badge variant="outline" className="capitalize">
                           {asset.asset_class}
                         </Badge>
@@ -378,7 +378,7 @@ export function AssetSearchDialog({
         </div>
 
         {/* Footer */}
-        <div className="text-xs text-muted-foreground text-center py-2 border-t">
+        <div className="text-xs text-muted-foreground text-center py-4 border-t">
           Showing {filteredAssets.length} of {assets.length} assets
         </div>
       </DialogContent>

@@ -114,50 +114,50 @@ const EnhancedPortfolioDashboard: React.FC = () => {
   return (
     <div className="h-full bg-background flex flex-col overflow-hidden">
       {/* Metrics Bar */}
-      <div className="border-b border-border bg-muted/20 px-4 py-3 space-y-3 flex-shrink-0">
+      <div className="border-b border-border bg-muted/20 px-4 py-4 space-y-4 flex-shrink-0">
         {/* First Row - Key Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-          <div className="bg-card/50 rounded-lg p-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">Total Equity</span>
-            <div className="font-semibold text-sm mt-1">${metrics.totalEquity.toFixed(2)}</div>
+            <div className="font-semibold text-sm mt-2">${metrics.totalEquity.toFixed(2)}</div>
           </div>
-          <div className="bg-card/50 rounded-lg p-2">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">Balance</span>
-            <div className="font-semibold text-sm mt-1">${metrics.totalBalance.toFixed(2)}</div>
+            <div className="font-semibold text-sm mt-2">${metrics.totalBalance.toFixed(2)}</div>
           </div>
-          <div className="bg-card/50 rounded-lg p-2">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">Used Margin</span>
-            <div className="font-semibold text-sm mt-1">${metrics.totalUsedMargin.toFixed(2)}</div>
+            <div className="font-semibold text-sm mt-2">${metrics.totalUsedMargin.toFixed(2)}</div>
           </div>
-          <div className="bg-card/50 rounded-lg p-2">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">Available Margin</span>
-            <div className="font-semibold text-sm mt-1">${metrics.totalAvailableMargin.toFixed(2)}</div>
+            <div className="font-semibold text-sm mt-2">${metrics.totalAvailableMargin.toFixed(2)}</div>
           </div>
         </div>
 
         {/* Second Row - P&L and Margin Level */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-          <div className="bg-card/50 rounded-lg p-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">Total P&L</span>
             <div
-              className="font-semibold text-sm mt-1"
+              className="font-semibold text-sm mt-2"
               style={{ color: metrics.totalPnL >= 0 ? '#00BFA5' : '#E53935' }}
             >
               {metrics.totalPnL >= 0 ? '+' : ''} ${metrics.totalPnL.toFixed(2)}
             </div>
           </div>
-          <div className="bg-card/50 rounded-lg p-2">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">ROI</span>
             <div
-              className="font-semibold text-sm mt-1"
+              className="font-semibold text-sm mt-2"
               style={{ color: metrics.roi >= 0 ? '#00BFA5' : '#E53935' }}
             >
               {metrics.roi >= 0 ? '+' : ''} {metrics.roi.toFixed(2)}%
             </div>
           </div>
-          <div className="bg-card/50 rounded-lg p-2">
+          <div className="bg-card/50 rounded-lg p-4">
             <span className="text-xs text-muted-foreground">Margin Level</span>
-            <div className="mt-1">
+            <div className="mt-2">
               <div
                 className="h-2 w-full bg-muted rounded-full overflow-hidden"
                 style={{
@@ -172,7 +172,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
                   }}
                 />
               </div>
-              <span className="text-xs text-muted-foreground mt-1">
+              <span className="text-xs text-muted-foreground mt-2">
                 {metrics.marginLevelPercent.toFixed(0)}%
               </span>
             </div>
@@ -194,13 +194,13 @@ const EnhancedPortfolioDashboard: React.FC = () => {
         </TabsList>
 
         <div className="flex-1 overflow-hidden">
-          <TabsContent value="positions" className="h-full mt-0 overflow-auto">
+          <TabsContent value="positions" className="h-full mt-2 overflow-auto">
             <div className="p-4">
               <EnhancedPositionsTable />
             </div>
           </TabsContent>
 
-          <TabsContent value="orders" className="h-full mt-0 overflow-auto">
+          <TabsContent value="orders" className="h-full mt-2 overflow-auto">
             <div className="p-4">
               <OrderHistory />
             </div>

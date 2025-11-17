@@ -243,45 +243,45 @@ const KycAdminDashboard: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">KYC Admin Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Review and manage user KYC submissions</p>
+        <p className="text-muted-foreground mt-2">Review and manage user KYC submissions</p>
       </div>
 
       {/* Statistics */}
       <div className="grid grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-4">
             <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.pending}</div>
-            <p className="text-xs text-muted-foreground mt-1">Awaiting decision</p>
+            <p className="text-xs text-muted-foreground mt-2">Awaiting decision</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-4">
             <CardTitle className="text-sm font-medium">Approved</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-profit">{stats.approved}</div>
-            <p className="text-xs text-muted-foreground mt-1">Verified users</p>
+            <p className="text-xs text-muted-foreground mt-2">Verified users</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-4">
             <CardTitle className="text-sm font-medium">Rejected</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">{stats.rejected}</div>
-            <p className="text-xs text-muted-foreground mt-1">Resubmit allowed</p>
+            <p className="text-xs text-muted-foreground mt-2">Resubmit allowed</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-4">
             <CardTitle className="text-sm font-medium">Manual Review</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-amber-500">{stats.manual_review}</div>
-            <p className="text-xs text-muted-foreground mt-1">Escalated</p>
+            <p className="text-xs text-muted-foreground mt-2">Escalated</p>
           </CardContent>
         </Card>
       </div>
@@ -364,7 +364,7 @@ const KycAdminDashboard: React.FC = () => {
                         {req.userProfile?.email}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-4">
                           {getStatusIcon(req.status)}
                           {getStatusBadge(req.status)}
                         </div>
@@ -386,7 +386,7 @@ const KycAdminDashboard: React.FC = () => {
                               onClick={() => setSelectedRequest(req)}
                               disabled={actionLoading === req.id}
                             >
-                              <Eye className="h-4 w-4 mr-1" />
+                              <Eye className="h-4 w-4 mr-2" />
                               Review
                             </Button>
                           </DialogTrigger>
@@ -401,19 +401,19 @@ const KycAdminDashboard: React.FC = () => {
 
                               <div className="space-y-6">
                                 {/* Documents */}
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                   <h4 className="font-semibold">Documents ({selectedRequest.kycDocuments?.length || 0})</h4>
                                   {selectedRequest.kycDocuments && selectedRequest.kycDocuments.length > 0 ? (
                                     <div className="space-y-2">
                                       {selectedRequest.kycDocuments.map((doc: KycDocument) => (
-                                        <div key={doc.id} className="border rounded-lg p-3 flex items-center justify-between">
+                                        <div key={doc.id} className="border rounded-lg p-4 flex items-center justify-between">
                                           <div>
                                             <p className="text-sm font-medium capitalize">{doc.type.replace(/_/g, ' ')}</p>
                                             <p className="text-xs text-muted-foreground">
                                               Uploaded: {new Date(doc.uploaded_at).toLocaleDateString()}
                                             </p>
                                           </div>
-                                          <div className="flex items-center gap-2">
+                                          <div className="flex items-center gap-4">
                                             <Badge variant="outline">{doc.status}</Badge>
                                             <Button
                                               size="sm"
@@ -432,7 +432,7 @@ const KycAdminDashboard: React.FC = () => {
                                 </div>
 
                                 {/* Decision Form */}
-                                <div className="space-y-3 border-t pt-4">
+                                <div className="space-y-4 border-t pt-4">
                                   <h4 className="font-semibold">Admin Decision</h4>
 
                                   {selectedRequest.status === 'rejected' && (
@@ -472,7 +472,7 @@ const KycAdminDashboard: React.FC = () => {
                                         />
                                       )}
 
-                                      <div className="flex gap-2">
+                                      <div className="flex gap-4">
                                         <Button
                                           className="flex-1 bg-profit hover:bg-profit/90"
                                           onClick={() =>

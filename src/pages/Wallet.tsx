@@ -91,17 +91,17 @@ const Wallet = () => {
               <h1 className="text-4xl font-bold gradient-text mb-2">Crypto Wallet</h1>
               <p className="text-muted-foreground">Manage your cryptocurrency deposits and withdrawals</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-4">
               <Button 
                 variant="outline"
                 onClick={handleRefresh}
-                className="gap-2"
+                className="gap-4"
               >
                 <RefreshCw className="h-4 w-4" />
               </Button>
               <Button 
                 onClick={() => setDepositDialogOpen(true)}
-                className="gap-2"
+                className="gap-4"
               >
                 <Plus className="h-4 w-4" />
                 Deposit
@@ -112,7 +112,7 @@ const Wallet = () => {
           {/* Balance Cards */}
           <div className="grid gap-6 md:grid-cols-3 mb-8">
             <Card className="glass-card">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Balance
                 </CardTitle>
@@ -130,7 +130,7 @@ const Wallet = () => {
             </Card>
 
             <Card className="glass-card">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Held Balance
                 </CardTitle>
@@ -144,12 +144,16 @@ const Wallet = () => {
                     ${(0).toFixed(2)}
                   </div>
                 )}
+<<<<<<< HEAD
                 <p className="text-xs text-muted-foreground mt-1">In pending withdrawals (feature disabled)</p>
+=======
+                <p className="text-xs text-muted-foreground mt-2">In pending withdrawals</p>
+>>>>>>> b2e9652 (refactor: enhance spacing and margin values across various components for improved layout consistency)
               </CardContent>
             </Card>
 
             <Card className="glass-card">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Pending Operations
                 </CardTitle>
@@ -158,18 +162,22 @@ const Wallet = () => {
               <CardContent>
                 <div className="flex gap-4">
                   <div>
-                    <Badge variant="secondary" className="flex items-center gap-1">
+                    <Badge variant="secondary" className="flex items-center gap-4">
                       <ArrowDownLeft className="h-3 w-3" />
                       {transactionsLoading ? '...' : pendingTransactions}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">Deposits</p>
+                    <p className="text-xs text-muted-foreground mt-2">Deposits</p>
                   </div>
                   <div>
-                    <Badge variant="secondary" className="flex items-center gap-1">
+                    <Badge variant="secondary" className="flex items-center gap-4">
                       <ArrowUpRight className="h-3 w-3" />
                       {0}
                     </Badge>
+<<<<<<< HEAD
                     <p className="text-xs text-muted-foreground mt-1">Withdrawals (disabled)</p>
+=======
+                    <p className="text-xs text-muted-foreground mt-2">Withdrawals</p>
+>>>>>>> b2e9652 (refactor: enhance spacing and margin values across various components for improved layout consistency)
                   </div>
                 </div>
               </CardContent>
@@ -183,7 +191,7 @@ const Wallet = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-4">
                       <ArrowDownLeft className="h-5 w-5 text-green-500" />
                       Deposit Crypto
                     </CardTitle>
@@ -191,9 +199,9 @@ const Wallet = () => {
                   </div>
                   <Button 
                     onClick={() => setDepositDialogOpen(true)}
-                    size="sm"
+                    size="default"
                   >
-                    <Plus className="h-4 w-4 mr-1" />
+                    <Plus className="h-4 w-4 mr-2" />
                     New Deposit
                   </Button>
                 </div>
@@ -218,7 +226,7 @@ const Wallet = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-4">
                       <ArrowUpRight className="h-5 w-5 text-red-500" />
                       Withdraw Crypto
                     </CardTitle>
@@ -226,10 +234,10 @@ const Wallet = () => {
                   </div>
                   <Button 
                     onClick={() => setWithdrawalDialogOpen(true)}
-                    size="sm"
+                    size="default"
                     variant="outline"
                   >
-                    <ArrowUpRight className="h-4 w-4 mr-1" />
+                    <ArrowUpRight className="h-4 w-4 mr-2" />
                     Withdraw
                   </Button>
                 </div>
@@ -272,9 +280,48 @@ const Wallet = () => {
 
                 <TabsContent value="withdrawals" className="mt-6">
                   <div className="space-y-4">
+<<<<<<< HEAD
                     <div className="space-y-4">
                       <p className="text-center text-muted-foreground py-8">Withdrawals feature temporarily disabled</p>
                     </div>
+=======
+                    {withdrawalsLoading ? (
+                      <div className="space-y-4">
+                        {[...Array(3)].map((_, i) => (
+                          <Skeleton key={i} className="h-16 w-full" />
+                        ))}
+                      </div>
+                    ) : withdrawals && withdrawals.length > 0 ? (
+                      <div className="space-y-2">
+                        {withdrawals.map((w) => (
+                          <Card key={w.id} className="p-4 bg-muted/50 border-0">
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-2">
+                                <p className="font-semibold">{w.amount} {w.currency}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {w.destination_address.slice(0, 10)}...{w.destination_address.slice(-10)}
+                                </p>
+                              </div>
+                              <div className="text-right space-y-2">
+                                <Badge variant={
+                                  w.status === 'completed' ? 'default' :
+                                  w.status === 'failed' ? 'destructive' :
+                                  'secondary'
+                                }>
+                                  {w.status}
+                                </Badge>
+                                <p className="text-xs text-muted-foreground">
+                                  {new Date(w.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-center text-muted-foreground py-8">No withdrawals yet</p>
+                    )}
+>>>>>>> b2e9652 (refactor: enhance spacing and margin values across various components for improved layout consistency)
                   </div>
                 </TabsContent>
 

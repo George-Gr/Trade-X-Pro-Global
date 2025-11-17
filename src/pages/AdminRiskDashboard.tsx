@@ -43,7 +43,7 @@ const AdminRiskDashboard = () => {
 
         <div className="grid gap-4 md:grid-cols-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
               <CardTitle className="text-sm font-medium">Total Margin Calls</CardTitle>
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -53,7 +53,7 @@ const AdminRiskDashboard = () => {
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
               <CardTitle className="text-sm font-medium">Critical Status</CardTitle>
               <AlertCircle className="h-4 w-4 text-orange-500" />
             </CardHeader>

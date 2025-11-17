@@ -44,7 +44,7 @@ export const PositionDetailDialog: React.FC<{ position: Position; onClose: () =>
     <div role="dialog" aria-modal="true" className="fixed inset-0 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded p-4 w-full max-w-md">
         <h4 className="text-lg font-semibold">Position Details: {position.symbol}</h4>
-        <div className="grid grid-cols-2 gap-2 mt-2">
+        <div className="grid grid-cols-2 gap-4 mt-2">
           <div>Entry: {position.entry_price}</div>
           <div>Current: {position.current_price}</div>
           <div>Quantity: {position.quantity}</div>
@@ -53,14 +53,14 @@ export const PositionDetailDialog: React.FC<{ position: Position; onClose: () =>
 
         <div className="mt-4">
           <label className="block text-sm">Stop Loss</label>
-          <input type="number" value={sl ?? ''} onChange={(e) => setSl(e.target.value ? Number(e.target.value) : undefined)} className="w-full p-2 border rounded" />
+          <input type="number" value={sl ?? ''} onChange={(e) => setSl(e.target.value ? Number(e.target.value) : undefined)} className="w-full p-4 border rounded" />
         </div>
         <div className="mt-2">
           <label className="block text-sm">Take Profit</label>
-          <input type="number" value={tp ?? ''} onChange={(e) => setTp(e.target.value ? Number(e.target.value) : undefined)} className="w-full p-2 border rounded" />
+          <input type="number" value={tp ?? ''} onChange={(e) => setTp(e.target.value ? Number(e.target.value) : undefined)} className="w-full p-4 border rounded" />
         </div>
 
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-4 mt-4">
           <button className="btn" onClick={onClose} disabled={saving}>Close</button>
           <button className="btn btn-primary" onClick={save} disabled={saving}>{saving ? 'Saving...' : 'Save SL/TP'}</button>
         </div>

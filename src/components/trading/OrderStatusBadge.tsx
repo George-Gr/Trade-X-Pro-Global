@@ -93,10 +93,10 @@ export const OrderStatusBadge = ({
     : `Status: ${config.label}`;
 
   return (
-    <div className="flex items-center gap-1" title={tooltipText}>
+    <div className="flex items-center gap-4" title={tooltipText}>
       <Badge
         variant="outline"
-        className={`${config.className} flex items-center gap-1 whitespace-nowrap`}
+        className={`${config.className} flex items-center gap-4 whitespace-nowrap`}
       >
         {config.Icon}
         {config.label}
