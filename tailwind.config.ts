@@ -84,9 +84,19 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        // Standardized border-radius scale
+        lg: "var(--radius)",              // 8px - Use for: cards, modals, containers, drawers
+        md: "calc(var(--radius) - 2px)",  // 6px - Use for: buttons, inputs, badges, small components
+        sm: "calc(var(--radius) - 4px)",  // 4px - Use for: very small elements (rare)
+        
+        // Special cases (use sparingly)
+        "rounded-full": "9999px",         // Use for: circular elements, avatars, badges
+        
+        // ⚠️ Deprecated - don't use in new code:
+        // - rounded-none (0px) - removed from UI system
+        // - rounded-xl (20px+) - use lg (8px) instead
+        // - rounded-2xl (24px+) - use lg (8px) instead
+        // - rounded-3xl (30px+) - use lg (8px) instead
       },
       keyframes: {
         "accordion-down": {

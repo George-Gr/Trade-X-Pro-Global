@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -75,6 +76,9 @@ const Admin = () => {
     userId: null,
   });
   const [fundAmount, setFundAmount] = useState("");
+  const [isApproving, setIsApproving] = useState<string | null>(null); // Track approval loading by document ID
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [isFunding, setIsFunding] = useState(false);
 
   const fetchKYCDocuments = useCallback(async () => {
     const { data, error } = await supabase
@@ -125,6 +129,8 @@ const Admin = () => {
 
   const handleApprove = async (docId: string, userId: string) => {
     try {
+      setIsApproving(docId);
+      
       const { error: docError } = await supabase
         .from("kyc_documents")
         .update({
@@ -156,6 +162,8 @@ const Admin = () => {
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setIsApproving(null);
     }
   };
 
@@ -170,6 +178,8 @@ const Admin = () => {
     }
 
     try {
+      setIsRejecting(true);
+      
       const doc = kycDocuments.find((d) => d.id === rejectionDialog.docId);
       if (!doc) return;
 
@@ -207,6 +217,8 @@ const Admin = () => {
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setIsRejecting(false);
     }
   };
 
@@ -241,6 +253,8 @@ const Admin = () => {
     }
 
     try {
+      setIsFunding(true);
+      
       // Call secure edge function instead of direct database access
       const { data, error } = await supabase.functions.invoke('admin-fund-account', {
         body: {
@@ -271,6 +285,8 @@ const Admin = () => {
         description: message || "Failed to fund account",
         variant: "destructive",
       });
+    } finally {
+      setIsFunding(false);
     }
   };
 
@@ -443,21 +459,25 @@ const Admin = () => {
                                   </Button>
                                   {doc.status === "pending" && (
                                     <>
-                                      <Button
+                                      <LoadingButton
                                         size="sm"
                                         variant="outline"
                                         onClick={() =>
                                           setRejectionDialog({ open: true, docId: doc.id })
                                         }
+                                        isLoading={isRejecting}
+                                        loadingText="Rejecting..."
                                       >
                                         Reject
-                                      </Button>
-                                      <Button
+                                      </LoadingButton>
+                                      <LoadingButton
                                         size="sm"
                                         onClick={() => handleApprove(doc.id, doc.user_id)}
+                                        isLoading={isApproving === doc.id}
+                                        loadingText="Approving..."
                                       >
                                         Approve
-                                      </Button>
+                                      </LoadingButton>
                                     </>
                                   )}
                                 </div>
@@ -595,9 +615,14 @@ const Admin = () => {
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleReject}>
+            <LoadingButton
+              variant="destructive"
+              onClick={handleReject}
+              isLoading={isRejecting}
+              loadingText="Rejecting..."
+            >
               Reject Document
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -632,7 +657,9 @@ const Admin = () => {
             <Button variant="outline" onClick={() => setFundDialog({ open: false, userId: null })}>
               Cancel
             </Button>
-            <Button onClick={handleFundAccount}>Add Funds</Button>
+            <LoadingButton onClick={handleFundAccount} isLoading={isFunding} loadingText="Adding Funds...">
+  Add Funds
+</LoadingButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

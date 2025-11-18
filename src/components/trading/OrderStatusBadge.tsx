@@ -38,49 +38,49 @@ export const OrderStatusBadge = ({
       case 'pending':
         return {
           label: 'Pending',
-          className: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+          className: 'bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] border-[hsl(var(--status-warning-border))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))] dark:border-[hsl(var(--status-warning-dark-border))]',
           Icon: <Clock className="w-3 h-3" />,
         };
       case 'open':
         return {
           label: 'Open',
-          className: 'bg-blue-100 text-blue-800 border-blue-300',
+          className: 'bg-[hsl(var(--status-info))] text-[hsl(var(--status-info-foreground))] border-[hsl(var(--status-info-border))] dark:bg-[hsl(var(--status-info-dark))] dark:text-[hsl(var(--status-info-dark-foreground))] dark:border-[hsl(var(--status-info-dark-border))]',
           Icon: <TrendingUp className="w-3 h-3" />,
         };
       case 'partially_filled':
         return {
           label: `Partial (${fillPercentage}%)`,
-          className: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+          className: 'bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] border-[hsl(var(--status-warning-border))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))] dark:border-[hsl(var(--status-warning-dark-border))]',
           Icon: <Clock className="w-3 h-3" />,
         };
       case 'filled':
         return {
           label: 'Filled',
-          className: 'bg-green-100 text-green-800 border-green-300',
+          className: 'bg-[hsl(var(--status-safe))] text-[hsl(var(--status-safe-foreground))] border-[hsl(var(--status-safe-border))] dark:bg-[hsl(var(--status-safe-dark))] dark:text-[hsl(var(--status-safe-dark-foreground))] dark:border-[hsl(var(--status-safe-dark-border))]',
           Icon: <CheckCircle className="w-3 h-3" />,
         };
       case 'cancelled':
         return {
           label: 'Cancelled',
-          className: 'bg-gray-100 text-gray-800 border-gray-300',
+          className: 'bg-[hsl(var(--status-neutral))] text-[hsl(var(--status-neutral-foreground))] border-[hsl(var(--status-neutral-border))] dark:bg-[hsl(var(--status-neutral-dark))] dark:text-[hsl(var(--status-neutral-dark-foreground))] dark:border-[hsl(var(--status-neutral-dark-border))]',
           Icon: <XCircle className="w-3 h-3" />,
         };
       case 'rejected':
         return {
           label: 'Rejected',
-          className: 'bg-red-100 text-red-800 border-red-300',
+          className: 'bg-[hsl(var(--status-error))] text-[hsl(var(--status-error-foreground))] border-[hsl(var(--status-error-border))] dark:bg-[hsl(var(--status-error-dark))] dark:text-[hsl(var(--status-error-dark-foreground))] dark:border-[hsl(var(--status-error-dark-border))]',
           Icon: <AlertCircle className="w-3 h-3" />,
         };
       case 'expired':
         return {
           label: 'Expired',
-          className: 'bg-orange-100 text-orange-800 border-orange-300',
+          className: 'bg-[hsl(var(--status-critical))] text-[hsl(var(--status-critical-foreground))] border-[hsl(var(--status-critical-border))] dark:bg-[hsl(var(--status-critical-dark))] dark:text-[hsl(var(--status-critical-dark-foreground))] dark:border-[hsl(var(--status-critical-dark-border))]',
           Icon: <AlertCircle className="w-3 h-3" />,
         };
       default:
         return {
           label: 'Unknown',
-          className: 'bg-gray-100 text-gray-800 border-gray-300',
+          className: 'bg-[hsl(var(--status-neutral))] text-[hsl(var(--status-neutral-foreground))] border-[hsl(var(--status-neutral-border))] dark:bg-[hsl(var(--status-neutral-dark))] dark:text-[hsl(var(--status-neutral-dark-foreground))] dark:border-[hsl(var(--status-neutral-dark-border))]',
           Icon: <AlertCircle className="w-3 h-3" />,
         };
     }
@@ -103,7 +103,7 @@ export const OrderStatusBadge = ({
       </Badge>
       {status === 'partially_filled' && fillPercentage > 0 && (
         <div
-          className="h-1 bg-indigo-400 rounded-full"
+          className="h-1 bg-[hsl(var(--status-warning-foreground))] rounded-full"
           style={{ width: `${Math.min(fillPercentage, 100)}px` }}
         />
       )}

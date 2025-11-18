@@ -59,6 +59,56 @@ All colors MUST be HSL.
     --panel-bg: 0 0% 100%;
     --panel-border: 214 32% 91%;
     
+    /* Status indicator colors - HSL design tokens */
+    --status-safe: 142 76% 96%;
+    --status-safe-foreground: 142 76% 40%;
+    --status-safe-border: 142 76% 80%;
+    
+    --status-warning: 38 92% 96%;
+    --status-warning-foreground: 38 92% 45%;
+    --status-warning-border: 38 92% 80%;
+    
+    --status-critical: 16 92% 95%;
+    --status-critical-foreground: 16 92% 50%;
+    --status-critical-border: 16 92% 80%;
+    
+    --status-error: 0 84% 96%;
+    --status-error-foreground: 0 84% 45%;
+    --status-error-border: 0 84% 80%;
+    
+    --status-info: 217 91% 96%;
+    --status-info-foreground: 217 91% 40%;
+    --status-info-border: 217 91% 80%;
+    
+    --status-neutral: 222 12% 96%;
+    --status-neutral-foreground: 222 12% 45%;
+    --status-neutral-border: 222 12% 80%;
+    
+    /* Dark mode status colors */
+    --status-safe-dark: 142 76% 15%;
+    --status-safe-dark-foreground: 142 76% 70%;
+    --status-safe-dark-border: 142 76% 25%;
+    
+    --status-warning-dark: 38 92% 15%;
+    --status-warning-dark-foreground: 38 92% 70%;
+    --status-warning-dark-border: 38 92% 25%;
+    
+    --status-critical-dark: 16 92% 15%;
+    --status-critical-dark-foreground: 16 92% 70%;
+    --status-critical-dark-border: 16 92% 25%;
+    
+    --status-error-dark: 0 84% 15%;
+    --status-error-dark-foreground: 0 84% 70%;
+    --status-error-dark-border: 0 84% 25%;
+    
+    --status-info-dark: 217 91% 15%;
+    --status-info-dark-foreground: 217 91% 70%;
+    --status-info-dark-border: 217 91% 25%;
+    
+    --status-neutral-dark: 222 12% 15%;
+    --status-neutral-dark-foreground: 222 12% 70%;
+    --status-neutral-dark-border: 222 12% 25%;
+    
     /* Price change indicators */
     --price-up: 142 76% 36%;
     --price-down: 0 84% 60%;
@@ -135,6 +185,31 @@ All colors MUST be HSL.
     
     --panel-bg: 217 33% 17%;
     --panel-border: 217 33% 17%;
+    
+    /* Status indicator colors - HSL design tokens */
+    --status-safe: 142 76% 15%;
+    --status-safe-foreground: 142 76% 70%;
+    --status-safe-border: 142 76% 25%;
+    
+    --status-warning: 38 92% 15%;
+    --status-warning-foreground: 38 92% 70%;
+    --status-warning-border: 38 92% 25%;
+    
+    --status-critical: 16 92% 15%;
+    --status-critical-foreground: 16 92% 70%;
+    --status-critical-border: 16 92% 25%;
+    
+    --status-error: 0 84% 15%;
+    --status-error-foreground: 0 84% 70%;
+    --status-error-border: 0 84% 25%;
+    
+    --status-info: 217 91% 15%;
+    --status-info-foreground: 217 91% 70%;
+    --status-info-border: 217 91% 25%;
+    
+    --status-neutral: 222 12% 15%;
+    --status-neutral-foreground: 222 12% 70%;
+    --status-neutral-border: 222 12% 25%;
     
     /* Price change indicators */
     --price-up: 142 76% 36%;

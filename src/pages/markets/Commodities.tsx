@@ -14,7 +14,7 @@ export default function Commodities() {
         <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">
+              <h1 className="text-4xl font-bold mb-6">
                 Trade Commodities
                 <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
                   Precious Metals, Energy & Agriculture

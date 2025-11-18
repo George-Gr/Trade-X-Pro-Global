@@ -77,8 +77,8 @@ export const CancelOrderConfirmation = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-start gap-4">
-            <div className="rounded-full bg-yellow-100 p-4 mt-2.5">
-              <AlertTriangle className="w-5 h-5 text-yellow-700" />
+            <div className="rounded-full bg-[hsl(var(--status-warning))] p-4 mt-2.5 dark:bg-[hsl(var(--status-warning-dark))]">
+              <AlertTriangle className="w-5 h-5 text-[hsl(var(--status-warning-foreground))] dark:text-[hsl(var(--status-warning-dark-foreground))]" />
             </div>
             <div>
               <AlertDialogTitle>Cancel Order?</AlertDialogTitle>
@@ -151,7 +151,7 @@ export const CancelOrderConfirmation = ({
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isLoading}
-            className="bg-red-600 hover:bg-red-700 text-white"
+            className="bg-[hsl(var(--status-error-foreground))] hover:bg-[hsl(var(--status-error-foreground)/0.9)] text-white"
           >
             {isLoading ? (
               <>

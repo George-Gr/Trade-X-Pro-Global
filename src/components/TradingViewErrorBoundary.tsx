@@ -134,11 +134,11 @@ class TradingViewErrorBoundary extends React.Component<
             {/* Error details in development */}
             {import.meta.env.MODE === "development" && this.state.error && (
               <details className="mt-4 text-xs">
-                <summary className="cursor-pointer text-red-600 dark:text-red-300 font-semibold">
+                <summary className="cursor-pointer text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] font-semibold">
                   Technical Details
                 </summary>
-                <div className="bg-red-50 dark:bg-red-950 rounded-lg p-4 mt-2">
-                  <p className="font-mono text-red-700 dark:text-red-200 break-words">
+                <div className="bg-[hsl(var(--status-error))] dark:bg-[hsl(var(--status-error-dark))] rounded-lg p-4 mt-2">
+                  <p className="font-mono text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] break-words">
                     <strong>Error:</strong> {this.state.error.toString()}
                   </p>
                   {this.state.error.toString().includes('Symbol.toStringTag') && (

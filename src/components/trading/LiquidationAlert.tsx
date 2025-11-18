@@ -165,11 +165,11 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4 mt-4 pt-4 border-t border-red-200 flex-wrap">
+      <div className="flex gap-4 mt-4 pt-4 border-t border-[hsl(var(--status-error-border))] flex-wrap">
         <Button
           onClick={onDeposit}
           size="sm"
-          className="bg-blue-600 hover:bg-blue-700 text-white"
+          className="bg-[hsl(var(--status-info-foreground))] hover:bg-[hsl(var(--status-info-foreground)/0.9)] text-white"
         >
           <DollarSign className="w-4 h-4 mr-2" />
           Deposit Funds
@@ -178,7 +178,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
           onClick={onViewHistory}
           variant="outline"
           size="sm"
-          className="border-red-300 text-red-900 hover:bg-red-100"
+          className="border-[hsl(var(--status-error-border))] text-[hsl(var(--status-error-foreground))] hover:bg-[hsl(var(--status-error))]"
         >
           View History
         </Button>
@@ -186,7 +186,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
           onClick={onContactSupport}
           variant="outline"
           size="sm"
-          className="border-red-300 text-red-900 hover:bg-red-100"
+          className="border-[hsl(var(--status-error-border))] text-[hsl(var(--status-error-foreground))] hover:bg-[hsl(var(--status-error))]"
         >
           Contact Support
         </Button>

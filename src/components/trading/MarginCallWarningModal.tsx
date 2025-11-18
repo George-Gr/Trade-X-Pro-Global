@@ -206,7 +206,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
               </Button>
               <AlertDialogAction
                 onClick={onDeposit}
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
+                className="w-full sm:w-auto bg-[hsl(var(--status-info-foreground))] hover:bg-[hsl(var(--status-info-foreground)/0.9)]"
               >
                 Deposit Funds Now
               </AlertDialogAction>
@@ -216,7 +216,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
               <AlertDialogCancel>Dismiss</AlertDialogCancel>
               <AlertDialogAction
                 onClick={onDeposit}
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
+                className="w-full sm:w-auto bg-[hsl(var(--status-info-foreground))] hover:bg-[hsl(var(--status-info-foreground)/0.9)]"
               >
                 Deposit Funds
               </AlertDialogAction>

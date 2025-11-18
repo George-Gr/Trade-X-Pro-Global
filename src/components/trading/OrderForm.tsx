@@ -348,36 +348,24 @@ export const OrderForm = ({
 
       {/* Buy/Sell Buttons */}
       <div className="grid grid-cols-2 gap-4">
-        <Button
+        <LoadingButton
           onClick={() => handleSubmit('buy')}
-          disabled={isLoading}
+          isLoading={isLoading}
+          loadingText="Buying..."
           className="bg-profit hover:bg-profit/90 text-white"
           size="lg"
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Buying...
-            </>
-          ) : (
-            'Buy'
-          )}
-        </Button>
-        <Button
+          Buy
+        </LoadingButton>
+        <LoadingButton
           onClick={() => handleSubmit('sell')}
-          disabled={isLoading}
+          isLoading={isLoading}
+          loadingText="Selling..."
           className="bg-loss hover:bg-loss/90 text-white"
           size="lg"
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Selling...
-            </>
-          ) : (
-            'Sell'
-          )}
-        </Button>
+          Sell
+        </LoadingButton>
       </div>
     </div>
   );

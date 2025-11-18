@@ -11,7 +11,7 @@ export default function RiskDisclosure() {
       
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <h1 className="text-4xl font-bold mb-8">Risk Disclosure Statement</h1>
+          <h1 className="text-3xl font-bold mb-8">Risk Disclosure Statement</h1>
           
           <Alert className="mb-8 border-warning bg-warning/10">
             <AlertTriangle className="h-5 w-5 text-warning" />

@@ -1,10 +1,12 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { ChevronDown, Loader2, AlertCircle, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import React, { useMemo, useState } from 'react';
+import { ChevronDown, Loader2, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { useOrdersTable, type OrderTableItem } from '@/hooks/useOrdersTable';
 import { useToast } from '@/hooks/use-toast';
+import { OrderFilter, type OrderFilterType } from '@/components/trading/OrderFilter';
+import { OrderDetailExpander } from '@/components/trading/OrderDetailExpander';
+import DesktopOrderTable from '@/components/trading/DesktopOrderTable';
+import MobileOrderCards from '@/components/trading/MobileOrderCards';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +18,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-type OrderFilterType = 'all' | 'pending' | 'filled' | 'cancelled';
 type OrderSortKey = 'created_at' | 'symbol' | 'quantity' | 'price';
 
 interface SortConfig {
@@ -167,197 +168,6 @@ const OrderHistory: React.FC = () => {
     });
   };
 
-  const renderDesktopTable = () => (
-    <div className="hidden md:block overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-border">
-            <th className="text-left py-4 px-4 font-semibold">
-              <SortHeader label="Date" sortKey="created_at" />
-            </th>
-            <th className="text-left py-4 px-4 font-semibold">
-              <SortHeader label="Symbol" sortKey="symbol" />
-            </th>
-            <th className="text-center py-4 px-4 font-semibold">Type</th>
-            <th className="text-left py-4 px-4 font-semibold">Side</th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Qty" sortKey="quantity" />
-            </th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Price" sortKey="price" />
-            </th>
-            <th className="text-center py-4 px-4 font-semibold">Status</th>
-            <th className="text-right py-4 px-4 font-semibold">Comm.</th>
-            <th className="text-center py-4 px-4 font-semibold">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedOrders.map((order) => {
-            const isExpanded = expandedOrderId === order.id;
-            
-            return (
-              <React.Fragment key={order.id}>
-                <tr
-                  className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
-                  onClick={() => setExpandedOrderId(isExpanded ? null : order.id)}
-                >
-                  <td className="py-4 px-4 text-xs">{formatDate(order.created_at)}</td>
-                  <td className="py-4 px-4 font-medium">{order.symbol}</td>
-                  <td className="py-4 px-4 text-center">
-                    <Badge variant="outline" className="text-xs">
-                      {order.type.replace('_', ' ').toUpperCase()}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-4">
-                    <Badge
-                      variant={order.side === 'buy' ? 'default' : 'secondary'}
-                      className={order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'}
-                    >
-                      {order.side.toUpperCase()}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-4 text-right font-mono">{order.quantity.toFixed(2)}</td>
-                  <td className="py-4 px-4 text-right font-mono">
-                    {order.limit_price || order.price ? `$${(order.limit_price || order.price || 0).toFixed(5)}` : '-'}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    <Badge
-                      style={{
-                        backgroundColor: getStatusColor(order.status),
-                        color: 'white',
-                      }}
-                      className="text-xs"
-                    >
-                      {getStatusLabel(order.status)}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-4 text-right font-mono">${(order.commission || 0).toFixed(2)}</td>
-                  <td className="py-4 px-4 text-center">
-                    {order.status === 'cancelled' || order.status === 'rejected' ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="text-xs"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedForReorder(order);
-                          setShowReorderConfirm(true);
-                        }}
-                      >
-                        <RotateCcw className="h-3 w-3 mr-2" />
-                        Reorder
-                      </Button>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">-</span>
-                    )}
-                  </td>
-                </tr>
-                {isExpanded && (
-                  <tr className="border-b border-border/50 bg-muted/20">
-                    <td colSpan={9} className="py-4 px-4">
-                      <OrderDetails order={order} />
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  const renderMobileCards = () => (
-    <div className="md:hidden space-y-4">
-      {sortedOrders.map((order) => {
-        const isExpanded = expandedOrderId === order.id;
-
-        return (
-          <Card
-            key={order.id}
-            className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => setExpandedOrderId(isExpanded ? null : order.id)}
-          >
-            <div className="space-y-4">
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold">{order.symbol}</h3>
-                  <p className="text-xs text-muted-foreground">{formatDate(order.created_at)}</p>
-                </div>
-                <Badge
-                  style={{
-                    backgroundColor: getStatusColor(order.status),
-                    color: 'white',
-                  }}
-                >
-                  {getStatusLabel(order.status)}
-                </Badge>
-              </div>
-
-              {/* Details */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Side</span>
-                  <Badge
-                    variant={order.side === 'buy' ? 'default' : 'secondary'}
-                    className={`mt-2 ${order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'}`}
-                  >
-                    {order.side.toUpperCase()}
-                  </Badge>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Type</span>
-                  <Badge variant="outline" className="mt-2 text-xs">
-                    {order.type.toUpperCase()}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Quantity and Price */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-muted-foreground text-xs">Quantity</span>
-                  <div className="font-mono font-semibold">{order.quantity.toFixed(2)}</div>
-                </div>
-                <div>
-                  <span className="text-muted-foreground text-xs">Price</span>
-                  <div className="font-mono font-semibold">
-                    {order.limit_price || order.price ? `$${(order.limit_price || order.price || 0).toFixed(5)}` : '-'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Expanded Details */}
-              {isExpanded && (
-                <div className="border-t border-border pt-4 mt-4">
-                  <OrderDetails order={order} />
-                </div>
-              )}
-
-              {/* Reorder Action */}
-              {(order.status === 'cancelled' || order.status === 'rejected') && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedForReorder(order);
-                    setShowReorderConfirm(true);
-                  }}
-                >
-                  <RotateCcw className="h-4 w-4 mr-2" />
-                  Reorder
-                </Button>
-              )}
-            </div>
-          </Card>
-        );
-      })}
-    </div>
-  );
-
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -383,27 +193,34 @@ const OrderHistory: React.FC = () => {
         <div>
           <h3 className="font-semibold text-lg">Order History ({sortedOrders.length})</h3>
         </div>
-        <div className="flex items-center gap-4 flex-wrap">
-          {(['all', 'pending', 'filled', 'cancelled'] as OrderFilterType[]).map((filter) => (
-            <Button
-              key={filter}
-              size="sm"
-              variant={filterStatus === filter ? 'default' : 'outline'}
-              onClick={() => setFilterStatus(filter)}
-              aria-label={`Filter orders by ${filter === 'all' ? 'all statuses' : filter}`}
-              aria-pressed={filterStatus === filter}
-            >
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </Button>
-          ))}
-        </div>
+        <OrderFilter filterStatus={filterStatus} onFilterChange={setFilterStatus} />
       </div>
 
       {/* Desktop Table */}
-      {renderDesktopTable()}
+      <DesktopOrderTable
+        orders={sortedOrders}
+        expandedOrderId={expandedOrderId}
+        onExpandToggle={(orderId) => setExpandedOrderId(expandedOrderId === orderId ? null : orderId)}
+        onReorderClick={(order) => {
+          setSelectedForReorder(order);
+          setShowReorderConfirm(true);
+        }}
+        onSortClick={handleSort}
+        sortConfig={sortConfig}
+        renderExpandedContent={(order) => <OrderDetailExpander order={order} />}
+      />
 
       {/* Mobile Cards */}
-      {renderMobileCards()}
+      <MobileOrderCards
+        orders={sortedOrders}
+        expandedOrderId={expandedOrderId}
+        onExpandToggle={(orderId) => setExpandedOrderId(expandedOrderId === orderId ? null : orderId)}
+        onReorderClick={(order) => {
+          setSelectedForReorder(order);
+          setShowReorderConfirm(true);
+        }}
+        renderExpandedContent={(order) => <OrderDetailExpander order={order} />}
+      />
 
       {/* Reorder Confirmation */}
       <AlertDialog open={showReorderConfirm} onOpenChange={setShowReorderConfirm}>
@@ -437,39 +254,5 @@ const OrderHistory: React.FC = () => {
   );
 };
 
-/**
- * OrderDetails Sub-component
- * Displays expanded details for an order
- */
-const OrderDetails: React.FC<{ order: Order }> = ({ order }) => {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-      <div>
-        <span className="text-muted-foreground text-xs">Order Type</span>
-        <div className="font-semibold capitalize">{order.type.replace('_', ' ')}</div>
-      </div>
-      <div>
-        <span className="text-muted-foreground text-xs">Filled Quantity</span>
-        <div className="font-mono">{(order.filled_quantity || 0).toFixed(2)}</div>
-      </div>
-      <div>
-        <span className="text-muted-foreground text-xs">Average Price</span>
-        <div className="font-mono">
-          {order.average_fill_price ? `$${order.average_fill_price.toFixed(5)}` : '-'}
-        </div>
-      </div>
-      {order.stop_price && (
-        <div>
-          <span className="text-muted-foreground text-xs">Stop Price</span>
-          <div className="font-mono">${order.stop_price.toFixed(5)}</div>
-        </div>
-      )}
-      <div>
-        <span className="text-muted-foreground text-xs">Commission</span>
-        <div className="font-mono">${(order.commission || 0).toFixed(2)}</div>
-      </div>
-    </div>
-  );
-};
-
 export default OrderHistory;
+

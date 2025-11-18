@@ -178,8 +178,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       <Card className="bg-card border-border p-4">
         {/* SL/TP Monitoring Status Badge */}
         {isMonitoring && pricesConnected && (
-          <div className="bg-blue-50 dark:bg-blue-950 border-b border-blue-200 dark:border-blue-800 px-4 py-4">
-            <p className="text-sm text-blue-700 dark:text-blue-300">
+          <div className="bg-[hsl(var(--status-info))] dark:bg-[hsl(var(--status-info-dark))] border-b border-[hsl(var(--status-info-border))] dark:border-[hsl(var(--status-info-dark-border))] px-4 py-4">
+            <p className="text-sm text-[hsl(var(--status-info-foreground))] dark:text-[hsl(var(--status-info-dark-foreground))]">
               ✓ Monitoring SL/TP for {monitoredCount} position{monitoredCount !== 1 ? 's' : ''}
             </p>
           </div>
