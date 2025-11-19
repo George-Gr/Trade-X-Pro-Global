@@ -83,7 +83,7 @@ const Settings = () => {
             <CardContent>
               {isLoading ? (
                 <div className="flex items-center gap-4">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">Loading status...</p>
                 </div>
               ) : (
@@ -92,7 +92,7 @@ const Settings = () => {
                     <div className="flex items-center gap-4">
                       {kycStatus === "approved" ? (
                         <>
-                          <CheckCircle2 className="h-5 w-5 text-profit" />
+                          <CheckCircle2 className="h-4 w-4 text-profit" />
                           <div>
                             <p className="font-medium">Verified</p>
                             <p className="text-sm text-muted-foreground">
@@ -102,7 +102,7 @@ const Settings = () => {
                         </>
                       ) : kycStatus === "rejected" ? (
                         <>
-                          <XCircle className="h-5 w-5 text-loss" />
+                          <XCircle className="h-4 w-4 text-loss" />
                           <div>
                             <p className="font-medium">Rejected</p>
                             <p className="text-sm text-muted-foreground">
@@ -112,7 +112,7 @@ const Settings = () => {
                         </>
                       ) : (
                         <>
-                          <Clock className="h-5 w-5 text-amber-500" />
+                          <Clock className="h-4 w-4 text-amber-500" />
                           <div>
                             <p className="font-medium">Pending Verification</p>
                             <p className="text-sm text-muted-foreground">
@@ -197,7 +197,7 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-4">
-                <Bell className="h-5 w-5" />
+                <Bell className="h-4 w-4" />
                 Notification Preferences
               </CardTitle>
               <CardDescription>Configure how you receive notifications</CardDescription>

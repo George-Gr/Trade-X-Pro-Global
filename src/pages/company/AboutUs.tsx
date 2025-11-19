@@ -33,7 +33,7 @@ export default function AboutUs() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Globe className="h-7 w-7 text-primary-foreground" />
+                    <Globe className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Our Story</h2>
                 </div>
@@ -50,7 +50,7 @@ export default function AboutUs() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <TrendingUp className="h-7 w-7 text-primary-foreground" />
+                    <TrendingUp className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Our Vision</h2>
                 </div>
@@ -87,7 +87,7 @@ export default function AboutUs() {
                 <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
                   <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                      <item.icon className="h-7 w-7 text-primary-foreground" />
+                      <item.icon className="h-6 w-6 text-primary-foreground" />
                     </div>
                     <h3 className="text-xl font-bold mb-4">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
@@ -129,7 +129,7 @@ export default function AboutUs() {
                   { value: "Community", description: "Supporting traders and building relationships" }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4 p-6 bg-muted/50 rounded-lg">
-                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-2" />
+                    <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2" />
                     <div>
                       <h3 className="font-bold text-lg mb-2">{item.value}</h3>
                       <p className="text-sm text-muted-foreground">{item.description}</p>

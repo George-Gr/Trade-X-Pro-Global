@@ -44,7 +44,7 @@ export default function Partners() {
                 <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
                   <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                      <Handshake className="h-7 w-7 text-primary-foreground" />
+                      <Handshake className="h-6 w-6 text-primary-foreground" />
                     </div>
                     <h3 className="text-2xl font-bold mb-2">{item.partner}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
@@ -109,7 +109,7 @@ export default function Partners() {
                   "Continuous innovation and updates"
                 ].map((benefit, i) => (
                   <div key={i} className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-2.5" />
+                    <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                     <span className="text-muted-foreground">{benefit}</span>
                   </div>
                 ))}

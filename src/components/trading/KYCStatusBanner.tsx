@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthData } from "@/contexts/AuthenticatedLayoutContext";
 import { AlertCircle, CheckCircle2, XCircle, Clock, ArrowRight } from "lucide-react";
 
 export function KYCStatusBanner() {
-  const { user } = useAuth();
+  const { user } = useAuthData();
   const navigate = useNavigate();
 
   const { data: profile } = useQuery({
@@ -86,7 +86,7 @@ export function KYCStatusBanner() {
   return (
     <Alert variant={config.variant} className="mb-4 border-l-4">
       <div className="flex items-start gap-4">
-        <StatusIcon className="h-5 w-5 mt-2.5" />
+        <StatusIcon className="h-4 w-4 mt-2.5" />
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-4">
             <AlertTitle className="mb-2">{config.title}</AlertTitle>

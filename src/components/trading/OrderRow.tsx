@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { OrderStatusBadge, calculateFillPercentage, type OrderStatus } from './OrderStatusBadge';
 import { Copy, MoreHorizontal, Trash2, Edit } from 'lucide-react';
@@ -45,7 +46,7 @@ interface OrderRowProps {
  * @param onCancel - Callback when cancel button clicked
  * @param onViewDetails - Callback when view details clicked
  */
-export const OrderRow = ({
+export const OrderRow = memo(({
   order,
   onModify,
   onCancel,
@@ -231,4 +232,23 @@ export const OrderRow = ({
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison to optimize re-renders
+  // Only re-render if the order data actually changed or callbacks changed
+  const orderChanged = prevProps.order.id !== nextProps.order.id ||
+    prevProps.order.status !== nextProps.order.status ||
+    prevProps.order.filled_quantity !== nextProps.order.filled_quantity ||
+    prevProps.order.quantity !== nextProps.order.quantity ||
+    prevProps.order.average_fill_price !== nextProps.order.average_fill_price ||
+    prevProps.order.price !== nextProps.order.price ||
+    prevProps.order.limit_price !== nextProps.order.limit_price ||
+    prevProps.order.commission !== nextProps.order.commission ||
+    prevProps.order.slippage !== nextProps.order.slippage ||
+    prevProps.order.realized_pnl !== nextProps.order.realized_pnl;
+  
+  const callbacksChanged = prevProps.onModify !== nextProps.onModify ||
+    prevProps.onCancel !== nextProps.onCancel ||
+    prevProps.onViewDetails !== nextProps.onViewDetails;
+  
+  return !orderChanged && !callbacksChanged;
+});

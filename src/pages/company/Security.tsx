@@ -33,7 +33,7 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Lock className="h-7 w-7 text-primary-foreground" />
+                    <Lock className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Data Security</h2>
                 </div>
@@ -45,7 +45,7 @@ export default function Security() {
                     "Secure database storage"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                      <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -57,7 +57,7 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Shield className="h-7 w-7 text-primary-foreground" />
+                    <Shield className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Account Protection</h2>
                 </div>
@@ -69,7 +69,7 @@ export default function Security() {
                     "Email verification for new accounts"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                      <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -83,7 +83,7 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Eye className="h-7 w-7 text-primary-foreground" />
+                    <Eye className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Platform Protection</h2>
                 </div>
@@ -96,7 +96,7 @@ export default function Security() {
                     "Audit logging for sensitive operations"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                      <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
@@ -108,7 +108,7 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Shield className="h-7 w-7 text-primary-foreground" />
+                    <Shield className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Payment Security</h2>
                 </div>
@@ -120,7 +120,7 @@ export default function Security() {
                     "Encrypted transaction data"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                      <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}

@@ -32,7 +32,7 @@ export default function ContactUs() {
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
               <CardContent className="text-center">
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                  <Mail className="h-7 w-7 text-primary-foreground" />
+                  <Mail className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Email</h3>
                 <p className="text-muted-foreground mb-4">support@tradexpro.com</p>
@@ -43,7 +43,7 @@ export default function ContactUs() {
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
               <CardContent className="text-center">
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                  <Phone className="h-7 w-7 text-primary-foreground" />
+                  <Phone className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Phone</h3>
                 <p className="text-muted-foreground mb-4">+1 (800) 123-4567</p>
@@ -54,7 +54,7 @@ export default function ContactUs() {
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
               <CardContent className="text-center">
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                  <MapPin className="h-7 w-7 text-primary-foreground" />
+                  <MapPin className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Address</h3>
                 <p className="text-muted-foreground mb-2">123 Finance Street</p>
@@ -102,7 +102,7 @@ export default function ContactUs() {
                     />
                   </div>
                   <Button className="w-full bg-gradient-to-r from-primary to-primary-glow flex items-center justify-center gap-4">
-                    <Send className="h-5 w-5" />
+                    <Send className="h-4 w-4" />
                     Send Message
                   </Button>
                 </form>

@@ -261,7 +261,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
                     )}
                     <div
                       className={cn(
-                        "flex flex-1 justify-between leading-none",
+                        "flex flex-1 justify-between leading-tight",
                         nestLabel ? "items-end" : "items-center",
                       )}
                     >

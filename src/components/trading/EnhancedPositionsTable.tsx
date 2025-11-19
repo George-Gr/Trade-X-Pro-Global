@@ -113,8 +113,8 @@ const EnhancedPositionsTable: React.FC = () => {
   // Sort positions
   const sortedPositions = useMemo(() => {
     const sorted = [...filteredPositions].sort((a, b) => {
-      let aVal: any = a[sortConfig.key as keyof Position];
-      let bVal: any = b[sortConfig.key as keyof Position];
+      let aVal: unknown = a[sortConfig.key as keyof Position];
+      let bVal: unknown = b[sortConfig.key as keyof Position];
 
       if (sortConfig.key === 'pnl') {
         aVal = getPositionPnL(a).unrealizedPnL || 0;

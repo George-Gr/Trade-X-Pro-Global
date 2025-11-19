@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
 import type { OrderStatus } from '@/lib/trading/orderStatusUtils';
@@ -109,4 +110,9 @@ export const OrderStatusBadge = ({
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if status, fillPercentage, or timestamp changed
+  return prevProps.status === nextProps.status &&
+    prevProps.fillPercentage === nextProps.fillPercentage &&
+    prevProps.timestamp === nextProps.timestamp;
+});

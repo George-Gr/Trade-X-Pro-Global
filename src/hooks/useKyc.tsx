@@ -46,7 +46,7 @@ export function useKyc(userId?: string) {
       if (docsErr) throw docsErr;
       
       // Map database documents to KycDocumentData format
-      const mappedDocs = (docs || []).map((doc: any) => ({
+      const mappedDocs = (docs || []).map((doc: { [key: string]: any }) => ({
         id: doc.id,
         kyc_request_id: doc.id,
         type: doc.document_type,
@@ -60,7 +60,7 @@ export function useKyc(userId?: string) {
       
       // Set status based on documents
       if (docs && docs.length > 0) {
-        const latestDoc = docs[0] as any;
+        const latestDoc = docs[0] as { status?: string };
         setKycStatus(latestDoc.status || 'pending');
       } else {
         setKycStatus('pending');

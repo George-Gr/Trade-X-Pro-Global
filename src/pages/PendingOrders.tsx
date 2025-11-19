@@ -113,7 +113,7 @@ const PendingOrders = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-4">
-              <Clock className="h-5 w-5" />
+              <Clock className="h-4 w-4" />
               Active Orders ({orders.length})
             </CardTitle>
             <CardDescription>

@@ -121,7 +121,7 @@ export const RiskSettingsForm = () => {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-4">
-              <Shield className="h-5 w-5" />
+              <Shield className="h-4 w-4" />
               Risk Management Settings
             </CardTitle>
             <CardDescription>

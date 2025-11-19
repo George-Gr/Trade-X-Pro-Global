@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { calculateUnrealizedPnL, getPositionColor } from './PositionsGrid';
 import type { Position } from '@/types/position';
 import { PositionCloseDialog } from './PositionCloseDialog';
 import { usePositionClose } from '@/hooks/usePositionClose';
 
-export const PositionRow: React.FC<{ position: Position; onView?: () => void; selectable?: boolean; selected?: boolean; onSelect?: (id: string, checked: boolean) => void }> = ({ position, onView, selectable = false, selected = false, onSelect }) => {
+export const PositionRow = memo(({ position, onView, selectable = false, selected = false, onSelect }: { position: Position; onView?: () => void; selectable?: boolean; selected?: boolean; onSelect?: (id: string, checked: boolean) => void }) => {
   const pnl = calculateUnrealizedPnL(position);
   const color = getPositionColor(position);
   const [openClose, setOpenClose] = useState(false);
@@ -45,6 +45,23 @@ export const PositionRow: React.FC<{ position: Position; onView?: () => void; se
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison to optimize re-renders
+  // Only re-render if position data changed or selection state changed
+  const positionChanged = prevProps.position.id !== nextProps.position.id ||
+    prevProps.position.symbol !== nextProps.position.symbol ||
+    prevProps.position.side !== nextProps.position.side ||
+    prevProps.position.quantity !== nextProps.position.quantity ||
+    prevProps.position.entry_price !== nextProps.position.entry_price ||
+    prevProps.position.current_price !== nextProps.position.current_price;
+  
+  const selectionChanged = prevProps.selected !== nextProps.selected ||
+    prevProps.selectable !== nextProps.selectable;
+  
+  const callbacksChanged = prevProps.onView !== nextProps.onView ||
+    prevProps.onSelect !== nextProps.onSelect;
+  
+  return !positionChanged && !selectionChanged && !callbacksChanged;
+});
 
 export default PositionRow;

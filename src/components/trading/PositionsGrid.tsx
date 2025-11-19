@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { Position, PositionMetricsData } from '@/types/position';
 
 // Re-export types and utilities for components

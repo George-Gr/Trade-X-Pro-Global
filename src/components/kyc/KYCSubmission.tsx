@@ -15,6 +15,10 @@ interface KYCSubmissionProps {
   onSuccess?: () => void;
 }
 
+interface KYCFormData {
+  documentType: string;
+}
+
 const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -59,7 +63,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: KYCFormData) => {
     // data contains documentType
     if (!user || !data.documentType || !selectedFile) {
       toast({

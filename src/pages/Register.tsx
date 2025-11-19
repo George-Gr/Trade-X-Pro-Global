@@ -10,6 +10,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { validationRules } from "@/components/ui/form";
 
+interface RegisterFormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -35,7 +42,7 @@ const Register = () => {
     }
   }, [user, navigate]);
 
-  const handleRegister = async (data: any) => {
+  const handleRegister = async (data: RegisterFormData) => {
     setIsLoading(true);
 
     try {

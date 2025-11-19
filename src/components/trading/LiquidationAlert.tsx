@@ -45,7 +45,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
     <Alert className="border-red-300 bg-background mb-4">
       <div className="flex items-start justify-between w-full gap-4">
         <div className="flex items-start gap-4 flex-1">
-          <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-2.5" />
+          <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-2.5" />
           <div className="flex-1">
             <AlertTitle className="text-red-900 text-lg mb-2">
               Account Liquidation Executed
@@ -160,7 +160,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
           className="flex-shrink-0 text-red-600 hover:text-red-900 transition-colors"
           aria-label="Dismiss"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
       </div>
 

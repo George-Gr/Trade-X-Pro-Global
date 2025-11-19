@@ -32,7 +32,7 @@ export default function Glossary() {
             <Card>
               <CardContent>
                 <div className="flex items-center gap-4 bg-muted/50 rounded-lg p-4 mb-8">
-                  <Search className="h-5 w-5 text-muted-foreground" />
+                  <Search className="h-4 w-4 text-muted-foreground" />
                   <input
                     type="text"
                     placeholder="Search trading terms..."
@@ -54,7 +54,7 @@ export default function Glossary() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <BookOpen className="h-7 w-7 text-primary-foreground" />
+                      <BookOpen className="h-6 w-6 text-primary-foreground" />
                     </div>
                     <h2 className="text-2xl font-bold">{group.category}</h2>
                   </div>
@@ -119,7 +119,7 @@ export default function Glossary() {
                   "Real-World Examples"
                 ].map((feature, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-2" />
+                    <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2" />
                     <div>
                       <p className="font-semibold">{feature}</p>
                     </div>

@@ -109,7 +109,7 @@ export const PriceAlertsManager = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-4">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-4 w-4" />
             Price Alerts
           </CardTitle>
           <PriceAlertDialog symbol="EURUSD" currentPrice={1.0856} onAlertCreated={fetchAlerts} />

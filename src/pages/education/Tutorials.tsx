@@ -33,7 +33,7 @@ export default function Tutorials() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <BookOpen className="h-7 w-7 text-primary-foreground" />
+                    <BookOpen className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Available Resources</h2>
                 </div>

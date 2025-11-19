@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { TrendingUp, LogOut, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
@@ -13,10 +13,10 @@ interface AuthenticatedLayoutProps {
 
 const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
   const navigate = useNavigate();
-  const { signOut, user } = useAuth();
+  const { user, handleLogout, sidebarOpen, setSidebarOpen } = useAuthenticatedLayout();
 
-  const handleLogout = async () => {
-    await signOut();
+  const handleLogoutClick = async () => {
+    await handleLogout();
     navigate("/login");
   };
 
@@ -32,10 +32,10 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
           <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4 flex-shrink-0">
             <div className="flex items-center gap-4">
               <SidebarTrigger>
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4" />
               </SidebarTrigger>
               <div className="flex items-center gap-4">
-                <TrendingUp className="h-5 w-5 text-primary" />
+                <TrendingUp className="h-4 w-4 text-primary" />
                 <span className="font-bold">TradeX Pro</span>
               </div>
             </div>
@@ -49,7 +49,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
               <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">
                 <User className="h-4 w-4 text-primary" />
               </div>
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
+              <Button variant="ghost" size="sm" onClick={handleLogoutClick}>
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>

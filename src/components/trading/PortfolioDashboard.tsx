@@ -170,9 +170,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
             <p className="text-sm text-muted-foreground">Total P&L</p>
             <div className="flex items-center gap-4">
               {metrics.totalPnL >= 0 ? (
-                <TrendingUp className="h-5 w-5 text-profit" />
+                <TrendingUp className="h-4 w-4 text-profit" />
               ) : (
-                <TrendingDown className="h-5 w-5 text-loss" />
+                <TrendingDown className="h-4 w-4 text-loss" />
               )}
               <p className={`text-2xl font-bold font-mono ${
                 metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'

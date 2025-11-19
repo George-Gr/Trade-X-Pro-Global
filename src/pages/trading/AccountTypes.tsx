@@ -183,35 +183,35 @@ export default function AccountTypes() {
                         <td className="p-4 font-medium">{row.feature}</td>
                         <td className="p-4 text-center">
                           {typeof row.standard === "boolean" ? (
-                            row.standard ? <CheckCircle2 className="h-5 w-5 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
+                            row.standard ? <CheckCircle2 className="h-4 w-4 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
                           ) : (
                             row.standard
                           )}
                         </td>
                         <td className="p-4 text-center">
                           {typeof row.premium === "boolean" ? (
-                            row.premium ? <CheckCircle2 className="h-5 w-5 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
+                            row.premium ? <CheckCircle2 className="h-4 w-4 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
                           ) : (
                             row.premium
                           )}
                         </td>
                         <td className="p-4 text-center">
                           {typeof row.ecn === "boolean" ? (
-                            row.ecn ? <CheckCircle2 className="h-5 w-5 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
+                            row.ecn ? <CheckCircle2 className="h-4 w-4 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
                           ) : (
                             row.ecn
                           )}
                         </td>
                         <td className="p-4 text-center">
                           {typeof row.islamic === "boolean" ? (
-                            row.islamic ? <CheckCircle2 className="h-5 w-5 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
+                            row.islamic ? <CheckCircle2 className="h-4 w-4 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
                           ) : (
                             row.islamic
                           )}
                         </td>
                         <td className="p-4 text-center">
                           {typeof row.corporate === "boolean" ? (
-                            row.corporate ? <CheckCircle2 className="h-5 w-5 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
+                            row.corporate ? <CheckCircle2 className="h-4 w-4 text-accent mx-auto" /> : <span className="text-muted-foreground">—</span>
                           ) : (
                             row.corporate
                           )}

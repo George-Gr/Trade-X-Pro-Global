@@ -26,6 +26,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const DevSentryTest = lazy(() => import("./pages/DevSentryTest"));
 const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
 import { NotificationProvider } from "@/contexts/NotificationContext";
+import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutContext";
 
 // Legal Pages
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";

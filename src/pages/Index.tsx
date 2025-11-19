@@ -28,13 +28,15 @@ export default function Index() {
       <PublicHeader />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-20 overflow-hidden md:min-h-[80vh]">
         <div 
           className="absolute inset-0 z-0"
           style={{
             backgroundImage: `url(${heroImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/60 to-primary-glow/65" />
@@ -58,7 +60,7 @@ export default function Index() {
               <Link to="/register">
                 <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
                   Start Trading Free
-                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
               </Link>
               <Link to="/dashboard">
@@ -70,15 +72,15 @@ export default function Index() {
 
             <div className="flex flex-wrap justify-center gap-6 text-primary-foreground/90">
               <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-5 w-5 text-accent" />
+                <CheckCircle2 className="h-4 w-4 text-accent" />
                 <span>$50,000 Virtual Capital</span>
               </div>
               <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-5 w-5 text-accent" />
+                <CheckCircle2 className="h-4 w-4 text-accent" />
                 <span>Real-Time Market Data</span>
               </div>
               <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-5 w-5 text-accent" />
+                <CheckCircle2 className="h-4 w-4 text-accent" />
                 <span>5 Asset Classes</span>
               </div>
             </div>
@@ -214,11 +216,13 @@ export default function Index() {
 
       {/* Global Markets Section */}
       <section 
-        className="py-20 relative overflow-hidden"
+        className="py-16 sm:py-20 relative overflow-hidden"
         style={{
           backgroundImage: `url(${globalMarketsMap})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
@@ -266,7 +270,7 @@ export default function Index() {
               <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card/80 backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6 text-center">
                   <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                    <asset.icon className="h-7 w-7 text-primary-foreground" aria-hidden="true" />
+                    <asset.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{asset.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{asset.description}</p>
@@ -281,11 +285,13 @@ export default function Index() {
       {/* Trust & Security Section */}
       <section 
         id="security" 
-        className="py-20 relative overflow-hidden bg-foreground"
+        className="py-16 sm:py-20 relative overflow-hidden bg-foreground"
         style={{
           backgroundImage: `url(${securityBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-foreground/90 backdrop-blur-sm" />
@@ -346,7 +352,7 @@ export default function Index() {
             <Link to="/register">
               <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Create free account now">
                 Create Free Account
-                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
 
@@ -424,7 +430,7 @@ export default function Index() {
                     <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex items-center gap-4">
                         <div className={`h-14 w-14 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center flex-shrink-0`}>
-                          <partner.icon className="h-7 w-7 text-primary-foreground" aria-hidden="true" />
+                          <partner.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
                       </div>
                       <div>
                         <p className="font-semibold text-lg">{partner.name}</p>

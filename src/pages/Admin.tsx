@@ -305,7 +305,7 @@ const Admin = () => {
       {/* Top Bar */}
       <div className="h-14 bg-card border-b border-border flex items-center justify-between px-6">
         <div className="flex items-center gap-4">
-          <TrendingUp className="h-5 w-5 text-primary" />
+          <TrendingUp className="h-4 w-4 text-primary" />
           <span className="font-bold">TradeX Pro</span>
           <Badge variant="outline" className="ml-2 text-xs">
             Admin
@@ -337,7 +337,7 @@ const Admin = () => {
               <Card className="p-4">
                 <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <FileCheck className="h-5 w-5 text-primary" />
+                    <FileCheck className="h-4 w-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Pending KYC</p>
@@ -351,7 +351,7 @@ const Admin = () => {
               <Card className="p-4">
                 <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Users className="h-5 w-5 text-primary" />
+                    <Users className="h-4 w-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Total Users</p>
@@ -363,7 +363,7 @@ const Admin = () => {
               <Card className="p-4">
                 <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <DollarSign className="h-5 w-5 text-primary" />
+                    <DollarSign className="h-4 w-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Total Virtual Capital</p>
@@ -377,7 +377,7 @@ const Admin = () => {
               <Card className="p-4">
                 <div className="flex items-center gap-4">
                   <div className="h-10 w-10 bg-profit/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-profit" />
+                    <TrendingUp className="h-4 w-4 text-profit" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Approved KYC</p>

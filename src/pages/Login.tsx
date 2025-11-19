@@ -10,6 +10,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -36,7 +41,7 @@ const Login = () => {
     }
   }, [user, isAdmin, navigate]);
 
-  const handleLogin = async (data: any) => {
+  const handleLogin = async (data: LoginFormData) => {
     setIsLoading(true);
 
     try {

@@ -14,7 +14,7 @@ export default function RiskDisclosure() {
           <h1 className="text-3xl font-bold mb-8">Risk Disclosure Statement</h1>
           
           <Alert className="mb-8 border-warning bg-warning/10">
-            <AlertTriangle className="h-5 w-5 text-warning" />
+            <AlertTriangle className="h-4 w-4 text-warning" />
             <AlertDescription className="text-foreground">
               <strong className="text-warning">WARNING:</strong> CFDs are complex instruments and come with a high risk of losing money rapidly due to leverage. 
               <strong> 75% of retail investor accounts lose money when trading CFDs with this provider.</strong> You should consider whether you understand how CFDs work and whether you can afford to take the high risk of losing your money.
@@ -163,7 +163,7 @@ export default function RiskDisclosure() {
 
               <div className="pt-6 border-t border-border">
                 <Alert className="border-warning bg-warning/10">
-                  <AlertTriangle className="h-5 w-5 text-warning" />
+                  <AlertTriangle className="h-4 w-4 text-warning" />
                   <AlertDescription className="text-foreground">
                     By opening an account and trading with TradeX Pro, you acknowledge that you have read, understood, and accepted this Risk Disclosure Statement and are aware of the risks involved in CFD trading.
                   </AlertDescription>

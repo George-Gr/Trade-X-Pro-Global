@@ -47,7 +47,12 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
   const watchedAmount = watch('amount');
   const watchedCurrency = watch('currency') || 'BTC';
 
-  const handleCreatePayment = async (data?: any) => {
+  interface DepositFormData {
+    amount: string;
+    currency: string;
+  }
+
+  const handleCreatePayment = async (data?: DepositFormData) => {
     const amt = data?.amount ?? watchedAmount;
     const curr = data?.currency ?? watchedCurrency;
 

@@ -19,19 +19,19 @@ export const PublicFooter = () => {
             </p>
             <div className="flex gap-4">
               <a href="https://facebook.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
-                <Facebook className="h-5 w-5" />
+                <Facebook className="h-4 w-4" />
               </a>
               <a href="https://twitter.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Twitter" target="_blank" rel="noopener noreferrer">
-                <Twitter className="h-5 w-5" />
+                <Twitter className="h-4 w-4" />
               </a>
               <a href="https://linkedin.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on LinkedIn" target="_blank" rel="noopener noreferrer">
-                <Linkedin className="h-5 w-5" />
+                <Linkedin className="h-4 w-4" />
               </a>
               <a href="https://youtube.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Subscribe on YouTube" target="_blank" rel="noopener noreferrer">
-                <Youtube className="h-5 w-5" />
+                <Youtube className="h-4 w-4" />
               </a>
               <a href="https://instagram.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
-                <Instagram className="h-5 w-5" />
+                <Instagram className="h-4 w-4" />
               </a>
             </div>
           </div>

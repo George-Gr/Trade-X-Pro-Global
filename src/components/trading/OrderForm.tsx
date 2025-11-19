@@ -178,7 +178,7 @@ export const OrderForm = ({
       {/* Error Display */}
       {(error || validationError) && (
         <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex gap-4">
-          <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-2.5" />
+          <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0 mt-2.5" />
           <div>
             <p className="text-sm font-medium text-destructive">
               {error || validationError}

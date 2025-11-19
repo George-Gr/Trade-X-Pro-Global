@@ -93,13 +93,13 @@ export function MarginLevelAlert({
   const getStatusIcon = () => {
     switch (marginStatus) {
       case MarginStatus.SAFE:
-        return <TrendingDown className="h-5 w-5 text-[hsl(var(--status-safe-foreground))]" />;
+        return <TrendingDown className="h-4 w-4 text-[hsl(var(--status-safe-foreground))]" />;
       case MarginStatus.WARNING:
-        return <AlertTriangle className="h-5 w-5 text-[hsl(var(--status-warning-foreground))]" />;
+        return <AlertTriangle className="h-4 w-4 text-[hsl(var(--status-warning-foreground))]" />;
       case MarginStatus.CRITICAL:
-        return <AlertCircle className="h-5 w-5 text-[hsl(var(--status-critical-foreground))]" />;
+        return <AlertCircle className="h-4 w-4 text-[hsl(var(--status-critical-foreground))]" />;
       case MarginStatus.LIQUIDATION:
-        return <AlertTriangle className="h-5 w-5 text-[hsl(var(--status-error-foreground))]" />;
+        return <AlertTriangle className="h-4 w-4 text-[hsl(var(--status-error-foreground))]" />;
       default:
         return null;
     }

@@ -19,6 +19,13 @@ interface WithdrawalFormProps {
   balance: number;
 }
 
+interface WithdrawalFormData {
+  currency: string;
+  address: string;
+  amount: string;
+  twoFACode: string;
+}
+
 const SUPPORTED_CRYPTOS = [
   { value: 'BTC', label: 'Bitcoin (BTC)', min: '0.001', networkFee: '0.0001', avgTime: '10-30 min' },
   { value: 'ETH', label: 'Ethereum (ETH)', min: '0.01', networkFee: '0.005', avgTime: '5-15 min' },
@@ -114,7 +121,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     return patterns[curr]?.test(addr) || false;
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: WithdrawalFormData) => {
     const { currency: formCurrency, address: formAddress, amount: formAmount } = data;
 
     // Validate address format

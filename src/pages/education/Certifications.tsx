@@ -102,7 +102,7 @@ export default function Certifications() {
                       "Market regulations and compliance"
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-4">
-                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                        <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                         <span className="text-muted-foreground">{item}</span>
                       </li>
                     ))}
@@ -121,7 +121,7 @@ export default function Certifications() {
                       "Job board access"
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-4">
-                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                        <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                         <span className="text-muted-foreground">{item}</span>
                       </li>
                     ))}

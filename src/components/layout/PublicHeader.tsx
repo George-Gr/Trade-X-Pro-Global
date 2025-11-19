@@ -288,5 +288,5 @@ export const PublicHeader = () => {
 };
 
 const linkClassName = cn(
-  "block select-none space-y-2 rounded-md p-4 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+  "block select-none space-y-2 rounded-md p-4 leading-tight no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
 );

@@ -368,7 +368,7 @@ export function AssetSearchDialog({
                     </div>
 
                     <div className="flex-shrink-0">
-                      <TrendingUp className="h-5 w-5 text-green-500 opacity-50" />
+                      <TrendingUp className="h-4 w-4 text-green-500 opacity-50" />
                     </div>
                   </div>
                 </button>

@@ -82,7 +82,7 @@ export default function TradingPlatforms() {
                   <ul className="space-y-4 mb-8">
                     {platform.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-4">
-                        <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                        <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                         <span className="text-sm text-muted-foreground">{feature}</span>
                       </li>
                     ))}
@@ -125,21 +125,21 @@ export default function TradingPlatforms() {
                         <td className="p-4 font-medium">{row.feature}</td>
                         <td className="p-4 text-center">
                           {row.desktop ? (
-                            <CheckCircle2 className="h-5 w-5 text-accent mx-auto" />
+                            <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}
                         </td>
                         <td className="p-4 text-center">
                           {row.web ? (
-                            <CheckCircle2 className="h-5 w-5 text-accent mx-auto" />
+                            <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}
                         </td>
                         <td className="p-4 text-center">
                           {row.mobile ? (
-                            <CheckCircle2 className="h-5 w-5 text-accent mx-auto" />
+                            <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}

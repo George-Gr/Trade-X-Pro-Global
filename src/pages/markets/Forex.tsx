@@ -35,7 +35,7 @@ export default function Forex() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Globe className="h-7 w-7 text-primary-foreground" />
+                    <Globe className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Why Trade Forex?</h2>
                 </div>
@@ -51,7 +51,7 @@ export default function Forex() {
                     "Deep liquidity from tier-1 providers"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-2.5" />
+                      <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}

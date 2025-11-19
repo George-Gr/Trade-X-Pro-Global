@@ -2,13 +2,14 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
+import type { Plugin } from "vite";
 
 // Safely load lovable-tagger plugin - fails gracefully if not available
-let componentTaggerPlugin: any = undefined;
+let componentTaggerPlugin: Plugin | undefined = undefined;
 (async () => {
   try {
     const lovableTagger = await import("lovable-tagger");
-    componentTaggerPlugin = lovableTagger.componentTagger();
+    componentTaggerPlugin = lovableTagger.componentTagger() as Plugin;
   } catch (e) {
     // lovable-tagger not available - component tagging will be disabled
     // This is expected in some environments

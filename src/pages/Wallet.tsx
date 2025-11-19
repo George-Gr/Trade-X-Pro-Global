@@ -184,7 +184,7 @@ const Wallet = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-4">
-                      <ArrowDownLeft className="h-5 w-5 text-green-500" />
+                      <ArrowDownLeft className="h-4 w-4 text-green-500" />
                       Deposit Crypto
                     </CardTitle>
                     <CardDescription>Add cryptocurrency to your account</CardDescription>
@@ -219,7 +219,7 @@ const Wallet = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-4">
-                      <ArrowUpRight className="h-5 w-5 text-red-500" />
+                      <ArrowUpRight className="h-4 w-4 text-red-500" />
                       Withdraw Crypto
                     </CardTitle>
                     <CardDescription>Withdraw to external wallet</CardDescription>

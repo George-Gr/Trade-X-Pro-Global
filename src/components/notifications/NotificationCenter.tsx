@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthData } from "@/contexts/AuthenticatedLayoutContext";
 import { useNotifications } from "@/contexts/notificationContextHelpers";
 import { formatDistanceToNow } from "date-fns";
 
@@ -25,7 +25,7 @@ interface Notification {
 }
 
 export function NotificationCenter() {
-  const { user } = useAuth();
+  const { user } = useAuthData();
   const { unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,7 +106,7 @@ export function NotificationCenter() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
+          <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
