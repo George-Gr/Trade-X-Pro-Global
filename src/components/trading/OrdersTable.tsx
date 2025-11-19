@@ -123,7 +123,7 @@ export const OrdersTable = ({
           <CardDescription>Recent orders and their status</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4 text-red-600 bg-red-50 p-4 rounded-lg">
+          <div className="flex items-center gap-4 text-red-600 bg-background p-4 rounded-lg">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>Error loading orders: {error.message}</span>
           </div>
@@ -141,13 +141,13 @@ export const OrdersTable = ({
             <CardDescription>Recent orders and their status</CardDescription>
           </div>
           <div className="flex gap-4 text-sm">
-            <div className="flex items-center gap-4 px-4 py-4 bg-blue-50 rounded text-blue-700">
+            <div className="flex items-center gap-4 px-4 py-4 bg-background rounded text-blue-700">
               Open: <strong>{stats.open}</strong>
             </div>
-            <div className="flex items-center gap-4 px-4 py-4 bg-green-50 rounded text-green-700">
+            <div className="flex items-center gap-4 px-4 py-4 bg-background rounded text-green-700">
               Filled: <strong>{stats.filled}</strong>
             </div>
-            <div className="flex items-center gap-4 px-4 py-4 bg-gray-50 rounded text-gray-700">
+            <div className="flex items-center gap-4 px-4 py-4 bg-muted rounded text-muted-foreground">
               Cancelled: <strong>{stats.cancelled}</strong>
             </div>
           </div>
@@ -179,11 +179,11 @@ export const OrdersTable = ({
         </div>
 
         {/* Table Header */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200 text-sm font-semibold text-gray-700">
+        <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-4 py-4 bg-muted rounded-lg border border-border text-sm font-semibold text-muted-foreground">
           <div className="col-span-2">
             <button
               onClick={() => handleSort('symbol')}
-              className="hover:text-gray-900 flex items-center gap-4"
+              className="hover:text-foreground flex items-center gap-4"
             >
               Order
               {sortKey === 'symbol' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
@@ -194,7 +194,7 @@ export const OrdersTable = ({
           <div className="col-span-1">
             <button
               onClick={() => handleSort('quantity')}
-              className="hover:text-gray-900 flex items-center gap-4"
+              className="hover:text-foreground flex items-center gap-4"
             >
               Quantity
               {sortKey === 'quantity' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
@@ -204,7 +204,7 @@ export const OrdersTable = ({
           <div className="col-span-1">
             <button
               onClick={() => handleSort('status')}
-              className="hover:text-gray-900 flex items-center gap-4"
+              className="hover:text-foreground flex items-center gap-4"
             >
               Status
               {sortKey === 'status' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
@@ -214,7 +214,7 @@ export const OrdersTable = ({
           <div className="col-span-1">
             <button
               onClick={() => handleSort('realized_pnl')}
-              className="hover:text-gray-900 flex items-center gap-4"
+              className="hover:text-foreground flex items-center gap-4"
             >
               P&L {sortKey === 'realized_pnl' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
             </button>
@@ -225,16 +225,16 @@ export const OrdersTable = ({
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
-            <span className="ml-2 text-gray-500">Loading orders...</span>
+            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-muted-foreground">Loading orders...</span>
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && sortedOrders.length === 0 && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500">
+            <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
+            <p className="text-muted-foreground">
               {orders.length === 0
                 ? 'No orders yet. Start trading to see orders here.'
                 : 'No orders match your filters.'}
@@ -263,25 +263,25 @@ export const OrdersTable = ({
         {!isLoading && sortedOrders.length > 0 && (
           <div className="pt-4 border-t border-gray-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             <div>
-              <span className="text-gray-600">Total Orders: </span>
+              <span className="text-muted-foreground">Total Orders: </span>
               <strong className="text-gray-900">{filteredOrders.length}</strong>
             </div>
             <div>
-              <span className="text-gray-600">Open Orders: </span>
+              <span className="text-muted-foreground">Open Orders: </span>
               <strong className="text-blue-600">
                 {filteredOrders.filter((o) => ['open', 'partially_filled'].includes(o.status))
                   .length}
               </strong>
             </div>
             <div>
-              <span className="text-gray-600">Filled Orders: </span>
+              <span className="text-muted-foreground">Filled Orders: </span>
               <strong className="text-green-600">
                 {filteredOrders.filter((o) => o.status === 'filled').length}
               </strong>
             </div>
             {stats.totalPnL !== 0 && (
               <div>
-                <span className="text-gray-600">Total P&L: </span>
+                <span className="text-muted-foreground">Total P&L: </span>
                 <strong
                   className={stats.totalPnL > 0 ? 'text-green-600' : 'text-red-600'}
                 >

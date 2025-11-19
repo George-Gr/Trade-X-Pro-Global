@@ -287,7 +287,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                   <div className="text-4xl font-bold text-blue-600">
                     {diversification.diversificationScore}%
                   </div>
-                  <div className="mt-4 w-full bg-gray-200 rounded-full h-3">
+                  <div className="mt-4 w-full bg-border rounded-full h-3">
                     <div
                       className="h-3 rounded-full bg-blue-600"
                       style={{
@@ -346,7 +346,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                         <span className="font-medium">{pos.symbol}</span>
                         <Badge variant="outline">{pos.risk}</Badge>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-border rounded-full h-2">
                         <div
                           className={`h-2 rounded-full ${
                             pos.risk === 'critical'

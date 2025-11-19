@@ -142,7 +142,7 @@ class TradingViewErrorBoundary extends React.Component<
                     <strong>Error:</strong> {this.state.error.toString()}
                   </p>
                   {this.state.error.toString().includes('Symbol.toStringTag') && (
-                    <p className="text-xs text-red-600 dark:text-red-300 mt-2">
+                    <p className="text-xs text-destructive mt-2">
                       This appears to be a TradingView compatibility issue. 
                       The compatibility layer should handle this automatically.
                     </p>

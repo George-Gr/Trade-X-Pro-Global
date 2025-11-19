@@ -214,13 +214,13 @@ export function MarginLevelAlert({
           {accountEquity && marginUsed && (
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-400">Account Equity</p>
+                <p className="text-muted-foreground">Account Equity</p>
                 <p className="font-semibold">
                   ${(accountEquity / 100).toFixed(2)}
                 </p>
               </div>
               <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-400">Margin Used</p>
+                <p className="text-muted-foreground">Margin Used</p>
                 <p className="font-semibold">
                   ${(marginUsed / 100).toFixed(2)}
                 </p>
@@ -269,7 +269,7 @@ export function MarginLevelAlert({
                         {action.action.replace(/_/g, " ")}
                       </p>
                       {action.recommendation && (
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                        <p className="text-xs text-muted-foreground">
                           {action.recommendation}
                         </p>
                       )}

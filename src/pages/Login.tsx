@@ -3,18 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, validationRules } from "@/components/ui/form";
 import { TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signIn, user, isAdmin } = useAuth();
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { register, handleSubmit, formState: { errors } } = form;
 
   // Redirect if already logged in
   useEffect(() => {
@@ -27,12 +36,11 @@ const Login = () => {
     }
   }, [user, isAdmin, navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (data: any) => {
     setIsLoading(true);
 
     try {
-      const { error } = await signIn(email, password);
+      const { error } = await signIn(data.email, data.password);
 
       if (error) {
         toast({
@@ -61,70 +69,71 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md space-y-6">
-        {/* Header */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-4 mb-6">
-            <TrendingUp className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">TradePro</span>
-          </Link>
-          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to your trading account</p>
+          <TrendingUp className="h-12 w-12 text-primary mx-auto mb-4" />
+          <h1 className="text-3xl font-bold">TradePro</h1>
+          <p className="text-muted-foreground">Login to your account</p>
         </div>
 
-        <Card className="p-6 md:p-6">
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-                disabled={isLoading}
-              />
-            </div>
+        <Card>
+          <div className="space-y-4 p-6">
+            <Form {...form}>
+              <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel htmlFor="email">Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="email"
+                          placeholder="Enter your email"
+                          {...register("email", validationRules.email)}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <button
-                  type="button"
-                  className="text-xs text-primary hover:underline"
-                >
-                  Forgot password?
-                </button>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                disabled={isLoading}
-              />
-            </div>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="password"
+                          type="password"
+                          placeholder="Enter your password"
+                          {...register("password", validationRules.password)}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing In..." : "Sign In"}
-            </Button>
-          </form>
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Logging in..." : "Login"}
+                </Button>
+              </form>
+            </Form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-primary hover:underline">
-                Sign up for free
+            <div className="text-center space-y-2">
+              <Link to="/register" className="text-sm text-primary hover:underline">
+                Don't have an account? Sign up
               </Link>
-            </p>
+              <div className="text-xs text-muted-foreground">
+                Demo Account: demo@tradingpro.com | Password: Demo123!
+              </div>
+            </div>
           </div>
         </Card>
-
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          By signing in, you agree to our Terms of Service and Privacy Policy
-        </p>
       </div>
     </div>
   );

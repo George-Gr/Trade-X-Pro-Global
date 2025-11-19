@@ -71,9 +71,9 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   }, [isOpen, timeToLiquidationMinutes]);
 
   const getMarginColor = (level: number) => {
-    if (level >= 200) return 'text-green-600 bg-green-50';
-    if (level >= 100) return 'text-yellow-600 bg-yellow-50';
-    if (level >= 50) return 'text-orange-600 bg-orange-50';
+    if (level >= 200) return 'text-green-600 bg-background';
+    if (level >= 100) return 'text-yellow-600 bg-background';
+    if (level >= 50) return 'text-orange-600 bg-background';
     return 'text-red-600 bg-red-50';
   };
 
@@ -112,7 +112,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="max-w-2xl">
+      <AlertDialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-2xl">
         <AlertDialogHeader>
           <div className="flex items-center gap-4 mb-2">
             {getSeverityIcon()}
@@ -134,7 +134,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
         {/* Time Information */}
         {timeInCallMinutes !== null && (
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-4 p-4 bg-blue-50 rounded">
+            <div className="flex items-center gap-4 p-4 bg-background rounded">
               <Clock className="w-4 h-4 text-blue-600" />
               <div>
                 <div className="font-semibold text-blue-900">Time in Call</div>
@@ -143,7 +143,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
             </div>
 
             {timeToLiquidationMinutes && (
-              <div className="flex items-center gap-4 p-4 bg-red-50 rounded">
+              <div className="flex items-center gap-4 p-4 bg-background rounded">
                 <TrendingDown className="w-4 h-4 text-red-600" />
                 <div>
                   <div className="font-semibold text-red-900">Est. Time to Liquidation</div>
@@ -166,7 +166,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
                   <span className="text-red-600 font-bold">•</span>
                   <div>
                     <div className="font-medium capitalize">{action.action.replace(/_/g, ' ')}</div>
-                    <div className="text-gray-600">{action.description}</div>
+                    <div className="text-muted-foreground">{action.description}</div>
                   </div>
                 </li>
               ))}
@@ -176,7 +176,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
 
         {/* Critical Alert */}
         {severity === MarginCallSeverity.CRITICAL && (
-          <Alert className="border-red-300 bg-red-50">
+          <Alert className="border-red-300 bg-background">
             <AlertTriangle className="h-4 w-4 text-red-600" />
             <AlertTitle className="text-red-900">Critical Alert</AlertTitle>
             <AlertDescription className="text-red-800">

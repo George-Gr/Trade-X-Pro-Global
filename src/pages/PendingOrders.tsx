@@ -128,61 +128,137 @@ const PendingOrders = () => {
                 No pending orders found. Place a limit or stop order to see them here.
               </div>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Symbol</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Side</TableHead>
-                    <TableHead className="text-right">Quantity</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
-                    <TableHead className="text-right">Stop Loss</TableHead>
-                    <TableHead className="text-right">Take Profit</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <>
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Symbol</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Side</TableHead>
+                        <TableHead className="text-right">Quantity</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                        <TableHead className="text-right">Stop Loss</TableHead>
+                        <TableHead className="text-right">Take Profit</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {orders.map((order) => (
+                        <TableRow key={order.id}>
+                          <TableCell className="font-medium">{order.symbol}</TableCell>
+                          <TableCell>{getOrderTypeBadge(order.order_type)}</TableCell>
+                          <TableCell>{getSideBadge(order.side)}</TableCell>
+                          <TableCell className="text-right">{order.quantity.toFixed(2)}</TableCell>
+                          <TableCell className="text-right">
+                            {order.price ? `$${order.price.toFixed(5)}` : '-'}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {order.stop_loss ? `$${order.stop_loss.toFixed(5)}` : '-'}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {order.take_profit ? `$${order.take_profit.toFixed(5)}` : '-'}
+                          </TableCell>
+                          <TableCell>
+                            {format(new Date(order.created_at), 'MMM dd, HH:mm')}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-4">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleModifyClick(order)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleCancelClick(order.id)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Mobile Card Layout */}
+                <div className="md:hidden space-y-4">
                   {orders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="font-medium">{order.symbol}</TableCell>
-                      <TableCell>{getOrderTypeBadge(order.order_type)}</TableCell>
-                      <TableCell>{getSideBadge(order.side)}</TableCell>
-                      <TableCell className="text-right">{order.quantity.toFixed(2)}</TableCell>
-                      <TableCell className="text-right">
-                        {order.price ? `$${order.price.toFixed(5)}` : '-'}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {order.stop_loss ? `$${order.stop_loss.toFixed(5)}` : '-'}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {order.take_profit ? `$${order.take_profit.toFixed(5)}` : '-'}
-                      </TableCell>
-                      <TableCell>
-                        {format(new Date(order.created_at), 'MMM dd, HH:mm')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-4">
+                    <Card key={order.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                      <div className="space-y-3">
+                        {/* Header */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold text-lg">{order.symbol}</h3>
+                            <p className="text-xs text-muted-foreground">
+                              {format(new Date(order.created_at), 'MMM dd, HH:mm')}
+                            </p>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            {getOrderTypeBadge(order.order_type)}
+                            {getSideBadge(order.side)}
+                          </div>
+                        </div>
+
+                        {/* Details Grid */}
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Qty:</span>
+                            <p className="font-mono font-semibold">{order.quantity.toFixed(2)}</p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Price:</span>
+                            <p className="font-mono font-semibold">
+                              {order.price ? `$${order.price.toFixed(5)}` : '-'}
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Stop Loss:</span>
+                            <p className="font-mono font-semibold">
+                              {order.stop_loss ? `$${order.stop_loss.toFixed(5)}` : '-'}
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Take Profit:</span>
+                            <p className="font-mono font-semibold">
+                              {order.take_profit ? `$${order.take_profit.toFixed(5)}` : '-'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-2 pt-2 border-t">
                           <Button
                             size="sm"
-                            variant="ghost"
+                            variant="outline"
+                            className="flex-1"
                             onClick={() => handleModifyClick(order)}
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-4 w-4 mr-2" />
+                            Modify
                           </Button>
                           <Button
                             size="sm"
-                            variant="ghost"
+                            variant="destructive"
+                            className="flex-1"
                             onClick={() => handleCancelClick(order.id)}
                           >
-                            <X className="h-4 w-4" />
+                            <X className="h-4 w-4 mr-2" />
+                            Cancel
                           </Button>
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </div>
+                    </Card>
                   ))}
-                </TableBody>
-              </Table>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>

@@ -7,16 +7,26 @@ import { TrendingUp, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { validationRules } from "@/components/ui/form";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { signUp, user } = useAuth();
+
+  const form = useForm({
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const { register, handleSubmit, watch, formState: { errors } } = form;
+  const password = watch("password");
 
   // Redirect if already logged in
   useEffect(() => {
@@ -25,32 +35,11 @@ const Register = () => {
     }
   }, [user, navigate]);
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validation
-    if (password !== confirmPassword) {
-      toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (password.length < 8) {
-      toast({
-        title: "Weak Password",
-        description: "Password must be at least 8 characters",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleRegister = async (data: any) => {
     setIsLoading(true);
 
     try {
-      const { error } = await signUp(email, password, fullName);
+      const { error } = await signUp(data.email, data.password, data.fullName);
 
       if (error) {
         toast({
@@ -90,18 +79,19 @@ const Register = () => {
         </div>
 
         <Card className="p-6 md:p-6">
-          <form onSubmit={handleRegister} className="space-y-4">
+          <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
               <Input
                 id="fullName"
                 type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
                 placeholder="John Doe"
-                required
+                {...register("fullName", validationRules.fullName)}
                 disabled={isLoading}
               />
+              {errors.fullName && (
+                <p className="text-sm text-destructive mt-1">{errors.fullName.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -109,12 +99,13 @@ const Register = () => {
               <Input
                 id="email"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                required
+                {...register("email", validationRules.email)}
                 disabled={isLoading}
               />
+              {errors.email && (
+                <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -122,12 +113,13 @@ const Register = () => {
               <Input
                 id="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                required
+                {...register("password", validationRules.password)}
                 disabled={isLoading}
               />
+              {errors.password && (
+                <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
+              )}
               <p className="text-xs text-muted-foreground">
                 Minimum 8 characters
               </p>
@@ -138,12 +130,17 @@ const Register = () => {
               <Input
                 id="confirmPassword"
                 type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                required
+                {...register("confirmPassword", {
+                  required: "Please confirm your password",
+                  validate: (value) =>
+                    value === password || "Passwords do not match",
+                })}
                 disabled={isLoading}
               />
+              {errors.confirmPassword && (
+                <p className="text-sm text-destructive mt-1">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
             {/* Benefits */}

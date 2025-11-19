@@ -54,7 +54,7 @@ export default function Glossary() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <BookOpen className="h-7 w-7 text-white" />
+                      <BookOpen className="h-7 w-7 text-primary-foreground" />
                     </div>
                     <h2 className="text-2xl font-bold">{group.category}</h2>
                   </div>

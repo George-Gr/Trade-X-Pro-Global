@@ -352,7 +352,7 @@ export const OrderForm = ({
           onClick={() => handleSubmit('buy')}
           isLoading={isLoading}
           loadingText="Buying..."
-          className="bg-profit hover:bg-profit/90 text-white"
+          className="bg-profit hover:bg-profit/90 text-foreground"
           size="lg"
         >
           Buy
@@ -361,7 +361,7 @@ export const OrderForm = ({
           onClick={() => handleSubmit('sell')}
           isLoading={isLoading}
           loadingText="Selling..."
-          className="bg-loss hover:bg-loss/90 text-white"
+          className="bg-loss hover:bg-loss/90 text-foreground"
           size="lg"
         >
           Sell

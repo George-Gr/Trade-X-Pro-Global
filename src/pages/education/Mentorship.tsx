@@ -33,7 +33,7 @@ export default function Mentorship() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Users className="h-7 w-7 text-white" />
+                    <Users className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Mentorship Benefits</h2>
                 </div>
@@ -107,7 +107,7 @@ export default function Mentorship() {
                   <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all">
                     <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-2">{mentor.name}</h3>
-                      <p className="text-primary text-sm font-semibold mb-4">{mentor.specialty}</p>
+                      <p className="text-primary text-sm font-semibold mb-4 hover:text-primary/80 transition-colors cursor-pointer">{mentor.specialty}</p>
                       <div className="space-y-2 text-xs text-muted-foreground mb-4">
                         <p>Experience: {mentor.experience}</p>
                         <p>Students Mentored: {mentor.students}</p>
@@ -134,7 +134,7 @@ export default function Mentorship() {
                 ].map((item, i) => (
                   <div key={i} className="text-center">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                      <span className="text-xl font-bold text-white">{item.step}</span>
+                      <span className="text-xl font-bold text-primary-foreground">{item.step}</span>
                     </div>
                     <h3 className="font-semibold mb-2">{item.title}</h3>
                     <p className="text-sm text-muted-foreground">{item.description}</p>

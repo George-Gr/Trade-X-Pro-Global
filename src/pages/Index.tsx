@@ -42,33 +42,33 @@ export default function Index() {
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in">
               Master CFD Trading
               <span className="block mt-2 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
                 Without the Risk
               </span>
             </h1>
             
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
               Practice trading across 5 asset classes with $50,000 in virtual funds. 
               Professional trading terminal with real-time data and zero risk.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link to="/register">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
+                <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
                   Start Trading Free
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Button>
               </Link>
               <Link to="/dashboard">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white" aria-label="View platform demo">
+                <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-foreground" aria-label="View platform demo">
                   View Platform
                 </Button>
               </Link>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+            <div className="flex flex-wrap justify-center gap-6 text-primary-foreground/90">
               <div className="flex items-center gap-4">
                 <CheckCircle2 className="h-5 w-5 text-accent" />
                 <span>$50,000 Virtual Capital</span>
@@ -131,7 +131,7 @@ export default function Index() {
               <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6">
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                    <feature.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
@@ -177,7 +177,7 @@ export default function Index() {
                 <div key={index} className="flex gap-4 group">
                   <div className="flex-shrink-0">
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center group-focus-within:ring-2 group-focus-within:ring-primary transition-all">
-                      <advantage.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                      <advantage.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
                     </div>
                   </div>
                   <div>
@@ -266,7 +266,7 @@ export default function Index() {
               <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card/80 backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6 text-center">
                   <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                    <asset.icon className="h-7 w-7 text-white" aria-hidden="true" />
+                    <asset.icon className="h-7 w-7 text-primary-foreground" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{asset.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{asset.description}</p>
@@ -316,13 +316,13 @@ export default function Index() {
                   description: "Safe environment for learning without financial risk"
                 }
               ].map((item, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-md border-white/20 hover:shadow-lg transition-all hover:-translate-y-1">
+                <Card key={index} className="bg-background/10 backdrop-blur-md border-white/20 hover:shadow-lg transition-all hover:-translate-y-1">
                   <CardContent className="p-6 text-center">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
-                      <item.icon className="h-8 w-8 text-white" aria-hidden="true" />
+                      <item.icon className="h-8 w-8 text-primary-foreground" aria-hidden="true" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 text-white">{item.title}</h3>
-                    <p className="text-white/80">{item.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-primary-foreground">{item.title}</h3>
+                    <p className="text-primary-foreground/80">{item.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -335,22 +335,22 @@ export default function Index() {
       <section className="py-20 bg-gradient-to-br from-primary to-primary-glow">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-6">
               Ready to Start Your Trading Journey?
             </h2>
-            <p className="text-xl text-white/90 mb-8">
+            <p className="text-xl text-primary-foreground/90 mb-8">
               Join thousands of traders mastering CFD trading with zero risk. 
               Get $50,000 in virtual capital instantly upon KYC verification.
             </p>
             
             <Link to="/register">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Create free account now">
+              <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Create free account now">
                 Create Free Account
                 <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
               </Button>
             </Link>
 
-            <p className="text-white/70 mt-6 text-sm">
+            <p className="text-primary-foreground/70 mt-6 text-sm">
               No credit card required • Setup in 2 minutes • Start trading immediately
             </p>
           </div>
@@ -381,7 +381,7 @@ export default function Index() {
                 ].map((partner, index) => (
                     <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
-                        <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl mb-2`}>
+                        <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl mb-2 text-primary-foreground`}>
                           <span role="img" aria-label={partner.name}>{partner.icon}</span>
                         </div>
                       <p className="text-sm font-semibold text-center">{partner.name}</p>
@@ -402,7 +402,7 @@ export default function Index() {
                 ].map((partner, index) => (
                     <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
-                        <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl font-bold text-white mb-2`}>
+                        <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl font-bold text-primary-foreground mb-2`}>
                           <span role="img" aria-label={partner.name}>{partner.icon}</span>
                       </div>
                       <p className="text-sm font-semibold text-center">{partner.name}</p>
@@ -424,7 +424,7 @@ export default function Index() {
                     <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex items-center gap-4">
                         <div className={`h-14 w-14 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center flex-shrink-0`}>
-                          <partner.icon className="h-7 w-7 text-white" aria-hidden="true" />
+                          <partner.icon className="h-7 w-7 text-primary-foreground" aria-hidden="true" />
                       </div>
                       <div>
                         <p className="font-semibold text-lg">{partner.name}</p>

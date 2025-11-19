@@ -63,7 +63,7 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh]">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-4xl h-[80vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Document Preview</span>

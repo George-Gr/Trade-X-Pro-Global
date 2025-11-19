@@ -284,9 +284,9 @@ describe('usePnLCalculations Hook: Utility Functions', () => {
       usePnLCalculations([], new Map(), {})
     );
 
-    expect(result.current.getPnLColor(100)).toBe('text-green-500');
-    expect(result.current.getPnLColor(-100)).toBe('text-red-500');
-    expect(result.current.getPnLColor(0)).toBe('text-gray-500');
+    expect(result.current.getPnLColor(100)).toBe('text-buy');
+    expect(result.current.getPnLColor(-100)).toBe('text-sell');
+    expect(result.current.getPnLColor(0)).toBe('text-muted-foreground');
   });
 
   it('should get position P&L by position', () => {

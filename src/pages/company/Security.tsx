@@ -33,9 +33,9 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Lock className="h-7 w-7 text-white" />
+                    <Lock className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h2 className="text-3xl font-bold">Data Encryption</h2>
+                  <h2 className="text-3xl font-bold">Data Security</h2>
                 </div>
                 <ul className="space-y-4">
                   {[
@@ -57,9 +57,9 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Shield className="h-7 w-7 text-white" />
+                    <Shield className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h2 className="text-3xl font-bold">Account Security</h2>
+                  <h2 className="text-3xl font-bold">Account Protection</h2>
                 </div>
                 <ul className="space-y-4">
                   {[
@@ -83,7 +83,7 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Eye className="h-7 w-7 text-white" />
+                    <Eye className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Platform Protection</h2>
                 </div>
@@ -108,7 +108,7 @@ export default function Security() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Shield className="h-7 w-7 text-white" />
+                    <Shield className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Payment Security</h2>
                 </div>

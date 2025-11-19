@@ -106,8 +106,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader className="border-b">
               <div className="flex items-center gap-4">
-                <AlertTriangle className="w-6 h-6 text-red-500" />
-                <CardTitle className="text-red-600 dark:text-red-400">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+                <CardTitle className="text-destructive">
                   Something went wrong
                 </CardTitle>
               </div>
@@ -133,10 +133,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
                     </p>
                     {this.state.errorInfo?.componentStack && (
                       <details className="text-xs">
-                        <summary className="cursor-pointer text-red-600 dark:text-red-300 font-semibold">
+                        <summary className="cursor-pointer text-destructive font-semibold">
                           Component Stack
                         </summary>
-                        <pre className="mt-2 text-red-600 dark:text-red-300 overflow-auto max-h-40 font-mono text-xs whitespace-pre-wrap break-words">
+                        <pre className="mt-2 text-destructive overflow-auto max-h-40 font-mono text-xs whitespace-pre-wrap break-words">
                           {this.state.errorInfo.componentStack}
                         </pre>
                       </details>

@@ -16,7 +16,7 @@ export const PositionCloseDialog: React.FC<{ position: Position; onClose: () => 
 
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded p-4 w-full max-w-md">
+      <div className="bg-background rounded p-4 w-full max-w-md">
         <h4 className="text-lg font-semibold">Close Position: {position.symbol}</h4>
         <p className="text-sm text-muted-foreground">Quantity (leave blank to close full position)</p>
         <input

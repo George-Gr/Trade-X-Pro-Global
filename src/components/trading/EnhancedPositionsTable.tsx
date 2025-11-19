@@ -228,7 +228,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   <td className="py-4 px-4">
                     <Badge
                       variant={position.side === 'long' ? 'default' : 'secondary'}
-                      className={position.side === 'long' ? 'bg-buy text-white' : 'bg-sell text-white'}
+                      className={position.side === 'long' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}
                     >
                       {position.side.toUpperCase()}
                     </Badge>
@@ -313,7 +313,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   <h3 className="font-semibold text-lg">{position.symbol}</h3>
                   <Badge
                     variant={position.side === 'long' ? 'default' : 'secondary'}
-                    className={`mt-2 ${position.side === 'long' ? 'bg-buy text-white' : 'bg-sell text-white'}`}
+                    className={`mt-2 ${position.side === 'long' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}`}
                   >
                     {position.side.toUpperCase()}
                   </Badge>

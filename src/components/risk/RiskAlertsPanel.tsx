@@ -55,12 +55,12 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
         <Card
           className={`border-2 ${
             riskMetrics?.riskLevel === 'liquidation'
-              ? 'border-red-500 bg-red-50'
+              ? 'border-red-500 bg-background'
               : riskMetrics?.riskLevel === 'critical'
-              ? 'border-orange-500 bg-orange-50'
+              ? 'border-orange-500 bg-background'
               : riskMetrics?.riskLevel === 'warning'
-              ? 'border-yellow-500 bg-yellow-50'
-              : 'border-green-500 bg-green-50'
+              ? 'border-yellow-500 bg-background'
+              : 'border-green-500 bg-background'
           }`}
         >
           <CardHeader className="pb-4">

@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useForm, Controller } from "react-hook-form";
+import { validationRules } from "@/components/ui/form";
 
 interface DepositCryptoDialogProps {
   open: boolean;
@@ -25,35 +27,49 @@ const SUPPORTED_CRYPTOS = [
 ];
 
 export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCryptoDialogProps) {
-  const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("BTC");
   const [loading, setLoading] = useState(false);
+  const [amountPreview, setAmountPreview] = useState("");
+  const [currencyPreview, setCurrencyPreview] = useState("BTC");
+  const [loadingState, setLoadingState] = useState(false);
   const [paymentData, setPaymentData] = useState<{ amount?: number; currency?: string; payment_address?: string; payment_url?: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const handleCreatePayment = async () => {
-    if (!amount || parseFloat(amount) <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid deposit amount",
-        variant: "destructive",
-      });
+  const form = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      amount: '',
+      currency: 'BTC',
+    },
+  });
+
+  const { register, handleSubmit, control, watch, formState: { errors } } = form;
+  const watchedAmount = watch('amount');
+  const watchedCurrency = watch('currency') || 'BTC';
+
+  const handleCreatePayment = async (data?: any) => {
+    const amt = data?.amount ?? watchedAmount;
+    const curr = data?.currency ?? watchedCurrency;
+
+    if (!amt || parseFloat(amt) <= 0) {
+      toast({ title: "Invalid Amount", description: "Please enter a valid deposit amount", variant: "destructive" });
       return;
     }
 
-    setLoading(true);
+    setLoadingState(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-crypto-payment', {
         body: {
-          amount: parseFloat(amount),
-          currency: currency,
+          amount: parseFloat(amt),
+          currency: curr,
         },
       });
 
       if (error) throw error;
 
       setPaymentData(data);
+      setAmountPreview(String(data?.amount ?? amt));
+      setCurrencyPreview(String(data?.currency ?? curr));
       toast({
         title: "Payment Created",
         description: "Send crypto to the address below to complete your deposit",
@@ -67,7 +83,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setLoadingState(false);
     }
   };
 
@@ -94,7 +110,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-md">
         <DialogHeader>
           <DialogTitle>Deposit Cryptocurrency</DialogTitle>
           <DialogDescription>
@@ -107,37 +123,60 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
 
         {!paymentData ? (
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Amount (USD)</Label>
-              <Input
-                id="amount"
-                type="number"
-                placeholder="100.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                min="1"
-                step="0.01"
-              />
-            </div>
+            <form onSubmit={handleSubmit(handleCreatePayment)} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount (USD)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  placeholder="100.00"
+                  {...register('amount', validationRules.amount)}
+                  min="1"
+                  step="0.01"
+                />
+                {errors.amount && <p className="text-sm text-destructive mt-1">{errors.amount.message}</p>}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="currency">Cryptocurrency</Label>
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SUPPORTED_CRYPTOS.map((crypto) => (
-                    <SelectItem key={crypto.value} value={crypto.value}>
-                      <span className="flex items-center gap-4">
-                        <span className="text-lg">{crypto.icon}</span>
-                        {crypto.label}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="currency">Cryptocurrency</Label>
+                <Controller
+                  control={control}
+                  name="currency"
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUPPORTED_CRYPTOS.map((crypto) => (
+                          <SelectItem key={crypto.value} value={crypto.value}>
+                            <span className="flex items-center gap-4">
+                              <span className="text-lg">{crypto.icon}</span>
+                              {crypto.label}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+
+              <Alert>
+                <AlertDescription>
+                  Minimum deposit: $10 USD. Deposits are usually confirmed within 15-30 minutes.
+                </AlertDescription>
+              </Alert>
+
+              <Button
+                type="submit"
+                disabled={loadingState}
+                className="w-full"
+              >
+                {loadingState && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Create Payment
+              </Button>
+            </form>
 
             <Alert>
               <AlertDescription>
@@ -177,7 +216,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
                   onClick={handleCopyAddress}
                 >
                   {copied ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    <CheckCircle2 className="h-4 w-4 text-buy" />
                   ) : (
                     <Copy className="h-4 w-4" />
                   )}
@@ -191,7 +230,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
                 {paymentData.amount} {paymentData.currency}
               </div>
               <p className="text-sm text-muted-foreground">
-                ≈ ${amount} USD
+                ≈ ${amountPreview || watchedAmount} USD
               </p>
             </div>
 

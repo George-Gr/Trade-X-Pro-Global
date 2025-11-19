@@ -103,7 +103,7 @@ const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
                   <Badge
                     variant={order.side === 'buy' ? 'default' : 'secondary'}
                     className={`mt-2 ${
-                      order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'
+                      order.side === 'buy' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'
                     }`}
                   >
                     {order.side.toUpperCase()}

@@ -100,9 +100,9 @@ export function TransactionHistory({ transactions, isLoading }: TransactionHisto
             <TableCell>
               <div className="flex items-center gap-4">
                 {transaction.transaction_type === 'deposit' ? (
-                  <ArrowDownRight className="h-4 w-4 text-green-500" />
+                  <ArrowDownRight className="h-4 w-4 text-buy" />
                 ) : (
-                  <ArrowUpRight className="h-4 w-4 text-red-500" />
+                  <ArrowUpRight className="h-4 w-4 text-sell" />
                 )}
                 <span className="capitalize">{transaction.transaction_type}</span>
               </div>

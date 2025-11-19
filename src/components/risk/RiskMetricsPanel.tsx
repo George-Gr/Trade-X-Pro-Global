@@ -58,7 +58,7 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
             {riskMetrics?.liquidationThreshold}%
           </p>
           {riskMetrics && (
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div className="w-full bg-border rounded-full h-2 mt-2">
               <div
                 className={`h-2 rounded-full ${
                   riskMetrics.currentMarginLevel >= 200

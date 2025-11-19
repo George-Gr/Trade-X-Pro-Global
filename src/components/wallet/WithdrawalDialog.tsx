@@ -17,7 +17,7 @@ export function WithdrawalDialog({
 }: WithdrawalDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Request Withdrawal</DialogTitle>
           <DialogDescription>

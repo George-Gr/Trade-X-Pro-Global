@@ -33,7 +33,7 @@ export default function Tutorials() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <BookOpen className="h-7 w-7 text-white" />
+                    <BookOpen className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Available Resources</h2>
                 </div>
@@ -48,7 +48,7 @@ export default function Tutorials() {
                   ].map((item, i) => (
                     <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                       <span className="font-medium">{item.resource}</span>
-                      <span className="text-primary font-semibold text-sm">{item.count}</span>
+                      <span className="text-primary font-semibold text-sm hover:text-primary/80 transition-colors cursor-pointer">{item.count}</span>
                     </div>
                   ))}
                 </div>
@@ -69,7 +69,7 @@ export default function Tutorials() {
                   ].map((book, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg flex items-center justify-between">
                       <span className="text-sm font-medium">{book}</span>
-                      <span className="text-xs text-primary">Download</span>
+                      <span className="text-xs text-primary hover:text-primary/80 transition-colors cursor-pointer">Download</span>
                     </div>
                   ))}
                 </div>

@@ -659,10 +659,10 @@ export function formatMarginCallStatus(status: MarginCallStatus): string {
  */
 export function getMarginCallStatusColor(status: MarginCallStatus): string {
   const colors: Record<MarginCallStatus, string> = {
-    [MarginCallStatus.PENDING]: 'text-green-600',
-    [MarginCallStatus.NOTIFIED]: 'text-yellow-600',
-    [MarginCallStatus.RESOLVED]: 'text-blue-600',
-    [MarginCallStatus.ESCALATED]: 'text-red-600',
+    [MarginCallStatus.PENDING]: 'text-status-safe',
+    [MarginCallStatus.NOTIFIED]: 'text-status-warning',
+    [MarginCallStatus.RESOLVED]: 'text-status-info',
+    [MarginCallStatus.ESCALATED]: 'text-status-error',
   };
   return colors[status];
 }
@@ -678,9 +678,9 @@ export function getMarginCallStatusColor(status: MarginCallStatus): string {
  */
 export function getSeverityBgColor(severity: MarginCallSeverity): string {
   const colors: Record<MarginCallSeverity, string> = {
-    [MarginCallSeverity.STANDARD]: 'bg-yellow-100',
-    [MarginCallSeverity.URGENT]: 'bg-orange-100',
-    [MarginCallSeverity.CRITICAL]: 'bg-red-100',
+    [MarginCallSeverity.STANDARD]: 'bg-status-warning',
+    [MarginCallSeverity.URGENT]: 'bg-status-critical',
+    [MarginCallSeverity.CRITICAL]: 'bg-status-error',
   };
   return colors[severity];
 }

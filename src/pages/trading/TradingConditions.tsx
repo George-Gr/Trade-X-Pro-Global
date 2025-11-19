@@ -35,7 +35,7 @@ export default function TradingConditions() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <TrendingUp className="h-7 w-7 text-white" />
+                    <TrendingUp className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold">Competitive Spreads</h2>
@@ -65,7 +65,7 @@ export default function TradingConditions() {
                           <td className="p-4 font-medium">{row.asset}</td>
                           <td className="p-4 text-center text-muted-foreground">{row.standard}</td>
                           <td className="p-4 text-center text-muted-foreground">{row.premium}</td>
-                          <td className="p-4 text-center text-primary font-semibold">{row.ecn}</td>
+                          <td className="p-4 text-center text-primary font-semibold hover:text-primary/80 transition-colors cursor-pointer">{row.ecn}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -85,7 +85,7 @@ export default function TradingConditions() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Zap className="h-7 w-7 text-white" />
+                    <Zap className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold">Flexible Leverage</h2>
@@ -105,8 +105,8 @@ export default function TradingConditions() {
                         { asset: "Cryptocurrencies", leverage: "1:100" }
                       ].map((item, i) => (
                         <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                          <span className="font-medium">{item.asset}</span>
-                          <span className="text-primary font-semibold">{item.leverage}</span>
+                          <span className="font-medium hover:text-foreground transition-colors cursor-pointer">{item.asset}</span>
+                          <span className="text-primary font-semibold hover:text-primary/80 transition-colors cursor-pointer">{item.leverage}</span>
                         </div>
                       ))}
                     </div>
@@ -132,7 +132,7 @@ export default function TradingConditions() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Clock className="h-7 w-7 text-white" />
+                    <Clock className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold">Trading Hours</h2>
@@ -192,7 +192,7 @@ export default function TradingConditions() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <DollarSign className="h-7 w-7 text-white" />
+                    <DollarSign className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <div>
                     <h2 className="text-3xl font-bold">Transparent Pricing</h2>

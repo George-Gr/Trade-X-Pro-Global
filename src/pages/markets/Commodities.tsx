@@ -33,7 +33,7 @@ export default function Commodities() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <LineChart className="h-7 w-7 text-white" />
+                    <LineChart className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Why Trade Commodities?</h2>
                 </div>

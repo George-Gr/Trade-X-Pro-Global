@@ -252,64 +252,134 @@ const History = () => {
                       </p>
                     </div>
                   ) : (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Closed At</TableHead>
-                            <TableHead>Symbol</TableHead>
-                            <TableHead>Side</TableHead>
-                            <TableHead>Volume</TableHead>
-                            <TableHead>Entry Price</TableHead>
-                            <TableHead>Exit Price</TableHead>
-                            <TableHead>P&L</TableHead>
-                            <TableHead>Margin Used</TableHead>
-                            <TableHead>Duration</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredTrades.map((trade) => {
-                            const duration = Math.floor(
-                              (new Date(trade.closed_at).getTime() -
-                                new Date(trade.opened_at).getTime()) /
-                                (1000 * 60)
-                            );
-                            return (
-                              <TableRow key={trade.id}>
-                                <TableCell className="text-sm">
-                                  {formatDateTime(trade.closed_at)}
-                                </TableCell>
-                                <TableCell className="font-medium">{trade.symbol}</TableCell>
-                                <TableCell>
+                    <>
+                      {/* Desktop Table */}
+                      <div className="hidden md:block overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Closed At</TableHead>
+                              <TableHead>Symbol</TableHead>
+                              <TableHead>Side</TableHead>
+                              <TableHead>Volume</TableHead>
+                              <TableHead>Entry Price</TableHead>
+                              <TableHead>Exit Price</TableHead>
+                              <TableHead>P&L</TableHead>
+                              <TableHead>Margin Used</TableHead>
+                              <TableHead>Duration</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredTrades.map((trade) => {
+                              const duration = Math.floor(
+                                (new Date(trade.closed_at).getTime() -
+                                  new Date(trade.opened_at).getTime()) /
+                                  (1000 * 60)
+                              );
+                              return (
+                                <TableRow key={trade.id}>
+                                  <TableCell className="text-sm">
+                                    {formatDateTime(trade.closed_at)}
+                                  </TableCell>
+                                  <TableCell className="font-medium">{trade.symbol}</TableCell>
+                                  <TableCell>
+                                    <Badge
+                                      variant={trade.side === "buy" ? "default" : "destructive"}
+                                    >
+                                      {trade.side.toUpperCase()}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>{trade.quantity.toFixed(2)}</TableCell>
+                                  <TableCell>{formatPrice(trade.entry_price, trade.symbol)}</TableCell>
+                                  <TableCell>{formatPrice(trade.exit_price, trade.symbol)}</TableCell>
+                                  <TableCell
+                                    className={`font-semibold ${
+                                      trade.realized_pnl >= 0 ? "text-profit" : "text-loss"
+                                    }`}
+                                  >
+                                    {trade.realized_pnl >= 0 ? "+" : ""}
+                                    {formatCurrency(trade.realized_pnl)}
+                                  </TableCell>
+                                  <TableCell>{formatCurrency(trade.margin_used)}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">
+                                    {duration < 60
+                                      ? `${duration}m`
+                                      : `${Math.floor(duration / 60)}h ${duration % 60}m`}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Mobile Card Layout */}
+                      <div className="md:hidden space-y-4">
+                        {filteredTrades.map((trade) => {
+                          const duration = Math.floor(
+                            (new Date(trade.closed_at).getTime() -
+                              new Date(trade.opened_at).getTime()) /
+                              (1000 * 60)
+                          );
+                          return (
+                            <Card key={trade.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <h3 className="font-semibold text-lg">{trade.symbol}</h3>
+                                    <p className="text-xs text-muted-foreground">
+                                      {formatDateTime(trade.closed_at)}
+                                    </p>
+                                  </div>
                                   <Badge
                                     variant={trade.side === "buy" ? "default" : "destructive"}
                                   >
                                     {trade.side.toUpperCase()}
                                   </Badge>
-                                </TableCell>
-                                <TableCell>{trade.quantity.toFixed(2)}</TableCell>
-                                <TableCell>{formatPrice(trade.entry_price, trade.symbol)}</TableCell>
-                                <TableCell>{formatPrice(trade.exit_price, trade.symbol)}</TableCell>
-                                <TableCell
-                                  className={`font-semibold ${
-                                    trade.realized_pnl >= 0 ? "text-profit" : "text-loss"
-                                  }`}
-                                >
-                                  {trade.realized_pnl >= 0 ? "+" : ""}
-                                  {formatCurrency(trade.realized_pnl)}
-                                </TableCell>
-                                <TableCell>{formatCurrency(trade.margin_used)}</TableCell>
-                                <TableCell className="text-sm text-muted-foreground">
-                                  {duration < 60
-                                    ? `${duration}m`
-                                    : `${Math.floor(duration / 60)}h ${duration % 60}m`}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                  <div>
+                                    <span className="text-muted-foreground">Volume:</span>
+                                    <p className="font-mono font-semibold">{trade.quantity.toFixed(2)}</p>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">Entry:</span>
+                                    <p className="font-mono font-semibold">{formatPrice(trade.entry_price, trade.symbol)}</p>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">Exit:</span>
+                                    <p className="font-mono font-semibold">{formatPrice(trade.exit_price, trade.symbol)}</p>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">Duration:</span>
+                                    <p className="font-mono font-semibold">
+                                      {duration < 60
+                                        ? `${duration}m`
+                                        : `${Math.floor(duration / 60)}h ${duration % 60}m`}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="pt-2 border-t">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-muted-foreground">P&L:</span>
+                                    <span className={`font-semibold ${
+                                      trade.realized_pnl >= 0 ? "text-profit" : "text-loss"
+                                    }`}>
+                                      {trade.realized_pnl >= 0 ? "+" : ""}
+                                      {formatCurrency(trade.realized_pnl)}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between mt-2">
+                                    <span className="text-muted-foreground">Margin:</span>
+                                    <span className="font-mono font-semibold">{formatCurrency(trade.margin_used)}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    </>
                   )}
                 </CardContent>
               </Card>
@@ -332,66 +402,135 @@ const History = () => {
                       <p className="text-sm mt-2">Your order history will appear here</p>
                     </div>
                   ) : (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Created At</TableHead>
-                            <TableHead>Symbol</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Side</TableHead>
-                            <TableHead>Quantity</TableHead>
-                            <TableHead>Limit Price</TableHead>
-                            <TableHead>Fill Price</TableHead>
-                            <TableHead>Commission</TableHead>
-                            <TableHead>Status</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredOrders.map((order) => (
-                            <TableRow key={order.id}>
-                              <TableCell className="text-sm">
-                                {formatDateTime(order.created_at)}
-                              </TableCell>
-                              <TableCell className="font-medium">{order.symbol}</TableCell>
-                              <TableCell>
-                                <Badge variant="outline">
-                                  {order.order_type.toUpperCase()}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={order.side === "buy" ? "default" : "destructive"}>
-                                  {order.side.toUpperCase()}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{order.quantity.toFixed(2)}</TableCell>
-                              <TableCell>
-                                {order.price ? formatPrice(order.price, order.symbol) : "-"}
-                              </TableCell>
-                              <TableCell>
-                                {order.fill_price
-                                  ? formatPrice(order.fill_price, order.symbol)
-                                  : "-"}
-                              </TableCell>
-                              <TableCell>{formatCurrency(order.commission)}</TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    order.status === "filled"
-                                      ? "default"
-                                      : order.status === "cancelled"
-                                      ? "destructive"
-                                      : "secondary"
-                                  }
-                                >
-                                  {order.status.toUpperCase()}
-                                </Badge>
-                              </TableCell>
+                    <>
+                      {/* Desktop Table */}
+                      <div className="hidden md:block overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Created At</TableHead>
+                              <TableHead>Symbol</TableHead>
+                              <TableHead>Type</TableHead>
+                              <TableHead>Side</TableHead>
+                              <TableHead>Quantity</TableHead>
+                              <TableHead>Limit Price</TableHead>
+                              <TableHead>Fill Price</TableHead>
+                              <TableHead>Commission</TableHead>
+                              <TableHead>Status</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredOrders.map((order) => (
+                              <TableRow key={order.id}>
+                                <TableCell className="text-sm">
+                                  {formatDateTime(order.created_at)}
+                                </TableCell>
+                                <TableCell className="font-medium">{order.symbol}</TableCell>
+                                <TableCell>
+                                  <Badge variant="outline">
+                                    {order.order_type.toUpperCase()}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant={order.side === "buy" ? "default" : "destructive"}>
+                                    {order.side.toUpperCase()}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>{order.quantity.toFixed(2)}</TableCell>
+                                <TableCell>
+                                  {order.price ? formatPrice(order.price, order.symbol) : "-"}
+                                </TableCell>
+                                <TableCell>
+                                  {order.fill_price
+                                    ? formatPrice(order.fill_price, order.symbol)
+                                    : "-"}
+                                </TableCell>
+                                <TableCell>{formatCurrency(order.commission)}</TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant={
+                                      order.status === "filled"
+                                        ? "default"
+                                        : order.status === "cancelled"
+                                        ? "destructive"
+                                        : "secondary"
+                                    }
+                                  >
+                                    {order.status.toUpperCase()}
+                                  </Badge>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Mobile Card Layout */}
+                      <div className="md:hidden space-y-4">
+                        {filteredOrders.map((order) => (
+                          <Card key={order.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-semibold text-lg">{order.symbol}</h3>
+                                  <p className="text-xs text-muted-foreground">
+                                    {formatDateTime(order.created_at)}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                  <Badge variant="outline">
+                                    {order.order_type.toUpperCase()}
+                                  </Badge>
+                                  <Badge variant={order.side === "buy" ? "default" : "destructive"}>
+                                    {order.side.toUpperCase()}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                  <span className="text-muted-foreground">Qty:</span>
+                                  <p className="font-mono font-semibold">{order.quantity.toFixed(2)}</p>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">Limit:</span>
+                                  <p className="font-mono font-semibold">
+                                    {order.price ? formatPrice(order.price, order.symbol) : "-"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">Fill:</span>
+                                  <p className="font-mono font-semibold">
+                                    {order.fill_price
+                                      ? formatPrice(order.fill_price, order.symbol)
+                                      : "-"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">Commission:</span>
+                                  <p className="font-mono font-semibold">{formatCurrency(order.commission)}</p>
+                                </div>
+                              </div>
+                              <div className="pt-2 border-t">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-muted-foreground">Status:</span>
+                                  <Badge
+                                    variant={
+                                      order.status === "filled"
+                                        ? "default"
+                                        : order.status === "cancelled"
+                                        ? "destructive"
+                                        : "secondary"
+                                    }
+                                  >
+                                    {order.status.toUpperCase()}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </CardContent>
               </Card>
@@ -414,49 +553,93 @@ const History = () => {
                       <p className="text-sm mt-2">Account transactions will appear here</p>
                     </div>
                   ) : (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Date/Time</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Amount</TableHead>
-                            <TableHead>Balance Before</TableHead>
-                            <TableHead>Balance After</TableHead>
-                            <TableHead>Description</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredLedger.map((entry) => (
-                            <TableRow key={entry.id}>
-                              <TableCell className="text-sm">
-                                {formatDateTime(entry.created_at)}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline">
-                                  {entry.transaction_type.toUpperCase().replace("_", " ")}
-                                </Badge>
-                              </TableCell>
-                              <TableCell
-                                className={`font-semibold ${
-                                  entry.amount >= 0 ? "text-profit" : "text-loss"
-                                }`}
-                              >
-                                {entry.amount >= 0 ? "+" : ""}
-                                {formatCurrency(entry.amount)}
-                              </TableCell>
-                              <TableCell>{formatCurrency(entry.balance_before)}</TableCell>
-                              <TableCell className="font-medium">
-                                {formatCurrency(entry.balance_after)}
-                              </TableCell>
-                              <TableCell className="text-sm text-muted-foreground">
-                                {entry.description || "-"}
-                              </TableCell>
+                    <>
+                      {/* Desktop Table */}
+                      <div className="hidden md:block overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Date/Time</TableHead>
+                              <TableHead>Type</TableHead>
+                              <TableHead>Amount</TableHead>
+                              <TableHead>Balance Before</TableHead>
+                              <TableHead>Balance After</TableHead>
+                              <TableHead>Description</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredLedger.map((entry) => (
+                              <TableRow key={entry.id}>
+                                <TableCell className="text-sm">
+                                  {formatDateTime(entry.created_at)}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant="outline">
+                                    {entry.transaction_type.toUpperCase().replace("_", " ")}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell
+                                  className={`font-semibold ${
+                                    entry.amount >= 0 ? "text-profit" : "text-loss"
+                                  }`}
+                                >
+                                  {entry.amount >= 0 ? "+" : ""}
+                                  {formatCurrency(entry.amount)}
+                                </TableCell>
+                                <TableCell>{formatCurrency(entry.balance_before)}</TableCell>
+                                <TableCell className="font-medium">
+                                  {formatCurrency(entry.balance_after)}
+                                </TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
+                                  {entry.description || "-"}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Mobile Card Layout */}
+                      <div className="md:hidden space-y-4">
+                        {filteredLedger.map((entry) => (
+                          <Card key={entry.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-semibold text-lg">
+                                    {entry.transaction_type.replace("_", " ").toUpperCase()}
+                                  </h3>
+                                  <p className="text-xs text-muted-foreground">
+                                    {formatDateTime(entry.created_at)}
+                                  </p>
+                                </div>
+                                <span className={`font-semibold text-lg ${
+                                  entry.amount >= 0 ? "text-profit" : "text-loss"
+                                }`}>
+                                  {entry.amount >= 0 ? "+" : ""}
+                                  {formatCurrency(entry.amount)}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                  <span className="text-muted-foreground">Before:</span>
+                                  <p className="font-mono font-semibold">{formatCurrency(entry.balance_before)}</p>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">After:</span>
+                                  <p className="font-mono font-semibold">{formatCurrency(entry.balance_after)}</p>
+                                </div>
+                              </div>
+                              {entry.description && (
+                                <div className="pt-2 border-t">
+                                  <p className="text-sm text-muted-foreground">{entry.description}</p>
+                                </div>
+                              )}
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </CardContent>
               </Card>

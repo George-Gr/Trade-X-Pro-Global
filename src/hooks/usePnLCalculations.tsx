@@ -47,7 +47,7 @@ interface UsePnLCalculationsReturn {
   // Convenience methods
   formatPnL: (value: number) => string;
   getPnLStatus: (pnl: number) => "profit" | "loss" | "breakeven";
-  getPnLColor: (pnl: number) => "text-green-500" | "text-red-500" | "text-gray-500";
+  getPnLColor: (pnl: number) => "text-buy" | "text-sell" | "text-muted-foreground";
 }
 
 export const usePnLCalculations = (
@@ -236,10 +236,10 @@ export const usePnLCalculations = (
   );
 
   const getPnLColor = useCallback(
-    (pnl: number): "text-green-500" | "text-red-500" | "text-gray-500" => {
-      if (pnl > 0) return "text-green-500";
-      if (pnl < 0) return "text-red-500";
-      return "text-gray-500";
+    (pnl: number): "text-buy" | "text-sell" | "text-muted-foreground" => {
+      if (pnl > 0) return "text-buy";
+      if (pnl < 0) return "text-sell";
+      return "text-muted-foreground";
     },
     []
   );

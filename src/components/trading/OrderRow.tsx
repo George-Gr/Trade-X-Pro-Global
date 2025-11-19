@@ -71,7 +71,7 @@ export const OrderRow = ({
   };
 
   return (
-    <div className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+    <div className="border-b border-border last:border-b-0 hover:bg-muted transition-colors">
       <div className="px-4 py-4">
         {/* Main row */}
         <div className="flex items-center justify-between gap-4">
@@ -79,10 +79,10 @@ export const OrderRow = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-4">
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-gray-900 truncate">
+                <span className="text-sm font-medium text-foreground truncate">
                   {order.symbol}
                 </span>
-                <span className="text-xs text-gray-500 truncate" title={order.id}>
+                <span className="text-xs text-muted-foreground truncate" title={order.id}>
                   {order.id.substring(0, 8)}...
                 </span>
               </div>
@@ -100,7 +100,7 @@ export const OrderRow = ({
 
           {/* Order Type */}
           <div className="flex-1 min-w-0">
-            <span className="text-sm text-gray-700">{typeLabel}</span>
+            <span className="text-sm text-muted-foreground">{typeLabel}</span>
           </div>
 
           {/* Side */}
@@ -113,11 +113,11 @@ export const OrderRow = ({
           {/* Quantity / Fill */}
           <div className="flex-1 min-w-0">
             <div className="flex flex-col">
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-foreground">
                 {order.filled_quantity} / {order.quantity}
               </span>
               {fillPercentage > 0 && fillPercentage < 100 && (
-                <div className="w-12 h-1 bg-gray-200 rounded-full mt-2 overflow-hidden">
+                <div className="w-12 h-1 bg-border rounded-full mt-2 overflow-hidden">
                   <div
                     className="h-full bg-indigo-500"
                     style={{ width: `${fillPercentage}%` }}
@@ -131,7 +131,7 @@ export const OrderRow = ({
           <div className="flex-1 min-w-0">
             <div className="flex flex-col">
               {order.price && (
-                <span className="text-sm text-gray-900">
+                <span className="text-sm text-foreground">
                   {order.average_fill_price
                     ? `Filled @ ${order.average_fill_price.toFixed(4)}`
                     : order.type === 'market'
@@ -140,7 +140,7 @@ export const OrderRow = ({
                 </span>
               )}
               {order.limit_price && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   Limit: {order.limit_price.toFixed(4)}
                 </span>
               )}

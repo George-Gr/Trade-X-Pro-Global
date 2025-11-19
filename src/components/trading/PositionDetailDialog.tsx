@@ -42,7 +42,7 @@ export const PositionDetailDialog: React.FC<{ position: Position; onClose: () =>
 
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded p-4 w-full max-w-md">
+      <div className="bg-background rounded p-4 w-full max-w-md">
         <h4 className="text-lg font-semibold">Position Details: {position.symbol}</h4>
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div>Entry: {position.entry_price}</div>

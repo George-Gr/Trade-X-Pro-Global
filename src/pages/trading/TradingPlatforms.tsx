@@ -74,7 +74,7 @@ export default function TradingPlatforms() {
               <Card key={index} className="hover:shadow-lg transition-all hover:-translate-y-1">
                 <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                    <platform.icon className="h-8 w-8 text-white" />
+                    <platform.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h3 className="text-2xl font-bold mb-2">{platform.title}</h3>
                   <p className="text-muted-foreground mb-6">{platform.description}</p>

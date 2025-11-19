@@ -131,7 +131,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
 
   if (error) {
     return (
-      <Card className="p-4 border-red-500/30 bg-red-500/5">
+      <Card className="p-4 border-red-500/30 bg-background/5">
         <p className="text-red-500">Error loading portfolio data: {error}</p>
       </Card>
     );
@@ -189,7 +189,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
         </Card>
 
         {/* Margin Status */}
-        <Card className={`p-4 ${metrics.marginLevel > 80 ? 'border-yellow-500/30 bg-yellow-500/5' : 'bg-card'}`}>
+        <Card className={`p-4 ${metrics.marginLevel > 80 ? 'border-yellow-500/30 bg-background/5' : 'bg-card'}`}>
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Margin Level</p>
             <p className="text-2xl font-bold font-mono">{metrics.marginLevel.toFixed(1)}%</p>
@@ -197,7 +197,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
               <div
                 className={`h-full transition-colors ${
                   metrics.marginLevel > 90 ? 'bg-loss' :
-                  metrics.marginLevel > 80 ? 'bg-yellow-500' : 'bg-profit'
+                  metrics.marginLevel > 80 ? 'bg-background' : 'bg-profit'
                 }`}
                 style={{ width: `${Math.min(metrics.marginLevel, 100)}%` }}
               />
@@ -295,46 +295,93 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
           <Card className="p-4 bg-card">
             <h3 className="font-semibold mb-4">Open Positions</h3>
             {positions && positions.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-4 text-muted-foreground font-medium">Symbol</th>
-                      <th className="text-right py-4 text-muted-foreground font-medium">Qty</th>
-                      <th className="text-right py-4 text-muted-foreground font-medium">Entry</th>
-                      <th className="text-right py-4 text-muted-foreground font-medium">Current</th>
-                      <th className="text-right py-4 text-muted-foreground font-medium">P&L</th>
-                      <th className="text-right py-4 text-muted-foreground font-medium">ROI%</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {positions.map(pos => {
-                      const posValue = pos.current_price * pos.quantity * 100000;
-                      const entryValue = pos.entry_price * pos.quantity * 100000;
-                      const pnl = pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
-                      const roi = entryValue > 0 ? (pnl / entryValue) * 100 : 0;
-                      
-                      return (
-                        <tr key={pos.id} className="border-b border-border/50 hover:bg-secondary/30">
-                          <td className="py-4">
-                            <span className="font-semibold">{pos.symbol}</span>
-                            <span className="text-xs text-muted-foreground ml-2">({pos.side})</span>
-                          </td>
-                          <td className="text-right font-mono text-xs">{pos.quantity}</td>
-                          <td className="text-right font-mono text-xs">{pos.entry_price.toFixed(5)}</td>
-                          <td className="text-right font-mono text-xs">{pos.current_price.toFixed(5)}</td>
-                          <td className={`text-right font-mono text-xs font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}>
-                            {pnl >= 0 ? '+' : ''}{pnl.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                          </td>
-                          <td className={`text-right font-mono text-xs font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}>
-                            {roi >= 0 ? '+' : ''}{roi.toFixed(2)}%
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              <>
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left py-4 text-muted-foreground font-medium">Symbol</th>
+                        <th className="text-right py-4 text-muted-foreground font-medium">Qty</th>
+                        <th className="text-right py-4 text-muted-foreground font-medium">Entry</th>
+                        <th className="text-right py-4 text-muted-foreground font-medium">Current</th>
+                        <th className="text-right py-4 text-muted-foreground font-medium">P&L</th>
+                        <th className="text-right py-4 text-muted-foreground font-medium">ROI%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {positions.map(pos => {
+                        const posValue = pos.current_price * pos.quantity * 100000;
+                        const entryValue = pos.entry_price * pos.quantity * 100000;
+                        const pnl = pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
+                        const roi = entryValue > 0 ? (pnl / entryValue) * 100 : 0;
+                        
+                        return (
+                          <tr key={pos.id} className="border-b border-border/50 hover:bg-secondary/30">
+                            <td className="py-4">
+                              <span className="font-semibold">{pos.symbol}</span>
+                              <span className="text-xs text-muted-foreground ml-2">({pos.side})</span>
+                            </td>
+                            <td className="text-right font-mono text-xs">{pos.quantity}</td>
+                            <td className="text-right font-mono text-xs">{pos.entry_price.toFixed(5)}</td>
+                            <td className="text-right font-mono text-xs">{pos.current_price.toFixed(5)}</td>
+                            <td className={`text-right font-mono text-xs font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}>
+                              {pnl >= 0 ? '+' : ''}{pnl.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                            </td>
+                            <td className={`text-right font-mono text-xs font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}>
+                              {roi >= 0 ? '+' : ''}{roi.toFixed(2)}%
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Card Layout */}
+                <div className="md:hidden space-y-3">
+                  {positions.map(pos => {
+                    const posValue = pos.current_price * pos.quantity * 100000;
+                    const entryValue = pos.entry_price * pos.quantity * 100000;
+                    const pnl = pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
+                    const roi = entryValue > 0 ? (pnl / entryValue) * 100 : 0;
+                    
+                    return (
+                      <div key={pos.id} className="border border-border rounded-lg p-3 space-y-2 hover:shadow-md transition-all cursor-pointer">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-semibold text-sm">{pos.symbol}</h4>
+                          <span className={`text-xs px-2 py-1 rounded ${pos.side === 'buy' ? 'bg-buy/20 text-buy' : 'bg-sell/20 text-sell'}`}>
+                            {pos.side.toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div>
+                            <span className="text-muted-foreground">Qty:</span>
+                            <p className="font-mono font-semibold">{pos.quantity}</p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Entry:</span>
+                            <p className="font-mono font-semibold">{pos.entry_price.toFixed(5)}</p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Current:</span>
+                            <p className="font-mono font-semibold">{pos.current_price.toFixed(5)}</p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">ROI:</span>
+                            <p className={`font-mono font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}>
+                              {roi >= 0 ? '+' : ''}{roi.toFixed(2)}%
+                            </p>
+                          </div>
+                        </div>
+                        <div className={`pt-2 border-t text-sm font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}>
+                          P&L: {pnl >= 0 ? '+' : ''}{pnl.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
             ) : (
               <p className="text-center text-muted-foreground py-8">No open positions</p>
             )}

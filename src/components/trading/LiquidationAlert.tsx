@@ -42,7 +42,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
   onContactSupport,
 }) => {
   return (
-    <Alert className="border-red-300 bg-red-50 mb-4">
+    <Alert className="border-red-300 bg-background mb-4">
       <div className="flex items-start justify-between w-full gap-4">
         <div className="flex items-start gap-4 flex-1">
           <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-2.5" />
@@ -58,22 +58,22 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
 
               {/* Liquidation Summary */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-                <div className="bg-white p-4 rounded border border-red-200">
-                  <div className="text-xs text-gray-600">Positions Closed</div>
+                <div className="bg-background p-4 rounded border border-red-200">
+                  <div className="text-xs text-muted-foreground">Positions Closed</div>
                   <div className="text-lg font-bold text-red-900">{result.totalPositionsClosed}</div>
                 </div>
-                <div className="bg-white p-4 rounded border border-red-200">
-                  <div className="text-xs text-gray-600">Realized Loss</div>
+                <div className="bg-background p-4 rounded border border-red-200">
+                  <div className="text-xs text-muted-foreground">Realized Loss</div>
                   <div className={cn('text-lg font-bold', result.totalLossRealized < 0 ? 'text-red-700' : 'text-green-700')}>
                     ${Math.abs(result.totalLossRealized).toFixed(2)}
                   </div>
                 </div>
-                <div className="bg-white p-4 rounded border border-red-200">
-                  <div className="text-xs text-gray-600">Slippage Cost</div>
+                <div className="bg-background p-4 rounded border border-red-200">
+                  <div className="text-xs text-muted-foreground">Slippage Cost</div>
                   <div className="text-lg font-bold text-orange-700">${result.totalSlippageApplied.toFixed(2)}</div>
                 </div>
-                <div className="bg-white p-4 rounded border border-red-200">
-                  <div className="text-xs text-gray-600">Margin Restored</div>
+                <div className="bg-background p-4 rounded border border-red-200">
+                  <div className="text-xs text-muted-foreground">Margin Restored</div>
                   <div className={cn('text-lg font-bold', result.finalMarginLevel > result.initialMarginLevel ? 'text-green-700' : 'text-red-700')}>
                     {result.finalMarginLevel.toFixed(1)}%
                   </div>
@@ -102,12 +102,12 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                       {result.closedPositions.map((pos, idx) => (
                         <div
                           key={idx}
-                          className="p-4 border border-gray-200 rounded-lg bg-gray-50"
+                          className="p-4 border border-border rounded-lg bg-muted"
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div>
-                              <div className="font-semibold text-gray-900">{pos.symbol}</div>
-                              <div className="text-sm text-gray-600 capitalize">
+                              <div className="font-semibold text-foreground">{pos.symbol}</div>
+                              <div className="text-sm text-muted-foreground capitalize">
                                 {pos.side} {pos.quantity} unit{pos.quantity !== 1 ? 's' : ''}
                               </div>
                             </div>
@@ -120,7 +120,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                               {pos.realizedPnL < 0 ? '-' : '+'}${Math.abs(pos.realizedPnL).toFixed(2)}
                             </div>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 text-xs text-gray-600">
+                          <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
                             <div>
                               <div className="font-medium">Entry Price</div>
                               <div>${pos.entryPrice.toFixed(4)}</div>
@@ -147,7 +147,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
 
               {/* Failed Positions Warning */}
               {result.totalPositionsFailed > 0 && (
-                <div className="bg-orange-50 border border-orange-200 p-4 rounded text-sm text-orange-900">
+                <div className="bg-background border border-orange-200 p-4 rounded text-sm text-orange-900">
                   <strong>{result.totalPositionsFailed} position{result.totalPositionsFailed !== 1 ? 's' : ''}</strong> failed
                   to close due to technical issues. These positions may still be open. Contact support.
                 </div>
@@ -169,7 +169,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
         <Button
           onClick={onDeposit}
           size="sm"
-          className="bg-[hsl(var(--status-info-foreground))] hover:bg-[hsl(var(--status-info-foreground)/0.9)] text-white"
+          className="bg-[hsl(var(--status-info-foreground))] hover:bg-[hsl(var(--status-info-foreground)/0.9)] text-foreground"
         >
           <DollarSign className="w-4 h-4 mr-2" />
           Deposit Funds

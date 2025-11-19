@@ -391,7 +391,7 @@ const KycAdminDashboard: React.FC = () => {
                             </Button>
                           </DialogTrigger>
                           {selectedRequest?.id === req.id && (
-                            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                            <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-3xl max-h-[90vh] overflow-y-auto">
                               <DialogHeader>
                                 <DialogTitle>KYC Review: {selectedRequest.userProfile?.full_name}</DialogTitle>
                                 <DialogDescription>
@@ -534,7 +534,7 @@ const KycAdminDashboard: React.FC = () => {
       {/* Document Preview Modal */}
       {previewUrl && (
         <Dialog open={!!previewUrl} onOpenChange={(open) => !open && setPreviewUrl(null)}>
-          <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-2xl max-h-[80vh]">
             <DialogHeader>
               <DialogTitle>Document Preview</DialogTitle>
             </DialogHeader>

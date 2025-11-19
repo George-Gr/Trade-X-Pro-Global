@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, FileText, CheckCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { validationRules } from "@/components/ui/form";
 
 interface KYCSubmissionProps {
   onSuccess?: () => void;
@@ -17,9 +19,17 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [documentType, setDocumentType] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [submitted, setSubmitted] = useState(false);
+
+  const form = useForm({
+    defaultValues: {
+      documentType: "",
+    },
+  });
+
+  const { register, handleSubmit, watch, reset, formState: { errors } } = form;
+  const documentType = watch("documentType");
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,10 +59,9 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!user || !documentType || !selectedFile) {
+  const onSubmit = async (data: any) => {
+    // data contains documentType
+    if (!user || !data.documentType || !selectedFile) {
       toast({
         title: "Missing information",
         description: "Please select document type and file",
@@ -67,7 +76,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       // Create FormData for server-side validation
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append("documentType", documentType);
+      formData.append("documentType", data.documentType);
 
       // Get auth token
       const { data: { session } } = await supabase.auth.getSession();
@@ -76,7 +85,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       }
 
       // Call server-side validation function
-      const { data, error } = await supabase.functions.invoke("validate-kyc-upload", {
+      const { data: fnData, error } = await supabase.functions.invoke("validate-kyc-upload", {
         body: formData,
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -84,14 +93,14 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       });
 
       if (error) throw error;
-      if (!data.success) throw new Error(data.error || "Upload failed");
+      if (!fnData.success) throw new Error(fnData.error || "Upload failed");
 
       // Update profile KYC status if first submission
       const { error: profileError } = await supabase
         .from("profiles")
         .update({ kyc_status: "pending" })
         .eq("id", user.id)
-        .eq("kyc_status", "pending");
+        .neq("kyc_status", "pending");
 
       if (profileError) console.warn("Profile update warning:", profileError);
 
@@ -159,7 +168,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="document-type">Document Type</Label>
-            <Select value={documentType} onValueChange={setDocumentType}>
+            <Select {...register("documentType", validationRules.documentType)}>
               <SelectTrigger id="document-type">
                 <SelectValue placeholder="Select document type" />
               </SelectTrigger>
@@ -170,6 +179,9 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
                 <SelectItem value="proof_of_address">Proof of Address</SelectItem>
               </SelectContent>
             </Select>
+            {errors.documentType && (
+              <p className="text-sm text-destructive mt-1">{errors.documentType.message}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -197,7 +209,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
           <Button
             type="submit"
             className="w-full"
-            disabled={isSubmitting || !documentType || !selectedFile}
+            disabled={isSubmitting || !selectedFile || !documentType}
           >
             {isSubmitting ? (
               <>

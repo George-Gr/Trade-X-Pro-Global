@@ -33,9 +33,9 @@ export default function AboutUs() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <Globe className="h-7 w-7 text-white" />
+                    <Globe className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h2 className="text-3xl font-bold">Our Mission</h2>
+                  <h2 className="text-3xl font-bold">Our Story</h2>
                 </div>
                 <p className="text-muted-foreground mb-6">
                   To democratize financial trading by providing accessible, educational, and risk-free platform for traders of all levels to learn, practice, and master CFD trading without financial risk.
@@ -50,7 +50,7 @@ export default function AboutUs() {
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                    <TrendingUp className="h-7 w-7 text-white" />
+                    <TrendingUp className="h-7 w-7 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Our Vision</h2>
                 </div>
@@ -87,7 +87,7 @@ export default function AboutUs() {
                 <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
                   <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                      <item.icon className="h-7 w-7 text-white" />
+                      <item.icon className="h-7 w-7 text-primary-foreground" />
                     </div>
                     <h3 className="text-xl font-bold mb-4">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>

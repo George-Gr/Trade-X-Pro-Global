@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, AlertTriangle, CheckCircle2, Clock, DollarSign, TrendingDown, Shield } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
+import { validationRules } from "@/components/ui/form";
 
 interface WithdrawalFormProps {
   onSuccess?: () => void;
@@ -35,14 +37,22 @@ const WITHDRAWAL_LIMITS = {
 export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   const { user } = useAuth();
   const { toast } = useToast();
-  
-  const [currency, setCurrency] = useState("BTC");
-  const [address, setAddress] = useState("");
-  const [amount, setAmount] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [twoFACode, setTwoFACode] = useState("");
   const [estimatedFee, setEstimatedFee] = useState(0);
+
+  const form = useForm({
+    mode: "onChange",
+    defaultValues: {
+      currency: "BTC",
+      address: "",
+      amount: "",
+      twoFACode: "",
+    },
+  });
+
+  const { register, handleSubmit, control, watch, reset, formState: { errors, isValid } } = form;
 
   // Fetch user profile for KYC status and withdrawal limits
   const { data: profile } = useQuery({
@@ -80,9 +90,14 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     enabled: !!user?.id,
   });
 
-  const selectedCrypto = SUPPORTED_CRYPTOS.find(c => c.value === currency);
+  const watchedCurrency = watch("currency") || "BTC";
+  const watchedAmount = watch("amount") || "";
+  const watchedAddress = watch("address") || "";
+  const watchedTwoFA = watch("twoFACode") || "";
+
+  const selectedCrypto = SUPPORTED_CRYPTOS.find(c => c.value === watchedCurrency);
   const networkFee = parseFloat(selectedCrypto?.networkFee || '0');
-  const totalWithdrawal = parseFloat(amount) + networkFee;
+  const totalWithdrawal = (parseFloat(watchedAmount || '0') || 0) + networkFee;
   const todayTotal = todayWithdrawals?.reduce((sum, t) => sum + (t.usd_amount || 0), 0) || 0;
   const remainingDailyLimit = WITHDRAWAL_LIMITS.daily - todayTotal;
 
@@ -99,74 +114,48 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     return patterns[curr]?.test(addr) || false;
   };
 
-  const handleSubmit = async () => {
-    // Validate inputs
-    if (!address.trim()) {
-      toast({
-        title: "Invalid Address",
-        description: "Please enter a withdrawal address",
-        variant: "destructive",
-      });
+  const onSubmit = async (data: any) => {
+    const { currency: formCurrency, address: formAddress, amount: formAmount } = data;
+
+    // Validate address format
+    if (!formAddress || !formAddress.trim()) {
+      toast({ title: "Invalid Address", description: "Please enter a withdrawal address", variant: "destructive" });
       return;
     }
 
-    if (!validateAddress(address, currency)) {
-      toast({
-        title: "Invalid Address Format",
-        description: `Please enter a valid ${currency} address`,
-        variant: "destructive",
-      });
+    if (!validateAddress(formAddress, formCurrency)) {
+      toast({ title: "Invalid Address Format", description: `Please enter a valid ${formCurrency} address`, variant: "destructive" });
       return;
     }
 
-    if (!amount || parseFloat(amount) <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid withdrawal amount",
-        variant: "destructive",
-      });
+    if (!formAmount || parseFloat(formAmount) <= 0) {
+      toast({ title: "Invalid Amount", description: "Please enter a valid withdrawal amount", variant: "destructive" });
       return;
     }
 
-    const withdrawAmount = parseFloat(amount);
+    const withdrawAmount = parseFloat(formAmount);
 
     // Check balance
     if (withdrawAmount > balance) {
-      toast({
-        title: "Insufficient Balance",
-        description: `You only have $${balance.toFixed(2)} available`,
-        variant: "destructive",
-      });
+      toast({ title: "Insufficient Balance", description: `You only have $${balance.toFixed(2)} available`, variant: "destructive" });
       return;
     }
 
     // Check transaction limit
     if (withdrawAmount > WITHDRAWAL_LIMITS.perTransaction) {
-      toast({
-        title: "Amount Exceeds Limit",
-        description: `Maximum per transaction: $${WITHDRAWAL_LIMITS.perTransaction}`,
-        variant: "destructive",
-      });
+      toast({ title: "Amount Exceeds Limit", description: `Maximum per transaction: $${WITHDRAWAL_LIMITS.perTransaction}`, variant: "destructive" });
       return;
     }
 
     // Check daily limit
     if (todayTotal + withdrawAmount > WITHDRAWAL_LIMITS.daily) {
-      toast({
-        title: "Daily Limit Exceeded",
-        description: `Remaining today: $${remainingDailyLimit.toFixed(2)}`,
-        variant: "destructive",
-      });
+      toast({ title: "Daily Limit Exceeded", description: `Remaining today: $${remainingDailyLimit.toFixed(2)}`, variant: "destructive" });
       return;
     }
 
     // Check KYC status
     if (profile?.kyc_status !== 'approved') {
-      toast({
-        title: "KYC Required",
-        description: "Please complete KYC verification before withdrawing",
-        variant: "destructive",
-      });
+      toast({ title: "KYC Required", description: "Please complete KYC verification before withdrawing", variant: "destructive" });
       return;
     }
 
@@ -286,13 +275,18 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
             <Label htmlFor="address">Withdrawal Address</Label>
             <Input
               id="address"
-              placeholder={`Enter your ${currency} address`}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              placeholder={`Enter your ${watchedCurrency} address`}
+              {...register("address", {
+                required: "Please enter a withdrawal address",
+                validate: (val: string) => validateAddress(val, watchedCurrency) || `Please enter a valid ${watchedCurrency} address`,
+              })}
               className="font-mono text-sm"
             />
+            {errors.address && (
+              <p className="text-sm text-destructive mt-1">{errors.address.message}</p>
+            )}
             <p className="text-xs text-muted-foreground">
-              Enter a valid {currency} address. This cannot be changed after submission.
+              Enter a valid {watchedCurrency} address. This cannot be changed after submission.
             </p>
           </div>
 
@@ -304,18 +298,20 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                 id="amount"
                 type="number"
                 placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                {...register("amount", validationRules.amount)}
                 className="pl-8"
                 min="0"
                 step="0.01"
                 disabled={!canWithdraw}
               />
             </div>
-            {amount && (
+            {errors.amount && (
+              <p className="text-sm text-destructive mt-1">{errors.amount.message}</p>
+            )}
+            {watchedAmount && (
               <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Network Fee: {networkFee} {currency}</span>
-                <span>Total: {(parseFloat(amount) + networkFee).toFixed(8)} {currency}</span>
+                <span>Network Fee: {networkFee} {watchedCurrency}</span>
+                <span>Total: {(parseFloat(watchedAmount) + networkFee).toFixed(8)} {watchedCurrency}</span>
               </div>
             )}
           </div>
@@ -352,7 +348,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
           </Alert>
 
           <Button
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(onSubmit)()}
             disabled={!canWithdraw || loading}
             className="w-full"
           >
@@ -397,17 +393,23 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
               <Input
                 id="twofa"
                 placeholder="Enter 6-digit code"
-                value={twoFACode}
-                onChange={(e) => setTwoFACode(e.target.value.slice(0, 6))}
+                {...register("twoFACode", {
+                  required: "2FA code is required",
+                  minLength: { value: 6, message: "Enter a 6-digit code" },
+                  maxLength: { value: 6, message: "Enter a 6-digit code" },
+                })}
                 maxLength={6}
                 pattern="[0-9]*"
               />
+              {errors.twoFACode && (
+                <p className="text-sm text-destructive mt-1">{errors.twoFACode.message}</p>
+              )}
             </div>
 
             <Alert>
               <CheckCircle2 className="h-4 w-4" />
               <AlertDescription className="text-xs">
-                Withdrawal will be sent to address ending in {address.slice(-10)}
+                Withdrawal will be sent to address ending in {watchedAddress.slice(-10)}
               </AlertDescription>
             </Alert>
           </div>
@@ -415,8 +417,8 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
           <div className="flex gap-4">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleConfirmWithdrawal}
-              disabled={loading || twoFACode.length !== 6}
+              onClick={() => handleConfirmWithdrawal()}
+              disabled={loading || watchedTwoFA.length !== 6}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirm Withdrawal

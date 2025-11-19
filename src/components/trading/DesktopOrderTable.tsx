@@ -140,7 +140,7 @@ const DesktopOrderTable: React.FC<DesktopOrderTableProps> = ({
                   <td className="py-4 px-4">
                     <Badge
                       variant={order.side === 'buy' ? 'default' : 'secondary'}
-                      className={order.side === 'buy' ? 'bg-buy text-white' : 'bg-sell text-white'}
+                      className={order.side === 'buy' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}
                     >
                       {order.side.toUpperCase()}
                     </Badge>

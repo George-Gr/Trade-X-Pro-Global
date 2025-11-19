@@ -44,7 +44,7 @@ export default function Partners() {
                 <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
                   <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                      <Handshake className="h-7 w-7 text-white" />
+                      <Handshake className="h-7 w-7 text-primary-foreground" />
                     </div>
                     <h3 className="text-2xl font-bold mb-2">{item.partner}</h3>
                     <p className="text-muted-foreground">{item.description}</p>

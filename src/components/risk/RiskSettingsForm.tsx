@@ -9,6 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Shield, Save, AlertTriangle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useForm } from "react-hook-form";
+import { validationRules } from "@/components/ui/form";
 
 interface RiskSettings {
   margin_call_level: number;
@@ -35,6 +37,23 @@ export const RiskSettingsForm = () => {
     enforce_stop_loss: true,
     min_stop_loss_distance: 10,
   });
+
+  const form = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      margin_call_level: 50,
+      stop_out_level: 20,
+      max_position_size: 10,
+      max_total_exposure: 100000,
+      max_positions: 10,
+      daily_loss_limit: 5000,
+      daily_trade_limit: 50,
+      enforce_stop_loss: true,
+      min_stop_loss_distance: 10,
+    },
+  });
+
+  const { register, formState: { errors } } = form;
 
   const { data: userSettings, isLoading } = useQuery({
     queryKey: ["risk-settings"],
@@ -134,9 +153,13 @@ export const RiskSettingsForm = () => {
                   min="0"
                   max="100"
                   step="1"
+                  {...register("margin_call_level", validationRules.amount)}
                   value={settings.margin_call_level}
                   onChange={(e) => setSettings({ ...settings, margin_call_level: parseFloat(e.target.value) })}
                 />
+                {errors.margin_call_level && (
+                  <p className="text-sm text-destructive mt-1">{errors.margin_call_level.message}</p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   You'll be notified when margin level drops below this
                 </p>
@@ -155,9 +178,13 @@ export const RiskSettingsForm = () => {
                   min="0"
                   max="100"
                   step="1"
+                  {...register("stop_out_level", validationRules.amount)}
                   value={settings.stop_out_level}
                   onChange={(e) => setSettings({ ...settings, stop_out_level: parseFloat(e.target.value) })}
                 />
+                {errors.stop_out_level && (
+                  <p className="text-sm text-destructive mt-1">{errors.stop_out_level.message}</p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Automatic liquidation starts at this level
                 </p>
@@ -178,9 +205,13 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0.01"
                   step="0.01"
+                  {...register("max_position_size", validationRules.amount)}
                   value={settings.max_position_size}
                   onChange={(e) => setSettings({ ...settings, max_position_size: parseFloat(e.target.value) })}
                 />
+                {errors.max_position_size && (
+                  <p className="text-sm text-destructive mt-1">{errors.max_position_size.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -190,9 +221,13 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
+                  {...register("max_positions", validationRules.amount)}
                   value={settings.max_positions}
                   onChange={(e) => setSettings({ ...settings, max_positions: parseInt(e.target.value) })}
                 />
+                {errors.max_positions && (
+                  <p className="text-sm text-destructive mt-1">{errors.max_positions.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -202,9 +237,13 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0"
                   step="1000"
+                  {...register("max_total_exposure", validationRules.amount)}
                   value={settings.max_total_exposure}
                   onChange={(e) => setSettings({ ...settings, max_total_exposure: parseFloat(e.target.value) })}
                 />
+                {errors.max_total_exposure && (
+                  <p className="text-sm text-destructive mt-1">{errors.max_total_exposure.message}</p>
+                )}
               </div>
             </div>
           </div>
@@ -222,9 +261,13 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0"
                   step="100"
+                  {...register("daily_loss_limit", validationRules.amount)}
                   value={settings.daily_loss_limit}
                   onChange={(e) => setSettings({ ...settings, daily_loss_limit: parseFloat(e.target.value) })}
                 />
+                {errors.daily_loss_limit && (
+                  <p className="text-sm text-destructive mt-1">{errors.daily_loss_limit.message}</p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Trading stops when daily loss reaches this amount
                 </p>
@@ -237,9 +280,13 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
+                  {...register("daily_trade_limit", validationRules.amount)}
                   value={settings.daily_trade_limit}
                   onChange={(e) => setSettings({ ...settings, daily_trade_limit: parseInt(e.target.value) })}
                 />
+                {errors.daily_trade_limit && (
+                  <p className="text-sm text-destructive mt-1">{errors.daily_trade_limit.message}</p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Maximum number of trades per day
                 </p>
@@ -276,9 +323,13 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
+                  {...register("min_stop_loss_distance", validationRules.amount)}
                   value={settings.min_stop_loss_distance}
                   onChange={(e) => setSettings({ ...settings, min_stop_loss_distance: parseFloat(e.target.value) })}
                 />
+                {errors.min_stop_loss_distance && (
+                  <p className="text-sm text-destructive mt-1">{errors.min_stop_loss_distance.message}</p>
+                )}
               </div>
             )}
           </div>

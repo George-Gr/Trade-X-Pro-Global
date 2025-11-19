@@ -113,7 +113,7 @@ export default function TradingTools() {
               <Card key={index} className="hover:shadow-lg transition-all hover:-translate-y-1">
                 <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                    <tool.icon className="h-8 w-8 text-white" />
+                    <tool.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h3 className="text-2xl font-bold mb-2">{tool.title}</h3>
                   <p className="text-muted-foreground mb-6">{tool.description}</p>
@@ -250,7 +250,7 @@ export default function TradingTools() {
                       </div>
                       <div className="border-t border-border pt-4 flex justify-between font-semibold">
                         <span>Position Size</span>
-                        <span className="text-primary">40 lots</span>
+                        <span className="text-primary hover:text-primary/80 transition-colors cursor-pointer">40 lots</span>
                       </div>
                     </div>
                   </div>
@@ -272,7 +272,7 @@ export default function TradingTools() {
                       </div>
                       <div className="border-t border-border pt-4 flex justify-between font-semibold">
                         <span>Pip Value</span>
-                        <span className="text-primary">$10</span>
+                        <span className="text-primary hover:text-primary/80 transition-colors cursor-pointer">$10</span>
                       </div>
                     </div>
                   </div>

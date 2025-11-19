@@ -70,7 +70,7 @@ export const CancelOrderConfirmation = ({
 
   const remainingQuantity = order.quantity - order.filled_quantity;
   const isMostlyFilled = order.filled_quantity > order.quantity * 0.75;
-  const sideColor = order.side === 'buy' ? 'text-blue-600' : 'text-orange-600';
+  const sideColor = order.side === 'buy' ? 'text-buy' : 'text-sell';
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onCancel}>
@@ -90,35 +90,35 @@ export const CancelOrderConfirmation = ({
         </AlertDialogHeader>
 
         {/* Order Details */}
-        <div className="bg-gray-50 rounded-lg p-4 space-y-4 my-4">
+        <div className="bg-muted rounded-lg p-4 space-y-4 my-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Symbol</span>
-            <span className="text-sm font-semibold text-gray-900">{order.symbol}</span>
+            <span className="text-sm font-medium text-muted-foreground">Symbol</span>
+            <span className="text-sm font-semibold text-foreground">{order.symbol}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Side</span>
+            <span className="text-sm font-medium text-muted-foreground">Side</span>
             <span className={`text-sm font-semibold ${sideColor} uppercase`}>{order.side}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Type</span>
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-medium text-muted-foreground">Type</span>
+            <span className="text-sm font-semibold text-foreground">
               {order.type.replace('_', ' ').toUpperCase()}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Total Quantity</span>
-            <span className="text-sm font-semibold text-gray-900">{order.quantity}</span>
+            <span className="text-sm font-medium text-muted-foreground">Total Quantity</span>
+            <span className="text-sm font-semibold text-foreground">{order.quantity}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Filled Quantity</span>
-            <span className="text-sm font-semibold text-gray-900">{order.filled_quantity}</span>
+            <span className="text-sm font-medium text-muted-foreground">Filled Quantity</span>
+            <span className="text-sm font-semibold text-foreground">{order.filled_quantity}</span>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+          <div className="flex items-center justify-between pt-4 border-t border-border">
             <span className="text-sm font-medium text-gray-700">Remaining to Cancel</span>
             <span className="text-sm font-bold text-red-600">{remainingQuantity}</span>
           </div>
@@ -126,7 +126,7 @@ export const CancelOrderConfirmation = ({
 
         {/* Warnings */}
         {isMostlyFilled && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-background border border-blue-200 rounded-lg p-4">
             <p className="text-xs text-blue-700">
               <strong>Note:</strong> This order is mostly filled ({(order.filled_quantity / order.quantity * 100).toFixed(0)}%).
               Cancelling will only affect the remaining {remainingQuantity} units.
@@ -151,7 +151,7 @@ export const CancelOrderConfirmation = ({
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isLoading}
-            className="bg-[hsl(var(--status-error-foreground))] hover:bg-[hsl(var(--status-error-foreground)/0.9)] text-white"
+            className="bg-[hsl(var(--status-error-foreground))] hover:bg-[hsl(var(--status-error-foreground)/0.9)] text-foreground"
           >
             {isLoading ? (
               <>

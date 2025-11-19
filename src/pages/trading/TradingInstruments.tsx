@@ -57,7 +57,7 @@ export default function TradingInstruments() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <Globe className="h-8 w-8 text-white" />
+                      <Globe className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="text-3xl font-bold">Forex CFDs</h2>
@@ -143,7 +143,7 @@ export default function TradingInstruments() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <TrendingUp className="h-8 w-8 text-white" />
+                      <TrendingUp className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="text-3xl font-bold">Stock CFDs</h2>
@@ -228,7 +228,7 @@ export default function TradingInstruments() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <BarChart3 className="h-8 w-8 text-white" />
+                      <BarChart3 className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="text-3xl font-bold">Indices CFDs</h2>
@@ -313,7 +313,7 @@ export default function TradingInstruments() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <LineChart className="h-8 w-8 text-white" />
+                      <LineChart className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="text-3xl font-bold">Commodity CFDs</h2>
@@ -398,7 +398,7 @@ export default function TradingInstruments() {
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                      <Zap className="h-8 w-8 text-white" />
+                      <Zap className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="text-3xl font-bold">Cryptocurrency CFDs</h2>

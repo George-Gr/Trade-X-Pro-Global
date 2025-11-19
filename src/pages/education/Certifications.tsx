@@ -70,7 +70,7 @@ export default function Certifications() {
               <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
                 <CardContent className="p-6">
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
-                    <Award className="h-6 w-6 text-white" />
+                    <Award className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{cert.description}</p>
