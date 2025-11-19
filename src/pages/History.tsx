@@ -322,7 +322,7 @@ const History = () => {
                               (1000 * 60)
                           );
                           return (
-                            <Card key={trade.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                            <Card key={trade.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all duration-150 cursor-pointer">
                               <div className="space-y-3">
                                 <div className="flex items-center justify-between">
                                   <div>
@@ -468,7 +468,7 @@ const History = () => {
                       {/* Mobile Card Layout */}
                       <div className="md:hidden space-y-4">
                         {filteredOrders.map((order) => (
-                          <Card key={order.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                          <Card key={order.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all duration-150 cursor-pointer">
                             <div className="space-y-3">
                               <div className="flex items-center justify-between">
                                 <div>
@@ -602,7 +602,7 @@ const History = () => {
                       {/* Mobile Card Layout */}
                       <div className="md:hidden space-y-4">
                         {filteredLedger.map((entry) => (
-                          <Card key={entry.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                          <Card key={entry.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all duration-150 cursor-pointer">
                             <div className="space-y-3">
                               <div className="flex items-center justify-between">
                                 <div>

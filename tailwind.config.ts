@@ -117,8 +117,15 @@ const config: Config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 150ms ease-out",
+        "accordion-up": "accordion-up 150ms ease-out",
+      },
+      transitionDuration: {
+        "DEFAULT": "150ms",
+        "150": "150ms",
+        "200": "200ms",
+        "300": "300ms",
+        "500": "500ms",
       },
     },
   },

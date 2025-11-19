@@ -352,7 +352,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
                   {/* Upload Area */}
                   <div
-                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-150 ${
                       isDragActive
                         ? 'border-primary bg-primary/5'
                         : 'border-muted-foreground/25 hover:border-primary/50'

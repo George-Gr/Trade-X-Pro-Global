@@ -391,24 +391,57 @@ const Admin = () => {
 
             {/* Tabs */}
             <Tabs defaultValue="kyc" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="kyc">KYC Submissions</TabsTrigger>
-                <TabsTrigger value="accounts">User Accounts</TabsTrigger>
+              <TabsList role="tablist" aria-label="Admin management tabs">
+                <TabsTrigger 
+                  value="kyc" 
+                  className="text-sm"
+                  tabIndex={0}
+                  role="tab"
+                  aria-selected={activeTab === "kyc"}
+                  aria-controls="tab-content-kyc"
+                >
+                  KYC Submissions
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="accounts" 
+                  className="text-sm"
+                  tabIndex={0}
+                  role="tab"
+                  aria-selected={activeTab === "accounts"}
+                  aria-controls="tab-content-accounts"
+                >
+                  User Accounts
+                </TabsTrigger>
               </TabsList>
 
               {/* KYC Submissions */}
-              <TabsContent value="kyc">
+              <TabsContent 
+                value="kyc"
+                id="tab-content-kyc"
+                role="tabpanel"
+                aria-labelledby="tab-trigger-kyc"
+              >
                 <Card>
                   <div className="p-6">
                     <h2 className="text-lg font-semibold mb-4">KYC Document Submissions</h2>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Document Type</TableHead>
-                          <TableHead>Submitted</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Name
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Email
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Document Type
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Submitted
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Status
+                          </TableHead>
                           <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -453,8 +486,10 @@ const Admin = () => {
                                     size="sm"
                                     variant="outline"
                                     onClick={() => handleViewDocument(doc.file_path)}
+                                    tabIndex={0}
+                                    aria-label={`View document for ${doc.profiles.full_name || "user"}`}
                                   >
-                                    <Eye className="h-3 w-3 mr-2" />
+                                    <Eye className="h-3 w-3 mr-2" aria-hidden="true" />
                                     View
                                   </Button>
                                   {doc.status === "pending" && (
@@ -467,6 +502,8 @@ const Admin = () => {
                                         }
                                         isLoading={isRejecting}
                                         loadingText="Rejecting..."
+                                        tabIndex={0}
+                                        aria-label={`Reject KYC document for ${doc.profiles.full_name || "user"}`}
                                       >
                                         Reject
                                       </LoadingButton>
@@ -475,6 +512,8 @@ const Admin = () => {
                                         onClick={() => handleApprove(doc.id, doc.user_id)}
                                         isLoading={isApproving === doc.id}
                                         loadingText="Approving..."
+                                        tabIndex={0}
+                                        aria-label={`Approve KYC document for ${doc.profiles.full_name || "user"}`}
                                       >
                                         Approve
                                       </LoadingButton>
@@ -499,12 +538,24 @@ const Admin = () => {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Balance</TableHead>
-                          <TableHead>Equity</TableHead>
-                          <TableHead>KYC Status</TableHead>
-                          <TableHead>Account Status</TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Name
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Email
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Balance
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Equity
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            KYC Status
+                          </TableHead>
+                          <TableHead tabIndex={0} className="cursor-pointer hover:bg-muted/50 focus:bg-muted/50 focus:outline-none">
+                            Account Status
+                          </TableHead>
                           <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -557,8 +608,10 @@ const Admin = () => {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => setFundDialog({ open: true, userId: account.id })}
+                                  tabIndex={0}
+                                  aria-label={`Fund account for ${account.full_name || "user"}`}
                                 >
-                                  <DollarSign className="h-3 w-3 mr-2" />
+                                  <DollarSign className="h-3 w-3 mr-2" aria-hidden="true" />
                                   Fund
                                 </Button>
                               </TableCell>

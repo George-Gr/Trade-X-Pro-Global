@@ -331,8 +331,9 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                                   removeSymbolFromWatchlist(list.id, item.id);
                                 }}
                                 className="hover:bg-destructive/20 rounded p-4"
+                                aria-label={`Remove ${item.symbol} from ${list.name} watchlist`}
                               >
-                                <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                                <X className="h-4 w-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
                               </button>
                             </div>
                           </div>

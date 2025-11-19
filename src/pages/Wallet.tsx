@@ -120,7 +120,7 @@ const Wallet = () => {
               </CardHeader>
               <CardContent>
                 {profileLoading ? (
-                  <Skeleton className="h-8 w-32" />
+                  <Skeleton className="h-10 w-48" />
                 ) : (
                   <div className="text-3xl font-bold gradient-text">
                     ${profile?.balance?.toFixed(2) || '0.00'}
@@ -138,7 +138,7 @@ const Wallet = () => {
               </CardHeader>
               <CardContent>
                 {profileLoading ? (
-                  <Skeleton className="h-8 w-32" />
+                  <Skeleton className="h-10 w-48" />
                 ) : (
                   <div className="text-3xl font-bold gradient-text">
                     ${(0).toFixed(2)}

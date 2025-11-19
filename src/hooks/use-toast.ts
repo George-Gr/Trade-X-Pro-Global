@@ -10,6 +10,15 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  duration?: number;
+};
+
+// Default durations based on toast variant
+const DEFAULT_DURATIONS = {
+  default: 4000,    // 4 seconds for normal toasts
+  destructive: 6000,  // 6 seconds for error toasts
+  success: 4000,     // 4 seconds for success toasts
+  warning: 5000,     // 5 seconds for warning toasts
 };
 
 const actionTypes = {
@@ -134,7 +143,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">;
 
-function toast({ ...props }: Toast) {
+function toast({ variant = "default", duration, ...props }: Toast) {
   const id = genId();
 
   const update = (props: ToasterToast) =>
@@ -144,10 +153,15 @@ function toast({ ...props }: Toast) {
     });
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
+  // Use provided duration or fall back to default based on variant
+  const toastDuration = duration || DEFAULT_DURATIONS[variant as keyof typeof DEFAULT_DURATIONS] || DEFAULT_DURATIONS.default;
+
   dispatch({
     type: "ADD_TOAST",
     toast: {
       ...props,
+      variant,
+      duration: toastDuration,
       id,
       open: true,
       onOpenChange: (open) => {

@@ -71,7 +71,7 @@ export default function TradingPlatforms() {
                 download: "Launch Web Platform"
               }
             ].map((platform, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all hover:-translate-y-1">
+              <Card key={index} className="hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
                 <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <platform.icon className="h-8 w-8 text-primary-foreground" />
@@ -88,7 +88,7 @@ export default function TradingPlatforms() {
                     ))}
                   </ul>
                   
-                  <Button className="w-full bg-gradient-to-r from-primary to-primary-glow">
+                  <Button className="w-full bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                     {platform.download}
                   </Button>
                 </CardContent>
@@ -162,7 +162,7 @@ export default function TradingPlatforms() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Create Account
                     </Button>
                   </Link>

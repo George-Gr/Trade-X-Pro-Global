@@ -71,8 +71,10 @@ const Trade = () => {
                     variant="outline" 
                     size="sm" 
                     className="flex-1 h-10 min-h-[44px]"
+                    tabIndex={0}
+                    aria-label="Open watchlist drawer"
                   >
-                    <Menu className="w-4 h-4 mr-2" />
+                    <Menu className="w-4 h-4 mr-2" aria-hidden="true" />
                     Watchlist
                   </Button>
                 </DrawerTrigger>
@@ -101,8 +103,10 @@ const Trade = () => {
                     variant="outline" 
                     size="sm" 
                     className="flex-1 h-10 min-h-[44px]"
+                    tabIndex={0}
+                    aria-label="Open trading panel drawer"
                   >
-                    <Menu className="w-4 h-4 mr-2" />
+                    <Menu className="w-4 h-4 mr-2" aria-hidden="true" />
                     Trade
                   </Button>
                 </DrawerTrigger>
@@ -136,13 +140,46 @@ const Trade = () => {
           {/* Right Sidebar - Analysis Tools & Trading Panel (hidden on mobile/tablet) */}
           <div className="hidden md:flex lg:flex w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden max-w-[min(100%,384px)]">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="w-full">
-                <TabsTrigger value="trade" className="flex-1">Trade</TabsTrigger>
-                <TabsTrigger value="analysis" className="flex-1">Analysis</TabsTrigger>
-                <TabsTrigger value="markets" className="flex-1">Markets</TabsTrigger>
+              <TabsList className="w-full" role="tablist" aria-label="Trading analysis tabs">
+                <TabsTrigger 
+                  value="trade" 
+                  className="flex-1" 
+                  tabIndex={0}
+                  role="tab"
+                  aria-selected={activeTab === "trade"}
+                  aria-controls="tab-content-trade"
+                >
+                  Trade
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="analysis" 
+                  className="flex-1" 
+                  tabIndex={0}
+                  role="tab"
+                  aria-selected={activeTab === "analysis"}
+                  aria-controls="tab-content-analysis"
+                >
+                  Analysis
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="markets" 
+                  className="flex-1" 
+                  tabIndex={0}
+                  role="tab"
+                  aria-selected={activeTab === "markets"}
+                  aria-controls="tab-content-markets"
+                >
+                  Markets
+                </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="trade" className="flex-1 flex flex-col overflow-hidden mt-2">
+              <TabsContent 
+                value="trade" 
+                className="flex-1 flex flex-col overflow-hidden mt-2"
+                id="tab-content-trade"
+                role="tabpanel"
+                aria-labelledby="tab-trigger-trade"
+              >
                 <div className="flex-1 overflow-auto">
                   <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
                 </div>
@@ -151,7 +188,13 @@ const Trade = () => {
                 </div>
               </TabsContent>
               
-              <TabsContent value="analysis" className="flex-1 overflow-auto mt-2 p-4 space-y-4">
+              <TabsContent 
+                value="analysis" 
+                className="flex-1 overflow-auto mt-2 p-4 space-y-4"
+                id="tab-content-analysis"
+                role="tabpanel"
+                aria-labelledby="tab-trigger-analysis"
+              >
                 <TechnicalIndicators symbol={selectedSymbol} />
                 <MarketSentiment symbol={selectedSymbol} />
                 <TradingSignals symbol={selectedSymbol} />
@@ -160,7 +203,13 @@ const Trade = () => {
                 </TradingViewErrorBoundary>
               </TabsContent>
               
-              <TabsContent value="markets" className="flex-1 overflow-hidden mt-2">
+              <TabsContent 
+                value="markets" 
+                className="flex-1 overflow-hidden mt-2"
+                id="tab-content-markets"
+                role="tabpanel"
+                aria-labelledby="tab-trigger-markets"
+              >
                 <TradingViewErrorBoundary widgetType="Markets Widget">
                   <TradingViewMarketsWidget />
                 </TradingViewErrorBoundary>

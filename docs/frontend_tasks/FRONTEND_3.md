@@ -122,7 +122,7 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, 
 **Implementation Summary:**
 - ✅ Updated `tailwind.config.ts` with explicit spacing constants (xs, sm, md, lg, xl, xxl)
 - ✅ Fixed 347 spacing violations across codebase
-- ✅ Achieved 100% compliance with spacing scale (gap-[1,2,4,6], space-y-[0,2,4,6], mb-[2,4,5,6,8])
+- ✅ Achieved 100% compliance with spacing scale (`gap-[1,2,4,6]`, `space-y-[0,2,4,6]`, `mb-[2,4,5,6,8]`)
 - ✅ Standardized gap violations: 78 → 0
 - ✅ Standardized space-y violations: 153 → 0
 - ✅ Standardized margin violations: 116 → 0

@@ -67,7 +67,7 @@ export default function Certifications() {
                 description: "Automated trading systems"
               }
             ].map((cert, i) => (
-              <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
+              <Card key={i} className="hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
                 <CardContent className="p-6">
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <Award className="h-6 w-6 text-primary-foreground" />

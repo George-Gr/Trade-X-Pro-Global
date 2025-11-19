@@ -126,7 +126,7 @@ export default function Cryptocurrencies() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Open Account
                     </Button>
                   </Link>

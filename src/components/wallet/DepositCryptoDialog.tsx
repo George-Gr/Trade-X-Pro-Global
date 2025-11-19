@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ const SUPPORTED_CRYPTOS = [
 
 export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCryptoDialogProps) {
   const [loading, setLoading] = useState(false);
+  const firstFocusableRef = useRef<HTMLSelectElement>(null);
   const [amountPreview, setAmountPreview] = useState("");
   const [currencyPreview, setCurrencyPreview] = useState("BTC");
   const [loadingState, setLoadingState] = useState(false);
@@ -113,6 +114,17 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
     onSuccess();
   };
 
+  // Focus management for accessibility
+  useEffect(() => {
+    if (open && firstFocusableRef.current && !paymentData) {
+      // Delay focus to allow dialog to fully render
+      const timeoutId = setTimeout(() => {
+        firstFocusableRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [open, paymentData]);
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-md">
@@ -148,7 +160,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
                   control={control}
                   name="currency"
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select value={field.value} onValueChange={field.onChange} ref={firstFocusableRef}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>

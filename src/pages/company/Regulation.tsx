@@ -81,7 +81,7 @@ export default function Regulation() {
               <h2 className="text-3xl font-bold mb-8">Compliance Commitments</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-4">Anti-Money Laundering (AML)</h3>
+                  <h3 className="text-lg font-semibold mb-4">Anti-Money Laundering (AML)</h3>
                   <p className="text-muted-foreground mb-4">
                     We maintain strict AML procedures including:
                   </p>
@@ -94,7 +94,7 @@ export default function Regulation() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold mb-4">Know Your Customer (KYC)</h3>
+                  <h3 className="text-lg font-semibold mb-4">Know Your Customer (KYC)</h3>
                   <p className="text-muted-foreground mb-4">
                     Required for account opening:
                   </p>
@@ -135,7 +135,7 @@ export default function Regulation() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/company/contact">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Contact Us
                     </Button>
                   </Link>

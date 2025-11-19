@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, FileText, Download } from "lucide-react";
@@ -12,6 +12,7 @@ interface DocumentViewerProps {
 
 const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) => {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [fileType, setFileType] = useState<string>("");
 
@@ -36,6 +37,17 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
       setIsLoading(false);
     }
   }, [filePath]);
+
+  // Focus management for accessibility
+  useEffect(() => {
+    if (open && closeButtonRef.current) {
+      // Delay focus to allow dialog to fully render
+      const timeoutId = setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [open]);
 
   useEffect(() => {
     // Only load when dialog is open and we don't already have the file URL
@@ -104,6 +116,16 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
             </div>
           )}
         </div>
+        
+        <DialogFooter>
+          <Button 
+            onClick={() => onOpenChange(false)}
+            variant="outline"
+            ref={closeButtonRef}
+          >
+            Close
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

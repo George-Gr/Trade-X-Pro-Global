@@ -50,7 +50,7 @@ export default function Glossary() {
               { category: "Technical Analysis", terms: ["Support", "Resistance", "Trend", "Moving Average", "RSI", "MACD"] },
               { category: "Risk Management", terms: ["Risk/Reward", "Position Size", "Drawdown", "Equity", "Margin Call", "Stop Loss"] }
             ].map((group, i) => (
-              <Card key={i} className="hover:shadow-md transition-all">
+              <Card key={i} className="hover:shadow-md transition-all duration-150">
                 <CardContent>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
@@ -60,7 +60,7 @@ export default function Glossary() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     {group.terms.map((term, j) => (
-                      <div key={j} className="p-4 bg-muted/50 rounded-lg text-sm font-semibold hover:bg-muted cursor-pointer transition-colors">
+                      <div key={j} className="p-4 bg-muted/50 rounded-lg text-sm font-semibold hover:bg-muted cursor-pointer transition-colors duration-150">
                         {term}
                       </div>
                     ))}
@@ -100,7 +100,7 @@ export default function Glossary() {
                     definition: "An order placed to automatically close a winning position at a target price to secure profits."
                   }
                 ].map((item, i) => (
-                  <div key={i} className="p-6 bg-muted/50 rounded-lg border border-border hover:border-primary transition-colors">
+                  <div key={i} className="p-6 bg-muted/50 rounded-lg border border-border hover:border-primary transition-colors duration-150">
                     <h3 className="text-lg font-bold mb-2">{item.term}</h3>
                     <p className="text-muted-foreground">{item.definition}</p>
                   </div>

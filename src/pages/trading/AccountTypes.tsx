@@ -110,7 +110,7 @@ export default function AccountTypes() {
             ].map((account, index) => (
               <Card 
                 key={index} 
-                className={`hover:shadow-lg transition-all hover:-translate-y-1 ${
+                className={`hover:shadow-lg transition-all duration-150 hover:-translate-y-1 ${
                   account.highlighted ? "ring-2 ring-primary md:col-span-2 lg:col-span-1" : ""
                 }`}
               >
@@ -145,7 +145,7 @@ export default function AccountTypes() {
                     ))}
                   </ul>
                   
-                  <Button className="w-full bg-gradient-to-r from-primary to-primary-glow text-sm">
+                  <Button className="w-full bg-gradient-to-r from-primary to-primary-glow text-sm transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                     {account.highlighted ? "Get Premium" : "Open Account"}
                   </Button>
                 </CardContent>
@@ -234,7 +234,7 @@ export default function AccountTypes() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Open Account
                     </Button>
                   </Link>

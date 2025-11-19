@@ -48,7 +48,7 @@ export default function Tutorials() {
                   ].map((item, i) => (
                     <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                       <span className="font-medium">{item.resource}</span>
-                      <span className="text-primary font-semibold text-sm hover:text-primary/80 transition-colors cursor-pointer">{item.count}</span>
+                      <span className="text-primary font-semibold text-sm hover:text-primary/80 transition-colors duration-150 cursor-pointer">{item.count}</span>
                     </div>
                   ))}
                 </div>
@@ -69,7 +69,7 @@ export default function Tutorials() {
                   ].map((book, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg flex items-center justify-between">
                       <span className="text-sm font-medium">{book}</span>
-                      <span className="text-xs text-primary hover:text-primary/80 transition-colors cursor-pointer">Download</span>
+                      <span className="text-xs text-primary hover:text-primary/80 transition-colors duration-150 cursor-pointer">Download</span>
                     </div>
                   ))}
                 </div>
@@ -89,7 +89,7 @@ export default function Tutorials() {
                   { title: "Risk Management Pro", lessons: "10 lessons", duration: "9 hours" },
                   { title: "Psychology & Discipline", lessons: "8 lessons", duration: "6 hours" }
                 ].map((series, i) => (
-                  <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all">
+                  <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all duration-150">
                     <CardContent className="p-6">
                       <h3 className="font-semibold text-lg mb-4">{series.title}</h3>
                       <div className="space-y-2 text-sm text-muted-foreground mb-4">
@@ -127,7 +127,7 @@ export default function Tutorials() {
                     modules: ["Algorithms", "Systems", "Management", "Specialization"]
                   }
                 ].map((path, i) => (
-                  <Card key={i} className="border-border hover:shadow-lg transition-all">
+                  <Card key={i} className="border-border hover:shadow-lg transition-all duration-150">
                     <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-2">{path.path}</h3>
                       <p className="text-sm text-muted-foreground mb-4">{path.description}</p>

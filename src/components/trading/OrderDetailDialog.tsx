@@ -189,7 +189,7 @@ export const OrderDetailDialog = ({
                   </div>
                   <div className="w-full bg-border rounded-full h-2 mt-2">
                     <div
-                      className="bg-indigo-500 h-full rounded-full transition-all duration-300"
+                      className="bg-indigo-500 h-full rounded-full transition-all duration-150"
                       style={{ width: `${fillPercentage}%` }}
                     />
                   </div>

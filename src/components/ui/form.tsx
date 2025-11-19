@@ -188,7 +188,7 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
         className={cn(
           "text-sm font-medium text-destructive",
           "flex items-center gap-1.5",
-          "animate-in fade-in-0 duration-300",
+          "animate-in fade-in-0 duration-150",
           className
         )}
         role="alert"

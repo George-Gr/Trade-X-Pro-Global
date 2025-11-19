@@ -124,8 +124,8 @@ Priority-ranked list of blockers preventing deployment or core functionality
 
 Structure tasks in **deployment-ready phases**:
 
-### 🚨 Phase 0: Critical Fixes (Block Deployment)
-**Task 0.1: [Issue Title]**
+### 🚨-phase-0-critical-fixes Critical Fixes (Block Deployment)
+**Task 0.1: Issue Title**
 - **Location**: `path/to/file.tsx` (lines X-Y)
 - **Problem**: Clear description of what's wrong
 - **Impact**: Why this blocks progress
@@ -138,32 +138,32 @@ Structure tasks in **deployment-ready phases**:
   // Show before and after code
 ```
 - **Verification**: How to test the fix works
-- **Estimated Time**: [X hours]
+- **Estimated Time**: \[X hours\]
 
 ### 🔴 Phase 1: Core Features (MVP Requirements)
-[Follow same task structure for each feature]
+Follow the same task structure for each feature
 
 ### 🟡 Phase 2: Enhanced Functionality
 [Secondary features from PRD]
 
 ### 🟢 Phase 3: Polish & Optimization
-[Performance, UX improvements, nice-to-haves]
+Performance, UX improvements, nice-to-haves
 
 ### 🔵 Phase 4: Future Enhancements
-[Post-launch considerations]
+Post-launch considerations
 
 ## Task Template (Use for Every Item)
 
-**Task [Phase].[Number]: [Clear Action Title]**
+**Task Phase.Number: Clear Action Title**
 - **Status**: ❌ Not Started | 🔄 In Progress | ✅ Complete
 - **Priority**: 🚨 Critical | 🔴 High | 🟡 Medium | 🟢 Low
 - **Component/Module**: Specific file paths
 - **PRD Reference**: Section/requirement this addresses
-- **Dependencies**: Must complete [Task X.Y] first
+- **Dependencies**: Must complete [Task 0.1: Critical Fixes](Phase 0 Critical Fixes Block Deployment) first
 - **Changes Required**:
-  - [ ] Create/modify files: [list]
-  - [ ] Install packages: [list]
-  - [ ] Update config: [list]
+  - [ ] Create/modify files: \[list\]
+  - [ ] Install packages: (list the required packages here)
+  - [ ] Update config: (specify configuration changes here)
 - **Implementation Guide**:
   1. Step-by-step instructions
   2. Include component structure if creating new files
@@ -175,7 +175,7 @@ Structure tasks in **deployment-ready phases**:
 - **Testing Steps**:
   1. How to manually verify
   2. User flows to test
-- **Estimated Effort**: [X hours/days]
+- **Estimated Effort**: X hours/days
 
 ## Workflow & Best Practices
 
@@ -224,6 +224,11 @@ Week 7+: Phase 4 + Buffer
 Mark critical path dependencies with arrows/connections.
 
 ## Output Format Requirements
+
+[Secondary features from PRD]: #phase-2-enhanced-functionality
+
+## Phase 2: Enhanced Functionality
+This section outlines secondary features from the PRD that enhance the application's functionality.
 
 - Single markdown file named: `IMPLEMENTATION_ROADMAP.md`
 - Include table of contents with anchor links

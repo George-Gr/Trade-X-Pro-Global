@@ -34,7 +34,7 @@ export default function ContactUs() {
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <Mail className="h-6 w-6 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Email</h3>
+                <h3 className="text-lg font-semibold mb-2">Email</h3>
                 <p className="text-muted-foreground mb-4">support@tradexpro.com</p>
                 <p className="text-sm text-muted-foreground">Response time: 24 hours</p>
               </CardContent>
@@ -45,7 +45,7 @@ export default function ContactUs() {
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <Phone className="h-6 w-6 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Phone</h3>
+                <h3 className="text-lg font-semibold mb-2">Phone</h3>
                 <p className="text-muted-foreground mb-4">+1 (800) 123-4567</p>
                 <p className="text-sm text-muted-foreground">24/5 Support Available</p>
               </CardContent>
@@ -56,7 +56,7 @@ export default function ContactUs() {
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <MapPin className="h-6 w-6 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Address</h3>
+                <h3 className="text-lg font-semibold mb-2">Address</h3>
                 <p className="text-muted-foreground mb-2">123 Finance Street</p>
                 <p className="text-sm text-muted-foreground">Trading District, TD 12345</p>
               </CardContent>
@@ -69,24 +69,26 @@ export default function ContactUs() {
                 <h2 className="text-3xl font-bold mb-8">Send us a Message</h2>
                 <form className="space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Name</label>
+                    <label htmlFor="contact-name" className="block text-sm font-semibold mb-2">Name</label>
                     <input
+                      id="contact-name"
                       type="text"
-                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors"
+                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors duration-150"
                       placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Email</label>
+                    <label htmlFor="contact-email" className="block text-sm font-semibold mb-2">Email</label>
                     <input
+                      id="contact-email"
                       type="email"
-                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors"
+                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors duration-150"
                       placeholder="your@email.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Subject</label>
-                    <select className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors">
+                    <label htmlFor="contact-subject" className="block text-sm font-semibold mb-2">Subject</label>
+                    <select id="contact-subject" className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors duration-150">
                       <option>General Inquiry</option>
                       <option>Support</option>
                       <option>Partnership</option>
@@ -94,10 +96,11 @@ export default function ContactUs() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Message</label>
+                    <label htmlFor="contact-message" className="block text-sm font-semibold mb-2">Message</label>
                     <textarea
+                      id="contact-message"
                       rows={5}
-                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors resize-none"
+                      className="w-full px-4 py-4 rounded-lg bg-muted/50 border border-border focus:border-primary outline-none transition-colors duration-150 resize-none"
                       placeholder="Your message..."
                     />
                   </div>

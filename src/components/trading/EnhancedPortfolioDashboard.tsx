@@ -165,7 +165,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
                 }}
               >
                 <div
-                  className="h-full rounded-full transition-all duration-300"
+                  className="h-full rounded-full transition-all duration-150"
                   style={{
                     width: `${Math.min(metrics.marginLevelPercent, 100)}%`,
                     backgroundColor: getMarginLevelColor(metrics.marginLevelPercent),

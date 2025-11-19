@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
   const [isCreating, setIsCreating] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const { templates, isLoading, createTemplate, deleteTemplate } = useOrderTemplates();
+  const firstFocusableRef = useRef<HTMLButtonElement>(null);
 
   const handleSaveTemplate = async () => {
     if (!templateName || !currentValues) return;
@@ -51,6 +52,17 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
     }
   };
 
+  // Focus management for accessibility
+  useEffect(() => {
+    if (open && firstFocusableRef.current) {
+      // Delay focus to allow dialog to fully render
+      const timeoutId = setTimeout(() => {
+        firstFocusableRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -70,7 +82,12 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
             <div className="border border-border rounded-lg p-4">
               <h3 className="font-semibold mb-4">Save Current Settings</h3>
               {!isCreating ? (
-                <Button onClick={() => setIsCreating(true)} variant="outline" className="w-full">
+                <Button 
+                  onClick={() => setIsCreating(true)} 
+                  variant="outline" 
+                  className="w-full"
+                  ref={firstFocusableRef}
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Save as Template
                 </Button>
@@ -141,8 +158,9 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
                         size="icon"
                         onClick={() => deleteTemplate(template.id)}
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        aria-label={`Delete order template for ${template.name || template.symbol}`}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
                       </Button>
                     </div>
                   </div>

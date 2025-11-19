@@ -110,7 +110,7 @@ export default function TradingTools() {
                 ]
               }
             ].map((tool, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all hover:-translate-y-1">
+              <Card key={index} className="hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
                 <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <tool.icon className="h-8 w-8 text-primary-foreground" />
@@ -250,7 +250,7 @@ export default function TradingTools() {
                       </div>
                       <div className="border-t border-border pt-4 flex justify-between font-semibold">
                         <span>Position Size</span>
-                        <span className="text-primary hover:text-primary/80 transition-colors cursor-pointer">40 lots</span>
+                        <span className="text-primary hover:text-primary/80 transition-colors duration-150 cursor-pointer">40 lots</span>
                       </div>
                     </div>
                   </div>
@@ -272,7 +272,7 @@ export default function TradingTools() {
                       </div>
                       <div className="border-t border-border pt-4 flex justify-between font-semibold">
                         <span>Pip Value</span>
-                        <span className="text-primary hover:text-primary/80 transition-colors cursor-pointer">$10</span>
+                        <span className="text-primary hover:text-primary/80 transition-colors duration-150 cursor-pointer">$10</span>
                       </div>
                     </div>
                   </div>
@@ -291,7 +291,7 @@ export default function TradingTools() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Open Account
                     </Button>
                   </Link>

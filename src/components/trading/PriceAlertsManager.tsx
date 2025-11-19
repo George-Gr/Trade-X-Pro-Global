@@ -156,8 +156,9 @@ export const PriceAlertsManager = () => {
                   size="icon"
                   onClick={() => handleDeleteAlert(alert.id)}
                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  aria-label={`Delete price alert for ${alert.symbol}`}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
             ))}

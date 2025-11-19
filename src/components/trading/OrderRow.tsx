@@ -202,8 +202,8 @@ export const OrderRow = memo(({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-4">
-                  <MoreHorizontal className="w-4 h-4" />
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-4" aria-label="More options">
+                  <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

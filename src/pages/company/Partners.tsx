@@ -41,12 +41,12 @@ export default function Partners() {
                   description: "Advanced charting platform with 100+ technical indicators"
                 }
               ].map((item, i) => (
-                <Card key={i} className="hover:shadow-lg transition-all hover:-translate-y-1">
+                <Card key={i} className="hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
                   <CardContent>
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                       <Handshake className="h-6 w-6 text-primary-foreground" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">{item.partner}</h3>
+                    <h3 className="text-lg font-semibold mb-2">{item.partner}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
                   </CardContent>
                 </Card>
@@ -68,7 +68,7 @@ export default function Partners() {
                 "NowPayments",
                 "Crypto Payment Gateways"
               ].map((partner, i) => (
-                <Card key={i} className="p-6 text-center hover:shadow-md transition-all hover:-translate-y-1">
+                <Card key={i} className="p-6 text-center hover:shadow-md transition-all duration-150 hover:-translate-y-1">
                   <CheckCircle2 className="h-8 w-8 text-accent mx-auto mb-4" />
                   <p className="font-semibold">{partner}</p>
                 </Card>
@@ -88,7 +88,7 @@ export default function Partners() {
                 { name: "DataDog", service: "Monitoring" }
               ].map((tech, i) => (
                 <Card key={i} className="p-6 hover:shadow-md transition-all hover:-translate-y-1">
-                  <h3 className="font-bold mb-2">{tech.name}</h3>
+                  <h3 className="text-lg font-semibold mb-2">{tech.name}</h3>
                   <p className="text-sm text-muted-foreground">{tech.service}</p>
                 </Card>
               ))}
@@ -126,7 +126,7 @@ export default function Partners() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/company/contact">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Contact Us
                     </Button>
                   </Link>

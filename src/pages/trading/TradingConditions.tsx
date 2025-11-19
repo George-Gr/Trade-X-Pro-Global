@@ -65,7 +65,7 @@ export default function TradingConditions() {
                           <td className="p-4 font-medium">{row.asset}</td>
                           <td className="p-4 text-center text-muted-foreground">{row.standard}</td>
                           <td className="p-4 text-center text-muted-foreground">{row.premium}</td>
-                          <td className="p-4 text-center text-primary font-semibold hover:text-primary/80 transition-colors cursor-pointer">{row.ecn}</td>
+                          <td className="p-4 text-center text-primary font-semibold hover:text-primary/80 transition-colors duration-150 cursor-pointer">{row.ecn}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -105,8 +105,8 @@ export default function TradingConditions() {
                         { asset: "Cryptocurrencies", leverage: "1:100" }
                       ].map((item, i) => (
                         <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                          <span className="font-medium hover:text-foreground transition-colors cursor-pointer">{item.asset}</span>
-                          <span className="text-primary font-semibold hover:text-primary/80 transition-colors cursor-pointer">{item.leverage}</span>
+                          <span className="font-medium hover:text-foreground transition-colors duration-150 cursor-pointer">{item.asset}</span>
+                          <span className="text-primary font-semibold hover:text-primary/80 transition-colors duration-150 cursor-pointer">{item.leverage}</span>
                         </div>
                       ))}
                     </div>
@@ -253,7 +253,7 @@ export default function TradingConditions() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Open Account
                     </Button>
                   </Link>

@@ -110,7 +110,9 @@ export const OrderStatusBadge = ({
       )}
     </div>
   );
-}, (prevProps, nextProps) => {
+};
+
+export default memo(OrderStatusBadge, (prevProps, nextProps) => {
   // Only re-render if status, fillPercentage, or timestamp changed
   return prevProps.status === nextProps.status &&
     prevProps.fillPercentage === nextProps.fillPercentage &&

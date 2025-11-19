@@ -89,7 +89,7 @@ export default function AboutUs() {
                     <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                       <item.icon className="h-6 w-6 text-primary-foreground" />
                     </div>
-                    <h3 className="text-xl font-bold mb-4">{item.title}</h3>
+                    <h3 className="text-lg font-semibold mb-4">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
                   </CardContent>
                 </Card>
@@ -149,7 +149,7 @@ export default function AboutUs() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Create Account
                     </Button>
                   </Link>

@@ -26,7 +26,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const DevSentryTest = lazy(() => import("./pages/DevSentryTest"));
 const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
 import { NotificationProvider } from "@/contexts/NotificationContext";
-import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutContext";
+// import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutContext"; // Removed as it is not exported
 
 // Legal Pages
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";

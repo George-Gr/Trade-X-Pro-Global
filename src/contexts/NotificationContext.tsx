@@ -82,11 +82,10 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         (payload) => {
           const notification = payload.new as SupabaseNotification;
           
-          // Show toast notification
+          // Show toast notification (uses default duration based on variant)
           toast({
             title: notification.title,
             description: notification.message,
-            duration: 5000,
           });
 
           setUnreadCount((prev) => prev + 1);

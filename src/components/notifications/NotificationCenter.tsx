@@ -162,8 +162,9 @@ export function NotificationCenter() {
                           size="icon"
                           className="h-6 w-6 shrink-0"
                           onClick={(e) => handleMarkAsRead(notification.id, e)}
+                          aria-label={`Mark ${notification.title} as read`}
                         >
-                          <Check className="h-4 w-4" />
+                          <Check className="h-4 w-4" aria-hidden="true" />
                         </Button>
                       )}
                     </div>

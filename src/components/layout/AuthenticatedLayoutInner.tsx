@@ -49,8 +49,8 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
               <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">
                 <User className="h-4 w-4 text-primary" />
               </div>
-              <Button variant="ghost" size="sm" onClick={handleLogoutClick}>
-                <LogOut className="h-4 w-4" />
+              <Button variant="ghost" size="sm" onClick={handleLogoutClick} aria-label="Logout">
+                <LogOut className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
           </header>

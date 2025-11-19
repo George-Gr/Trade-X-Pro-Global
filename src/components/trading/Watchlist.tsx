@@ -220,8 +220,9 @@ const Watchlist = () => {
                   <button
                     onClick={() => removeFromWatchlist(item.symbol)}
                     className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 rounded p-4"
+                    aria-label={`Remove ${item.symbol} from watchlist`}
                   >
-                    <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                    <X className="h-4 w-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
                   </button>
                 </div>
               );

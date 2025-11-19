@@ -104,10 +104,10 @@ export default function Mentorship() {
                     students: "180+"
                   }
                 ].map((mentor, i) => (
-                  <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all">
+                  <Card key={i} className="bg-muted/50 border-border hover:shadow-md transition-all duration-150">
                     <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-2">{mentor.name}</h3>
-                      <p className="text-primary text-sm font-semibold mb-4 hover:text-primary/80 transition-colors cursor-pointer">{mentor.specialty}</p>
+                      <p className="text-primary text-sm font-semibold mb-4 hover:text-primary/80 transition-colors duration-150 cursor-pointer">{mentor.specialty}</p>
                       <div className="space-y-2 text-xs text-muted-foreground mb-4">
                         <p>Experience: {mentor.experience}</p>
                         <p>Students Mentored: {mentor.students}</p>

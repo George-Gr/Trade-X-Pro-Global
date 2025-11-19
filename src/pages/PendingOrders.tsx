@@ -177,8 +177,9 @@ const PendingOrders = () => {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleCancelClick(order.id)}
+                                aria-label={`Cancel ${order.symbol} order`}
                               >
-                                <X className="h-4 w-4" />
+                                <X className="h-4 w-4" aria-hidden="true" />
                               </Button>
                             </div>
                           </TableCell>
@@ -191,7 +192,7 @@ const PendingOrders = () => {
                 {/* Mobile Card Layout */}
                 <div className="md:hidden space-y-4">
                   {orders.map((order) => (
-                    <Card key={order.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all cursor-pointer">
+                    <Card key={order.id} className="p-4 border-l-4 border-l-primary hover:shadow-md transition-all duration-150 cursor-pointer">
                       <div className="space-y-3">
                         {/* Header */}
                         <div className="flex items-center justify-between">

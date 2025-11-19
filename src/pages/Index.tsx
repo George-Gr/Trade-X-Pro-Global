@@ -28,7 +28,10 @@ export default function Index() {
       <PublicHeader />
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-20 overflow-hidden md:min-h-[80vh]">
+      <section 
+        className="relative pt-24 pb-16 sm:pt-32 sm:pb-20 overflow-hidden md:min-h-[80vh]"
+        aria-label="Hero section with professional trading platform background showing financial charts and market data"
+      >
         <div 
           className="absolute inset-0 z-0"
           style={{
@@ -130,7 +133,7 @@ export default function Index() {
                 description: "Save and reuse your favorite trading setups for consistent execution"
               }
             ].map((feature, index) => (
-              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
+              <Card key={index} className="border-border hover:shadow-lg transition-all duration-150 hover:-translate-y-1 bg-card backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6">
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <feature.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
@@ -178,7 +181,7 @@ export default function Index() {
               ].map((advantage, index) => (
                 <div key={index} className="flex gap-4 group">
                   <div className="flex-shrink-0">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center group-focus-within:ring-2 group-focus-within:ring-primary transition-all">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center group-focus-within:ring-2 group-focus-within:ring-primary transition-all duration-150">
                       <advantage.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
                     </div>
                   </div>
@@ -224,6 +227,7 @@ export default function Index() {
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed',
         }}
+        aria-label="Global markets section with world map background showing international trading access"
       >
         <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
         
@@ -267,7 +271,7 @@ export default function Index() {
                 icon: Zap
               }
             ].map((asset, index) => (
-              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1 bg-card/80 backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
+              <Card key={index} className="border-border hover:shadow-lg transition-all duration-150 hover:-translate-y-1 bg-card/80 backdrop-blur-sm focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="p-6 text-center">
                   <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                     <asset.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
@@ -293,6 +297,7 @@ export default function Index() {
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed',
         }}
+        aria-label="Security and trust section with encrypted data background showing platform security features"
       >
         <div className="absolute inset-0 bg-foreground/90 backdrop-blur-sm" />
         
@@ -322,7 +327,7 @@ export default function Index() {
                   description: "Safe environment for learning without financial risk"
                 }
               ].map((item, index) => (
-                <Card key={index} className="bg-background/10 backdrop-blur-md border-white/20 hover:shadow-lg transition-all hover:-translate-y-1">
+                <Card key={index} className="bg-background/10 backdrop-blur-md border-white/20 hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
                   <CardContent className="p-6 text-center">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                       <item.icon className="h-8 w-8 text-primary-foreground" aria-hidden="true" />
@@ -385,7 +390,7 @@ export default function Index() {
                     { name: "UPI", icon: "💸", color: "from-blue-600 to-teal-600" },
                     { name: "NowPayments", icon: "🔐", color: "from-indigo-600 to-purple-600" }
                 ].map((partner, index) => (
-                    <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
+                    <Card key={index} className="border-border hover:shadow-md transition-all duration-150 hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
                         <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl mb-2 text-primary-foreground`}>
                           <span role="img" aria-label={partner.name}>{partner.icon}</span>
@@ -406,7 +411,7 @@ export default function Index() {
                     { name: "Ethereum", icon: "Ξ", color: "from-blue-500 to-purple-600", description: "ETH" },
                     { name: "Tether", icon: "₮", color: "from-green-500 to-green-600", description: "USDT" }
                 ].map((partner, index) => (
-                    <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
+                    <Card key={index} className="border-border hover:shadow-md transition-all duration-150 hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex flex-col items-center justify-center min-h-[120px]">
                         <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center text-2xl font-bold text-primary-foreground mb-2`}>
                           <span role="img" aria-label={partner.name}>{partner.icon}</span>
@@ -427,7 +432,7 @@ export default function Index() {
                     { name: "TradingView", icon: LineChart, description: "Advanced charting & analysis", color: "from-indigo-600 to-indigo-700" },
                     { name: "MetaTrader", icon: BarChart3, description: "Professional trading platform", color: "from-slate-700 to-slate-800" }
                 ].map((partner, index) => (
-                    <Card key={index} className="border-border hover:shadow-md transition-all hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
+                    <Card key={index} className="border-border hover:shadow-md transition-all duration-150 hover:-translate-y-1 bg-card focus-within:ring-2 focus-within:ring-primary">
                     <CardContent className="p-6 flex items-center gap-4">
                         <div className={`h-14 w-14 rounded-lg bg-gradient-to-br ${partner.color} flex items-center justify-center flex-shrink-0`}>
                           <partner.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
