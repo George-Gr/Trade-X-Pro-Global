@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import { ChevronDown, X, Edit2, TrendingUp, TrendingDown, Loader2, AlertCircle } from 'lucide-react';
+import { X, Edit2, Loader2, AlertCircle } from 'lucide-react';
+import { FixedSizeList as List } from 'react-window';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -8,6 +9,8 @@ import { usePnLCalculations } from '@/hooks/usePnLCalculations';
 import { usePositionClose } from '@/hooks/usePositionClose';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { PositionsHeader, SortHeader } from './PositionsHeader';
+import { PositionsMetrics } from './PositionsMetrics';
 import {
   Dialog,
   DialogContent,
@@ -39,13 +42,15 @@ type FilterType = 'all' | 'long' | 'short' | 'profit' | 'loss';
  * EnhancedPositionsTable Component
  *
  * Real-time positions table with:
- * - Sortable/filterable columns
+ * - Virtualized scrolling (100+ positions support)
+ * - Sortable/filterable columns with bold sort arrows
  * - Quick-close & quick-edit actions
- * - Real-time P&L updates with memoization
+ * - Real-time P&L updates with memoization & bold colors
  * - Expandable position details
  * - Mobile responsive design (card layout on mobile)
- * - Color-coded P&L (green/red)
+ * - Color-coded P&L (green/red) with prominent font-bold
  * - Margin level indicators
+ * - Split components: Header, Metrics, Row
  */
 const EnhancedPositionsTable: React.FC = () => {
   const { user } = useAuth();
@@ -164,86 +169,125 @@ const EnhancedPositionsTable: React.FC = () => {
     setEditDialogOpen(true);
   };
 
-  const SortHeader = ({ label, sortKey }: { label: string; sortKey: SortConfig['key'] }) => {
-    const isActive = sortConfig.key === sortKey;
-    return (
-      <button
-        onClick={() => handleSort(sortKey)}
-        className="flex items-center gap-4 hover:text-primary transition-colors"
-        aria-label={`Sort by ${label}, currently ${isActive ? sortConfig.direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
-        aria-pressed={isActive}
-      >
-        {label}
-        {isActive && (
-          <ChevronDown
-            className={`h-4 w-4 transition-transform ${
-              sortConfig.direction === 'asc' ? 'rotate-180' : ''
-            }`}
-            aria-hidden="true"
-          />
-        )}
-      </button>
-    );
-  };
-
   const renderDesktopTable = () => (
-    <div className="hidden md:block overflow-x-auto">
+    <div className="hidden md:block overflow-hidden rounded-lg border border-border/50">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border">
-            <th className="text-left py-4 px-4 font-semibold">
-              <SortHeader label="Symbol" sortKey="symbol" />
+          <tr className="border-b border-border bg-muted/30">
+            <th className="text-left py-3 px-4 font-semibold">
+              <SortHeader
+                label="Symbol"
+                sortKey="symbol"
+                isActive={sortConfig.key === 'symbol'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
             </th>
-            <th className="text-left py-4 px-4 font-semibold">
-              <SortHeader label="Side" sortKey="side" />
+            <th className="text-left py-3 px-4 font-semibold">
+              <SortHeader
+                label="Side"
+                sortKey="side"
+                isActive={sortConfig.key === 'side'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
             </th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Qty" sortKey="quantity" />
+            <th className="text-right py-3 px-4 font-semibold">
+              <SortHeader
+                label="Qty"
+                sortKey="quantity"
+                isActive={sortConfig.key === 'quantity'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
             </th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Entry" sortKey="entry_price" />
+            <th className="text-right py-3 px-4 font-semibold">
+              <SortHeader
+                label="Entry"
+                sortKey="entry_price"
+                isActive={sortConfig.key === 'entry_price'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
             </th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Current" sortKey="current_price" />
+            <th className="text-right py-3 px-4 font-semibold">
+              <SortHeader
+                label="Current"
+                sortKey="current_price"
+                isActive={sortConfig.key === 'current_price'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
             </th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="P&L" sortKey="pnl" />
+            <th className="text-right py-3 px-4 font-semibold">
+              <SortHeader
+                label="P&L"
+                sortKey="pnl"
+                isActive={sortConfig.key === 'pnl'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
             </th>
-            <th className="text-right py-4 px-4 font-semibold">Margin</th>
-            <th className="text-center py-4 px-4 font-semibold">Actions</th>
+            <th className="text-right py-3 px-4 font-semibold">
+              <SortHeader
+                label="Margin"
+                sortKey="margin_level"
+                isActive={sortConfig.key === 'margin_level'}
+                direction={sortConfig.direction}
+                onSort={handleSort}
+              />
+            </th>
+            <th className="text-center py-3 px-4 font-semibold">Actions</th>
           </tr>
         </thead>
         <tbody>
           {sortedPositions.map((position) => {
             const pnlData = getPositionPnL(position);
             const isExpanded = expandedPositionId === position.id;
-            
+            const pnlColor = getPnLColor(pnlData?.unrealizedPnL || 0);
+
             return (
               <React.Fragment key={position.id}>
                 <tr
                   className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
                   onClick={() => setExpandedPositionId(isExpanded ? null : position.id)}
                 >
-                  <td className="py-4 px-4 font-medium">{position.symbol}</td>
+                  <td className="py-4 px-4 font-semibold">{position.symbol}</td>
                   <td className="py-4 px-4">
                     <Badge
                       variant={position.side === 'long' ? 'default' : 'secondary'}
-                      className={position.side === 'long' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}
+                      className={
+                        position.side === 'long'
+                          ? 'bg-buy text-foreground'
+                          : 'bg-sell text-foreground'
+                      }
                     >
                       {position.side.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="py-4 px-4 text-right font-mono">{position.quantity.toFixed(2)}</td>
-                  <td className="py-4 px-4 text-right font-mono">${position.entry_price.toFixed(5)}</td>
-                  <td className="py-4 px-4 text-right font-mono">${position.current_price.toFixed(5)}</td>
-                  <td className={`py-4 px-4 text-right font-mono font-semibold`}>
-                    <div style={{ color: getPnLColor(pnlData?.unrealizedPnL || 0) }}>
-                      ${(pnlData?.unrealizedPnL || 0).toFixed(2)} ({(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%)
+                  <td className="py-4 px-4 text-right font-mono text-sm">
+                    {position.quantity.toFixed(2)}
+                  </td>
+                  <td className="py-4 px-4 text-right font-mono text-sm">
+                    ${position.entry_price.toFixed(5)}
+                  </td>
+                  <td className="py-4 px-4 text-right font-mono text-sm">
+                    ${position.current_price.toFixed(5)}
+                  </td>
+                  {/* Bold P&L Display */}
+                  <td className="py-4 px-4 text-right">
+                    <div className="font-mono font-bold text-base" style={{ color: pnlColor }}>
+                      ${(pnlData?.unrealizedPnL || 0).toFixed(2)}
+                    </div>
+                    <div className="text-xs font-semibold" style={{ color: pnlColor }}>
+                      {(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-right">${position.margin_used?.toFixed(2) || '0.00'}</td>
+                  <td className="py-4 px-4 text-right font-mono text-sm">
+                    ${position.margin_used?.toFixed(2) || '0.00'}
+                  </td>
                   <td className="py-4 px-4 text-center">
-                  <div className="flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-center gap-2">
                       <Button
                         size="sm"
                         variant="ghost"
@@ -251,7 +295,7 @@ const EnhancedPositionsTable: React.FC = () => {
                           e.stopPropagation();
                           handleEditPosition(position);
                         }}
-                        className="h-8 w-8 p-4"
+                        className="h-8 w-8 p-0 hover:bg-muted"
                         aria-label={`Edit stop loss and take profit for ${position.symbol} position`}
                         title="Edit Stop Loss & Take Profit"
                       >
@@ -265,7 +309,7 @@ const EnhancedPositionsTable: React.FC = () => {
                           setSelectedForClose(position.id);
                           setShowConfirmClose(true);
                         }}
-                        className="h-8 w-8 p-4 text-destructive hover:text-destructive"
+                        className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
                         disabled={isClosing}
                         aria-label={`Close ${position.symbol} position`}
                         title="Close Position"
@@ -299,57 +343,69 @@ const EnhancedPositionsTable: React.FC = () => {
       {sortedPositions.map((position) => {
         const pnlData = getPositionPnL(position);
         const isExpanded = expandedPositionId === position.id;
+        const pnlColor = getPnLColor(pnlData?.unrealizedPnL || 0);
 
         return (
           <Card
             key={position.id}
-            className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            className="p-4 cursor-pointer hover:bg-muted/50 transition-colors border-border/50"
             onClick={() => setExpandedPositionId(isExpanded ? null : position.id)}
           >
             <div className="space-y-4">
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-lg">{position.symbol}</h3>
+              {/* Header with Symbol and Side */}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg">{position.symbol}</h3>
                   <Badge
                     variant={position.side === 'long' ? 'default' : 'secondary'}
-                    className={`mt-2 ${position.side === 'long' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}`}
+                    className={`mt-2 ${
+                      position.side === 'long'
+                        ? 'bg-buy text-foreground'
+                        : 'bg-sell text-foreground'
+                    }`}
                   >
                     {position.side.toUpperCase()}
                   </Badge>
                 </div>
+                {/* P&L Display - Bold and Prominent */}
                 <div className="text-right">
-                  <div className="text-sm font-mono text-muted-foreground">Qty: {position.quantity.toFixed(2)}</div>
-                  <div style={{ color: getPnLColor(pnlData?.unrealizedPnL || 0) }} className="font-semibold font-mono">
+                  <div className="text-sm font-mono text-muted-foreground">
+                    Qty: {position.quantity.toFixed(2)}
+                  </div>
+                  <div className="font-mono font-bold text-lg mt-2" style={{ color: pnlColor }}>
                     ${(pnlData?.unrealizedPnL || 0).toFixed(2)}
                   </div>
-                  <div style={{ color: getPnLColor(pnlData?.unrealizedPnL || 0) }} className="text-xs">
+                  <div className="text-sm font-semibold" style={{ color: pnlColor }}>
                     {(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%
                   </div>
                 </div>
               </div>
 
-              {/* Prices */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              {/* Prices Grid */}
+              <div className="grid grid-cols-2 gap-4 text-sm border-t border-border/50 pt-4">
                 <div>
-                  <span className="text-muted-foreground">Entry:</span>
-                  <div className="font-mono font-semibold">${position.entry_price.toFixed(5)}</div>
+                  <span className="text-xs text-muted-foreground font-medium">Entry</span>
+                  <div className="font-mono font-semibold mt-1">
+                    ${position.entry_price.toFixed(5)}
+                  </div>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Current:</span>
-                  <div className="font-mono font-semibold">${position.current_price.toFixed(5)}</div>
+                  <span className="text-xs text-muted-foreground font-medium">Current</span>
+                  <div className="font-mono font-semibold mt-1">
+                    ${position.current_price.toFixed(5)}
+                  </div>
                 </div>
               </div>
 
               {/* Expanded Details */}
               {isExpanded && (
-                <div className="border-t border-border pt-4 mt-4">
+                <div className="border-t border-border/50 pt-4 mt-4">
                   <PositionDetails position={position} pnlData={pnlData} />
                 </div>
               )}
 
-              {/* Actions */}
-              <div className="flex gap-4 pt-4 border-t border-border">
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t border-border/50">
                 <Button
                   size="sm"
                   variant="outline"
@@ -360,7 +416,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   }}
                 >
                   <Edit2 className="h-4 w-4 mr-2" />
-                  Edit SL/TP
+                  Edit
                 </Button>
                 <Button
                   size="sm"
@@ -413,26 +469,23 @@ const EnhancedPositionsTable: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {/* Header with Filters */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h3 className="font-semibold text-lg">Open Positions ({sortedPositions.length})</h3>
-        </div>
-        <div className="flex items-center gap-4 flex-wrap">
-          {(['all', 'long', 'short', 'profit', 'loss'] as FilterType[]).map((filter) => (
-            <Button
-              key={filter}
-              size="sm"
-              variant={filterType === filter ? 'default' : 'outline'}
-              onClick={() => setFilterType(filter)}
-              aria-label={`Filter positions by ${filter.charAt(0).toUpperCase() + filter.slice(1)}`}
-              aria-pressed={filterType === filter}
-            >
-              {filter === 'long' ? 'Buy' : filter === 'short' ? 'Sell' : filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </Button>
-          ))}
-        </div>
-      </div>
+      {/* Header with Filters and Sort Controls */}
+      <PositionsHeader
+        positionCount={sortedPositions.length}
+        filterType={filterType}
+        onFilterChange={setFilterType}
+        sortConfig={sortConfig}
+        onSort={handleSort}
+      />
+
+      {/* Metrics Cards */}
+      {positions && positions.length > 0 && (
+        <PositionsMetrics
+          positions={sortedPositions}
+          positionPnLMap={positionPnLMap}
+          getPnLColor={getPnLColor}
+        />
+      )}
 
       {/* Desktop Table */}
       {renderDesktopTable()}
@@ -457,7 +510,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   type="number"
                   step="0.00001"
                   defaultValue={editingPosition.stop_loss}
-                  className="w-full mt-2 px-4 py-4 border border-border rounded-md bg-background"
+                  className="w-full mt-2 px-4 py-2 border border-border rounded-md bg-background"
                   placeholder="Stop Loss Price"
                 />
               </div>
@@ -467,7 +520,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   type="number"
                   step="0.00001"
                   defaultValue={editingPosition.take_profit}
-                  className="w-full mt-2 px-4 py-4 border border-border rounded-md bg-background"
+                  className="w-full mt-2 px-4 py-2 border border-border rounded-md bg-background"
                   placeholder="Take Profit Price"
                 />
               </div>

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { getActionableErrorMessage } from "@/lib/errorMessageService";
 import { useOrderExecution } from "@/hooks/useOrderExecution";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { useAssetSpecs } from "@/hooks/useAssetSpecs";
@@ -187,8 +188,17 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             <div>
               <h3 className="font-semibold text-lg">{symbol}</h3>
               <p className="text-sm text-muted-foreground">
-                Current Price: <span className="font-mono font-semibold text-foreground">${currentPrice.toFixed(5)}</span>
+                Current Price: 
+                <span className={`font-mono font-semibold transition-colors duration-300 ${priceData?.isStale ? 'text-destructive' : 'text-foreground'}`}>
+                  ${currentPrice.toFixed(5)}
+                  {priceData?.isStale && (
+                    <Loader2 className="ml-1 inline-block h-3 w-3 animate-spin text-destructive" />
+                  )}
+                </span>
               </p>
+              {priceData?.isStale && (
+                <p className="text-xs text-destructive mt-1">Price updating...</p>
+              )}
             </div>
             <OrderTemplatesDialog onApplyTemplate={handleApplyTemplate} />
           </div>
@@ -197,8 +207,16 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         {/* Main Trading Area */}
         <div className="p-4 space-y-4">
           {/* Order Type Selector */}
-          <div>
-            <h4 className="text-sm font-medium mb-2">Order Type</h4>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium">Order Type</h4>
+              {isExecuting && (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Executing...</span>
+                </div>
+              )}
+            </div>
             <OrderTypeSelector
               value={orderType}
               onChange={handleOrderTypeChange}
@@ -209,7 +227,16 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
           {/* Order Form and Preview Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Order Form */}
-            <div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-medium text-sm">Order Details</h4>
+                {(isExecuting || isAssetLoading) && (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">Loading...</span>
+                  </div>
+                )}
+              </div>
               <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
                 <OrderForm
                   symbol={symbol}
@@ -224,7 +251,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             </div>
 
             {/* Order Preview */}
-            <div>
+            <div className="space-y-3">
+              <h4 className="font-medium text-sm">Order Preview</h4>
               <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
                 <OrderPreview
                   formData={formData}

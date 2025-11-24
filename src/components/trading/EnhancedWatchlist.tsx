@@ -2,9 +2,10 @@ import { useState, lazy, Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, HelpCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useWatchlists } from "@/hooks/useWatchlists";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { CompareSymbolsDialog } from "./CompareSymbolsDialog";
@@ -84,8 +85,36 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
 
   if (isLoading) {
     return (
-      <Card className="h-full flex items-center justify-center">
-        <div className="text-muted-foreground">Loading watchlists...</div>
+      <Card className="h-full">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-6 w-32 bg-muted/50 rounded animate-pulse" />
+            <div className="flex items-center gap-4">
+              <div className="h-8 w-8 bg-muted/50 rounded animate-pulse" />
+              <div className="h-8 w-8 bg-muted/50 rounded animate-pulse" />
+            </div>
+          </div>
+          <div className="relative">
+            <div className="h-9 w-full bg-muted/50 rounded animate-pulse" />
+          </div>
+        </CardHeader>
+        <CardContent className="flex-1 pb-4 pt-0">
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center justify-between p-3 bg-muted/50 rounded animate-pulse">
+                <div className="flex items-center space-x-3">
+                  <div className="h-8 w-16 bg-muted rounded" />
+                  <div className="h-4 w-20 bg-muted rounded" />
+                </div>
+                <div className="flex space-x-2">
+                  <div className="h-6 w-6 bg-muted rounded-full" />
+                  <div className="h-6 w-6 bg-muted rounded-full" />
+                  <div className="h-6 w-16 bg-muted rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
       </Card>
     );
   }
@@ -96,6 +125,42 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
         <div className="flex items-center justify-between mb-4">
           <CardTitle className="text-lg">Watchlists</CardTitle>
           <div className="flex items-center gap-4">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <HelpCircle className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="left" className="max-w-xs">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">Keyboard Shortcuts</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Create Watchlist:</span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl/Cmd + N</kbd>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Add Symbol:</span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl/Cmd + A</kbd>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Search Symbols:</span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl/Cmd + F</kbd>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Clear Search:</span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Escape</kbd>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Quick Trade:</span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Enter on symbol</kbd>
+                      </div>
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <CompareSymbolsDialog symbols={activeSymbols} />
             <CreateWatchlistDialog onCreateWatchlist={createWatchlist} />
           </div>
@@ -107,13 +172,43 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
             placeholder="Search symbols..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 h-9 bg-input border-border"
+            className="pl-8 pr-16 h-9 bg-input border-border"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2 top-1/2 transform -top-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Clear search"
+            >
+              <span className="w-6 h-6 bg-muted/50 rounded-full flex items-center justify-center text-xs">
+                ✕
+              </span>
+            </button>
+          )}
         </div>
       </CardHeader>
 
       <CardContent className="flex-1 pb-4 pt-0 overflow-hidden flex flex-col">
-        {watchlists.length > 0 && (
+        {watchlists.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
+            <div className="w-24 h-24 mb-4 bg-muted/50 rounded-full flex items-center justify-center">
+              <Search className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">No Watchlists Yet</h3>
+            <p className="text-sm text-muted-foreground mb-4 max-w-sm">
+              Create your first watchlist to track your favorite symbols and get real-time price updates.
+            </p>
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground">💡 Try creating a watchlist with commonly traded symbols like:</p>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <span className="bg-muted/50 px-2 py-1 rounded">EURUSD</span>
+                <span className="bg-muted/50 px-2 py-1 rounded">GBPUSD</span>
+                <span className="bg-muted/50 px-2 py-1 rounded">USDJPY</span>
+                <span className="bg-muted/50 px-2 py-1 rounded">BTCUSD</span>
+              </div>
+            </div>
+          </div>
+        ) : (
           <Tabs
             value={activeWatchlistId || undefined}
             onValueChange={setActiveWatchlistId}

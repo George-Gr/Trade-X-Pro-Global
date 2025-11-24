@@ -56,8 +56,8 @@ const Trade = () => {
         {/* Mobile-first layout: stack vertically on mobile, 2-col on tablet, 3-col on desktop */}
         <div className="flex-1 flex flex-col md:flex-row lg:flex-row overflow-hidden gap-0">
           {/* Left Sidebar - Enhanced Watchlist */}
-          {/* Hidden on mobile, shown as drawer trigger */}
-          {/* Visible on tablet+ */}
+          {/* Hidden on mobile and tablet, shown as drawer trigger on md and below */}
+          {/* Visible only on lg (1024px+) */}
           <div className="hidden lg:flex w-80 border-r border-border flex-shrink-0 overflow-hidden">
             <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
               <EnhancedWatchlist 
@@ -69,24 +69,27 @@ const Trade = () => {
 
           {/* Center - Chart & Trading (primary content) */}
           <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-            {/* Mobile Watchlist/Trading Controls */}
-            <div className="lg:hidden flex gap-2 px-4 py-2 border-b border-border flex-shrink-0">
+            {/* Mobile & Tablet Control Buttons (hidden on desktop lg+) */}
+            <div className="lg:hidden flex gap-2 px-4 py-2.5 border-b border-border flex-shrink-0 bg-background/80 backdrop-blur-sm">
               <Drawer open={showWatchlistDrawer} onOpenChange={setShowWatchlistDrawer}>
                 <DrawerTrigger asChild>
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="flex-1 h-10 min-h-[44px]"
+                    className="flex-1 h-11 min-h-[44px] font-medium transition-all hover:bg-primary/10 active:scale-95"
                     tabIndex={0}
-                    aria-label="Open watchlist drawer"
+                    aria-label="Open watchlist"
                   >
                     <Menu className="w-4 h-4 mr-2" aria-hidden="true" />
                     Watchlist
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent className="max-h-[80vh]">
-                  <DrawerHeader>
-                    <DrawerTitle>Watchlist</DrawerTitle>
+                  <DrawerHeader className="border-b border-border">
+                    <DrawerTitle className="text-lg font-bold">Watchlist</DrawerTitle>
+                    <DrawerClose className="absolute right-4 top-4">
+                      <X className="h-5 w-5" />
+                    </DrawerClose>
                   </DrawerHeader>
                   <div className="overflow-auto px-4 pb-4">
                     <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
@@ -110,17 +113,20 @@ const Trade = () => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="flex-1 h-10 min-h-[44px]"
+                    className="flex-1 h-11 min-h-[44px] font-medium transition-all hover:bg-primary/10 active:scale-95"
                     tabIndex={0}
-                    aria-label="Open trading panel drawer"
+                    aria-label="Open trading panel"
                   >
                     <Menu className="w-4 h-4 mr-2" aria-hidden="true" />
                     Trade
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent className="max-h-[80vh]">
-                  <DrawerHeader>
-                    <DrawerTitle>Trading Panel</DrawerTitle>
+                <DrawerContent className="max-h-[90vh]">
+                  <DrawerHeader className="border-b border-border">
+                    <DrawerTitle className="text-lg font-bold">Trading Panel</DrawerTitle>
+                    <DrawerClose className="absolute right-4 top-4">
+                      <X className="h-5 w-5" />
+                    </DrawerClose>
                   </DrawerHeader>
                   <div className="overflow-auto px-4 pb-4">
                     <div className="space-y-4">
@@ -138,28 +144,29 @@ const Trade = () => {
               </Drawer>
             </div>
 
-            {/* Chart */}
-            <div className="flex-1 overflow-hidden min-h-0">
+            {/* Chart - Responsive height based on screen size */}
+            <div className="flex-1 overflow-hidden min-h-0 md:max-h-[calc(100vh-300px)] lg:max-h-none">
               <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
                 <ChartPanel symbol={selectedSymbol} />
               </Suspense>
             </div>
 
-            {/* Portfolio Dashboard */}
-            <div className="h-96 border-t border-border flex-shrink-0 overflow-hidden">
+            {/* Portfolio Dashboard - Responsive height */}
+            <div className="h-64 md:h-80 lg:h-96 border-t border-border flex-shrink-0 overflow-hidden">
               <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
                 <EnhancedPortfolioDashboard />
               </Suspense>
             </div>
           </div>
 
-          {/* Right Sidebar - Analysis Tools & Trading Panel (hidden on mobile/tablet) */}
-          <div className="hidden md:flex lg:flex w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden max-w-[min(100%,384px)]">
+          {/* Right Sidebar - Analysis Tools & Trading Panel */}
+          {/* Shown on md+ but narrower on md, full width on lg */}
+          <div className="hidden md:flex w-64 lg:w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden max-w-[min(100%,384px)]">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="w-full" role="tablist" aria-label="Trading analysis tabs">
+              <TabsList className="w-full rounded-none" role="tablist" aria-label="Trading analysis tabs">
                 <TabsTrigger 
                   value="trade" 
-                  className="flex-1" 
+                  className="flex-1 text-xs md:text-sm" 
                   tabIndex={0}
                   role="tab"
                   aria-selected={activeTab === "trade"}
@@ -169,7 +176,7 @@ const Trade = () => {
                 </TabsTrigger>
                 <TabsTrigger 
                   value="analysis" 
-                  className="flex-1" 
+                  className="flex-1 text-xs md:text-sm" 
                   tabIndex={0}
                   role="tab"
                   aria-selected={activeTab === "analysis"}
@@ -179,7 +186,7 @@ const Trade = () => {
                 </TabsTrigger>
                 <TabsTrigger 
                   value="markets" 
-                  className="flex-1" 
+                  className="flex-1 text-xs md:text-sm" 
                   tabIndex={0}
                   role="tab"
                   aria-selected={activeTab === "markets"}
@@ -191,7 +198,7 @@ const Trade = () => {
               
               <TabsContent 
                 value="trade" 
-                className="flex-1 flex flex-col overflow-hidden mt-2"
+                className="flex-1 flex flex-col overflow-hidden mt-0 px-2 md:px-3"
                 id="tab-content-trade"
                 role="tabpanel"
                 aria-labelledby="tab-trigger-trade"
@@ -201,7 +208,7 @@ const Trade = () => {
                     <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
                   </Suspense>
                 </div>
-                <div ref={tradingPanelRef} className="border-t border-border">
+                <div ref={tradingPanelRef} className="border-t border-border mt-2 pt-2">
                   <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
                     <TradingPanel symbol={selectedSymbol} />
                   </Suspense>
@@ -210,7 +217,7 @@ const Trade = () => {
               
               <TabsContent 
                 value="analysis" 
-                className="flex-1 overflow-auto mt-2 p-4 space-y-4"
+                className="flex-1 overflow-auto mt-0 p-2 md:p-3 space-y-3"
                 id="tab-content-analysis"
                 role="tabpanel"
                 aria-labelledby="tab-trigger-analysis"
@@ -233,7 +240,7 @@ const Trade = () => {
               
               <TabsContent 
                 value="markets" 
-                className="flex-1 overflow-hidden mt-2"
+                className="flex-1 overflow-hidden mt-0"
                 id="tab-content-markets"
                 role="tabpanel"
                 aria-labelledby="tab-trigger-markets"

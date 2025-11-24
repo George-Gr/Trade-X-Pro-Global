@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { formatToastError } from "@/lib/errorMessageService";
+import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,7 +34,9 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
       const ext = filePath.split(".").pop()?.toLowerCase();
       setFileType(ext || "");
     } catch (error) {
-      console.error("Error loading document:", error);
+      const { toast } = useToast();
+      const actionableError = formatToastError(error, 'data_fetching');
+      toast(actionableError);
     } finally {
       setIsLoading(false);
     }

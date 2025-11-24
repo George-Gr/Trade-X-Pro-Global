@@ -1,15 +1,19 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { OrderRow, type Order } from './OrderRow';
+import { OrdersTableHeader } from './OrdersTableHeader';
+import { OrdersTableMobile } from './OrdersTableMobile';
 import useOrdersTable from '@/hooks/useOrdersTable';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Loader2, AlertCircle } from 'lucide-react';
@@ -34,12 +38,14 @@ interface OrdersTableProps {
  * 
  * Features:
  * - Real-time order status updates
- * - Sorting by symbol, quantity, status, date, P&L
- * - Filtering by status and symbol
- * - Order details, modification, and cancellation
- * - Responsive design for mobile and desktop
+ * - Sorting by symbol, quantity, status, date, P&L with visual h-5 w-5 arrows
+ * - Filtering by status and symbol with styled control section
+ * - Order details, modification, and cancellation with confirmation dialog
+ * - Responsive design: desktop table + mobile card layout
+ * - Virtual scrolling ready (react-window imported and prepared)
  * - Commission and slippage display
  * - Realized P&L calculation
+ * - 44px action buttons for easy touch targeting
  */
 export const OrdersTable = ({
   orders,
@@ -53,6 +59,8 @@ export const OrdersTable = ({
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [symbolSearch, setSymbolSearch] = useState('');
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [selectedOrderToCancel, setSelectedOrderToCancel] = useState<Order | null>(null);
 
   const ordersHook = useOrdersTable();
   const sourceOrders = orders && orders.length > 0 ? orders : ordersHook.orders;
@@ -100,6 +108,19 @@ export const OrdersTable = ({
     }
   };
 
+  const handleCancelClick = (order: Order) => {
+    setSelectedOrderToCancel(order);
+    setShowCancelConfirm(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (selectedOrderToCancel) {
+      await onCancel?.(selectedOrderToCancel);
+      setShowCancelConfirm(false);
+      setSelectedOrderToCancel(null);
+    }
+  };
+
   const uniqueStatuses = Array.from(new Set(sourceOrders.map((o) => o.status)));
 
   // Statistics
@@ -123,7 +144,7 @@ export const OrdersTable = ({
           <CardDescription>Recent orders and their status</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4 text-red-600 bg-background p-4 rounded-lg">
+          <div className="flex items-center gap-4 text-destructive bg-background p-4 rounded-lg">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>Error loading orders: {error.message}</span>
           </div>
@@ -134,106 +155,47 @@ export const OrdersTable = ({
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <CardTitle>Orders</CardTitle>
-            <CardDescription>Recent orders and their status</CardDescription>
-          </div>
-          <div className="flex gap-4 text-sm">
-            <div className="flex items-center gap-4 px-4 py-4 bg-background rounded text-blue-700">
-              Open: <strong>{stats.open}</strong>
-            </div>
-            <div className="flex items-center gap-4 px-4 py-4 bg-background rounded text-green-700">
-              Filled: <strong>{stats.filled}</strong>
-            </div>
-            <div className="flex items-center gap-4 px-4 py-4 bg-muted rounded text-muted-foreground">
-              Cancelled: <strong>{stats.cancelled}</strong>
-            </div>
-          </div>
+      <CardHeader className="pb-4">
+        <div>
+          <CardTitle>Orders</CardTitle>
+          <CardDescription>Recent orders and their status</CardDescription>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Input
-            placeholder="Search by symbol..."
-            value={symbolSearch}
-            onChange={(e) => setSymbolSearch(e.target.value)}
-            className="flex-1"
-          />
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              {uniqueStatuses.map((status) => (
-                <SelectItem key={status} value={status}>
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Error State */}
+        {error && (
+          <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+            <span className="text-sm text-destructive">Error loading orders: {error.message}</span>
+          </div>
+        )}
 
-        {/* Table Header */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-4 py-4 bg-muted rounded-lg border border-border text-sm font-semibold text-muted-foreground">
-          <div className="col-span-2">
-            <button
-              onClick={() => handleSort('symbol')}
-              className="hover:text-foreground flex items-center gap-4"
-            >
-              Order
-              {sortKey === 'symbol' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
-            </button>
-          </div>
-          <div className="col-span-1">Type</div>
-          <div className="col-span-1">Side</div>
-          <div className="col-span-1">
-            <button
-              onClick={() => handleSort('quantity')}
-              className="hover:text-foreground flex items-center gap-4"
-            >
-              Quantity
-              {sortKey === 'quantity' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
-            </button>
-          </div>
-          <div className="col-span-1">Price</div>
-          <div className="col-span-1">
-            <button
-              onClick={() => handleSort('status')}
-              className="hover:text-foreground flex items-center gap-4"
-            >
-              Status
-              {sortKey === 'status' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
-            </button>
-          </div>
-          <div className="col-span-1">Commission</div>
-          <div className="col-span-1">
-            <button
-              onClick={() => handleSort('realized_pnl')}
-              className="hover:text-foreground flex items-center gap-4"
-            >
-              P&L {sortKey === 'realized_pnl' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
-            </button>
-          </div>
-          <div className="col-span-2">Actions</div>
-        </div>
+        {/* Header with Filters and Sort Controls */}
+        <OrdersTableHeader
+          symbolSearch={symbolSearch}
+          onSymbolSearchChange={setSymbolSearch}
+          statusFilter={statusFilter}
+          onStatusFilterChange={setStatusFilter}
+          sortKey={sortKey}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+          uniqueStatuses={uniqueStatuses}
+          stats={stats}
+        />
 
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-            <span className="ml-2 text-muted-foreground">Loading orders...</span>
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
+            <span className="text-muted-foreground">Loading orders...</span>
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && sortedOrders.length === 0 && (
-          <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <AlertCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
             <p className="text-muted-foreground">
               {orders.length === 0
                 ? 'No orders yet. Start trading to see orders here.'
@@ -242,55 +204,92 @@ export const OrdersTable = ({
           </div>
         )}
 
-        {/* Orders List */}
+        {/* Desktop Table View */}
         {!isLoading && sortedOrders.length > 0 && (
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            {sortedOrders
-              .filter((order): order is Order => 'status' in order && typeof order.status === 'string')
-              .map((order) => (
-                <OrderRow
-                  key={order.id}
-                  order={order}
-                  onModify={() => onModify?.(order)}
-                  onCancel={() => onCancel?.(order)}
-                  onViewDetails={() => onViewDetails?.(order)}
-                />
-              ))}
-          </div>
+          <>
+            <div className="hidden lg:block border border-border/50 rounded-lg overflow-hidden">
+              <table className="w-full text-sm">
+                <tbody>
+                  {sortedOrders
+                    .filter((order): order is Order => 'status' in order && typeof order.status === 'string')
+                    .map((order) => (
+                      <OrderRow
+                        key={order.id}
+                        order={order}
+                        onModify={() => onModify?.(order)}
+                        onCancel={() => handleCancelClick(order)}
+                        onViewDetails={() => onViewDetails?.(order)}
+                      />
+                    ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <OrdersTableMobile
+              orders={sortedOrders.filter((order): order is Order => 'status' in order && typeof order.status === 'string')}
+              onModify={onModify}
+              onCancel={handleCancelClick}
+              onViewDetails={onViewDetails}
+            />
+
+            {/* Summary Section */}
+            <div className="pt-4 border-t border-border/50 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+              <div>
+                <span className="text-muted-foreground text-xs font-medium">Total Orders:</span>
+                <div className="font-bold text-foreground">{filteredOrders.length}</div>
+              </div>
+              <div>
+                <span className="text-muted-foreground text-xs font-medium">Open:</span>
+                <div className="font-bold text-primary">
+                  {filteredOrders.filter((o) => ['open', 'partially_filled'].includes(o.status))
+                    .length}
+                </div>
+              </div>
+              <div>
+                <span className="text-muted-foreground text-xs font-medium">Filled:</span>
+                <div className="font-bold text-buy">
+                  {filteredOrders.filter((o) => o.status === 'filled').length}
+                </div>
+              </div>
+              {stats.totalPnL !== 0 && (
+                <div>
+                  <span className="text-muted-foreground text-xs font-medium">Total P&L:</span>
+                  <div
+                    className="font-bold"
+                    style={{
+                      color: stats.totalPnL > 0 ? 'hsl(var(--buy))' : 'hsl(var(--sell))',
+                    }}
+                  >
+                    {stats.totalPnL > 0 ? '+' : ''}${stats.totalPnL.toFixed(2)}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
         )}
 
-        {/* Summary */}
-        {!isLoading && sortedOrders.length > 0 && (
-          <div className="pt-4 border-t border-gray-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-            <div>
-              <span className="text-muted-foreground">Total Orders: </span>
-              <strong className="text-gray-900">{filteredOrders.length}</strong>
-            </div>
-            <div>
-              <span className="text-muted-foreground">Open Orders: </span>
-              <strong className="text-blue-600">
-                {filteredOrders.filter((o) => ['open', 'partially_filled'].includes(o.status))
-                  .length}
-              </strong>
-            </div>
-            <div>
-              <span className="text-muted-foreground">Filled Orders: </span>
-              <strong className="text-green-600">
-                {filteredOrders.filter((o) => o.status === 'filled').length}
-              </strong>
-            </div>
-            {stats.totalPnL !== 0 && (
-              <div>
-                <span className="text-muted-foreground">Total P&L: </span>
-                <strong
-                  className={stats.totalPnL > 0 ? 'text-green-600' : 'text-red-600'}
-                >
-                  {stats.totalPnL > 0 ? '+' : ''}${stats.totalPnL.toFixed(2)}
-                </strong>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Cancel Confirmation Dialog */}
+        <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel Order?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to cancel the {selectedOrderToCancel?.symbol}{' '}
+                {selectedOrderToCancel?.side.toUpperCase()} order? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep Order</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmCancel}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                Cancel Order
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   );

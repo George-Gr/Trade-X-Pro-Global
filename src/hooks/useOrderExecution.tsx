@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getActionableErrorMessage, formatToastError } from "@/lib/errorMessageService";
 
 export interface OrderRequest {
   symbol: string;
@@ -58,20 +59,14 @@ export const useOrderExecution = () => {
       });
 
       if (error) {
-        toast({
-          title: "Order Failed",
-          description: error.message || "Failed to execute order",
-          variant: "destructive",
-        });
+        const actionableError = formatToastError(error, 'order_submission');
+        toast(actionableError);
         return null;
       }
 
       if (data.error) {
-        toast({
-          title: "Order Failed",
-          description: data.error,
-          variant: "destructive",
-        });
+        const actionableError = formatToastError(data.error, 'order_submission');
+        toast(actionableError);
         return null;
       }
 

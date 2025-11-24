@@ -24,7 +24,7 @@ export const PositionRow = memo(({ position, onView, selectable = false, selecte
       <div role="cell">{position.quantity}</div>
       <div role="cell">{position.entry_price.toFixed(4)}</div>
       <div role="cell">{position.current_price.toFixed(4)}</div>
-      <div role="cell" className={`font-medium ${color === 'green' ? 'text-green-600' : color === 'red' ? 'text-red-600' : ''}`}>
+      <div role="cell" className={`font-medium ${color === 'green' ? 'text-buy' : color === 'red' ? 'text-sell' : ''}`}>
         {pnl.toFixed(2)}
       </div>
 

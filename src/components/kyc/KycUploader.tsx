@@ -17,6 +17,7 @@ interface DocumentUpload {
   status: 'pending' | 'uploading' | 'validated' | 'error';
   progress: number;
   error?: string;
+  thumbnail?: string;
 }
 
 interface DocumentRequirement {
@@ -67,17 +68,33 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   const validateFile = (file: File): { valid: boolean; error?: string } => {
     // Check file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      return { valid: false, error: 'File size exceeds 10MB limit' };
+      return { valid: false, error: 'File size exceeds 10MB limit. Please upload a smaller file.' };
     }
 
     // Check file type
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
-      return { valid: false, error: 'Only JPEG, PNG, and PDF files are allowed' };
+      return { valid: false, error: 'File format not supported. Only JPEG, PNG, and PDF files are allowed.' };
     }
 
     // Check magic numbers for file integrity
     return { valid: true };
+  };
+
+  // Generate thumbnail for image files
+  const generateThumbnail = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      if (!file.type.includes('image')) {
+        resolve('');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve(e.target?.result as string || '');
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   // Handle file selection
@@ -90,27 +107,31 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       return;
     }
 
-    // Check if document type already exists
-    const exists = uploads.some(u => u.type === documentType);
-    if (exists) {
-      // Replace existing
-      setUploads(prev =>
-        prev.map(u =>
-          u.type === documentType
-            ? { ...u, file, status: 'pending' as const, error: undefined }
-            : u
-        )
-      );
-    } else {
-      // Add new
-      setUploads(prev => [...prev, {
-        id: `${documentType}_${Date.now()}`,
-        type: documentType,
-        file,
-        status: 'pending',
-        progress: 0,
-      }]);
-    }
+    // Generate thumbnail if it's an image
+    generateThumbnail(file).then((thumbnail) => {
+      // Check if document type already exists
+      const exists = uploads.some(u => u.type === documentType);
+      if (exists) {
+        // Replace existing
+        setUploads(prev =>
+          prev.map(u =>
+            u.type === documentType
+              ? { ...u, file, status: 'pending' as const, error: undefined, thumbnail }
+              : u
+          )
+        );
+      } else {
+        // Add new
+        setUploads(prev => [...prev, {
+          id: `${documentType}_${Date.now()}`,
+          type: documentType,
+          file,
+          status: 'pending',
+          progress: 0,
+          thumbnail,
+        }]);
+      }
+    });
   }, [uploads]);
 
   // Handle drag and drop
@@ -305,9 +326,11 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
         {/* Success Alert */}
         {successMessage && (
-          <Alert className="border-profit/20 bg-profit/5">
-            <CheckCircle className="h-4 w-4 text-profit" />
-            <AlertDescription>{successMessage}</AlertDescription>
+          <Alert className="border-buy/20 bg-buy/5 animate-in fade-in slide-in-from-top-2 transition-all duration-300">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-buy animate-in zoom-in-50 duration-300" />
+              <AlertDescription className="text-buy font-medium">{successMessage}</AlertDescription>
+            </div>
           </Alert>
         )}
 
@@ -352,43 +375,59 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
                   {/* Upload Area */}
                   <div
-                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-150 ${
+                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-[280px] flex flex-col items-center justify-center ${
                       isDragActive
-                        ? 'border-primary bg-primary/5'
-                        : 'border-muted-foreground/25 hover:border-primary/50'
-                    } ${upload?.status === 'validated' ? 'bg-profit/5' : ''}`}
+                        ? 'border-primary bg-primary/5 scale-105'
+                        : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2'
+                    } ${upload?.status === 'validated' ? 'bg-buy/5 border-buy/30' : ''}`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
                     onDrop={(e) => handleDrop(e, doc.type)}
                   >
                     {upload && upload.file ? (
-                      <div className="space-y-2">
-                        <div className="flex justify-center">
-                          {upload.file.type.includes('pdf') ? (
-                            <FileText className="h-8 w-8 text-muted-foreground" />
-                          ) : (
-                            <ImageIcon className="h-8 w-8 text-muted-foreground" />
-                          )}
-                        </div>
-                        <p className="text-sm font-medium">{upload.file.name}</p>
+                      <div className="space-y-3 w-full">
+                        {/* Thumbnail Preview for Images */}
+                        {upload.thumbnail ? (
+                          <div className="flex justify-center mb-4">
+                            <img 
+                              src={upload.thumbnail} 
+                              alt={upload.file.name}
+                              className="max-w-[120px] max-h-[120px] rounded-lg border border-muted-foreground/20 shadow-sm object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex justify-center mb-4">
+                            {upload.file.type.includes('pdf') ? (
+                              <FileText className="h-12 w-12 text-muted-foreground" />
+                            ) : (
+                              <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                            )}
+                          </div>
+                        )}
+                        <p className="text-sm font-semibold">{upload.file.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {(upload.file.size / 1024 / 1024).toFixed(2)} MB
                         </p>
 
                         {upload.status === 'uploading' && (
-                          <div className="space-y-2 mt-4">
+                          <div className="space-y-2 mt-4 w-full">
                             <Progress value={upload.progress} className="h-2" />
-                            <p className="text-xs text-muted-foreground">{upload.progress}%</p>
+                            <p className="text-xs font-medium text-primary">{upload.progress}% uploaded</p>
                           </div>
                         )}
 
                         {upload.status === 'error' && (
-                          <p className="text-xs text-destructive mt-2">{upload.error}</p>
+                          <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                            <p className="text-xs text-destructive font-medium">{upload.error}</p>
+                          </div>
                         )}
 
                         {upload.status === 'validated' && (
-                          <p className="text-xs text-profit">Validated successfully</p>
+                          <div className="flex items-center justify-center gap-2 mt-3">
+                            <CheckCircle className="h-5 w-5 text-buy animate-in fade-in zoom-in-50" />
+                            <p className="text-xs font-medium text-buy">Validated successfully</p>
+                          </div>
                         )}
 
                         {upload.status !== 'uploading' && (
@@ -413,13 +452,18 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                             (fileInputRef.current as unknown as Record<string, unknown>).dataset = { docType: doc.type };
                           }
                         }}
-                        className="cursor-pointer"
+                        className="cursor-pointer space-y-3 w-full"
                       >
-                        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm font-medium mb-2">
-                          Drag and drop or click to select
-                        </p>
-                        <p className="text-xs text-muted-foreground">
+                        <Upload className="h-10 w-10 mx-auto text-muted-foreground" />
+                        <div>
+                          <p className="text-sm font-semibold mb-1">
+                            Drag and drop your file here
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            or click to select from your computer
+                          </p>
+                        </div>
+                        <p className="text-xs text-muted-foreground font-medium">
                           JPEG, PNG, or PDF (max 10MB)
                         </p>
                       </div>
@@ -432,23 +476,23 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         </Tabs>
 
         {/* Submission Info */}
-        <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-          <h4 className="text-sm font-medium">Upload Status</h4>
+        <div className="bg-muted/50 rounded-lg p-4 space-y-3 border border-muted">
+          <h4 className="text-sm font-semibold">Upload Status</h4>
           <ul className="text-sm space-y-2">
             {REQUIRED_DOCUMENTS.map(doc => {
               const uploaded = uploads.find(u => u.type === doc.type);
               return (
-                <li key={doc.type} className="flex items-center gap-4">
+                <li key={doc.type} className="flex items-center gap-3 transition-all duration-200">
                   {uploaded?.status === 'validated' ? (
-                    <CheckCircle className="h-4 w-4 text-profit" />
+                    <CheckCircle className="h-5 w-5 text-buy flex-shrink-0 animate-in zoom-in-50" />
                   ) : uploaded?.status === 'uploading' ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+                    <Loader2 className="h-5 w-5 text-primary flex-shrink-0 animate-spin" />
                   ) : uploaded?.status === 'error' ? (
-                    <AlertCircle className="h-4 w-4 text-destructive" />
+                    <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
                   ) : (
-                    <div className="h-4 w-4 border border-muted-foreground rounded-full" />
+                    <div className="h-5 w-5 border-2 border-muted-foreground/30 rounded-full flex-shrink-0" />
                   )}
-                  <span>
+                  <span className={uploaded?.status === 'validated' ? 'text-buy font-medium' : ''}>
                     {doc.label}
                     {doc.required && <span className="text-destructive ml-2">*</span>}
                   </span>
@@ -462,18 +506,23 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         <Button
           onClick={handleSubmitAll}
           disabled={submitting || !requiredUploaded}
-          className="w-full"
+          className="w-full transition-all duration-200"
           size="lg"
         >
           {submitting ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Submitting...
+              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              Submitting Documents...
+            </>
+          ) : requiredUploaded ? (
+            <>
+              <CheckCircle className="h-5 w-5 mr-2" />
+              Submit All Documents
             </>
           ) : (
             <>
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Submit All Documents
+              <Upload className="h-5 w-5 mr-2" />
+              Complete Upload to Submit
             </>
           )}
         </Button>

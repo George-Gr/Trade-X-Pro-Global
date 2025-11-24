@@ -61,9 +61,13 @@ const WatchlistRow = React.memo(
         {/* Prices */}
         <div className="text-right">
           <div className="font-mono font-semibold text-sm">
-            {priceData ? formatPrice(priceData.currentPrice) : "---"}
+            {priceData ? (
+              formatPrice(priceData.currentPrice)
+            ) : (
+              <div className="h-5 bg-muted/50 rounded animate-pulse" />
+            )}
           </div>
-          {priceData && (
+          {priceData ? (
             <div
               className={cn(
                 "text-xs font-medium",
@@ -73,6 +77,8 @@ const WatchlistRow = React.memo(
               {isPositive ? "+" : ""}
               {priceData.changePercent.toFixed(2)}%
             </div>
+          ) : (
+            <div className="h-3 w-12 bg-muted/50 rounded animate-pulse mt-1" />
           )}
         </div>
 

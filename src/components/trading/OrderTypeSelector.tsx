@@ -64,13 +64,13 @@ export const OrderTypeSelector = ({
         onValueChange={(v) => onChange(v as OrderType)}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-5 bg-muted/50 rounded-lg p-1">
           {orderTypes.map((type) => (
             <TabsTrigger
               key={type.value}
               value={type.value}
               disabled={disabled}
-              className="text-xs"
+              className="text-xs font-medium data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border hover:bg-muted/50 transition-all duration-200"
             >
               {type.label}
             </TabsTrigger>

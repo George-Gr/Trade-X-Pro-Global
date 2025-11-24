@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/contexts/notificationContextHelpers";
 import { useToast } from "@/hooks/use-toast";
 import { AuthenticatedLayoutContext, type AuthenticatedLayoutContextType } from "@/contexts/AuthenticatedLayoutContext";
+import { formatToastError } from "@/lib/errorMessageService";
 
 // Provider component
 export function AuthenticatedLayoutProvider({ children }: { children: React.ReactNode }) {
@@ -15,11 +16,8 @@ export function AuthenticatedLayoutProvider({ children }: { children: React.Reac
     try {
       const { error } = await signOut();
       if (error) {
-        toast({
-          title: "Logout Failed",
-          description: error.message,
-          variant: "destructive",
-        });
+        const actionableError = formatToastError(error, 'authentication');
+        toast(actionableError);
       } else {
         toast({
           title: "Logged Out",
@@ -28,11 +26,8 @@ export function AuthenticatedLayoutProvider({ children }: { children: React.Reac
         setSidebarOpen(false);
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred during logout",
-        variant: "destructive",
-      });
+      const actionableError = formatToastError(error, 'authentication');
+      toast(actionableError);
     }
   };
   

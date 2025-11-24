@@ -129,6 +129,10 @@ const config: Config = {
       },
     },
   },
+  // Define Tailwind plugin for trading color utilities
+  corePlugins: {
+    // Ensure we don't override custom utilities
+  },
   plugins: [
     tailwindcssAnimate,
     function ({ addUtilities }) {
@@ -200,6 +204,38 @@ const config: Config = {
           'height': '0.75rem',
           'width': '0.75rem',
           'color': 'hsl(var(--muted-foreground))',
+        },
+        
+        // Trading-specific color utilities
+        '.trading-buy': {
+          'color': 'hsl(var(--buy))',
+        },
+        '.trading-sell': {
+          'color': 'hsl(var(--sell))',
+        },
+        '.trading-profit': {
+          'color': 'hsl(var(--profit))',
+        },
+        '.trading-loss': {
+          'color': 'hsl(var(--loss))',
+        },
+        '.bg-trading-buy': {
+          'background-color': 'hsl(var(--buy))',
+        },
+        '.bg-trading-sell': {
+          'background-color': 'hsl(var(--sell))',
+        },
+        '.border-trading-buy': {
+          'border-color': 'hsl(var(--buy))',
+        },
+        '.border-trading-sell': {
+          'border-color': 'hsl(var(--sell))',
+        },
+        '.ring-trading-buy': {
+          'box-shadow': '0 0 0 3px hsl(var(--buy) / 0.1)',
+        },
+        '.ring-trading-sell': {
+          'box-shadow': '0 0 0 3px hsl(var(--sell) / 0.1)',
         },
       };
       

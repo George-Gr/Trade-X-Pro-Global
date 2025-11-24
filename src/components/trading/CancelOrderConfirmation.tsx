@@ -8,6 +8,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Loader2, AlertTriangle } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { formatToastError } from "@/lib/errorMessageService";
 
 export interface Order {
   id: string;
@@ -58,13 +60,15 @@ export const CancelOrderConfirmation = ({
   if (!order) return null;
 
   const handleConfirm = async () => {
+    const { toast } = useToast();
     try {
       const success = await onConfirm(order.id);
       if (success) {
         onCancel();
       }
     } catch (err) {
-      console.error('Error confirming cancellation:', err);
+      const actionableError = formatToastError(err, 'order_submission');
+      toast(actionableError);
     }
   };
 
@@ -119,8 +123,8 @@ export const CancelOrderConfirmation = ({
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            <span className="text-sm font-medium text-gray-700">Remaining to Cancel</span>
-            <span className="text-sm font-bold text-red-600">{remainingQuantity}</span>
+            <span className="text-sm font-medium text-foreground">Remaining to Cancel</span>
+            <span className="text-sm font-bold text-sell">{remainingQuantity}</span>
           </div>
         </div>
 

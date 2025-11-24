@@ -55,19 +55,19 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
         <Card
           className={`border-2 ${
             riskMetrics?.riskLevel === 'liquidation'
-              ? 'border-red-500 bg-background'
+              ? 'border-sell bg-background'
               : riskMetrics?.riskLevel === 'critical'
               ? 'border-orange-500 bg-background'
               : riskMetrics?.riskLevel === 'warning'
               ? 'border-yellow-500 bg-background'
-              : 'border-green-500 bg-background'
+              : 'border-buy bg-background'
           }`}
         >
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {riskMetrics?.riskLevel === 'liquidation' && (
-                  <AlertTriangle className="h-6 w-6 text-red-600" />
+                  <AlertTriangle className="h-6 w-6 text-sell" />
                 )}
                 {riskMetrics?.riskLevel === 'critical' && (
                   <AlertCircle className="h-6 w-6 text-orange-600" />
@@ -76,7 +76,7 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
                   <AlertTriangle className="h-6 w-6 text-yellow-600" />
                 )}
                 {riskMetrics?.riskLevel === 'safe' && (
-                  <Activity className="h-6 w-6 text-green-600" />
+                  <Activity className="h-6 w-6 text-buy" />
                 )}
                 <CardTitle>{riskLevelDetails.description}</CardTitle>
               </div>
@@ -138,7 +138,7 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
             <CardTitle className="text-sm font-medium">Max Drawdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-red-600">
+            <div className="text-3xl font-bold text-sell">
               {drawdownAnalysis?.maxDrawdownPercentage.toFixed(2)}%
             </div>
             <p className="text-xs text-muted-foreground mt-2">

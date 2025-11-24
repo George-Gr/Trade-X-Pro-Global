@@ -154,13 +154,13 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
             <CardContent className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Largest Win</span>
-                <span className="font-medium text-green-600">
+                <span className="font-medium text-buy">
                   {formatCurrency(portfolioMetrics?.largestWin || 0)}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Largest Loss</span>
-                <span className="font-medium text-red-600">
+                <span className="font-medium text-sell">
                   {formatCurrency(portfolioMetrics?.largestLoss || 0)}
                 </span>
               </div>
@@ -350,12 +350,12 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                         <div
                           className={`h-2 rounded-full ${
                             pos.risk === 'critical'
-                              ? 'bg-red-600'
+                              ? 'bg-sell'
                               : pos.risk === 'high'
                               ? 'bg-orange-600'
                               : pos.risk === 'medium'
                               ? 'bg-yellow-600'
-                              : 'bg-green-600'
+                              : 'bg-buy'
                           }`}
                           style={{
                             width: `${Math.min(pos.percentageOfPortfolio, 100)}%`,

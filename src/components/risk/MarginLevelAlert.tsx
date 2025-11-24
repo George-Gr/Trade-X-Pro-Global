@@ -47,6 +47,7 @@ export function MarginLevelAlert({
 }: MarginLevelAlertProps) {
   const [isExpanded, setIsExpanded] = useState(!compact);
   const [prevStatus, setPrevStatus] = useState<MarginStatus | null>(null);
+  const [isStatusChanging, setIsStatusChanging] = useState(false);
   
   const {
     marginLevel,
@@ -64,6 +65,9 @@ export function MarginLevelAlert({
     refreshInterval: 30000, // Refresh every 30 seconds
     onStatusChange: (newStatus, oldStatus) => {
       setPrevStatus(oldStatus);
+      setIsStatusChanging(true);
+      // Reset animation state after transition
+      setTimeout(() => setIsStatusChanging(false), 300);
       onStatusChange?.(newStatus);
     },
     onCritical: () => {
@@ -93,13 +97,13 @@ export function MarginLevelAlert({
   const getStatusIcon = () => {
     switch (marginStatus) {
       case MarginStatus.SAFE:
-        return <TrendingDown className="h-4 w-4 text-[hsl(var(--status-safe-foreground))]" />;
+        return <TrendingDown className="h-5 w-5 text-[hsl(var(--status-safe-foreground))]" />;
       case MarginStatus.WARNING:
-        return <AlertTriangle className="h-4 w-4 text-[hsl(var(--status-warning-foreground))]" />;
+        return <AlertTriangle className="h-5 w-5 text-[hsl(var(--status-warning-foreground))]" />;
       case MarginStatus.CRITICAL:
-        return <AlertCircle className="h-4 w-4 text-[hsl(var(--status-critical-foreground))]" />;
+        return <AlertCircle className="h-5 w-5 text-[hsl(var(--status-critical-foreground))]" />;
       case MarginStatus.LIQUIDATION:
-        return <AlertTriangle className="h-4 w-4 text-[hsl(var(--status-error-foreground))]" />;
+        return <AlertTriangle className="h-5 w-5 text-[hsl(var(--status-error-foreground))]" />;
       default:
         return null;
     }
@@ -160,9 +164,9 @@ export function MarginLevelAlert({
   }
 
   return (
-    <div className={className}>
+    <div className={cn(className, "transition-all duration-300 ease-in-out", isStatusChanging ? "ring-2 ring-primary/50 shadow-lg" : "")}>
       {/* Main Alert Card */}
-      <Card className={cn("border-2", getAlertClass())}>
+      <Card className={cn("border-2 transition-all duration-300 ease-in-out", getAlertClass())}>
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
@@ -180,7 +184,7 @@ export function MarginLevelAlert({
               </div>
             </div>
             {(isCritical || isLiquidationRisk) && (
-              <div className="text-xs font-semibold text-red-600 dark:text-red-400">
+              <div className="text-xs font-semibold text-destructive">
                 ⚠️ ACTION REQUIRED
               </div>
             )}
@@ -203,7 +207,7 @@ export function MarginLevelAlert({
                   max={300}
                   className="h-2"
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Target: &geq;200% for SAFE, &geq;100% for WARNING
                 </p>
               </div>
@@ -237,7 +241,7 @@ export function MarginLevelAlert({
                 : "bg-[hsl(var(--status-critical))] dark:bg-[hsl(var(--status-critical-dark))]"
             )}>
               <Clock className={cn(
-                "h-4 w-4",
+                "h-5 w-5",
                 timeToLiquidation <= 30
                   ? "text-[hsl(var(--status-error-foreground))]"
                   : "text-[hsl(var(--status-critical-foreground))]"
@@ -282,8 +286,8 @@ export function MarginLevelAlert({
 
           {/* Close-Only Mode Indicator */}
           {isLiquidationRisk && (
-            <Alert variant="destructive" style={{ backgroundColor: `hsl(var(--status-error)/.1)` }}>
-              <AlertTriangle className="h-4 w-4" />
+            <Alert variant="destructive" className="bg-destructive/10 border-destructive/20">
+              <AlertTriangle className="h-5 w-5" />
               <AlertTitle>Close-Only Mode Active</AlertTitle>
               <AlertDescription>
                 You can only close positions. New orders are restricted.
@@ -293,13 +297,10 @@ export function MarginLevelAlert({
 
           {/* Order Restriction Indicator */}
           {isCritical && !isLiquidationRisk && (
-            <Alert style={{ 
-              backgroundColor: `hsl(var(--status-critical)/.1)`,
-              borderColor: `hsl(var(--status-critical-border))`
-            }}>
-              <AlertCircle className="h-4 w-4" style={{ color: `hsl(var(--status-critical-foreground))` }} />
-              <AlertTitle style={{ color: `hsl(var(--status-critical-foreground))` }}>Order Restrictions Active</AlertTitle>
-              <AlertDescription style={{ color: `hsl(var(--status-critical-foreground))` }}>
+            <Alert className="bg-warning/10 border-warning/20">
+              <AlertCircle className="h-5 w-5 text-warning-foreground" />
+              <AlertTitle className="text-warning-foreground">Order Restrictions Active</AlertTitle>
+              <AlertDescription className="text-warning-foreground">
                 New leveraged orders are restricted. Focus on closing positions.
               </AlertDescription>
             </Alert>
@@ -332,14 +333,14 @@ export function MarginLevelAlert({
       {/* Status Change Notification */}
       {prevStatus && prevStatus !== marginStatus && (
         <div className={cn(
-          "mt-2 p-4 rounded-md text-sm font-medium animate-in fade-in",
+          "mt-2 p-4 rounded-md text-sm font-medium transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2",
           marginStatus === MarginStatus.LIQUIDATION
-            ? "bg-[hsl(var(--status-error))] text-[hsl(var(--status-error-foreground))] dark:bg-[hsl(var(--status-error-dark))] dark:text-[hsl(var(--status-error-dark-foreground))]"
+            ? "bg-destructive/10 text-destructive-foreground border border-destructive/20"
             : marginStatus === MarginStatus.CRITICAL
-            ? "bg-[hsl(var(--status-critical))] text-[hsl(var(--status-critical-foreground))] dark:bg-[hsl(var(--status-critical-dark))] dark:text-[hsl(var(--status-critical-dark-foreground))]"
+            ? "bg-warning/10 text-warning-foreground border border-warning/20"
             : marginStatus === MarginStatus.WARNING
-            ? "bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))]"
-            : "bg-[hsl(var(--status-safe))] text-[hsl(var(--status-safe-foreground))] dark:bg-[hsl(var(--status-safe-dark))] dark:text-[hsl(var(--status-safe-dark-foreground))]"
+            ? "bg-warning/10 text-warning-foreground border border-warning/20"
+            : "bg-buy/5 text-buy-foreground border border-buy/20"
         )}>
           Status changed from {formatMarginStatus(prevStatus)} to {formatMarginStatus(marginStatus)}
         </div>

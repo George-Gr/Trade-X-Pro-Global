@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { formatFieldError } from "@/lib/errorMessageService";
 import {
   Select,
   SelectContent,
@@ -10,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { OrderType } from "./OrderTypeSelector";
 
 export interface OrderFormData {
@@ -177,14 +179,13 @@ export const OrderForm = ({
     <div className="space-y-4">
       {/* Error Display */}
       {(error || validationError) && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex gap-4">
-          <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0 mt-2.5" />
-          <div>
-            <p className="text-sm font-medium text-destructive">
-              {error || validationError}
-            </p>
-          </div>
-        </div>
+        <ErrorState
+          error={error || validationError}
+          context="order_submission"
+          showRetry={false}
+          showSupport={true}
+          className="mt-4"
+        />
       )}
 
       {/* Volume Input */}
@@ -203,8 +204,16 @@ export const OrderForm = ({
           placeholder="0.01"
           disabled={isLoading}
           aria-label="Order volume in lots"
+          className="hover:border-primary/50 transition-colors"
+          inputMode="decimal"
+          pattern="[0-9]+([\.][0-9]+)?"
         />
-        <p className="text-xs text-muted-foreground">
+        {validationError && (
+          <p className="text-xs text-destructive mt-1" role="alert">
+            {formatFieldError(validationError, 'volume')}
+          </p>
+        )}
+        <p className="text-xs text-muted-foreground mt-1">
           Pip value: ${pipValue.toFixed(2)}
         </p>
       </div>
@@ -245,6 +254,7 @@ export const OrderForm = ({
             placeholder={currentPrice.toFixed(5)}
             disabled={isLoading}
             aria-label="Limit price for order"
+            className="hover:border-primary/50 transition-colors"
           />
         </div>
       )}
@@ -265,6 +275,7 @@ export const OrderForm = ({
             placeholder={currentPrice.toFixed(5)}
             disabled={isLoading}
             aria-label="Stop price for order"
+            className="hover:border-primary/50 transition-colors"
           />
         </div>
       )}
@@ -285,6 +296,7 @@ export const OrderForm = ({
             placeholder="10"
             disabled={isLoading}
             aria-label="Trailing stop distance in pips"
+            className="hover:border-primary/50 transition-colors"
           />
         </div>
       )}
@@ -305,6 +317,7 @@ export const OrderForm = ({
             placeholder="Optional"
             disabled={isLoading}
             aria-label="Take profit price"
+            className="hover:border-primary/50 transition-colors"
           />
         </div>
         <div className="space-y-2">
@@ -321,6 +334,7 @@ export const OrderForm = ({
             placeholder="Optional"
             disabled={isLoading}
             aria-label="Stop loss price"
+            className="hover:border-primary/50 transition-colors"
           />
         </div>
       </div>
@@ -352,18 +366,20 @@ export const OrderForm = ({
           onClick={() => handleSubmit('buy')}
           isLoading={isLoading}
           loadingText="Buying..."
-          className="bg-profit hover:bg-profit/90 text-foreground"
+          className="bg-profit hover:bg-profit/90 text-foreground font-medium"
           size="lg"
         >
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Buy
         </LoadingButton>
         <LoadingButton
           onClick={() => handleSubmit('sell')}
           isLoading={isLoading}
           loadingText="Selling..."
-          className="bg-loss hover:bg-loss/90 text-foreground"
+          className="bg-loss hover:bg-loss/90 text-foreground font-medium"
           size="lg"
         >
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Sell
         </LoadingButton>
       </div>

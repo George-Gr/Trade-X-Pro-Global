@@ -90,11 +90,11 @@ export const OrderRow = memo(({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-4"
+                className="h-11 w-11"
                 onClick={copyOrderId}
                 title="Copy order ID"
               >
-                <Copy className="w-3 h-3" />
+                <Copy className="w-5 h-5" />
               </Button>
             </div>
           </div>
@@ -161,12 +161,12 @@ export const OrderRow = memo(({
           <div className="flex-1 min-w-0">
             <div className="flex flex-col text-sm">
               {order.commission !== undefined && (
-                <span className="text-gray-700">
+                <span className="text-muted-foreground">
                   Comm: ${order.commission.toFixed(2)}
                 </span>
               )}
               {order.slippage !== undefined && (
-                <span className="text-gray-500">
+                <span className="text-muted-foreground">
                   Slip: {order.slippage.toFixed(2)}%
                 </span>
               )}
@@ -178,7 +178,7 @@ export const OrderRow = memo(({
             <div className="flex-1 min-w-0">
               <span
                 className={`text-sm font-medium ${
-                  order.realized_pnl > 0 ? 'text-green-600' : 'text-red-600'
+                  order.realized_pnl > 0 ? 'text-buy' : 'text-sell'
                 }`}
               >
                 {order.realized_pnl > 0 ? '+' : ''}
@@ -202,8 +202,8 @@ export const OrderRow = memo(({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-4" aria-label="More options">
-                  <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
+                <Button variant="ghost" size="sm" className="h-11 w-11" aria-label="More options">
+                  <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -214,7 +214,7 @@ export const OrderRow = memo(({
                   </DropdownMenuItem>
                 )}
                 {canCancel && onCancel && (
-                  <DropdownMenuItem onClick={onCancel} className="text-red-600">
+                  <DropdownMenuItem onClick={onCancel} className="text-sell">
                     <Trash2 className="w-4 h-4 mr-2" />
                     Cancel Order
                   </DropdownMenuItem>
@@ -225,7 +225,7 @@ export const OrderRow = memo(({
         </div>
 
         {/* Timestamp */}
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-muted-foreground">
           Created: {new Date(order.created_at).toLocaleString()} • Updated:{' '}
           {new Date(order.updated_at).toLocaleString()}
         </div>

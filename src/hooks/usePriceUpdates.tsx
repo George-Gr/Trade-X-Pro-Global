@@ -12,6 +12,7 @@ export interface PriceData {
   open: number;
   previousClose: number;
   timestamp: number;
+  isStale?: boolean;
 }
 
 interface UsePriceUpdatesOptions {
@@ -143,7 +144,14 @@ export const usePriceUpdates = ({
   }, [symbols, intervalMs, enabled]);
 
   const getPrice = (symbol: string): PriceData | null => {
-    return prices.get(symbol) || null;
+    const priceData = prices.get(symbol) || null;
+    if (priceData) {
+      const now = Date.now();
+      // Mark as stale if price is older than intervalMs + 500ms
+      const isStale = (now - priceData.timestamp) > (intervalMs + 500);
+      return { ...priceData, isStale };
+    }
+    return null;
   };
 
   const refreshPrice = async (symbol: string) => {

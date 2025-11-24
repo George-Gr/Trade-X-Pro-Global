@@ -131,8 +131,8 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
 
   if (error) {
     return (
-      <Card className="p-4 border-red-500/30 bg-background/5">
-        <p className="text-red-500">Error loading portfolio data: {error}</p>
+      <Card className="p-4 border-destructive/20 bg-destructive/5">
+        <p className="text-destructive">Error loading portfolio data: {error}</p>
       </Card>
     );
   }

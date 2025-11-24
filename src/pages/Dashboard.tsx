@@ -36,9 +36,10 @@ const Dashboard = () => {
     {
       title: "Open Positions",
       value: "0",
-      change: "Active trades",
+      change: "No active trades",
       icon: Activity,
       trend: "neutral" as const,
+      empty: true,
     },
   ];
 
@@ -62,8 +63,12 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {stats.map((stat) => {
               const Icon = stat.icon;
+              const isTrendUp = stat.trend === "up" || stat.change.includes("+");
+              const isTrendDown = stat.trend === "down" || stat.change.includes("-");
+              const isEmptyState = (stat as any).empty;
+              
               return (
-                <Card key={stat.title}>
+                <Card key={stat.title} className="hover:shadow-md transition-shadow">
                   <CardHeader className="flex flex-row items-center justify-between pb-4">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {stat.title}
@@ -72,9 +77,30 @@ const Dashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {stat.change}
-                    </p>
+                    {isEmptyState ? (
+                      <div className="mt-2 space-y-2">
+                        <p className="text-xs text-muted-foreground font-medium">
+                          {stat.change}
+                        </p>
+                        <p className="text-xs text-muted-foreground italic">
+                          Ready to start trading? Head to the Trade page to open your first position.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 mt-2">
+                        {isTrendUp && (
+                          <TrendingUp className="h-4 w-4 text-buy animate-in fade-in slide-in-from-bottom-1 duration-500" />
+                        )}
+                        {isTrendDown && (
+                          <TrendingDown className="h-4 w-4 text-sell animate-in fade-in slide-in-from-top-1 duration-500" />
+                        )}
+                        <p className={`text-xs font-medium ${
+                          isTrendUp ? "text-buy" : isTrendDown ? "text-sell" : "text-muted-foreground"
+                        }`}>
+                          {stat.change}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
@@ -82,7 +108,7 @@ const Dashboard = () => {
           </div>
 
           {/* Risk Management Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <MarginLevelIndicator />
             <div>
               <RiskAlerts />
@@ -90,17 +116,24 @@ const Dashboard = () => {
           </div>
 
           {/* Quick Actions */}
-          <Card>
+          <Card className="border-primary/20 hover:border-primary/40 transition-colors">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="flex gap-4">
-              <Button onClick={() => navigate("/trade")} className="gap-4">
-                <TrendingUp className="h-4 w-4" />
+            <CardContent className="flex gap-4 flex-wrap">
+              <Button 
+                onClick={() => navigate("/trade")} 
+                className="gap-2 h-11 px-6 font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+              >
+                <TrendingUp className="h-5 w-5" />
                 Start Trading
               </Button>
-              <Button variant="outline" onClick={() => navigate("/portfolio")} className="gap-4">
-                <Activity className="h-4 w-4" />
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/portfolio")} 
+                className="gap-2 h-11 px-6 font-medium transition-all duration-200 hover:scale-105 active:scale-95 hover:border-primary/50"
+              >
+                <Activity className="h-5 w-5" />
                 View Portfolio
               </Button>
             </CardContent>

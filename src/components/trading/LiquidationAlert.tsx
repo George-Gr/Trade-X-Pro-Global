@@ -42,15 +42,15 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
   onContactSupport,
 }) => {
   return (
-    <Alert className="border-red-300 bg-background mb-4">
+    <Alert className="border-sell/30 bg-background mb-4">
       <div className="flex items-start justify-between w-full gap-4">
         <div className="flex items-start gap-4 flex-1">
-          <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-2.5" />
+          <AlertCircle className="h-4 w-4 text-sell flex-shrink-0 mt-2.5" />
           <div className="flex-1">
-            <AlertTitle className="text-red-900 text-lg mb-2">
+            <AlertTitle className="text-sell text-lg mb-2">
               Account Liquidation Executed
             </AlertTitle>
-            <AlertDescription className="text-red-800 space-y-4">
+            <AlertDescription className="text-sell/90 space-y-4">
               <p>
                 {result.totalPositionsClosed} position{result.totalPositionsClosed !== 1 ? 's' : ''} have been
                 automatically liquidated due to margin call. Your account margin has been restored.
@@ -58,23 +58,23 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
 
               {/* Liquidation Summary */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-                <div className="bg-background p-4 rounded border border-red-200">
+                <div className="bg-background p-4 rounded border border-sell/30">
                   <div className="text-xs text-muted-foreground">Positions Closed</div>
-                  <div className="text-lg font-bold text-red-900">{result.totalPositionsClosed}</div>
+                  <div className="text-lg font-bold text-sell">{result.totalPositionsClosed}</div>
                 </div>
-                <div className="bg-background p-4 rounded border border-red-200">
+                <div className="bg-background p-4 rounded border border-sell/30">
                   <div className="text-xs text-muted-foreground">Realized Loss</div>
-                  <div className={cn('text-lg font-bold', result.totalLossRealized < 0 ? 'text-red-700' : 'text-green-700')}>
+                  <div className={cn('text-lg font-bold', result.totalLossRealized < 0 ? 'text-sell' : 'text-buy')}>
                     ${Math.abs(result.totalLossRealized).toFixed(2)}
                   </div>
                 </div>
-                <div className="bg-background p-4 rounded border border-red-200">
+                <div className="bg-background p-4 rounded border border-sell/30">
                   <div className="text-xs text-muted-foreground">Slippage Cost</div>
                   <div className="text-lg font-bold text-orange-700">${result.totalSlippageApplied.toFixed(2)}</div>
                 </div>
-                <div className="bg-background p-4 rounded border border-red-200">
+                <div className="bg-background p-4 rounded border border-sell/30">
                   <div className="text-xs text-muted-foreground">Margin Restored</div>
-                  <div className={cn('text-lg font-bold', result.finalMarginLevel > result.initialMarginLevel ? 'text-green-700' : 'text-red-700')}>
+                  <div className={cn('text-lg font-bold', result.finalMarginLevel > result.initialMarginLevel ? 'text-buy' : 'text-sell')}>
                     {result.finalMarginLevel.toFixed(1)}%
                   </div>
                 </div>
@@ -86,7 +86,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                   <DialogTrigger asChild>
                     <Button
                       variant="link"
-                      className="text-red-800 underline p-4 h-auto font-semibold"
+                      className="text-sell underline p-4 h-auto font-semibold"
                     >
                       View {result.closedPositions.length} liquidated position{result.closedPositions.length !== 1 ? 's' : ''}
                     </Button>
@@ -114,7 +114,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                             <div
                               className={cn(
                                 'text-lg font-bold',
-                                pos.realizedPnL < 0 ? 'text-red-600' : 'text-green-600'
+                                pos.realizedPnL < 0 ? 'text-sell' : 'text-buy'
                               )}
                             >
                               {pos.realizedPnL < 0 ? '-' : '+'}${Math.abs(pos.realizedPnL).toFixed(2)}
@@ -157,7 +157,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
         </div>
         <button
           onClick={onDismiss}
-          className="flex-shrink-0 text-red-600 hover:text-red-900 transition-colors"
+          className="flex-shrink-0 text-sell hover:text-sell/80 transition-colors"
           aria-label="Dismiss"
         >
           <X className="h-4 w-4" />

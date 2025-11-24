@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { formatToastError } from "@/lib/errorMessageService";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -68,12 +69,8 @@ export default function RiskManagement() {
         });
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      toast({
-        title: "Error",
-        description: message,
-        variant: "destructive",
-      });
+      const actionableError = formatToastError(err, 'data_fetching');
+      toast(actionableError);
     } finally {
       setLoading(false);
     }
@@ -100,12 +97,8 @@ export default function RiskManagement() {
         description: "Your risk management settings have been updated",
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      toast({
-        title: "Error",
-        description: message,
-        variant: "destructive",
-      });
+      const actionableError = formatToastError(err, 'form_validation');
+      toast(actionableError);
     } finally {
       setSaving(false);
     }

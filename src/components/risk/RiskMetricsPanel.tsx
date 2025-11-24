@@ -62,10 +62,10 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
               <div
                 className={`h-2 rounded-full ${
                   riskMetrics.currentMarginLevel >= 200
-                    ? 'bg-green-600'
+                    ? 'bg-buy'
                     : riskMetrics.currentMarginLevel >= 100
                     ? 'bg-yellow-600'
-                    : 'bg-red-600'
+                    : 'bg-sell'
                 }`}
                 style={{
                   width: `${Math.min(
@@ -100,17 +100,17 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
         <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
           <CardTitle className="text-sm font-medium">Total P&L</CardTitle>
           {(portfolioMetrics?.totalPnL || 0) >= 0 ? (
-            <TrendingUp className="h-4 w-4 text-green-600" />
+            <TrendingUp className="h-4 w-4 text-buy" />
           ) : (
-            <TrendingDown className="h-4 w-4 text-red-600" />
+            <TrendingDown className="h-4 w-4 text-sell" />
           )}
         </CardHeader>
         <CardContent>
           <div
             className={`text-2xl font-bold ${
               (portfolioMetrics?.totalPnL || 0) >= 0
-                ? 'text-green-600'
-                : 'text-red-600'
+                ? 'text-buy'
+                : 'text-sell'
             }`}
           >
             {formatCurrency(portfolioMetrics?.totalPnL || 0)}

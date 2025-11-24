@@ -30,7 +30,7 @@ export default function Index() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in">
             Master CFD Trading
-            <span className="block mt-2 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
+            <span className="block mt-2 bg-gradient-to-r from-background to-primary-glow bg-clip-text text-transparent">
               Without the Risk
             </span>
           </h1>
@@ -280,7 +280,7 @@ export default function Index() {
                   description: "Safe environment for learning without financial risk"
                 }
               ].map((item, index) => (
-                <Card key={index} className="bg-background/10 backdrop-blur-md border-white/20 hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
+                <Card key={index} className="bg-background/10 backdrop-blur-md border-foreground/10 hover:shadow-lg transition-all duration-150 hover:-translate-y-1\">
                   <CardContent className="p-6 text-center">
                     <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                       <item.icon className="h-8 w-8 text-primary-foreground" aria-hidden="true" />

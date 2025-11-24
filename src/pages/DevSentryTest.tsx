@@ -30,9 +30,9 @@ const DevSentryTest: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Sentry / Logger Test (Dev)</h1>
       <p className="mb-4">Use these buttons to test logging and Sentry integration.</p>
       <div className="space-x-4">
-        <button onClick={throwError} className="px-4 py-4 bg-red-500 text-white rounded transition-all hover:bg-red-600 active:bg-red-700 active:scale-95">Throw Error</button>
+        <button onClick={throwError} className="px-4 py-4 bg-red-500 text-foreground rounded transition-all hover:bg-red-600 active:bg-red-700 active:scale-95">Throw Error</button>
         <button onClick={logError} className="px-4 py-4 bg-yellow-500 text-foreground rounded transition-all hover:bg-yellow-600 active:bg-yellow-700 active:scale-95">Log Error via logger</button>
-        <button onClick={sendMessage} className="px-4 py-4 bg-blue-500 text-white rounded transition-all hover:bg-blue-600 active:bg-blue-700 active:scale-95">Send Sentry Message</button>
+        <button onClick={sendMessage} className="px-4 py-4 bg-blue-500 text-foreground rounded transition-all hover:bg-blue-600 active:bg-blue-700 active:scale-95">Send Sentry Message</button>
       </div>
     </div>
   );

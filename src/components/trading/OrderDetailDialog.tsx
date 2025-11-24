@@ -143,17 +143,17 @@ export const OrderDetailDialog = ({
               </div>
               <div>
                 <span className="text-xs text-muted-foreground">Type</span>
-                <div className="text-lg font-bold text-gray-900">{orderTypeLabel}</div>
+                <div className="text-lg font-bold text-foreground">{orderTypeLabel}</div>
               </div>
               <div>
                 <span className="text-xs text-muted-foreground">Filled</span>
-                <div className="text-lg font-bold text-gray-900">{fillPercentage}%</div>
+                <div className="text-lg font-bold text-foreground">{fillPercentage}%</div>
               </div>
               <div>
                 <span className="text-xs text-muted-foreground">Total P&L</span>
                 <div
                   className={`text-lg font-bold ${
-                    order.realized_pnl && order.realized_pnl > 0 ? 'text-green-600' : 'text-red-600'
+                    order.realized_pnl && order.realized_pnl > 0 ? 'text-buy' : 'text-sell'
                   }`}
                 >
                   {order.realized_pnl !== undefined ? (

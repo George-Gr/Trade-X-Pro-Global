@@ -62,13 +62,18 @@ export const TradingPanelConfirmationDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isExecuting}>
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            disabled={isExecuting}
+            className="font-medium"
+          >
             Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
+          </Button>
+          <Button
             onClick={onConfirm}
             disabled={isExecuting}
-            className="bg-profit hover:bg-profit/90"
+            className="bg-profit hover:bg-profit/90 text-foreground font-medium"
           >
             {isExecuting ? (
               <>
@@ -78,7 +83,7 @@ export const TradingPanelConfirmationDialog = ({
             ) : (
               'Execute Order'
             )}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

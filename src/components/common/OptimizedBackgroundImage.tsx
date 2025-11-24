@@ -113,7 +113,7 @@ export const OptimizedBackgroundImage = ({
         aria-label="Loading image"
       >
         <div className="animate-pulse">
-          <div className="h-4 w-32 bg-gray-300 rounded" />
+          <div className="h-4 w-32 bg-muted rounded" />
         </div>
       </div>
     );
