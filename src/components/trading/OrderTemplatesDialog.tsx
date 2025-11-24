@@ -173,3 +173,5 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
     </Dialog>
   );
 };
+
+export default OrderTemplatesDialog;

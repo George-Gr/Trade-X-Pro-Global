@@ -62,9 +62,22 @@ const ChartContainer = React.forwardRef<
         data-chart={chartId}
         ref={ref}
         className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          "flex aspect-video justify-center text-xs",
+          "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground",
+          "[&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50",
+          "[&_.recharts-curve.recharts-tooltip-cursor]:stroke-border",
+          "[&_.recharts-dot[stroke='#fff']]:stroke-transparent",
+          "[&_.recharts-layer]:outline-none",
+          "[&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border",
+          "[&_.recharts-radial-bar-background-sector]:fill-muted",
+          "[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted",
+          "[&_.recharts-reference-line_[stroke='#ccc']]:stroke-border",
+          "[&_.recharts-sector[stroke='#fff']]:stroke-transparent",
+          "[&_.recharts-sector]:outline-none",
+          "[&_.recharts-surface]:outline-none",
           className,
         )}
+        style={{ minHeight: "280px", minWidth: "100%" }}
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
@@ -73,7 +86,7 @@ const ChartContainer = React.forwardRef<
         ) : (
           // Placeholder while recharts is loading. Keep the layout so sizes
           // don't jump when the real chart mounts.
-          <div style={{ width: "100%", height: "100%" }} />
+          <div style={{ width: "100%", height: "100%", minHeight: "280px" }} />
         )}
       </div>
     </ChartContext.Provider>
@@ -213,7 +226,9 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
       <div
         ref={ref}
         className={cn(
-          "grid min-w-[8rem] items-start gap-4.5 rounded-lg border border-border/50 bg-background px-4.5 py-4.5 text-xs shadow-xl",
+          "grid min-w-[8rem] items-start gap-4.5",
+          "rounded-lg border border-border/50",
+          "bg-background px-4.5 py-4.5 text-xs shadow-xl",
           className,
         )}
       >
@@ -231,7 +246,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
               <div
                 key={item.dataKey || `item-${index}`}
                 className={cn(
-                  "flex w-full flex-wrap items-stretch gap-4 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  "flex w-full flex-wrap items-stretch gap-4 table-icon",
                   indicator === "dot" && "items-center",
                 )}
               >
@@ -308,7 +323,11 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
   return (
     <div
       ref={ref}
-      className={cn("flex items-center justify-center gap-4", verticalAlign === "top" ? "pb-4" : "pt-4", className)}
+      className={cn(
+        "flex items-center justify-center gap-4",
+        verticalAlign === "top" ? "pb-4" : "pt-4",
+        className
+      )}
     >
       {payload.map((item) => {
         const key = `${nameKey || item.dataKey || "value"}`;
@@ -317,7 +336,7 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
         return (
           <div
             key={String(item.value) || item.dataKey}
-            className={cn("flex items-center gap-4.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground")}
+            className={cn("flex items-center gap-4.5 chart-icon")}
           >
             {itemConfig?.icon && !hideIcon ? (
               <itemConfig.icon />

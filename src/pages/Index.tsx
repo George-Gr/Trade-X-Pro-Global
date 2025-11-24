@@ -17,9 +17,7 @@ import {
 } from "lucide-react";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
-import heroImage from "@/assets/hero-trading.jpg";
-import securityBg from "@/assets/security-bg.jpg";
-import globalMarketsMap from "@/assets/global-markets-map.jpg";
+import { HeroTradingSection, GlobalMarketsSection, SecuritySection } from "@/components/common/OptimizedHeroSection";
 import { SectionHeader } from "@/components/common";
 
 export default function Index() {
@@ -28,68 +26,50 @@ export default function Index() {
       <PublicHeader />
 
       {/* Hero Section */}
-      <section 
-        className="relative pt-24 pb-16 sm:pt-32 sm:pb-20 overflow-hidden md:min-h-[80vh]"
-        aria-label="Hero section with professional trading platform background showing financial charts and market data"
-      >
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url(${heroImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/60 to-primary-glow/65" />
-        </div>
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in">
-              Master CFD Trading
-              <span className="block mt-2 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
-                Without the Risk
-              </span>
-            </h1>
-            
-            <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-              Practice trading across 5 asset classes with $50,000 in virtual funds. 
-              Professional trading terminal with real-time data and zero risk.
-            </p>
+      <HeroTradingSection aria-label="Hero section with professional trading platform background showing financial charts and market data">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in">
+            Master CFD Trading
+            <span className="block mt-2 bg-gradient-to-r from-white to-primary-glow bg-clip-text text-transparent">
+              Without the Risk
+            </span>
+          </h1>
+          
+          <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
+            Practice trading across 5 asset classes with $50,000 in virtual funds. 
+            Professional trading terminal with real-time data and zero risk.
+          </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Link to="/register">
-                <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
-                  Start Trading Free
-                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </Button>
-              </Link>
-              <Link to="/dashboard">
-                <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-foreground" aria-label="View platform demo">
-                  View Platform
-                </Button>
-              </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Link to="/register">
+              <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
+                Start Trading Free
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Button>
+            </Link>
+            <Link to="/dashboard">
+              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-foreground" aria-label="View platform demo">
+                View Platform
+              </Button>
+            </Link>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-6 text-primary-foreground/90">
+            <div className="flex items-center gap-4">
+              <CheckCircle2 className="h-4 w-4 text-accent" />
+              <span>$50,000 Virtual Capital</span>
             </div>
-
-            <div className="flex flex-wrap justify-center gap-6 text-primary-foreground/90">
-              <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-4 w-4 text-accent" />
-                <span>$50,000 Virtual Capital</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-4 w-4 text-accent" />
-                <span>Real-Time Market Data</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-4 w-4 text-accent" />
-                <span>5 Asset Classes</span>
-              </div>
+            <div className="flex items-center gap-4">
+              <CheckCircle2 className="h-4 w-4 text-accent" />
+              <span>Real-Time Market Data</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <CheckCircle2 className="h-4 w-4 text-accent" />
+              <span>5 Asset Classes</span>
             </div>
           </div>
         </div>
-      </section>
+      </HeroTradingSection>
 
       {/* Features Section */}
       <section id="features" className="py-20 bg-muted/30">
@@ -218,27 +198,14 @@ export default function Index() {
       </section>
 
       {/* Global Markets Section */}
-      <section 
-        className="py-16 sm:py-20 relative overflow-hidden"
-        style={{
-          backgroundImage: `url(${globalMarketsMap})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-        aria-label="Global markets section with world map background showing international trading access"
-      >
-        <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <SectionHeader
-              title="Trade Global Markets"
-              subtitle="Across 5 Asset Classes"
-              description="Access 500+ instruments across forex, stocks, indices, commodities, and cryptocurrencies"
-            />
+      <GlobalMarketsSection aria-label="Global markets section with world map background showing international trading access">
+        <SectionHeader
+          title="Trade Global Markets"
+          subtitle="Across 5 Asset Classes"
+          description="Access 500+ instruments across forex, stocks, indices, commodities, and cryptocurrencies"
+        />
 
-          <div className="grid md:grid-cols-5 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-5 gap-6 max-w-5xl mx-auto">
             {[
               {
                 title: "Forex",
@@ -283,25 +250,11 @@ export default function Index() {
               </Card>
             ))}
           </div>
-        </div>
-      </section>
+      </GlobalMarketsSection>
 
       {/* Trust & Security Section */}
-      <section 
-        id="security" 
-        className="py-16 sm:py-20 relative overflow-hidden bg-foreground"
-        style={{
-          backgroundImage: `url(${securityBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-        aria-label="Security and trust section with encrypted data background showing platform security features"
-      >
-        <div className="absolute inset-0 bg-foreground/90 backdrop-blur-sm" />
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <SecuritySection id="security" aria-label="Security and trust section with encrypted data background showing platform security features">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <SectionHeader
               title="Your Security is Our"
@@ -340,7 +293,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-      </section>
+      </SecuritySection>
 
       {/* Final CTA Section */}
       <section className="py-20 bg-gradient-to-br from-primary to-primary-glow">

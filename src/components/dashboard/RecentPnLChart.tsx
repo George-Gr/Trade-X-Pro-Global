@@ -57,7 +57,7 @@ export const RecentPnLChart: React.FC = () => {
         </div>
 
         {/* Chart */}
-        <div style={{ width: '100%', height: 200 }}>
+        <div className="aspect-[16/9] w-full">
           <ResponsiveContainer>
             <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />

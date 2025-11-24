@@ -28,7 +28,7 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
   return (
     <Card className="p-4 bg-card">
       <h3 className="font-semibold mb-2">Asset Allocation</h3>
-      <div style={{ width: '100%', height: 220 }}>
+      <div className="aspect-[16/9] w-full">
         <ResponsiveContainer>
           <PieChart>
             <Pie dataKey="value" data={data} innerRadius={40} outerRadius={80} paddingAngle={2}>

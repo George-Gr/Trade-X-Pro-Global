@@ -86,69 +86,94 @@ const Register = () => {
         </div>
 
         <Card className="p-6 md:p-6">
-          <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="John Doe"
-                {...register("fullName", validationRules.fullName)}
-                disabled={isLoading}
+          <Form {...form}>
+            <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="fullName">Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="fullName"
+                        type="text"
+                        placeholder="John Doe"
+                        {...register("fullName", validationRules.fullName)}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.fullName && (
-                <p className="text-sm text-destructive mt-1">{errors.fullName.message}</p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                {...register("email", validationRules.email)}
-                disabled={isLoading}
+              <FormField
+                control={form.control}
+                name="email"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="email">Email Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        {...register("email", validationRules.email)}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.email && (
-                <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register("password", validationRules.password)}
-                disabled={isLoading}
+              <FormField
+                control={form.control}
+                name="password"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="••••••••"
+                        {...register("password", validationRules.password)}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                    <p className="text-xs text-muted-foreground">
+                      Minimum 8 characters
+                    </p>
+                  </FormItem>
+                )}
               />
-              {errors.password && (
-                <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
-              )}
-              <p className="text-xs text-muted-foreground">
-                Minimum 8 characters
-              </p>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                {...register("confirmPassword", {
-                  required: "Please confirm your password",
-                  validate: (value) =>
-                    value === password || "Passwords do not match",
-                })}
-                disabled={isLoading}
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        {...register("confirmPassword", {
+                          required: "Please confirm your password",
+                          validate: (value) =>
+                            value === password || "Passwords do not match",
+                        })}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.confirmPassword && (
-                <p className="text-sm text-destructive mt-1">{errors.confirmPassword.message}</p>
-              )}
-            </div>
 
             {/* Benefits */}
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
@@ -166,10 +191,11 @@ const Register = () => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </form>
+<Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Creating Account..." : "Create Account"}
+              </Button>
+            </form>
+          </Form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
@@ -179,9 +205,7 @@ const Register = () => {
               </Link>
             </p>
           </div>
-        </Card>
-
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        </Card>        <p className="text-center text-xs text-muted-foreground mt-6">
           By creating an account, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>

@@ -48,13 +48,21 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   build: {
-    chunkSizeWarningLimit: 600,
+    // Reduced from 600 to 400 - encourages better code splitting
+    chunkSizeWarningLimit: 400,
     rollupOptions: {
       output: {
-        // Simplified chunking - let Vite handle React dependencies automatically
-        manualChunks: {
-          'vendor-charts': ['lightweight-charts', 'recharts'],
-          'vendor-supabase': ['@supabase/supabase-js'],
+        // Optimized manual chunks for better bundle splitting
+        // Each vendor chunk is split separately to enable parallel loading
+        manualChunks: (id) => {
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('lightweight-charts')) return 'vendor-charts';
+            if (id.includes('recharts')) return 'vendor-charts';
+            if (id.includes('@supabase')) return 'vendor-supabase';
+            if (id.includes('@radix-ui')) return 'vendor-ui';
+            if (id.includes('react-hook-form') || id.includes('zod')) return 'vendor-forms';
+          }
         },
       },
     },

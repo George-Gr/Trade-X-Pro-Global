@@ -1,35 +1,30 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useOrderExecution } from "@/hooks/useOrderExecution";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { useAssetSpecs } from "@/hooks/useAssetSpecs";
 import { useSLTPMonitoring } from "@/hooks/useSLTPMonitoring";
-import { OrderTemplatesDialog } from "./OrderTemplatesDialog";
 import { OrderTemplate } from "@/hooks/useOrderTemplates";
-import { OrderForm, type OrderFormData } from "./OrderForm";
-import { OrderPreview } from "./OrderPreview";
-import { OrderTypeSelector, type OrderType } from "./OrderTypeSelector";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { OrderType } from "@/lib/trading/orderMatching";
+import { OrderFormData } from "./OrderForm";
+
+// Lazy load heavy components
+const OrderTemplatesDialog = lazy(() => import("./OrderTemplatesDialog").then(module => ({ default: module.OrderTemplatesDialog })));
+const OrderForm = lazy(() => import("./OrderForm").then(module => ({ default: module.OrderForm })));
+const OrderPreview = lazy(() => import("./OrderPreview").then(module => ({ default: module.OrderPreview })));
+const OrderTypeSelector = lazy(() => import("./OrderTypeSelector").then(module => ({ default: module.OrderTypeSelector })));
+const AlertDialogComponent = lazy(() => import("./TradingPanelConfirmationDialog").then(module => ({ default: module.default })));
 
 interface TradingPanelProps {
   symbol: string;
 }
 
 /**
- * TradingPanel Component (Refactored)
+ * TradingPanel Component (Optimized)
  *
- * Main trading interface composed of modular components:
+ * Main trading interface with lazy-loaded components for better bundle splitting:
  * - OrderTypeSelector: Select order type (market, limit, stop, etc.)
  * - OrderForm: Form inputs with validation
  * - OrderPreview: Real-time order preview with P&L calculations
@@ -39,20 +34,21 @@ interface TradingPanelProps {
  * - Order execution integration
  * - Order templates support
  * - Confirmation dialog before execution
+ * - Lazy loading for improved performance
  */
 const TradingPanel = ({ symbol }: TradingPanelProps) => {
   // State
-  const [orderType, setOrderType] = useState<OrderType>('market');
+  const [orderType, setOrderType] = useState<OrderType>(OrderType.Market);
   const [formData, setFormData] = useState<Partial<OrderFormData>>({
     symbol,
     side: 'buy',
     quantity: 0.01,
-    type: 'market',
+    type: OrderType.Market,
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<OrderFormData | null>(null);
   
-  // Hooks
+  // Hooks (moved to hooks directory for better separation)
   const { toast } = useToast();
   const { executeOrder, isExecuting } = useOrderExecution();
   const { leverage: assetLeverage, isLoading: isAssetLoading } = useAssetSpecs(symbol);
@@ -214,82 +210,47 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Order Form */}
             <div>
-              <OrderForm
-                symbol={symbol}
-                orderType={orderType}
-                currentPrice={currentPrice}
-                onOrderTypeChange={handleOrderTypeChange}
-                onSubmit={handleFormSubmit}
-                isLoading={isExecuting || isAssetLoading}
-                assetLeverage={assetLeverage}
-              />
+              <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
+                <OrderForm
+                  symbol={symbol}
+                  orderType={orderType}
+                  currentPrice={currentPrice}
+                  onOrderTypeChange={handleOrderTypeChange}
+                  onSubmit={handleFormSubmit}
+                  isLoading={isExecuting || isAssetLoading}
+                  assetLeverage={assetLeverage}
+                />
+              </Suspense>
             </div>
 
             {/* Order Preview */}
             <div>
-              <OrderPreview
-                formData={formData}
-                currentPrice={currentPrice}
-                assetLeverage={assetLeverage}
-                commission={0.0005}
-                slippage={orderType === 'market' ? 0.0001 : 0}
-              />
+              <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
+                <OrderPreview
+                  formData={formData}
+                  currentPrice={currentPrice}
+                  assetLeverage={assetLeverage}
+                  commission={0.0005}
+                  slippage={orderType === 'market' ? 0.0001 : 0}
+                />
+              </Suspense>
             </div>
           </div>
         </div>
       </Card>
 
       {/* Confirmation Dialog */}
-      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Order</AlertDialogTitle>
-            <AlertDialogDescription>
-              {pendingOrder && (
-                <div className="space-y-2 text-sm mt-2">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-muted-foreground">Side</p>
-                      <p className="font-semibold capitalize">{pendingOrder.side}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Quantity</p>
-                      <p className="font-semibold">{pendingOrder.quantity} lots</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Type</p>
-                      <p className="font-semibold capitalize">{pendingOrder.type}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Leverage (Fixed)</p>
-                      <p className="font-semibold">1:{assetLeverage}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isExecuting}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmOrder}
-              disabled={isExecuting}
-              className="bg-profit hover:bg-profit/90"
-            >
-              {isExecuting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Executing...
-                </>
-              ) : (
-                'Execute Order'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Suspense fallback={<div />}>
+        <AlertDialogComponent
+          open={confirmDialogOpen}
+          onOpenChange={setConfirmDialogOpen}
+          pendingOrder={pendingOrder}
+          isExecuting={isExecuting}
+          assetLeverage={assetLeverage}
+          onConfirm={handleConfirmOrder}
+          onCancel={handleCancelOrder}
+        />
+      </Suspense>
     </div>
   );
 };

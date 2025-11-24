@@ -6,7 +6,7 @@ import React, { Suspense } from "react";
 const AuthenticatedLayoutInner = React.lazy(() => import("./AuthenticatedLayoutInner"));
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<div style={{ minHeight: 200 }} />}> 
+  <Suspense fallback={<div style={{ minHeight: "200px", width: "100%" }} />}> 
     <AuthenticatedLayoutInner>{children}</AuthenticatedLayoutInner>
   </Suspense>
 );

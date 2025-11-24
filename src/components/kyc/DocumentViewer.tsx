@@ -88,13 +88,13 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto min-h-[400px]">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : fileUrl ? (
-            <div className="h-full">
+            <div className="aspect-[4/3] w-full">
               {fileType === "pdf" ? (
                 <iframe
                   src={fileUrl}
@@ -105,7 +105,7 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
                 <img
                   src={fileUrl}
                   alt="Document"
-                  className="max-w-full h-auto mx-auto"
+                  className="w-full h-full object-contain"
                 />
               )}
             </div>

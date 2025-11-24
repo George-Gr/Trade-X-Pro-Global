@@ -129,7 +129,83 @@ const config: Config = {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [
+    tailwindcssAnimate,
+    function ({ addUtilities }) {
+      const newUtilities = {
+        // Icon sizing utilities
+        '.icon-xs': {
+          'height': '0.75rem',
+          'width': '0.75rem',
+        },
+        '.icon-sm': {
+          'height': '1rem',
+          'width': '1rem',
+        },
+        '.icon-md': {
+          'height': '1.25rem',
+          'width': '1.25rem',
+        },
+        '.icon-lg': {
+          'height': '1.5rem',
+          'width': '1.5rem',
+        },
+        '.icon-xl': {
+          'height': '1.75rem',
+          'width': '1.75rem',
+        },
+        
+        // Icon spacing utilities for specific components
+        '.icon-inline': {
+          'pointer-events': 'none',
+          'width': '1rem',
+          'height': '1rem',
+          'flex-shrink': '0',
+        },
+        '.icon-button': {
+          'pointer-events': 'none',
+          'width': '1rem',
+          'height': '1rem',
+          'flex-shrink': '0',
+        },
+        '.icon-sidebar': {
+          'pointer-events': 'none',
+          'width': '1rem',
+          'height': '1rem',
+          'flex-shrink': '0',
+        },
+        '.icon-command': {
+          'height': '1.25rem',
+          'width': '1.25rem',
+          'color': 'hsl(var(--muted-foreground))',
+        },
+        
+        // Component-specific utilities
+        '.sidebar-trigger': {
+          'width': '1rem',
+          'height': '1rem',
+          'flex-shrink': '0',
+        },
+        '.sidebar-button': {
+          'width': '1rem',
+          'height': '1rem',
+          'flex-shrink': '0',
+        },
+        '.table-icon': {
+          'height': '0.625rem',
+          'width': '0.625rem',
+          'color': 'hsl(var(--muted-foreground))',
+        },
+        '.chart-icon': {
+          'height': '0.75rem',
+          'width': '0.75rem',
+          'color': 'hsl(var(--muted-foreground))',
+        },
+      };
+      
+      addUtilities(newUtilities);
+    },
+  ],
 };
 
 export default config;

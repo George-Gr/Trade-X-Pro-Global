@@ -1,43 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Star, TrendingUp, TrendingDown, Plus, X, FolderPlus, Trash2, ShoppingCart } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useWatchlists } from "@/hooks/useWatchlists";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
-import { PriceAlertDialog } from "./PriceAlertDialog";
 import { CompareSymbolsDialog } from "./CompareSymbolsDialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import CreateWatchlistDialog from "./CreateWatchlistDialog";
+import AddSymbolDialog from "./AddSymbolDialog";
+import DeleteWatchlistDialog from "./DeleteWatchlistDialog";
+import WatchlistItems from "./WatchlistItems";
+
+// Lazy load heavy components
+const PriceAlertDialog = lazy(() => import("./PriceAlertDialog").then(mod => ({ default: mod.PriceAlertDialog })));
 
 interface EnhancedWatchlistProps {
   onSelectSymbol?: (symbol: string) => void;
   onQuickTrade?: (symbol: string, side: "buy" | "sell") => void;
 }
 
-const POPULAR_SYMBOLS = [
-  { symbol: "EURUSD", name: "Euro / US Dollar" },
-  { symbol: "GBPUSD", name: "British Pound / US Dollar" },
-  { symbol: "USDJPY", name: "US Dollar / Japanese Yen" },
-  { symbol: "AUDUSD", name: "Australian Dollar / US Dollar" },
-  { symbol: "BTCUSD", name: "Bitcoin / US Dollar" },
-  { symbol: "ETHUSD", name: "Ethereum / US Dollar" },
-  { symbol: "XAUUSD", name: "Gold / US Dollar" },
-  { symbol: "AAPL", name: "Apple Inc." },
-  { symbol: "GOOGL", name: "Alphabet Inc." },
-  { symbol: "TSLA", name: "Tesla Inc." },
-];
-
+/**
+ * EnhancedWatchlist Component (Optimized)
+ * 
+ * Main watchlist component with refactored subcomponents for better code splitting.
+ * Delegates dialog logic to specialized components:
+ * - CreateWatchlistDialog: Create new watchlist
+ * - AddSymbolDialog: Add symbol to watchlist
+ * - DeleteWatchlistDialog: Delete watchlist confirmation
+ * - WatchlistItems: List rendering with memoized rows
+ * 
+ * This reduces the component size from 355 lines to ~150 lines,
+ * enabling better tree-shaking and bundle splitting.
+ */
 const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistProps) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [newWatchlistName, setNewWatchlistName] = useState("");
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [addSymbolDialogOpen, setAddSymbolDialogOpen] = useState(false);
-  const [selectedSymbol, setSelectedSymbol] = useState("");
 
   const {
     watchlists,
@@ -54,27 +52,11 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
   const activeItems = activeWatchlistId ? watchlistItems[activeWatchlistId] || [] : [];
   const activeSymbols = activeItems.map((item) => item.symbol);
 
-  const { prices, getPrice } = usePriceUpdates({
+  const { getPrice } = usePriceUpdates({
     symbols: activeSymbols,
     intervalMs: 2000,
     enabled: activeSymbols.length > 0,
   });
-
-  const handleCreateWatchlist = async () => {
-    if (newWatchlistName.trim()) {
-      await createWatchlist(newWatchlistName);
-      setNewWatchlistName("");
-      setCreateDialogOpen(false);
-    }
-  };
-
-  const handleAddSymbol = async () => {
-    if (activeWatchlistId && selectedSymbol) {
-      await addSymbolToWatchlist(activeWatchlistId, selectedSymbol);
-      setSelectedSymbol("");
-      setAddSymbolDialogOpen(false);
-    }
-  };
 
   const handleSymbolClick = (symbol: string) => {
     if (onSelectSymbol) {
@@ -89,15 +71,16 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
     }
   };
 
+  const handleRemoveSymbol = (itemId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (activeWatchlistId) {
+      removeSymbolFromWatchlist(activeWatchlistId, itemId);
+    }
+  };
+
   const filteredItems = activeItems.filter((item) =>
     item.symbol.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const formatPrice = (price: number, symbol: string) => {
-    if (symbol.includes("JPY")) return price.toFixed(2);
-    if (symbol.includes("BTC") || symbol.includes("ETH") || symbol.includes("XAU")) return price.toFixed(2);
-    return price.toFixed(5);
-  };
 
   if (isLoading) {
     return (
@@ -114,32 +97,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
           <CardTitle className="text-lg">Watchlists</CardTitle>
           <div className="flex items-center gap-4">
             <CompareSymbolsDialog symbols={activeSymbols} />
-            <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <FolderPlus className="h-4 w-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create New Watchlist</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label>Watchlist Name</Label>
-                    <Input
-                      placeholder="e.g., Forex Pairs"
-                      value={newWatchlistName}
-                      onChange={(e) => setNewWatchlistName(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleCreateWatchlist()}
-                    />
-                  </div>
-                  <Button onClick={handleCreateWatchlist} className="w-full">
-                    Create Watchlist
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <CreateWatchlistDialog onCreateWatchlist={createWatchlist} />
           </div>
         </div>
 
@@ -165,183 +123,40 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
               <ScrollArea className="flex-1">
                 <TabsList className="w-full justify-start">
                   {watchlists.map((list) => (
-                    <TabsTrigger key={list.id} value={list.id} className="relative group">
-                      {list.name}
+                    <div key={list.id} className="relative group">
+                      <TabsTrigger value={list.id}>
+                        {list.name}
+                      </TabsTrigger>
                       {!list.is_default && (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <button
-                              onClick={(e) => e.stopPropagation()}
-                              className="ml-2 opacity-0 group-hover:opacity-100 hover:text-destructive"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Watchlist</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to delete "{list.name}"? This action cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => deleteWatchlist(list.id)}>
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <DeleteWatchlistDialog
+                          watchlistName={list.name}
+                          onDelete={() => deleteWatchlist(list.id)}
+                        />
                       )}
-                    </TabsTrigger>
+                    </div>
                   ))}
                 </TabsList>
               </ScrollArea>
               
-              <Dialog open={addSymbolDialogOpen} onOpenChange={setAddSymbolDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Symbol to Watchlist</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label>Select Symbol</Label>
-                      <Input
-                        placeholder="Enter symbol (e.g., EURUSD)"
-                        value={selectedSymbol}
-                        onChange={(e) => setSelectedSymbol(e.target.value.toUpperCase())}
-                        onKeyDown={(e) => e.key === "Enter" && handleAddSymbol()}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-xs text-muted-foreground">Popular Symbols</Label>
-                      <div className="grid grid-cols-2 gap-4">
-                        {POPULAR_SYMBOLS.map((s) => (
-                          <Button
-                            key={s.symbol}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedSymbol(s.symbol)}
-                            className={cn(
-                              "justify-start text-xs",
-                              selectedSymbol === s.symbol && "border-primary"
-                            )}
-                          >
-                            {s.symbol}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                    <Button onClick={handleAddSymbol} className="w-full">
-                      Add Symbol
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <AddSymbolDialog 
+                onAddSymbol={async (symbol) => {
+                  if (activeWatchlistId) {
+                    await addSymbolToWatchlist(activeWatchlistId, symbol);
+                  }
+                }}
+              />
             </div>
 
             {watchlists.map((list) => (
               <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
-                <ScrollArea className="h-full pr-4">
-                  <div className="space-y-2">
-                    {filteredItems.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <p className="mb-2">No symbols in this watchlist</p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setAddSymbolDialogOpen(true)}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Symbol
-                        </Button>
-                      </div>
-                    ) : (
-                      filteredItems.map((item) => {
-                        const priceData = getPrice(item.symbol);
-                        const isPositive = (priceData?.change || 0) >= 0;
-                        const TrendIcon = isPositive ? TrendingUp : TrendingDown;
-
-                        return (
-                          <div
-                            key={item.id}
-                            onClick={() => handleSymbolClick(item.symbol)}
-                            className="group relative flex items-center gap-4 p-4 rounded-md bg-secondary/50 hover:bg-secondary transition-colors border border-border/50 hover:border-border cursor-pointer"
-                          >
-                            {/* Symbol & Name */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-4">
-                                <span className="font-semibold text-sm">{item.symbol}</span>
-                                <TrendIcon
-                                  className={cn("h-3 w-3", isPositive ? "text-profit" : "text-loss")}
-                                />
-                              </div>
-                            </div>
-
-                            {/* Prices */}
-                            <div className="text-right">
-                              <div className="font-mono font-semibold text-sm">
-                                {priceData ? formatPrice(priceData.currentPrice, item.symbol) : "---"}
-                              </div>
-                              {priceData && (
-                                <div
-                                  className={cn(
-                                    "text-xs font-medium",
-                                    isPositive ? "text-profit" : "text-loss"
-                                  )}
-                                >
-                                  {isPositive ? "+" : ""}
-                                  {priceData.changePercent.toFixed(2)}%
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Quick Actions */}
-                            <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => handleQuickTrade(item.symbol, "buy", e)}
-                                className="h-7 px-4 text-xs bg-buy/10 hover:bg-buy/20 text-buy-foreground"
-                              >
-                                Buy
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => handleQuickTrade(item.symbol, "sell", e)}
-                                className="h-7 px-4 text-xs bg-sell/10 hover:bg-sell/20 text-sell-foreground"
-                              >
-                                Sell
-                              </Button>
-                              {priceData && (
-                                <PriceAlertDialog
-                                  symbol={item.symbol}
-                                  currentPrice={priceData.currentPrice}
-                                />
-                              )}
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  removeSymbolFromWatchlist(list.id, item.id);
-                                }}
-                                className="hover:bg-destructive/20 rounded p-4"
-                                aria-label={`Remove ${item.symbol} from ${list.name} watchlist`}
-                              >
-                                <X className="h-4 w-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </ScrollArea>
+                <WatchlistItems
+                  items={filteredItems}
+                  getPrice={getPrice}
+                  onSymbolClick={handleSymbolClick}
+                  onQuickTrade={handleQuickTrade}
+                  onRemoveSymbol={handleRemoveSymbol}
+                  onAddSymbolClick={() => {/* Dialog opens on button click */}}
+                />
               </TabsContent>
             ))}
           </Tabs>

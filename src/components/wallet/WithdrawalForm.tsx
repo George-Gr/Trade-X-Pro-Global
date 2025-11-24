@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2, AlertTriangle, CheckCircle2, Clock, DollarSign, TrendingDown, Shield } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { validationRules } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 interface WithdrawalFormProps {
   onSuccess?: () => void;
@@ -257,71 +258,98 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
       {/* Withdrawal Form */}
       {isKYCVerified && (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="currency">Cryptocurrency</Label>
-            <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SUPPORTED_CRYPTOS.map((crypto) => (
-                  <SelectItem key={crypto.value} value={crypto.value}>
-                    {crypto.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {selectedCrypto && (
-              <p className="text-xs text-muted-foreground">
-                Min: {selectedCrypto.min} {currency} • Network Fee: {selectedCrypto.networkFee} {currency} (~${(parseFloat(selectedCrypto.networkFee) * 1000).toFixed(0)}) • Est. Time: {selectedCrypto.avgTime}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="address">Withdrawal Address</Label>
-            <Input
-              id="address"
-              placeholder={`Enter your ${watchedCurrency} address`}
-              {...register("address", {
-                required: "Please enter a withdrawal address",
-                validate: (val: string) => validateAddress(val, watchedCurrency) || `Please enter a valid ${watchedCurrency} address`,
-              })}
-              className="font-mono text-sm"
-            />
-            {errors.address && (
-              <p className="text-sm text-destructive mt-1">{errors.address.message}</p>
-            )}
-            <p className="text-xs text-muted-foreground">
-              Enter a valid {watchedCurrency} address. This cannot be changed after submission.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount ({currency})</Label>
-            <div className="relative">
-              <DollarSign className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="amount"
-                type="number"
-                placeholder="0.00"
-                {...register("amount", validationRules.amount)}
-                className="pl-8"
-                min="0"
-                step="0.01"
-                disabled={!canWithdraw}
-              />
-            </div>
-            {errors.amount && (
-              <p className="text-sm text-destructive mt-1">{errors.amount.message}</p>
-            )}
-            {watchedAmount && (
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Network Fee: {networkFee} {watchedCurrency}</span>
-                <span>Total: {(parseFloat(watchedAmount) + networkFee).toFixed(8)} {watchedCurrency}</span>
+          <Form {...form}>
+            <form className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="currency">Cryptocurrency</Label>
+                <Select value={currency} onValueChange={setCurrency}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUPPORTED_CRYPTOS.map((crypto) => (
+                      <SelectItem key={crypto.value} value={crypto.value}>
+                        {crypto.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedCrypto && (
+                  <p className="text-xs text-muted-foreground">
+                    Min: {selectedCrypto.min} {currency} • Network Fee: {selectedCrypto.networkFee} {currency} (~${(parseFloat(selectedCrypto.networkFee) * 1000).toFixed(0)}) • Est. Time: {selectedCrypto.avgTime}
+                  </p>
+                )}
               </div>
-            )}
-          </div>
+
+              <FormField
+                control={form.control}
+                name="address"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="address">Withdrawal Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="address"
+                        placeholder={`Enter your ${watchedCurrency} address`}
+                        {...register("address", {
+                          required: "Please enter a withdrawal address",
+                          validate: (val: string) => validateAddress(val, watchedCurrency) || `Please enter a valid ${watchedCurrency} address`,
+                        })}
+                        className="font-mono text-sm"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                    <p className="text-xs text-muted-foreground">
+                      Enter a valid {watchedCurrency} address. This cannot be changed after submission.
+                    </p>
+                  </FormItem>
+                )}
+              />
+
+          <FormField
+                control={form.control}
+                name="amount"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="amount">Amount ({currency})</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <DollarSign className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="amount"
+                          type="number"
+                          placeholder="0.00"
+                          {...register("amount", validationRules.amount)}
+                          className="pl-8"
+                          min="0"
+                          step="0.01"
+                          disabled={!canWithdraw}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                    {watchedAmount && (
+                      <div className="flex justify-between text-sm text-muted-foreground">
+                        <span>Network Fee: {networkFee} {watchedCurrency}</span>
+                        <span>Total: {(parseFloat(watchedAmount) + networkFee).toFixed(8)} {watchedCurrency}</span>
+                      </div>
+                    )}
+                  </FormItem>
+                )}
+              />
+
+              {/* Form submission button */}
+              <Button
+                type="submit"
+                onClick={() => handleSubmit(onSubmit)()}
+                disabled={!canWithdraw || loading}
+                className="w-full"
+              >
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Request Withdrawal
+              </Button>
+            </form>
+          </Form>
 
           {/* Fee Breakdown */}
           {amount && (
@@ -353,15 +381,6 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
               <strong>Important:</strong> Double-check the address. Funds sent to an incorrect address cannot be recovered.
             </AlertDescription>
           </Alert>
-
-          <Button
-            onClick={() => handleSubmit(onSubmit)()}
-            disabled={!canWithdraw || loading}
-            className="w-full"
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Request Withdrawal
-          </Button>
         </div>
       )}
 
@@ -395,23 +414,29 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="twofa">2FA Code (Email)</Label>
-              <Input
-                id="twofa"
-                placeholder="Enter 6-digit code"
-                {...register("twoFACode", {
-                  required: "2FA code is required",
-                  minLength: { value: 6, message: "Enter a 6-digit code" },
-                  maxLength: { value: 6, message: "Enter a 6-digit code" },
-                })}
-                maxLength={6}
-                pattern="[0-9]*"
+            <FormField
+                control={form.control}
+                name="twoFACode"
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor="twofa">2FA Code (Email)</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="twofa"
+                        placeholder="Enter 6-digit code"
+                        {...register("twoFACode", {
+                          required: "2FA code is required",
+                          minLength: { value: 6, message: "Enter a 6-digit code" },
+                          maxLength: { value: 6, message: "Enter a 6-digit code" },
+                        })}
+                        maxLength={6}
+                        pattern="[0-9]*"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {errors.twoFACode && (
-                <p className="text-sm text-destructive mt-1">{errors.twoFACode.message}</p>
-              )}
-            </div>
 
             <Alert>
               <CheckCircle2 className="h-4 w-4" />

@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, FileText, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { validationRules } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 interface KYCSubmissionProps {
   onSuccess?: () => void;
@@ -169,24 +170,31 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="document-type">Document Type</Label>
-            <Select {...register("documentType", validationRules.documentType)}>
-              <SelectTrigger id="document-type">
-                <SelectValue placeholder="Select document type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="passport">Passport</SelectItem>
-                <SelectItem value="national_id">National ID Card</SelectItem>
-                <SelectItem value="drivers_license">Driver's License</SelectItem>
-                <SelectItem value="proof_of_address">Proof of Address</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.documentType && (
-              <p className="text-sm text-destructive mt-1">{errors.documentType.message}</p>
-            )}
-          </div>
+        <Form {...form}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="documentType"
+              render={() => (
+                <FormItem>
+                  <FormLabel htmlFor="document-type">Document Type</FormLabel>
+                  <FormControl>
+                    <Select {...register("documentType", validationRules.documentType)}>
+                      <SelectTrigger id="document-type">
+                        <SelectValue placeholder="Select document type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="passport">Passport</SelectItem>
+                        <SelectItem value="national_id">National ID Card</SelectItem>
+                        <SelectItem value="drivers_license">Driver's License</SelectItem>
+                        <SelectItem value="proof_of_address">Proof of Address</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
           <div className="space-y-2">
             <Label htmlFor="document-file">Document File</Label>
@@ -227,7 +235,8 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
               </>
             )}
           </Button>
-        </form>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

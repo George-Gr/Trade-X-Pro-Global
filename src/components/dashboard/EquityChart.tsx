@@ -127,7 +127,7 @@ export const EquityChart: React.FC = () => {
         </div>
 
         {/* Chart */}
-        <div style={{ width: '100%', height: 250 }}>
+        <div className="aspect-[16/9] w-full">
           <ResponsiveContainer>
             <LineChart data={visibleData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />

@@ -1,22 +1,24 @@
-import { useState, useRef } from "react";
-import EnhancedWatchlist from "@/components/trading/EnhancedWatchlist";
-import AssetTree from "@/components/trading/AssetTree";
-import TradingPanel from "@/components/trading/TradingPanel";
-import EnhancedPortfolioDashboard from "@/components/trading/EnhancedPortfolioDashboard";
-import ChartPanel from "@/components/trading/ChartPanel";
+import { useState, useRef, Suspense, lazy } from "react";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import TradingViewMarketsWidget from "@/components/trading/TradingViewMarketsWidget";
-import TechnicalIndicators from "@/components/trading/TechnicalIndicators";
-import MarketSentiment from "@/components/trading/MarketSentiment";
-import TradingSignals from "@/components/trading/TradingSignals";
-import EconomicCalendar from "@/components/trading/EconomicCalendar";
-import { KYCStatusBanner } from "@/components/trading/KYCStatusBanner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+
+// Lazy load heavy components for better bundle splitting
+const EnhancedWatchlist = lazy(() => import("@/components/trading/EnhancedWatchlist"));
+const AssetTree = lazy(() => import("@/components/trading/AssetTree"));
+const TradingPanel = lazy(() => import("@/components/trading/TradingPanel"));
+const EnhancedPortfolioDashboard = lazy(() => import("@/components/trading/EnhancedPortfolioDashboard"));
+const ChartPanel = lazy(() => import("@/components/trading/ChartPanel"));
+const TradingViewMarketsWidget = lazy(() => import("@/components/trading/TradingViewMarketsWidget"));
+const TechnicalIndicators = lazy(() => import("@/components/trading/TechnicalIndicators"));
+const MarketSentiment = lazy(() => import("@/components/trading/MarketSentiment"));
+const TradingSignals = lazy(() => import("@/components/trading/TradingSignals"));
+const EconomicCalendar = lazy(() => import("@/components/trading/EconomicCalendar"));
+const KYCStatusBanner = lazy(() => import("@/components/trading/KYCStatusBanner"));
 
 const Trade = () => {
   const [selectedSymbol, setSelectedSymbol] = useState("EURUSD");
@@ -46,7 +48,9 @@ const Trade = () => {
       <div className="flex-1 flex flex-col overflow-hidden h-full">
         {/* KYC Status Banner */}
         <div className="flex-shrink-0 px-4 pt-4">
-          <KYCStatusBanner />
+          <Suspense fallback={<div className="h-12 bg-muted/50 rounded animate-pulse" />}>
+            <KYCStatusBanner />
+          </Suspense>
         </div>
 
         {/* Mobile-first layout: stack vertically on mobile, 2-col on tablet, 3-col on desktop */}
@@ -55,10 +59,12 @@ const Trade = () => {
           {/* Hidden on mobile, shown as drawer trigger */}
           {/* Visible on tablet+ */}
           <div className="hidden lg:flex w-80 border-r border-border flex-shrink-0 overflow-hidden">
-            <EnhancedWatchlist 
-              onSelectSymbol={setSelectedSymbol} 
-              onQuickTrade={handleQuickTrade}
-            />
+            <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+              <EnhancedWatchlist 
+                onSelectSymbol={setSelectedSymbol} 
+                onQuickTrade={handleQuickTrade}
+              />
+            </Suspense>
           </div>
 
           {/* Center - Chart & Trading (primary content) */}
@@ -83,16 +89,18 @@ const Trade = () => {
                     <DrawerTitle>Watchlist</DrawerTitle>
                   </DrawerHeader>
                   <div className="overflow-auto px-4 pb-4">
-                    <EnhancedWatchlist 
-                      onSelectSymbol={(symbol) => {
-                        setSelectedSymbol(symbol);
-                        setShowWatchlistDrawer(false);
-                      }} 
-                      onQuickTrade={(symbol, side) => {
-                        handleQuickTrade(symbol, side);
-                        setShowWatchlistDrawer(false);
-                      }}
-                    />
+                    <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+                      <EnhancedWatchlist 
+                        onSelectSymbol={(symbol) => {
+                          setSelectedSymbol(symbol);
+                          setShowWatchlistDrawer(false);
+                        }} 
+                        onQuickTrade={(symbol, side) => {
+                          handleQuickTrade(symbol, side);
+                          setShowWatchlistDrawer(false);
+                        }}
+                      />
+                    </Suspense>
                   </div>
                 </DrawerContent>
               </Drawer>
@@ -116,9 +124,13 @@ const Trade = () => {
                   </DrawerHeader>
                   <div className="overflow-auto px-4 pb-4">
                     <div className="space-y-4">
-                      <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
+                      <Suspense fallback={<div className="h-64 bg-muted/50 rounded animate-pulse" />}>
+                        <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
+                      </Suspense>
                       <div ref={tradingPanelRef} className="border-t border-border pt-4">
-                        <TradingPanel symbol={selectedSymbol} />
+                        <Suspense fallback={<div className="h-96 bg-muted/50 rounded animate-pulse" />}>
+                          <TradingPanel symbol={selectedSymbol} />
+                        </Suspense>
                       </div>
                     </div>
                   </div>
@@ -128,12 +140,16 @@ const Trade = () => {
 
             {/* Chart */}
             <div className="flex-1 overflow-hidden min-h-0">
-              <ChartPanel symbol={selectedSymbol} />
+              <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+                <ChartPanel symbol={selectedSymbol} />
+              </Suspense>
             </div>
 
             {/* Portfolio Dashboard */}
             <div className="h-96 border-t border-border flex-shrink-0 overflow-hidden">
-              <EnhancedPortfolioDashboard />
+              <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+                <EnhancedPortfolioDashboard />
+              </Suspense>
             </div>
           </div>
 
@@ -181,10 +197,14 @@ const Trade = () => {
                 aria-labelledby="tab-trigger-trade"
               >
                 <div className="flex-1 overflow-auto">
-                  <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
+                  <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+                    <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
+                  </Suspense>
                 </div>
                 <div ref={tradingPanelRef} className="border-t border-border">
-                  <TradingPanel symbol={selectedSymbol} />
+                  <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+                    <TradingPanel symbol={selectedSymbol} />
+                  </Suspense>
                 </div>
               </TabsContent>
               
@@ -195,11 +215,19 @@ const Trade = () => {
                 role="tabpanel"
                 aria-labelledby="tab-trigger-analysis"
               >
-                <TechnicalIndicators symbol={selectedSymbol} />
-                <MarketSentiment symbol={selectedSymbol} />
-                <TradingSignals symbol={selectedSymbol} />
+                <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
+                  <TechnicalIndicators symbol={selectedSymbol} />
+                </Suspense>
+                <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
+                  <MarketSentiment symbol={selectedSymbol} />
+                </Suspense>
+                <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
+                  <TradingSignals symbol={selectedSymbol} />
+                </Suspense>
                 <TradingViewErrorBoundary widgetType="Economic Calendar">
-                  <EconomicCalendar />
+                  <Suspense fallback={<div className="h-64 bg-muted/50 rounded animate-pulse" />}>
+                    <EconomicCalendar />
+                  </Suspense>
                 </TradingViewErrorBoundary>
               </TabsContent>
               
@@ -211,7 +239,9 @@ const Trade = () => {
                 aria-labelledby="tab-trigger-markets"
               >
                 <TradingViewErrorBoundary widgetType="Markets Widget">
-                  <TradingViewMarketsWidget />
+                  <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
+                    <TradingViewMarketsWidget />
+                  </Suspense>
                 </TradingViewErrorBoundary>
               </TabsContent>
             </Tabs>
