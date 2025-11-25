@@ -1,4 +1,5 @@
 import { ReactNode, useState, useEffect } from "react";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 import { TrendingUp, LogOut, User, Clock, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
 // Separate component that has access to sidebar context
 interface AuthenticatedLayoutContentProps {
   children: ReactNode;
-  user: any;
+  user: SupabaseUser | null;
   handleLogoutClick: () => void;
 }
 

@@ -46,7 +46,7 @@ export function useKyc(userId?: string) {
       if (docsErr) throw docsErr;
       
       // Map database documents to KycDocumentData format
-      const mappedDocs = (docs || []).map((doc: { [key: string]: any }) => ({
+      const mappedDocs = (docs || []).map((doc: Record<string, unknown>) => ({
         id: doc.id,
         kyc_request_id: doc.id,
         type: doc.document_type,

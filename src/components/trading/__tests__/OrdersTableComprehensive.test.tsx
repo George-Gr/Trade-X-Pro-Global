@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { OrderStatusBadge, classifyOrderStatus, calculateFillPercentage, type OrderStatus } from '../OrderStatusBadge';
+import { OrderStatusBadge } from '../OrderStatusBadge';
+import { classifyOrderStatus, calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
 import { OrderRow, type Order } from '../OrderRow';
 import { OrderDetailDialog } from '../OrderDetailDialog';
 import { ModifyOrderDialog, type OrderModification } from '../ModifyOrderDialog';

@@ -87,11 +87,14 @@ export const usePriceStream = ({
           if (message.type === 'prices' && message.data) {
             const newPrices = new Map<string, PriceData>();
             for (const [symbol, data] of Object.entries(message.data)) {
-              const priceInfo = data as any;
+              // Supabase function returns Finnhub-like response
+              const priceInfo = data as {
+                c: number; d: number; dp: number; h: number; l: number; o: number; pc: number; t: number;
+                provider?: string; cached?: boolean; error?: boolean;
+              };
               if (priceInfo.error) {
                 continue;
               }
-              
               newPrices.set(symbol, {
                 symbol,
                 currentPrice: Number(priceInfo.c) || 0,
@@ -103,12 +106,11 @@ export const usePriceStream = ({
                 low: Number(priceInfo.l) || 0,
                 open: Number(priceInfo.o) || 0,
                 previousClose: Number(priceInfo.pc) || 0,
-                timestamp: message.timestamp,
-                provider: String(priceInfo.provider || ''),
-                cached: Boolean(priceInfo.cached),
+                timestamp: Number(priceInfo.t) || Date.now(),
+                provider: priceInfo.provider,
+                cached: priceInfo.cached,
               });
             }
-            
             setPrices(newPrices);
           }
         } catch (err) {

@@ -3,7 +3,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Edit, X, Copy } from 'lucide-react';
-import { OrderStatusBadge, calculateFillPercentage, type OrderStatus } from './OrderStatusBadge';
+import { OrderStatusBadge } from './OrderStatusBadge';
+import { calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
 import type { Order } from './OrderRow';
 
 interface OrdersTableMobileProps {

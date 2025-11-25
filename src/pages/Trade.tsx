@@ -167,7 +167,7 @@ const Trade = () => {
           {/* Shown on md+ but narrower on md, full width on lg */}
           <div className="hidden md:flex w-64 lg:w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden max-w-[min(100%,384px)]">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="w-full rounded-none" role="tablist" aria-label="Trading analysis tabs">
+              <TabsList className="w-full" role="tablist" aria-label="Trading analysis tabs">
                 <TabsTrigger 
                   value="trade" 
                   className="flex-1 text-xs md:text-sm" 

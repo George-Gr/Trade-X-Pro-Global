@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
-import { OrderStatusBadge, calculateFillPercentage, type OrderStatus } from './OrderStatusBadge';
+import { OrderStatusBadge } from './OrderStatusBadge';
+import { calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
 import { Copy, MoreHorizontal, Trash2, Edit } from 'lucide-react';
 import {
   DropdownMenu,
@@ -177,10 +178,10 @@ export const OrderRow = memo(({
           {order.realized_pnl !== undefined && (
             <div className="flex-1 min-w-0">
               <span
-                className={`text-sm font-medium ${
-                  order.realized_pnl > 0 ? 'text-buy' : 'text-sell'
-                }`}
-              >
+                  className={`text-sm font-medium ${
+                    order.realized_pnl > 0 ? 'text-buy text-green-600' : 'text-sell text-red-600'
+                  }`}
+                >
                 {order.realized_pnl > 0 ? '+' : ''}
                 ${order.realized_pnl.toFixed(2)}
               </span>
@@ -202,7 +203,7 @@ export const OrderRow = memo(({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-11 w-11" aria-label="More options">
+                <Button variant="ghost" size="sm" className="p-0" aria-label="More options">
                   <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>

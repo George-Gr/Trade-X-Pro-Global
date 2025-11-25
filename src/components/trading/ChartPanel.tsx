@@ -14,25 +14,25 @@ const ChartPanel = ({ symbol }: ChartPanelProps) => {
         <div className="flex items-center gap-4">
           <div className="font-semibold">{symbol}</div>
           <div className="flex items-center gap-4 text-sm">
-            <Button variant="ghost" size="sm" className="h-7 px-4">
+            <Button variant="ghost" size="sm">
               1m
             </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-4">
+            <Button variant="ghost" size="sm">
               5m
             </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-4 bg-primary/10">
+            <Button variant="ghost" size="sm" className="bg-primary/10">
               15m
             </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-4">
+            <Button variant="ghost" size="sm">
               30m
             </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-4">
+            <Button variant="ghost" size="sm">
               1h
             </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-4">
+            <Button variant="ghost" size="sm">
               4h
             </Button>
-            <Button variant="ghost" size="sm" className="h-7 px-4">
+            <Button variant="ghost" size="sm">
               1d
             </Button>
           </div>

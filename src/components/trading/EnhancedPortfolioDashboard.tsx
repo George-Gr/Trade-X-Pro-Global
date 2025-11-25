@@ -42,7 +42,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     });
     return map;
   }, [positions]);
-  const { positionPnLMap } = usePnLCalculations(positions as any, priceMap, undefined, {});
+  const { positionPnLMap } = usePnLCalculations(positions as Position[], priceMap, undefined, {});
 
   // Calculate comprehensive portfolio metrics
   const metrics = useMemo((): PortfolioMetrics => {
@@ -182,7 +182,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
 
       {/* Tabs - Positions and Orders */}
       <Tabs defaultValue="positions" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="w-full border-b border-border rounded-none bg-muted/20">
+        <TabsList className="w-full border-b border-border bg-muted/20">
           <TabsTrigger value="positions" className="flex-1">
             <Zap className="h-4 w-4 mr-2" />
             Positions

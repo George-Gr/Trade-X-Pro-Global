@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { PositionsGrid, Position, calculateUnrealizedPnL } from './PositionsGrid';
+import { PositionsGrid } from './PositionsGrid';
+import type { Position } from '@/types/position';
+import { calculateUnrealizedPnL } from '@/lib/trading/positionUtils';
 import { useRealtimePositions } from '@/hooks/useRealtimePositions';
 import { PositionRow } from './PositionRow';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -59,14 +61,17 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
             {isLoading ? 'Loading...' : `${rows.length} position${rows.length !== 1 ? 's' : ''}`}
           </span>
           {selectedCount > 0 && (
-            <Button 
-              onClick={bulkClose} 
-              variant="destructive"
-              size="sm"
-              className="transition-all duration-200"
-            >
-              Close {selectedCount} Selected
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={bulkClose} 
+                variant="destructive"
+                size="sm"
+                className="transition-all duration-200"
+              >
+                Close Selected
+              </Button>
+              <span className="text-sm text-muted-foreground">{selectedCount}</span>
+            </div>
           )}
         </div>
       </div>

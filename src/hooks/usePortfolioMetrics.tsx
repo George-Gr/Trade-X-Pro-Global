@@ -89,7 +89,9 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       if (historyError) throw historyError;
 
       // Build equity history
-      const history = (portfolioHistory || []).map((h: any) => h.equity || 0);
+      const history = (portfolioHistory || [])
+        .filter((h: any) => h && typeof h.equity === 'number' && !h.error)
+        .map((h: any) => h.equity);
       if (history.length > 0) {
         setEquityHistory(history);
       }

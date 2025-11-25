@@ -358,7 +358,7 @@ export function generateRiskDashboardHTMLReport(
         .metric-card {
             background: #f8f9fa;
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 6px;
             border-left: 4px solid #007bff;
         }
         .metric-label {

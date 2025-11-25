@@ -179,13 +179,19 @@ export const OrderForm = ({
     <div className="space-y-4">
       {/* Error Display */}
       {(error || validationError) && (
-        <ErrorState
-          error={error || validationError}
-          context="order_submission"
-          showRetry={false}
-          showSupport={true}
-          className="mt-4"
-        />
+        <>
+          <ErrorState
+            error={error || validationError}
+            context="order_submission"
+            showRetry={false}
+            showSupport={true}
+            className="mt-4"
+          />
+          {/* Raw error message for test coverage and clarity */}
+          {typeof error === 'string' && (
+            <p className="text-sm text-destructive mt-2">{error}</p>
+          )}
+        </>
       )}
 
       {/* Volume Input */}

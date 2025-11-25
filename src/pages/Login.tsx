@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { validationRules } from "@/lib/validationRules";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -94,11 +94,15 @@ const Login = () => {
                       <FormControl>
                         <Input
                           id="email"
+                          type="email"
                           placeholder="Enter your email"
+                          label="Email Address"
+                          description="Enter your registered email address"
                           {...register("email", validationRules.email)}
                           disabled={isLoading}
-                        />
+                        </Input>
                       </FormControl>
+                      <FormDescription>Enter your registered email address</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -115,10 +119,13 @@ const Login = () => {
                           id="password"
                           type="password"
                           placeholder="Enter your password"
+                          label="Password"
+                          description="Enter your account password"
                           {...register("password", validationRules.password)}
                           disabled={isLoading}
-                        />
+                        </Input>
                       </FormControl>
+                      <FormDescription>Enter your account password</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

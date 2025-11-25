@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
-import type { OrderStatus } from '@/lib/trading/orderStatusUtils';
+import { classifyOrderStatus, calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
 
 interface OrderStatusBadgeProps {
   status: OrderStatus;

@@ -200,7 +200,7 @@ export default function Index() {
             ].map((feature, index) => (
               <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-border bg-card">
                 <CardContent className="p-8">
-                  <div className={`h-16 w-16 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`h-16 w-16 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <feature.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
@@ -258,7 +258,7 @@ export default function Index() {
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-border bg-card">
                   <CardContent className="p-8 text-center">
                     <div className={`text-6xl font-bold ${step.color} mb-6 opacity-20`}>{step.step}</div>
-                    <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-primary to-gold flex items-center justify-center mx-auto mb-6">
+                    <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-gold flex items-center justify-center mx-auto mb-6">
                       <step.icon className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
@@ -334,7 +334,7 @@ export default function Index() {
             ].map((asset, index) => (
               <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-border bg-card">
                 <CardContent className="p-6 text-center">
-                  <div className={`h-16 w-16 rounded-xl bg-gradient-to-br ${asset.gradient} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`h-16 w-16 rounded-lg bg-gradient-to-br ${asset.gradient} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <asset.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{asset.title}</h3>

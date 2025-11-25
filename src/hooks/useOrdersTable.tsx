@@ -52,22 +52,22 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
-      const mappedOrders: OrderTableItem[] = (data || []).map((order: { [key: string]: any }) => ({
-        id: order.id,
-        user_id: order.user_id,
-        symbol: order.symbol,
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: any) => ({
+        id: typeof order.id === 'string' ? order.id : String(order.id ?? ''),
+        user_id: typeof order.user_id === 'string' ? order.user_id : String(order.user_id ?? ''),
+        symbol: typeof order.symbol === 'string' ? order.symbol : String(order.symbol ?? ''),
         type: order.order_type as OrderType,
         side: order.side as OrderSide,
-        quantity: order.quantity,
+        quantity: typeof order.quantity === 'number' ? order.quantity : Number(order.quantity ?? 0),
         filled_quantity: 0, // TODO: Calculate from fills table
-        price: order.price,
-        limit_price: order.price,
-        stop_price: order.price,
-        status: order.status,
-        created_at: order.created_at,
-        updated_at: order.created_at, // Use created_at as fallback
-        average_fill_price: order.fill_price,
-        commission: order.commission,
+        price: typeof order.price === 'number' ? order.price : null,
+        limit_price: typeof order.price === 'number' ? order.price : null,
+        stop_price: typeof order.price === 'number' ? order.price : null,
+        status: typeof order.status === 'string' ? order.status : String(order.status ?? ''),
+        created_at: typeof order.created_at === 'string' ? order.created_at : String(order.created_at ?? ''),
+        updated_at: typeof order.updated_at === 'string' ? order.updated_at : String(order.updated_at ?? ''),
+        average_fill_price: typeof order.fill_price === 'number' ? order.fill_price : null,
+        commission: typeof order.commission === 'number' ? order.commission : null,
         slippage: null,
         realized_pnl: null,
       }));

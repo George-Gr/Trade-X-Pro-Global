@@ -1,7 +1,7 @@
 import React, { useMemo, useState, CSSProperties } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Position } from '@/types/position';
-import { calculateUnrealizedPnL } from './PositionsGrid';
+import { calculateUnrealizedPnL } from '@/lib/trading/positionUtils';
 import { useRealtimePositions } from '@/hooks/useRealtimePositions';
 import { PositionRow } from './PositionRow';
 

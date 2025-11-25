@@ -71,7 +71,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8" style={{ gridAutoRows: 'minmax(auto, 1fr)' }}>
         {stats.map((stat) => {
           const Icon = stat.icon;
-          const isEmptyState = (stat as any).empty;
+          const isEmptyState = 'empty' in stat && stat.empty;
           const isNeutral = stat.trend === "neutral" && !stat.change.includes("+") && !stat.change.includes("-");
           
           return (
@@ -219,7 +219,7 @@ const Dashboard = () => {
           </div>
           <Button 
             onClick={() => navigate("/trade")} 
-            className="w-full h-12 gap-3 font-semibold text-base bg-primary hover:bg-primary/90"
+            className="w-full gap-3 font-semibold bg-primary hover:bg-primary/90"
             size="lg"
           >
             <TrendingUp className="h-5 w-5" />

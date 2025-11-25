@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Position } from './PositionsGrid';
+import type { Position } from '@/types/position';
 
 export const PositionCloseDialog: React.FC<{ position: Position; onClose: () => void; onConfirm: (quantity?: number) => Promise<void> }> = ({ position, onClose, onConfirm }) => {
   const [quantity, setQuantity] = useState<number | undefined>(undefined);

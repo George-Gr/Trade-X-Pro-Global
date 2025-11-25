@@ -574,11 +574,11 @@ export function formatLiquidationStatus(status: LiquidationStatus): {
     LiquidationStatus,
     { label: string; color: string }
   > = {
-    [LiquidationStatus.PENDING]: { label: 'Pending', color: 'text-status-warning' },
-    [LiquidationStatus.IN_PROGRESS]: { label: 'In Progress', color: 'text-status-info' },
-    [LiquidationStatus.COMPLETED]: { label: 'Completed', color: 'text-status-error' },
-    [LiquidationStatus.FAILED]: { label: 'Failed', color: 'text-status-error' },
-    [LiquidationStatus.PARTIAL]: { label: 'Partial', color: 'text-status-critical' },
+    [LiquidationStatus.PENDING]: { label: 'Pending', color: 'text-yellow-600' },
+    [LiquidationStatus.IN_PROGRESS]: { label: 'In Progress', color: 'text-blue-600' },
+    [LiquidationStatus.COMPLETED]: { label: 'Completed', color: 'text-red-600' },
+    [LiquidationStatus.FAILED]: { label: 'Failed', color: 'text-red-600' },
+    [LiquidationStatus.PARTIAL]: { label: 'Partial', color: 'text-orange-600' },
     [LiquidationStatus.CANCELLED]: { label: 'Cancelled', color: 'text-muted-foreground' },
   };
   return labels[status];

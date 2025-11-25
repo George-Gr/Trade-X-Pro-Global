@@ -463,7 +463,7 @@ describe('OrderForm and OrderPreview Integration', () => {
             side: 'buy',
             quantity: 1,
             type: 'market',
-          } as any}
+          } as Partial<OrderFormData>}
           currentPrice={1.0950}
         />
       </div>

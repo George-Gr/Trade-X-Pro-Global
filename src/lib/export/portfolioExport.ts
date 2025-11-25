@@ -89,7 +89,7 @@ export const generatePDFHTML = (data: PortfolioExportData): string => {
           th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
           th { background-color: #f8f9fa; font-weight: bold; }
           .summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0; }
-          .summary-item { padding: 10px; background: #f8f9fa; border-radius: 4px; }
+          .summary-item { padding: 10px; background: #f8f9fa; border-radius: 6px; }
           .summary-label { font-weight: bold; color: #666; }
           .summary-value { font-size: 18px; color: #333; margin-top: 5px; }
           .positive { color: #28a745; }

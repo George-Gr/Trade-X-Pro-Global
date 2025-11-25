@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { calculateUnrealizedPnL, getPositionColor } from './PositionsGrid';
+import { calculateUnrealizedPnL, getPositionColor } from '@/lib/trading/positionUtils';
 import type { Position } from '@/types/position';
 import { PositionCloseDialog } from './PositionCloseDialog';
 import { usePositionClose } from '@/hooks/usePositionClose';
@@ -24,7 +24,7 @@ export const PositionRow = memo(({ position, onView, selectable = false, selecte
       <div role="cell">{position.quantity}</div>
       <div role="cell">{position.entry_price.toFixed(4)}</div>
       <div role="cell">{position.current_price.toFixed(4)}</div>
-      <div role="cell" className={`font-medium ${color === 'green' ? 'text-buy' : color === 'red' ? 'text-sell' : ''}`}>
+      <div role="cell" className={`font-medium ${color === 'green' ? 'text-buy text-green-600' : color === 'red' ? 'text-sell text-red-600' : ''}`}>
         {pnl.toFixed(2)}
       </div>
 

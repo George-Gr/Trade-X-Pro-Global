@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { validationRules } from "@/lib/validationRules";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 
 interface RegisterFormData {
   fullName: string;
@@ -100,6 +100,8 @@ const Register = () => {
                         id="fullName"
                         type="text"
                         placeholder="John Doe"
+                        label="Full Name"
+                        description="Enter your full legal name as it appears on your identification"
                         {...register("fullName", validationRules.fullName)}
                         disabled={isLoading}
                       />
@@ -120,6 +122,8 @@ const Register = () => {
                         id="email"
                         type="email"
                         placeholder="your@email.com"
+                        label="Email Address"
+                        description="Enter your email address for account notifications"
                         {...register("email", validationRules.email)}
                         disabled={isLoading}
                       />
@@ -140,14 +144,14 @@ const Register = () => {
                         id="password"
                         type="password"
                         placeholder="••••••••"
+                        label="Password"
+                        description="Create a strong password with at least 8 characters"
                         {...register("password", validationRules.password)}
                         disabled={isLoading}
                       />
                     </FormControl>
+                    <FormDescription>Create a strong password with at least 8 characters</FormDescription>
                     <FormMessage />
-                    <p className="text-xs text-muted-foreground">
-                      Minimum 8 characters
-                    </p>
                   </FormItem>
                 )}
               />
@@ -163,6 +167,8 @@ const Register = () => {
                         id="confirmPassword"
                         type="password"
                         placeholder="••••••••"
+                        label="Confirm Password"
+                        description="Re-enter your password to confirm it matches"
                         {...register("confirmPassword", {
                           required: "Please confirm your password",
                           validate: (value) =>

@@ -300,7 +300,12 @@ describe('Payment Integration - Withdrawal Tests', () => {
     });
 
     it('should create audit log entries for withdrawal actions', () => {
-      const auditLogs: any[] = [];
+      type AuditLogEntry = {
+        action: string;
+        reason: string;
+        timestamp: Date;
+      };
+      const auditLogs: AuditLogEntry[] = [];
 
       const logAction = (action: string, reason: string) => {
         auditLogs.push({
@@ -473,7 +478,8 @@ describe('Payment Integration - Withdrawal Tests', () => {
         { amount: 100, timestamp: Date.now() + 180000 }, // 3 min later
       ];
 
-      const flagSuspicious = (withdrawals: any[]) => {
+      type Withdrawal = { amount: number; timestamp: number };
+      const flagSuspicious = (withdrawals: Withdrawal[]) => {
         const timeDiffs = withdrawals.slice(1).map((w, i) => 
           w.timestamp - withdrawals[i].timestamp
         );

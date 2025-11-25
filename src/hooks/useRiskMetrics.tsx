@@ -80,7 +80,17 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       // Calculate portfolio risk assessment
       const concentration = calculateConcentration(positionsData as Position[]);
-      const assessment = assessPortfolioRisk(metrics, positionsData as any[], concentration);
+      const assessment = assessPortfolioRisk(
+        metrics,
+        Array.isArray(positionsData)
+          ? positionsData.map((p: any) => ({
+              symbol: typeof p.symbol === 'string' ? p.symbol : String(p.symbol ?? ''),
+              quantity: typeof p.quantity === 'number' ? p.quantity : Number(p.quantity ?? 0),
+              positionValue: (Number(p.quantity ?? 0)) * (Number(p.current_price ?? 0)),
+            }))
+          : [],
+        concentration
+      );
       setPortfolioRiskAssessment(assessment);
 
       setError(null);

@@ -271,7 +271,7 @@ export function useRealtimePositions(
 
       try {
         if (subscriptionRef.current) {
-          await supabase.removeChannel(subscriptionRef.current as any);
+          await supabase.removeChannel(subscriptionRef.current as import('@supabase/supabase-js').RealtimeChannel);
         }
 
         setConnectionStatus("connecting");
@@ -280,20 +280,19 @@ export function useRealtimePositions(
         const channel = supabase
           .channel(`positions:${userId}`)
           .on(
-            "postgres_changes" as any,
+            'postgres_changes' as any,
             {
-              event: "*",
-              schema: "public",
-              table: "positions",
+              event: '*',
+              schema: 'public',
+              table: 'positions',
               filter: `user_id=eq.${userId}`,
             },
-            (payload: RealtimePositionUpdate) => {
+            (payload: any) => {
               if (debounceTimerRef.current) {
                 clearTimeout(debounceTimerRef.current);
               }
-
               debounceTimerRef.current = setTimeout(() => {
-                handlePositionUpdate(payload, filter);
+                handlePositionUpdate(payload as RealtimePositionUpdate, filter);
               }, debounceMs);
             }
           )

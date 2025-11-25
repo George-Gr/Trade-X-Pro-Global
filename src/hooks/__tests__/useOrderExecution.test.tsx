@@ -45,7 +45,7 @@ describe('useOrderExecution', () => {
     const mockGetSession = vi.spyOn(supabase.auth, 'getSession');
     mockGetSession.mockResolvedValueOnce({
       data: { session: null },
-    } as any);
+    } as { data: { session: null } } );
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -68,14 +68,14 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { session: { user: { id: string } } } } );
 
     const mockInvoke = vi.spyOn(supabase.functions, 'invoke');
     mockInvoke.mockResolvedValueOnce({
       data: {
         error: 'Insufficient balance',
       },
-    } as any);
+    } as { data: { error: string } } );
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -98,7 +98,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { session: { user: { id: string } } } } );
 
     const mockOrderResponse = {
       success: true,
@@ -120,7 +120,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as { data: { data: typeof mockOrderResponse } } );
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -151,7 +151,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { session: { user: { id: string } } } } );
 
     const mockOrderResponse = {
       success: true,
@@ -173,7 +173,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as { data: { data: typeof mockOrderResponse } } );
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -201,7 +201,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { session: { user: { id: string } } } } );
 
     const mockOrderResponse = {
       success: true,
@@ -223,7 +223,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as { data: { data: typeof mockOrderResponse } } );
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -260,7 +260,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { session: { user: { id: string } } } } );
 
     const mockOrderResponse = {
       success: true,
@@ -282,7 +282,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as { data: { data: typeof mockOrderResponse } } );
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -317,7 +317,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { session: { user: { id: string } } } } );
 
     const mockInvoke = vi.spyOn(supabase.functions, 'invoke');
     mockInvoke.mockRejectedValueOnce(new Error('Network error'));
@@ -344,7 +344,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as { data: { data: typeof mockOrderResponse } } );
 
     const mockInvoke = vi.spyOn(supabase.functions, 'invoke');
     mockInvoke.mockResolvedValue({

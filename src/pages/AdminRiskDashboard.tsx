@@ -85,7 +85,7 @@ const AdminRiskDashboard = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  marginCalls?.map((call: { [key: string]: any }) => (
+                  marginCalls?.map((call: MarginCallEvent) => (
                     <TableRow key={call.id}>
                       <TableCell>
                         <div className="font-medium">{call.profiles?.full_name || "Unknown"}</div>

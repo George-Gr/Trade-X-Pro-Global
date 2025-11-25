@@ -8,7 +8,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { OrderStatusBadge, calculateFillPercentage, type OrderStatus } from './OrderStatusBadge';
+import { OrderStatusBadge } from './OrderStatusBadge';
+import { calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
 import { Copy, X } from 'lucide-react';
 
 export interface Order {
@@ -154,7 +155,7 @@ export const OrderDetailDialog = ({
                 <span className="text-xs text-muted-foreground">Total P&L</span>
                 <div
                   className={`text-lg font-bold ${
-                    order.realized_pnl && order.realized_pnl > 0 ? 'text-buy' : 'text-sell'
+                    order.realized_pnl && order.realized_pnl > 0 ? 'text-buy text-green-600' : 'text-sell text-red-600'
                   }`}
                 >
                   {order.realized_pnl !== undefined ? (
