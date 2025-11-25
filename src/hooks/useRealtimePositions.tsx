@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "./useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from '@/lib/supabaseBrowserClient';
 import type { Position } from '@/types/position';
 
 export interface RealtimePositionUpdate {
