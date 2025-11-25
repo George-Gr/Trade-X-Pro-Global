@@ -132,10 +132,42 @@ const config: Config = {
           from: { opacity: "1" },
           to: { opacity: "0" },
         },
+        "slideInUp": {
+          from: { 
+            opacity: "0",
+            transform: "translateY(20px)"
+          },
+          to: { 
+            opacity: "1",
+            transform: "translateY(0)"
+          },
+        },
+        "scaleIn": {
+          from: {
+            opacity: "0",
+            transform: "scale(0.95)"
+          },
+          to: {
+            opacity: "1",
+            transform: "scale(1)"
+          },
+        },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0px)"
+          },
+          "50%": {
+            transform: "translateY(-10px)"
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 150ms ease-out",
         "accordion-up": "accordion-up 150ms ease-out",
+        "fade-in": "fadeIn 0.6s ease-out",
+        "slide-in-up": "slideInUp 0.6s ease-out",
+        "scale-in": "scaleIn 0.4s ease-out",
+        "float": "float 3s ease-in-out infinite",
       },
       transitionDuration: {
         "DEFAULT": "150ms",
