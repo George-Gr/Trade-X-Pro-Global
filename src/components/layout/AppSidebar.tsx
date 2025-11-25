@@ -46,7 +46,7 @@ export function AppSidebar() {
   return (
     <Sidebar 
       collapsible="icon" 
-      className="border-r border-border shadow-lg w-64 z-50 bg-white"
+      className="border-r border-border shadow-lg w-64 z-50 bg-background"
       variant="sidebar"
     >
       <SidebarContent className="text-sidebar-foreground">
