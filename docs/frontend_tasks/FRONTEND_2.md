@@ -1603,9 +1603,9 @@ const { showSuccess, triggerSuccess, SuccessAnimation } = useSuccessAnimation();
 
 ---
 
-## 🔄 STATE-SPECIFIC ISSUES
+## 🔄 STATE-SPECIFIC ISSUES ✅ COMPLETED
 
-### Issue FE-061: Disabled Form Fields Look Unclear
+### Issue FE-061: Disabled Form Fields Look Unclear ✅ Completed
 **Severity:** 🟡 Minor  
 **Category:** Interaction  
 **Files Affected:** Forms
@@ -1616,11 +1616,18 @@ Disabled input uses `disabled:opacity-50` - text still readable but not obviousl
 **Solution:**
 Use `disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-muted`.
 
+**Implementation:**
+Updated `src/components/ui/input.tsx`:
+- Changed disabled opacity from `disabled:opacity-40` to `disabled:opacity-60` for better visibility
+- Added `disabled:bg-muted` to provide clear visual distinction for disabled fields
+- Maintained `disabled:cursor-not-allowed` for proper cursor feedback
+- Result: Disabled fields now have clearer visual state with better contrast and obvious non-interactive appearance
+
 **Estimated Fix Time:** 0.5 hours
 
 ---
 
-### Issue FE-062: Loading Skeleton Shape Mismatch
+### Issue FE-062: Loading Skeleton Shape Mismatch ✅ Completed
 **Severity:** 🟡 Minor  
 **Category:** Animation  
 **Files Affected:** Skeleton component
@@ -1631,11 +1638,40 @@ Skeleton loader doesn't match the actual content shape.
 **Solution:**
 Create skeleton variants for different content types.
 
+**Implementation:**
+Completely refactored `src/components/ui/skeleton.tsx` with comprehensive variants:
+
+**Skeleton Variants Created:**
+- `default`: Basic rounded skeleton (original behavior)
+- `text`: Single line text (h-4, full width)
+- `heading`: Heading text (h-8, 75% width)
+- `avatar`: Circular avatar (10x10)
+- `button`: Button shape (h-10, w-24)
+- `card`: Card container (h-32, full width)
+- `table`: Table row (h-12, full width)
+- `thumbnail`: Square thumbnail (24x24)
+- `badge`: Pill-shaped badge (h-6, w-16)
+- `input`: Input field (h-10, full width)
+
+**Convenience Components:**
+- `SkeletonText`: Multiple text lines with configurable count
+- `SkeletonCard`: Complete card skeleton (thumbnail + heading + text)
+- `SkeletonTable`: Table skeleton with configurable rows and columns
+- `SkeletonAvatar`: Avatar skeleton with custom sizing
+
+**Usage Examples:**
+```tsx
+<Skeleton variant="heading" />
+<SkeletonText lines={3} />
+<SkeletonCard />
+<SkeletonTable rows={5} columns={4} />
+```
+
 **Estimated Fix Time:** 1 hour
 
 ---
 
-### Issue FE-063: Readonly Fields Don't Look Readonly
+### Issue FE-063: Readonly Fields Don't Look Readonly ✅ Completed
 **Severity:** 🟡 Minor  
 **Category:** Interaction  
 **Files Affected:** Forms
@@ -1645,6 +1681,17 @@ Readonly input looks like normal input - user might try to edit.
 
 **Solution:**
 Add visual indicator: gray background, cursor-default.
+
+**Implementation:**
+Updated `src/components/ui/input.tsx`:
+- Added `read-only:bg-muted/50` for subtle gray background on readonly fields
+- Added `read-only:cursor-default` to show default cursor instead of text cursor
+- Added `read-only:focus:ring-0` and `read-only:focus-visible:ring-0` to remove focus rings on readonly fields
+- Result: Readonly fields now clearly indicate they cannot be edited with distinct visual styling
+
+**Combined State Styles:**
+- **Disabled**: `opacity-60`, `bg-muted`, `cursor-not-allowed` - clearly non-interactive
+- **Readonly**: `bg-muted/50`, `cursor-default`, no focus ring - visibly different from editable fields
 
 **Estimated Fix Time:** 0.5 hours
 
