@@ -37,6 +37,11 @@ const config: Config = {
           foreground: "hsl(var(--primary-foreground))",
           glow: "hsl(var(--primary-glow))",
         },
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          hover: "hsl(var(--gold-hover))",
+          foreground: "hsl(var(--gold-foreground))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
