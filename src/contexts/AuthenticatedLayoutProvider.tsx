@@ -17,7 +17,10 @@ export function AuthenticatedLayoutProvider({ children }: { children: React.Reac
       const { error } = await signOut();
       if (error) {
         const actionableError = formatToastError(error, 'authentication');
-        toast(actionableError);
+        toast({
+          ...actionableError,
+          variant: actionableError.variant as "default" | "destructive"
+        });
       } else {
         toast({
           title: "Logged Out",
@@ -27,7 +30,10 @@ export function AuthenticatedLayoutProvider({ children }: { children: React.Reac
       }
     } catch (error) {
       const actionableError = formatToastError(error, 'authentication');
-      toast(actionableError);
+      toast({
+        ...actionableError,
+        variant: actionableError.variant as "default" | "destructive"
+      });
     }
   };
   

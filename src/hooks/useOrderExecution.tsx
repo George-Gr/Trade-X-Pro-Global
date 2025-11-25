@@ -60,13 +60,19 @@ export const useOrderExecution = () => {
 
       if (error) {
         const actionableError = formatToastError(error, 'order_submission');
-        toast(actionableError);
+        toast({
+          ...actionableError,
+          variant: actionableError.variant as "default" | "destructive"
+        });
         return null;
       }
 
       if (data.error) {
         const actionableError = formatToastError(data.error, 'order_submission');
-        toast(actionableError);
+        toast({
+          ...actionableError,
+          variant: actionableError.variant as "default" | "destructive"
+        });
         return null;
       }
 

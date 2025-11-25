@@ -61,6 +61,8 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   });
 
   const { register, handleSubmit, control, watch, reset, formState: { errors, isValid } } = form;
+  const currency = watch("currency");
+  const amount = watch("amount");
 
   // Fetch user profile for KYC status and withdrawal limits
   const { data: profile } = useQuery({
@@ -173,12 +175,13 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   const handleConfirmWithdrawal = async () => {
     setLoading(true);
     try {
+      const formValues = form.getValues();
       const { data, error } = await supabase.functions.invoke('initiate-withdrawal', {
         body: {
-          currency,
-          address,
-          amount: parseFloat(amount),
-          twoFACode,
+          currency: formValues.currency,
+          address: formValues.address,
+          amount: parseFloat(formValues.amount),
+          twoFACode: formValues.twoFACode,
         },
       });
 
@@ -186,25 +189,20 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
 
       toast({
         title: "Withdrawal Initiated",
-        description: `Your withdrawal of ${amount} ${currency} has been requested. It will be processed shortly.`,
+        description: `Your withdrawal of ${formValues.amount} ${formValues.currency} has been requested. It will be processed shortly.`,
       });
 
       // Reset form
-      setAddress("");
-      setAmount("");
-      setTwoFACode("");
+      reset();
       setShowConfirmation(false);
-      setCurrency("BTC");
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (err) {
-      console.error('Error initiating withdrawal:', err);
-      const message = err instanceof Error ? err.message : String(err);
       toast({
         title: "Withdrawal Failed",
-        description: message || "Failed to initiate withdrawal. Please try again.",
+        description: err instanceof Error ? err.message : "Failed to process withdrawal",
         variant: "destructive",
       });
     } finally {
@@ -262,18 +260,24 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
             <form className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="currency">Cryptocurrency</Label>
-                <Select value={currency} onValueChange={setCurrency}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SUPPORTED_CRYPTOS.map((crypto) => (
-                      <SelectItem key={crypto.value} value={crypto.value}>
-                        {crypto.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  control={control}
+                  name="currency"
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUPPORTED_CRYPTOS.map((crypto) => (
+                          <SelectItem key={crypto.value} value={crypto.value}>
+                            {crypto.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {selectedCrypto && (
                   <p className="text-xs text-muted-foreground">
                     Min: {selectedCrypto.min} {currency} • Network Fee: {selectedCrypto.networkFee} {currency} (~${(parseFloat(selectedCrypto.networkFee) * 1000).toFixed(0)}) • Est. Time: {selectedCrypto.avgTime}

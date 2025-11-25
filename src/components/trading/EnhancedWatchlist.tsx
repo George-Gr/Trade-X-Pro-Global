@@ -162,7 +162,9 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
               </Tooltip>
             </TooltipProvider>
             <CompareSymbolsDialog symbols={activeSymbols} />
-            <CreateWatchlistDialog onCreateWatchlist={createWatchlist} />
+            <CreateWatchlistDialog onCreateWatchlist={async (name) => {
+              await createWatchlist(name);
+            }} />
           </div>
         </div>
 

@@ -68,7 +68,10 @@ export const CancelOrderConfirmation = ({
       }
     } catch (err) {
       const actionableError = formatToastError(err, 'order_submission');
-      toast(actionableError);
+      toast({
+        ...actionableError,
+        variant: actionableError.variant as "default" | "destructive"
+      });
     }
   };
 
