@@ -89,7 +89,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       if (historyError) throw historyError;
 
       // Build equity history
-      const history = (portfolioHistory || []).map((h: { equity?: number }) => h.equity || 0);
+      const history = (portfolioHistory || []).map((h: any) => h.equity || 0);
       if (history.length > 0) {
         setEquityHistory(history);
       }
@@ -267,7 +267,7 @@ export const useDrawdownAnalysis = () => {
           .gte("date", thirtyDaysAgo.toISOString())
           .order("date", { ascending: true });
 
-        const equityValues = (history || []).map((h: { equity?: number }) => h.equity || 0);
+        const equityValues = (history || []).map((h: any) => h.equity || 0);
         const peakEquity = Math.max(...equityValues, profile?.equity || 0);
 
         const analysis = analyzeDrawdown(

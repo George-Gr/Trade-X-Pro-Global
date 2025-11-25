@@ -106,8 +106,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
   };
 
   const handleClose = () => {
-    setAmount("");
-    setCurrency("BTC");
+    form.reset();
     setPaymentData(null);
     setCopied(false);
     onOpenChange(false);
@@ -160,7 +159,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
                   control={control}
                   name="currency"
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange} ref={firstFocusableRef}>
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -202,7 +201,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
             </Alert>
 
             <Button
-              onClick={handleCreatePayment}
+              onClick={handleSubmit(handleCreatePayment)}
               disabled={loading}
               className="w-full"
             >

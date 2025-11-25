@@ -163,7 +163,13 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
       <RiskChartsPanel
         equityHistory={equityHistory}
         assetClassMetrics={assetClassMetrics}
-        stressTests={stressTests}
+        stressTests={{
+          ...stressTests,
+          scenarios: stressTests.scenarios.map(s => ({
+            ...s,
+            priceMovement: String(s.priceMovement)
+          }))
+        }}
         diversification={diversification}
         concentration={concentration}
         riskMetrics={riskMetrics}
