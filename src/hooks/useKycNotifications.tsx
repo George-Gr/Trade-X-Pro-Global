@@ -14,7 +14,7 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from './useAuth';
 import { useToast } from './use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 interface NotificationPayload {
   kyc_status?: string;

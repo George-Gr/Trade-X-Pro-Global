@@ -24,7 +24,7 @@
 
 import { useCallback, useState, useRef } from 'react';
 import { useAuth } from './useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import type { LiquidationExecutionResult } from '@/lib/trading/liquidationEngine';
 
 interface LiquidationExecutionParams {

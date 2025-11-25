@@ -31,7 +31,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from './useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 interface KycTradingState {
   kycStatus: 'pending' | 'approved' | 'rejected' | 'under_review' | 'requires_resubmit' | 'submitted';

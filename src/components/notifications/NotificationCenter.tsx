@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { useAuthData } from "@/contexts/AuthenticatedLayoutContext";
 import { useNotifications } from "@/contexts/notificationContextHelpers";
 import { formatDistanceToNow } from "date-fns";

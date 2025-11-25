@@ -44,7 +44,7 @@ import {
   estimateTimeToLiquidation,
   type MarginAction,
 } from "@/lib/trading/marginMonitoring";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseBrowserClient";
 
 interface MarginMonitoringState {
   marginLevel: number | null;
