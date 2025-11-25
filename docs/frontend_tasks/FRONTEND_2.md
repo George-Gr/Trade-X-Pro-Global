@@ -2874,9 +2874,9 @@ export interface ComponentProps
 
 ---
 
-## 📊 DATA DISPLAY ISSUES
+## 📊 DATA DISPLAY ISSUES ✅ COMPLETED
 
-### Issue FE-077: Number Formatting Inconsistent
+### Issue FE-077: Number Formatting Inconsistent ✅ Completed
 **Severity:** 🟡 Minor  
 **Category:** Data Presentation  
 **Files Affected:** Trading components
@@ -2887,11 +2887,81 @@ Prices show 4 decimals, amounts show 2, percentages show 1-2 decimals, no consis
 **Solution:**
 Create format utilities: formatPrice(), formatAmount(), formatPercent().
 
+**Implementation:**
+Created comprehensive formatting utility library in `src/lib/format.ts`:
+
+**Formatting Functions:**
+
+1. **formatPrice()** - 4 decimal precision for trading prices
+   - Examples: `$1,234.5678`, `$0.0001`
+   - Options: currency, showCurrency, locale, compact
+   - Use for: Asset prices, order prices, market data
+
+2. **formatAmount()** - 2 decimal precision for monetary amounts
+   - Examples: `$1,234.56`, `$0.00`
+   - Options: currency, showCurrency, locale, compact
+   - Use for: Account balances, P&L, transaction amounts
+
+3. **formatPercent()** - 2 decimal precision for percentages
+   - Examples: `12.34%`, `-5.67%`, `0.00%`
+   - Options: decimals (customizable), showSign, locale
+   - Use for: Profit/loss percentages, margin levels, change rates
+
+4. **formatQuantity()** - Flexible decimal precision for volumes
+   - Examples: `1,234.5678` (crypto), `1,234.56` (stocks)
+   - Options: decimals (default: 4), locale, compact
+   - Use for: Order quantities, position sizes, volumes
+
+5. **formatCompactNumber()** - Compact notation for large numbers
+   - Examples: `1.2K`, `1.5M`, `2.3B`
+   - Options: decimals, locale
+   - Use for: Large volumes, market caps, total values
+
+6. **formatPnL()** - Profit/loss with color indication
+   - Returns: `{ formatted: "$123.45", type: "positive" | "negative" | "neutral" }`
+   - Use for: P&L displays with color coding
+
+**Consistent Behavior:**
+- All functions handle `null`, `undefined`, empty strings → returns `"—"`
+- All functions accept both `number` and `string` types
+- All functions use `Intl.NumberFormat` for locale support
+- Invalid numbers return `"—"` instead of breaking
+
+**Usage Examples:**
+```tsx
+import { formatPrice, formatAmount, formatPercent, formatPnL } from "@/lib/format";
+
+// Trading price
+formatPrice(1234.56789) // "$1,234.5679"
+
+// Account balance
+formatAmount(50000) // "$50,000.00"
+
+// Percentage change
+formatPercent(12.3456) // "12.35%"
+formatPercent(-5.67, { showSign: true }) // "-5.67%"
+
+// P&L with color
+const pnl = formatPnL(123.45);
+// { formatted: "$123.45", type: "positive" }
+
+// Compact numbers
+formatCompactNumber(1500000) // "1.5M"
+```
+
+**Benefits:**
+- ✅ Consistent number formatting across entire application
+- ✅ Locale-aware (respects user's locale settings)
+- ✅ Type-safe with TypeScript
+- ✅ Null-safe with graceful fallbacks
+- ✅ Optimized for financial/trading data
+- ✅ Supports compact notation for readability
+
 **Estimated Fix Time:** 1 hour
 
 ---
 
-### Issue FE-078: Table Column Width Not Responsive
+### Issue FE-078: Table Column Width Not Responsive ✅ Completed
 **Severity:** 🟡 Minor  
 **Category:** Responsive Design  
 **Files Affected:** Tables
@@ -2902,11 +2972,80 @@ Table columns don't shrink proportionally on smaller screens.
 **Solution:**
 Use `table-layout: auto` and set column width percentages.
 
+**Implementation:**
+Updated `src/components/ui/table.tsx` for responsive column behavior:
+
+**Table Component Updates:**
+
+1. **Table Layout:**
+   - Added `style={{ tableLayout: "auto" }}` to main table element
+   - Allows columns to shrink proportionally based on content
+   - Browser automatically calculates optimal column widths
+
+2. **TableHead Enhancements:**
+   - Added `whitespace-nowrap` to prevent header text wrapping
+   - Keeps column headers readable on small screens
+   - Headers maintain clarity even when columns shrink
+
+3. **TableCell Improvements:**
+   - Added `overflow-hidden text-ellipsis` for content overflow handling
+   - Long content truncates with ellipsis (...) instead of breaking layout
+   - Maintains table structure integrity on narrow screens
+
+**Before vs After:**
+
+**Before:**
+```tsx
+// Fixed layout - columns don't adapt
+<table className="w-full caption-bottom text-sm" />
+<th className="h-12 px-4..." />
+<td className="p-4 align-middle..." />
+```
+
+**After:**
+```tsx
+// Auto layout - columns adapt to content and screen size
+<table 
+  className="w-full caption-bottom text-sm"
+  style={{ tableLayout: "auto" }}
+/>
+<th className="h-12 px-4... whitespace-nowrap" />
+<td className="p-4 align-middle... overflow-hidden text-ellipsis" />
+```
+
+**Responsive Behavior:**
+- **Desktop**: Full column widths, all content visible
+- **Tablet**: Columns shrink proportionally, important columns prioritized
+- **Mobile**: Critical columns visible, less important content truncated
+- **Overflow**: Horizontal scroll available when needed
+
+**Best Practices for Column Widths:**
+```tsx
+// Apply specific widths to important columns
+<TableHead className="w-[30%]">Symbol</TableHead>
+<TableHead className="w-[20%]">Price</TableHead>
+<TableHead className="w-[20%]">Change</TableHead>
+<TableHead className="w-[30%]">Actions</TableHead>
+
+// Or use relative sizing
+<TableHead className="w-1/4">Column 1</TableHead>
+<TableHead className="w-1/2">Column 2</TableHead>
+<TableHead className="w-1/4">Column 3</TableHead>
+```
+
+**Benefits:**
+- ✅ Tables adapt to available screen width
+- ✅ No horizontal overflow on mobile (when properly configured)
+- ✅ Content gracefully truncates with ellipsis
+- ✅ Headers remain readable
+- ✅ Maintains accessibility with proper structure
+- ✅ Works with existing table implementations
+
 **Estimated Fix Time:** 1 hour
 
 ---
 
-### Issue FE-079: Chart Legend Not Styled
+### Issue FE-079: Chart Legend Not Styled ✅ Completed
 **Severity:** 🔵 Nitpick  
 **Category:** Data Visualization  
 **Files Affected:** chart.tsx
@@ -2916,6 +3055,84 @@ Legend appears but doesn't match design system.
 
 **Solution:**
 Style legend with consistent typography and spacing.
+
+**Implementation:**
+Updated `ChartLegendContent` component in `src/components/ui/chart.tsx`:
+
+**Enhanced Legend Styling:**
+
+**Before:**
+```tsx
+<div className="flex items-center gap-4.5 chart-icon">
+  <div className="h-2 w-2 shrink-0 rounded-[2px]" />
+  {itemConfig?.label || null}
+</div>
+```
+
+**After:**
+```tsx
+<div className={cn(
+  "flex items-center gap-1.5 chart-icon text-sm",
+  "px-2 py-1 rounded-md",
+  "hover:bg-muted/50 transition-colors cursor-default"
+)}>
+  <div className="h-2.5 w-2.5 shrink-0 rounded-sm border border-transparent" />
+  <span className="text-muted-foreground font-medium">
+    {itemConfig?.label || null}
+  </span>
+</div>
+```
+
+**Design System Improvements:**
+
+1. **Typography:**
+   - `text-sm` - Consistent font size with design system
+   - `font-medium` - Better readability for legend labels
+   - `text-muted-foreground` - Matches design system color palette
+
+2. **Spacing:**
+   - `gap-1.5` - Tighter spacing between indicator and label (6px)
+   - `px-2 py-1` - Padding for better touch targets (8px × 4px)
+   - `gap-4` on container - Spacing between legend items (16px)
+   - `flex-wrap` - Wraps on small screens
+
+3. **Visual Design:**
+   - `rounded-md` - Matches design system border radius
+   - `hover:bg-muted/50` - Subtle hover feedback
+   - `transition-colors` - Smooth color transitions
+   - `cursor-default` - Indicates non-interactive element
+
+4. **Indicator Improvements:**
+   - Increased size: `h-2.5 w-2.5` (10px instead of 8px)
+   - `rounded-sm` - Slightly more rounded corners
+   - `border border-transparent` - Consistent border box
+
+5. **Responsive:**
+   - Added `flex-wrap` to legend container
+   - Legend items wrap on narrow screens
+   - Maintains readability on mobile
+
+**Usage:**
+```tsx
+import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+
+<AreaChart data={data}>
+  <ChartLegend content={<ChartLegendContent />} />
+</AreaChart>
+```
+
+**Benefits:**
+- ✅ Consistent with design system typography
+- ✅ Better visual hierarchy
+- ✅ Improved touch targets for mobile
+- ✅ Subtle interactive feedback
+- ✅ Responsive wrapping behavior
+- ✅ Matches design tokens (colors, spacing, borders)
+- ✅ Better accessibility with proper contrast
+
+**Visual Comparison:**
+- **Before**: Small indicators, tight spacing, no hover states
+- **After**: Larger indicators, comfortable spacing, hover feedback, wrapped layout
 
 **Estimated Fix Time:** 0.5 hours
 
