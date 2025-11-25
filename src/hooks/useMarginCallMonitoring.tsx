@@ -162,7 +162,7 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
       timeInCallMinutes: getTimeInCall(),
       estimatedTimeToLiquidationMinutes: isLiquidationRisk ? 30 : null,
     };
-  }, [state.marginLevel, state.severity, state.recommendedActions, user?.id, getTimeInCall, isLiquidationRisk]);
+  }, [state.marginLevel, state.severity, state.shouldEscalate, state.recommendedActions, user?.id, getTimeInCall, isLiquidationRisk]);
 
   /**
    * Track margin call entry and escalation
@@ -264,7 +264,7 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
         clearInterval(escalationCheckTimeoutRef.current);
       }
     };
-  }, [enabled, marginLevel, escalationCheckInterval, getTimeInCall, toast, onEscalation, onLiquidationRisk, shouldEscalateToLiquidation]);
+  }, [enabled, marginLevel, escalationCheckInterval, getTimeInCall, toast, onEscalation, onLiquidationRisk]);
 
   /**
    * Send notifications (rate-limited)

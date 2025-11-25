@@ -4,7 +4,8 @@ import { TrendingUp, LogOut, User, Clock, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
-import { SidebarProvider, useSidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebarContext";
 import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "./AppSidebar";
 

@@ -78,24 +78,3 @@ export const SuccessAnimation: React.FC<SuccessAnimationProps> = ({
     </div>
   );
 };
-
-// Convenience hook for managing success state
-export const useSuccessAnimation = (duration: number = 2000) => {
-  const [showSuccess, setShowSuccess] = React.useState(false);
-
-  const triggerSuccess = React.useCallback(() => {
-    setShowSuccess(true);
-  }, []);
-
-  const handleComplete = React.useCallback(() => {
-    setShowSuccess(false);
-  }, []);
-
-  return {
-    showSuccess,
-    triggerSuccess,
-    SuccessAnimation: showSuccess ? (
-      <SuccessAnimation duration={duration} onComplete={handleComplete} />
-    ) : null,
-  };
-};

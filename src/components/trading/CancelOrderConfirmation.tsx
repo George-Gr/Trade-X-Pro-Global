@@ -57,10 +57,11 @@ export const CancelOrderConfirmation = ({
   onConfirm,
   onCancel,
 }: CancelOrderConfirmationProps) => {
+  const { toast } = useToast();
+
   if (!order) return null;
 
   const handleConfirm = async () => {
-    const { toast } = useToast();
     try {
       const success = await onConfirm(order.id);
       if (success) {

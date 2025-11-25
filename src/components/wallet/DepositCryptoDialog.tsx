@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useForm, Controller } from "react-hook-form";
-import { validationRules } from "@/components/ui/form";
+import { validationRules } from "@/lib/validationRules";
 
 interface DepositCryptoDialogProps {
   open: boolean;

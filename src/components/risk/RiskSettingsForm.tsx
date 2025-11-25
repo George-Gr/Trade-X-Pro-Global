@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Shield, Save, AlertTriangle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useForm } from "react-hook-form";
-import { validationRules } from "@/components/ui/form";
+import { validationRules } from "@/lib/validationRules";
 
 interface RiskSettings {
   margin_call_level: number;

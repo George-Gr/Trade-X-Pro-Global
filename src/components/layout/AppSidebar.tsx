@@ -20,7 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useSidebar } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebarContext";
 import { cn } from "@/lib/utils";
 
 const navItems = [

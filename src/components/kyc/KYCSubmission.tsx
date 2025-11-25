@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, FileText, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { validationRules } from "@/components/ui/form";
+import { validationRules } from "@/lib/validationRules";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 interface KYCSubmissionProps {

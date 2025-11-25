@@ -1,10 +1,6 @@
 import React, { memo } from 'react';
 import type { Position, PositionMetricsData } from '@/types/position';
 
-// Re-export types and utilities for components
-export type { Position, PositionMetricsData } from '@/types/position';
-export { calculateUnrealizedPnL, calculatePnLPercentage, getPositionColor } from '@/lib/trading/positionCalculations';
-
 export const PositionCard: React.FC<{ position: Position; onClose?: (id: string) => void; onModify?: (id: string) => void; isUpdating?: boolean; isLocked?: boolean }> = ({ position, onClose, onModify, isUpdating, isLocked }) => {
   // Minimal stub for test compatibility
   return <div>{position.symbol}</div>;

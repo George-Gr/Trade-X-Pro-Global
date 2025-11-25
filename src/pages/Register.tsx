@@ -8,7 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
-import { validationRules, Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { validationRules } from "@/lib/validationRules";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 interface RegisterFormData {
   fullName: string;

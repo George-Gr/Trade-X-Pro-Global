@@ -72,4 +72,4 @@ function SkeletonAvatar({ className }: { className?: string }) {
   return <Skeleton variant="avatar" className={className} />;
 }
 
-export { Skeleton, SkeletonText, SkeletonCard, SkeletonTable, SkeletonAvatar, skeletonVariants };
+export { Skeleton, SkeletonText, SkeletonCard, SkeletonTable, SkeletonAvatar };

@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, AlertTriangle, CheckCircle2, Clock, DollarSign, TrendingDown, Shield } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
-import { validationRules } from "@/components/ui/form";
+import { validationRules } from "@/lib/validationRules";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 
 interface WithdrawalFormProps {

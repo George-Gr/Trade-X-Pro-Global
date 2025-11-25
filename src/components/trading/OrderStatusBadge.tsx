@@ -3,10 +3,6 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
 import type { OrderStatus } from '@/lib/trading/orderStatusUtils';
 
-// Re-export types and utilities for components
-export type { OrderStatus } from '@/lib/trading/orderStatusUtils';
-export { calculateFillPercentage, classifyOrderStatus } from '@/lib/trading/orderStatusUtils';
-
 interface OrderStatusBadgeProps {
   status: OrderStatus;
   fillPercentage?: number;
