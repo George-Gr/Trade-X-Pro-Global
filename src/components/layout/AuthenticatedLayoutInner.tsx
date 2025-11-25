@@ -76,10 +76,10 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
       {/* Sidebar */}
       <AppSidebar />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      {/* Main Content Area with SidebarInset */}
+      <SidebarInset className="flex flex-col">
         {/* Top Header */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-40 backdrop-blur-sm bg-card/95">
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm">
           <div className="flex items-center gap-4">
             <SidebarTrigger className="h-10 w-10" />
             <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
             {children}
           </div>
         </main>
-      </div>
+      </SidebarInset>
     </div>
   );
 };
