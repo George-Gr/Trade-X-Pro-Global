@@ -1697,9 +1697,9 @@ Updated `src/components/ui/input.tsx`:
 
 ---
 
-## 💬 NOTIFICATION & FEEDBACK ISSUES
+## 💬 NOTIFICATION & FEEDBACK ISSUES ✅ COMPLETED
 
-### Issue FE-064: Toast Position Not Optimal
+### Issue FE-064: Toast Position Not Optimal ✅ Completed
 **Severity:** 🟡 Minor  
 **Category:** UX  
 **Files Affected:** useToast hook
@@ -1710,11 +1710,32 @@ Toasts appear at top-right by default - can cover important UI.
 **Solution:**
 Consider bottom-right or mobile-specific positioning.
 
+**Implementation:**
+Updated `src/components/ui/toast.tsx`:
+
+**ToastViewport Positioning Changes:**
+- **Before**: Mobile (`top-4`) → Desktop (`bottom-0 right-0`)
+- **After**: All screens (`bottom-0 right-0`) - consistent bottom-right positioning
+- Removed `top-4` and `sm:top-auto` classes to eliminate top positioning on mobile
+- Maintained `flex-col-reverse` for mobile and `sm:flex-col` for desktop to ensure newest toasts appear at top of stack
+- Result: Toasts now appear in bottom-right corner on all devices, avoiding coverage of important UI elements in header/navigation
+
+**Animation Updates:**
+- Changed toast entrance animation from `slide-in-from-top-full` and `sm:slide-in-from-bottom-full` to unified `slide-in-from-bottom-full`
+- All toasts now slide in from bottom consistently across all screen sizes
+- Exit animation remains `slide-out-to-right-full` for consistent dismissal
+
+**Benefits:**
+- ✅ Toasts don't cover top navigation or important CTAs
+- ✅ Consistent positioning across all devices
+- ✅ Better mobile UX with toasts appearing near thumb-reachable area
+- ✅ Smoother animations without viewport-dependent behavior
+
 **Estimated Fix Time:** 0.5 hours
 
 ---
 
-### Issue FE-065: Toast Has No Sound/Vibration on Mobile
+### Issue FE-065: Toast Has No Sound/Vibration on Mobile ✅ Completed
 **Severity:** 🔵 Nitpick  
 **Category:** Mobile UX  
 **Files Affected:** useToast hook
@@ -1724,6 +1745,38 @@ Silent toast on mobile might be missed.
 
 **Solution:**
 Add optional haptic feedback on mobile.
+
+**Implementation:**
+Updated `src/hooks/use-toast.ts`:
+
+**New Haptic Feedback System:**
+Created `triggerHapticFeedback()` helper function that:
+- Detects mobile device support for Vibration API
+- Provides different vibration patterns based on toast variant:
+  - **default**: `[50]` - Single short vibration (50ms)
+  - **destructive**: `[100, 50, 100]` - Double vibration for errors
+  - **success**: `[50, 30, 50]` - Success pattern with pause
+  - **warning**: `[80, 40, 80]` - Warning pattern
+- Gracefully degrades on unsupported devices
+- Silently fails with debug log if vibration is blocked
+
+**Integration:**
+- Automatically triggered when `toast()` function is called
+- Works on all mobile browsers that support Vibration API (most modern mobile browsers)
+- No additional setup required - works out of the box
+- No impact on desktop/non-supporting devices
+
+**Benefits:**
+- ✅ Improved notification awareness on mobile
+- ✅ Contextual feedback based on toast type
+- ✅ Better accessibility for users who might miss visual toasts
+- ✅ Progressive enhancement - doesn't break on unsupported devices
+
+**Browser Support:**
+- Chrome Android ✅
+- Firefox Android ✅
+- Samsung Internet ✅
+- Safari iOS ⚠️ (Vibration API not supported, gracefully degrades)
 
 **Estimated Fix Time:** 0.5 hours
 
