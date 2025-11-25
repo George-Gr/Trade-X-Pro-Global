@@ -85,6 +85,7 @@ const config: Config = {
           down: "hsl(var(--price-down))",
           neutral: "hsl(var(--price-neutral))",
         },
+        "quick-actions": "hsl(var(--quick-actions))",
       },
       borderRadius: {
         // Standardized border-radius scale

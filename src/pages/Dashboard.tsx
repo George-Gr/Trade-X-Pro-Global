@@ -194,7 +194,7 @@ const Dashboard = () => {
           <p className="text-base text-foreground">
             You currently have <strong>no open positions</strong>. Your account is fully funded and ready for trading.
           </p>
-          <div className="bg-white/50 dark:bg-slate-900/50 rounded-lg p-4 border border-primary/20 space-y-3">
+          <div className="bg-quick-actions/50 rounded-lg p-4 border border-primary/20 space-y-3">
             <div className="flex items-start gap-3">
               <ArrowRight className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
               <div>
