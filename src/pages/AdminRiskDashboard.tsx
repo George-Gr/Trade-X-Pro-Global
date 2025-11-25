@@ -9,6 +9,16 @@ import { AlertTriangle, TrendingDown, AlertCircle, CheckCircle, XCircle, Activit
 import { toast } from "sonner";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 
+import type { Database } from "@/integrations/supabase/types";
+type MarginCallEvent = Database["public"]["Tables"]["margin_call_events"]["Row"] & {
+  profiles?: {
+    email: string;
+    full_name: string;
+    equity: number;
+    margin_used: number;
+  };
+};
+
 const AdminRiskDashboard = () => {
   const queryClient = useQueryClient();
 

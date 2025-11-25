@@ -49,7 +49,7 @@ export default function Index() {
               Trusted by 50,000+ Traders Worldwide
             </Badge>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in leading-tight typography-h1">
               Trade with Confidence
               <span className="block mt-2 bg-gradient-to-r from-gold to-accent bg-clip-text text-transparent">
                 Master CFD Trading Risk-Free
@@ -109,7 +109,7 @@ export default function Index() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-1">Bank-Level Security</h3>
+                <h3 className="typography-h4 mb-1">Bank-Level Security</h3>
                 <p className="text-muted-foreground">SSL encryption & secure authentication protect your data</p>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function Index() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-1">Regulated Platform</h3>
+                <h3 className="typography-h4 mb-1">Regulated Platform</h3>
                 <p className="text-muted-foreground">Compliant with international trading standards</p>
               </div>
             </div>
@@ -133,7 +133,7 @@ export default function Index() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-1">50,000+ Active Traders</h3>
+                <h3 className="typography-h4 mb-1">50,000+ Active Traders</h3>
                 <p className="text-muted-foreground">Join a thriving community of successful traders</p>
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function Index() {
             <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20">
               Our Services
             </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 typography-h2">
               Everything You Need to
               <span className="block mt-2 bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
                 Succeed in Trading
@@ -203,7 +203,7 @@ export default function Index() {
                   <div className={`h-16 w-16 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <feature.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <h3 className="typography-h3 mb-3">{feature.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>

@@ -88,7 +88,7 @@ const Wallet = () => {
         <div className="container mx-auto py-8 px-4 max-w-7xl">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold gradient-text mb-2">Crypto Wallet</h1>
+              <h1 className="typography-h1 gradient-text mb-2">Crypto Wallet</h1>
               <p className="text-muted-foreground">Manage your cryptocurrency deposits and withdrawals</p>
             </div>
             <div className="flex gap-4">

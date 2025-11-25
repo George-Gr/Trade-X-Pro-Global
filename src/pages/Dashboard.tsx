@@ -63,8 +63,8 @@ const Dashboard = () => {
     <AuthenticatedLayout>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back to your trading account</p>
+        <h1 className="typography-h1 mb-2">Dashboard</h1>
+        <p className="typography-body text-muted-foreground">Welcome back to your trading account</p>
       </div>
 
       {/* Stats Grid - Fixed: Standardized typography and improved structure */}
@@ -78,7 +78,7 @@ const Dashboard = () => {
             <Card key={stat.title} className="rounded-lg border-border/70 focus-within:ring-2 focus-within:ring-offset-2 hover:shadow-lg focus-within:ring-primary transition-shadow duration-300">
               <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
                 <div className="flex-1">
-                  <CardTitle className="text-sm font-semibold text-muted-foreground tracking-wide">
+                  <CardTitle className="typography-label text-muted-foreground tracking-wide">
                     {stat.title}
                   </CardTitle>
                   {stat.timeContext && (

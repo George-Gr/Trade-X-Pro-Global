@@ -76,7 +76,7 @@ const Login = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
           <TrendingUp className="h-12 w-12 text-primary mx-auto mb-4" />
-          <h1 className="text-3xl font-bold">TradePro</h1>
+          <h1 className="typography-h1">TradePro</h1>
           <p className="text-muted-foreground">Login to your account</p>
         </div>
 

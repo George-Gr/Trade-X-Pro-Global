@@ -18,6 +18,17 @@ import {
 } from "@/lib/risk/portfolioMetrics";
 import type { Position } from "@/integrations/supabase/types/tables";
 
+// Database interfaces
+interface DatabasePortfolioHistory {
+  equity: number;
+  date: string;
+  error?: boolean;
+}
+
+interface DatabaseClosedPosition {
+  realized_pnl?: number;
+}
+
 interface UsePortfolioMetricsReturn {
   portfolioMetrics: PortfolioMetrics | null;
   drawdownAnalysis: DrawdownAnalysis | null;
@@ -90,14 +101,14 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
 
       // Build equity history
       const history = (portfolioHistory || [])
-        .filter((h: any) => h && typeof h.equity === 'number' && !h.error)
-        .map((h: any) => h.equity);
+        .filter((h: DatabasePortfolioHistory) => h && typeof h.equity === 'number' && !h.error)
+        .map((h: DatabasePortfolioHistory) => h.equity);
       if (history.length > 0) {
         setEquityHistory(history);
       }
 
       // Build trade statistics from closed positions
-      const trades = (closedPositions || []).map((p: { realized_pnl?: number }) => ({
+      const trades = (closedPositions || []).map((p: DatabaseClosedPosition) => ({
         pnl: p.realized_pnl || 0,
         isProfit: (p.realized_pnl || 0) > 0,
       }));

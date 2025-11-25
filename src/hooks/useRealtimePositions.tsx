@@ -280,14 +280,14 @@ export function useRealtimePositions(
         const channel = supabase
           .channel(`positions:${userId}`)
           .on(
-            'postgres_changes' as any,
+            'postgres_changes' as const,
             {
               event: '*',
               schema: 'public',
               table: 'positions',
               filter: `user_id=eq.${userId}`,
             },
-            (payload: any) => {
+            (payload: { [key: string]: unknown }) => {
               if (debounceTimerRef.current) {
                 clearTimeout(debounceTimerRef.current);
               }
@@ -330,7 +330,7 @@ export function useRealtimePositions(
   const unsubscribe = useCallback(async () => {
     if (subscriptionRef.current) {
       try {
-        await supabase.removeChannel(subscriptionRef.current as any);
+        await supabase.removeChannel(subscriptionRef.current);
         subscriptionRef.current = null;
         setIsSubscribed(false);
         setConnectionStatus("disconnected");

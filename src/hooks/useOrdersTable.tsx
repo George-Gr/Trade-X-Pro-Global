@@ -25,6 +25,22 @@ export interface OrderTableItem {
   realized_pnl?: number | null;
 }
 
+// Database order interface
+interface DatabaseOrder {
+  id: string | number;
+  user_id: string | number;
+  symbol: string;
+  order_type: OrderType;
+  side: OrderSide;
+  quantity: number | string;
+  price?: number | string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  fill_price?: number | string | null;
+  commission?: number | string | null;
+}
+
 export interface UseOrdersTableOptions {
   initialStatus?: string | 'all';
 }
@@ -52,7 +68,7 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
-      const mappedOrders: OrderTableItem[] = (data || []).map((order: any) => ({
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: DatabaseOrder) => ({
         id: typeof order.id === 'string' ? order.id : String(order.id ?? ''),
         user_id: typeof order.user_id === 'string' ? order.user_id : String(order.user_id ?? ''),
         symbol: typeof order.symbol === 'string' ? order.symbol : String(order.symbol ?? ''),

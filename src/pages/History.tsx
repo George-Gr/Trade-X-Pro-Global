@@ -131,7 +131,7 @@ const History = () => {
           {/* Header */}
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Trading History & Reports</h1>
+              <h1 className="typography-h1 mb-2">Trading History & Reports</h1>
               <p className="text-muted-foreground">
                 Comprehensive view of your trading activity with advanced analytics
               </p>

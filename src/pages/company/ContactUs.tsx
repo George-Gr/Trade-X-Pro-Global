@@ -11,10 +11,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
+interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 export default function ContactUs() {
   const { toast } = useToast();
   
-  const form = useForm({
+  const form = useForm<ContactFormData>({
     defaultValues: {
       name: "",
       email: "",
@@ -25,7 +32,7 @@ export default function ContactUs() {
 
   const { register, handleSubmit, formState: { errors }, reset } = form;
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: ContactFormData) => {
     // Simulate form submission
     console.log('Form data:', data);
     toast({

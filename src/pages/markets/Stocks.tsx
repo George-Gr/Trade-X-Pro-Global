@@ -14,7 +14,7 @@ export default function Stocks() {
         <section className="gradient-primary/10 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl font-bold mb-6">
+              <h1 className="typography-h1 mb-6">
                 Trade Global Stocks
                 <span className="block mt-2 gradient-primary bg-clip-text text-transparent">
                   200+ Top-Performing Companies
@@ -35,7 +35,7 @@ export default function Stocks() {
                   <div className="h-14 w-14 rounded-lg gradient-primary flex items-center justify-center">
                     <TrendingUp className="h-6 w-6 text-primary-foreground" />
                   </div>
-                  <h2 className="text-3xl font-bold">Why Trade Stocks?</h2>
+                  <h2 className="typography-h2">Why Trade Stocks?</h2>
                 </div>
                 <ul className="space-y-4">
                   {[
@@ -59,7 +59,7 @@ export default function Stocks() {
 
             <Card>
               <CardContent>
-                <h2 className="text-3xl font-bold mb-6">Popular Stocks</h2>
+                <h2 className="typography-h2 mb-6">Popular Stocks</h2>
                 <div className="space-y-4">
                   {[
                     { market: "US Tech", stocks: "Apple, Microsoft, Tesla, Amazon, Google, Meta, Nvidia" },
@@ -79,7 +79,7 @@ export default function Stocks() {
 
           <Card className="mb-8">
             <CardContent>
-              <h2 className="text-3xl font-bold mb-8">Stock Trading Specifications</h2>
+              <h2 className="typography-h2 mb-8">Stock Trading Specifications</h2>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
@@ -114,7 +114,7 @@ export default function Stocks() {
           <div className="text-center">
             <Card className="gradient-primary/10 border-primary/20">
               <CardContent className="p-8">
-                <h2 className="text-3xl font-bold mb-4">Start Trading Stocks Today</h2>
+                <h2 className="typography-h2 mb-4">Start Trading Stocks Today</h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access 200+ global stocks with professional conditions
                 </p>

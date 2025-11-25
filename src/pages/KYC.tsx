@@ -131,7 +131,7 @@ const KYC = () => {
       <div className="h-full overflow-auto">
         <div className="container mx-auto px-4 py-6 space-y-6 max-w-5xl">
           <div>
-            <h1 className="text-3xl font-bold mb-2">KYC Verification</h1>
+            <h1 className="typography-h1 mb-2">KYC Verification</h1>
             <p className="text-muted-foreground">
               Submit your identity documents for verification. This is required to start trading.
             </p>

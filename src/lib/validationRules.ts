@@ -18,7 +18,7 @@ export const validationRules = {
       message: "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     },
   },
-  confirmPassword: (getValues: () => Record<string, any>) => ({
+  confirmPassword: (getValues: () => Record<string, unknown>) => ({
     required: "Please confirm your password",
     validate: (value: string) =>
       value === getValues().password || "Passwords do not match",

@@ -17,6 +17,13 @@ import {
 } from "@/lib/risk/riskMetrics";
 import type { Position } from "@/integrations/supabase/types/tables";
 
+// Interface for position risk data
+interface PositionRiskData {
+  symbol: string;
+  quantity: number;
+  positionValue: number;
+}
+
 interface UseRiskMetricsReturn {
   riskMetrics: RiskMetrics | null;
   portfolioRiskAssessment: PortfolioRiskAssessment | null;
@@ -83,7 +90,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       const assessment = assessPortfolioRisk(
         metrics,
         Array.isArray(positionsData)
-          ? positionsData.map((p: any) => ({
+          ? positionsData.map((p: Position) => ({
               symbol: typeof p.symbol === 'string' ? p.symbol : String(p.symbol ?? ''),
               quantity: typeof p.quantity === 'number' ? p.quantity : Number(p.quantity ?? 0),
               positionValue: (Number(p.quantity ?? 0)) * (Number(p.current_price ?? 0)),

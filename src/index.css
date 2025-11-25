@@ -3,6 +3,9 @@
 @import "tailwindcss";
 /* stylelint-enable at-rule-no-unknown */
 
+/* Import typography system */
+@import "./styles/typography.css";
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

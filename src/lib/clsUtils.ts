@@ -56,7 +56,7 @@ export const getAspectRatioClass = (ratio: string): string => {
 /**
  * Utility to get minimum height style
  */
-export const getMinHeightStyle = (height: string): Record<string, any> => {
+export const getMinHeightStyle = (height: string): React.CSSProperties => {
   return {
     minHeight: height,
     minWidth: "100%"
@@ -66,7 +66,7 @@ export const getMinHeightStyle = (height: string): Record<string, any> => {
 /**
  * Utility to get chart container styles
  */
-export const getChartContainerStyles = (height: string = CLS_DIMENSIONS.CHART_HEIGHT): Record<string, any> => {
+export const getChartContainerStyles = (height: string = CLS_DIMENSIONS.CHART_HEIGHT): React.CSSProperties => {
   return {
     height,
     minHeight: height,
@@ -81,7 +81,7 @@ export const getChartContainerStyles = (height: string = CLS_DIMENSIONS.CHART_HE
 export const getSkeletonStyles = (
   height: string | number,
   width: string | number
-): Record<string, any> => {
+): React.CSSProperties => {
   const heightValue = typeof height === "string" ? height : `${height}px`;
   const widthValue = typeof width === "string" ? width : `${width}px`;
   
@@ -96,7 +96,7 @@ export const getSkeletonStyles = (
 /**
  * Utility to prevent layout shifts during image loading
  */
-export const getImageLoadingStyles = (aspectRatio: string): Record<string, any> => {
+export const getImageLoadingStyles = (aspectRatio: string): React.CSSProperties => {
   return {
     aspectRatio,
     minHeight: CLS_DIMENSIONS.IMAGE_HEIGHT,
