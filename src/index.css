@@ -9,7 +9,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light mode - Professional fintech theme */
+    /* Light mode - Premium brokerage theme inspired by Charles Schwab */
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
 
@@ -19,9 +19,15 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 217 91% 60%;
+    /* Deep Navy - Trust & Professionalism */
+    --primary: 220 60% 20%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 91% 70%;
+    --primary-glow: 220 60% 35%;
+    
+    /* Gold Accents - Premium */
+    --gold: 43 74% 49%;
+    --gold-hover: 43 74% 42%;
+    --gold-foreground: 222 47% 11%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
@@ -30,7 +36,8 @@ All colors MUST be HSL.
     --muted-foreground: 215 16% 35%;
     --placeholder-foreground: 215 16% 50%;
 
-    --accent: 142 76% 36%;
+    /* Emerald - Growth & Success */
+    --accent: 160 84% 39%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -127,12 +134,15 @@ All colors MUST be HSL.
     --chart-grid: 214 32% 91%;
     --chart-line: 217 91% 60%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(189 94% 43%));
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60% / 0.95), hsl(189 94% 43% / 0.9));
-    --gradient-buy: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 42%));
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 60% 20%), hsl(220 60% 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 60% 20% / 0.97), hsl(220 60% 35% / 0.95));
+    --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 74% 42%));
+    --gradient-emerald: linear-gradient(135deg, hsl(160 84% 39%), hsl(160 84% 45%));
+    --gradient-buy: linear-gradient(135deg, hsl(160 84% 39%), hsl(160 84% 45%));
     --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 66%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.4));
+    --gradient-premium: linear-gradient(135deg, hsl(220 60% 20%), hsl(43 74% 49%));
     
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
@@ -148,7 +158,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode - Professional trading terminal */
+    /* Dark mode - Premium trading terminal */
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
 
@@ -158,9 +168,15 @@ All colors MUST be HSL.
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%;
+    /* Deep Navy (lighter for dark mode) */
+    --primary: 220 60% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 91% 70%;
+    --primary-glow: 220 60% 60%;
+    
+    /* Gold Accents */
+    --gold: 43 74% 55%;
+    --gold-hover: 43 74% 49%;
+    --gold-foreground: 222 47% 11%;
 
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -169,7 +185,8 @@ All colors MUST be HSL.
     --muted-foreground: 215 20% 65%;
     --placeholder-foreground: 215 20% 45%;
 
-    --accent: 142 76% 36%;
+    /* Emerald - Growth */
+    --accent: 160 84% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -239,12 +256,15 @@ All colors MUST be HSL.
     --chart-grid: 217 33% 17%;
     --chart-line: 217 91% 60%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(189 94% 43%));
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60% / 0.95), hsl(189 94% 43% / 0.9));
-    --gradient-buy: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 42%));
+    /* Premium Gradients (Dark Mode) */
+    --gradient-primary: linear-gradient(135deg, hsl(220 60% 45%), hsl(220 60% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 60% 45% / 0.97), hsl(220 60% 60% / 0.95));
+    --gradient-gold: linear-gradient(135deg, hsl(43 74% 55%), hsl(43 74% 49%));
+    --gradient-emerald: linear-gradient(135deg, hsl(160 84% 45%), hsl(160 84% 52%));
+    --gradient-buy: linear-gradient(135deg, hsl(160 84% 45%), hsl(160 84% 52%));
     --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 66%));
     --gradient-card: linear-gradient(145deg, hsl(217 33% 17% / 0.8), hsl(217 33% 17% / 0.4));
+    --gradient-premium: linear-gradient(135deg, hsl(220 60% 45%), hsl(43 74% 55%));
     
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
