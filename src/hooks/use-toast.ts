@@ -143,6 +143,28 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">;
 
+// Haptic feedback helper for mobile devices
+function triggerHapticFeedback(variant: string = "default") {
+  // Check if we're on a mobile device and vibration is supported
+  if (typeof window !== "undefined" && "vibrate" in navigator) {
+    try {
+      // Different vibration patterns based on toast type
+      const patterns = {
+        default: [50], // Single short vibration
+        destructive: [100, 50, 100], // Double vibration for errors
+        success: [50, 30, 50], // Success pattern
+        warning: [80, 40, 80], // Warning pattern
+      };
+      
+      const pattern = patterns[variant as keyof typeof patterns] || patterns.default;
+      navigator.vibrate(pattern);
+    } catch (error) {
+      // Silently fail if vibration is not supported or blocked
+      console.debug("Haptic feedback not available:", error);
+    }
+  }
+}
+
 function toast({ variant = "default", duration, ...props }: Toast) {
   const id = genId();
 
@@ -155,6 +177,9 @@ function toast({ variant = "default", duration, ...props }: Toast) {
 
   // Use provided duration or fall back to default based on variant
   const toastDuration = duration || DEFAULT_DURATIONS[variant as keyof typeof DEFAULT_DURATIONS] || DEFAULT_DURATIONS.default;
+
+  // Trigger haptic feedback on mobile devices
+  triggerHapticFeedback(variant);
 
   dispatch({
     type: "ADD_TOAST",
