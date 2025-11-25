@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatToastError } from "@/lib/errorMessageService";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Loader2, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +17,7 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [fileType, setFileType] = useState<string>("");
+  const { toast } = useToast();
 
   const loadDocument = useCallback(async () => {
     setIsLoading(true);
@@ -34,13 +35,15 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
       const ext = filePath.split(".").pop()?.toLowerCase();
       setFileType(ext || "");
     } catch (error) {
-      const { toast } = useToast();
       const actionableError = formatToastError(error, 'data_fetching');
-      toast(actionableError);
+      toast({
+        ...actionableError,
+        variant: actionableError.variant as "default" | "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
-  }, [filePath]);
+  }, [filePath, toast]);
 
   // Focus management for accessibility
   useEffect(() => {

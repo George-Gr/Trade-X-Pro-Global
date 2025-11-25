@@ -150,7 +150,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
               onClick={() => {
                 setSubmitted(false);
                 setSelectedFile(null);
-                setDocumentType("");
+                reset();
               }}
             >
               Submit Another Document
@@ -171,7 +171,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="documentType"

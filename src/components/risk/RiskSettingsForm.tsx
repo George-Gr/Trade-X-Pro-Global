@@ -153,7 +153,11 @@ export const RiskSettingsForm = () => {
                   min="0"
                   max="100"
                   step="1"
-                  {...register("margin_call_level", validationRules.amount)}
+                  {...register("margin_call_level", {
+                    required: "Margin call level is required",
+                    min: { value: 0, message: "Must be at least 0" },
+                    validate: (value: number) => !isNaN(value) && value >= 0 || "Please enter a valid amount"
+                  })}
                   value={settings.margin_call_level}
                   onChange={(e) => setSettings({ ...settings, margin_call_level: parseFloat(e.target.value) })}
                 />
@@ -178,7 +182,11 @@ export const RiskSettingsForm = () => {
                   min="0"
                   max="100"
                   step="1"
-                  {...register("stop_out_level", validationRules.amount)}
+                  {...register("stop_out_level", {
+                    required: "Stop out level is required",
+                    min: { value: 0, message: "Must be at least 0" },
+                    validate: (value: number) => !isNaN(value) && value >= 0 || "Please enter a valid amount"
+                  })}
                   value={settings.stop_out_level}
                   onChange={(e) => setSettings({ ...settings, stop_out_level: parseFloat(e.target.value) })}
                 />
@@ -205,7 +213,11 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0.01"
                   step="0.01"
-                  {...register("max_position_size", validationRules.amount)}
+                  {...register("max_position_size", {
+                    required: "Max position size is required",
+                    min: { value: 0.01, message: "Must be at least 0.01" },
+                    validate: (value: number) => !isNaN(value) && value > 0 || "Please enter a valid amount"
+                  })}
                   value={settings.max_position_size}
                   onChange={(e) => setSettings({ ...settings, max_position_size: parseFloat(e.target.value) })}
                 />
@@ -221,7 +233,11 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
-                  {...register("max_positions", validationRules.amount)}
+                  {...register("max_positions", {
+                    required: "Max positions is required",
+                    min: { value: 1, message: "Must be at least 1" },
+                    validate: (value: number) => !isNaN(value) && value >= 1 || "Please enter a valid amount"
+                  })}
                   value={settings.max_positions}
                   onChange={(e) => setSettings({ ...settings, max_positions: parseInt(e.target.value) })}
                 />
@@ -237,7 +253,11 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0"
                   step="1000"
-                  {...register("max_total_exposure", validationRules.amount)}
+                  {...register("max_total_exposure", {
+                    required: "Max total exposure is required",
+                    min: { value: 0, message: "Must be at least 0" },
+                    validate: (value: number) => !isNaN(value) && value >= 0 || "Please enter a valid amount"
+                  })}
                   value={settings.max_total_exposure}
                   onChange={(e) => setSettings({ ...settings, max_total_exposure: parseFloat(e.target.value) })}
                 />
@@ -261,7 +281,11 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0"
                   step="100"
-                  {...register("daily_loss_limit", validationRules.amount)}
+                  {...register("daily_loss_limit", {
+                    required: "Daily loss limit is required",
+                    min: { value: 0, message: "Must be at least 0" },
+                    validate: (value: number) => !isNaN(value) && value >= 0 || "Please enter a valid amount"
+                  })}
                   value={settings.daily_loss_limit}
                   onChange={(e) => setSettings({ ...settings, daily_loss_limit: parseFloat(e.target.value) })}
                 />
@@ -280,7 +304,11 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
-                  {...register("daily_trade_limit", validationRules.amount)}
+                  {...register("daily_trade_limit", {
+                    required: "Daily trade limit is required",
+                    min: { value: 1, message: "Must be at least 1" },
+                    validate: (value: number) => !isNaN(value) && value >= 1 || "Please enter a valid amount"
+                  })}
                   value={settings.daily_trade_limit}
                   onChange={(e) => setSettings({ ...settings, daily_trade_limit: parseInt(e.target.value) })}
                 />
@@ -323,7 +351,11 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
-                  {...register("min_stop_loss_distance", validationRules.amount)}
+                  {...register("min_stop_loss_distance", {
+                    required: "Min stop loss distance is required",
+                    min: { value: 1, message: "Must be at least 1" },
+                    validate: (value: number) => !isNaN(value) && value >= 1 || "Please enter a valid amount"
+                  })}
                   value={settings.min_stop_loss_distance}
                   onChange={(e) => setSettings({ ...settings, min_stop_loss_distance: parseFloat(e.target.value) })}
                 />
