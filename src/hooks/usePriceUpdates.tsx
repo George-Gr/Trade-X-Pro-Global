@@ -21,7 +21,7 @@ interface UsePriceUpdatesOptions {
   enabled?: boolean;
 }
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 const CACHE_DURATION_MS = 1000; // Cache prices for 1 second to avoid excessive API calls
 

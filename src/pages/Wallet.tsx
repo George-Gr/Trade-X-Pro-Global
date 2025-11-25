@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wallet as WalletIcon, TrendingUp, History, Plus, RefreshCw, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { DepositCryptoDialog } from "@/components/wallet/DepositCryptoDialog";
 import { WithdrawalDialog } from "@/components/wallet/WithdrawalDialog";
 import { TransactionHistory } from "@/components/wallet/TransactionHistory";

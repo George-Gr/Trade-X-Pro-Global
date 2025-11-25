@@ -29,7 +29,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from './useAuth';
 import { useMarginMonitoring } from './useMarginMonitoring';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import {
   detectMarginCall,
   shouldEscalateToLiquidation,

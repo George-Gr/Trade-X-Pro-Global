@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Position } from '@/types/position';
 import type { Json } from '@/integrations/supabase/types';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 export const PositionDetailDialog: React.FC<{ position: Position; onClose: () => void }> = ({ position, onClose }) => {
   const [sl, setSl] = useState<number | undefined>((position as Record<string, unknown>).stop_loss as number);
