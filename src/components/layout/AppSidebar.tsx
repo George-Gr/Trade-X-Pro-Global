@@ -46,13 +46,13 @@ export function AppSidebar() {
   return (
     <Sidebar 
       collapsible="icon" 
-      className="border-r border-border shadow-lg w-64 z-50 bg-background"
+      className="border-r border-border/50 backdrop-blur-none"
       variant="sidebar"
     >
-      <SidebarContent className="text-sidebar-foreground">
-        <SidebarGroup>
+      <SidebarContent className="text-sidebar-foreground bg-sidebar">
+        <SidebarGroup className="pt-2">
           <SidebarGroupLabel className={cn(
-            "text-sidebar-foreground/80 font-semibold text-sm tracking-wide",
+            "text-sidebar-foreground/80 font-semibold text-sm tracking-wide px-2",
             collapsed && "opacity-0 h-0 overflow-hidden"
           )}>
             Main Navigation
