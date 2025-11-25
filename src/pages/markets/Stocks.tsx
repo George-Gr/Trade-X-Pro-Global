@@ -11,12 +11,12 @@ export default function Stocks() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
+        <section className="gradient-primary/10 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl font-bold mb-6">
                 Trade Global Stocks
-                <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                <span className="block mt-2 gradient-primary bg-clip-text text-transparent">
                   200+ Top-Performing Companies
                 </span>
               </h1>
@@ -32,7 +32,7 @@ export default function Stocks() {
             <Card>
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
+                  <div className="h-14 w-14 rounded-lg gradient-primary flex items-center justify-center">
                     <TrendingUp className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold">Why Trade Stocks?</h2>
@@ -112,7 +112,7 @@ export default function Stocks() {
           </Card>
 
           <div className="text-center">
-            <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
+            <Card className="gradient-primary/10 border-primary/20">
               <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">Start Trading Stocks Today</h2>
                 <p className="text-xl text-muted-foreground mb-8">
@@ -120,7 +120,7 @@ export default function Stocks() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
+                    <Button size="lg" className="gradient-primary transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                       Open Account
                     </Button>
                   </Link>

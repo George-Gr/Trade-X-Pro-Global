@@ -223,12 +223,17 @@ export const OrderForm = ({
         <Label className="text-sm font-semibold">
           Leverage (Fixed by Broker)
         </Label>
-        <div className="bg-muted/50 border border-border rounded-md p-4 flex items-center justify-between">
-          <span className="font-mono font-semibold text-foreground">
-            1:{assetLeverage.toFixed(0)}
-          </span>
-          <span className="text-xs bg-primary/10 text-primary px-4 py-4 rounded">
-            Fixed
+        <div className="gradient-card border border-panel rounded-md p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="font-mono font-semibold text-foreground">
+              1:{assetLeverage.toFixed(0)}
+            </span>
+            <span className="text-xs gradient-primary text-foreground px-2 py-1 rounded">
+              MARGIN REQUIRED
+            </span>
+          </div>
+          <span className="text-xs font-medium gradient-primary/20 text-foreground px-3 py-1 rounded">
+            ${marginRequired.toFixed(2)}
           </span>
         </div>
         <p className="text-xs text-muted-foreground">

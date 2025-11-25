@@ -124,11 +124,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
       <TabsContent value="overview" className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2">
           {/* Margin Details */}
-          <Card>
-            <CardHeader>
+          <Card className="panel">
+            <CardHeader className="panel-header">
               <CardTitle>Margin Status</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="panel-content space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Free Margin</span>
@@ -147,11 +147,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
           </Card>
 
           {/* Portfolio Stats */}
-          <Card>
-            <CardHeader>
+          <Card className="panel">
+            <CardHeader className="panel-header">
               <CardTitle>Trade Statistics</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="panel-content space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Largest Win</span>
                 <span className="font-medium text-buy">
@@ -178,11 +178,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
       {/* Charts Tab */}
       <TabsContent value="charts" className="space-y-4">
         {equityChartData.length > 0 && (
-          <Card>
-            <CardHeader>
+          <Card className="panel">
+            <CardHeader className="panel-header">
               <CardTitle>Equity Curve (30 Days)</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="panel-content">
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={equityChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -203,11 +203,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
         )}
 
         {assetClassChartData.length > 0 && (
-          <Card>
-            <CardHeader>
+          <Card className="panel">
+            <CardHeader className="panel-header">
               <CardTitle>Portfolio Allocation</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="panel-content">
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -235,14 +235,14 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
       {/* Stress Test Tab */}
       <TabsContent value="stress">
         {stressTestChartData.length > 0 ? (
-          <Card>
-            <CardHeader>
+          <Card className="panel">
+            <CardHeader className="panel-header">
               <CardTitle>Stress Test Results</CardTitle>
               <CardDescription>
                 Estimated losses under different market conditions
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="panel-content">
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={stressTestChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -266,8 +266,8 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
             </CardContent>
           </Card>
         ) : (
-          <Card>
-            <CardContent className="pt-6">
+          <Card className="panel">
+            <CardContent className="panel-content pt-6">
               <p className="text-sm text-muted-foreground">No positions to stress test</p>
             </CardContent>
           </Card>
@@ -279,11 +279,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
         <div className="grid gap-4 md:grid-cols-2">
           {diversification && (
             <>
-              <Card>
-                <CardHeader>
+              <Card className="panel">
+                <CardHeader className="panel-header">
                   <CardTitle className="text-base">Diversification Score</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="panel-content">
                   <div className="text-4xl font-bold text-blue-600">
                     {diversification.diversificationScore}%
                   </div>
@@ -303,11 +303,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
+              <Card className="panel">
+                <CardHeader className="panel-header">
                   <CardTitle className="text-base">Diversification Stats</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="panel-content space-y-2">
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Total Positions</span>
                     <span className="font-medium">{diversification.numberOfSymbols}</span>
@@ -334,11 +334,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
           )}
 
           {concentration && concentration.totalPositions > 0 && (
-            <Card>
-              <CardHeader>
+            <Card className="panel">
+              <CardHeader className="panel-header">
                 <CardTitle className="text-base">Top Positions</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="panel-content">
                 <div className="space-y-4">
                   {concentration.topPositions.map((pos) => (
                     <div key={pos.symbol} className="space-y-2">

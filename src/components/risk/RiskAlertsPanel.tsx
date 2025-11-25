@@ -104,11 +104,11 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
 
       {/* Trade Statistics */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader>
+        <Card className="panel">
+          <CardHeader className="panel-header">
             <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="panel-content">
             <div className="text-3xl font-bold">
               {portfolioMetrics?.winRate.toFixed(2)}%
             </div>
@@ -119,11 +119,11 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="panel">
+          <CardHeader className="panel-header">
             <CardTitle className="text-sm font-medium">Profit Factor</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="panel-content">
             <div className="text-3xl font-bold">
               {portfolioMetrics?.profitFactor.toFixed(2)}
             </div>
@@ -133,11 +133,11 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="panel">
+          <CardHeader className="panel-header">
             <CardTitle className="text-sm font-medium">Max Drawdown</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="panel-content">
             <div className="text-3xl font-bold text-sell">
               {drawdownAnalysis?.maxDrawdownPercentage.toFixed(2)}%
             </div>
@@ -150,11 +150,11 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
 
       {/* Recommendations */}
       {portfolioRiskAssessment?.recommendedActions && (
-        <Card>
-          <CardHeader>
+        <Card className="panel">
+          <CardHeader className="panel-header">
             <CardTitle className="text-base">Recommended Actions</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="panel-content">
             <ul className="space-y-2">
               {portfolioRiskAssessment.recommendedActions.map((action, idx) => (
                 <li key={idx} className="flex items-start gap-4">

@@ -127,7 +127,7 @@ export const OptimizedHeroSection = ({
 
       {/* Overlay */}
       {overlay && (
-        <div className="absolute inset-0 z-10 bg-gradient-to-br from-primary/70 via-primary/60 to-primary-glow/65" />
+        <div className="absolute inset-0 z-10 gradient-hero" />
       )}
 
       {/* Content */}

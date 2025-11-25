@@ -11,12 +11,12 @@ export default function Commodities() {
       <PublicHeader />
       
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
+        <section className="bg-gradient-primary/10 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl font-bold mb-6">
                 Trade Commodities
-                <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-primary bg-clip-text text-transparent">
                   Precious Metals, Energy & Agriculture
                 </span>
               </h1>

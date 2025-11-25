@@ -9,8 +9,8 @@ interface ChartPanelProps {
 
 const ChartPanel = ({ symbol }: ChartPanelProps) => {
   return (
-    <div className="h-full bg-card flex flex-col">
-      <div className="h-12 px-4 border-b border-border flex items-center justify-between flex-shrink-0">
+    <div className="h-full bg-panel flex flex-col">
+      <div className="h-12 px-4 panel-header border-b border-panel flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="font-semibold">{symbol}</div>
           <div className="flex items-center gap-4 text-sm">

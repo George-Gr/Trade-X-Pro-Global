@@ -172,7 +172,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   return (
     <div className="space-y-4">
       {/* Trading Panel Container */}
-      <Card className="bg-card border-border p-4">
+      <Card className="panel border-border p-4">
         {/* SL/TP Monitoring Status Badge */}
         {isMonitoring && pricesConnected && (
           <div className="bg-[hsl(var(--status-info))] dark:bg-[hsl(var(--status-info-dark))] border-b border-[hsl(var(--status-info-border))] dark:border-[hsl(var(--status-info-dark-border))] px-4 py-4">
@@ -183,7 +183,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         )}
         
         {/* Header with Symbol and Current Price */}
-        <div className="border-b border-border px-4 py-4">
+        <div className="panel-header border-b border-panel px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-lg">{symbol}</h3>
@@ -205,7 +205,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         </div>
 
         {/* Main Trading Area */}
-        <div className="p-4 space-y-4">
+        <div className="panel-content p-4 space-y-4">
           {/* Order Type Selector */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">

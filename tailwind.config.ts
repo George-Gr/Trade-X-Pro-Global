@@ -240,6 +240,61 @@ const config: Config = {
         '.ring-trading-sell': {
           'box-shadow': '0 0 0 3px hsl(var(--sell) / 0.1)',
         },
+        
+        // Panel-specific utilities
+        '.panel': {
+          'background-color': 'hsl(var(--panel-bg))',
+          'border-color': 'hsl(var(--panel-border))',
+        },
+        '.bg-panel': {
+          'background-color': 'hsl(var(--panel-bg))',
+        },
+        '.border-panel': {
+          'border-color': 'hsl(var(--panel-border))',
+        },
+        '.panel-header': {
+          'background-color': 'hsl(var(--panel-bg))',
+          'border-bottom': '1px solid hsl(var(--panel-border))',
+        },
+        '.panel-content': {
+          'background-color': 'hsl(var(--panel-bg))',
+        },
+        '.panel-footer': {
+          'background-color': 'hsl(var(--panel-bg))',
+          'border-top': '1px solid hsl(var(--panel-border))',
+        },
+        
+        // Gradient utilities
+        '.gradient-primary': {
+          'background': 'var(--gradient-primary)',
+        },
+        '.gradient-hero': {
+          'background': 'var(--gradient-hero)',
+        },
+        '.gradient-buy': {
+          'background': 'var(--gradient-buy)',
+        },
+        '.gradient-sell': {
+          'background': 'var(--gradient-sell)',
+        },
+        '.gradient-card': {
+          'background': 'var(--gradient-card)',
+        },
+        '.bg-gradient-primary': {
+          'background': 'var(--gradient-primary)',
+        },
+        '.bg-gradient-hero': {
+          'background': 'var(--gradient-hero)',
+        },
+        '.bg-gradient-buy': {
+          'background': 'var(--gradient-buy)',
+        },
+        '.bg-gradient-sell': {
+          'background': 'var(--gradient-sell)',
+        },
+        '.bg-gradient-card': {
+          'background': 'var(--gradient-card)',
+        },
       };
       
       addUtilities(newUtilities);
