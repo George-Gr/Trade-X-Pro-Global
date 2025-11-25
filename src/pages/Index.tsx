@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
+import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { HeroTradingSection, GlobalMarketsSection, SecuritySection } from "@/components/common/OptimizedHeroSection";
 import { SectionHeader } from "@/components/common";
 
@@ -24,6 +25,11 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
+      
+      {/* Breadcrumb Navigation */}
+      <div className="container mx-auto px-6 py-4">
+        <AutoBreadcrumb />
+      </div>
 
       {/* Hero Section */}
       <HeroTradingSection aria-label="Hero section with professional trading platform background showing financial charts and market data">
@@ -42,13 +48,13 @@ export default function Index() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link to="/register">
-              <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
+              <Button size="lg" className="px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 bg-background text-primary text-lg hover:bg-background/90 focus-visible:ring-offset-primary" aria-label="Start trading free - Sign up now">
                 Start Trading Free
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
             <Link to="/dashboard">
-              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-foreground" aria-label="View platform demo">
+              <Button size="lg" variant="outline" className="px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 border-primary-foreground text-primary-foreground text-lg hover:bg-primary-foreground/10 focus-visible:ring-primary-foreground" aria-label="View platform demo">
                 View Platform
               </Button>
             </Link>
@@ -80,7 +86,7 @@ export default function Index() {
               description="Professional-grade tools and features designed for serious traders"
             />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 icon: LineChart,
@@ -135,7 +141,7 @@ export default function Index() {
               subtitle="TradeX Pro?"
             />
 
-          <div className="grid md:grid-cols-2 gap-6 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 items-center">
             <div className="space-y-6">
               {[
                 {
@@ -205,7 +211,7 @@ export default function Index() {
           description="Access 500+ instruments across forex, stocks, indices, commodities, and cryptocurrencies"
         />
 
-        <div className="grid md:grid-cols-5 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 max-w-5xl mx-auto">
             {[
               {
                 title: "Forex",
@@ -253,7 +259,7 @@ export default function Index() {
       </GlobalMarketsSection>
 
       {/* Trust & Security Section */}
-      <SecuritySection id="security" aria-label="Security and trust section with encrypted data background showing platform security features">
+      <SecuritySection aria-label="Security and trust section with encrypted data background showing platform security features">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <SectionHeader
@@ -262,7 +268,7 @@ export default function Index() {
               description="Enterprise-grade security protecting your data and trading activity"
             />
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               {[
                 {
                   icon: Lock,
@@ -308,7 +314,7 @@ export default function Index() {
             </p>
             
             <Link to="/register">
-              <Button size="lg" className="bg-background text-primary hover:bg-background/90 text-lg px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-primary" aria-label="Create free account now">
+              <Button size="lg" className="px-8 py-6 focus-visible:ring-2 focus-visible:ring-offset-2 bg-background text-primary text-lg hover:bg-background/90 focus-visible:ring-offset-primary" aria-label="Create free account now">
                 Create Free Account
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
@@ -334,7 +340,7 @@ export default function Index() {
             {/* Payment Partners */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Payment Methods</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
                 {[
                     { name: "Visa", icon: "💳", color: "from-blue-600 to-blue-700" },
                     { name: "Mastercard", icon: "💳", color: "from-orange-600 to-red-600" },
@@ -358,7 +364,7 @@ export default function Index() {
             {/* Crypto Partners */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Cryptocurrency</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
                 {[
                     { name: "Bitcoin", icon: "₿", color: "from-orange-500 to-orange-600", description: "BTC" },
                     { name: "Ethereum", icon: "Ξ", color: "from-blue-500 to-purple-600", description: "ETH" },
@@ -380,7 +386,7 @@ export default function Index() {
             {/* Trading Platforms */}
             <div>
               <h3 className="text-lg font-semibold text-center mb-6 text-muted-foreground">Trading Platforms</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto">
                 {[
                     { name: "TradingView", icon: LineChart, description: "Advanced charting & analysis", color: "from-indigo-600 to-indigo-700" },
                     { name: "MetaTrader", icon: BarChart3, description: "Professional trading platform", color: "from-slate-700 to-slate-800" }

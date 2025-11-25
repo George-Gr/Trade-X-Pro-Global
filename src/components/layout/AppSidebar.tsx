@@ -20,7 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useSidebar } from "@/components/ui/sidebarContext";
+import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -36,7 +36,7 @@ const navItems = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, open } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   const collapsed = state === "collapsed";
@@ -44,11 +44,18 @@ export function AppSidebar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border">
-      <SidebarContent>
+    <Sidebar 
+      collapsible="icon" 
+      className="border-r border-border shadow-lg w-64 z-50 bg-white"
+      variant="sidebar"
+    >
+      <SidebarContent className="text-sidebar-foreground">
         <SidebarGroup>
-          <SidebarGroupLabel className={cn(collapsed && "opacity-0")}>
-            Navigation
+          <SidebarGroupLabel className={cn(
+            "text-sidebar-foreground/80 font-semibold text-sm tracking-wide",
+            collapsed && "opacity-0 h-0 overflow-hidden"
+          )}>
+            Main Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -62,12 +69,22 @@ export function AppSidebar() {
                       isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       className={cn(
-                        "gap-4",
-                        active && "bg-primary/10 text-primary font-medium"
+                        "gap-3 transition-all duration-200 px-4 py-2.5",
+                        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                        active && "bg-primary text-primary-foreground font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary",
+                        collapsed && "justify-center px-2",
+                        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                       )}
+                      aria-label={`Navigate to ${item.label}`}
+                      aria-current={active ? "page" : undefined}
                     >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      <span className={cn(
+                        "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                        collapsed && "hidden"
+                      )}>
+                        {item.label}
+                      </span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

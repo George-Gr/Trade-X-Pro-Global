@@ -172,7 +172,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
             placeholder="Search symbols..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 pr-16 h-9 bg-input border-border"
+            className="pl-8 pr-16 h-10 bg-input border-border"
           />
           {searchQuery && (
             <button

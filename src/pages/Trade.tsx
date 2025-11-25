@@ -18,7 +18,11 @@ const TechnicalIndicators = lazy(() => import("@/components/trading/TechnicalInd
 const MarketSentiment = lazy(() => import("@/components/trading/MarketSentiment"));
 const TradingSignals = lazy(() => import("@/components/trading/TradingSignals"));
 const EconomicCalendar = lazy(() => import("@/components/trading/EconomicCalendar"));
-const KYCStatusBanner = lazy(() => import("@/components/trading/KYCStatusBanner"));
+const KYCStatusBanner = lazy(() =>
+  import("@/components/trading/KYCStatusBanner").then(module => ({
+    default: module.KYCStatusBanner,
+  }))
+);
 
 const Trade = () => {
   const [selectedSymbol, setSelectedSymbol] = useState("EURUSD");
@@ -54,7 +58,7 @@ const Trade = () => {
         </div>
 
         {/* Mobile-first layout: stack vertically on mobile, 2-col on tablet, 3-col on desktop */}
-        <div className="flex-1 flex flex-col md:flex-row lg:flex-row overflow-hidden gap-0">
+        <div className="flex-1 flex flex-col sm:flex-row md:flex-row lg:flex-row overflow-hidden gap-0">
           {/* Left Sidebar - Enhanced Watchlist */}
           {/* Hidden on mobile and tablet, shown as drawer trigger on md and below */}
           {/* Visible only on lg (1024px+) */}
@@ -87,7 +91,7 @@ const Trade = () => {
                 <DrawerContent className="max-h-[80vh]">
                   <DrawerHeader className="border-b border-border">
                     <DrawerTitle className="text-lg font-bold">Watchlist</DrawerTitle>
-                    <DrawerClose className="absolute right-4 top-4">
+                    <DrawerClose className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-md opacity-70 transition-opacity hover:opacity-100 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                       <X className="h-5 w-5" />
                     </DrawerClose>
                   </DrawerHeader>
@@ -124,7 +128,7 @@ const Trade = () => {
                 <DrawerContent className="max-h-[90vh]">
                   <DrawerHeader className="border-b border-border">
                     <DrawerTitle className="text-lg font-bold">Trading Panel</DrawerTitle>
-                    <DrawerClose className="absolute right-4 top-4">
+                    <DrawerClose className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-md opacity-70 transition-opacity hover:opacity-100 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                       <X className="h-5 w-5" />
                     </DrawerClose>
                   </DrawerHeader>

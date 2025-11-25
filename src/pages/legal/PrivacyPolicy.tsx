@@ -1,13 +1,19 @@
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 import { Card, CardContent } from "@/components/ui/card";
+import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
       
-      <main className="pt-24 pb-20">
+      {/* Breadcrumb Navigation */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <AutoBreadcrumb />
+      </div>
+      
+      <main className="pt-8 pb-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
           <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
           

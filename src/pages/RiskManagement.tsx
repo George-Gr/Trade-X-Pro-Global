@@ -70,7 +70,10 @@ export default function RiskManagement() {
       }
     } catch (err: unknown) {
       const actionableError = formatToastError(err, 'data_fetching');
-      toast(actionableError);
+      toast({
+        ...actionableError,
+        variant: actionableError.variant === "destructive" ? "destructive" : "default",
+      });
     } finally {
       setLoading(false);
     }
@@ -98,7 +101,10 @@ export default function RiskManagement() {
       });
     } catch (err: unknown) {
       const actionableError = formatToastError(err, 'form_validation');
-      toast(actionableError);
+      toast({
+        ...actionableError,
+        variant: actionableError.variant === "destructive" ? "destructive" : "default",
+      });
     } finally {
       setSaving(false);
     }
@@ -127,7 +133,7 @@ export default function RiskManagement() {
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
                 <CardTitle className="text-sm font-medium">Margin Level</CardTitle>

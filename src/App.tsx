@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ErrorContextProvider } from "@/components/ErrorContextProvider";
+import { NotificationProvider } from "@/contexts/NotificationContext";
+import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
 import { logger, initializeSentry } from "@/lib/logger";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));
@@ -25,8 +27,6 @@ const Wallet = lazy(() => import("./pages/Wallet"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const DevSentryTest = lazy(() => import("./pages/DevSentryTest"));
 const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
-import { NotificationProvider } from "@/contexts/NotificationContext";
-// import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutContext"; // Removed as it is not exported
 
 // Legal Pages
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
@@ -96,169 +96,194 @@ const App = () => {
             >
               <BrowserRouter>
                 <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-            <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          
-          {/* Legal Pages */}
-          <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/legal/terms" element={<Terms />} />
-          <Route path="/legal/risk-disclosure" element={<RiskDisclosure />} />
-          <Route path="/legal/cookie-policy" element={<CookiePolicy />} />
-          <Route path="/legal/aml-policy" element={<AMLPolicy />} />
-          
-          {/* Public Trading Pages */}
-          <Route path="/trading/instruments" element={<TradingInstruments />} />
-            <Route path="/trading/platforms" element={<TradingPlatforms />} />
-            <Route path="/trading/account-types" element={<AccountTypes />} />
-            <Route path="/trading/conditions" element={<TradingConditions />} />
-            <Route path="/trading/tools" element={<TradingTools />} />
-          
-            {/* Markets Pages */}
-            <Route path="/markets/forex" element={<Forex />} />
-            <Route path="/markets/stocks" element={<Stocks />} />
-            <Route path="/markets/indices" element={<Indices />} />
-            <Route path="/markets/commodities" element={<Commodities />} />
-            <Route path="/markets/cryptocurrencies" element={<Cryptocurrencies />} />
-          
-            {/* Education Pages */}
-            <Route path="/education/webinar" element={<Webinar />} />
-            <Route path="/education/certifications" element={<Certifications />} />
-            <Route path="/education/tutorials" element={<Tutorials />} />
-            <Route path="/education/mentorship" element={<Mentorship />} />
-            <Route path="/education/glossary" element={<Glossary />} />
-          
-            {/* Company Pages */}
-            <Route path="/company/about" element={<AboutUs />} />
-            <Route path="/company/regulation" element={<Regulation />} />
-            <Route path="/company/security" element={<Security />} />
-            <Route path="/company/partners" element={<Partners />} />
-            <Route path="/company/contact" element={<ContactUs />} />
-          
-          <Route
-            path="/dashboard"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/trade"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <Trade />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/portfolio"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <Portfolio />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <History />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/pending-orders"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <PendingOrders />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/wallet"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <Wallet />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/kyc"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <KYC />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute adminOnly>
-                  <Admin />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/admin/risk"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute adminOnly>
-                  <AdminRiskDashboard />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/risk-management"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <RiskManagement />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <ErrorBoundary>
-                <ProtectedRoute>
-                  <Notifications />
-                </ProtectedRoute>
-              </ErrorBoundary>
-            }
-          />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
-          <Route path="*" element={<NotFound />} />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                
+                {/* Legal Pages */}
+                <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/legal/terms" element={<Terms />} />
+                <Route path="/legal/risk-disclosure" element={<RiskDisclosure />} />
+                <Route path="/legal/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/legal/aml-policy" element={<AMLPolicy />} />
+                
+                {/* Public Trading Pages */}
+                <Route path="/trading/instruments" element={<TradingInstruments />} />
+                  <Route path="/trading/platforms" element={<TradingPlatforms />} />
+                  <Route path="/trading/account-types" element={<AccountTypes />} />
+                  <Route path="/trading/conditions" element={<TradingConditions />} />
+                  <Route path="/trading/tools" element={<TradingTools />} />
+                
+                  {/* Markets Pages */}
+                  <Route path="/markets/forex" element={<Forex />} />
+                  <Route path="/markets/stocks" element={<Stocks />} />
+                  <Route path="/markets/indices" element={<Indices />} />
+                  <Route path="/markets/commodities" element={<Commodities />} />
+                  <Route path="/markets/cryptocurrencies" element={<Cryptocurrencies />} />
+                
+                  {/* Education Pages */}
+                  <Route path="/education/webinar" element={<Webinar />} />
+                  <Route path="/education/certifications" element={<Certifications />} />
+                  <Route path="/education/tutorials" element={<Tutorials />} />
+                  <Route path="/education/mentorship" element={<Mentorship />} />
+                  <Route path="/education/glossary" element={<Glossary />} />
+                
+                  {/* Company Pages */}
+                  <Route path="/company/about" element={<AboutUs />} />
+                  <Route path="/company/regulation" element={<Regulation />} />
+                  <Route path="/company/security" element={<Security />} />
+                  <Route path="/company/partners" element={<Partners />} />
+                  <Route path="/company/contact" element={<ContactUs />} />
+                
+                {/* Protected Routes with AuthenticatedLayoutProvider */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <Dashboard />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/trade"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <Trade />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/portfolio"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <Portfolio />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/history"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <History />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/pending-orders"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <PendingOrders />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/wallet"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <Wallet />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <Settings />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/kyc"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <KYC />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute adminOnly>
+                        <AuthenticatedLayoutProvider>
+                          <Admin />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/admin/risk"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute adminOnly>
+                        <AuthenticatedLayoutProvider>
+                          <AdminRiskDashboard />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/risk-management"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <RiskManagement />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route
+                  path="/notifications"
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AuthenticatedLayoutProvider>
+                          <Notifications />
+                        </AuthenticatedLayoutProvider>
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  }
+                />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
+                <Route path="*" element={<NotFound />} />
               </Routes>
               </Suspense>
             </BrowserRouter>

@@ -10,6 +10,7 @@ export const MarginLevelIndicator = () => {
   const [marginLevel, setMarginLevel] = useState<number>(0);
   const [marginCallLevel, setMarginCallLevel] = useState<number>(50);
   const [stopOutLevel, setStopOutLevel] = useState<number>(20);
+  const [hasData, setHasData] = useState<boolean>(false);
 
   useEffect(() => {
     if (!user) return;
@@ -32,6 +33,7 @@ export const MarginLevelIndicator = () => {
       if (profile && profile.margin_used > 0) {
         const level = (profile.equity / profile.margin_used) * 100;
         setMarginLevel(level);
+        setHasData(true);
       }
 
       if (settings) {
@@ -57,6 +59,7 @@ export const MarginLevelIndicator = () => {
           const { equity, margin_used } = payload.new;
           if (margin_used > 0) {
             setMarginLevel((equity / margin_used) * 100);
+            setHasData(true);
           }
         }
       )
@@ -79,37 +82,26 @@ export const MarginLevelIndicator = () => {
     return 'Healthy';
   };
 
-  if (marginLevel === 0) return null;
+  // Return null to let parent handle the empty state display
+  if (marginLevel === 0 || !hasData) return null;
 
   return (
-    <Card>
-      <CardHeader className="pb-4">
-        <CardTitle className="text-sm font-medium flex items-center gap-4">
-          Margin Level
-          {marginLevel < marginCallLevel && (
-            <AlertTriangle className="h-4 w-4 text-warning" />
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>{getStatus()}</span>
-            <span className="font-bold">{marginLevel.toFixed(1)}%</span>
-          </div>
-          <Progress 
-            value={Math.min(marginLevel, 200)} 
-            className="h-2"
-            style={{ 
-              '--progress-background': getColor() 
-            } as React.CSSProperties}
-          />
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Stop Out: {stopOutLevel}%</span>
-            <span>Margin Call: {marginCallLevel}%</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-2">
+      <div className="flex justify-between text-sm">
+        <span className="font-medium">{getStatus()}</span>
+        <span className="font-bold text-primary">{marginLevel.toFixed(1)}%</span>
+      </div>
+      <Progress 
+        value={Math.min(marginLevel, 200)} 
+        className="h-2"
+        style={{ 
+          '--progress-background': getColor() 
+        } as React.CSSProperties}
+      />
+      <div className="flex justify-between text-xs text-muted-foreground">
+        <span>Stop Out: {stopOutLevel}%</span>
+        <span>Margin Call: {marginCallLevel}%</span>
+      </div>
+    </div>
   );
 };

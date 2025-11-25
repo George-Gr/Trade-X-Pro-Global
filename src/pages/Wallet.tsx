@@ -110,7 +110,7 @@ const Wallet = () => {
           </div>
 
           {/* Balance Cards */}
-          <div className="grid gap-6 md:grid-cols-3 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
             <Card className="glass-card">
               <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -177,7 +177,7 @@ const Wallet = () => {
           </div>
 
           {/* Deposit & Withdrawal Forms */}
-          <div className="grid gap-6 mb-8 lg:grid-cols-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8">
             {/* Deposit Section */}
             <Card className="glass-card">
               <CardHeader>

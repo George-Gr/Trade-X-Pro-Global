@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { TrendingUp, LogOut, User, Menu } from "lucide-react";
+import { TrendingUp, LogOut, User, Clock, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, useSidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "./AppSidebar";
 
 interface AuthenticatedLayoutProps {
@@ -13,7 +14,7 @@ interface AuthenticatedLayoutProps {
 
 const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
   const navigate = useNavigate();
-  const { user, handleLogout, sidebarOpen, setSidebarOpen } = useAuthenticatedLayout();
+  const { user, handleLogout } = useAuthenticatedLayout();
 
   const handleLogoutClick = async () => {
     await handleLogout();
@@ -22,46 +23,112 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        {/* Sidebar */}
-        <AppSidebar />
-
-        {/* Main Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Top Header */}
-          <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4 flex-shrink-0">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger>
-                <Menu className="h-4 w-4" />
-              </SidebarTrigger>
-              <div className="flex items-center gap-4">
-                <TrendingUp className="h-4 w-4 text-primary" />
-                <span className="font-bold">TradeX Pro</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="hidden md:block text-sm">
-                <span className="text-muted-foreground">Account:</span>
-                <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
-              </div>
-              <NotificationCenter />
-              <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-primary" />
-              </div>
-              <Button variant="ghost" size="sm" onClick={handleLogoutClick} aria-label="Logout">
-                <LogOut className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </div>
-          </header>
-
-          {/* Main Content */}
-          <main className="flex-1 overflow-hidden">
-            {children}
-          </main>
-        </div>
-      </div>
+      <AuthenticatedLayoutContent 
+        children={children} 
+        user={user} 
+        handleLogoutClick={handleLogoutClick}
+      />
     </SidebarProvider>
+  );
+};
+
+// Separate component that has access to sidebar context
+interface AuthenticatedLayoutContentProps {
+  children: ReactNode;
+  user: any;
+  handleLogoutClick: () => void;
+}
+
+const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({ 
+  children, 
+  user, 
+  handleLogoutClick 
+}) => {
+  const { state, open } = useSidebar();
+  const { setSidebarOpen } = useAuthenticatedLayout();
+  const [currentTime, setCurrentTime] = useState<string>("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Update current time every minute
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Sync sidebar state with AuthenticatedLayoutContext
+  useEffect(() => {
+    setSidebarOpen(open);
+  }, [open, setSidebarOpen]);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Refresh the current page/data
+    window.location.reload();
+  };
+
+  return (
+    <div className="min-h-screen flex w-full bg-background">
+      {/* Sidebar */}
+      <AppSidebar />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Top Header */}
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-40 backdrop-blur-sm bg-card/95">
+          <div className="flex items-center gap-4">
+            <SidebarTrigger className="h-10 w-10" />
+            <div className="flex items-center gap-3">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <span className="font-bold text-lg">TradeX Pro</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            {/* Last Updated Timestamp */}
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>Last updated: {currentTime || "--:-- --"}</span>
+            </div>
+
+            {/* Refresh Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="h-10 w-10"
+              aria-label="Refresh data"
+            >
+              <RotateCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </Button>
+
+            <div className="hidden md:block text-sm">
+              <span className="text-muted-foreground">Account:</span>
+              <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
+            </div>
+            <NotificationCenter />
+            <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
+              <User className="h-5 w-5 text-primary" />
+            </div>
+            <Button variant="ghost" size="icon" onClick={handleLogoutClick} aria-label="Logout">
+              <LogOut className="h-5 w-5" aria-hidden="true" />
+            </Button>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto bg-background">
+          <div className="container mx-auto px-6 py-6">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
   );
 };
 

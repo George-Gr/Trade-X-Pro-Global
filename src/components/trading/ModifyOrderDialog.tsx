@@ -162,8 +162,9 @@ export const ModifyOrderDialog = ({
           </div>
           <button
             onClick={handleClose}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
             disabled={isLoading}
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>

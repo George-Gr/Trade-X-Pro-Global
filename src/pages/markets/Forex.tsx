@@ -1,6 +1,7 @@
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 import { Card, CardContent } from "@/components/ui/card";
+import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Globe, TrendingUp, CheckCircle2 } from "lucide-react";
@@ -10,7 +11,12 @@ export default function Forex() {
     <div className="min-h-screen bg-background">
       <PublicHeader />
       
-      <main className="pt-24 pb-20">
+      {/* Breadcrumb Navigation */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <AutoBreadcrumb />
+      </div>
+      
+      <main className="pt-8 pb-20">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,7 +36,7 @@ export default function Forex() {
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Trading Advantages */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 sm:gap-6 mb-8">
             <Card>
               <CardContent>
                 <div className="flex items-center gap-4 mb-6">
@@ -83,7 +89,7 @@ export default function Forex() {
           <Card className="mb-8">
             <CardContent>
               <h2 className="text-3xl font-bold mb-8">Available Currency Pairs</h2>
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 sm:gap-6 mb-8">
                 <div>
                   <h3 className="text-xl font-semibold mb-4">Major Pairs (7)</h3>
                   <p className="text-sm text-muted-foreground mb-4">Most liquid pairs with tightest spreads</p>

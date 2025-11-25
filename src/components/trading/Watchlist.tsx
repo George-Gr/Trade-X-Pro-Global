@@ -122,7 +122,7 @@ const Watchlist = () => {
                 placeholder="Search symbols..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-9 w-[200px] bg-input border-border"
+                className="pl-8 h-10 w-[200px] bg-input border-border"
               />
             </div>
           </div>

@@ -57,6 +57,7 @@ export const RiskAlerts = () => {
     };
   }, [user]);
 
+  // Return null to let parent handle the empty state display
   if (events.length === 0) return null;
 
   return (

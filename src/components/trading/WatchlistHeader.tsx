@@ -73,7 +73,7 @@ export const WatchlistHeader = ({
           placeholder="Search symbols..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-8 h-9 bg-input border-border"
+          className="pl-8 h-10 bg-input border-border"
         />
       </div>
     </>

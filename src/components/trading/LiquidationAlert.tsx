@@ -157,8 +157,8 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
         </div>
         <button
           onClick={onDismiss}
-          className="flex-shrink-0 text-sell hover:text-sell/80 transition-colors"
-          aria-label="Dismiss"
+          className="flex h-11 w-11 items-center justify-center flex-shrink-0 rounded-md text-sell hover:text-sell/80 hover:bg-sell/5 transition-colors"
+          aria-label="Dismiss alert"
         >
           <X className="h-4 w-4" />
         </button>

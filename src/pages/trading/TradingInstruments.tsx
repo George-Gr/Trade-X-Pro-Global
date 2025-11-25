@@ -1,6 +1,7 @@
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 import { Card, CardContent } from "@/components/ui/card";
+import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Globe, TrendingUp, BarChart3, LineChart, Zap, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,12 @@ export default function TradingInstruments() {
     <div className="min-h-screen bg-background">
       <PublicHeader />
       
-      <main className="pt-24 pb-20">
+      {/* Breadcrumb Navigation */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <AutoBreadcrumb />
+      </div>
+      
+      <main className="pt-8 pb-20">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -79,6 +79,7 @@ const Admin = () => {
   const [isApproving, setIsApproving] = useState<string | null>(null); // Track approval loading by document ID
   const [isRejecting, setIsRejecting] = useState(false);
   const [isFunding, setIsFunding] = useState(false);
+  const [activeTab, setActiveTab] = useState("kyc");
 
   const fetchKYCDocuments = useCallback(async () => {
     const { data, error } = await supabase
@@ -388,9 +389,13 @@ const Admin = () => {
                 </div>
               </Card>
             </div>
-
             {/* Tabs */}
-            <Tabs defaultValue="kyc" className="space-y-4">
+            <Tabs
+              defaultValue="kyc"
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="space-y-4"
+            >
               <TabsList role="tablist" aria-label="Admin management tabs">
                 <TabsTrigger 
                   value="kyc" 
@@ -413,7 +418,6 @@ const Admin = () => {
                   User Accounts
                 </TabsTrigger>
               </TabsList>
-
               {/* KYC Submissions */}
               <TabsContent 
                 value="kyc"
