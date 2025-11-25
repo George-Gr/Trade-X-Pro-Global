@@ -42,7 +42,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     });
     return map;
   }, [positions]);
-  const { positionPnLMap } = usePnLCalculations(positions as Position[], priceMap, undefined, {});
+  const { positionPnLMap } = usePnLCalculations(positions as any, priceMap, undefined, {});
 
   // Calculate comprehensive portfolio metrics
   const metrics = useMemo((): PortfolioMetrics => {

@@ -36,9 +36,12 @@ interface DatabaseOrder {
   price?: number | string | null;
   status: string;
   created_at: string;
-  updated_at: string;
   fill_price?: number | string | null;
   commission?: number | string | null;
+  filled_at?: string | null;
+  stop_loss?: number | string | null;
+  take_profit?: number | string | null;
+  idempotency_key?: string;
 }
 
 export interface UseOrdersTableOptions {
@@ -68,7 +71,7 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
-      const mappedOrders: OrderTableItem[] = (data || []).map((order: DatabaseOrder) => ({
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: any) => ({
         id: typeof order.id === 'string' ? order.id : String(order.id ?? ''),
         user_id: typeof order.user_id === 'string' ? order.user_id : String(order.user_id ?? ''),
         symbol: typeof order.symbol === 'string' ? order.symbol : String(order.symbol ?? ''),

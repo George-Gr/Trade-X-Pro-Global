@@ -92,17 +92,22 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
 
       const { data: portfolioHistory, error: historyError } = await supabase
         .from("daily_pnl_tracking")
-        .select("equity, date as recorded_at")
+        .select("realized_pnl, trading_date")
         .eq("user_id", user.id)
-        .gte("date", thirtyDaysAgo.toISOString())
-        .order("date", { ascending: true });
+        .gte("trading_date", thirtyDaysAgo.toISOString())
+        .order("trading_date", { ascending: true });
 
       if (historyError) throw historyError;
 
-      // Build equity history
-      const history = (portfolioHistory || [])
-        .filter((h: DatabasePortfolioHistory) => h && typeof h.equity === 'number' && !h.error)
-        .map((h: DatabasePortfolioHistory) => h.equity);
+      // Build equity history (using realized_pnl as proxy since equity column doesn't exist in daily_pnl_tracking)
+      const history: number[] = [];
+      if (portfolioHistory && Array.isArray(portfolioHistory)) {
+        portfolioHistory.forEach((h: any) => {
+          if (h && typeof h.realized_pnl === 'number') {
+            history.push(h.realized_pnl);
+          }
+        });
+      }
       if (history.length > 0) {
         setEquityHistory(history);
       }
