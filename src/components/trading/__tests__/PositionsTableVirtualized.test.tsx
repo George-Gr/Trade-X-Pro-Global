@@ -48,12 +48,12 @@ describe('PositionsTableVirtualized - Performance Tests', () => {
 
   beforeAll(() => {
     // Mock ResizeObserver for react-window
-    const globalObj = globalThis as typeof globalThis & { ResizeObserver: typeof ResizeObserver };
-    globalObj.ResizeObserver = vi.fn().mockImplementation(() => ({
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-      disconnect: vi.fn(),
-    })) as ResizeObserver;
+    const globalObj = globalThis as typeof globalThis & { ResizeObserver: any };
+    globalObj.ResizeObserver = class ResizeObserver {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    };
   });
 
   it('renders 1000 positions without lag (<1000ms)', () => {
