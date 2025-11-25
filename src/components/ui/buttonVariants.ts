@@ -14,11 +14,12 @@ export const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline active:text-primary/80 active:underline",
       },
       size: {
-        default: "h-11 px-4 py-2",        // Increased from h-10 to h-11 (44px)
-        sm: "h-10 rounded-md px-3",       // Increased from h-9 to h-10 (40px)
-        lg: "h-12 rounded-md px-8",       // Increased from h-11 to h-12 (48px)
-        icon: "h-12 w-12",               // Increased from h-10 w-10 to h-12 w-12 (48px)
-        xl: "h-14 px-10",                // NEW - extra large (56px)
+        xs: "h-8 rounded-md px-2 text-xs",    // Extra small (32px)
+        sm: "h-10 rounded-md px-3",           // Increased from h-9 to h-10 (40px)
+        default: "h-11 px-4 py-2",            // Increased from h-10 to h-11 (44px)
+        lg: "h-12 rounded-md px-8",           // Increased from h-11 to h-12 (48px)
+        icon: "h-12 w-12",                    // Increased from h-10 w-10 to h-12 w-12 (48px)
+        xl: "h-14 px-10 text-base",           // Extra large (56px)
       },
     },
     defaultVariants: {
