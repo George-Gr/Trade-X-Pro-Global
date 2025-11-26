@@ -32,8 +32,6 @@ const ChartLoadingSkeleton = () => (
   </div>
 );
 
-const COLORS = ['#4ade80', '#f97316', '#60a5fa', '#f87171', '#c084fc', '#94a3b8'];
-
 export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> = ({ onSelect }) => {
   const { positions } = usePortfolioData();
 

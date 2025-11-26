@@ -134,7 +134,7 @@ export function handleMenuKeyboardNavigation(
  * @param isActive - Whether the item is currently active
  * @param isPage - Whether this represents the current page (vs section)
  */
-export function getAriaCurrentState(isActive: boolean, isPage: boolean = true): string | undefined {
+export function getAriaCurrentState(isActive: boolean, isPage: boolean = true): "page" | "step" | undefined {
   return isActive ? (isPage ? "page" : "step") : undefined;
 }
 

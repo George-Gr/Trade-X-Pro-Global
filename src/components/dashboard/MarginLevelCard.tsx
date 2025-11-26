@@ -260,7 +260,6 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({ loading = fals
                 }}
                 isAnimationActive={true}
                 animationDuration={chartAnimations.fast}
-                animationEasing="easeOutQuad"
               />
             </LineChart>
           </ResponsiveContainer>
