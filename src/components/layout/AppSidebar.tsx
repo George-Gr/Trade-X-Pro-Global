@@ -55,15 +55,15 @@ export function AppSidebar() {
     >
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
         {/* Main Navigation Section */}
-        <SidebarGroup className="pt-2">
+        <SidebarGroup className="pt-1 pb-0">
           <SidebarGroupLabel className={cn(
-            "text-sidebar-foreground/80 font-semibold text-sm tracking-wide px-2",
+            "text-sidebar-foreground/80 font-semibold text-xs tracking-wide px-2 h-6",
             collapsed && "opacity-0 h-0 overflow-hidden"
           )}>
             Main Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
@@ -74,7 +74,7 @@ export function AppSidebar() {
                       isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       className={cn(
-                        "gap-3 px-4 py-3",
+                        "gap-3 px-4 py-2",
                         collapsed && "justify-center px-2"
                       )}
                       aria-label={`Navigate to ${item.label}`}
@@ -99,15 +99,15 @@ export function AppSidebar() {
         <div className="flex-1" />
 
         {/* User Profile Actions Section */}
-        <SidebarGroup className="pb-2">
+        <SidebarGroup className="pt-0 pb-1">
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/settings/profile")}
                   tooltip={collapsed ? "Profile" : undefined}
                   className={cn(
-                    "gap-3 px-4 py-3",
+                    "gap-3 px-4 py-2",
                     collapsed && "justify-center px-2"
                   )}
                   aria-label="View profile"
@@ -127,7 +127,7 @@ export function AppSidebar() {
                   onClick={() => navigate("/settings")}
                   tooltip={collapsed ? "Account Settings" : undefined}
                   className={cn(
-                    "gap-3 px-4 py-3",
+                    "gap-3 px-4 py-2",
                     collapsed && "justify-center px-2"
                   )}
                   aria-label="Account settings"
@@ -147,7 +147,7 @@ export function AppSidebar() {
                   onClick={handleLogout}
                   tooltip={collapsed ? "Logout" : undefined}
                   className={cn(
-                    "gap-3 px-4 py-3 text-destructive hover:bg-destructive/10",
+                    "gap-3 px-4 py-2 text-destructive hover:bg-destructive/10",
                     collapsed && "justify-center px-2"
                   )}
                   aria-label="Logout"
