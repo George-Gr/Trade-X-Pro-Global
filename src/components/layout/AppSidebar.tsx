@@ -15,14 +15,12 @@ import {
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { useSidebar } from "@/components/ui/sidebarContext";
@@ -55,7 +53,8 @@ export function AppSidebar() {
       className="border-r border-border/50 backdrop-blur-none"
       variant="sidebar"
     >
-      <SidebarContent className="text-sidebar-foreground bg-sidebar">
+      <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
+        {/* Main Navigation Section */}
         <SidebarGroup className="pt-2">
           <SidebarGroupLabel className={cn(
             "text-sidebar-foreground/80 font-semibold text-sm tracking-wide px-2",
@@ -95,71 +94,77 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Spacer to push user actions to bottom */}
+        <div className="flex-1" />
+
+        {/* User Profile Actions Section */}
+        <SidebarGroup className="pb-2">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => navigate("/settings/profile")}
+                  tooltip={collapsed ? "Profile" : undefined}
+                  className={cn(
+                    "gap-3 px-4 py-3",
+                    collapsed && "justify-center px-2"
+                  )}
+                  aria-label="View profile"
+                >
+                  <User className="h-5 w-5 flex-shrink-0" />
+                  <span className={cn(
+                    "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                    collapsed && "hidden"
+                  )}>
+                    Profile
+                  </span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => navigate("/settings")}
+                  tooltip={collapsed ? "Account Settings" : undefined}
+                  className={cn(
+                    "gap-3 px-4 py-3",
+                    collapsed && "justify-center px-2"
+                  )}
+                  aria-label="Account settings"
+                >
+                  <Settings className="h-5 w-5 flex-shrink-0" />
+                  <span className={cn(
+                    "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                    collapsed && "hidden"
+                  )}>
+                    Account Settings
+                  </span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={handleLogout}
+                  tooltip={collapsed ? "Logout" : undefined}
+                  className={cn(
+                    "gap-3 px-4 py-3 text-destructive hover:bg-destructive/10",
+                    collapsed && "justify-center px-2"
+                  )}
+                  aria-label="Logout"
+                >
+                  <LogOut className="h-5 w-5 flex-shrink-0" />
+                  <span className={cn(
+                    "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                    collapsed && "hidden"
+                  )}>
+                    Logout
+                  </span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter className="border-t border-border/50 bg-sidebar/50 backdrop-blur-sm">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={() => navigate("/settings/profile")}
-              tooltip={collapsed ? "Profile" : undefined}
-              className={cn(
-                "gap-3 px-4 py-3",
-                collapsed && "justify-center px-2"
-              )}
-              aria-label="View profile"
-            >
-              <User className="h-5 w-5 flex-shrink-0" />
-              <span className={cn(
-                "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
-                collapsed && "hidden"
-              )}>
-                Profile
-              </span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={() => navigate("/settings")}
-              tooltip={collapsed ? "Account Settings" : undefined}
-              className={cn(
-                "gap-3 px-4 py-3",
-                collapsed && "justify-center px-2"
-              )}
-              aria-label="Account settings"
-            >
-              <Settings className="h-5 w-5 flex-shrink-0" />
-              <span className={cn(
-                "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
-                collapsed && "hidden"
-              )}>
-                Account Settings
-              </span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={handleLogout}
-              tooltip={collapsed ? "Logout" : undefined}
-              className={cn(
-                "gap-3 px-4 py-3 text-destructive hover:bg-destructive/10",
-                collapsed && "justify-center px-2"
-              )}
-              aria-label="Logout"
-            >
-              <LogOut className="h-5 w-5 flex-shrink-0" />
-              <span className={cn(
-                "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
-                collapsed && "hidden"
-              )}>
-                Logout
-              </span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }
