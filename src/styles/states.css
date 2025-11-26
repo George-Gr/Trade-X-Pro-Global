@@ -1,0 +1,547 @@
+/* 
+ * Visual Feedback States System
+ * 
+ * Comprehensive state management for all interactive elements
+ * Provides consistent visual feedback across the application
+ * 
+ * States covered:
+ * - Hover: Brightness +10%, cursor: pointer, transition: 200ms ease
+ * - Active: Brightness -5%, scale: 0.98
+ * - Focus: 2px outline with brand color, offset: 2px
+ * - Disabled: opacity: 0.5, cursor: not-allowed
+ */
+
+/* ============================================
+   BASE INTERACTIVE ELEMENT STATES
+   ============================================ */
+
+/* Apply to all interactive elements */
+button,
+a,
+input,
+textarea,
+select,
+[role="button"],
+[role="link"],
+.interactive {
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* ============================================
+   HOVER STATES
+   ============================================ */
+
+/* Buttons - Brightness +10%, cursor pointer */
+button:not(:disabled):hover,
+[role="button"]:not([aria-disabled="true"]):hover,
+.btn:not(.btn-disabled):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Links - Brightness +10%, cursor pointer */
+a:hover,
+[role="link"]:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Interactive Cards */
+.card-interactive:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Navigation Items */
+nav a:hover,
+nav button:hover,
+[data-sidebar="menu-button"]:not([data-active="true"]):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Form Inputs - Subtle hover for inputs */
+input:not(:disabled):hover,
+textarea:not(:disabled):hover,
+select:not(:disabled):hover {
+  filter: brightness(1.05);
+  cursor: text;
+  transition: all 0.2s ease;
+}
+
+/* Checkboxes and Radio Buttons */
+input[type="checkbox"]:not(:disabled):hover,
+input[type="radio"]:not(:disabled):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   ACTIVE STATES
+   ============================================ */
+
+/* Buttons - Brightness -5%, scale 0.98 */
+button:not(:disabled):active,
+[role="button"]:not([aria-disabled="true"]):active,
+.btn:not(.btn-disabled):active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+/* Links - Brightness -5%, scale 0.98 */
+a:active,
+[role="link"]:active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+/* Interactive Cards */
+.card-interactive:active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+/* Navigation Items */
+nav a:active,
+nav button:active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+/* Form Inputs - Subtle active state */
+input:not(:disabled):active,
+textarea:not(:disabled):active,
+select:not(:disabled):active {
+  filter: brightness(0.98);
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   FOCUS STATES
+   ============================================ */
+
+/* Universal Focus Ring - 2px outline, brand color, 2px offset */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible,
+.interactive:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+  transition: all 0.2s ease;
+}
+
+/* Navigation Focus States */
+nav a:focus-visible,
+nav button:focus-visible,
+[data-sidebar="menu-button"]:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+  transition: all 0.2s ease;
+}
+
+/* Card Focus States */
+.card-focusable:focus-visible,
+.card-interactive:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+  transition: all 0.2s ease;
+}
+
+/* Form Input Focus - Enhanced for better visibility */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 0;
+  border-color: hsl(var(--ring));
+  box-shadow: 
+    0 0 0 4px hsl(var(--ring) / 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Remove default focus outline */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+/* ============================================
+   DISABLED STATES
+   ============================================ */
+
+/* Buttons - opacity 0.5, cursor not-allowed */
+button:disabled,
+button[disabled],
+[role="button"][aria-disabled="true"],
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  transform: none;
+  transition: all 0.2s ease;
+}
+
+/* Links - disabled state */
+a[aria-disabled="true"],
+.link-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  transform: none;
+  transition: all 0.2s ease;
+}
+
+/* Form Inputs - disabled state */
+input:disabled,
+textarea:disabled,
+select:disabled,
+input[readonly],
+textarea[readonly] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: hsl(var(--muted));
+  filter: none;
+  transition: all 0.2s ease;
+}
+
+/* Cards - disabled state */
+.card-disabled,
+.card[data-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  transform: none;
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   SPECIFIC COMPONENT STATES
+   ============================================ */
+
+/* Button Variants */
+.btn-primary:not(:disabled):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.btn-primary:not(:disabled):active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+.btn-secondary:not(:disabled):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.btn-secondary:not(:disabled):active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+.btn-outline:not(:disabled):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.btn-outline:not(:disabled):active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+.btn-ghost:not(:disabled):hover {
+  filter: brightness(1.1);
+  background-color: hsl(var(--accent) / 0.1);
+  cursor: pointer;
+}
+
+.btn-ghost:not(:disabled):active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+/* Icon Buttons */
+button[aria-label]:not(:disabled):hover,
+.icon-button:not(:disabled):hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  background-color: hsl(var(--accent) / 0.1);
+}
+
+button[aria-label]:not(:disabled):active,
+.icon-button:not(:disabled):active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+/* Navigation Active States (preserve existing active styles) */
+[data-sidebar="menu-button"][data-active="true"]:hover {
+  /* Active items don't need brightness change */
+  filter: none;
+}
+
+/* Dropdown Items */
+[role="menuitem"]:hover,
+.dropdown-item:hover {
+  filter: brightness(1.1);
+  background-color: hsl(var(--accent) / 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[role="menuitem"]:active,
+.dropdown-item:active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+/* Tab Components */
+[role="tab"]:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[role="tab"]:active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  transition: all 0.2s ease;
+}
+
+[role="tab"]:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+/* Table Row Interactions */
+tr[role="button"]:hover,
+tr.clickable:hover {
+  filter: brightness(1.05);
+  cursor: pointer;
+  background-color: hsl(var(--accent) / 0.05);
+  transition: all 0.2s ease;
+}
+
+tr[role="button"]:active,
+tr.clickable:active {
+  filter: brightness(0.98);
+  transform: scale(0.995);
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+
+.dark button:not(:disabled):hover,
+.dark [role="button"]:not([aria-disabled="true"]):hover,
+.dark a:hover {
+  filter: brightness(1.15);
+}
+
+.dark button:not(:disabled):active,
+.dark [role="button"]:not([aria-disabled="true"]):active,
+.dark a:active {
+  filter: brightness(0.9);
+}
+
+.dark input:not(:disabled):hover,
+.dark textarea:not(:disabled):hover,
+.dark select:not(:disabled):hover {
+  filter: brightness(1.1);
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+  }
+  
+  button:disabled,
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6;
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  button,
+  a,
+  input,
+  textarea,
+  select,
+  [role="button"],
+  [role="link"],
+  .interactive {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  button:not(:disabled):active,
+  a:active,
+  .card-interactive:active {
+    transform: none !important;
+  }
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+/* Loading Button State */
+button[data-loading="true"],
+.btn-loading {
+  opacity: 0.7;
+  cursor: wait;
+  pointer-events: none;
+  position: relative;
+}
+
+button[data-loading="true"]::after,
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: button-loading-spinner 0.6s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* ============================================
+   FOCUS TRAP FOR MODALS
+   ============================================ */
+
+/* Ensure focus stays within modal */
+[role="dialog"]:focus,
+[role="alertdialog"]:focus {
+  outline: none;
+}
+
+[role="dialog"] button:focus-visible,
+[role="alertdialog"] button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    box-shadow: none !important;
+  }
+  
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible {
+    outline: 1px solid black !important;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Force hover state (for testing) */
+.force-hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+/* Force active state (for testing) */
+.force-active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+/* Force focus state (for testing) */
+.force-focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+}
+
+/* Force disabled state (for testing) */
+.force-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Remove all interactive states (for static elements) */
+.no-interaction {
+  pointer-events: none;
+  cursor: default;
+  transition: none;
+}
+
+.no-interaction:hover,
+.no-interaction:active,
+.no-interaction:focus {
+  filter: none;
+  transform: none;
+  outline: none;
+  box-shadow: none;
+}
