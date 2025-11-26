@@ -134,29 +134,16 @@ function AppSidebarContent() {
   // Memoize current pathname to prevent unnecessary recalculations
   const activePath = useMemo(() => location.pathname, [location.pathname]);
 
-  // Memoize navigation items with pre-computed active states
+  // Memoize navigation sections without modifying items
   const memoizedNavigationSections = useMemo(() => {
-    return navigationSections.map((section) => {
-      if (section.id === 'actions') return section;
-      
-      return {
-        ...section,
-        items: section.items.map(item => ({
-          ...item,
-          isActive: isPathActive(activePath, item.path)
-        }))
-      };
-    });
-  }, [navigationSections, activePath]);
+    return navigationSections;
+  }, [navigationSections]);
 
-  // Memoize settings section items with active states
+  // Memoize settings section items
   const settingsItems = useMemo(() => {
     const settingsSection = navigationSections.find(section => section.id === 'settings');
-    return settingsSection?.items.map(item => ({
-      ...item,
-      isActive: isPathActive(activePath, item.path)
-    })) || [];
-  }, [navigationSections, activePath]);
+    return settingsSection?.items || [];
+  }, [navigationSections]);
 
   // Memoize isActive function to prevent recreation on every render
   const isActive = useCallback((path: string) => 
@@ -223,8 +210,21 @@ function AppSidebarContent() {
       variant="sidebar"
     >
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
-        {/* Top spacing to prevent overlap with header */}
-        <div className="h-6" />
+        {/* Logo/Branding Section */}
+        <div className={cn(
+          "flex items-center gap-3 px-4 py-4 border-b border-border/50",
+          collapsed && "justify-center px-2"
+        )}>
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
+            <TrendingUp className="h-5 w-5 text-primary" />
+          </div>
+          {!collapsed && (
+            <div className="flex flex-col">
+              <span className="text-sm font-bold text-foreground">TradeX Pro</span>
+              <span className="text-xs text-muted-foreground">Trading Platform</span>
+            </div>
+          )}
+        </div>
         
         {/* Dynamic Navigation Sections */}
         {memoizedNavigationSections.map((section) => {
@@ -249,7 +249,7 @@ function AppSidebarContent() {
                         <SidebarMenuButton
                           onClick={() => navigate(item.path)}
                           onKeyDown={(e) => handleNavigationKeyDown(e, item.path)}
-                          isActive={item.isActive}
+                          isActive={isActive(item.path)}
                           tooltip={collapsed ? item.label : undefined}
                           disabled={item.disabled}
                           className={cn(
@@ -257,8 +257,8 @@ function AppSidebarContent() {
                             collapsed && "justify-center px-2",
                             item.disabled && "opacity-50 cursor-not-allowed"
                           )}
-                          aria-label={generateNavigationAriaLabel(item.label, item.isActive, item.disabled)}
-                          aria-current={getAriaCurrentState(item.isActive)}
+                          aria-label={generateNavigationAriaLabel(item.label, isActive(item.path), item.disabled)}
+                          aria-current={getAriaCurrentState(isActive(item.path))}
                           role="menuitem"
                           tabIndex={0}
                           aria-disabled={item.disabled}
@@ -296,7 +296,7 @@ function AppSidebarContent() {
                     <SidebarMenuButton
                       onClick={() => item.path && navigate(item.path)}
                       onKeyDown={(e) => handleSettingsKeyDown(e, item.path)}
-                      isActive={item.isActive}
+                      isActive={isActive(item.path || '')}
                       tooltip={collapsed ? item.label : undefined}
                       disabled={item.disabled}
                       className={cn(
@@ -304,8 +304,8 @@ function AppSidebarContent() {
                         collapsed && "justify-center px-2",
                         item.disabled && "opacity-50 cursor-not-allowed"
                       )}
-                      aria-label={generateNavigationAriaLabel(item.label, item.isActive, item.disabled)}
-                      aria-current={getAriaCurrentState(item.isActive)}
+                      aria-label={generateNavigationAriaLabel(item.label, isActive(item.path || ''), item.disabled)}
+                      aria-current={getAriaCurrentState(isActive(item.path || ''))}
                       role="menuitem"
                       tabIndex={0}
                       aria-disabled={item.disabled}
