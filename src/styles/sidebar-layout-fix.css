@@ -1,0 +1,50 @@
+/* Sidebar layout fixes
+   Purpose: Small set of overrides to ensure the sidebar stacks correctly,
+   has smooth transitions and uses the design tokens defined in `index.css`.
+   This file is intentionally minimal — it only contains fixes required for
+   z-index, background, and transition behaviors across browsers. */
+
+/* Ensure sidebar background and foreground use design tokens */
+.sidebar,
+.app-sidebar,
+[class*="sidebar-"] {
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
+  border-color: hsl(var(--sidebar-border));
+}
+
+/* Make sure the sidebar sits above page content but below modal overlays */
+.sidebar {
+  z-index: 50; /* default app sidebar stacking */
+}
+
+.sidebar--overlay,
+.sidebar-overlay {
+  z-index: 70; /* overlays should sit above sidebars */
+}
+
+/* Smooth, performant transitions for show/hide and theme changes */
+.sidebar,
+.sidebar * {
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast),
+              transform var(--transition-fast);
+  will-change: transform, opacity;
+}
+
+/* Fix for mobile: ensure sidebar uses full height and scrolls internally */
+.sidebar {
+  max-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Accessibility: high contrast border when focused */
+.sidebar:focus-within {
+  box-shadow: 0 0 0 3px hsl(var(--sidebar-ring) / 0.18);
+}
+
+/* Small tweak to avoid flicker on theme inversion in Safari/Chromium */
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar { backface-visibility: hidden; }
+}

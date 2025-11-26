@@ -7,6 +7,7 @@ import TradingViewWatchlist from "@/components/trading/TradingViewWatchlist";
 import { RiskAlerts } from "@/components/risk/RiskAlerts";
 import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
+import "@/components/dashboard/DashboardGrid.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -67,8 +68,8 @@ const Dashboard = () => {
         <p className="typography-body text-secondary-contrast">Welcome back to your trading account</p>
       </div>
 
-      {/* Stats Grid - Fixed: Standardized typography and improved structure */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8" style={{ gridAutoRows: 'minmax(auto, 1fr)' }}>
+      {/* Stats Grid - Using CSS Grid for responsive layout */}
+      <div className="dashboard-grid mb-8">
         {stats.map((stat) => {
           const Icon = stat.icon;
           const isEmptyState = 'empty' in stat && stat.empty;
@@ -126,8 +127,8 @@ const Dashboard = () => {
         })}
       </div>
 
-      {/* Risk Management Section - Fixed: Added placeholder content */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-md mb-xl section-spacing">
+      {/* Risk Management Section - Using CSS Grid for responsive layout */}
+      <div className="dashboard-grid mb-xl section-spacing">
         <Card elevation="2" variant="primary" className="border-border/70">
           <CardHeader>
             <CardTitle className="text-base font-semibold text-primary-contrast">Margin Level</CardTitle>

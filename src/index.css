@@ -12,6 +12,9 @@
 /* Import sidebar enhancements */
 @import "./styles/sidebar.css";
 
+/* Import sidebar layout fixes (z-index, transitions, background) */
+@import "./styles/sidebar-layout-fix.css";
+
 /* Import card elevation system */
 @import "./styles/cards.css";
 

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Grid Layout Testing</title>
+    <style>
+        :root {
+            --space-md: 16px;
+            --space-sm: 8px;
+            --space-lg: 24px;
+            --card: 0 0% 100%;
+            --muted: 210 40% 96%;
+            --border: 214 32% 91%;
+            --ring: 222 47% 11%;
+            --primary: 221 83% 53%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .test-section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .test-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Dashboard Grid Styles from DashboardGrid.css */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md, 16px);
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            animation: gridLayout 0.3s ease-in-out;
+        }
+
+        @keyframes gridLayout {
+            from {
+                opacity: 0.95;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm, 8px);
+            }
+        }
+
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: var(--space-md, 16px);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: var(--space-lg, 24px);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .dashboard-grid > * {
+            min-width: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card {
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 16px;
+            background: hsl(var(--card));
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .viewport-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: monospace;
+            z-index: 1000;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .controls label {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .controls input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .controls button {
+            padding: 6px 12px;
+            background: hsl(var(--primary));
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .controls button:hover {
+            background: hsl(var(--primary) / 0.9);
+        }
+
+        .grid-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Grid Layout Test Suite</h1>
+
+    <div class="test-section">
+        <div class="test-title">Interactive Grid Test</div>
+        <div class="controls">
+            <label>
+                Number of cards:
+                <input type="number" id="cardCount" min="1" max="20" value="4">
+            </label>
+            <button onclick="updateGrid()">Update Grid</button>
+        </div>
+        <div id="testGrid" class="dashboard-grid"></div>
+        <div class="grid-info" id="gridInfo"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Single Card (1 Card)</div>
+        <div class="dashboard-grid">
+            <div class="card"><span class="card-number">1</span><span class="card-label">Single Card</span></div>
+        </div>
+        <div class="grid-info">✓ Card should be full-width on mobile, centered on desktop</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Stat Cards (3 Cards)</div>
+        <div class="dashboard-grid">
+            <div class="card"><span class="card-number">1</span><span class="card-label">Total Equity</span></div>
+            <div class="card"><span class="card-number">2</span><span class="card-label">Profit/Loss</span></div>
+            <div class="card"><span class="card-number">3</span><span class="card-label">Available Margin</span></div>
+        </div>
+        <div class="grid-info">✓ 3 cards should be: 1 column (mobile), 3 columns (desktop)</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Mixed Cards (6 Cards)</div>
+        <div class="dashboard-grid">
+            <div class="card"><span class="card-number">1</span></div>
+            <div class="card"><span class="card-number">2</span></div>
+            <div class="card"><span class="card-number">3</span></div>
+            <div class="card"><span class="card-number">4</span></div>
+            <div class="card"><span class="card-number">5</span></div>
+            <div class="card"><span class="card-number">6</span></div>
+        </div>
+        <div class="grid-info">✓ 6 cards should be: 1 column (mobile), 2-3 columns (tablet), 4 columns (desktop)</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Many Cards (9 Cards)</div>
+        <div class="dashboard-grid">
+            <div class="card"><span class="card-number">1</span></div>
+            <div class="card"><span class="card-number">2</span></div>
+            <div class="card"><span class="card-number">3</span></div>
+            <div class="card"><span class="card-number">4</span></div>
+            <div class="card"><span class="card-number">5</span></div>
+            <div class="card"><span class="card-number">6</span></div>
+            <div class="card"><span class="card-number">7</span></div>
+            <div class="card"><span class="card-number">8</span></div>
+            <div class="card"><span class="card-number">9</span></div>
+        </div>
+        <div class="grid-info">✓ 9 cards should wrap naturally maintaining minimum 280px width</div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Large Dataset (12+ Cards)</div>
+        <div class="dashboard-grid">
+            <div class="card"><span class="card-number">1</span></div>
+            <div class="card"><span class="card-number">2</span></div>
+            <div class="card"><span class="card-number">3</span></div>
+            <div class="card"><span class="card-number">4</span></div>
+            <div class="card"><span class="card-number">5</span></div>
+            <div class="card"><span class="card-number">6</span></div>
+            <div class="card"><span class="card-number">7</span></div>
+            <div class="card"><span class="card-number">8</span></div>
+            <div class="card"><span class="card-number">9</span></div>
+            <div class="card"><span class="card-number">10</span></div>
+            <div class="card"><span class="card-number">11</span></div>
+            <div class="card"><span class="card-number">12</span></div>
+        </div>
+        <div class="grid-info">✓ 12 cards should maintain consistent grid layout without horizontal scroll</div>
+    </div>
+
+    <div class="viewport-info">
+        <div id="widthDisplay">Width: 0px</div>
+        <div id="breakpointDisplay">Breakpoint: --</div>
+        <div id="columnsDisplay">Columns: --</div>
+    </div>
+
+    <script>
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            let breakpoint = 'Mobile';
+            let columns = '1';
+
+            if (width >= 1200) {
+                breakpoint = 'Desktop (Large)';
+                columns = '4+';
+            } else if (width >= 1024) {
+                breakpoint = 'Desktop';
+                columns = 'auto-fit';
+            } else if (width >= 640) {
+                breakpoint = 'Tablet';
+                columns = 'auto-fit';
+            } else {
+                breakpoint = 'Mobile';
+                columns = '1';
+            }
+
+            document.getElementById('widthDisplay').textContent = `Width: ${width}px`;
+            document.getElementById('breakpointDisplay').textContent = `Breakpoint: ${breakpoint}`;
+            document.getElementById('columnsDisplay').textContent = `Columns: ${columns}`;
+        }
+
+        function updateGrid() {
+            const count = parseInt(document.getElementById('cardCount').value) || 4;
+            const grid = document.getElementById('testGrid');
+            grid.innerHTML = '';
+
+            for (let i = 1; i <= count; i++) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<span class="card-number">${i}</span><span class="card-label">Card ${i}</span>`;
+                grid.appendChild(card);
+            }
+
+            document.getElementById('gridInfo').textContent = `Generated ${count} cards - resize window to see responsive behavior`;
+        }
+
+        // Initialize
+        updateViewportInfo();
+        updateGrid();
+
+        // Update on resize
+        window.addEventListener('resize', updateViewportInfo);
+    </script>
+</body>
+</html>

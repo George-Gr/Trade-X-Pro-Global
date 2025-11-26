@@ -74,14 +74,14 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      {/* Sidebar */}
+    <div className="min-h-screen flex w-full bg-background transition-all duration-300 ease-in-out">
+      {/* Sidebar - z-index managed by sidebar component (z-50) */}
       <AppSidebar />
 
-      {/* Main Content Area with SidebarInset */}
-      <SidebarInset className="flex flex-col">
-        {/* Top Header */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-lg sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm">
+      {/* Main Content Area with SidebarInset - positioned below sidebar */}
+      <SidebarInset className="flex flex-col transition-all duration-300 ease-in-out">
+        {/* Top Header - sticky with z-50 to stay above main content */}
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-lg sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm transition-all duration-300 ease-in-out">
           <div className="flex items-center gap-lg">
             <SidebarTrigger className="h-10 w-10" />
             <div className="flex items-center gap-md">
@@ -124,7 +124,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-background">
+        <main className="flex-1 overflow-auto bg-background transition-all duration-300 ease-in-out">
           <div className="container mx-auto px-lg py-lg">
             {children}
           </div>
