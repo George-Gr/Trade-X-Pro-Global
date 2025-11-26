@@ -76,8 +76,8 @@ const Login = () => {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
           <TrendingUp className="h-12 w-12 text-primary mx-auto mb-4" />
-          <h1 className="typography-h1">TradePro</h1>
-          <p className="text-muted-foreground">Login to your account</p>
+          <h1 className="typography-h1 text-primary-contrast">TradePro</h1>
+          <p className="text-secondary-contrast">Login to your account</p>
         </div>
 
         <Card>
@@ -89,18 +89,19 @@ const Login = () => {
                   name="email"
                   render={() => (
                     <FormItem>
-                      <FormLabel htmlFor="email">Email Address</FormLabel>
+                      <FormLabel htmlFor="email" className="text-primary-contrast">Email Address</FormLabel>
                       <FormControl>
                         <Input
                           id="email"
                           type="email"
                           placeholder="Enter your email"
+                          className="text-primary-contrast"
                           {...register("email", validationRules.email)}
                           disabled={isLoading}
                         />
                       </FormControl>
-                      <FormDescription>Enter your registered email address</FormDescription>
-                      <FormMessage />
+                      <FormDescription className="text-secondary-contrast">Enter your registered email address</FormDescription>
+                      <FormMessage className="text-danger-contrast" />
                     </FormItem>
                   )}
                 />
@@ -110,33 +111,39 @@ const Login = () => {
                   name="password"
                   render={() => (
                     <FormItem>
-                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <FormLabel htmlFor="password" className="text-primary-contrast">Password</FormLabel>
                       <FormControl>
                         <Input
                           id="password"
                           type="password"
                           placeholder="Enter your password"
+                          className="text-primary-contrast"
                           {...register("password", validationRules.password)}
                           disabled={isLoading}
                         />
                       </FormControl>
-                      <FormDescription>Enter your account password</FormDescription>
-                      <FormMessage />
+                      <FormDescription className="text-secondary-contrast">Enter your account password</FormDescription>
+                      <FormMessage className="text-danger-contrast" />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                  disabled={isLoading}
+                  aria-label="Sign in to your trading account"
+                >
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </form>
             </Form>
 
             <div className="text-center space-y-2">
-              <Link to="/register" className="text-sm text-primary hover:underline">
+              <Link to="/register" className="text-sm text-primary-contrast hover:underline font-medium">
                 Don't have an account? Sign up
               </Link>
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-secondary-contrast">
                 Demo Account: demo@tradingpro.com | Password: Demo123!
               </div>
             </div>

@@ -215,22 +215,22 @@ export const OrderForm = ({
           pattern="[0-9]+([\.][0-9]+)?"
         />
         {validationError && (
-          <p className="text-xs text-destructive mt-1" role="alert">
+          <p className="text-xs text-destructive mt-sm" role="alert">
             {formatFieldError(validationError, 'volume')}
           </p>
         )}
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className="text-xs text-muted-foreground mt-sm">
           Pip value: ${pipValue.toFixed(2)}
         </p>
       </div>
 
       {/* Fixed Asset Leverage Display (Read-Only) */}
-      <div className="space-y-2">
+      <div className="space-y-sm">
         <Label className="text-sm font-semibold">
           Leverage (Fixed by Broker)
         </Label>
-        <div className="gradient-card border border-panel rounded-md p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="gradient-card border border-panel rounded-md p-lg flex items-center justify-between">
+          <div className="flex items-center gap-md">
             <span className="font-mono font-semibold text-foreground">
               1:{assetLeverage.toFixed(0)}
             </span>
@@ -238,7 +238,7 @@ export const OrderForm = ({
               MARGIN REQUIRED
             </span>
           </div>
-          <span className="text-xs font-medium gradient-primary/20 text-foreground px-3 py-1 rounded">
+          <span className="text-xs font-medium gradient-primary/20 text-foreground px-md py-sm rounded">
             ${marginRequired.toFixed(2)}
           </span>
         </div>

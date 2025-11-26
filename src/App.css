@@ -1,23 +1,37 @@
+/* Enhanced Accessibility & Color Contrast System */
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  /* Ensure minimum font size for readability */
+  font-size: 16px;
+  line-height: 1.6;
 }
 
+/* Logo with enhanced accessibility */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  transition: filter 300ms ease-out;
+  /* Ensure adequate contrast for logo text */
+  color: hsl(var(--primary-contrast));
 }
 
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+  /* Enhanced hover state with better contrast */
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: brightness(1.1) contrast(1.1);
+}
+
+/* Enhanced animation with reduced motion support */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +47,141 @@
   }
 }
 
+/* Enhanced card styling with better contrast */
 .card {
   padding: 2em;
+  border-radius: 8px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  box-shadow: 0 1px 3px hsl(var(--shadow) / 0.1), 0 1px 2px hsl(var(--shadow) / 0.08);
 }
 
+/* Enhanced text contrast for documentation links */
 .read-the-docs {
-  color: #888;
+  color: hsl(var(--secondary-contrast));
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.read-the-docs:hover {
+  color: hsl(var(--primary-contrast));
+  text-decoration: underline;
+}
+
+/* Focus management for better keyboard navigation */
+*:focus-visible {
+  outline: 2px solid hsl(var(--focus-color));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--focus-ring-color) / 0.3);
+}
+
+/* Skip link for screen readers */
+.sr-skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  font-size: 1px;
+}
+
+.sr-skip-link:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  padding: 0.75rem 1rem;
+  background: hsl(var(--primary-contrast-bg));
+  color: hsl(var(--primary-contrast-fg));
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px hsl(var(--focus-ring-color) / 0.2);
+  z-index: 9999;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .contrast-auto {
+    color: hsl(var(--contrast-auto-high));
+    background-color: hsl(var(--contrast-auto-bg-high));
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .logo {
+    animation: none !important;
+  }
+}
+
+/* Print accessibility */
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  .sr-skip-link, .sr-only {
+    display: none !important;
+  }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ARIA live regions for dynamic content */
+.aria-live-polite {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.aria-live-assertive {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

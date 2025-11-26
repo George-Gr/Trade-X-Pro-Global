@@ -81,18 +81,18 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
       {/* Main Content Area with SidebarInset */}
       <SidebarInset className="flex flex-col">
         {/* Top Header */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm">
-          <div className="flex items-center gap-4">
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-lg sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm">
+          <div className="flex items-center gap-lg">
             <SidebarTrigger className="h-10 w-10" />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-md">
               <TrendingUp className="h-5 w-5 text-primary" />
-              <span className="font-bold text-lg">TradeX Pro</span>
+              <span className="font-bold text-lg text-primary-contrast">TradeX Pro</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-xl">
             {/* Last Updated Timestamp */}
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-sm text-xs text-secondary-contrast">
               <Clock className="h-4 w-4" />
               <span>Last updated: {currentTime || "--:-- --"}</span>
             </div>
@@ -104,14 +104,14 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
               onClick={handleRefresh}
               disabled={isRefreshing}
               className="h-10 w-10"
-              aria-label="Refresh data"
+              aria-label={isRefreshing ? "Refreshing data..." : "Refresh data"}
             >
-              <RotateCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RotateCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''} text-secondary-contrast`} />
             </Button>
 
             <div className="hidden md:block text-sm">
-              <span className="text-muted-foreground">Account:</span>
-              <span className="ml-2 font-semibold">{user?.email || "Trading Account"}</span>
+              <span className="text-secondary-contrast">Account:</span>
+              <span className="ml-sm font-semibold text-primary-contrast">{user?.email || "Trading Account"}</span>
             </div>
             <NotificationCenter />
             <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
@@ -125,7 +125,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto bg-background">
-          <div className="container mx-auto px-6 py-6">
+          <div className="container mx-auto px-lg py-lg">
             {children}
           </div>
         </main>

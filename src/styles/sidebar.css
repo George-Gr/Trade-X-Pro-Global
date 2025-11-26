@@ -1,0 +1,187 @@
+/* Navigation Sidebar Active State Enhancements */
+
+/* Enhanced active state styling for sidebar navigation items */
+[data-sidebar="menu-button"][data-active="true"] {
+  /* Left border accent - #3B82F6 (blue-500) */
+  border-left: 4px solid hsl(217 91% 60%);
+  
+  /* Background highlight - rgba(59, 130, 246, 0.1) */
+  background-color: hsl(217 91% 60% / 0.1);
+  
+  /* Icon and text color - #3B82F6 (blue-500) */
+  color: hsl(217 91% 60%);
+  
+  /* Enhanced shadow for active state */
+  box-shadow: 
+    inset 4px 0 0 0 hsl(217 91% 60%),
+    0 4px 12px hsl(217 91% 60% / 0.15);
+  
+  /* Smooth transition for all active state changes */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enhanced hover state for better UX */
+[data-sidebar="menu-button"]:not([data-active="true"]):hover {
+  /* Subtle background highlight on hover */
+  background-color: hsl(var(--sidebar-accent) / 0.3);
+  
+  /* Enhanced border on hover */
+  border-left: 2px solid hsl(217 91% 60% / 0.5);
+  
+  /* Smooth transition */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus state for keyboard navigation */
+[data-sidebar="menu-button"]:focus-visible:not([data-active="true"]) {
+  /* Focus ring with accent color */
+  outline: 2px solid hsl(217 91% 60%);
+  outline-offset: 2px;
+  
+  /* Background highlight on focus */
+  background-color: hsl(var(--sidebar-accent) / 0.2);
+  
+  /* Smooth transition */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Active state with focus combination */
+[data-sidebar="menu-button"][data-active="true"]:focus-visible {
+  /* Enhanced focus ring for active state */
+  outline: 2px solid hsl(217 91% 60%);
+  outline-offset: 2px;
+  
+  /* Additional shadow for active + focus state */
+  box-shadow: 
+    inset 4px 0 0 0 hsl(217 91% 60%),
+    0 4px 12px hsl(217 91% 60% / 0.15),
+    0 0 0 4px hsl(217 91% 60% / 0.2);
+  
+  /* Smooth transition */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Icon styling for active state */
+[data-sidebar="menu-button"][data-active="true"] svg {
+  /* Icon color for active state */
+  color: hsl(217 91% 60%);
+  
+  /* Enhanced icon with slight scale */
+  transform: scale(1.05);
+  
+  /* Smooth transition */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Icon styling for hover state */
+[data-sidebar="menu-button"]:not([data-active="true"]):hover svg {
+  /* Icon color for hover state */
+  color: hsl(217 91% 60%);
+  
+  /* Slight scale effect on hover */
+  transform: scale(1.02);
+  
+  /* Smooth transition */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Text styling for active state */
+[data-sidebar="menu-button"][data-active="true"] span {
+  /* Text color for active state */
+  color: hsl(217 91% 60%);
+  
+  /* Bold font weight for active state */
+  font-weight: 600;
+  
+  /* Smooth transition */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enhanced active state for collapsed sidebar */
+[data-sidebar="menu-button"][data-active="true"][data-collapsible="icon"] {
+  /* Left border accent for collapsed state */
+  border-left: 4px solid hsl(217 91% 60%);
+  
+  /* Background highlight for collapsed state */
+  background-color: hsl(217 91% 60% / 0.1);
+  
+  /* Icon and text color for collapsed state */
+  color: hsl(217 91% 60%);
+  
+  /* Remove left padding to align with border */
+  padding-left: 0.5rem;
+  
+  /* Enhanced shadow for collapsed active state */
+  box-shadow: 
+    inset 4px 0 0 0 hsl(217 91% 60%),
+    0 2px 8px hsl(217 91% 60% / 0.2);
+}
+
+/* Dark mode adjustments */
+.dark [data-sidebar="menu-button"][data-active="true"] {
+  /* Left border accent for dark mode */
+  border-left: 4px solid hsl(217 91% 60%);
+  
+  /* Background highlight for dark mode */
+  background-color: hsl(217 91% 60% / 0.15);
+  
+  /* Icon and text color for dark mode */
+  color: hsl(217 91% 60%);
+}
+
+.dark [data-sidebar="menu-button"]:not([data-active="true"]):hover {
+  /* Hover background for dark mode */
+  background-color: hsl(var(--sidebar-accent) / 0.4);
+  
+  /* Hover border for dark mode */
+  border-left: 2px solid hsl(217 91% 60% / 0.6);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  [data-sidebar="menu-button"][data-active="true"] {
+    /* High contrast border */
+    border-left: 4px solid hsl(217 91% 60%);
+    
+    /* High contrast background */
+    background-color: hsl(217 91% 60% / 0.2);
+    
+    /* High contrast text */
+    color: hsl(217 91% 60%);
+    
+    /* Enhanced shadow for high contrast */
+    box-shadow: 
+      inset 4px 0 0 0 hsl(217 91% 60%),
+      0 4px 12px hsl(217 91% 60% / 0.3);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  [data-sidebar="menu-button"][data-active="true"],
+  [data-sidebar="menu-button"]:not([data-active="true"]):hover,
+  [data-sidebar="menu-button"]:focus-visible {
+    /* Remove transitions for reduced motion */
+    transition: none !important;
+    
+    /* Remove scale transforms for reduced motion */
+    transform: none !important;
+  }
+}
+
+/* Touch target optimization for mobile */
+@media (max-width: 768px) {
+  [data-sidebar="menu-button"][data-active="true"] {
+    /* Ensure minimum touch target size */
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    
+    /* Larger border for better visibility on mobile */
+    border-left: 4px solid hsl(217 91% 60%);
+  }
+  
+  [data-sidebar="menu-button"]:not([data-active="true"]):hover {
+    /* Larger touch target for hover state */
+    min-height: 44px;
+  }
+}

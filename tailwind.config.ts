@@ -32,6 +32,18 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        /* WCAG AA Compliant Accessibility Colors */
+        "primary-contrast": "hsl(var(--primary-contrast))",
+        "primary-contrast-light": "hsl(var(--primary-contrast-light))",
+        "secondary-contrast": "hsl(var(--secondary-contrast))",
+        "secondary-contrast-light": "hsl(var(--secondary-contrast-light))",
+        "tertiary-contrast": "hsl(var(--tertiary-contrast))",
+        "tertiary-contrast-light": "hsl(var(--tertiary-contrast-light))",
+        "muted-contrast": "hsl(var(--muted-contrast))",
+        "muted-contrast-light": "hsl(var(--muted-contrast-light))",
+        "success-contrast": "hsl(var(--success-contrast))",
+        "warning-contrast": "hsl(var(--warning-contrast))",
+        "danger-contrast": "hsl(var(--danger-contrast))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

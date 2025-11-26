@@ -1,0 +1,297 @@
+/* Spacing System - TradeX Pro Dashboard
+ * Implements an 8px base grid system for consistent spacing across the application
+ * All spacing values are multiples of 8px for visual harmony and consistency
+ */
+
+@layer base {
+  :root {
+    /* Base 8px Grid System */
+    --space-0: 0px;
+    --space-xs: 0.25rem;    /* 4px - Half grid unit */
+    --space-1: 0.5rem;      /* 8px - Base unit */
+    --space-2: 1rem;        /* 16px - Double unit */
+    --space-3: 1.5rem;      /* 24px - Triple unit */
+    --space-4: 2rem;        /* 32px - Quadruple unit */
+    --space-6: 3rem;        /* 48px - Six times unit */
+    --space-8: 4rem;        /* 64px - Eight times unit */
+    --space-10: 5rem;       /* 80px - Ten times unit */
+    --space-12: 6rem;       /* 96px - Twelve times unit */
+    --space-16: 8rem;       /* 128px - Sixteen times unit */
+    --space-20: 10rem;      /* 160px - Twenty times unit */
+    --space-24: 12rem;      /* 192px - Twenty-four times unit */
+
+    /* Common Padding Values */
+    --padding-xs: var(--space-xs);     /* 4px */
+    --padding-sm: var(--space-1);      /* 8px */
+    --padding-md: var(--space-2);      /* 16px */
+    --padding-lg: var(--space-3);      /* 24px */
+    --padding-xl: var(--space-4);      /* 32px */
+    --padding-2xl: var(--space-6);     /* 48px */
+    --padding-3xl: var(--space-8);     /* 64px */
+
+    /* Common Margin Values */
+    --margin-xs: var(--space-xs);      /* 4px */
+    --margin-sm: var(--space-1);       /* 8px */
+    --margin-md: var(--space-2);       /* 16px */
+    --margin-lg: var(--space-3);       /* 24px */
+    --margin-xl: var(--space-4);       /* 32px */
+    --margin-2xl: var(--space-6);      /* 48px */
+    --margin-3xl: var(--space-8);      /* 64px */
+
+    /* Gap Values for Flexbox and Grid */
+    --gap-xs: var(--space-xs);         /* 4px */
+    --gap-sm: var(--space-1);          /* 8px */
+    --gap-md: var(--space-2);          /* 16px */
+    --gap-lg: var(--space-3);          /* 24px */
+    --gap-xl: var(--space-4);          /* 32px */
+    --gap-2xl: var(--space-6);         /* 48px */
+
+    /* Component-Specific Spacing */
+    --card-padding: var(--space-3);           /* 24px - Card internal padding */
+    --card-margin: var(--space-2);            /* 16px - Card external margin */
+    --card-gap: var(--space-3);               /* 24px - Card content spacing */
+
+    --button-padding-x: var(--space-3);       /* 24px - Button horizontal padding */
+    --button-padding-y: var(--space-2);       /* 16px - Button vertical padding */
+    --button-margin: var(--space-1);          /* 8px - Button external margin */
+
+    --input-padding-x: var(--space-3);        /* 24px - Input horizontal padding */
+    --input-padding-y: var(--space-2);        /* 16px - Input vertical padding */
+    --input-margin: var(--space-1);           /* 8px - Input external margin */
+
+    --form-field-margin: var(--space-2);      /* 16px - Form field spacing */
+    --form-section-margin: var(--space-4);    /* 32px - Form section spacing */
+
+    --header-padding: var(--space-3);         /* 24px - Header internal padding */
+    --header-margin: var(--space-1);          /* 8px - Header external margin */
+
+    --sidebar-width: 240px;                   /* Fixed sidebar width */
+    --sidebar-padding: var(--space-3);        /* 24px - Sidebar internal padding */
+    --sidebar-gap: var(--space-2);            /* 16px - Sidebar item spacing */
+
+    /* Layout Spacing */
+    --layout-padding: var(--space-4);         /* 32px - Main layout padding */
+    --layout-margin: var(--space-2);          /* 16px - Main layout margin */
+    --section-spacing: var(--space-6);        /* 48px - Section separation */
+
+    --dashboard-grid-gap: var(--space-3);     /* 24px - Dashboard grid spacing */
+    --dashboard-card-padding: var(--space-3); /* 24px - Dashboard card padding */
+    --dashboard-card-margin: var(--space-2);  /* 16px - Dashboard card margin */
+  }
+}
+
+/* Utility Classes for Spacing */
+@layer utilities {
+  /* Margin Classes */
+  .m-0 { margin: 0; }
+  .m-xs { margin: var(--margin-xs); }
+  .m-sm { margin: var(--margin-sm); }
+  .m-md { margin: var(--margin-md); }
+  .m-lg { margin: var(--margin-lg); }
+  .m-xl { margin: var(--margin-xl); }
+  .m-2xl { margin: var(--margin-2xl); }
+
+  .mt-0 { margin-top: 0; }
+  .mt-xs { margin-top: var(--margin-xs); }
+  .mt-sm { margin-top: var(--margin-sm); }
+  .mt-md { margin-top: var(--margin-md); }
+  .mt-lg { margin-top: var(--margin-lg); }
+  .mt-xl { margin-top: var(--margin-xl); }
+  .mt-2xl { margin-top: var(--margin-2xl); }
+
+  .mb-0 { margin-bottom: 0; }
+  .mb-xs { margin-bottom: var(--margin-xs); }
+  .mb-sm { margin-bottom: var(--margin-sm); }
+  .mb-md { margin-bottom: var(--margin-md); }
+  .mb-lg { margin-bottom: var(--margin-lg); }
+  .mb-xl { margin-bottom: var(--margin-xl); }
+  .mb-2xl { margin-bottom: var(--margin-2xl); }
+
+  .ml-0 { margin-left: 0; }
+  .ml-xs { margin-left: var(--margin-xs); }
+  .ml-sm { margin-left: var(--margin-sm); }
+  .ml-md { margin-left: var(--margin-md); }
+  .ml-lg { margin-left: var(--margin-lg); }
+  .ml-xl { margin-left: var(--margin-xl); }
+  .ml-2xl { margin-left: var(--margin-2xl); }
+
+  .mr-0 { margin-right: 0; }
+  .mr-xs { margin-right: var(--margin-xs); }
+  .mr-sm { margin-right: var(--margin-sm); }
+  .mr-md { margin-right: var(--margin-md); }
+  .mr-lg { margin-right: var(--margin-lg); }
+  .mr-xl { margin-right: var(--margin-xl); }
+  .mr-2xl { margin-right: var(--margin-2xl); }
+
+  .mx-0 { margin-left: 0; margin-right: 0; }
+  .mx-xs { margin-left: var(--margin-xs); margin-right: var(--margin-xs); }
+  .mx-sm { margin-left: var(--margin-sm); margin-right: var(--margin-sm); }
+  .mx-md { margin-left: var(--margin-md); margin-right: var(--margin-md); }
+  .mx-lg { margin-left: var(--margin-lg); margin-right: var(--margin-lg); }
+  .mx-xl { margin-left: var(--margin-xl); margin-right: var(--margin-xl); }
+  .mx-2xl { margin-left: var(--margin-2xl); margin-right: var(--margin-2xl); }
+
+  .my-0 { margin-top: 0; margin-bottom: 0; }
+  .my-xs { margin-top: var(--margin-xs); margin-bottom: var(--margin-xs); }
+  .my-sm { margin-top: var(--margin-sm); margin-bottom: var(--margin-sm); }
+  .my-md { margin-top: var(--margin-md); margin-bottom: var(--margin-md); }
+  .my-lg { margin-top: var(--margin-lg); margin-bottom: var(--margin-lg); }
+  .my-xl { margin-top: var(--margin-xl); margin-bottom: var(--margin-xl); }
+  .my-2xl { margin-top: var(--margin-2xl); margin-bottom: var(--margin-2xl); }
+
+  /* Padding Classes */
+  .p-0 { padding: 0; }
+  .p-xs { padding: var(--padding-xs); }
+  .p-sm { padding: var(--padding-sm); }
+  .p-md { padding: var(--padding-md); }
+  .p-lg { padding: var(--padding-lg); }
+  .p-xl { padding: var(--padding-xl); }
+  .p-2xl { padding: var(--padding-2xl); }
+
+  .pt-0 { padding-top: 0; }
+  .pt-xs { padding-top: var(--padding-xs); }
+  .pt-sm { padding-top: var(--padding-sm); }
+  .pt-md { padding-top: var(--padding-md); }
+  .pt-lg { padding-top: var(--padding-lg); }
+  .pt-xl { padding-top: var(--padding-xl); }
+  .pt-2xl { padding-top: var(--padding-2xl); }
+
+  .pb-0 { padding-bottom: 0; }
+  .pb-xs { padding-bottom: var(--padding-xs); }
+  .pb-sm { padding-bottom: var(--padding-sm); }
+  .pb-md { padding-bottom: var(--padding-md); }
+  .pb-lg { padding-bottom: var(--padding-lg); }
+  .pb-xl { padding-bottom: var(--padding-xl); }
+  .pb-2xl { padding-bottom: var(--padding-2xl); }
+
+  .pl-0 { padding-left: 0; }
+  .pl-xs { padding-left: var(--padding-xs); }
+  .pl-sm { padding-left: var(--padding-sm); }
+  .pl-md { padding-left: var(--padding-md); }
+  .pl-lg { padding-left: var(--padding-lg); }
+  .pl-xl { padding-left: var(--padding-xl); }
+  .pl-2xl { padding-left: var(--padding-2xl); }
+
+  .pr-0 { padding-right: 0; }
+  .pr-xs { padding-right: var(--padding-xs); }
+  .pr-sm { padding-right: var(--padding-sm); }
+  .pr-md { padding-right: var(--padding-md); }
+  .pr-lg { padding-right: var(--padding-lg); }
+  .pr-xl { padding-right: var(--padding-xl); }
+  .pr-2xl { padding-right: var(--padding-2xl); }
+
+  .px-0 { padding-left: 0; padding-right: 0; }
+  .px-xs { padding-left: var(--padding-xs); padding-right: var(--padding-xs); }
+  .px-sm { padding-left: var(--padding-sm); padding-right: var(--padding-sm); }
+  .px-md { padding-left: var(--padding-md); padding-right: var(--padding-md); }
+  .px-lg { padding-left: var(--padding-lg); padding-right: var(--padding-lg); }
+  .px-xl { padding-left: var(--padding-xl); padding-right: var(--padding-xl); }
+  .px-2xl { padding-left: var(--padding-2xl); padding-right: var(--padding-2xl); }
+
+  .py-0 { padding-top: 0; padding-bottom: 0; }
+  .py-xs { padding-top: var(--padding-xs); padding-bottom: var(--padding-xs); }
+  .py-sm { padding-top: var(--padding-sm); padding-bottom: var(--padding-sm); }
+  .py-md { padding-top: var(--padding-md); padding-bottom: var(--padding-md); }
+  .py-lg { padding-top: var(--padding-lg); padding-bottom: var(--padding-lg); }
+  .py-xl { padding-top: var(--padding-xl); padding-bottom: var(--padding-xl); }
+  .py-2xl { padding-top: var(--padding-2xl); padding-bottom: var(--padding-2xl); }
+
+  /* Gap Classes for Flexbox and Grid */
+  .gap-0 { gap: 0; }
+  .gap-xs { gap: var(--gap-xs); }
+  .gap-sm { gap: var(--gap-sm); }
+  .gap-md { gap: var(--gap-md); }
+  .gap-lg { gap: var(--gap-lg); }
+  .gap-xl { gap: var(--gap-xl); }
+  .gap-2xl { gap: var(--gap-2xl); }
+
+  /* Component-Specific Utility Classes */
+  .card-spacing {
+    padding: var(--card-padding);
+    margin: var(--card-margin);
+    gap: var(--card-gap);
+  }
+
+  .button-spacing {
+    padding: var(--button-padding-y) var(--button-padding-x);
+    margin: var(--button-margin);
+  }
+
+  .input-spacing {
+    padding: var(--input-padding-y) var(--input-padding-x);
+    margin: var(--input-margin);
+  }
+
+  .form-field-spacing {
+    margin-bottom: var(--form-field-margin);
+  }
+
+  .form-section-spacing {
+    margin-bottom: var(--form-section-margin);
+  }
+
+  .header-spacing {
+    padding: var(--header-padding);
+    margin: var(--header-margin);
+  }
+
+  .sidebar-spacing {
+    padding: var(--sidebar-padding);
+    gap: var(--sidebar-gap);
+  }
+
+  .dashboard-grid-spacing {
+    gap: var(--dashboard-grid-gap);
+  }
+
+  .dashboard-card-spacing {
+    padding: var(--dashboard-card-padding);
+    margin: var(--dashboard-card-margin);
+  }
+
+  .layout-spacing {
+    padding: var(--layout-padding);
+    margin: var(--layout-margin);
+  }
+
+  .section-spacing {
+    margin-bottom: var(--section-spacing);
+  }
+}
+
+/* Responsive Spacing Adjustments */
+@layer utilities {
+  /* Mobile spacing adjustments */
+  @media (max-width: 640px) {
+    .p-md { padding: var(--padding-sm); }
+    .p-lg { padding: var(--padding-md); }
+    .p-xl { padding: var(--padding-lg); }
+    .py-md { padding-top: var(--padding-sm); padding-bottom: var(--padding-sm); }
+    .py-lg { padding-top: var(--padding-md); padding-bottom: var(--padding-md); }
+    .py-xl { padding-top: var(--padding-lg); padding-bottom: var(--padding-lg); }
+    .px-md { padding-left: var(--padding-sm); padding-right: var(--padding-sm); }
+    .px-lg { padding-left: var(--padding-md); padding-right: var(--padding-md); }
+    .px-xl { padding-left: var(--padding-lg); padding-right: var(--padding-lg); }
+    
+    .m-lg { margin: var(--margin-md); }
+    .m-xl { margin: var(--margin-lg); }
+    .my-lg { margin-top: var(--margin-md); margin-bottom: var(--margin-md); }
+    .my-xl { margin-top: var(--margin-lg); margin-bottom: var(--margin-lg); }
+    .mx-lg { margin-left: var(--margin-md); margin-right: var(--margin-md); }
+    .mx-xl { margin-left: var(--margin-lg); margin-right: var(--margin-lg); }
+    
+    .section-spacing { margin-bottom: var(--margin-lg); }
+    .dashboard-grid-spacing { gap: var(--gap-md); }
+  }
+
+  /* Tablet spacing adjustments */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .py-lg { padding-top: var(--padding-lg); padding-bottom: var(--padding-lg); }
+    .py-xl { padding-top: var(--padding-xl); padding-bottom: var(--padding-xl); }
+    .px-lg { padding-left: var(--padding-lg); padding-right: var(--padding-lg); }
+    .px-xl { padding-left: var(--padding-xl); padding-right: var(--padding-xl); }
+    
+    .my-xl { margin-top: var(--margin-xl); margin-bottom: var(--margin-xl); }
+    .mx-xl { margin-left: var(--margin-xl); margin-right: var(--margin-xl); }
+  }
+}
