@@ -16,7 +16,7 @@ const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
-const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_WIDTH_ICON = "4rem"; // 64px for collapsed state
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 const SidebarProvider = React.forwardRef<
@@ -151,7 +151,7 @@ const Sidebar = React.forwardRef<
     >
       <div
         className={cn(
-          "relative h-svh w-[--sidebar-width] bg-transparent transition-[width] duration-150 ease-linear",
+          "relative h-svh w-[--sidebar-width] bg-transparent transition-[width] duration-300 ease-in-out",
           "group-data-[collapsible=offcanvas]:w-0",
           "group-data-[side=right]:rotate-180",
           variant === "floating" || variant === "inset"
@@ -161,7 +161,7 @@ const Sidebar = React.forwardRef<
       />
       <div
         className={cn(
-          "absolute z-10 hidden h-full top-0 w-[--sidebar-width] transition-[left,right,width] duration-150 ease-linear md:flex items-center justify-center bg-sidebar",
+          "absolute z-10 hidden h-full top-0 w-[--sidebar-width] transition-[left,right,width] duration-300 ease-in-out md:flex items-center justify-center bg-sidebar",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
