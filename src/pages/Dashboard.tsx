@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import TradingViewWatchlist from "@/components/trading/TradingViewWatchlist";
-import { RiskAlerts } from "@/components/risk/RiskAlerts";
-import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
+import MarginLevelCard from "@/components/dashboard/MarginLevelCard";
+import RiskAlertsCard from "@/components/dashboard/RiskAlertsCard";
+import ProfitLossCard from "@/components/dashboard/ProfitLossCard";
+import { ErrorMessage, RealtimeErrorAlert } from "@/components/ui/ErrorUI";
+import { useRiskMetrics } from "@/hooks/useRiskMetrics";
+import useRiskEvents from "@/hooks/useRiskEvents";
+import { useProfitLossData } from "@/hooks/useProfitLossData";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import "@/components/dashboard/DashboardGrid.css";
 
@@ -59,6 +64,19 @@ const Dashboard = () => {
     { time: "Today", action: "KYC Submitted", status: "Approved" },
     { time: "Today", action: "Virtual Balance Assigned", status: "$50,000" },
   ];
+
+  // Use real backend hooks for risk metrics & events (includes realtime subscriptions)
+  const { riskMetrics, marginTrend, loading: riskLoading, error: riskError, refetch: refetchRiskMetrics } = useRiskMetrics();
+  const { events: alertsData, loading: alertsLoading } = useRiskEvents(5);
+  
+  // Use profit/loss data hook for enhanced chart visualization
+  const { 
+    metrics: profitLossMetrics, 
+    chartData: profitLossData, 
+    loading: profitLossLoading, 
+    error: profitLossError,
+    refetch: refetchProfitLoss 
+  } = useProfitLossData('7d');
 
   return (
     <AuthenticatedLayout>
@@ -126,45 +144,62 @@ const Dashboard = () => {
           );
         })}
       </div>
+      {/* Error Alerts for Connection Issues */}
+      {riskError && (
+        <RealtimeErrorAlert onRetry={refetchRiskMetrics} />
+      )}
 
       {/* Risk Management Section - Using CSS Grid for responsive layout */}
       <div className="dashboard-grid mb-xl section-spacing">
-        <Card elevation="2" variant="primary" className="border-border/70">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold text-primary-contrast">Margin Level</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <MarginLevelIndicator />
-            {/* Empty state when no positions */}
-            <div className="text-center py-2xl">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-lg">
-                <BarChart3 className="h-6 w-6 text-primary" />
-              </div>
-              <p className="text-sm font-semibold text-primary-contrast">No Active Margin</p>
-              <p className="text-xs text-secondary-contrast mt-sm">
-                Open a position with leverage to see your margin level
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card elevation="2" variant="primary" className="border-border/70">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold text-primary-contrast">Risk Alerts</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RiskAlerts />
-            {/* Empty state when no alerts */}
-            <div className="text-center py-2xl">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-success-contrast/10 mb-lg">
-                <AlertCircle className="h-6 w-6 text-success-contrast" />
-              </div>
-              <p className="text-sm font-semibold text-primary-contrast">No Risk Alerts</p>
-              <p className="text-xs text-secondary-contrast mt-sm">
-                Your account is in excellent standing. All positions within safe limits.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Margin Level card - wired to real backend via useRiskMetrics */}
+        <div>
+          {riskError ? (
+            <ErrorMessage
+              error={riskError}
+              title="Margin Data Unavailable"
+              description="Unable to load margin metrics. Please check your connection."
+              onRetry={refetchRiskMetrics}
+            />
+          ) : (
+            <MarginLevelCard loading={riskLoading} marginLevel={riskMetrics?.currentMarginLevel ?? 0} trend={marginTrend} />
+          )}
+        </div>
+        
+        {/* Profit/Loss card - wired to real backend via useProfitLossData */}
+        <div>
+          {profitLossError ? (
+            <ErrorMessage
+              error={profitLossError}
+              title="Profit/Loss Data Unavailable"
+              description="Unable to load profit/loss data. Please check your connection."
+              onRetry={refetchProfitLoss}
+            />
+          ) : (
+            <ProfitLossCard 
+              loading={profitLossLoading} 
+              currentValue={profitLossMetrics?.currentEquity ?? 0}
+              profitLossData={profitLossData}
+              timeRange="7d"
+            />
+          )}
+        </div>
+        
+        {/* Risk Alerts card - wired to real backend via useRiskEvents */}
+        <div>
+          {alertsLoading && !alertsData ? (
+            <RiskAlertsCard loading={alertsLoading} alerts={[]} />
+          ) : (
+            <RiskAlertsCard
+              loading={alertsLoading}
+              alerts={alertsData?.map((e: any) => ({
+                id: e.id,
+                level: (e.severity === "critical" || e.severity === "danger") ? "critical" : e.severity === "warning" ? "warning" : "info",
+                title: e.event_type ? String(e.event_type).replace(/_/g, " ") : (e.description || "Risk event"),
+                details: e.description,
+              }))}
+            />
+          )}
+        </div>
       </div>
 
       {/* Market Watch - Full width component below Risk Management */}

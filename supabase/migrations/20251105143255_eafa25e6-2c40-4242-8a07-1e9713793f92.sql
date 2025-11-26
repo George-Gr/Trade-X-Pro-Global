@@ -218,6 +218,13 @@ CREATE POLICY "Users can view own role" ON public.user_roles
 CREATE POLICY "Admins can view all roles" ON public.user_roles
     FOR SELECT USING (public.has_role(auth.uid(), 'admin'));
 
+-- Allow role-based filtering for role checks (needed for admin verification)
+CREATE POLICY "Allow role filtering for role checks" ON public.user_roles
+    FOR SELECT USING (
+        (auth.uid() = user_id) OR 
+        (public.has_role(auth.uid(), 'admin'))
+    );
+
 -- Profiles: Users can view/update their own, admins can view all
 CREATE POLICY "Users can view own profile" ON public.profiles
     FOR SELECT USING (auth.uid() = id);

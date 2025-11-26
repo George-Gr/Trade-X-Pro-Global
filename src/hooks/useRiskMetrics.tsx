@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import {
   calculateRiskMetrics,
@@ -27,6 +27,7 @@ interface PositionRiskData {
 interface UseRiskMetricsReturn {
   riskMetrics: RiskMetrics | null;
   portfolioRiskAssessment: PortfolioRiskAssessment | null;
+  marginTrend: number[]; // Last 7 days of margin levels for sparkline
   loading: boolean;
   error: string | null;
   isCloseOnlyMode: boolean;
@@ -39,6 +40,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
   const [riskMetrics, setRiskMetrics] = useState<RiskMetrics | null>(null);
   const [portfolioRiskAssessment, setPortfolioRiskAssessment] =
     useState<PortfolioRiskAssessment | null>(null);
+  const [marginTrend, setMarginTrend] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,6 +72,19 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       if (positionsError) throw positionsError;
 
+      // Fetch margin history (last 7 days) for sparkline
+      const { data: marginHistoryData, error: historyError } = await supabase
+        .from('margin_history' as any)
+        .select('margin_level')
+        .eq('user_id', user.id)
+        .gt('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .order('created_at', { ascending: true });
+
+      if (historyError) {
+        console.warn("Failed to fetch margin history:", historyError);
+        // Continue without history - it's not critical
+      }
+
       // Convert positions to format needed for calculations
       const positions = (positionsData as Position[]).map(p => ({
         positionValue: (p.quantity || 0) * (p.current_price || 0),
@@ -84,6 +99,15 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       );
 
       setRiskMetrics(metrics);
+
+      // Set margin trend from history
+      if (marginHistoryData && marginHistoryData.length > 0) {
+        const trend = ((marginHistoryData as unknown) as { margin_level: number }[]).map(d => d.margin_level);
+        setMarginTrend(trend);
+      } else {
+        // If no history, use current margin level as single data point
+        setMarginTrend([metrics.currentMarginLevel]);
+      }
 
       // Calculate portfolio risk assessment
       const concentration = calculateConcentration(positionsData as Position[]);
@@ -170,6 +194,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
   return {
     riskMetrics,
     portfolioRiskAssessment,
+    marginTrend,
     loading,
     error,
     isCloseOnlyMode,

@@ -36,16 +36,23 @@ export const useAuth = () => {
 
   const checkAdminRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // First try to get user's roles
+      const { data: rolesData, error: rolesError } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("user_id", userId)
-        .eq("role", "admin")
-        .single();
+        .eq("user_id", userId);
 
-      setIsAdmin(!!data && !error);
+      if (rolesError) {
+        console.error('Error fetching user roles:', rolesError);
+        setIsAdmin(false);
+        return;
+      }
+
+      // Check if user has admin role
+      const isAdminRole = rolesData?.some(role => role.role === 'admin') || false;
+      setIsAdmin(isAdminRole);
     } catch (error) {
-      // Error silently handled - will return isAdmin as false
+      console.error('Error checking admin role:', error);
       setIsAdmin(false);
     } finally {
       setLoading(false);
