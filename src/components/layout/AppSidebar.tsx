@@ -8,18 +8,23 @@ import {
   Shield, 
   Settings,
   Bell,
-  Wallet
+  Wallet,
+  User,
+  LogOut
 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { useSidebar } from "@/components/ui/sidebarContext";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +44,7 @@ export function AppSidebar() {
   const { state, open } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, handleLogout } = useAuthenticatedLayout();
   const collapsed = state === "collapsed";
 
   const isActive = (path: string) => location.pathname === path;
@@ -90,6 +96,70 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-border/50 bg-sidebar/50 backdrop-blur-sm">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => navigate("/settings/profile")}
+              tooltip={collapsed ? "Profile" : undefined}
+              className={cn(
+                "gap-3 px-4 py-3",
+                collapsed && "justify-center px-2"
+              )}
+              aria-label="View profile"
+            >
+              <User className="h-5 w-5 flex-shrink-0" />
+              <span className={cn(
+                "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                collapsed && "hidden"
+              )}>
+                Profile
+              </span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => navigate("/settings")}
+              tooltip={collapsed ? "Account Settings" : undefined}
+              className={cn(
+                "gap-3 px-4 py-3",
+                collapsed && "justify-center px-2"
+              )}
+              aria-label="Account settings"
+            >
+              <Settings className="h-5 w-5 flex-shrink-0" />
+              <span className={cn(
+                "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                collapsed && "hidden"
+              )}>
+                Account Settings
+              </span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleLogout}
+              tooltip={collapsed ? "Logout" : undefined}
+              className={cn(
+                "gap-3 px-4 py-3 text-destructive hover:bg-destructive/10",
+                collapsed && "justify-center px-2"
+              )}
+              aria-label="Logout"
+            >
+              <LogOut className="h-5 w-5 flex-shrink-0" />
+              <span className={cn(
+                "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
+                collapsed && "hidden"
+              )}>
+                Logout
+              </span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
