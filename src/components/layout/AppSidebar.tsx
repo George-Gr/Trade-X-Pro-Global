@@ -69,7 +69,7 @@ export function AppSidebar() {
                       isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       className={cn(
-                        "gap-3 px-4 py-2.5",
+                        "gap-3 px-4 py-3",
                         collapsed && "justify-center px-2"
                       )}
                       aria-label={`Navigate to ${item.label}`}
