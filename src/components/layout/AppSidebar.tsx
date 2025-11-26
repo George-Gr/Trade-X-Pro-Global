@@ -69,11 +69,8 @@ export function AppSidebar() {
                       isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       className={cn(
-                        "gap-3 transition-all duration-200 px-4 py-2.5",
-                        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                        active && "bg-primary text-primary-foreground font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary",
-                        collapsed && "justify-center px-2",
-                        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                        "gap-3 px-4 py-2.5",
+                        collapsed && "justify-center px-2"
                       )}
                       aria-label={`Navigate to ${item.label}`}
                       aria-current={active ? "page" : undefined}
