@@ -10,7 +10,7 @@ export const AccountSummary: React.FC = () => {
   const marginLevel = calculateMarginLevel();
 
   return (
-    <Card className="p-4 bg-card">
+    <Card elevation="1" variant="primary" className="p-4 bg-card">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted-foreground">Account Balance</p>

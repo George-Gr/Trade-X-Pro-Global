@@ -104,7 +104,7 @@ export const EquityChart: React.FC = () => {
   const visibleData = data.slice(visibleDataStart, Math.min(visibleDataStart + visibleDataLength, data.length));
 
   return (
-    <Card className="p-4 bg-card">
+    <Card elevation="1" variant="primary" className="p-4 bg-card">
       <div className="space-y-4">
         {/* Header with controls */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
