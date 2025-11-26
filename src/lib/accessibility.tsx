@@ -9,8 +9,8 @@
 import { useEffect, useRef, useCallback } from 'react';
 
 // Mock vitest for testing environment when needed
-declare global {
-  var vi: any;
+if (typeof window !== 'undefined') {
+  (window as any).vi = (window as any).vi || undefined;
 }
 
 /* 
