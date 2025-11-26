@@ -19,14 +19,14 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
 
   if (data.length === 0) {
     return (
-      <Card className="p-4 bg-card">
+      <Card elevation="1" variant="primary" className="p-4 bg-card">
         <p className="text-sm text-muted-foreground">No positions</p>
       </Card>
     );
   }
 
   return (
-    <Card className="p-4 bg-card">
+    <Card elevation="1" variant="primary" className="p-4 bg-card">
       <h3 className="font-semibold mb-2">Asset Allocation</h3>
       <div className="aspect-[16/9] w-full">
         <ResponsiveContainer>

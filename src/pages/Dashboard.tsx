@@ -75,7 +75,12 @@ const Dashboard = () => {
           const isNeutral = stat.trend === "neutral" && !stat.change.includes("+") && !stat.change.includes("-");
           
           return (
-            <Card key={stat.title} className="rounded-lg border-border/70 focus-within:ring-2 focus-within:ring-offset-2 hover:shadow-lg focus-within:ring-primary transition-shadow duration-300">
+            <Card 
+              key={stat.title} 
+              elevation="1" 
+              variant="primary"
+              className="rounded-lg border-border/70 focus-within:ring-2 focus-within:ring-offset-2 hover:shadow-lg focus-within:ring-primary transition-shadow duration-300"
+            >
               <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
                 <div className="flex-1">
                   <CardTitle className="typography-label text-primary-contrast tracking-wide">
@@ -123,7 +128,7 @@ const Dashboard = () => {
 
       {/* Risk Management Section - Fixed: Added placeholder content */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-md mb-xl section-spacing">
-        <Card className="border-border/70">
+        <Card elevation="2" variant="primary" className="border-border/70">
           <CardHeader>
             <CardTitle className="text-base font-semibold text-primary-contrast">Margin Level</CardTitle>
           </CardHeader>
@@ -141,7 +146,7 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/70">
+        <Card elevation="2" variant="primary" className="border-border/70">
           <CardHeader>
             <CardTitle className="text-base font-semibold text-primary-contrast">Risk Alerts</CardTitle>
           </CardHeader>
@@ -162,7 +167,7 @@ const Dashboard = () => {
       </div>
 
       {/* Market Watch - Full width component below Risk Management */}
-      <Card className="border-border/70 mb-xl">
+      <Card elevation="2" variant="primary" className="border-border/70 mb-xl">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-primary-contrast">Market Watch</CardTitle>
         </CardHeader>
@@ -174,7 +179,7 @@ const Dashboard = () => {
       </Card>
 
       {/* Combined Actions Section - Quick Actions, Ready to Start Trading, and Recent Activity */}
-      <Card className="border-border/70 mb-xl">
+      <Card elevation="1" variant="secondary" className="border-border/70 mb-xl">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-primary-contrast">Trading Actions & Activity</CardTitle>
         </CardHeader>

@@ -46,7 +46,7 @@ export const RecentPnLChart: React.FC = () => {
   }, [data]);
 
   return (
-    <Card className="p-4 bg-card">
+    <Card elevation="1" variant="primary" className="p-4 bg-card">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
