@@ -11,9 +11,9 @@
  * TASK 2.1: Asset Specs Population & Trading Expansion
  */
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Search, X, Star, TrendingUp, Filter } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Dialog,
   DialogContent,
@@ -75,20 +75,9 @@ export function AssetSearchDialog({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
-  // Initialize Supabase client
-  const supabase = useMemo(() => {
-    const url = import.meta.env.VITE_SUPABASE_URL;
-    const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    if (!url || !key) {
-      console.error('Missing Supabase credentials');
-      return null;
-    }
-    return createClient(url, key);
-  }, []);
-
   // Fetch assets from database
   useEffect(() => {
-    if (!open || !supabase) return;
+    if (!open) return;
 
     const fetchAssets = async () => {
       setIsLoading(true);

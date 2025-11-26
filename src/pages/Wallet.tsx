@@ -12,6 +12,7 @@ import { TransactionHistory } from "@/components/wallet/TransactionHistory";
 import { Skeleton } from "@/components/ui/skeleton";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { useAuth } from "@/hooks/useAuth";
+import { WalletLoading } from "@/components/common/PageLoadingStates";
 
 const Wallet = () => {
   const { user } = useAuth();
@@ -50,6 +51,11 @@ const Wallet = () => {
     },
     enabled: !!user?.id,
   });
+
+  // Show loading skeleton while data is being fetched
+  if (profileLoading || transactionsLoading) {
+    return <WalletLoading />;
+  }
 
   // Fetch withdrawal requests
   // Withdrawal requests - feature disabled (table does not exist in current schema)

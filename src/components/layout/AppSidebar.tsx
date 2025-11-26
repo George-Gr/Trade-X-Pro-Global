@@ -115,17 +115,7 @@ function AppSidebarContent() {
   const { user, isAdmin, handleLogout, authLoading } = useAuthenticatedLayout();
   const collapsed = state === "collapsed";
 
-  // Show skeleton loading state
-  if (authLoading) {
-    return <AppSidebarLoading />;
-  }
-
-  // Show error state if no user and not loading
-  if (!user && !authLoading) {
-    return <AppSidebarError />;
-  }
-
-  // Build user roles array for permission-based filtering
+  // Build user roles array for permission-based filtering (must be before hooks)
   const userRoles = user ? ['user', ...(isAdmin ? ['admin'] : [])] : [];
 
   // Get filtered navigation sections based on user roles
@@ -202,6 +192,16 @@ function AppSidebarContent() {
         break;
     }
   }, [handleLogout]);
+
+  // Show skeleton loading state
+  if (authLoading) {
+    return <AppSidebarLoading />;
+  }
+
+  // Show error state if no user and not loading
+  if (!user && !authLoading) {
+    return <AppSidebarError />;
+  }
 
   return (
     <Sidebar 

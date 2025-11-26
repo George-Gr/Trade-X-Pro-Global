@@ -76,9 +76,9 @@ export default defineConfig(({ mode }) => ({
         chunkFileNames: 'chunks/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
       },
-      // Limit the number of parallel requests during runtime
-      maxParallelRequests: 10,
     },
+    // Limit the number of parallel requests during runtime
+    chunkLimit: 10,
     // Optimize for production builds
     target: 'es2015',
     // Use default minification (esbuild)

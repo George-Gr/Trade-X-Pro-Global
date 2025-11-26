@@ -190,6 +190,11 @@ All colors MUST be HSL.
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Enhanced loading animations */
+    --animation-loading-slow: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    --animation-loading-fast: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    --animation-shimmer: shimmer 2s infinite;
   }
 
   .dark {
@@ -337,6 +342,7 @@ All colors MUST be HSL.
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     line-height: 1.6;
+    font-family: var(--font-family-base);
   }
 
   /* Typography hierarchy */
@@ -370,6 +376,73 @@ All colors MUST be HSL.
   button:focus {
     outline: none;
     ring-width: 2px;
+  }
+
+  /* Enhanced loading animations */
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes pulse-fast {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Loading state enhancements */
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .animate-pulse-fast {
+    animation: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Optimistic loading states */
+  .optimistic-loading {
+    opacity: 0.7;
+    transform: scale(0.98);
+    transition: all 0.2s ease-out;
+  }
+
+  .optimistic-loading:hover {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  /* Progressive loading reveal */
+  .progressive-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: progressive-reveal-animation 0.6s ease-out 0.2s both;
+  }
+
+  @keyframes progressive-reveal-animation {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* FE-052: Firefox Input Focus Ring Enhancement */

@@ -72,7 +72,7 @@ export function validateOrderInput(body: unknown) {
 }
 
 export async function validateAssetExists(db: SupabaseClient, symbol: string) {
-  const { data: assetSpec, error } = await (db as any)
+  const { data: assetSpec, error } = await (db as SupabaseClient)
     .from('asset_specs')
     .select('*')
     .eq('symbol', symbol)

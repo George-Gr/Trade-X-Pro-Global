@@ -282,7 +282,7 @@ export const useChartData = (
       changeDirection: sparklineData.changeDirection,
       color: sparklineData.color
     };
-  }, [rawData, labels, baseValue, format]);
+  }, [rawData, labels, format]);
 };
 
 /**

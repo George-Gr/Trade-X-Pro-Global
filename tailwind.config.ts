@@ -15,7 +15,12 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        // Body / UI font - modern, technical
+        sans: ['Manrope', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        // Display / Headings font - premium serif for authority
+        display: ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
+        // Preserve default serif mapping for explicit usage
+        serif: ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
       },
       spacing: {
         // Standard spacing scale (4px baseline)

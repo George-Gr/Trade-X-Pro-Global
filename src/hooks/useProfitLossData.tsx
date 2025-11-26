@@ -60,124 +60,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
     }
   }, [timeRange]);
 
-  // Fetch profit/loss data
-  const fetchProfitLossData = useCallback(async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Fetch current profile data
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("balance, equity, pnl_realized, pnl_unrealized")
-        .eq("id", user.id)
-        .single();
-
-      if (profileError) throw profileError;
-
-      // Fetch open positions for unrealized P&L
-      const { data: positionsData, error: positionsError } = await supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "open");
-
-      if (positionsError) throw positionsError;
-
-      // Fetch closed positions and fills for realized P&L
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - daysCount);
-
-      const { data: fillsData, error: fillsError } = await supabase
-        .from("fills" as any)
-        .select("*")
-        .eq("user_id", user.id)
-        .gte("created_at", startDate.toISOString())
-        .order("created_at", { ascending: true });
-
-      if (fillsError) throw fillsError;
-
-      // Calculate daily P&L data
-      const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], positionsData || []);
-      setDailyData(calculatedDailyData);
-
-      // Calculate chart data (equity values)
-      const chartData = calculatedDailyData.map(d => d.equity);
-      
-      // Calculate profit/loss metrics
-      const calculatedMetrics = calculateProfitLossMetrics(
-        profileData,
-        positionsData || [],
-        fillsData || [],
-        calculatedDailyData
-      );
-      
-      setMetrics(calculatedMetrics);
-
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to fetch profit/loss data";
-      setError(message);
-      console.error("Profit/loss data error:", message);
-      
-      // Set default empty data on error
-      setDailyData([]);
-      setMetrics(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [user, daysCount]);
-
-  // Calculate daily P&L data
-  const calculateDailyPnLData = useCallback((
-    startDate: Date,
-    daysCount: number,
-    fills: any[],
-    positions: Position[]
-  ): DailyPnLData[] => {
-    const dailyData: DailyPnLData[] = [];
-    
-    for (let i = 0; i < daysCount; i++) {
-      const date = new Date(startDate);
-      date.setDate(date.getDate() + i);
-      const dateStr = date.toISOString().split('T')[0];
-
-      // Calculate realized P&L for this day
-      const dailyFills = fills.filter(f => 
-        f.created_at?.split('T')[0] === dateStr
-      );
-      
-      const realizedPnL = dailyFills.reduce((sum, fill) => {
-        // Calculate P&L for this fill
-        const pnl = fill.pnl || 0;
-        return sum + pnl;
-      }, 0);
-
-      // Calculate unrealized P&L (from open positions)
-      const unrealizedPnL = positions.reduce((sum, pos) => {
-        const currentPnL = pos.unrealized_pnl || 0;
-        return sum + currentPnL;
-      }, 0);
-
-      // Estimate equity for this day (simplified calculation)
-      const baseEquity = 50000; // Starting balance
-      const equity = baseEquity + realizedPnL + unrealizedPnL;
-
-      dailyData.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        realizedPnL,
-        unrealizedPnL,
-        totalPnL: realizedPnL + unrealizedPnL,
-        equity
-      });
-    }
-
-    return dailyData;
-  }, []);
+  // calculateDailyPnLData is already defined above; duplicate removed to avoid redeclaration.
 
   // Calculate profit/loss metrics
   const calculateProfitLossMetrics = useCallback((
@@ -241,7 +124,146 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       maxDrawdown,
       maxProfit
     };
+  }, [daysCount]);
+
+  // Calculate daily P&L data
+  const calculateDailyPnLData = useCallback((
+    startDate: Date,
+    daysCount: number,
+    fills: any[],
+    positions: Position[]
+  ): DailyPnLData[] => {
+    const dailyData: DailyPnLData[] = [];
+    
+    for (let i = 0; i < daysCount; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      const dateStr = date.toISOString().split('T')[0];
+
+      // Calculate realized P&L for this day
+      const dailyFills = fills.filter(f => 
+        f.created_at?.split('T')[0] === dateStr
+      );
+      
+      const realizedPnL = dailyFills.reduce((sum, fill) => {
+        // Calculate P&L for this fill
+        const pnl = fill.pnl || 0;
+        return sum + pnl;
+      }, 0);
+
+      // Calculate unrealized P&L (from open positions)
+      const unrealizedPnL = positions.reduce((sum, pos) => {
+        const currentPnL = pos.unrealized_pnl || 0;
+        return sum + currentPnL;
+      }, 0);
+
+      // Estimate equity for this day (simplified calculation)
+      const baseEquity = 50000; // Starting balance
+      const equity = baseEquity + realizedPnL + unrealizedPnL;
+
+      dailyData.push({
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        realizedPnL,
+        unrealizedPnL,
+        totalPnL: realizedPnL + unrealizedPnL,
+        equity
+      });
+    }
+
+    return dailyData;
   }, []);
+
+  // Fetch profit/loss data
+  const fetchProfitLossData = useCallback(async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch current profile data
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("balance, equity, margin_used")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError) throw profileError;
+      
+      // Validate profile data
+      if (!profileData) {
+        throw new Error("Profile data not found for user");
+      }
+
+      // Fetch open positions for unrealized P&L
+      const { data: positionsData, error: positionsError } = await supabase
+        .from("positions")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("status", "open");
+
+      if (positionsError) throw positionsError;
+
+      // Fetch closed positions and fills for realized P&L
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - daysCount);
+
+      const { data: fillsData, error: fillsError } = await supabase
+        .from("fills" as any)
+        .select("*")
+        .eq("user_id", user.id)
+        .gte("created_at", startDate.toISOString())
+        .order("created_at", { ascending: true });
+        
+      if (fillsError) throw fillsError;
+
+      if (fillsError) throw fillsError;
+
+      // Calculate daily P&L data
+      const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], positionsData || []);
+      setDailyData(calculatedDailyData);
+
+      // Calculate chart data (equity values)
+      const chartData = calculatedDailyData.map(d => d.equity);
+      
+      // Calculate profit/loss metrics
+      const calculatedMetrics = calculateProfitLossMetrics(
+        profileData,
+        positionsData || [],
+        fillsData || [],
+        calculatedDailyData
+      );
+      
+      setMetrics(calculatedMetrics);
+
+    } catch (err) {
+      let message = "Failed to fetch profit/loss data";
+      const detailedError = err;
+      
+      if (err && typeof err === 'object' && 'message' in err) {
+        message = err.message as string;
+      } else if (typeof err === 'string') {
+        message = err;
+      }
+      
+      setError(message);
+      console.error("Profit/loss data error:", {
+        message,
+        error: detailedError,
+        userId: user?.id,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Set default empty data on error
+      setDailyData([]);
+      setMetrics(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, daysCount, calculateDailyPnLData, calculateProfitLossMetrics]);
 
   // Set up real-time subscriptions
   useEffect(() => {

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { CheckCircle2, Clock, XCircle, Loader2, Bell } from "lucide-react";
+import { SettingsLoading } from "@/components/common/PageLoadingStates";
 
 const Settings = () => {
   const { user } = useAuth();
@@ -35,6 +36,11 @@ const Settings = () => {
       fetchKYCStatus();
     }
   }, [user, fetchKYCStatus]);
+
+  // Show loading skeleton while data is being fetched
+  if (isLoading) {
+    return <SettingsLoading />;
+  }
 
   return (
     <AuthenticatedLayout>

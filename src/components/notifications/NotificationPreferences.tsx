@@ -76,7 +76,21 @@ export function NotificationPreferences() {
   };
 
   if (loading) {
-    return <div>Loading preferences...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="space-y-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-between p-4 border border-border/50 rounded-lg">
+              <div className="space-y-1">
+                <div className="h-4 w-48 bg-muted/50 rounded animate-pulse" />
+                <div className="h-3 w-32 bg-muted/50 rounded animate-pulse" />
+              </div>
+              <div className="h-6 w-12 bg-muted/50 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (

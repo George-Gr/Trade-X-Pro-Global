@@ -10,7 +10,7 @@ import { useEffect, useRef, useCallback } from 'react';
 
 // Mock vitest for testing environment when needed
 if (typeof window !== 'undefined') {
-  (window as any).vi = (window as any).vi || undefined;
+  (window as Window & { vi?: unknown }).vi = (window as Window & { vi?: unknown }).vi || undefined;
 }
 
 /* 
@@ -407,7 +407,7 @@ export const checkWCAGCompliance = (element: HTMLElement) => {
  * Default ARIA attributes for common components
  */
 
-export const getDefaultAriaAttributes = (role: string, props: Record<string, any> = {}) => {
+export const getDefaultAriaAttributes = (role: string, props: Record<string, unknown> = {}) => {
   const defaults = {
     button: {
       role: 'button',

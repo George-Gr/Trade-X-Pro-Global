@@ -202,7 +202,7 @@ export const withErrorHandling = <P extends object>(
     description?: string;
     showRetry?: boolean;
   }
-) => {
+): React.ComponentType<P> => {
   return function WithErrorHandling(props: P & { error?: string; onRetry?: () => void }) {
     const { error, onRetry, ...componentProps } = props;
 
@@ -219,13 +219,4 @@ export const withErrorHandling = <P extends object>(
 
     return <Component {...(componentProps as P)} />;
   };
-};
-
-export default {
-  ErrorMessage,
-  NetworkErrorBanner,
-  RealtimeErrorAlert,
-  DataLoadingFallback,
-  ConnectionStatus,
-  withErrorHandling,
 };

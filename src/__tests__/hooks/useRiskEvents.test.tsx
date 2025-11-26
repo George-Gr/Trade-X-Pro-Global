@@ -14,6 +14,7 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useRiskEvents, type RiskEvent } from '@/hooks/useRiskEvents';
 import * as useAuthModule from '@/hooks/useAuth';
+import { AuthenticatedLayoutContextType } from '@/contexts/AuthenticatedLayoutContext';
 
 // Mock Supabase client
 vi.mock('@/lib/supabaseBrowserClient', () => ({
@@ -62,7 +63,7 @@ describe('useRiskEvents', () => {
       error: null,
       signOut: vi.fn(),
       isAdmin: false,
-    } as any);
+    } as AuthenticatedLayoutContextType);
   });
 
   afterEach(() => {

@@ -6,12 +6,14 @@ import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import TradingViewWatchlist from "@/components/trading/TradingViewWatchlist";
 import MarginLevelCard from "@/components/dashboard/MarginLevelCard";
 import RiskAlertsCard from "@/components/dashboard/RiskAlertsCard";
+// removed incorrect RiskAlert import — use events returned from useRiskEvents instead
 import ProfitLossCard from "@/components/dashboard/ProfitLossCard";
 import { ErrorMessage, RealtimeErrorAlert } from "@/components/ui/ErrorUI";
 import { useRiskMetrics } from "@/hooks/useRiskMetrics";
 import useRiskEvents from "@/hooks/useRiskEvents";
 import { useProfitLossData } from "@/hooks/useProfitLossData";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
+import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
 import "@/components/dashboard/DashboardGrid.css";
 
 const Dashboard = () => {
@@ -77,6 +79,11 @@ const Dashboard = () => {
     error: profitLossError,
     refetch: refetchProfitLoss 
   } = useProfitLossData('7d');
+
+  // Show loading skeleton while data is being fetched
+  if (riskLoading || alertsLoading || profitLossLoading) {
+    return <DashboardLoading />;
+  }
 
   return (
     <AuthenticatedLayout>
@@ -191,7 +198,7 @@ const Dashboard = () => {
           ) : (
             <RiskAlertsCard
               loading={alertsLoading}
-              alerts={alertsData?.map((e: any) => ({
+              alerts={alertsData?.map((e) => ({
                 id: e.id,
                 level: (e.severity === "critical" || e.severity === "danger") ? "critical" : e.severity === "warning" ? "warning" : "info",
                 title: e.event_type ? String(e.event_type).replace(/_/g, " ") : (e.description || "Risk event"),

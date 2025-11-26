@@ -9,6 +9,7 @@ import { ErrorContextProvider } from "@/components/ErrorContextProvider";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
 import { logger, initializeSentry } from "@/lib/logger";
+import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
@@ -94,8 +95,28 @@ const App = () => {
                 // Sentry integration would be handled by logger in production
               }}
             >
-              <BrowserRouter>
-                <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                <Suspense 
+                  fallback={
+                    <div className="min-h-screen flex items-center justify-center bg-background">
+                      <div className="text-center space-y-4">
+                        <div className="relative">
+                          <div className="h-12 w-12 mx-auto bg-primary/20 rounded-full animate-pulse-slow">
+                            <ShimmerEffect className="absolute inset-0 rounded-full" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-lg font-semibold text-primary-contrast">
+                            <Skeleton variant="text" className="h-6 w-32 mx-auto" />
+                          </div>
+                          <div className="text-sm text-secondary-contrast">
+                            <Skeleton variant="text" className="h-4 w-24 mx-auto" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                >
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/register" element={<Register />} />

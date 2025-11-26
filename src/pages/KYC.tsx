@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2, AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { KYCLoading } from "@/components/common/PageLoadingStates";
 
 interface KYCDocument {
   id: string;
@@ -125,6 +126,11 @@ const KYC = () => {
         return <Badge variant="outline">Pending</Badge>;
     }
   };
+
+  // Show loading skeleton while data is being fetched
+  if (isLoading) {
+    return <KYCLoading />;
+  }
 
   return (
     <AuthenticatedLayout>

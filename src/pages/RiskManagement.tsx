@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RiskAlerts } from "@/components/risk/RiskAlerts";
 import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
 import { RiskSettingsForm } from "@/components/risk/RiskSettingsForm";
+import { RiskManagementLoading } from "@/components/risk/RiskManagementLoading";
 import { Shield, TrendingDown, Lock, AlertTriangle } from "lucide-react";
 
 interface RiskSettings {
@@ -111,13 +112,7 @@ export default function RiskManagement() {
   };
 
   if (loading) {
-    return (
-      <AuthenticatedLayout>
-        <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </AuthenticatedLayout>
-    );
+    return <RiskManagementLoading />;
   }
 
   return (

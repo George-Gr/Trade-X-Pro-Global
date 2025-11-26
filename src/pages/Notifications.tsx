@@ -1,5 +1,6 @@
 import { NotificationPreferences } from "@/components/notifications/NotificationPreferences";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import { NotificationsLoading } from "@/components/common/PageLoadingStates";
 
 export default function Notifications() {
   return (

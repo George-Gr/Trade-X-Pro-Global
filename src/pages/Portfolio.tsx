@@ -8,6 +8,7 @@ import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { usePositionClose } from "@/hooks/usePositionClose";
+import { PortfolioLoading } from "@/components/portfolio/PortfolioLoading";
 import { usePnLCalculations } from "@/hooks/usePnLCalculations";
 import { useToast } from "@/hooks/use-toast";
 import { TrailingStopDialog } from "@/components/trading/TrailingStopDialog";
@@ -27,25 +28,11 @@ const Portfolio = () => {
     refresh,
   } = usePortfolioData();
 
+  // Always call hooks at the top level (React Hook Rules)
   const { closePosition, isClosing } = usePositionClose();
   const [closingPositions, setClosingPositions] = useState<Set<string>>(new Set());
 
-  const symbols = positions.map((p) => p.symbol);
-  const { prices, getPrice } = usePriceUpdates({
-    symbols,
-    intervalMs: 3000,
-    enabled: symbols.length > 0,
-  });
-
   // Initialize P&L calculations with memoization
-  // Convert prices Map to extract just the numeric values
-  const pricesMap = new Map<string, number>(
-    Array.from(prices.entries()).map(([symbol, priceData]) => [
-      symbol,
-      typeof priceData === 'number' ? priceData : ((priceData as unknown as Record<string, unknown>)?.c as number) || 0,
-    ])
-  );
-
   const mappedPositions = positions.map((position) => ({
     ...position,
     entryPrice: position.entry_price,
@@ -57,6 +44,18 @@ const Portfolio = () => {
 
   const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor, getPnLStatus } =
     usePnLCalculations(mappedPositions, priceMap, undefined, { enabled: positions.length > 0 });
+
+  const symbols = positions.map((p) => p.symbol);
+  const { prices, getPrice } = usePriceUpdates({
+    symbols,
+    intervalMs: 3000,
+    enabled: symbols.length > 0 && !loading,
+  });
+
+  // Show loading skeleton while data is being fetched
+  if (loading) {
+    return <PortfolioLoading />;
+  }
 
   const handleClosePosition = async (positionId: string, symbol: string) => {
     setClosingPositions((prev) => new Set(prev).add(positionId));

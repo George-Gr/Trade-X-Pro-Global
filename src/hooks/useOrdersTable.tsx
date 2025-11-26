@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from './use-toast';
+import { type Database } from '@/integrations/supabase/types';
 
 export type OrderType = 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
 export type OrderSide = 'buy' | 'sell';
@@ -71,7 +72,7 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
-      const mappedOrders: OrderTableItem[] = (data || []).map((order: any) => ({
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: Database["public"]["Tables"]["orders"]["Row"]) => ({
         id: typeof order.id === 'string' ? order.id : String(order.id ?? ''),
         user_id: typeof order.user_id === 'string' ? order.user_id : String(order.user_id ?? ''),
         symbol: typeof order.symbol === 'string' ? order.symbol : String(order.symbol ?? ''),
