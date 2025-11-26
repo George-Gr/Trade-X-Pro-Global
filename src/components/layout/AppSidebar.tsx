@@ -54,6 +54,9 @@ export function AppSidebar() {
       variant="sidebar"
     >
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
+        {/* Top spacing to prevent overlap with header */}
+        <div className="h-6" />
+        
         {/* Main Navigation Section */}
         <SidebarGroup className="pt-1 pb-0">
           <SidebarGroupLabel className={cn(
