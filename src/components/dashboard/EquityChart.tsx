@@ -1,9 +1,48 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
 import { ZoomIn, ZoomOut } from 'lucide-react';
+
+// Dynamic import wrapper for recharts components
+const DynamicLineChart = React.lazy(() => import('recharts').then(m => ({
+  default: m.LineChart,
+})));
+
+const DynamicLine = React.lazy(() => import('recharts').then(m => ({
+  default: m.Line,
+})));
+
+const DynamicXAxis = React.lazy(() => import('recharts').then(m => ({
+  default: m.XAxis,
+})));
+
+const DynamicYAxis = React.lazy(() => import('recharts').then(m => ({
+  default: m.YAxis,
+})));
+
+const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
+  default: m.Tooltip,
+})));
+
+const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
+  default: m.ResponsiveContainer,
+})));
+
+const DynamicCartesianGrid = React.lazy(() => import('recharts').then(m => ({
+  default: m.CartesianGrid,
+})));
+
+const DynamicReferenceLine = React.lazy(() => import('recharts').then(m => ({
+  default: m.ReferenceLine,
+})));
+
+// Loading component for charts
+const ChartLoadingSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="bg-muted rounded-lg h-64 w-full"></div>
+  </div>
+);
 
 type Timeframe = '1D' | '1W' | '1M' | '3M' | '6M' | '1Y';
 
@@ -28,6 +67,7 @@ export const EquityChart: React.FC = () => {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panX, setPanX] = useState(0);
 
+  // Memoized chart data
   const data = useMemo(() => {
     const base = profile?.balance ?? 0;
     const config = TIMEFRAME_CONFIG[timeframe];
@@ -128,40 +168,42 @@ export const EquityChart: React.FC = () => {
 
         {/* Chart */}
         <div className="aspect-[16/9] w-full">
-          <ResponsiveContainer>
-            <LineChart data={visibleData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 12 }}
-                angle={-45}
-                textAnchor="end"
-                height={60}
-              />
-              <YAxis
-                tick={{ fontSize: 12 }}
-                label={{ value: 'Equity ($)', angle: -90, position: 'insideLeft' }}
-              />
-              <Tooltip
-                formatter={(value: number) => `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
-                contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
-              />
-              <ReferenceLine
-                y={stats.avgEquity}
-                stroke="#94a3b8"
-                strokeDasharray="5 5"
-                label={{ value: 'Avg', position: 'right', fill: '#94a3b8', fontSize: 12 } as unknown}
-              />
-              <Line
-                type="monotone"
-                dataKey="equity"
-                stroke="#4ade80"
-                dot={false}
-                strokeWidth={2}
-                isAnimationActive={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <Suspense fallback={<ChartLoadingSkeleton />}>
+            <DynamicResponsiveContainer>
+              <DynamicLineChart data={visibleData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <DynamicCartesianGrid strokeDasharray="3 3" />
+                <DynamicXAxis
+                  dataKey="date"
+                  tick={{ fontSize: 12 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
+                <DynamicYAxis
+                  tick={{ fontSize: 12 }}
+                  label={{ value: 'Equity ($)', angle: -90, position: 'insideLeft' }}
+                />
+                <DynamicTooltip
+                  formatter={(value: number) => `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
+                  contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
+                />
+                <DynamicReferenceLine
+                  y={stats.avgEquity}
+                  stroke="#94a3b8"
+                  strokeDasharray="5 5"
+                  label={{ value: 'Avg', position: 'right', fill: '#94a3b8', fontSize: 12 } as unknown}
+                />
+                <DynamicLine
+                  type="monotone"
+                  dataKey="equity"
+                  stroke="#4ade80"
+                  dot={false}
+                  strokeWidth={2}
+                  isAnimationActive={false}
+                />
+              </DynamicLineChart>
+            </DynamicResponsiveContainer>
+          </Suspense>
         </div>
 
         {/* Statistics row */}

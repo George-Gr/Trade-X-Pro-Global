@@ -55,16 +55,37 @@ export default defineConfig(({ mode }) => ({
         // Optimized manual chunks for better bundle splitting
         // Each vendor chunk is split separately to enable parallel loading
         manualChunks: (id) => {
-          // Vendor chunks
+          // Vendor chunks - split charts into separate chunks
           if (id.includes('node_modules')) {
-            if (id.includes('lightweight-charts')) return 'vendor-charts';
-            if (id.includes('recharts')) return 'vendor-charts';
+            if (id.includes('lightweight-charts')) return 'vendor-lightweight-charts';
+// Split recharts into smaller chunks based on specific components
+            if (id.includes('recharts') && id.includes('cartesian')) return 'vendor-recharts-cartesian';
+            if (id.includes('recharts') && id.includes('pie')) return 'vendor-recharts-pie';
+            if (id.includes('recharts') && id.includes('bar')) return 'vendor-recharts-bar';
+            if (id.includes('recharts') && id.includes('line')) return 'vendor-recharts-line';
+            if (id.includes('recharts')) return 'vendor-recharts-core';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('@radix-ui')) return 'vendor-ui';
             if (id.includes('react-hook-form') || id.includes('zod')) return 'vendor-forms';
+            if (id.includes('@tanstack')) return 'vendor-query';
+            if (id.includes('@sentry')) return 'vendor-monitoring';
+            if (id.includes('date-fns')) return 'vendor-date';
           }
         },
+        // Ensure chunks are optimized for caching
+        chunkFileNames: 'chunks/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
       },
+      // Limit the number of parallel requests during runtime
+      maxParallelRequests: 10,
     },
+    // Optimize for production builds
+    target: 'es2015',
+    // Use default minification (esbuild)
+    minify: true,
+    // Optimize for faster builds
+    cssCodeSplit: true,
+    // Optimize chunk size
+    chunkSize: 500,
   },
 }));

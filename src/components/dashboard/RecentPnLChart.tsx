@@ -1,6 +1,45 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, Suspense } from 'react';
 import { Card } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
+
+// Dynamic import wrapper for recharts components
+const DynamicBarChart = React.lazy(() => import('recharts').then(m => ({
+  default: m.BarChart,
+})));
+
+const DynamicBar = React.lazy(() => import('recharts').then(m => ({
+  default: m.Bar,
+})));
+
+const DynamicXAxis = React.lazy(() => import('recharts').then(m => ({
+  default: m.XAxis,
+})));
+
+const DynamicYAxis = React.lazy(() => import('recharts').then(m => ({
+  default: m.YAxis,
+})));
+
+const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
+  default: m.Tooltip,
+})));
+
+const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
+  default: m.ResponsiveContainer,
+})));
+
+const DynamicCartesianGrid = React.lazy(() => import('recharts').then(m => ({
+  default: m.CartesianGrid,
+})));
+
+const DynamicCell = React.lazy(() => import('recharts').then(m => ({
+  default: m.Cell,
+})));
+
+// Loading component for charts
+const ChartLoadingSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="bg-muted rounded-lg h-48 w-full"></div>
+  </div>
+);
 
 interface DailyPnL {
   date: string;
@@ -58,22 +97,24 @@ export const RecentPnLChart: React.FC = () => {
 
         {/* Chart */}
         <div className="aspect-[16/9] w-full">
-          <ResponsiveContainer>
-            <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip
-                formatter={(value: number) => `$${value.toLocaleString()}`}
-                contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
-              />
-              <Bar dataKey="pnl" isAnimationActive={false}>
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.isProfit ? '#4ade80' : '#f87171'} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+          <Suspense fallback={<ChartLoadingSkeleton />}>
+            <DynamicResponsiveContainer>
+              <DynamicBarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <DynamicCartesianGrid strokeDasharray="3 3" vertical={false} />
+                <DynamicXAxis dataKey="date" tick={{ fontSize: 11 }} />
+                <DynamicYAxis tick={{ fontSize: 11 }} />
+                <DynamicTooltip
+                  formatter={(value: number) => `$${value.toLocaleString()}`}
+                  contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
+                />
+                <DynamicBar dataKey="pnl" isAnimationActive={false}>
+                  {data.map((entry, index) => (
+                    <DynamicCell key={`cell-${index}`} fill={entry.isProfit ? '#4ade80' : '#f87171'} />
+                  ))}
+                </DynamicBar>
+              </DynamicBarChart>
+            </DynamicResponsiveContainer>
+          </Suspense>
         </div>
 
         {/* Statistics Grid */}
