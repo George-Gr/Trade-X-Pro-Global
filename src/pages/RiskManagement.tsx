@@ -16,7 +16,7 @@ import { Shield, TrendingDown, Lock, AlertTriangle } from "lucide-react";
 import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import("@/integrations/supabase/client");
+  const { supabase } = await import("@/lib/supabaseBrowserClient");
   return supabase;
 };
 

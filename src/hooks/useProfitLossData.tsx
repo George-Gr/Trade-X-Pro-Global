@@ -11,7 +11,7 @@ import { useAuth } from "./useAuth";
 import type { Position, Order, Fill } from "@/integrations/supabase/types/tables";
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import("@/integrations/supabase/client");
+  const { supabase } = await import("@/lib/supabaseBrowserClient");
   return supabase;
 };
 
