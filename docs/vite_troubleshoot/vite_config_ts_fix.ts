@@ -212,10 +212,8 @@ export default defineConfig(({ mode }) => ({
       "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
       "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
     },
-    // Force single React instance across app and deps
     dedupe: ["react", "react-dom", "react/jsx-runtime"],
   },
-  // Ensure a single prebundled copy in dev server
   optimizeDeps: {
     include: [
       "react", 
@@ -224,29 +222,16 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-tooltip",
       "@radix-ui/react-hover-card",
     ],
-    // Force re-optimization to fix dependency issues
     force: true,
   },
   build: {
-    // Reduced from 600 to 400 - encourages better code splitting
     chunkSizeWarningLimit: 400,
     
-    // Limit the number of parallel requests during runtime
-    chunkLimit: 10,
-    
-    // Optimize chunk size
-    chunkSize: 500,
-    
-    // Additional PWA optimizations
     rollupOptions: {
       output: {
-        // Optimized manual chunks for better bundle splitting
-        // Each vendor chunk is split separately to enable parallel loading
         manualChunks: (id) => {
-          // Vendor chunks - split charts into separate chunks
           if (id.includes('node_modules')) {
             if (id.includes('lightweight-charts')) return 'vendor-lightweight-charts';
-// Split recharts into smaller chunks based on specific components
             if (id.includes('recharts') && id.includes('cartesian')) return 'vendor-recharts-cartesian';
             if (id.includes('recharts') && id.includes('pie')) return 'vendor-recharts-pie';
             if (id.includes('recharts') && id.includes('bar')) return 'vendor-recharts-bar';
@@ -260,20 +245,17 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('date-fns')) return 'vendor-date';
           }
         },
-        // Ensure chunks are optimized for caching
         chunkFileNames: 'chunks/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'
       },
     },
     
-    // Compression for better PWA performance
     target: 'es2015',
     cssTarget: 'chrome61',
     minify: true,
     cssCodeSplit: true,
     
-    // Source map configuration for Sentry
     sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : true,
   },
 }));
