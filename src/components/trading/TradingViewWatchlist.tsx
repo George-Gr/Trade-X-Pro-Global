@@ -26,26 +26,7 @@ const TradingViewWatchlist = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   
-  // Use debounced updates for performance
-  const [debouncedUpdate] = useDebouncedChartUpdate(
-    useCallback(() => {
-      initializeTradingView();
-    }, [initializeTradingView]),
-    { delay: 300 }
-  );
-
-  const checkVisibility = useCallback(() => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-      setIsVisible(isVisible);
-      
-      if (isVisible && isLoading) {
-        debouncedUpdate();
-      }
-    }
-  }, [debouncedUpdate, isLoading]);
-
+  // Define initializeTradingView first
   const initializeTradingView = useCallback(() => {
     if (!containerRef.current || !isVisible) return;
 
@@ -141,6 +122,26 @@ const TradingViewWatchlist = () => {
       loader.reset();
     };
   }, [isVisible]);
+  
+  // Use debounced updates for performance
+  const [debouncedUpdate] = useDebouncedChartUpdate(
+    useCallback(() => {
+      initializeTradingView();
+    }, [initializeTradingView]),
+    { delay: 300 }
+  );
+
+  const checkVisibility = useCallback(() => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      setIsVisible(isVisible);
+      
+      if (isVisible && isLoading) {
+        debouncedUpdate();
+      }
+    }
+  }, [debouncedUpdate, isLoading]);
 
   // Handle visibility changes and resize
   useEffect(() => {
