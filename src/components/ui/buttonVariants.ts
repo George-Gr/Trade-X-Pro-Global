@@ -2,16 +2,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md gap-2 ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed icon-button text-sm font-medium",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md gap-2 ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed icon-button text-sm font-medium hover:shadow-lg active:shadow-md",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/85 active:scale-95",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/85 active:scale-95",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground active:bg-accent/50 active:text-accent-foreground/80",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70 active:scale-95",
-        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/50 active:text-accent-foreground/80",
-        link: "text-primary underline-offset-4 hover:underline active:text-primary/80 active:underline",
+        default: "bg-primary text-primary-foreground hover:bg-primary/95 active:bg-primary/90 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/95 active:bg-destructive/90 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        outline: "border border-input bg-background hover:bg-accent/5 hover:text-accent-foreground active:bg-accent/10 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 active:bg-secondary/80 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        ghost: "hover:bg-accent/10 active:bg-accent/20 active:scale-[0.98] hover:translate-y-[-1px] hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline active:text-primary/80 active:underline bg-transparent hover:bg-transparent",
+        loading: "bg-primary/50 text-primary-foreground cursor-wait hover:bg-primary/50 active:scale-100",
+        success: "bg-green-500 text-white hover:bg-green-600 active:bg-green-700 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        warning: "bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
       },
       size: {
         xs: "h-8 px-2 text-xs",               // 32px height
@@ -21,16 +24,24 @@ export const buttonVariants = cva(
         icon: "h-12 w-12",                    // 48px height (square)
         xl: "h-16 px-8 text-lg",              // 64px height
       },
+      animation: {
+        none: "",
+        subtle: "hover:animate-button-hover active:animate-button-press-instant",
+        bouncy: "hover:animate-button-hover active:animate-button-press",
+        immediate: "active:animate-button-press-instant",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      animation: "subtle",
     },
   },
 );
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants> & {
   asChild?: boolean;
+  loading?: boolean;
 };
 
 export default buttonVariants;

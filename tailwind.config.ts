@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -177,6 +177,142 @@ const config: Config = {
             transform: "translateY(-10px)"
           },
         },
+        // Button interactions
+        "button-press": {
+          "0%": {
+            transform: "scale(1)",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+          },
+          "50%": {
+            transform: "scale(0.98)",
+            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)"
+          },
+          "100%": {
+            transform: "scale(1)",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+          },
+        },
+        "button-hover": {
+          "0%": {
+            transform: "translateY(0) scale(1)",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+          },
+          "100%": {
+            transform: "translateY(-2px) scale(1.01)",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)"
+          },
+        },
+        // Card interactions
+        "card-hover": {
+          "0%": {
+            transform: "translateY(0) scale(1)",
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+          },
+          "100%": {
+            transform: "translateY(-4px) scale(1.02)",
+            boxShadow: "0 8px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.08)"
+          },
+        },
+        // Loading animations
+        "loading-pulse": {
+          "0%, 100%": {
+            opacity: "1"
+          },
+          "50%": {
+            opacity: "0.4"
+          },
+        },
+        "loading-spin": {
+          "0%": {
+            transform: "rotate(0deg)"
+          },
+          "100%": {
+            transform: "rotate(360deg)"
+          },
+        },
+        "loading-bounce": {
+          "0%, 80%, 100%": {
+            transform: "translateY(0)"
+          },
+          "40%": {
+            transform: "translateY(-10px)"
+          },
+        },
+        // Progress animations
+        "progress-fill": {
+          "0%": {
+            transform: "translateX(-100%)"
+          },
+          "100%": {
+            transform: "translateX(0)"
+          },
+        },
+        // Success/Error feedback
+        "success-check": {
+          "0%": {
+            strokeDasharray: "50",
+            strokeDashoffset: "50",
+            opacity: "0"
+          },
+          "50%": {
+            strokeDasharray: "50",
+            strokeDashoffset: "0",
+            opacity: "1"
+          },
+          "100%": {
+            strokeDasharray: "50",
+            strokeDashoffset: "0",
+            opacity: "1"
+          },
+        },
+        "error-shake": {
+          "0%, 100%": {
+            transform: "translateX(0)"
+          },
+          "25%": {
+            transform: "translateX(-4px)"
+          },
+          "75%": {
+            transform: "translateX(4px)"
+          },
+        },
+        // Page transitions
+        "page-slide-in": {
+          "0%": {
+            transform: "translateX(100%)",
+            opacity: "0"
+          },
+          "100%": {
+            transform: "translateX(0)",
+            opacity: "1"
+          },
+        },
+        "page-fade-in": {
+          "0%": {
+            opacity: "0"
+          },
+          "100%": {
+            opacity: "1"
+          },
+        },
+        // Number counting
+        "number-count": {
+          "0%": {
+            opacity: "0.3"
+          },
+          "100%": {
+            opacity: "1"
+          },
+        },
+        // Focus and attention
+        "focus-pulse": {
+          "0%, 100%": {
+            boxShadow: "0 0 0 0 rgba(59, 130, 246, 0.5)"
+          },
+          "50%": {
+            boxShadow: "0 0 0 8px rgba(59, 130, 246, 0.15)"
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 150ms ease-out",
@@ -185,6 +321,31 @@ const config: Config = {
         "slide-in-up": "slideInUp 0.6s ease-out",
         "scale-in": "scaleIn 0.4s ease-out",
         "float": "float 3s ease-in-out infinite",
+        // Button interactions
+        "button-press": "button-press 150ms ease-out",
+        "button-hover": "button-hover 200ms ease-out",
+        "button-press-instant": "button-press 75ms ease-out",
+        // Card interactions
+        "card-hover": "card-hover 300ms ease-out",
+        // Loading animations
+        "loading-pulse": "loading-pulse 1.5s ease-in-out infinite",
+        "loading-spin": "loading-spin 1s linear infinite",
+        "loading-bounce": "loading-bounce 1s infinite",
+        // Progress animations
+        "progress-fill": "progress-fill 1s ease-out forwards",
+        // Success/Error feedback
+        "success-check": "success-check 0.6s ease-out forwards",
+        "error-shake": "error-shake 0.5s ease-in-out",
+        // Page transitions
+        "page-slide-in": "page-slide-in 0.3s ease-out",
+        "page-fade-in": "page-fade-in 0.3s ease-out",
+        // Number counting
+        "number-count": "number-count 2s ease-out forwards",
+        // Focus and attention
+        "focus-pulse": "focus-pulse 2s ease-in-out infinite",
+        // Reduced motion utilities
+        "none": "none",
+        "auto": "auto",
       },
       transitionDuration: {
         "DEFAULT": "150ms",
@@ -195,13 +356,30 @@ const config: Config = {
       },
     },
   },
-  // Define Tailwind plugin for trading color utilities
-  corePlugins: {
-    // Ensure we don't override custom utilities
-  },
   plugins: [
     tailwindcssAnimate,
-    function ({ addUtilities }) {
+    function({
+      addVariant,
+      addUtilities,
+    }: {
+      addVariant: (name: string, rule: string) => void;
+      addUtilities: (utilities: Record<string, Record<string, string>>) => void;
+    }) {
+      // Add reduced-motion variants
+      addVariant('motion-safe', '@media (prefers-reduced-motion: no-preference)');
+      addVariant('motion-reduce', '@media (prefers-reduced-motion: reduce)');
+      
+      // Add utilities for reduced motion
+      addUtilities({
+        '.animate-none': {
+          'animation': 'none',
+        },
+        '.transition-none': {
+          'transition': 'none',
+        },
+      });
+    },
+    function ({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string>>) => void }) {
       const newUtilities = {
         // Icon sizing utilities
         '.icon-xs': {

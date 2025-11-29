@@ -192,17 +192,7 @@ export const ConnectionStatus: React.FC<{
   );
 };
 
-/**
- * HOC to wrap components with error boundary and retry logic
- */
-export const withErrorHandling = <P extends object>(
-  Component: React.ComponentType<P>,
-  options?: {
-    title?: string;
-    description?: string;
-    showRetry?: boolean;
-  }
-): React.ComponentType<P> => {
+
   return function WithErrorHandling(props: P & { error?: string; onRetry?: () => void }) {
     const { error, onRetry, ...componentProps } = props;
 
@@ -219,4 +209,3 @@ export const withErrorHandling = <P extends object>(
 
     return <Component {...(componentProps as P)} />;
   };
-};

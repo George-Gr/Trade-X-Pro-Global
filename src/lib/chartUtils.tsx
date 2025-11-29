@@ -3,7 +3,9 @@
  * Provides chart data processing, formatting, and utility functions
  */
 
+import React, { useEffect, useRef, ReactNode } from 'react';
 import { useMemo } from 'react';
+import { optimizeChartData, useChartWorker } from './chartPerformance';
 
 export interface ChartDataPoint {
   date: string;
@@ -24,6 +26,24 @@ export interface BarChartData {
   values: number[];
   colors?: string[];
 }
+
+// Performance-optimized chart data generation
+export const generateOptimizedChartData = (
+  count: number,
+  baseValue: number,
+  volatility: number,
+  trend: number,
+  maxPoints: number = 1000
+): ChartDataPoint[] => {
+  const data = generateMockChartData(count, baseValue, volatility, trend);
+  
+  // Optimize large datasets
+  if (count > maxPoints) {
+    return optimizeChartData(data, { maxDataPoints: maxPoints });
+  }
+  
+  return data;
+};
 
 /**
  * Formats a number with appropriate suffixes and decimal places
@@ -199,6 +219,85 @@ export const createChartConfig = (data: ChartDataPoint[]) => {
 /**
  * Validates chart data for display
  */
+import React, { useEffect, useRef } from 'react';
+
+/**
+ * Performance monitoring for chart operations
+ */
+export const monitorChartPerformance = (() => {
+  const measurements: Map<string, number[]> = new Map();
+  
+  return {
+    start: (operation: string) => {
+      const key = `${operation}_${Date.now()}`;
+      sessionStorage.setItem(key, performance.now().toString());
+      return key;
+    },
+    
+    end: (key: string) => {
+      const startTime = sessionStorage.getItem(key);
+      if (!startTime) return;
+      
+      const duration = performance.now() - parseFloat(startTime);
+      sessionStorage.removeItem(key);
+      
+      if (!measurements.has('chart_operations')) {
+        measurements.set('chart_operations', []);
+      }
+      
+      const ops = measurements.get('chart_operations')!;
+      ops.push(duration);
+      
+      // Keep only last 100 measurements
+      if (ops.length > 100) {
+        ops.shift();
+      }
+    },
+    
+    getAverageTime: () => {
+      const ops = measurements.get('chart_operations') || [];
+      return ops.length > 0 ? ops.reduce((a, b) => a + b, 0) / ops.length : 0;
+    },
+    
+    getMetrics: () => {
+      const ops = measurements.get('chart_operations') || [];
+      return {
+        average: ops.length > 0 ? ops.reduce((a, b) => a + b, 0) / ops.length : 0,
+        min: ops.length > 0 ? Math.min(...ops) : 0,
+        max: ops.length > 0 ? Math.max(...ops) : 0,
+        count: ops.length
+      };
+    },
+    
+    clear: () => {
+      measurements.clear();
+    }
+  };
+})();
+
+/**
+ * Chart performance profiler component
+ */
+export const ChartPerformanceProfiler: React.FC<{ 
+  children: React.ReactNode;
+  name: string;
+}> = ({ children, name }) => {
+  const startTimeRef = useRef<number>();
+  
+  useEffect(() => {
+    startTimeRef.current = performance.now();
+    return () => {
+      if (startTimeRef.current) {
+        const duration = performance.now() - startTimeRef.current;
+        // Chart performance monitoring - duration: ${duration}ms
+        console.debug(`Chart ${name} performance: ${duration}ms`);
+      }
+    };
+  }, [name]);
+
+  return <>{children}</>;
+};
+
 export const validateChartData = (data: ChartDataPoint[]): boolean => {
   return data && 
          Array.isArray(data) && 

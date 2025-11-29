@@ -11,6 +11,7 @@ const inputVariants = cva(
         sm: "h-9 px-3 py-2 text-sm",
         default: "h-10 px-3 py-2.5 text-base md:text-sm",
         lg: "h-11 px-4 py-3 text-base",
+        mobile: "h-11 min-h-11 px-4 py-3 text-base md:text-sm",
       },
     },
     defaultVariants: {
@@ -25,14 +26,47 @@ export interface InputProps
   label?: string;
   error?: string;
   description?: string;
+  mobileOptimized?: boolean;
+  keyboardType?: 'default' | 'numeric' | 'decimal' | 'email' | 'tel';
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, size, label, error, description, ...props }, ref) => {
+  ({ className, type, size, label, error, description, mobileOptimized, keyboardType, ...props }, ref) => {
+    // Mobile optimization for keyboards
+    const getInputType = () => {
+      if (type) return type;
+      if (keyboardType === 'numeric') return 'tel';
+      if (keyboardType === 'decimal') return 'number';
+      if (keyboardType === 'email') return 'email';
+      return 'text';
+    };
+
+    const getInputMode = () => {
+      if (keyboardType === 'numeric') return 'numeric';
+      if (keyboardType === 'decimal') return 'decimal';
+      if (keyboardType === 'email') return 'email';
+      return 'text';
+    };
+
+    // Auto-capitalize settings for mobile
+    const getAutoCapitalize = () => {
+      if (keyboardType === 'email') return 'none';
+      if (keyboardType === 'tel') return 'none';
+      return 'sentences';
+    };
+
     return (
       <input
-        type={type}
-        className={cn(inputVariants({ size }), className)}
+        type={getInputType()}
+        inputMode={getInputMode()}
+        autoCapitalize={getAutoCapitalize()}
+        autoComplete={keyboardType === 'email' ? 'email' : undefined}
+        pattern={keyboardType === 'numeric' ? '[0-9]*' : undefined}
+        className={cn(
+          inputVariants({ size: mobileOptimized ? 'mobile' : size }), 
+          className,
+          mobileOptimized && "mobile-optimized-input"
+        )}
         ref={ref}
         aria-label={label}
         aria-describedby={description ? `${props.id}-description` : undefined}

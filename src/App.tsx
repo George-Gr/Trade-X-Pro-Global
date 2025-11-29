@@ -1,15 +1,18 @@
-import React, { Suspense, lazy, useEffect } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ErrorContextProvider } from "@/components/ErrorContextProvider";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
 import { logger, initializeSentry } from "@/lib/logger";
+import { breadcrumbTracker } from "@/lib/breadcrumbTracker";
 import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
@@ -65,13 +68,24 @@ import Security from "./pages/company/Security";
 import Partners from "./pages/company/Partners";
 import ContactUs from "./pages/company/ContactUs";
 
+// Theme Testing (Development Only)
+const ThemeTesting = lazy(() => import("./pages/ThemeTesting"));
+
 const queryClient = new QueryClient();
 
+// Layout Components
+const MobileBottomNavigation = lazy(() => import("./components/layout/MobileBottomNavigation"));
+
 const App = () => {
-  // Initialize Sentry on app load (production only)
+  // Initialize Sentry and monitoring on app load (production only)
   useEffect(() => {
     initializeSentry();
     logger.info("App initialized", { action: "app_startup" });
+    
+    // Initialize breadcrumb tracking
+    logger.info("Breadcrumb tracker initialized", { 
+      action: "breadcrumb_tracker_init" 
+    });
   }, []);
 
   return (
@@ -157,7 +171,7 @@ const App = () => {
                   <Route path="/company/partners" element={<Partners />} />
                   <Route path="/company/contact" element={<ContactUs />} />
                 
-                {/* Protected Routes with AuthenticatedLayoutProvider */}
+                {/* Protected Routes with Mobile-Optimized Layout */}
                 <Route
                   path="/dashboard"
                   element={
@@ -165,6 +179,8 @@ const App = () => {
                       <ProtectedRoute>
                         <AuthenticatedLayoutProvider>
                           <Dashboard />
+                          {/* Mobile bottom navigation for dashboard */}
+                          <MobileBottomNavigation />
                         </AuthenticatedLayoutProvider>
                       </ProtectedRoute>
                     </ErrorBoundary>
@@ -303,6 +319,7 @@ const App = () => {
                   }
                 />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                {import.meta.env.DEV && <Route path="/dev/theme-testing" element={<ThemeTesting />} />}
                 {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -32,43 +32,53 @@
   transition: all 0.2s ease-in-out;
 }
 
-/* Focus state for keyboard navigation */
+/* Focus state for keyboard navigation - Enhanced 3px Width */
 [data-sidebar="menu-button"]:focus-visible:not([data-active="true"]) {
-  /* Focus ring with accent color */
-  outline: 2px solid hsl(217 91% 60%);
+  /* Enhanced focus ring with accent color using CSS variables */
+  outline: 3px solid hsl(var(--focus-color));
   outline-offset: 2px;
   
   /* Background highlight on focus */
-  background-color: hsl(var(--sidebar-accent) / 0.2);
+  background-color: hsl(var(--sidebar-accent) / 0.25);
+  
+  /* Enhanced shadow for better visibility using focus ring color */
+  box-shadow: 
+    0 0 0 4px hsl(var(--focus-ring-color) / 0.2),
+    0 4px 8px hsl(var(--focus-ring-color) / 0.1);
   
   /* Smooth transition */
   transition: all 0.2s ease-in-out;
 }
 
-/* Active state with focus combination */
+/* Active state with focus combination - Enhanced */
 [data-sidebar="menu-button"][data-active="true"]:focus-visible {
-  /* Enhanced focus ring for active state */
-  outline: 2px solid hsl(217 91% 60%);
+  /* Enhanced focus ring for active state with 3px width */
+  outline: 3px solid hsl(var(--focus-color));
   outline-offset: 2px;
   
   /* Additional shadow for active + focus state */
   box-shadow: 
-    inset 4px 0 0 0 hsl(217 91% 60%),
-    0 4px 12px hsl(217 91% 60% / 0.15),
+    inset 4px 0 0 0 hsl(var(--focus-color)),
+    0 4px 12px hsl(var(--focus-ring-color) / 0.15),
     0 0 0 4px hsl(217 91% 60% / 0.2);
   
   /* Smooth transition */
   transition: all 0.2s ease-in-out;
 }
 
-/* Enhanced focus indicators for keyboard navigation */
+/* Enhanced focus indicators for keyboard navigation - Updated 3px Width */
 [data-sidebar="menu-button"][role="menuitem"]:focus-visible {
-  /* Clear visual indicator for keyboard focus */
-  outline: 2px solid hsl(217 91% 60%);
+  /* Clear visual indicator for keyboard focus - 3px width using CSS variables */
+  outline: 3px solid hsl(var(--focus-color));
   outline-offset: 2px;
   
   /* Enhanced background for better visibility */
   background-color: hsl(var(--sidebar-accent) / 0.25);
+  
+  /* Enhanced shadow for better separation using focus ring color */
+  box-shadow: 
+    0 0 0 4px hsl(var(--focus-ring-color) / 0.25),
+    0 2px 4px hsl(var(--focus-ring-color) / 0.1);
   
   /* Ensure focus is always visible */
   border-radius: 0.375rem;
@@ -77,18 +87,26 @@
   transition: all 0.2s ease-in-out;
 }
 
-/* High contrast focus indicators */
+/* High contrast focus indicators - Enhanced for WCAG AA */
 @media (prefers-contrast: high) {
   [data-sidebar="menu-button"][role="menuitem"]:focus-visible {
-    /* High contrast focus ring */
-    outline: 3px solid hsl(217 91% 60%);
+    /* High contrast focus ring - 4px for maximum visibility */
+    outline: 4px solid hsl(var(--contrast-auto-high));
     outline-offset: 2px;
     
     /* High contrast background */
-    background-color: hsl(var(--sidebar-accent) / 0.3);
+    background-color: hsl(var(--contrast-auto-bg-high) / 0.8);
+    
+    /* Enhanced shadow for maximum separation */
+    box-shadow: 
+      0 0 0 6px hsl(var(--contrast-auto-bg-high) / 0.9),
+      0 0 0 8px hsl(var(--contrast-auto-bg-high) / 0.7);
     
     /* Ensure visibility in high contrast mode */
-    border: 1px solid hsl(217 91% 60% / 0.3);
+    border: 2px solid hsl(var(--contrast-auto-high));
+    
+    /* Force text color for contrast */
+    color: hsl(var(--contrast-auto-high));
   }
 }
 
@@ -243,5 +261,48 @@
   [data-sidebar="menu-button"]:not([data-active="true"]):hover {
     /* Larger touch target for hover state */
     min-height: 44px;
+  }
+}
+
+/* Dark Mode Sidebar Focus Rings */
+@media (prefers-color-scheme: dark) {
+  .dark [data-sidebar="menu-button"]:focus-visible:not([data-active="true"]) {
+    /* Dark mode focus ring - enhanced visibility using CSS variables */
+    outline: 3px solid hsl(var(--focus-color));
+    outline-offset: 2px;
+    
+    /* Dark mode background highlight */
+    background-color: hsl(var(--sidebar-accent) / 0.3);
+    
+    /* Enhanced shadow for dark backgrounds using focus ring color */
+    box-shadow: 
+      0 0 0 4px hsl(var(--focus-ring-color) / 0.3),
+      0 4px 8px hsl(var(--focus-ring-color) / 0.15);
+  }
+  
+  .dark [data-sidebar="menu-button"][data-active="true"]:focus-visible {
+    /* Dark mode active + focus state */
+    outline: 3px solid hsl(var(--focus-color));
+    outline-offset: 2px;
+    
+    /* Dark mode active + focus shadow */
+    box-shadow: 
+      inset 4px 0 0 0 hsl(var(--focus-color)),
+      0 4px 12px hsl(var(--focus-ring-color) / 0.2),
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.25);
+  }
+  
+  .dark [data-sidebar="menu-button"][role="menuitem"]:focus-visible {
+    /* Dark mode keyboard navigation focus */
+    outline: 3px solid hsl(var(--focus-color));
+    outline-offset: 2px;
+    
+    /* Dark mode background */
+    background-color: hsl(var(--sidebar-accent) / 0.3);
+    
+    /* Dark mode shadow using focus ring color */
+    box-shadow: 
+      0 0 0 4px hsl(var(--focus-ring-color) / 0.3),
+      0 2px 4px hsl(var(--focus-ring-color) / 0.15);
   }
 }

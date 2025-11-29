@@ -1,29 +1,28 @@
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/tracing";
+import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from "react-router-dom";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import App from "./App.tsx";
 import "./index.css";
 import { initializeSentry } from "./lib/logger";
+import { initializeSentryAdvanced } from "./lib/sentryConfig";
+import { pwaManager } from "./lib/pwa";
 
 // Initialize Sentry for error tracking and performance monitoring
 if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
-  Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_DSN,
-    environment: import.meta.env.MODE,
-    integrations: [
-      // BrowserTracing removed due to type incompatibility
-    ],
-    // Capture 100% of errors in development, 10% of transactions in production
-    tracesSampleRate: import.meta.env.DEV ? 1.0 : 0.1,
-    // Capture all errors
-    attachStacktrace: true,
-    // Enable breadcrumbs (tracks user interactions)
-    maxBreadcrumbs: 50,
-    // Release tracking (useful for correlating errors with deploys)
-    release: import.meta.env.VITE_APP_VERSION || "unknown",
-  });
+  // Use advanced Sentry configuration
+  initializeSentryAdvanced();
   // Notify logger that Sentry has been initialized so it can route logs
   initializeSentry();
+}
+
+// Initialize PWA features
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  // Register service worker for PWA functionality
+  pwaManager.registerServiceWorker().catch(console.error);
+  
+  // Store last connected time
+  localStorage.setItem('lastConnected', new Date().toISOString());
 }
 
 const root = createRoot(document.getElementById("root")!);
@@ -39,6 +38,8 @@ root.render(
     )}
     showDialog
   >
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </Sentry.ErrorBoundary>
 );

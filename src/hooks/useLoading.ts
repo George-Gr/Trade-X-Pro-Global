@@ -10,12 +10,12 @@ interface UseLoadingOptions {
   initialLoading?: boolean;
   debounceMs?: number;
   optimisticUpdate?: boolean;
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: unknown) => void;
   onError?: (error: string) => void;
 }
 
-export function useLoading<T = any>(
-  asyncFunction: (...args: any[]) => Promise<T>,
+export function useLoading<T = unknown>(
+  asyncFunction: (...args: unknown[]) => Promise<T>,
   options: UseLoadingOptions = {}
 ) {
   const {
@@ -36,7 +36,7 @@ export function useLoading<T = any>(
   const abortControllerRef = useRef<AbortController>();
 
   const execute = useCallback(
-    async (...args: any[]): Promise<T | null> => {
+    async (...args: unknown[]): Promise<T | null> => {
       // Cancel previous request if still running
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();

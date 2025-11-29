@@ -8,6 +8,7 @@ import MarginLevelCard from "@/components/dashboard/MarginLevelCard";
 import RiskAlertsCard from "@/components/dashboard/RiskAlertsCard";
 // removed incorrect RiskAlert import — use events returned from useRiskEvents instead
 import ProfitLossCard from "@/components/dashboard/ProfitLossCard";
+import { ChartPerformanceTester } from "@/components/charts/ChartPerformanceTester";
 import { ErrorMessage, RealtimeErrorAlert } from "@/components/ui/ErrorUI";
 import { useRiskMetrics } from "@/hooks/useRiskMetrics";
 import useRiskEvents from "@/hooks/useRiskEvents";
@@ -15,6 +16,7 @@ import { useProfitLossData } from "@/hooks/useProfitLossData";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
 import "@/components/dashboard/DashboardGrid.css";
+import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -309,8 +311,9 @@ const Dashboard = () => {
         </CardContent>
       </Card>
 
-      
-    </AuthenticatedLayout>
+      {/* Mobile bottom navigation for dashboard */}
+      <MobileBottomNavigation />
+      </AuthenticatedLayout>
   );
 };
 

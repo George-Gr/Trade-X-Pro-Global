@@ -37,13 +37,14 @@ interface UserProfile {
   max_leverage?: number;
 }
 
+interface SupabaseQueryBuilder<T> {
+  eq(column: string, value: string | boolean): SupabaseQueryBuilder<T>;
+  maybeSingle(): Promise<{ data: T | null; error: Error | null }>;
+}
+
 interface SupabaseClient {
   from(table: string): {
-    select(columns: string): {
-      eq(column: string, value: string | boolean): {
-        maybeSingle(): Promise<{ data: AssetSpec | null; error: Error | null }>;
-      };
-    };
+    select(columns: string): SupabaseQueryBuilder<AssetSpec>;
   };
 }
 

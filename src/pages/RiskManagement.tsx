@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { supabase } from "@/integrations/supabase/client";
 import { formatToastError } from "@/lib/errorMessageService";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
 import { RiskSettingsForm } from "@/components/risk/RiskSettingsForm";
 import { RiskManagementLoading } from "@/components/risk/RiskManagementLoading";
 import { Shield, TrendingDown, Lock, AlertTriangle } from "lucide-react";
+import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
 
 interface RiskSettings {
   margin_call_level: number;
@@ -186,6 +187,9 @@ export default function RiskManagement() {
           <RiskSettingsForm />
         </div>
       </div>
-    </AuthenticatedLayout>
+
+      {/* Mobile bottom navigation for risk management */}
+      <MobileBottomNavigation />
+      </AuthenticatedLayout>
   );
 }

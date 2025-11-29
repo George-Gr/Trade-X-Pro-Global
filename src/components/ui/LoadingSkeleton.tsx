@@ -6,25 +6,32 @@ import { LucideIcon } from "lucide-react";
 interface DashboardStatsSkeletonProps {
   count?: number;
   className?: string;
+  animated?: boolean;
 }
 
-export function DashboardStatsSkeleton({ count = 4, className }: DashboardStatsSkeletonProps) {
+export function DashboardStatsSkeleton({ count = 4, className, animated = true }: DashboardStatsSkeletonProps) {
   return (
     <div className={cn("dashboard-grid mb-8", className)}>
       {Array.from({ length: count }).map((_, index) => (
-        <Card key={index} elevation="1" variant="primary">
+        <Card 
+          key={index} 
+          elevation="1" 
+          variant="primary" 
+          className={animated ? "animate-slide-in-up" : ""}
+          style={{ animationDelay: `${index * 100}ms` }}
+        >
           <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
             <div className="flex-1">
               <CardTitle className="typography-label text-primary-contrast tracking-wide">
-                <Skeleton variant="text" className="w-3/4 h-4" />
+                <Skeleton variant="text" className={cn("w-3/4 h-4", animated && "animate-loading-pulse")} />
               </CardTitle>
-              <Skeleton variant="text" className="w-1/2 h-3 mt-2" />
+              <Skeleton variant="text" className={cn("w-1/2 h-3 mt-2", animated && "animate-loading-pulse")} />
             </div>
-            <Skeleton variant="avatar" className="h-5 w-5" />
+            <Skeleton variant="avatar" className={cn("h-5 w-5", animated && "animate-loading-pulse")} />
           </CardHeader>
           <CardContent className="space-y-2">
-            <Skeleton variant="text" className="w-1/2 h-8" />
-            <Skeleton variant="text" className="w-1/3 h-3" />
+            <Skeleton variant="text" className={cn("w-1/2 h-8", animated && "animate-loading-pulse")} />
+            <Skeleton variant="text" className={cn("w-1/3 h-3", animated && "animate-loading-pulse")} />
           </CardContent>
         </Card>
       ))}
@@ -35,14 +42,19 @@ export function DashboardStatsSkeleton({ count = 4, className }: DashboardStatsS
 interface MarketWatchSkeletonProps {
   className?: string;
   height?: string;
+  animated?: boolean;
 }
 
-export function MarketWatchSkeleton({ className, height = "h-[400px]" }: MarketWatchSkeletonProps) {
+export function MarketWatchSkeleton({ className, height = "h-[400px]", animated = true }: MarketWatchSkeletonProps) {
   return (
-    <Card elevation="2" variant="primary" className={cn("border-border/70 mb-xl", className)}>
+    <Card 
+      elevation="2" 
+      variant="primary" 
+      className={cn("border-border/70 mb-xl", animated && "animate-slide-in-up", className)}
+    >
       <CardHeader>
         <CardTitle className="text-base font-semibold text-primary-contrast">
-          <Skeleton variant="text" className="w-1/3 h-5" />
+          <Skeleton variant="text" className={cn("w-1/3 h-5", animated && "animate-loading-pulse")} />
         </CardTitle>
       </CardHeader>
       <CardContent className={cn(height, "bg-muted/50 rounded-lg")}>
@@ -393,3 +405,86 @@ export const ShimmerEffect = ({ className }: { className?: string }) => {
     </div>
   );
 };
+
+// Enhanced Loading Spinner Component
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'dots' | 'spinner' | 'pulse' | 'bounce';
+  className?: string;
+  text?: string;
+}
+
+export function LoadingSpinner({ 
+  size = 'md', 
+  variant = 'spinner', 
+  className, 
+  text 
+}: LoadingSpinnerProps) {
+  const sizeClasses = {
+    sm: 'h-6 w-6',
+    md: 'h-8 w-8', 
+    lg: 'h-12 w-12',
+    xl: 'h-16 w-16',
+  };
+
+  const spinnerContent = (
+    <div className={cn("flex items-center justify-center", className)}>
+      {variant === 'spinner' && (
+        <div className={cn("animate-loading-spin rounded-full border-2 border-current border-t-transparent", sizeClasses[size])} />
+      )}
+      
+      {variant === 'dots' && (
+        <div className="flex space-x-2">
+          <div className={cn("rounded-full bg-current animate-loading-bounce", sizeClasses[size])} style={{ animationDelay: '0s' }} />
+          <div className={cn("rounded-full bg-current animate-loading-bounce", sizeClasses[size])} style={{ animationDelay: '0.2s' }} />
+          <div className={cn("rounded-full bg-current animate-loading-bounce", sizeClasses[size])} style={{ animationDelay: '0.4s' }} />
+        </div>
+      )}
+      
+      {variant === 'pulse' && (
+        <div className={cn("rounded-full bg-current animate-loading-pulse", sizeClasses[size])} />
+      )}
+      
+      {variant === 'bounce' && (
+        <div className="flex space-x-1">
+          <div className={cn("w-2 bg-current rounded-full animate-loading-bounce", size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6')} />
+          <div className={cn("w-2 bg-current rounded-full animate-loading-bounce", size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6')} />
+          <div className={cn("w-2 bg-current rounded-full animate-loading-bounce", size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6')} />
+        </div>
+      )}
+      
+      {text && (
+        <span className="ml-3 text-sm text-foreground/70 animate-loading-pulse">
+          {text}
+        </span>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="flex items-center justify-center py-8">
+      {spinnerContent}
+    </div>
+  );
+}
+
+// Page Loading Overlay
+interface PageLoadingOverlayProps {
+  visible?: boolean;
+  text?: string;
+}
+
+export function PageLoadingOverlay({ visible = false, text = "Loading..." }: PageLoadingOverlayProps) {
+  if (!visible) return null;
+
+  return (
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <LoadingSpinner size="xl" variant="bounce" />
+        <p className="text-lg font-medium text-foreground animate-loading-pulse">
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}

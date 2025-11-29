@@ -18,10 +18,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       data-elevation={elevation}
       data-variant={variant}
       className={cn(
-        "rounded-lg border shadow-sm bg-card text-card-foreground",
+        "rounded-lg border shadow-sm bg-card text-card-foreground transition-all duration-300",
         `card-elevation-${elevation}`,
         `card-${variant}`,
-        interactive && "card-interactive",
+        interactive && "card-interactive hover:animate-card-hover cursor-pointer",
         className
       )} 
       {...props} 

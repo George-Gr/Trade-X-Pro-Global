@@ -1,0 +1,500 @@
+/* 
+ * Mobile Landscape Orientation Optimization
+ * 
+ * Optimizes the mobile experience for landscape orientation,
+ * providing better layout utilization and improved functionality
+ * when devices are rotated horizontally
+ */
+
+/* ============================================
+   LANDSCAPE ORIENTATION BASE STYLES
+   ============================================ */
+
+/* Target landscape orientation on mobile devices */
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Main layout adjustments */
+  .mobile-landscape-layout {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+  }
+
+  .mobile-landscape-sidebar {
+    width: 280px;
+    min-width: 280px;
+    max-width: 320px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    border-right: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+  }
+
+  .mobile-landscape-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  /* Hide bottom navigation in landscape */
+  .mobile-bottom-navigation {
+    display: none;
+  }
+
+  /* Adjust content padding for landscape */
+  .mobile-landscape-content-with-nav {
+    padding-bottom: 0;
+  }
+}
+
+/* ============================================
+   LANDSCAPE-SPECIFIC COMPONENT LAYOUTS
+   ============================================ */
+
+/* Dashboard in landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+  .dashboard-landscape {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 16px;
+    height: 100%;
+  }
+
+  .dashboard-landscape-header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .dashboard-landscape-main {
+    grid-column: 1;
+    grid-row: 2;
+    overflow-y: auto;
+  }
+
+  .dashboard-landscape-sidebar {
+    grid-column: 2;
+    grid-row: 2;
+    overflow-y: auto;
+    border-left: 1px solid hsl(var(--border));
+    padding: 16px;
+  }
+
+  .dashboard-landscape-footer {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    padding: 12px 16px;
+    border-top: 1px solid hsl(var(--border));
+  }
+}
+
+/* Trading interface in landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+  .trading-interface-landscape {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
+
+  .trading-chart-landscape {
+    grid-column: 1;
+    grid-row: 2;
+    overflow: hidden;
+  }
+
+  .trading-controls-landscape {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    overflow-y: auto;
+    border-left: 1px solid hsl(var(--border));
+    background: hsl(var(--muted));
+  }
+
+  .trading-header-landscape {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 12px 16px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+}
+
+/* Chart layout in landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+  .chart-landscape-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-landscape-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .chart-landscape-content {
+    flex: 1;
+    min-height: 200px;
+  }
+
+  .chart-landscape-controls {
+    padding: 8px 12px;
+    border-top: 1px solid hsl(var(--border));
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+/* Portfolio layout in landscape */
+@media (max-width: 767px) and (orientation: landscape) {
+  .portfolio-landscape {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
+
+  .portfolio-summary-landscape {
+    grid-column: 1;
+    grid-row: 2;
+    overflow-y: auto;
+    border-right: 1px solid hsl(var(--border));
+  }
+
+  .portfolio-positions-landscape {
+    grid-column: 2;
+    grid-row: 2;
+    overflow-y: auto;
+  }
+
+  .portfolio-header-landscape {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 12px 16px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+}
+
+/* ============================================
+   FORM OPTIMIZATION FOR LANDSCAPE
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Form layout in landscape */
+  .form-landscape {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-landscape .form-group {
+    grid-column: span 1;
+  }
+
+  .form-landscape .form-group-full {
+    grid-column: span 2;
+  }
+
+  /* Input sizing for landscape */
+  .form-landscape input,
+  .form-landscape select,
+  .form-landscape textarea {
+    min-height: 40px;
+    padding: 10px 12px;
+  }
+
+  /* Button layout in landscape */
+  .form-landscape .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .form-landscape .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+/* ============================================
+   NAVIGATION ADAPTATIONS
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Side navigation for landscape */
+  .landscape-nav-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: hsl(var(--background));
+    border-right: 1px solid hsl(var(--border));
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .landscape-nav-drawer.open {
+    transform: translateX(0);
+  }
+
+  .landscape-nav-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1100;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
+  }
+
+  /* Tab navigation in landscape */
+  .landscape-tabs {
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid hsl(var(--border));
+    padding: 0;
+    gap: 0;
+  }
+
+  .landscape-tab {
+    flex-shrink: 0;
+    min-width: 80px;
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .landscape-tab.active {
+    border-bottom-color: hsl(var(--primary));
+    background: hsl(var(--muted));
+  }
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS FOR LANDSCAPE
+   ============================================ */
+
+/* Small landscape devices (iPhone 5/SE) */
+@media (max-width: 568px) and (orientation: landscape) {
+  .mobile-landscape-layout {
+    gap: 8px;
+  }
+
+  .mobile-landscape-sidebar {
+    width: 200px;
+    min-width: 200px;
+  }
+
+  .form-landscape {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-landscape {
+    grid-template-columns: 1fr;
+  }
+
+  .trading-interface-landscape {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Medium landscape devices (iPhone 6/7/8+) */
+@media (min-width: 569px) and (max-width: 736px) and (orientation: landscape) {
+  .mobile-landscape-sidebar {
+    width: 240px;
+    min-width: 240px;
+  }
+}
+
+/* Large landscape devices (iPhone Plus, Android large) */
+@media (min-width: 737px) and (max-width: 767px) and (orientation: landscape) {
+  .mobile-landscape-sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+}
+
+/* ============================================
+   KEYBOARD AVOIDANCE IN LANDSCAPE
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Adjust layout when virtual keyboard is active */
+  .keyboard-active .mobile-landscape-content {
+    padding-bottom: 0;
+  }
+
+  /* Form positioning for keyboard avoidance */
+  .landscape-form-keyboard-avoidance {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: hsl(var(--background));
+    border-top: 1px solid hsl(var(--border));
+    z-index: 1000;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  /* Input focus adjustments */
+  .landscape-input-focused {
+    background: hsl(var(--background));
+    position: relative;
+    z-index: 1001;
+    border: 2px solid hsl(var(--primary));
+    border-radius: 8px;
+  }
+}
+
+/* ============================================
+   GESTURE SUPPORT IN LANDSCAPE
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Swipe gestures for landscape navigation */
+  .landscape-swipe-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 44px;
+    z-index: 10;
+  }
+
+  .landscape-swipe-area.right {
+    left: auto;
+    right: 0;
+  }
+
+  /* Edge swipe for navigation */
+  .landscape-edge-swipe {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    left: 0;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .landscape-edge-swipe.right {
+    left: auto;
+    right: 0;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Hardware acceleration for smooth transitions */
+  .mobile-landscape-layout,
+  .landscape-nav-drawer,
+  .trading-interface-landscape {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Reduce animations on lower-end devices */
+  @media (max-width: 568px) and (orientation: landscape) {
+    .mobile-landscape-layout,
+    .landscape-nav-drawer {
+      transition: none;
+    }
+  }
+
+  /* Optimize scrolling performance */
+  .mobile-landscape-sidebar,
+  .mobile-landscape-content {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY IN LANDSCAPE
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Focus management */
+  .landscape-nav-drawer:focus-within ~ .mobile-landscape-content {
+    filter: blur(2px);
+  }
+
+  /* High contrast support */
+  @media (prefers-contrast: high) {
+    .mobile-landscape-sidebar {
+      border-right-width: 2px;
+    }
+
+    .trading-interface-landscape {
+      border-left-width: 2px;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .landscape-nav-drawer {
+      transition: none;
+    }
+
+    .mobile-landscape-layout {
+      transition: none;
+    }
+  }
+
+  /* Large text support */
+  @media (max-width: 767px) and (orientation: landscape) {
+    .landscape-text-large * {
+      font-size: calc(1rem * 1.2);
+      line-height: 1.6;
+    }
+  }
+}
+
+/* ============================================
+   SAFE AREA AND VIEWPORT HANDLING
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+  /* Handle notches and rounded corners in landscape */
+  .landscape-safe-area-left {
+    padding-left: max(env(safe-area-inset-left), constant(safe-area-inset-left));
+  }
+
+  .landscape-safe-area-right {
+    padding-right: max(env(safe-area-inset-right), constant(safe-area-inset-right));
+  }
+
+  .landscape-safe-area-top {
+    padding-top: max(env(safe-area-inset-top), constant(safe-area-inset-top));
+  }
+
+  .landscape-safe-area-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), constant(safe-area-inset-bottom));
+  }
+
+  /* Dynamic viewport height for landscape */
+  .landscape-full-height {
+    height: 100vh;
+    height: 100dvh;
+    height: 100svh;
+  }
+
+  .landscape-keyboard-detection {
+    height: 100dvh;
+  }
+}

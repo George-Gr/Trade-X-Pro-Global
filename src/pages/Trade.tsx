@@ -6,7 +6,7 @@ import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import TradeLoading from "@/components/trading/TradeLoading";
+import { TradeLoading } from "@/components/trading/TradeLoading";
 
 // Lazy load heavy components for better bundle splitting
 const EnhancedWatchlist = lazy(() => import("@/components/trading/EnhancedWatchlist"));

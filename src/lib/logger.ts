@@ -8,6 +8,8 @@
  * - Error tracking with full stack traces
  * - Breadcrumb support for tracking user actions
  * - Performance monitoring (log execution time)
+ * - Sentry transaction tracking for performance monitoring
+ * - Session replay integration for debugging
  * 
  * Usage:
  * ```typescript
@@ -31,10 +33,19 @@
  * 
  * // With breadcrumbs (for tracking action sequences)
  * logger.addBreadcrumb('user_interaction', 'Clicked Place Order');
+ * 
+ * // Performance tracking
+ * logger.startTransaction('order_execution', 'operation');
+ * // ... perform operation ...
+ * logger.finishTransaction('order_execution');
+ * 
+ * // API timing
+ * logger.timeApiCall('GET', '/api/orders', responseTime);
  * ```
  */
 
 import * as Sentry from "@sentry/react";
+import { Transaction, Span } from "@sentry/types";
 
 /**
  * Log context information
@@ -46,6 +57,29 @@ export interface LogContext {
   component?: string;
   metadata?: Record<string, unknown>;
   timestamp?: string;
+}
+
+/**
+ * Performance transaction tracking
+ */
+export interface PerformanceTransaction {
+  name: string;
+  operation: string;
+  startTime: number;
+  spanId?: string;
+  parentSpanId?: string;
+}
+
+/**
+ * API call tracking
+ */
+export interface APICallInfo {
+  method: string;
+  url: string;
+  status?: number;
+  duration: number;
+  success: boolean;
+  error?: string;
 }
 
 /**
@@ -76,6 +110,13 @@ let globalContext: LogContext = {};
  */
 const breadcrumbs: Breadcrumb[] = [];
 const MAX_BREADCRUMBS = 50;
+
+/**
+ * Active performance transactions
+ */
+const activeTransactions: Map<string, PerformanceTransaction> = new Map();
+const apiCallHistory: APICallInfo[] = [];
+const MAX_API_HISTORY = 100;
 
 /**
  * Check if Sentry is initialized and active
@@ -328,6 +369,250 @@ export const logger = {
       const fullContext = mergeContext(context);
       const formatted = formatLogMessage('DEBUG', message, fullContext);
       console.debug(formatted, fullContext.metadata || {});
+    }
+  },
+
+  /**
+   * Start a performance transaction
+   */
+  startTransaction(name: string, operation: string, context?: LogContext): string {
+    const startTime = performance.now();
+    const transactionId = `${name}-${startTime}-${Math.random().toString(36).substring(2, 8)}`;
+    
+    const transaction: PerformanceTransaction = {
+      name,
+      operation,
+      startTime,
+    };
+
+    activeTransactions.set(transactionId, transaction);
+
+    if (isSentryActive()) {
+      // Start Sentry transaction
+      const sentryTransaction = Sentry.startTransaction({
+        name,
+        operation,
+        tags: context ? {
+          userId: context.userId,
+          page: context.page,
+          component: context.component,
+        } : {},
+      });
+      
+      transaction.spanId = sentryTransaction.spanId;
+      activeTransactions.set(transactionId, transaction);
+    }
+
+    if (isDevelopment) {
+      console.log(`[PERF] Started transaction: ${name} (${transactionId})`, {
+        operation,
+        startTime,
+        context: context?.metadata || {}
+      });
+    }
+
+    return transactionId;
+  },
+
+  /**
+   * Finish a performance transaction
+   */
+  finishTransaction(transactionId: string, context?: LogContext): void {
+    const transaction = activeTransactions.get(transactionId);
+    if (!transaction) {
+      if (isDevelopment) {
+        console.warn(`[PERF] Transaction not found: ${transactionId}`);
+      }
+      return;
+    }
+
+    const duration = performance.now() - transaction.startTime;
+    const fullContext = mergeContext(context);
+
+    if (isSentryActive() && transaction.spanId) {
+      // Finish Sentry transaction
+      const scope = Sentry.getCurrentHub().getScope();
+      const sentryTransaction = scope?.getTransaction();
+      if (sentryTransaction) {
+        sentryTransaction.setStatus('ok');
+        sentryTransaction.setTag('duration', duration);
+        sentryTransaction.setTag('operation', transaction.operation);
+        sentryTransaction.finish();
+      }
+    }
+
+    // Add breadcrumb for completed transaction
+    this.addBreadcrumb('performance', `${transaction.operation}: ${transaction.name} completed in ${duration.toFixed(2)}ms`);
+
+    // Log slow transactions as warnings
+    if (duration > 1000) { // Log transactions slower than 1 second
+      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, undefined, {
+        ...fullContext,
+        metadata: {
+          ...fullContext.metadata,
+          transactionName: transaction.name,
+          duration,
+          operation: transaction.operation,
+        }
+      });
+    }
+
+    activeTransactions.delete(transactionId);
+
+    if (isDevelopment) {
+      console.log(`[PERF] Finished transaction: ${transaction.name} (${transactionId})`, {
+        duration: `${duration.toFixed(2)}ms`,
+        operation: transaction.operation,
+        context: fullContext.metadata || {}
+      });
+    }
+  },
+
+  /**
+   * Record an API call
+   */
+  timeApiCall(method: string, url: string, duration: number, status?: number, error?: string): void {
+    const apiCall: APICallInfo = {
+      method,
+      url,
+      duration,
+      status,
+      success: !error && status && status < 400,
+      error,
+    };
+
+    // Add to history
+    apiCallHistory.push(apiCall);
+    if (apiCallHistory.length > MAX_API_HISTORY) {
+      apiCallHistory.shift();
+    }
+
+    if (isSentryActive()) {
+      // Add breadcrumb for API call
+      const message = `${method} ${url} - ${status || 'unknown'} (${duration.toFixed(2)}ms)`;
+      Sentry.addBreadcrumb({
+        category: 'http',
+        message,
+        level: apiCall.success ? 'info' : 'error',
+        data: {
+          method,
+          url,
+          status,
+          duration,
+          error,
+        },
+        timestamp: Date.now() / 1000,
+      });
+
+      // Track slow API calls
+      if (duration > 2000) { // API calls slower than 2 seconds
+        Sentry.addBreadcrumb({
+          category: 'performance',
+          message: `Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`,
+          level: 'warning',
+          timestamp: Date.now() / 1000,
+        });
+      }
+    }
+
+    // Add breadcrumb for API call
+    const statusText = status ? `(${status})` : '';
+    const message = `${method} ${url} ${statusText} - ${duration.toFixed(2)}ms`;
+    this.addBreadcrumb(
+      'api',
+      message,
+      apiCall.success ? 'info' : 'error'
+    );
+
+    // Log slow API calls
+    if (duration > 2000) {
+      this.warn(`Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`, undefined, {
+        component: 'API',
+        action: 'api_slow_response',
+        metadata: {
+          method,
+          url,
+          duration,
+          status,
+          error,
+        }
+      });
+    }
+
+    if (isDevelopment) {
+      const logLevel = apiCall.success ? 'log' : 'warn';
+      console[logLevel](`[API] ${message}`, {
+        method,
+        url,
+        status,
+        duration,
+        error: error || 'none'
+      });
+    }
+  },
+
+  /**
+   * Get API call history
+   */
+  getApiCallHistory(): APICallInfo[] {
+    return [...apiCallHistory];
+  },
+
+  /**
+   * Clear API call history
+   */
+  clearApiCallHistory(): void {
+    apiCallHistory.length = 0;
+  },
+
+  /**
+   * Record user action with timing
+   */
+  recordUserAction(action: string, duration?: number, context?: LogContext): void {
+    const fullContext = mergeContext(context);
+    const message = duration ? `${action} (${duration.toFixed(2)}ms)` : action;
+
+    this.addBreadcrumb('user_action', message);
+
+    if (isSentryActive()) {
+      const sentryTransaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+      if (sentryTransaction && duration) {
+        sentryTransaction.setTag('user_action', action);
+        sentryTransaction.setTag('action_duration', duration);
+      }
+    }
+
+    if (isDevelopment) {
+      console.log(`[USER ACTION] ${message}`, fullContext.metadata || {});
+    }
+  },
+
+  /**
+   * Start a user action timing
+   */
+  startUserAction(action: string, context?: LogContext): string {
+    const startTime = performance.now();
+    const actionId = `${action}-${startTime}`;
+
+    if (isDevelopment) {
+      console.log(`[USER ACTION START] ${action} (${actionId})`, context?.metadata || {});
+    }
+
+    return actionId;
+  },
+
+  /**
+   * End a user action timing
+   */
+  endUserAction(actionId: string, action: string, context?: LogContext): void {
+    const startTime = parseFloat(actionId.split('-')[1]);
+    if (isNaN(startTime)) return;
+
+    const duration = performance.now() - startTime;
+    this.recordUserAction(action, duration, context);
+
+    if (isDevelopment) {
+      console.log(`[USER ACTION END] ${action} (${actionId}) - ${duration.toFixed(2)}ms`);
     }
   },
 

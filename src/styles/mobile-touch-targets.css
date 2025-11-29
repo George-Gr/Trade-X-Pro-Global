@@ -1,0 +1,454 @@
+/* 
+ * Mobile Touch Target Optimization
+ * 
+ * Ensures all interactive elements meet the 44x44px minimum touch target size
+ * recommended by WCAG and platform guidelines (iOS Human Interface Guidelines, Android Material Design)
+ * 
+ * This file contains mobile-specific CSS to enhance touch accessibility
+ */
+
+/* ============================================
+   BASE TOUCH TARGET SIZING
+   ============================================ */
+
+/* Ensure minimum touch target size for all interactive elements on mobile */
+@media (max-width: 767px) {
+  /* Buttons - primary, secondary, and all variants */
+  .btn,
+  button,
+  [role="button"],
+  .button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+    font-size: 16px;
+    line-height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Input fields */
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  /* Links that act as buttons */
+  a.btn,
+  .link-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Form controls wrapper for better touch targets */
+  .form-control {
+    position: relative;
+  }
+
+  .form-control::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 44px;
+    min-width: 44px;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+/* ============================================
+   TRADING INTERFACE TOUCH OPTIMIZATION
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Trading buttons */
+  .trade-button,
+  .order-button,
+  .market-button,
+  .limit-button,
+  .stop-button {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    margin: 4px;
+  }
+
+  /* Order size controls */
+  .quantity-control {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .quantity-input {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  /* Leverage selector */
+  .leverage-selector button {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 8px 12px;
+    margin: 2px;
+  }
+
+  /* Chart interaction buttons */
+  .chart-toolbar button,
+  .chart-controls button {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 8px 12px;
+  }
+}
+
+/* ============================================
+   NAVIGATION TOUCH OPTIMIZATION
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Sidebar navigation items */
+  .sidebar-nav-link {
+    min-height: 44px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Tab navigation */
+  .tab-nav button {
+    min-height: 44px;
+    min-width: 60px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  /* Pagination controls */
+  .pagination button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Modal close button */
+  .modal-close,
+  .dialog-close {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+}
+
+/* ============================================
+   MOBILE-SPECIFIC COMPONENT TOUCH TARGETS
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Card components */
+  .card {
+    padding: 16px;
+  }
+
+  .card-header,
+  .card-content,
+  .card-footer {
+    padding: 0;
+  }
+
+  /* List items */
+  .list-item {
+    min-height: 44px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Accordion items */
+  .accordion-trigger {
+    min-height: 44px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Dropdown items */
+  .dropdown-item {
+    min-height: 44px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Toast and notification actions */
+  .toast-action,
+  .notification-action {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 8px 12px;
+  }
+}
+
+/* ============================================
+   THUMB ZONE OPTIMIZATION
+   ============================================ */
+
+/* Bottom navigation zone - optimized for thumb reach */
+@media (max-width: 767px) {
+  .thumb-zone-bottom {
+    padding-bottom: 88px; /* Account for bottom navigation height + safe area */
+  }
+
+  .bottom-navigation-zone {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 88px; /* 60px nav + 28px safe area */
+    pointer-events: none;
+  }
+
+  .bottom-navigation-zone::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 28px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 100%);
+    pointer-events: none;
+  }
+}
+
+/* ============================================
+   TOUCH FEEDBACK AND VISUAL STATES
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Press state for touch feedback */
+  .touch-target {
+    transition: all 0.1s ease-out;
+    transform: translateZ(0);
+    will-change: transform, background-color;
+  }
+
+  .touch-target:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  /* Focus state for accessibility */
+  .touch-target:focus-visible {
+    outline: 3px solid hsl(var(--focus-color));
+    outline-offset: 2px;
+  }
+
+  /* Hover states (for devices that support hover) */
+  @media (hover: hover) and (pointer: fine) {
+    .touch-target:hover {
+      transform: scale(1.02);
+      background-color: hsl(var(--muted));
+    }
+  }
+}
+
+/* ============================================
+   FORM OPTIMIZATION FOR MOBILE KEYBOARDS
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Form labels */
+  .form-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  /* Form messages */
+  .form-message {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* Input groups */
+  .input-group {
+    gap: 8px;
+  }
+
+  .input-group .input {
+    flex: 1;
+  }
+
+  .input-group .btn {
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Select components */
+  .select-trigger {
+    min-height: 44px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Checkbox and radio inputs */
+  .checkbox,
+  .radio {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .checkbox-input,
+  .radio-input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+
+  /* Toggle switches */
+  .toggle-switch {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+  }
+}
+
+/* ============================================
+   MOBILE KEYBOARD OPTIMIZATION
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Input types optimization */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"] {
+    font-size: 16px; /* Prevents zoom on iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Number inputs for trading */
+  input[type="number"] {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Tel input for mobile numbers */
+  input[type="tel"] {
+    font-size: 16px; /* Prevents zoom on iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Number inputs for trading values */
+  /* Note: inputmode should be set as HTML attribute, not CSS property */
+  input[type="number"][data-trading] {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+}
+
+/* ============================================
+   SAFE AREA AND VIEWPORT OPTIMIZATION
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* iPhone X and similar devices */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Viewport units for mobile */
+  .mobile-full-height {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height */
+    height: 100svh; /* Small viewport height */
+    height: 100lvh; /* Large viewport height */
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATION FOR TOUCH
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Hardware acceleration for smooth touch interactions */
+  .touch-optimized {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .touch-target:active {
+      transform: none;
+      opacity: inherit;
+    }
+
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .touch-target {
+      border: 2px solid;
+    }
+
+    .touch-target:focus-visible {
+      outline-width: 4px;
+    }
+  }
+}

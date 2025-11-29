@@ -104,7 +104,7 @@ export function AssetSearchDialog({
     };
 
     fetchAssets();
-  }, [open, supabase]);
+  }, [open]);
 
   // Filter assets based on search and filters
   const filterAssets = useCallback(

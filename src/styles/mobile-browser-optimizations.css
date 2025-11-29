@@ -1,0 +1,512 @@
+/* 
+ * iOS Safari and Android Chrome Specific Optimizations
+ * 
+ * Platform-specific CSS to handle browser quirks and provide optimal
+ * mobile experience on the two most important mobile browsers
+ */
+
+/* ============================================
+   iOS SAFARI SPECIFIC OPTIMIZATIONS
+   ============================================ */
+
+/* iOS Safari viewport and scrolling fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS specific viewport handling */
+  .ios-viewport-fix {
+    height: 100vh;
+    height: 100dvh;
+    height: 100svh;
+    height: 100lvh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* iOS Safari form input zoom prevention */
+  .ios-no-zoom input,
+  .ios-no-zoom select,
+  .ios-no-zoom textarea {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* iOS Safari safe area handling */
+  .ios-safe-area {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* iOS Safari bottom navigation fix */
+  .ios-bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* iOS Safari pull-to-refresh prevention on specific elements */
+  .ios-no-pull-to-refresh {
+    overscroll-behavior: contain;
+  }
+
+  .ios-no-pull-to-refresh * {
+    overscroll-behavior: none;
+  }
+
+  /* iOS Safari keyboard handling */
+  .ios-keyboard-responsive {
+    min-height: 100dvh;
+    height: 100dvh;
+  }
+
+  /* iOS Safari form input focus fix */
+  .ios-form-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+
+  /* iOS Safari button touch handling */
+  .ios-touch-button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  /* iOS Safari modal and overlay fixes */
+  .ios-modal-fix {
+    position: fixed;
+    top: env(safe-area-inset-top);
+    left: env(safe-area-inset-left);
+    right: env(safe-area-inset-right);
+    bottom: env(safe-area-inset-bottom);
+  }
+
+  /* iOS Safari animation performance */
+  .ios-hardware-accelerated {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    -webkit-will-change: transform;
+  }
+
+  /* iOS Safari input placeholder styling */
+  .ios-placeholder-fix::placeholder {
+    color: hsl(var(--muted-foreground));
+    opacity: 1;
+  }
+
+  /* iOS Safari select dropdown fix */
+  .ios-select-fix {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+  }
+
+  /* iOS Safari text selection fix */
+  .ios-no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* iOS Safari touch scrolling optimization */
+  .ios-scroll-fix {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* iOS Safari flexbox gap support */
+  .ios-flex-gap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .ios-flex-gap > * {
+    margin: 0;
+  }
+
+  /* iOS Safari backdrop blur support */
+  .ios-backdrop-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  /* iOS Safari dark mode detection */
+  @media (prefers-color-scheme: dark) {
+    .ios-dark-mode {
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+  }
+
+  /* iOS Safari light mode detection */
+  @media (prefers-color-scheme: light) {
+    .ios-light-mode {
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+    }
+  }
+}
+
+/* ============================================
+   ANDROID CHROME SPECIFIC OPTIMIZATIONS
+   ============================================ */
+
+/* Android Chrome specific optimizations */
+@supports (-webkit-text-size-adjust: 100%) and (not (-webkit-touch-callout: none)) {
+  /* Android Chrome viewport handling */
+  .android-viewport-fix {
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  /* Android Chrome form input optimization */
+  .android-form-input {
+    font-size: 16px;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Android Chrome touch target optimization */
+  .android-touch-target {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 16px;
+  }
+
+  /* Android Chrome navigation bar handling */
+  .android-navigation-fix {
+    padding-bottom: 48px; /* Account for Android navigation bar */
+  }
+
+  /* Android Chrome status bar handling */
+  .android-status-fix {
+    padding-top: 24px; /* Account for Android status bar */
+  }
+
+  /* Android Chrome keyboard detection */
+  .android-keyboard-active {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  /* Android Chrome material design ripple effect */
+  .android-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .android-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    pointer-events: none;
+  }
+
+  .android-ripple:active::after {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+
+  /* Android Chrome bottom navigation optimization */
+  .android-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px; /* Material Design bottom navigation height */
+    background: hsl(var(--background));
+    border-top: 1px solid hsl(var(--border));
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 1000;
+  }
+
+  /* Android Chrome snackbar positioning */
+  .android-snackbar {
+    position: fixed;
+    bottom: 72px; /* Above bottom navigation */
+    left: 16px;
+    right: 16px;
+    z-index: 1100;
+  }
+
+  /* Android Chrome dialog optimization */
+  .android-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Android Chrome progress bar */
+  .android-progress {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .android-progress::-webkit-progress-bar {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  .android-progress::-webkit-progress-value {
+    background: hsl(var(--primary));
+    border-radius: 4px;
+  }
+
+  /* Android Chrome autofill styling */
+  .android-autofill input:-webkit-autofill {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    box-shadow: 0 0 0 1000px hsl(var(--background)) inset !important;
+  }
+
+  /* Android Chrome scrollbar styling */
+  .android-custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .android-custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .android-custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  .android-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+
+  /* Android Chrome tap highlight */
+  .android-tap-highlight {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Android Chrome text selection */
+  .android-selection::selection {
+    background: hsl(var(--primary)) / 20%;
+  }
+}
+
+/* ============================================
+   CROSS-PLATFORM MOBILE OPTIMIZATIONS
+   ============================================ */
+
+/* High DPI/Retina display support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi-crisp {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  .high-dpi-scale {
+    transform: scale(0.5);
+  }
+}
+
+/* Touch device specific styles */
+@media (hover: none) and (pointer: coarse) {
+  .touch-device-only {
+    display: block;
+  }
+
+  .mouse-device-only {
+    display: none;
+  }
+
+  /* Touch-specific button sizing */
+  .touch-button {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 16px 20px;
+  }
+
+  /* Touch-specific form elements */
+  .touch-form-element {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Touch-specific spacing */
+  .touch-spacing {
+    padding: 8px;
+    margin: 8px;
+  }
+}
+
+/* Mouse device specific styles */
+@media (hover: hover) and (pointer: fine) {
+  .touch-device-only {
+    display: none;
+  }
+
+  .mouse-device-only {
+    display: block;
+  }
+
+  /* Mouse-specific hover effects */
+  .mouse-hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* ============================================
+   BROWSER DETECTION AND FALLBACKS
+   ============================================ */
+
+/* Feature detection based styles */
+@supports (overscroll-behavior: contain) {
+  .supports-overscroll-behavior {
+    overscroll-behavior: contain;
+  }
+}
+
+@supports (not (overscroll-behavior: contain)) {
+  .no-overscroll-behavior {
+    /* Fallback styles for browsers without overscroll-behavior */
+    overflow: hidden;
+  }
+}
+
+@supports (backdrop-filter: blur(10px)) {
+  .supports-backdrop-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@supports (not (backdrop-filter: blur(10px))) {
+  .no-backdrop-blur {
+    background: rgba(255, 255, 255, 0.9);
+  }
+}
+
+@supports (display: grid) {
+  .supports-grid {
+    display: grid;
+  }
+}
+
+@supports (not (display: grid)) {
+  .no-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .reduce-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast * {
+    border-width: 2px !important;
+  }
+
+  .high-contrast-focus:focus-visible {
+    outline-width: 4px !important;
+  }
+}
+
+/* Forced colors mode */
+@media (forced-colors: active) {
+  .forced-colors {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+
+  .forced-colors-button {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+}
+
+/* Dark color scheme */
+@media (prefers-color-scheme: dark) {
+  .auto-dark-theme {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+/* Light color scheme */
+@media (prefers-color-scheme: light) {
+  .auto-light-theme {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+/* ============================================
+   SAFETY AND COMPATIBILITY
+   ============================================ */
+
+/* Legacy browser support */
+.no-js {
+  display: block;
+}
+
+.js .no-js {
+  display: none;
+}
+
+/* CSS Grid fallback */
+.grid-fallback {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@supports (display: grid) {
+  .grid-fallback {
+    display: grid;
+  }
+}
+
+/* CSS Flexbox fallback */
+.flex-fallback {
+  display: block;
+}
+
+.flex-fallback > * {
+  display: inline-block;
+  vertical-align: top;
+}
+
+@supports (display: flex) {
+  .flex-fallback {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+}

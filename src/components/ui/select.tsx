@@ -13,18 +13,23 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, mobileOptimized, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-input bg-background px-4 py-4 text-sm placeholder:text-placeholder-foreground disabled:cursor-not-allowed disabled:opacity-40 [&>span]:line-clamp-4",
+      "flex w-full items-center justify-between rounded-md border ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-input bg-background placeholder:text-placeholder-foreground disabled:cursor-not-allowed disabled:opacity-40 [&>span]:line-clamp-4",
+      mobileOptimized ? "h-12 min-h-12 px-4 py-4 text-base" : "h-10 px-3 py-2 text-sm",
       className,
+      mobileOptimized && "mobile-optimized-select"
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
+      <ChevronDown className={cn(
+        "opacity-50",
+        mobileOptimized ? "h-5 w-5" : "h-4 w-4"
+      )} />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -61,7 +66,7 @@ SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayNam
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => (
+>(({ className, children, position = "popper", mobileOptimized, ...props }, ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
@@ -69,6 +74,7 @@ const SelectContent = React.forwardRef<
         "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-4 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        mobileOptimized && "max-h-[70vh] min-w-full fixed inset-x-0 bottom-0 rounded-t-none rounded-b-none",
         className,
       )}
       position={position}
@@ -101,11 +107,12 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, mobileOptimized, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
       "relative flex w-full cursor-default select-none items-center rounded-sm py-4.5 pl-8 pr-4 outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed text-sm data-[disabled]:opacity-40",
+      mobileOptimized && "min-h-12 py-4 text-base",
       className,
     )}
     {...props}
@@ -141,3 +148,14 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 };
+
+// Add interfaces at the end of the file
+export interface SelectProps extends SelectPrimitive.SelectProps {
+  children: React.ReactNode;
+  mobileOptimized?: boolean;
+  placeholder?: string;
+}
+
+export interface SelectContentProps extends SelectPrimitive.SelectContentProps {
+  mobileOptimized?: boolean;
+}
