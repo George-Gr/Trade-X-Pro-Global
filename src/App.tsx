@@ -135,6 +135,7 @@ const App = () => {
                     </div>
                   }
                 >
+                  <main>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/register" element={<Register />} />
@@ -327,6 +328,7 @@ const App = () => {
                 {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+                  </main>
               </Suspense>
             </BrowserRouter>
             </ErrorBoundary>
