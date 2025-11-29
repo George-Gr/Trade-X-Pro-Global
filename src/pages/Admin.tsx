@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TrendingUp, Users, FileCheck, Shield, LogOut } from "lucide-react";
+import { TrendingUp, Users, FileCheck, Shield, LogOut, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UsersPanel from "@/components/admin/UsersPanel";
 import KYCPanel from "@/components/admin/KYCPanel";
@@ -41,6 +41,7 @@ const Admin = () => {
   const { user, isAdmin, signOut } = useAuth();
   const [activePanel, setActivePanel] = useState("users");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     if (!user) {
