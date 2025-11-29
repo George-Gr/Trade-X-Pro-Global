@@ -49,11 +49,19 @@ Deno.serve(async (req: Request): Promise<Response> => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
     );
 
-    // For scheduled check, no auth required
     const checkAllUsers = req.method === 'GET';
     let userId: string | null = null;
 
-    if (!checkAllUsers) {
+    if (checkAllUsers) {
+      // For scheduled GET requests, require CRON_SECRET
+      const CRON_SECRET = Deno.env.get('CRON_SECRET');
+      const providedSecret = req.headers.get('X-Cron-Secret');
+      
+      if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+        console.error('Unauthorized access attempt to check-portfolio-risk');
+        return new Response('Unauthorized', { status: 401 });
+      }
+    } else {
       // For POST requests, require auth header
       const authHeader = req.headers.get('Authorization');
       if (!authHeader?.startsWith('Bearer ')) {
