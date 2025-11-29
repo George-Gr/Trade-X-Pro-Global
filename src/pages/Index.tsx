@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import heroImage from "@/assets/hero-trading-professional.jpg";
 
 export default function Index() {
@@ -34,8 +35,9 @@ export default function Index() {
       {/* Hero Section - Professional & Trust-Building */}
       <section className="relative overflow-hidden bg-primary py-20 md:py-28">
         <div className="absolute inset-0 z-0">
-          <img 
-            src={heroImage} 
+          <OptimizedImage 
+            webpSrc="/assets/hero-trading-professional.webp"
+            fallbackSrc={heroImage} 
             alt="Professional trading desk" 
             className="h-full w-full object-cover opacity-20"
           />

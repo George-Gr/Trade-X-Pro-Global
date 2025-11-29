@@ -10,6 +10,8 @@
  * - Performance monitoring (log execution time)
  * - Sentry transaction tracking for performance monitoring
  * - Session replay integration for debugging
+ * - Supabase integration logging
+ * - Real-time performance metrics
  * 
  * Usage:
  * ```typescript
@@ -41,6 +43,12 @@
  * 
  * // API timing
  * logger.timeApiCall('GET', '/api/orders', responseTime);
+ * 
+ * // Supabase query timing
+ * logger.timeSupabaseQuery('profiles', 'SELECT', 45);
+ * 
+ * // Risk monitoring
+ * logger.logRiskEvent('margin_call', { userId: '123', marginLevel: 25 });
  * ```
  */
 
@@ -83,6 +91,40 @@ export interface APICallInfo {
 }
 
 /**
+ * Supabase query tracking
+ */
+export interface SupabaseQueryInfo {
+  table: string;
+  operation: string;
+  duration: number;
+  success: boolean;
+  error?: string;
+  rowsAffected?: number;
+}
+
+/**
+ * Risk event tracking
+ */
+export interface RiskEventInfo {
+  type: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  userId?: string;
+  details: Record<string, unknown>;
+  timestamp: string;
+}
+
+/**
+ * Performance metric
+ */
+export interface PerformanceMetric {
+  name: string;
+  value: number;
+  unit: string;
+  timestamp: string;
+  context?: Record<string, unknown>;
+}
+
+/**
  * Breadcrumb entry for action tracking
  */
 export interface Breadcrumb {
@@ -116,7 +158,13 @@ const MAX_BREADCRUMBS = 50;
  */
 const activeTransactions: Map<string, PerformanceTransaction> = new Map();
 const apiCallHistory: APICallInfo[] = [];
+const supabaseQueryHistory: SupabaseQueryInfo[] = [];
+const riskEvents: RiskEventInfo[] = [];
+const performanceMetrics: PerformanceMetric[] = [];
 const MAX_API_HISTORY = 100;
+const MAX_SUPABASE_HISTORY = 100;
+const MAX_RISK_EVENTS = 50;
+const MAX_PERFORMANCE_METRICS = 200;
 
 /**
  * Check if Sentry is initialized and active
@@ -340,6 +388,7 @@ export const logger = {
             component: fullContext.component,
             action: fullContext.action,
             page: fullContext.page,
+            userId: fullContext.userId,
           },
           contexts: {
             application: {
@@ -387,13 +436,6 @@ export const logger = {
 
     activeTransactions.set(transactionId, transaction);
 
-    if (isSentryActive()) {
-      // Start Sentry transaction
-      // Note: startTransaction API not available in current Sentry version
-      // Sentry handles transactions automatically via BrowserTracing
-      // Transaction tracking is disabled for this version
-    }
-
     if (isDevelopment) {
       console.log(`[PERF] Started transaction: ${name} (${transactionId})`, {
         operation,
@@ -419,13 +461,6 @@ export const logger = {
 
     const duration = performance.now() - transaction.startTime;
     const fullContext = mergeContext(context);
-
-    if (isSentryActive() && transaction.spanId) {
-      // Finish Sentry transaction
-      // Note: getCurrentHub API not available in current Sentry version
-      // Sentry handles transactions automatically via BrowserTracing
-      // Transaction tracking is disabled for this version
-    }
 
     // Add breadcrumb for completed transaction
     this.addBreadcrumb('performance', `${transaction.operation}: ${transaction.name} completed in ${duration.toFixed(2)}ms`);
@@ -538,17 +573,195 @@ export const logger = {
   },
 
   /**
-   * Get API call history
+   * Record a Supabase query
    */
-  getApiCallHistory(): APICallInfo[] {
-    return [...apiCallHistory];
+  timeSupabaseQuery(table: string, operation: string, duration: number, success: boolean, error?: string, rowsAffected?: number): void {
+    const query: SupabaseQueryInfo = {
+      table,
+      operation,
+      duration,
+      success,
+      error,
+      rowsAffected,
+    };
+
+    // Add to history
+    supabaseQueryHistory.push(query);
+    if (supabaseQueryHistory.length > MAX_SUPABASE_HISTORY) {
+      supabaseQueryHistory.shift();
+    }
+
+    if (isSentryActive()) {
+      // Add breadcrumb for Supabase query
+      const message = `${operation} ${table} - ${duration.toFixed(2)}ms`;
+      Sentry.addBreadcrumb({
+        category: 'supabase',
+        message,
+        level: success ? 'info' : 'error',
+        data: {
+          table,
+          operation,
+          duration,
+          success,
+          error,
+          rowsAffected,
+        },
+        timestamp: Date.now() / 1000,
+      });
+
+      // Track slow queries
+      if (duration > 1000) { // Queries slower than 1 second
+        this.warn(`Slow Supabase query: ${operation} ${table} took ${duration.toFixed(2)}ms`, undefined, {
+          component: 'Supabase',
+          action: 'slow_query',
+          metadata: {
+            table,
+            operation,
+            duration,
+            rowsAffected,
+          }
+        });
+      }
+    }
+
+    // Add breadcrumb for Supabase query
+    const statusText = success ? '✓' : '✗';
+    const message = `${statusText} ${operation} ${table} - ${duration.toFixed(2)}ms`;
+    this.addBreadcrumb(
+      'supabase',
+      message,
+      success ? 'info' : 'error'
+    );
+
+    if (isDevelopment) {
+      const logLevel = success ? 'log' : 'warn';
+      console[logLevel](`[SUPABASE] ${message}`, {
+        table,
+        operation,
+        duration,
+        success,
+        error: error || 'none',
+        rowsAffected,
+      });
+    }
   },
 
   /**
-   * Clear API call history
+   * Log a risk event
    */
-  clearApiCallHistory(): void {
-    apiCallHistory.length = 0;
+  logRiskEvent(type: string, severity: 'low' | 'medium' | 'high' | 'critical', details: Record<string, unknown>, userId?: string): void {
+    const riskEvent: RiskEventInfo = {
+      type,
+      severity,
+      userId,
+      details,
+      timestamp: getTimestamp(),
+    };
+
+    // Add to history
+    riskEvents.push(riskEvent);
+    if (riskEvents.length > MAX_RISK_EVENTS) {
+      riskEvents.shift();
+    }
+
+    // Always log risk events, regardless of environment
+    const message = `Risk Event [${severity.toUpperCase()}]: ${type}`;
+    console.warn(`[RISK] ${message}`, {
+      userId,
+      details,
+      timestamp: riskEvent.timestamp,
+    });
+
+    if (isSentryActive()) {
+      // Capture as Sentry event with appropriate level
+      const sentryLevel = severity === 'critical' ? 'fatal' : severity === 'high' ? 'error' : 'warning';
+      Sentry.captureMessage(message, sentryLevel as any);
+      
+      // Add context
+      Sentry.setContext('risk_event', {
+        type,
+        severity,
+        userId,
+        details,
+        timestamp: riskEvent.timestamp,
+      });
+    }
+
+    // Add breadcrumb for risk event
+    this.addBreadcrumb('risk', `${severity}: ${type}`, severity === 'critical' ? 'error' : severity === 'high' ? 'error' : 'warning');
+  },
+
+  /**
+   * Record a performance metric
+   */
+  recordMetric(name: string, value: number, unit: string, context?: Record<string, unknown>): void {
+    const metric: PerformanceMetric = {
+      name,
+      value,
+      unit,
+      timestamp: getTimestamp(),
+      context,
+    };
+
+    // Add to history
+    performanceMetrics.push(metric);
+    if (performanceMetrics.length > MAX_PERFORMANCE_METRICS) {
+      performanceMetrics.shift();
+    }
+
+    if (isDevelopment) {
+      console.log(`[METRIC] ${name}: ${value}${unit}`, context || {});
+    }
+
+    if (isSentryActive()) {
+      // Add to Sentry context for performance monitoring
+      Sentry.setMeasurement(name, value, unit as any);
+      
+      // Add breadcrumb
+      this.addBreadcrumb('metric', `${name}: ${value}${unit}`);
+    }
+  },
+
+  /**
+   * Get Supabase query history
+   */
+  getSupabaseQueryHistory(): SupabaseQueryInfo[] {
+    return [...supabaseQueryHistory];
+  },
+
+  /**
+   * Clear Supabase query history
+   */
+  clearSupabaseQueryHistory(): void {
+    supabaseQueryHistory.length = 0;
+  },
+
+  /**
+   * Get risk events
+   */
+  getRiskEvents(): RiskEventInfo[] {
+    return [...riskEvents];
+  },
+
+  /**
+   * Clear risk events
+   */
+  clearRiskEvents(): void {
+    riskEvents.length = 0;
+  },
+
+  /**
+   * Get performance metrics
+   */
+  getPerformanceMetrics(): PerformanceMetric[] {
+    return [...performanceMetrics];
+  },
+
+  /**
+   * Clear performance metrics
+   */
+  clearPerformanceMetrics(): void {
+    performanceMetrics.length = 0;
   },
 
   /**
@@ -561,10 +774,12 @@ export const logger = {
     this.addBreadcrumb('user_action', message);
 
     if (isSentryActive()) {
-      const sentryTransaction = undefined; // Sentry handles this automatically
-      if (sentryTransaction && duration) {
-        sentryTransaction.setTag('user_action', action);
-        sentryTransaction.setTag('action_duration', duration);
+      // Sentry handles this automatically via BrowserTracing
+      if (duration) {
+        this.recordMetric(`user_action_${action.replace(/\s+/g, '_').toLowerCase()}`, duration, 'ms', {
+          action,
+          ...fullContext.metadata,
+        });
       }
     }
 
@@ -622,6 +837,7 @@ export const logger = {
           fullContext.metadata || {}
         );
       }
+      this.recordMetric(`operation_${label.replace(/\s+/g, '_').toLowerCase()}`, duration, 'ms', fullContext.metadata);
     }
   },
 
@@ -645,6 +861,7 @@ export const logger = {
           fullContext.metadata || {}
         );
       }
+      this.recordMetric(`async_${label.replace(/\s+/g, '_').toLowerCase()}`, duration, 'ms', fullContext.metadata);
     }
   },
 };

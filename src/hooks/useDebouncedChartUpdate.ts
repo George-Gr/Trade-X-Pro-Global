@@ -22,7 +22,7 @@ export const useDebouncedChartUpdate = <T>(
   const lastCallTimeRef = useRef<number>();
   const lastInvokeTimeRef = useRef<number>();
   const lastArgsRef = useRef<T[]>();
-  const lastThisRef = useRef<any>();
+  const lastThisRef = useRef<unknown>();
 
   // Core functions - order matters due to dependencies
   const shouldInvoke = useCallback((time: number) => {

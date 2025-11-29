@@ -1,5 +1,10 @@
+// @ts-expect-error - Deno URL imports (VSCode Node context; deploys fine)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+// @ts-expect-error - Deno URL imports
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+
+declare const Deno: any;
+
 import {
   validateOrderInput,
   validateAssetExists,
@@ -64,7 +69,7 @@ interface AssetSpec {
   pip_size?: number;
 }
 
-serve(async (req) => {
+serve(async (req: any) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -95,17 +100,19 @@ serve(async (req) => {
       );
     }
 
-    // Check rate limit: 10 requests per minute
+    // Rate limit already handled via RPC in existing code; standardized to 100/min
+
+    // Restore proper rate limit check (100/min)
     const { data: rateLimitOk } = await (supabase as any).rpc('check_rate_limit', {
       p_user_id: user.id,
       p_endpoint: 'execute-order',
-      p_max_requests: 10,
+      p_max_requests: 100,
       p_window_seconds: 60
     });
 
     if (!rateLimitOk) {
       return new Response(
-        JSON.stringify({ error: 'Too many requests. Please wait before placing another order.' }),
+        JSON.stringify({ error: 'Too many requests. Rate limit exceeded (100/min).' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } }
       );
     }

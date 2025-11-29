@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Offline - TradeX Pro</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --text: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --bg-card: rgba(255, 255, 255, 0.1);
+            --bg-card-hover: rgba(255, 255, 255, 0.15);
+            --border-radius: 12px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            width: 90%;
+        }
+
+        .offline-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .status-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--warning);
+            transition: var(--transition);
+        }
+
+        .status-item.online {
+            border-left-color: var(--success);
+        }
+
+        .status-item.critical {
+            border-left-color: var(--error);
+            animation: glow 3s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(244, 67, 54, 0.3); }
+            to { box-shadow: 0 0 20px rgba(244, 67, 54, 0.6); }
+        }
+
+        .status-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-item .label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        .feature h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .feature-description {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .feature-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .status-limited {
+            background: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+        }
+
+        .status-unavailable {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--text);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .info-section {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-section h3 {
+            margin: 0 0 1rem 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .timestamp {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 2rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--text);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="offline-icon">📡</div>
+        <h1>You're Offline</h1>
+        <p class="subtitle">TradeX Pro requires an internet connection for real-time trading and market data</p>
+        
+        <div class="status-card">
+            <h2>Connection Status</h2>
+            <div class="status-grid">
+                <div class="status-item critical">
+                    <h3>📡 Connection</h3>
+                    <div class="value">Offline</div>
+                    <div class="label">No internet connection</div>
+                </div>
+                <div class="status-item">
+                    <h3>🕒 Offline Since</h3>
+                    <div class="value" id="offlineDuration">Loading...</div>
+                    <div class="label">Duration</div>
+                </div>
+                <div class="status-item online">
+                    <h3>💾 Cache Status</h3>
+                    <div class="value" id="cacheStatus">Active</div>
+                    <div class="label">Cached data available</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-header">
+                    <span class="feature-icon">📊</span>
+                    <h3>Portfolio Data</h3>
+                </div>
+                <div class="feature-description">
+                    View your account balance, positions, and trading history from cached data
+                </div>
+                <span class="feature-status status-limited">
+                    ⚠️ Limited (Cached)
+                </span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <span class="feature-icon">📈</span>
+                    <h3>Market Overview</h3>
+                </div>
+                <div class="feature-description">
+                    Access cached market symbols and basic information
+                </div>
+                <span class="feature-status status-limited">
+                    ⚠️ Limited (Cached)
+                </span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <span class="feature-icon">📝</span>
+                    <h3>Trading</h3>
+                </div>
+                <div class="feature-description">
+                    Place new orders, modify positions, and execute trades
+                </div>
+                <span class="feature-status status-unavailable">
+                    ❌ Unavailable
+                </span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-header">
+                    <span class="feature-icon">🛡️</span>
+                    <h3>Security</h3>
+                </div>
+                <div class="feature-description">
+                    Your account remains secure while offline
+                </div>
+                <span class="feature-status status-available">
+                    ✅ Protected
+                </span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="checkConnection()">
+                <span class="loading" id="checkLoader" style="display: none;"></span>
+                Check Connection
+            </button>
+            <button class="btn btn-secondary" onclick="viewCachedData()">
+                View Cached Data
+            </button>
+            <button class="btn btn-secondary" onclick="showHelp()">
+                Help & Tips
+            </button>
+        </div>
+
+        <div class="info-section" id="helpSection" style="display: none;">
+            <h3>💡 Staying Productive Offline</h3>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <h4>While you're offline, you can:</h4>
+                <ul style="text-align: left; padding-left: 1.5rem; margin: 1rem 0;">
+                    <li>Review your cached portfolio and trading history</li>
+                    <li>Study market analysis and trading strategies</li>
+                    <li>Set up price alerts for when you come back online</li>
+                    <li>Review your risk management settings</li>
+                    <li>Read educational content about trading</li>
+                </ul>
+                
+                <h4 style="margin-top: 1.5rem;">When you reconnect:</h4>
+                <ul style="text-align: left; padding-left: 1.5rem; margin: 1rem 0;">
+                    <li>Your cached data will automatically refresh</li>
+                    <li>Pending trades will be processed</li>
+                    <li>Market data will update to real-time</li>
+                    <li>You'll receive notifications of important updates</li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="timestamp">
+            Last online: <span id="lastOnline">Checking...</span>
+        </p>
+    </div>
+
+    <script>
+        // Set offline timestamp when page loads
+        const offlineTime = localStorage.getItem('offlineStartTime') || Date.now();
+        localStorage.setItem('offlineStartTime', offlineTime);
+        
+        // Update timestamps
+        function updateTimestamps() {
+            const offlineSince = new Date(offlineTime).toLocaleString();
+            document.getElementById('offlineSince').textContent = offlineSince;
+            
+            // Calculate duration
+            const duration = Date.now() - parseInt(offlineTime);
+            const minutes = Math.floor(duration / 60000);
+            const seconds = Math.floor((duration % 60000) / 1000);
+            
+            if (minutes > 0) {
+                document.getElementById('offlineDuration').textContent = `${minutes}m ${seconds}s`;
+            } else {
+                document.getElementById('offlineDuration').textContent = `${seconds}s`;
+            }
+        }
+
+        // Check connection status
+        async function checkConnection() {
+            const loader = document.getElementById('checkLoader');
+            const button = event?.target || document.querySelector('.btn-primary');
+            
+            loader.style.display = 'inline-block';
+            button.disabled = true;
+            
+            try {
+                // Try multiple endpoints for better reliability
+                const endpoints = [
+                    '/api/health',
+                    '/api/timestamp',
+                    '/'
+                ];
+                
+                for (const endpoint of endpoints) {
+                    try {
+                        const response = await fetch(endpoint, { 
+                            method: 'GET',
+                            cache: 'no-cache',
+                            timeout: 5000
+                        });
+                        
+                        if (response.ok) {
+                            // Connection restored
+                            localStorage.removeItem('offlineStartTime');
+                            window.location.href = '/';
+                            return;
+                        }
+                    } catch (error) {
+                        // Try next endpoint
+                    }
+                }
+                
+                // Still offline
+                throw new Error('No connection');
+                
+            } catch (error) {
+                alert('Still offline. Please check your internet connection and try again.');
+            } finally {
+                loader.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+
+        // View cached data
+        function viewCachedData() {
+            // Try to access cached data
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    const cachePromises = cacheNames.map(name => 
+                        caches.open(name).then(cache => cache.keys())
+                    );
+                    
+                    Promise.all(cachePromises).then(allRequests => {
+                        const allUrls = allRequests.flat().map(req => req.url);
+                        alert(`Found ${allUrls.length} cached resources:\n\n${allUrls.slice(0, 10).join('\n')}${allUrls.length > 10 ? '\n...' : ''}`);
+                    });
+                });
+            } else {
+                alert('Cache API not available in this browser.');
+            }
+        }
+
+        // Show help section
+        function showHelp() {
+            const helpSection = document.getElementById('helpSection');
+            helpSection.style.display = helpSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Auto-check every 10 seconds
+        setInterval(checkConnection, 10000);
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            setTimeout(checkConnection, 1000);
+        });
+
+        // Update last online time
+        async function updateLastOnline() {
+            try {
+                const response = await fetch('/api/timestamp', { cache: 'no-cache' });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('lastOnline').textContent = new Date(data.timestamp).toLocaleString();
+                } else {
+                    throw new Error('API error');
+                }
+            } catch (error) {
+                // Try to get from cache
+                if ('caches' in window) {
+                    caches.match('/api/timestamp').then(response => {
+                        if (response) {
+                            response.json().then(data => {
+                                document.getElementById('lastOnline').textContent = new Date(data.timestamp).toLocaleString();
+                            });
+                        } else {
+                            document.getElementById('lastOnline').textContent = 'Unknown';
+                        }
+                    });
+                } else {
+                    document.getElementById('lastOnline').textContent = 'Unknown';
+                }
+            }
+        }
+
+        // Check cache status
+        async function updateCacheStatus() {
+            let cachedItems = 0;
+            
+            if ('caches' in window) {
+                try {
+                    const cacheNames = await caches.keys();
+                    const cachePromises = cacheNames.map(name => 
+                        caches.open(name).then(cache => cache.keys())
+                    );
+                    
+                    const allRequests = await Promise.all(cachePromises);
+                    cachedItems = allRequests.flat().length;
+                    
+                    document.getElementById('cacheStatus').textContent = `${cachedItems} items`;
+                } catch (error) {
+                    document.getElementById('cacheStatus').textContent = 'Error';
+                }
+            } else {
+                document.getElementById('cacheStatus').textContent = 'N/A';
+            }
+        }
+
+        // Initialize everything
+        updateTimestamps();
+        updateLastOnline();
+        updateCacheStatus();
+
+        // Update every 30 seconds
+        setInterval(updateTimestamps, 30000);
+    </script>
+</body>
+</html>

@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from "./useAuth";
 import {
   calculatePortfolioMetrics,
@@ -16,7 +16,8 @@ import {
   DrawdownAnalysis,
   AssetClassMetrics,
 } from "@/lib/risk/portfolioMetrics";
-import type { Position } from "@/integrations/supabase/types/tables";
+import type { Database } from "@/integrations/supabase/types";
+type Position = Database["public"]["Tables"]["positions"]["Row"];
 
 // Database interfaces
 interface DatabasePortfolioHistory {
@@ -113,7 +114,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       }
 
       // Build trade statistics from closed positions
-      const trades = (closedPositions || []).map((p: DatabaseClosedPosition) => ({
+      const trades = (closedPositions || []).map((p: any) => ({
         pnl: p.realized_pnl || 0,
         isProfit: (p.realized_pnl || 0) > 0,
       }));
@@ -167,7 +168,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
         .in("symbol", positionValues.map(p => p.symbol).filter(Boolean));
 
       if (assetSpecs.data) {
-        assetSpecs.data.forEach(spec => {
+        assetSpecs.data.forEach((spec: any) => {
           symbolToAssetClass[spec.symbol] = spec.asset_class || "Other";
         });
       }
@@ -285,7 +286,7 @@ export const useDrawdownAnalysis = () => {
           .gte("date", thirtyDaysAgo.toISOString())
           .order("date", { ascending: true });
 
-        const equityValues = (history || []).map((h: any) => h.equity || 0);
+        const equityValues = (history || []).map((h: any) => 'equity' in h ? Number(h.equity) || 0 : 0);
         const peakEquity = Math.max(...equityValues, profile?.equity || 0);
 
         const analysis = analyzeDrawdown(

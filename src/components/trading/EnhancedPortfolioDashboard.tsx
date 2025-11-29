@@ -34,6 +34,18 @@ interface PortfolioMetrics {
  */
 const EnhancedPortfolioDashboard: React.FC = () => {
   const { profile, positions = [], loading, error } = usePortfolioData();
+  
+  // Map PositionWithPnL to PnLPosition format for usePnLCalculations
+  const mappedPositions = useMemo(() => {
+    return positions.map(pos => ({
+      ...pos,
+      entryPrice: pos.entry_price,
+      currentPrice: pos.current_price,
+      side: (pos.side === 'buy' ? 'long' : 'short') as 'long' | 'short',
+      margin_required: pos.margin_used || 0,
+    }));
+  }, [positions]);
+  
   // Build price map from positions
   const priceMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -42,7 +54,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     });
     return map;
   }, [positions]);
-  const { positionPnLMap } = usePnLCalculations(positions as any, priceMap, undefined, {});
+  const { positionPnLMap } = usePnLCalculations(mappedPositions, priceMap, undefined, {});
 
   // Calculate comprehensive portfolio metrics
   const metrics = useMemo((): PortfolioMetrics => {
@@ -110,6 +122,8 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     if (level >= 20) return '#FF9800'; // Orange - Urgent
     return '#E53935'; // Red - Liquidation
   };
+
+
 
   return (
     <div className="h-full bg-background flex flex-col overflow-hidden">

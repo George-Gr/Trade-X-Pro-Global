@@ -3,7 +3,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 interface LoadingState {
   isLoading: boolean;
   error: string | null;
-  data: any;
+  data: unknown;
 }
 
 interface UseLoadingOptions {
@@ -133,7 +133,7 @@ export function useLoading<T = unknown>(
     clearError,
     // Convenience methods for optimistic updates
     startOptimistic: () => setState(prev => ({ ...prev, isLoading: true })),
-    finishOptimistic: (data?: any) => setState(prev => ({ ...prev, isLoading: false, data: data || prev.data, error: null })),
+    finishOptimistic: (data?: unknown) => setState(prev => ({ ...prev, isLoading: false, data: data || prev.data, error: null })),
     failOptimistic: (error: string) => setState(prev => ({ ...prev, isLoading: false, error })),
   };
 }

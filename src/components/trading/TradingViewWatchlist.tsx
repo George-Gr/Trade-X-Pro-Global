@@ -178,8 +178,8 @@ const TradingViewWatchlist = () => {
 
   // Cleanup on unmount
   useEffect(() => {
+    const container = containerRef.current;
     return () => {
-      const container = containerRef.current;
       if (container) {
         container.innerHTML = "";
       }

@@ -57,7 +57,7 @@ const DarkModeTest: React.FC<DarkModeTestProps> = ({ className }) => {
     { code: 'AU', name: 'Australia' },
   ];
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

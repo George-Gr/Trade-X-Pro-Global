@@ -1,0 +1,9 @@
+{
+  "name": "db-monitor",
+  "version": "0.1.0",
+  "imports": {
+    "https://esm.sh/@supabase/supabase-js@2.38.0": {
+      "types": "https://esm.sh/@supabase/supabase-js@2.38.0/index.d.ts"
+    }
+  }
+}

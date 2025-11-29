@@ -364,7 +364,7 @@ describe('useOrderExecution', () => {
           new_margin_level: 500,
         },
       },
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof supabase.functions.invoke>>);
 
     const { result } = renderHook(() => useOrderExecution());
 

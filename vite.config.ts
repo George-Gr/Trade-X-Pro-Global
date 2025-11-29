@@ -2,8 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
-import type { Plugin, Connect } from "vite";
+import type { Plugin } from "vite";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+import type { IncomingMessage, ServerResponse } from 'http';
+
 
 // CORS middleware for development - handles cross-origin requests
 const corsMiddleware = (): Plugin => ({
@@ -15,14 +17,18 @@ const corsMiddleware = (): Plugin => ({
 });
 
 // Custom middleware to add CORS headers and handle OPTIONS requests
-const corsHeadersMiddleware = (req: Connect.IncomingMessage, res: Connect.ServerResponse, next: Connect.NextFunction) => {
-  // Add CORS headers to all responses
-  res.setHeader('Access-Control-Allow-Origin', '*');
+type NextFunction = (err?: any) => void;
+
+const corsHeadersMiddleware = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
+  // Conditional CORS: * in dev, whitelisted in prod (use NODE_ENV here)
+  const isProd = process.env.NODE_ENV === 'production';
+  res.setHeader('Access-Control-Allow-Origin', isProd
+    ? 'https://tradepro.vercel.app,https://*.vercel.app,https://localhost:8080'
+    : '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin,X-Requested-With');
   res.setHeader('Access-Control-Max-Age', '3600');
   
-  // Handle OPTIONS (preflight) requests
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     res.end();
@@ -151,32 +157,39 @@ const PWA_CONFIG = {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "0.0.0.0",
+    // Let Vite auto-detect the host to avoid binding issues
+    // host: "0.0.0.0", // Comment out explicit host binding
     port: 8080,
     strictPort: false,
     hmr: {
       // GitHub Codespaces detection and configuration
       ...(process.env.CODESPACE_NAME ? {
+        // For Codespaces, use auto-discovery instead of explicit host binding
         protocol: 'wss',
-        host: `${process.env.CODESPACE_NAME}-8080.app.github.dev`,
-        port: 443,
-        clientPort: 443,
+        // Don't specify host - let Vite auto-detect
+        // Use port 8080 instead of 443 to avoid permission issues
+        port: 8080,
+        clientPort: 8080,
+        // Use relative path to avoid absolute URL issues
+        path: '/hmr',
       } : {
+        // Default configuration for local development
         protocol: 'ws',
         host: 'localhost',
         port: 8080,
       })
     },
-    // Add CORS headers for development
+    // Conditional CORS: * in dev, whitelisted domains in prod
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': mode === 'production' 
+        ? 'https://tradepro.vercel.app,https://*.vercel.app,https://localhost:8080' 
+        : '*',
       'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type,Authorization,Accept',
+      'Access-Control-Allow-Headers': 'Content-Type,Authorization,Accept,Origin,X-Requested-With',
       'Access-Control-Max-Age': '3600',
     },
-    // Add custom middleware for CORS handling
+    // Add custom middleware for CORS handling (OPTIONS preflight)
     middlewares: [corsHeadersMiddleware],
-    // Middleware mode
     middlewareMode: false,
   },
   plugins: [
