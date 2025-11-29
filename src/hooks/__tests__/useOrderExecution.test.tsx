@@ -344,7 +344,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as unknown);
 
     const mockInvoke = vi.spyOn(supabase.functions, 'invoke');
     mockInvoke.mockResolvedValue({

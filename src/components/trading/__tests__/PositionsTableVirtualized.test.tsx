@@ -48,7 +48,7 @@ describe('PositionsTableVirtualized - Performance Tests', () => {
 
   beforeAll(() => {
     // Mock ResizeObserver for react-window
-    const globalObj = globalThis as typeof globalThis & { ResizeObserver: any };
+    const globalObj = globalThis as typeof globalThis & { ResizeObserver: unknown };
     globalObj.ResizeObserver = class ResizeObserver {
       observe = vi.fn();
       unobserve = vi.fn();

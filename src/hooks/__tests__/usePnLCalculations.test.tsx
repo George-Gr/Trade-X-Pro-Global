@@ -73,7 +73,7 @@ describe('usePnLCalculations Hook: Initialization', () => {
   });
 
   it('should handle single position with profitable state', () => {
-    const positions: any[] = [
+    const positions: unknown[] = [
       createMockPosition({
         entryPrice: 1.0900,
         currentPrice: 1.1000,

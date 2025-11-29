@@ -4,6 +4,7 @@ import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
 /**
  * HOC to wrap components with sidebar error boundary
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const withSidebarErrorBoundary = <P extends {}>(
   Component: React.ComponentType<P>,
   options?: {
