@@ -167,15 +167,7 @@ export default defineConfig(({ mode }) => ({
       // Essential for containerized environments like Codespaces
       usePolling: true,
       interval: 1000,
-    },
-    // Proxy configuration to handle manifest.json properly
-    proxy: mode !== 'production' ? {
-      '/manifest.json': {
-        target: 'http://localhost:8080',
-        changeOrigin: false,
-        secure: false,
-      }
-    } : undefined,
+    }
   },
   plugins: [
     react(),
