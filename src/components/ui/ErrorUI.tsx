@@ -192,20 +192,3 @@ export const ConnectionStatus: React.FC<{
   );
 };
 
-
-  return function WithErrorHandling(props: P & { error?: string; onRetry?: () => void }) {
-    const { error, onRetry, ...componentProps } = props;
-
-    if (error) {
-      return (
-        <ErrorMessage
-          error={error}
-          title={options?.title}
-          description={options?.description}
-          onRetry={options?.showRetry !== false ? onRetry : undefined}
-        />
-      );
-    }
-
-    return <Component {...(componentProps as P)} />;
-  };

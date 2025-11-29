@@ -3,9 +3,8 @@
  * Provides chart data processing, formatting, and utility functions
  */
 
-import React, { useEffect, useRef, ReactNode } from 'react';
-import { useMemo } from 'react';
-import { optimizeChartData, useChartWorker } from './chartPerformance';
+import React, { useEffect, useRef, ReactNode, useMemo } from 'react';
+import { optimizeChartData } from './chartPerformance';
 
 export interface ChartDataPoint {
   date: string;
@@ -39,7 +38,13 @@ export const generateOptimizedChartData = (
   
   // Optimize large datasets
   if (count > maxPoints) {
-    return optimizeChartData(data, { maxDataPoints: maxPoints });
+    return optimizeChartData(data, {
+      maxDataPoints: maxPoints,
+      virtualizationThreshold: 100,
+      updateInterval: 16,
+      debounceDelay: 300,
+      enablePooling: true
+    });
   }
   
   return data;
@@ -219,7 +224,12 @@ export const createChartConfig = (data: ChartDataPoint[]) => {
 /**
  * Validates chart data for display
  */
-import React, { useEffect, useRef } from 'react';
+export const validateChartData = (data: ChartDataPoint[]): boolean => {
+  return data && 
+         Array.isArray(data) && 
+         data.length > 0 && 
+         data.every(d => typeof d.value === 'number' && isFinite(d.value));
+};
 
 /**
  * Performance monitoring for chart operations
@@ -278,31 +288,20 @@ export const monitorChartPerformance = (() => {
 /**
  * Chart performance profiler component
  */
-export const ChartPerformanceProfiler: React.FC<{ 
-  children: React.ReactNode;
-  name: string;
-}> = ({ children, name }) => {
-  const startTimeRef = useRef<number>();
-  
-  useEffect(() => {
-    startTimeRef.current = performance.now();
-    return () => {
-      if (startTimeRef.current) {
-        const duration = performance.now() - startTimeRef.current;
-        // Chart performance monitoring - duration: ${duration}ms
-        console.debug(`Chart ${name} performance: ${duration}ms`);
-      }
-    };
-  }, [name]);
-
-  return <>{children}</>;
-};
-
-export const validateChartData = (data: ChartDataPoint[]): boolean => {
-  return data && 
-         Array.isArray(data) && 
-         data.length > 0 && 
-         data.every(d => typeof d.value === 'number' && isFinite(d.value));
+/**
+ * Lightweight chart profiler utility
+ * Use in non-React contexts or where JSX is not appropriate.
+ * Example:
+ * const stop = createChartProfiler('MyChart');
+ * // ... run work
+ * stop(); // logs duration
+ */
+export const createChartProfiler = (name: string) => {
+  const start = typeof performance !== 'undefined' ? performance.now() : Date.now();
+  return () => {
+    const duration = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - start;
+    console.debug(`Chart ${name} performance: ${duration}ms`);
+  };
 };
 
 /**

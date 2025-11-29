@@ -389,18 +389,9 @@ export const logger = {
 
     if (isSentryActive()) {
       // Start Sentry transaction
-      const sentryTransaction = Sentry.startTransaction({
-        name,
-        operation,
-        tags: context ? {
-          userId: context.userId,
-          page: context.page,
-          component: context.component,
-        } : {},
-      });
-      
-      transaction.spanId = sentryTransaction.spanId;
-      activeTransactions.set(transactionId, transaction);
+      // Note: startTransaction API not available in current Sentry version
+      // Sentry handles transactions automatically via BrowserTracing
+      // Transaction tracking is disabled for this version
     }
 
     if (isDevelopment) {
@@ -431,14 +422,9 @@ export const logger = {
 
     if (isSentryActive() && transaction.spanId) {
       // Finish Sentry transaction
-      const scope = Sentry.getCurrentHub().getScope();
-      const sentryTransaction = scope?.getTransaction();
-      if (sentryTransaction) {
-        sentryTransaction.setStatus('ok');
-        sentryTransaction.setTag('duration', duration);
-        sentryTransaction.setTag('operation', transaction.operation);
-        sentryTransaction.finish();
-      }
+      // Note: getCurrentHub API not available in current Sentry version
+      // Sentry handles transactions automatically via BrowserTracing
+      // Transaction tracking is disabled for this version
     }
 
     // Add breadcrumb for completed transaction
@@ -575,7 +561,7 @@ export const logger = {
     this.addBreadcrumb('user_action', message);
 
     if (isSentryActive()) {
-      const sentryTransaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+      const sentryTransaction = undefined; // Sentry handles this automatically
       if (sentryTransaction && duration) {
         sentryTransaction.setTag('user_action', action);
         sentryTransaction.setTag('action_duration', duration);

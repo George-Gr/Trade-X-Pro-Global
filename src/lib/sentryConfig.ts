@@ -308,7 +308,7 @@ export function initializeSentryAdvanced() {
     integrations: [
       // Enhanced BrowserTracing with React Router
       new BrowserTracing({
-        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+        routingInstrumentation: Sentry.reactRouterV6BrowserTracingIntegration(
           React.useEffect,
           useLocation,
           useNavigationType,
@@ -322,33 +322,9 @@ export function initializeSentryAdvanced() {
           /^https:\/\/staging-api\.tradexpro\.com\/api/,
         ],
       }),
-      
-      // Session replay for debugging (if available)
-      ...(typeof window !== 'undefined' ? [new Sentry.Replay({
-        maskAllText: false,
-        blockAllMedia: false,
-        networkDetailAllowUrls: [
-          'localhost',
-          /^https:\/\/api\.tradexpro\.com\/api/,
-        ],
-        networkRequestHeaders: {
-          'User-Agent': true,
-          'Accept': true,
-        },
-        networkResponseHeaders: {
-          'Content-Type': true,
-          'Content-Length': true,
-        },
-      })] : []),
-      
-      // Performance monitoring (if available)
-      ...(typeof window !== 'undefined' && Sentry.BrowserProfilingIntegration ? [new Sentry.BrowserProfilingIntegration()] : []),
-      
-      // Feedback integration for user reports (if available)
-      ...(typeof window !== 'undefined' && Sentry.Feedback ? [new Sentry.Feedback({
-        colorScheme: 'system',
-        useSentryUserFeedback: true,
-      })] : []),
+      // Note: Session replay, profiling, and feedback integrations removed
+      // as they are not available in the current Sentry version or require
+      // additional configuration. BrowserTracing handles basic performance monitoring.
     ],
     
     // Enhanced error processing

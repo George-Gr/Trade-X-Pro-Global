@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +26,53 @@ export const PwaUpdateNotification: React.FC<UpdateNotificationProps> = ({
   const [updateProgress, setUpdateProgress] = useState(0);
   const { toast } = useToast();
 
+  const handleUpdate = useCallback(async (updateServiceWorker?: () => Promise<void>) => {
+    if (!updateServiceWorker) return;
+
+    setIsUpdating(true);
+    setUpdateProgress(10);
+
+    try {
+      // Simulate update progress
+      const progressInterval = setInterval(() => {
+        setUpdateProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 200);
+
+      // Wait a bit then trigger update
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Trigger service worker update
+      await updateServiceWorker();
+      
+      clearInterval(progressInterval);
+      setUpdateProgress(100);
+      
+      // Reset after completion
+      setTimeout(() => {
+        setIsUpdating(false);
+        setUpdateAvailable(false);
+        setUpdateProgress(0);
+      }, 2000);
+
+    } catch (error) {
+      console.error('Update failed:', error);
+      setIsUpdating(false);
+      setUpdateProgress(0);
+      
+      toast({
+        title: "Update Failed",
+        description: "Please try refreshing the page or contact support if the problem persists.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
   useEffect(() => {
     // Listen for service worker updates
     const handleServiceWorkerUpdate = (event: Event) => {
@@ -46,7 +93,7 @@ export const PwaUpdateNotification: React.FC<UpdateNotificationProps> = ({
 
     // Listen for PWA update available events
     const handleUpdateAvailable = (event: CustomEvent) => {
-      const detail = event.detail as unknown;
+      const detail = event.detail as { updateServiceWorker?: () => Promise<void> };
       
       setUpdateAvailable(true);
       
@@ -58,7 +105,7 @@ export const PwaUpdateNotification: React.FC<UpdateNotificationProps> = ({
           <Button
             size="sm"
             onClick={() => {
-              if (detail && detail.updateServiceWorker) {
+              if (detail?.updateServiceWorker) {
                 handleUpdate(detail.updateServiceWorker);
               }
             }}
@@ -83,7 +130,7 @@ export const PwaUpdateNotification: React.FC<UpdateNotificationProps> = ({
       }
       window.removeEventListener('pwaUpdateAvailable', handleUpdateAvailable as EventListener);
     };
-  }, [toast]);
+  }, [handleUpdate]);
 
   const handleUpdate = useCallback(async (updateServiceWorker?: () => Promise<void>) => {
     if (!updateServiceWorker) return;

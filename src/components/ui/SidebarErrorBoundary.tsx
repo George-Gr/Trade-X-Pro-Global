@@ -10,7 +10,9 @@ import * as React from "react";
 import { AlertTriangle, RefreshCw, Home, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { useToast, toast } from "@/hooks/use-toast";
+// Re-export navigation item helper boundary for compatibility with existing imports/tests
+export { NavigationItemErrorBoundary } from '@/lib/sidebarErrorHandling';
 
 interface SidebarErrorBoundaryState {
   hasError: boolean;
@@ -59,11 +61,10 @@ export class SidebarErrorBoundary extends React.Component<
       this.props.onError(error, errorInfo);
     }
 
-    // Show toast notification for critical navigation errors
+    // Show toast notification for critical navigation errors (imperative toast for class components)
     if (typeof window !== 'undefined') {
       // Use setTimeout to ensure toast is shown after re-render
       setTimeout(() => {
-        const { toast } = useToast();
         toast({
           title: "Navigation Error",
           description: "We're experiencing issues with the navigation menu. Please try refreshing the page.",

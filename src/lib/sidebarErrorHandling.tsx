@@ -15,7 +15,7 @@ export const withSidebarErrorBoundary = <P extends {}>(
   return function WithSidebarErrorBoundary(props: P) {
     return (
       <SidebarErrorBoundary
-        onerror={options?.onerror}
+        onError={options?.onError}
       >
         <Component {...props} />
       </SidebarErrorBoundary>

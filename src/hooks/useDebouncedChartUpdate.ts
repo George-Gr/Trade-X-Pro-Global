@@ -24,6 +24,7 @@ export const useDebouncedChartUpdate = <T>(
   const lastArgsRef = useRef<T[]>();
   const lastThisRef = useRef<any>();
 
+  // Core functions - order matters due to dependencies
   const shouldInvoke = useCallback((time: number) => {
     const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
     const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
@@ -35,20 +36,24 @@ export const useDebouncedChartUpdate = <T>(
     );
   }, [delay, maxWait]);
 
-  const leadingEdge = useCallback((...args: T[]) => {
-    lastInvokeTimeRef.current = Date.now();
-    timeoutRef.current = setTimeout(() => trailingEdge(...args), delay);
-    return leading ? invokeFunc(...args) : undefined;
-  }, [delay, leading, invokeFunc, trailingEdge]);
-
-  const timerExpired = useCallback((...args: T[]) => {
+  const invokeFunc = useCallback((...args: T[]) => {
     const time = Date.now();
-    if (shouldInvoke(time)) {
-      return trailingEdge(...args);
-    }
-    startTimer(getRemainingWait(time), ...args);
-  }, [shouldInvoke, trailingEdge, startTimer, getRemainingWait]);
+    lastInvokeTimeRef.current = time;
+    return callback(...args);
+  }, [callback]);
 
+  const getRemainingWait = useCallback((time: number) => {
+    const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
+    const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
+    
+    const timeWaiting = maxWait > 0 
+      ? Math.min(maxWait - timeSinceLastInvoke, delay - timeSinceLastCall) 
+      : delay - timeSinceLastCall;
+    
+    return Math.max(timeWaiting, 0);
+  }, [maxWait, delay]);
+
+  // Declare functions after their dependencies
   const trailingEdge = useCallback((...args: T[]) => {
     timeoutRef.current = undefined;
     
@@ -60,31 +65,28 @@ export const useDebouncedChartUpdate = <T>(
     return undefined;
   }, [trailing, invokeFunc]);
 
-  const invokeFunc = useCallback((...args: T[]) => {
+  const timerExpired = useCallback((...args: T[]) => {
     const time = Date.now();
-    lastInvokeTimeRef.current = time;
-    return callback(...args);
-  }, [callback]);
+    if (shouldInvoke(time)) {
+      return trailingEdge(...args);
+    }
+    // Recompute after shouldInvoke check
+  }, [shouldInvoke, trailingEdge]);
 
   const startTimer = useCallback((wait: number, ...args: T[]) => {
-    timeoutRef.current = setTimeout(() => timerExpired(...args), wait);
-  }, [timerExpired]);
+    timeoutRef.current = setTimeout(() => {
+      const time = Date.now();
+      if (shouldInvoke(time)) {
+        trailingEdge(...args);
+      }
+    }, wait);
+  }, [shouldInvoke, trailingEdge]);
 
-  const cancelTimer = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
-    }
-  }, []);
-
-  const getRemainingWait = useCallback((time: number) => {
-    const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
-    const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
-    
-    const timeWaiting = maxWait > 0 ? Math.min(maxWait - timeSinceLastInvoke, delay - timeSinceLastCall) : delay - timeSinceLastCall;
-    
-    return Math.max(timeWaiting, 0);
-  }, [maxWait, delay]);
+  const leadingEdge = useCallback((...args: T[]) => {
+    lastInvokeTimeRef.current = Date.now();
+    timeoutRef.current = setTimeout(() => trailingEdge(...args), delay);
+    return leading ? invokeFunc(...args) : undefined;
+  }, [delay, leading, invokeFunc, trailingEdge]);
 
   const debouncedCallback = useCallback((...args: T[]) => {
     const time = Date.now();
@@ -168,17 +170,6 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
     callbackRef.current = callback;
   }, []);
 
-  const addUpdate = useCallback((update: any) => {
-    updatesRef.current.push(update);
-    
-    if (updatesRef.current.length >= batchSize) {
-      flushUpdates();
-    } else if (!timeoutRef.current) {
-      // Batch updates within 16ms for 60fps
-      timeoutRef.current = setTimeout(flushUpdates, 16);
-    }
-  }, [batchSize, flushUpdates]);
-
   const flushUpdates = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -191,6 +182,17 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
       callbackRef.current(updates);
     }
   }, []);
+
+  const addUpdate = useCallback((update: any) => {
+    updatesRef.current.push(update);
+    
+    if (updatesRef.current.length >= batchSize) {
+      flushUpdates();
+    } else if (!timeoutRef.current) {
+      // Batch updates within 16ms for 60fps
+      timeoutRef.current = setTimeout(flushUpdates, 16);
+    }
+  }, [batchSize, flushUpdates]);
 
   const clear = useCallback(() => {
     if (timeoutRef.current) {

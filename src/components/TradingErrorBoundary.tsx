@@ -16,6 +16,7 @@ interface TradingErrorBoundaryState {
   error: Error | null;
   errorId: string;
   retryCount: number;
+  errorInfo?: React.ErrorInfo;
 }
 
 interface TradingErrorBoundaryProps {
@@ -89,12 +90,13 @@ class TradingErrorBoundary extends React.Component<
       );
     }
     
+    // Update state with errorInfo
+    this.setState({ errorInfo });
+    
     // Call custom error handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
-    
-    // Error will be displayed in the fallback UI below
   }
 
   handleRetry = () => {
@@ -102,7 +104,7 @@ class TradingErrorBoundary extends React.Component<
     const { maxRetries = 3 } = this.props;
     
     if (retryCount >= maxRetries) {
-      logger.warn("Maximum retry attempts reached for trading component", undefined, {
+      logger.warn("Maximum retry attempts reached for trading component", {
         component: "TradingErrorBoundary",
         action: "max_retries_exceeded",
         metadata: { retryCount, maxRetries }

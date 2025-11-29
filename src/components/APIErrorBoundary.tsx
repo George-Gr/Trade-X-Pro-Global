@@ -17,6 +17,7 @@ interface APIErrorBoundaryState {
   errorId: string;
   retryCount: number;
   isOffline: boolean;
+  errorInfo?: React.ErrorInfo;
 }
 
 interface APIErrorBoundaryProps {
@@ -113,6 +114,9 @@ class APIErrorBoundary extends React.Component<
       );
     }
     
+    // Update state with errorInfo
+    this.setState({ errorInfo });
+    
     // Call custom error handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -124,7 +128,7 @@ class APIErrorBoundary extends React.Component<
     const { maxRetries = 3 } = this.props;
     
     if (retryCount >= maxRetries) {
-      logger.warn("Maximum retry attempts reached for API call", undefined, {
+      logger.warn("Maximum retry attempts reached for API call", {
         component: "APIErrorBoundary",
         action: "max_api_retries_exceeded",
         metadata: { 

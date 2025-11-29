@@ -64,7 +64,7 @@ export interface AlertThresholds {
 /**
  * Critical error alert rules
  */
-export const CRITICAL_ALERT_RULES: AlertRule[] = [
+const CRITICAL_ALERT_RULES: AlertRule[] = [
   {
     id: 'trading-system-down',
     name: 'Trading System Down',

@@ -74,7 +74,11 @@ const ThemeTesting = lazy(() => import("./pages/ThemeTesting"));
 const queryClient = new QueryClient();
 
 // Layout Components
-const MobileBottomNavigation = lazy(() => import("./components/layout/MobileBottomNavigation"));
+const MobileBottomNavigation = lazy(() => 
+  import("./components/layout/MobileBottomNavigation").then(module => ({
+    default: module.MobileBottomNavigation
+  }))
+);
 
 const App = () => {
   // Initialize Sentry and monitoring on app load (production only)

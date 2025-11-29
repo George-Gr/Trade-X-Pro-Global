@@ -45,10 +45,11 @@ class APIInterceptor {
   /**
    * Enhanced fetch with monitoring
    */
-  async fetch(url: string, options: RequestInit = {}): Promise<Response> {
+  async fetch(url: string | URL, options: RequestInit & { timeout?: number } = {}): Promise<Response> {
     const startTime = performance.now();
     const requestId = `req-${this.requestCount++}`;
     const method = options.method || 'GET';
+    const { timeout: customTimeout = 30000, ...fetchOptions } = options;
 
     // Start performance transaction
     const transactionId = logger.startTransaction(`api_${method}_${url}`, 'api_call', {
@@ -57,8 +58,7 @@ class APIInterceptor {
       metadata: {
         requestId,
         method,
-        url,
-        headers: options.headers,
+        url: typeof url === 'string' ? url : url.toString(),
       },
     });
 
@@ -67,24 +67,24 @@ class APIInterceptor {
       logger.addBreadcrumb('api', `Starting ${method} request to ${url}`, 'info');
 
       const controller = new AbortController();
-      const timeout = options.timeout || 30000; // 30 second default timeout
+      const timeout = customTimeout; // Use extracted timeout value
       
       const timeoutId = setTimeout(() => {
         controller.abort();
-        logger.warn(`API request timeout: ${method} ${url}`, undefined, {
+        logger.warn(`API request timeout: ${method} ${url}`, {
           component: 'APIInterceptor',
           action: 'api_timeout',
           metadata: {
             requestId,
             method,
-            url,
+            url: typeof url === 'string' ? url : url.toString(),
             timeout,
           },
         });
       }, timeout);
 
-      const response = await fetch(url, {
-        ...options,
+      const response = await fetch(typeof url === 'string' ? url : url.toString(), {
+        ...fetchOptions,
         signal: controller.signal,
       });
 
