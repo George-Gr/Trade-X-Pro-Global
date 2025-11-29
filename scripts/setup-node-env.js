@@ -8,9 +8,21 @@ if (process.env.NODE_OPTIONS === undefined) {
   process.env.NODE_OPTIONS = '--max-old-space-size=4096';
 }
 
-// Suppress Node.js deprecation warnings
-process.env.NODE_DISABLE_DEPRECATION_WARNINGS = '1';
-process.env.NODE_SUPPRESS_DEPRECATION = '1';
+// Prefer filtering specific deprecation warnings rather than globally suppressing them.
+// This preserves visibility for new or unknown deprecations while reducing noise
+// from known, expected deprecation messages (such as punycode or others).
+process.on('warning', (warning) => {
+  try {
+    // Some warnings have a 'code' field (e.g., DEP0040)
+    if (warning.code === 'DEP0040') {
+      // Ignore punycode-specific deprecation warning
+      return;
+    }
+  } catch (e) {
+    // If there's no code, continue and show the warning
+  }
+  console.warn(warning.name + ': ' + warning.message);
+});
 
 // Fix punycode deprecation by providing a polyfill
 if (!global.punycode) {
@@ -30,8 +42,13 @@ if (!global.punycode) {
   }
 }
 
-// Fix navigator global error
-if (typeof global.navigator === 'undefined') {
+// Fix navigator global error only when explicitly requested.
+// Setting navigator in Node.js can cause external tools (extensions, other processes)
+// to mis-detect the runtime; this should be opt-in to avoid side-effects.
+const _forceNavigator = process.env.FORCE_NODE_POLYFILL_NAVIGATOR === '1' || process.env.FORCE_POLYFILL === '1';
+if (_forceNavigator && typeof global.navigator === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const version = process.version || 'unknown';
   global.navigator = {
     userAgent: 'Node.js',
     platform: 'Node.js',
@@ -51,13 +68,15 @@ if (typeof global.navigator === 'undefined') {
   };
 }
 
-// Fix window global error
-if (typeof global.window === 'undefined') {
-  global.window = global;
+// Only set global.window if developer explicitly requested full browser polyfills
+if (_forceNavigator) {
+  if (typeof global.window === 'undefined') {
+    global.window = global;
+  }
 }
 
-// Fix document global error
-if (typeof global.document === 'undefined') {
+// Only set document-like globals if developer explicitly requested full polyfilling
+if (_forceNavigator && typeof global.document === 'undefined') {
   global.document = {
     createElement: () => ({
       addEventListener: () => {},
@@ -102,12 +121,27 @@ if (typeof global.document === 'undefined') {
     readyState: 'complete',
     visibilityState: 'hidden',
     hidden: true,
-  };
+    };
 }
 
 // Fix location global error
 if (typeof global.location === 'undefined') {
-  global.location = global.document.location;
+  if (typeof global.document !== 'undefined' && global.document.location) {
+    global.location = global.document.location;
+  } else {
+    // Create a minimal location object when document is not available
+    global.location = {
+      href: '',
+      protocol: 'http:',
+      host: '',
+      hostname: '',
+      port: '',
+      pathname: '',
+      search: '',
+      hash: '',
+      origin: '',
+    };
+  }
 }
 
 // Fix crypto API
@@ -181,9 +215,10 @@ if (typeof global.console === 'undefined') {
   };
 }
 
-// Fix SQLite experimental warning by providing a polyfill
-if (typeof global.SQLite === 'undefined') {
+// Fix SQLite experimental warning by providing a polyfill only when requested
+if (process.env.FORCE_NODE_POLYFILL_SQLITE === '1' && typeof global.SQLite === 'undefined') {
   try {
+    // Attempt to require sqlite3 (npm package)
     global.SQLite = require('sqlite3');
   } catch (e) {
     // sqlite3 not available, create minimal stub

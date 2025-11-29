@@ -191,7 +191,7 @@ export const EquityChart: React.FC = () => {
                   y={stats.avgEquity}
                   stroke="#94a3b8"
                   strokeDasharray="5 5"
-                  label={{ value: 'Avg', position: 'right', fill: '#94a3b8', fontSize: 12 } as unknown}
+                  label={{ value: 'Avg', position: 'right', fill: '#94a3b8', fontSize: 12 } as { value: string; position: string; fill: string; fontSize: number }}
                 />
                 <DynamicLine
                   type="monotone"

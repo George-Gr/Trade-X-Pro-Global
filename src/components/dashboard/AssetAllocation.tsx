@@ -4,19 +4,19 @@ import { usePortfolioData } from '@/hooks/usePortfolioData';
 
 // Dynamic import wrapper for recharts components
 const DynamicPieChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.PieChart,
+  default: m.PieChart as React.ComponentType<unknown>,
 })));
 
 const DynamicPie = React.lazy(() => import('recharts').then(m => ({
-  default: m.Pie,
+  default: m.Pie as React.ComponentType<unknown>,
 })));
 
 const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell,
+  default: m.Cell as React.ComponentType<unknown>,
 })));
 
 const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip,
+  default: m.Tooltip as React.ComponentType<unknown>,
 })));
 
 const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({

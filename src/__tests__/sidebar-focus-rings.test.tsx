@@ -132,9 +132,9 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
 
   it('should support data-sidebar="menu-button" attribute focus rings', () => {
     // Create multiple test elements with data-sidebar attribute
-    const buttons = [];
+    const buttons: HTMLButtonElement[] = [];
     const labels = ['Dashboard', 'Trading', 'Settings', 'Analytics'];
-    
+
     labels.forEach((label, index) => {
       const button = document.createElement('button');
       button.setAttribute('data-sidebar', 'menu-button');
@@ -142,12 +142,16 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
       button.textContent = label;
       document.body.appendChild(button);
       buttons.push(button);
-      
+
       // Apply focus styles
       button.style.outline = '3px solid hsl(var(--focus-color))';
       button.style.outlineOffset = '2px';
       button.style.boxShadow = '0 0 0 4px hsl(var(--focus-ring-color) / 0.2), 0 4px 8px hsl(var(--focus-ring-color) / 0.1)';
-      
+
+      // Test focus behavior
+      button.focus();
+      expect(document.activeElement).toBe(button);
+
       // Verify data-sidebar attribute is present
       expect(button.getAttribute('data-sidebar')).toBe('menu-button');
       expect(button.style.outline).toContain('3px solid');
@@ -242,11 +246,11 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
     render(<AppSidebar />);
 
     const dashboardButton = screen.getByLabelText(/Dashboard/i) as HTMLElement;
-    
+
     // Focus using keyboard navigation
     await user.click(dashboardButton);
     await user.keyboard('{Enter}');
-    
+
     expect(dashboardButton).toHaveFocus();
     expect(dashboardButton).toHaveStyle({
       outline: expect.stringContaining('3px solid'),
@@ -256,17 +260,17 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
 
   it('should show different focus styles for active vs non-active items', async () => {
     const user = userEvent.setup();
-    
+
     // Mock active path
     vi.mocked(() => import('@/lib/navigationConfig').then(m => m.isPathActive)).mockReturnValue(true);
-    
+
     render(<AppSidebar />);
 
     const activeButton = screen.getByLabelText(/Dashboard/i) as HTMLElement;
-    
+
     await user.click(activeButton);
     expect(activeButton).toHaveFocus();
-    
+
     // Active items should have enhanced focus rings with inset border
     expect(activeButton).toHaveStyle({
       outline: expect.stringContaining('3px solid'),
@@ -293,10 +297,10 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
     render(<AppSidebar />);
 
     const dashboardButton = screen.getByLabelText(/Dashboard/i) as HTMLElement;
-    
+
     await user.click(dashboardButton);
     expect(dashboardButton).toHaveFocus();
-    
+
     // Check for high contrast styles
     if (window.matchMedia('(prefers-contrast: high)').matches) {
       expect(dashboardButton).toHaveStyle({
@@ -307,14 +311,14 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
 
   it('should maintain focus rings in dark mode', async () => {
     const user = userEvent.setup();
-    
+
     // Add dark class to body for testing
     document.body.classList.add('dark');
-    
+
     render(<AppSidebar />);
 
     const dashboardButton = screen.getByLabelText(/Dashboard/i) as HTMLElement;
-    
+
     await user.click(dashboardButton);
     expect(dashboardButton).toHaveFocus();
     expect(dashboardButton).toHaveStyle({
@@ -332,14 +336,14 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
 
     const dashboardButton = screen.getByLabelText(/Dashboard/i) as HTMLElement;
     const tradingButton = screen.getByLabelText(/Trading/i) as HTMLElement;
-    
+
     // Focus first item
     await user.click(dashboardButton);
     expect(dashboardButton).toHaveFocus();
-    
+
     // Navigate with arrow keys (this tests the keyboard event handlers)
     await user.keyboard('{ArrowDown}');
-    
+
     // Focus should move to next item
     expect(tradingButton).toHaveFocus();
     expect(tradingButton).toHaveStyle({
@@ -354,11 +358,11 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
 
     const dashboardButton = screen.getByLabelText(/Dashboard/i) as HTMLElement;
     const settingsButton = screen.getByLabelText(/Settings/i) as HTMLElement;
-    
+
     // Focus on last item
     await user.click(settingsButton);
     expect(settingsButton).toHaveFocus();
-    
+
     // Navigate to first item with Home
     await user.keyboard('{Home}');
     expect(dashboardButton).toHaveFocus();
@@ -366,7 +370,7 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
       outline: expect.stringContaining('3px solid'),
       'outline-offset': '2px'
     });
-    
+
     // Navigate to last item with End
     await user.keyboard('{End}');
     expect(settingsButton).toHaveFocus();
@@ -381,7 +385,7 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
     render(<AppSidebar />);
 
     const logoutButton = screen.getByLabelText(/Sign out/i) as HTMLElement;
-    
+
     await user.click(logoutButton);
     expect(logoutButton).toHaveFocus();
     expect(logoutButton).toHaveStyle({

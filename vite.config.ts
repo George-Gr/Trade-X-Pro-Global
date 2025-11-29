@@ -19,13 +19,13 @@ const corsMiddleware = (): Plugin => ({
       res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin,X-Requested-With');
       res.setHeader('Access-Control-Max-Age', '3600');
-      
+
       if (req.method === 'OPTIONS') {
         res.writeHead(204);
         res.end();
         return;
       }
-      
+
       next();
     });
   },
@@ -49,7 +49,7 @@ const PWA_CONFIG = {
   description: 'Practice CFD trading risk-free with virtual funds on a professional trading platform.',
   themeColor: '#3b82f6',
   backgroundColor: '#0a0a0a',
-  
+
   icons: [
     {
       src: '/icons/icon-72x72.png',
@@ -100,7 +100,7 @@ const PWA_CONFIG = {
       purpose: 'any maskable'
     }
   ],
-  
+
   workbox: {
     globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
@@ -173,31 +173,31 @@ export default defineConfig(({ mode }) => ({
     react(),
     corsMiddleware(),
     componentTaggerPlugin,
-    process.env.ANALYZE && visualizer({ 
-      filename: 'dist/bundle-analysis.html', 
-      open: false, 
-      gzipSize: true 
+    process.env.ANALYZE && visualizer({
+      filename: 'dist/bundle-analysis.html',
+      open: false,
+      gzipSize: true
     }),
     // Sentry source map upload plugin (production only)
     process.env.NODE_ENV === 'production' ? sentryVitePlugin({
       org: "trade-x-pro",
       project: "trade-x-pro-global",
-      
+
       authToken: process.env.SENTRY_AUTH_TOKEN,
-      
+
       sourcemaps: {
         assets: "./dist/**",
         ignore: ["node_modules", "dist/assets"],
       },
-      
+
       release: {
         name: process.env.npm_package_version || "unknown",
         create: true,
       },
-      
+
     }) : null,
   ].filter(Boolean) as Plugin[],
-  
+
   // Fix environment variables for browser bundling
   define: {
     // Provide browser globals - these are handled by setup-node-env.js at build time
@@ -210,6 +210,11 @@ export default defineConfig(({ mode }) => ({
     'process.env.VITE_SENTRY_DSN': JSON.stringify(process.env.VITE_SENTRY_DSN || ''),
     'process.env.VITE_APP_VERSION': JSON.stringify(process.env.VITE_APP_VERSION || '0.0.0'),
     'process.env.VITE_FINNHUB_API_KEY': JSON.stringify(process.env.VITE_FINNHUB_API_KEY || ''),
+    // Fix the navigator global for libraries that check for it during bundling.
+    // By default, Vite will treat navigator as undefined for server-side bundles.
+    // This reduces console noise and prevents libraries from incorrectly
+    // assuming a browser environment when bundling for Node-like contexts.
+    'navigator': 'undefined',
   },
   resolve: {
     alias: {
@@ -224,8 +229,8 @@ export default defineConfig(({ mode }) => ({
   // Ensure a single prebundled copy in dev server
   optimizeDeps: {
     include: [
-      "react", 
-      "react-dom", 
+      "react",
+      "react-dom",
       "react/jsx-runtime",
       "@radix-ui/react-tooltip",
       "@radix-ui/react-hover-card",
@@ -236,13 +241,13 @@ export default defineConfig(({ mode }) => ({
   build: {
     // Reduced from 600 to 400 - encourages better code splitting
     chunkSizeWarningLimit: 400,
-    
+
     // Limit the number of parallel requests during runtime
     chunkLimit: 10,
-    
+
     // Optimize chunk size
     chunkSize: 500,
-    
+
     // Additional PWA optimizations
     rollupOptions: {
       output: {
@@ -252,7 +257,7 @@ export default defineConfig(({ mode }) => ({
           // Vendor chunks - split charts into separate chunks
           if (id.includes('node_modules')) {
             if (id.includes('lightweight-charts')) return 'vendor-lightweight-charts';
-// Split recharts into smaller chunks based on specific components
+            // Split recharts into smaller chunks based on specific components
             if (id.includes('recharts') && id.includes('cartesian')) return 'vendor-recharts-cartesian';
             if (id.includes('recharts') && id.includes('pie')) return 'vendor-recharts-pie';
             if (id.includes('recharts') && id.includes('bar')) return 'vendor-recharts-bar';
@@ -272,13 +277,13 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: 'assets/[name]-[hash].[ext]'
       },
     },
-    
+
     // Compression for better PWA performance
     target: 'es2015',
     cssTarget: 'chrome61',
     minify: true,
     cssCodeSplit: true,
-    
+
     // Source map configuration for Sentry
     sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : true,
   },

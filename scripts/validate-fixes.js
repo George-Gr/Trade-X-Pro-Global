@@ -12,6 +12,15 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Utility: parse JSONC (strip comments) for files that may contain JSON with comments.
+function parseJsonc(content) {
+  // Remove single-line comments
+  const noSingle = content.replace(/\/\/.*$/gm, '');
+  // Remove multi-line comments
+  const noMulti = noSingle.replace(/\/\*[\s\S]*?\*\//g, '');
+  return JSON.parse(noMulti);
+}
+
 console.log('🔍 Validating Windows Output Log Fixes...\n');
 
 const checks = [];
@@ -37,8 +46,8 @@ checks.push({
     if (!fs.existsSync(viteConfigPath)) return false;
     
     const content = fs.readFileSync(viteConfigPath, 'utf8');
-    return content.includes('navigator: \'undefined\'') && 
-           content.includes('NODE_DISABLE_DEPRECATION_WARNINGS');
+          return (content.includes("navigator: 'undefined'") || content.includes("'navigator': 'undefined'")) &&
+            content.includes("'typeof navigator'");
   },
   message: '✅ Vite configuration has navigator and deprecation fixes'
 });
@@ -64,7 +73,18 @@ checks.push({
     const content = fs.readFileSync(setupScriptPath, 'utf8');
     return content.includes('navigator') && content.includes('punycode');
   },
-  message: '✅ Node.js setup script found with polyfills'
+  message: '✅ Node.js setup script found with polyfills (navigator polyfill is opt-in)'
+});
+
+// Check 11: Setup script doesn't suppress all deprecation warnings globally
+checks.push({
+  name: 'No global deprecation suppression in setup script',
+  test: () => {
+    const setupScriptPath = path.join(__dirname, '../scripts/setup-node-env.js');
+    const content = fs.readFileSync(setupScriptPath, 'utf8');
+    return !content.includes('NODE_DISABLE_DEPRECATION_WARNINGS') && !content.includes('NODE_SUPPRESS_DEPRECATION');
+  },
+  message: '✅ Setup script does not globally suppress deprecation warnings'
 });
 
 // Check 5: Performance monitoring hooks exist
@@ -129,6 +149,44 @@ checks.push({
     return packageJson.scripts && packageJson.scripts['dev:validate'];
   },
   message: '✅ Validation script found in package.json'
+});
+
+// Check 10: Dev script includes FORCE_NODE_POLYFILL_NAVIGATOR flag
+checks.push({
+  name: 'Dev Script Navigator Polyfill Flag',
+  test: () => {
+    const packageJsonPath = path.join(__dirname, '../package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return packageJson.scripts && packageJson.scripts.dev && packageJson.scripts.dev.includes('FORCE_NODE_POLYFILL_NAVIGATOR=1');
+  },
+  message: '✅ Dev script includes FORCE_NODE_POLYFILL_NAVIGATOR flag'
+});
+
+// Check 11: Workspace settings include Raptor mini Copilot settings
+checks.push({
+  name: 'Workspace Copilot Raptor Mini Settings',
+  test: () => {
+    const settingsFile = path.join(__dirname, '../.vscode/settings.json');
+    if (!fs.existsSync(settingsFile)) return false;
+    const settings = parseJsonc(fs.readFileSync(settingsFile, 'utf8'));
+    return settings['github.copilot.experimental.raptorMiniEnabled'] === true &&
+           settings['github.copilot.experimental.raptorMiniForAllClients'] === true;
+  },
+  message: '✅ Workspace Copilot Raptor mini settings added to .vscode/settings.json'
+});
+
+// Check 12: Devcontainer has Copilot settings applied for Codespaces
+checks.push({
+  name: 'Devcontainer Copilot Settings',
+  test: () => {
+    const devcontainerFile = path.join(__dirname, '../.devcontainer/devcontainer.json');
+    if (!fs.existsSync(devcontainerFile)) return false;
+    const content = parseJsonc(fs.readFileSync(devcontainerFile, 'utf8'));
+    const settings = content.customizations?.vscode?.settings || {};
+    return settings['github.copilot.experimental.raptorMiniEnabled'] === true &&
+           settings['github.copilot.experimental.raptorMiniForAllClients'] === true;
+  },
+  message: '✅ Devcontainer Copilot Raptor settings added for Codespaces'
 });
 
 // Run all checks

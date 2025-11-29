@@ -21,6 +21,11 @@
       "settings": {
         "typescript.tsserver.maxMemory": 4096,
         "typescript.enablePromptUseWorkspaceTsdk": true
+        ,
+        // Enable Copilot Raptor mini (Preview) in Codespaces/devcontainer environment
+        "github.copilot.experimental.raptorMiniEnabled": true,
+        "github.copilot.experimental.raptorMiniForAllClients": true,
+        "github.copilot.model": "raptor-mini"
       }
     }
   },

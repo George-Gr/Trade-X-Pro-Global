@@ -77,7 +77,7 @@ export class SidebarErrorBoundary extends React.Component<
   logErrorToService = (error: Error, errorInfo: React.ErrorInfo) => {
     // In a real application, you would send this to your error tracking service
     // such as Sentry, LogRocket, or a custom logging endpoint
-    
+
     const errorData = {
       message: error.message,
       stack: error.stack,
@@ -103,13 +103,9 @@ export class SidebarErrorBoundary extends React.Component<
   getUserId = (): string | null => {
     // Extract user ID from your auth system
     // This is a placeholder - implement based on your authentication system
-    try {
-      // Example: return localStorage.getItem('userId');
-      // Example: return auth.currentUser?.id;
-      return null;
-    } catch {
-      return null;
-    }
+    // Example: return localStorage.getItem('userId');
+    // Example: return auth.currentUser?.id;
+    return null;
   };
 
   handleRetry = () => {
@@ -121,6 +117,7 @@ export class SidebarErrorBoundary extends React.Component<
     // Force page reload to recover from error
     if (typeof window !== 'undefined') {
       window.location.reload();
+      return;
     }
   };
 
@@ -161,10 +158,10 @@ const SidebarErrorFallback: React.FC<{
       <p className="text-sm text-muted-foreground mb-4 max-w-sm">
         We're experiencing issues with the navigation menu. This could be due to a temporary error or network issue.
       </p>
-      
+
       <div className="flex flex-col sm:flex-row gap-2 w-full max-w-xs">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           onClick={onRetry}
           className="flex-1"
@@ -172,8 +169,8 @@ const SidebarErrorFallback: React.FC<{
           <RefreshCw className="h-4 w-4 mr-2" />
           Try Again
         </Button>
-        <Button 
-          variant="default" 
+        <Button
+          variant="default"
           size="sm"
           onClick={() => window.location.reload()}
           className="flex-1"
@@ -189,7 +186,7 @@ const SidebarErrorFallback: React.FC<{
             Error Details (for developers)
           </summary>
           <div className="mt-2 p-2 bg-muted rounded-md overflow-auto max-h-32">
-            <code className="font-mono whitespace-pre-wrap break-words">
+            <code className="font-mono whitespace-pre-wrap wrap-break-word">
               {error.message}
             </code>
           </div>
@@ -210,7 +207,7 @@ export const SidebarMinimalFallback: React.FC<{
     <div className="flex flex-col h-full">
       {/* Header placeholder */}
       <div className="h-6 bg-muted/50" />
-      
+
       {/* Minimal navigation */}
       <div className="flex-1 flex flex-col justify-center items-center">
         <div className="text-destructive mb-2">
@@ -220,15 +217,15 @@ export const SidebarMinimalFallback: React.FC<{
         <p className="text-xs text-muted-foreground mb-3 text-center px-4">
           Navigation temporarily unavailable
         </p>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           onClick={onRetry}
         >
           Retry
         </Button>
       </div>
-      
+
       {/* Actions placeholder */}
       <div className="p-4 space-y-1">
         <div className="h-10 bg-muted/50 rounded flex items-center px-3 text-xs text-muted-foreground">

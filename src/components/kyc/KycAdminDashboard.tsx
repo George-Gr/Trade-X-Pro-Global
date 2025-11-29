@@ -98,6 +98,9 @@ const KycAdminDashboard: React.FC = () => {
             ...r,
             userProfile: profile,
             kycDocuments: (r.kyc_documents as KycDocument[]) || [],
+          };
+        })
+      );
           } as KycRequest & { userProfile?: UserProfile; kycDocuments?: KycDocument[] };
         })
       );

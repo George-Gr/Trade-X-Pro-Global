@@ -3,19 +3,19 @@ import { Card } from '@/components/ui/card';
 
 // Dynamic import wrapper for recharts components
 const DynamicBarChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.BarChart,
+  default: m.BarChart as React.ComponentType<unknown>,
 })));
 
 const DynamicBar = React.lazy(() => import('recharts').then(m => ({
-  default: m.Bar,
+  default: m.Bar as React.ComponentType<unknown>,
 })));
 
 const DynamicXAxis = React.lazy(() => import('recharts').then(m => ({
-  default: m.XAxis,
+  default: m.XAxis as React.ComponentType<unknown>,
 })));
 
 const DynamicYAxis = React.lazy(() => import('recharts').then(m => ({
-  default: m.YAxis,
+  default: m.YAxis as React.ComponentType<unknown>,
 })));
 
 const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({

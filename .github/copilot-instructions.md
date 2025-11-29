@@ -44,6 +44,23 @@ VITE_SENTRY_DSN=<for-error-tracking>
 ### 2. Essential Commands
 ```bash
 npm run dev              # Start dev server (localhost:8080, Vite HMR enabled)
+### Enabling Raptor mini (Preview) for AI assistants
+
+If you use GitHub Copilot or other AI assistant extensions and want to enable the Raptor mini (Preview) model for faster, local suggestions, add the following workspace settings (they are included by default in `.vscode/settings.json` and `.devcontainer/devcontainer.json` for Codespaces):
+
+```jsonc
+{
+  "github.copilot.experimental.raptorMiniEnabled": true,
+  "github.copilot.experimental.raptorMiniForAllClients": true,
+  "github.copilot.model": "raptor-mini"
+}
+```
+
+Notes:
+- These settings are workspace-level; clients will use the preview model when possible.
+- If your manager or organization doesn't allow preview models, disable these in your personal settings.
+- Unknown keys will be ignored by VS Code if the extension or client doesn't support them.
+
 npm run build           # Production build (generates bundle-analysis.html with ANALYZE=true)
 npm run lint            # ESLint check (auto-fix with --fix)
 npm run test            # Vitest (add --ui for interactive, watch mode default)

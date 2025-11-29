@@ -71,3 +71,24 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Troubleshooting: Node.js polyfills & DEV environment
+
+If you see errors like `navigator is now a global in nodejs`, `DEP0040 punycode`, or other Node.js deprecation/compatibility warnings, the project provides a helper script used by dev and build commands to add optional polyfills.
+
+By default, these polyfills are opt-in to avoid creating globals that could affect other processes or extensions.
+
+To enable the navigator polyfill for your local dev server, run:
+
+```bash
+cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 npm run dev
+```
+
+To enable the SQLite polyfill (for tests that require sqlite3), run:
+
+```bash
+cross-env FORCE_NODE_POLYFILL_SQLITE=1 npm run dev
+```
+
+We recommend using these flags only when necessary. They are present to make development and testing easier, but shouldn't be enabled globally on shared or CI environments.
+

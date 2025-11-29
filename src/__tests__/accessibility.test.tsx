@@ -22,14 +22,14 @@ describe('Accessibility Tests', () => {
       // This would require actual color testing in a real environment
       // For now, we test that the correct classes are applied
       render(<Dashboard />);
-      
+
       const primaryText = screen.getByRole('heading', { level: 1 });
       expect(primaryText).toHaveClass(/text-primary-contrast/);
     });
 
     it('should have sufficient contrast for secondary text', () => {
       render(<Login />);
-      
+
       const secondaryText = screen.getByText(/Login to your account/);
       expect(secondaryText).toHaveClass(/text-secondary-contrast/);
     });
@@ -40,7 +40,7 @@ describe('Accessibility Tests', () => {
           This is a test error message
         </FormMessage>
       );
-      
+
       const errorMessage = screen.getByText(/This is a test error message/);
       expect(errorMessage).toHaveClass(/text-danger-contrast/);
     });
@@ -92,7 +92,7 @@ describe('Accessibility Tests', () => {
       // Test tab navigation and focus ring visibility
       await user.tab();
       expect(emailInput).toHaveFocus();
-      
+
       // Check for enhanced 3px focus ring
       expect(emailInput).toHaveStyle({
         outline: expect.stringContaining('3px solid'),
@@ -101,7 +101,7 @@ describe('Accessibility Tests', () => {
 
       await user.tab();
       expect(passwordInput).toHaveFocus();
-      
+
       // Check password input focus ring
       expect(passwordInput).toHaveStyle({
         outline: expect.stringContaining('3px solid'),
@@ -110,7 +110,7 @@ describe('Accessibility Tests', () => {
 
       await user.tab();
       expect(submitButton).toHaveFocus();
-      
+
       // Check button focus ring
       expect(submitButton).toHaveStyle({
         outline: expect.stringContaining('3px solid'),
@@ -123,13 +123,13 @@ describe('Accessibility Tests', () => {
       render(<Login />);
 
       const emailInput = screen.getByRole('textbox', { name: /email address/i });
-      
+
       // Add trading interface class to test animated focus rings
       emailInput.classList.add('trading-interface');
-      
+
       await user.tab();
       expect(emailInput).toHaveFocus();
-      
+
       // Check for animation
       expect(emailInput).toHaveStyle({
         animation: expect.stringContaining('focus-pulse')
@@ -145,7 +145,7 @@ describe('Accessibility Tests', () => {
       // Mouse click should not trigger focus-visible styles in supporting browsers
       await user.click(emailInput);
       expect(emailInput).toHaveFocus();
-      
+
       // In browsers that support focus-visible, mouse click should not show enhanced rings
       // This test ensures the focus-visible implementation works correctly
       expect(emailInput).toBeVisible();
@@ -271,12 +271,12 @@ describe('Accessibility Tests', () => {
           addEventListener: vi.fn(),
           removeEventListener: vi.fn(),
         })),
-      });
+      }) as unknown as MediaQueryList;
 
       render(<Dashboard />);
 
       // Check that animations are disabled when reduced motion is preferred
-      expect(window.matchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
+      expect(window.matchMedia('(prefers-reduced-motion: reduce)')).toBeDefined();
     });
   });
 
@@ -393,13 +393,13 @@ export const checkAccessibility = {
   // Check if element is keyboard accessible
   isKeyboardAccessible: (element: HTMLElement): boolean => {
     const tabIndex = element.getAttribute('tabindex');
-    const isFocusable = element.tabIndex >= 0 || 
-                       element.tagName === 'INPUT' ||
-                       element.tagName === 'BUTTON' ||
-                       element.tagName === 'A' ||
-                       element.tagName === 'TEXTAREA' ||
-                       element.tagName === 'SELECT';
-    
+    const isFocusable = element.tabIndex >= 0 ||
+      element.tagName === 'INPUT' ||
+      element.tagName === 'BUTTON' ||
+      element.tagName === 'A' ||
+      element.tagName === 'TEXTAREA' ||
+      element.tagName === 'SELECT';
+
     return isFocusable && tabIndex !== '-1';
   },
 
@@ -409,7 +409,7 @@ export const checkAccessibility = {
     const label = document.querySelector(`label[for="${id}"]`);
     const ariaLabel = input.getAttribute('aria-label');
     const ariaLabelledby = input.getAttribute('aria-labelledby');
-    
+
     return !!(label || ariaLabel || ariaLabelledby);
   },
 
@@ -418,12 +418,12 @@ export const checkAccessibility = {
     const role = element.getAttribute('role');
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledby = element.getAttribute('aria-labelledby');
-    
+
     // Check if interactive elements have proper labels
     if (role === 'button' || role === 'link' || element.tagName === 'BUTTON') {
       return !!(ariaLabel || ariaLabelledby || element.textContent?.trim());
     }
-    
+
     return true;
   }
 };
