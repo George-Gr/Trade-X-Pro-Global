@@ -146,7 +146,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
 
       // Calculate realized P&L for this day
       const dailyFills = fills.filter(f => 
-        f.created_at?.split('T')[0] === dateStr
+        f.executed_at?.split('T')[0] === dateStr
       );
       
       const realizedPnL = dailyFills.reduce((sum, fill) => {
@@ -220,11 +220,9 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
         .from("fills" as any)
         .select("*")
         .eq("user_id", user.id)
-        .gte("created_at", startDate.toISOString())
-        .order("created_at", { ascending: true });
+        .gte("executed_at", startDate.toISOString())
+        .order("executed_at", { ascending: true });
         
-      if (fillsError) throw fillsError;
-
       if (fillsError) throw fillsError;
 
       // Calculate daily P&L data
