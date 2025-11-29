@@ -151,10 +151,6 @@ export default defineConfig(({ mode }) => ({
         create: true,
       },
       
-      // Deploy configuration
-      deploy: {
-        env: process.env.NODE_ENV === 'production' ? "production" : "development",
-      },
     }) : null,
   ].filter(Boolean) as unknown as (import("vite").Plugin)[],
   resolve: {

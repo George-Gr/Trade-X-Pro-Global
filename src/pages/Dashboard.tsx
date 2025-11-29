@@ -8,7 +8,6 @@ import MarginLevelCard from "@/components/dashboard/MarginLevelCard";
 import RiskAlertsCard from "@/components/dashboard/RiskAlertsCard";
 // removed incorrect RiskAlert import — use events returned from useRiskEvents instead
 import ProfitLossCard from "@/components/dashboard/ProfitLossCard";
-import { ChartPerformanceTester } from "@/components/charts/ChartPerformanceTester";
 import { ErrorMessage, RealtimeErrorAlert } from "@/components/ui/ErrorUI";
 import { useRiskMetrics } from "@/hooks/useRiskMetrics";
 import useRiskEvents from "@/hooks/useRiskEvents";
@@ -185,10 +184,7 @@ const Dashboard = () => {
             />
           ) : (
             <ProfitLossCard 
-              loading={profitLossLoading} 
-              currentValue={profitLossMetrics?.currentEquity ?? 0}
-              profitLossData={profitLossData}
-              timeRange="7d"
+              loading={profitLossLoading}
             />
           )}
         </div>

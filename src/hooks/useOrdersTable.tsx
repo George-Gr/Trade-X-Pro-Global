@@ -85,7 +85,7 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
         stop_price: typeof order.price === 'number' ? order.price : null,
         status: typeof order.status === 'string' ? order.status : String(order.status ?? ''),
         created_at: typeof order.created_at === 'string' ? order.created_at : String(order.created_at ?? ''),
-        updated_at: typeof order.updated_at === 'string' ? order.updated_at : String(order.updated_at ?? ''),
+        updated_at: typeof order.created_at === 'string' ? order.created_at : String(order.created_at ?? ''),
         average_fill_price: typeof order.fill_price === 'number' ? order.fill_price : null,
         commission: typeof order.commission === 'number' ? order.commission : null,
         slippage: null,

@@ -1,16 +1,12 @@
 // Notification Types for TradeX Pro
 
-import type { 
-  PwaNotification, 
-  NotificationSubscription, 
-  TradingAlertData 
-} from './pwa';
-
-export type {
-  PwaNotification,
-  NotificationSubscription,
-  TradingAlertData
-};
+export interface TradingAlertData {
+  type: 'price' | 'order' | 'position' | 'risk';
+  symbol: string;
+  message: string;
+  severity: 'info' | 'warning' | 'critical';
+  data?: any;
+}
 
 export interface UserNotification {
   id: string;
