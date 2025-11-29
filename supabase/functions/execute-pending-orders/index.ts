@@ -25,6 +25,17 @@ serve(async (req) => {
   }
 
   try {
+    // Validate CRON_SECRET to prevent unauthorized access
+    const CRON_SECRET = Deno.env.get('CRON_SECRET');
+    const providedSecret = req.headers.get('X-Cron-Secret');
+
+    if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+      console.error('Unauthorized access attempt to execute-pending-orders');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);

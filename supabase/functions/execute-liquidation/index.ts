@@ -467,24 +467,16 @@ async function executeLiquidationForEvent(
  * 2. Scheduled CRON job to process pending liquidations
  */
 serve(async (req: Request): Promise<Response> => {
-  // Validate CRON secret if this is a scheduled invocation
-  const authHeader = req.headers.get('authorization');
-  if (authHeader) {
-    const expectedSecret = Deno.env.get('LIQUIDATION_CRON_SECRET');
-    if (!authHeader.startsWith('Bearer ')) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid authorization format' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } },
-      );
-    }
+  // ALWAYS validate CRON secret - no bypass allowed
+  const CRON_SECRET = Deno.env.get('CRON_SECRET');
+  const providedSecret = req.headers.get('X-Cron-Secret');
 
-    const token = authHeader.substring(7);
-    if (token !== expectedSecret) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid CRON secret' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } },
-      );
-    }
+  if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+    console.error('Unauthorized access attempt to execute-liquidation');
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
   const supabaseClient = createClient(
