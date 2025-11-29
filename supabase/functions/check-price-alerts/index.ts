@@ -1,10 +1,17 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// Input validation schema for defense-in-depth
+const PriceUpdateSchema = z.object({
+  symbol: z.string().trim().min(1, 'Symbol required').max(20, 'Symbol too long').regex(/^[A-Z0-9_]+$/, 'Invalid symbol format'),
+  current_price: z.number().positive('Price must be positive').finite('Price must be finite'),
+});
 
 interface PriceUpdate {
   symbol: string;
@@ -33,7 +40,22 @@ serve(async (req: Request) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { symbol, current_price }: PriceUpdate = await req.json();
+    const body = await req.json();
+
+    // Validate input with Zod
+    const validation = PriceUpdateSchema.safeParse(body);
+    if (!validation.success) {
+      console.error('Invalid input:', validation.error.format());
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid input parameters',
+          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`)
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+      );
+    }
+
+    const { symbol, current_price } = validation.data;
 
     console.log("Checking price alerts for:", symbol, "at price:", current_price);
 

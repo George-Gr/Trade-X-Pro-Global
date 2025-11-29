@@ -1,10 +1,17 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema for defense-in-depth
+const UpdatePnLSchema = z.object({
+  user_id: z.string().uuid('Invalid user_id format'),
+  realized_pnl: z.number().finite('realized_pnl must be a finite number'),
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -29,14 +36,22 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { user_id, realized_pnl } = await req.json();
+    const body = await req.json();
 
-    if (!user_id || realized_pnl === undefined) {
+    // Validate input with Zod
+    const validation = UpdatePnLSchema.safeParse(body);
+    if (!validation.success) {
+      console.error('Invalid input:', validation.error.format());
       return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
+        JSON.stringify({ 
+          error: 'Invalid input parameters',
+          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`)
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { user_id, realized_pnl } = validation.data;
 
     const today = new Date().toISOString().split('T')[0];
 
