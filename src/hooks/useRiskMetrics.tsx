@@ -77,42 +77,24 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       if (positionsError) throw positionsError;
 
-      // Try to fetch margin history (last 7 days) for sparkline
+      // Fetch margin call events for margin trend (last 7 days) for sparkline
       let marginHistoryData: any[] = [];
-      let historyError: any = null;
       
       try {
-        const { data, error } = await supabase
-          .from('margin_history' as any)
-          .select('margin_level')
+        const { data: callEventsData, error: callEventsError } = await supabase
+          .from('margin_call_events')
+          .select('margin_level, triggered_at')
           .eq('user_id', user.id)
-          .gt('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-          .order('created_at', { ascending: true });
+          .gt('triggered_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+          .order('triggered_at', { ascending: true });
 
-        if (error) {
-          console.warn("margin_history table not found, trying margin_call_events fallback:", error);
-          historyError = error;
-          
-          // Fallback to margin_call_events for margin level data
-          const { data: callEventsData, error: callEventsError } = await supabase
-            .from('margin_call_events' as any)
-            .select('margin_level, triggered_at')
-            .eq('user_id', user.id)
-            .gt('triggered_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-            .order('triggered_at', { ascending: true });
-
-          if (callEventsError) {
-            console.warn("Failed to fetch margin_call_events:", callEventsError);
-          } else {
-            marginHistoryData = callEventsData || [];
-            console.log("Using margin_call_events as fallback for margin history");
-          }
+        if (callEventsError) {
+          console.warn("Failed to fetch margin call events:", callEventsError);
         } else {
-          marginHistoryData = data || [];
+          marginHistoryData = callEventsData || [];
         }
       } catch (err) {
         console.warn("Error fetching margin history:", err);
-        historyError = err;
       }
 
       // Convert positions to format needed for calculations
@@ -132,15 +114,9 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       // Set margin trend from history
       if (marginHistoryData && marginHistoryData.length > 0) {
-        // Handle both margin_history and margin_call_events formats
-        const trend = marginHistoryData.map((d: any) => {
-          // If it's margin_call_events format, use margin_level field
-          if ('margin_level' in d) {
-            return d.margin_level;
-          }
-          // If it's margin_history format, use margin_level field
-          return d.margin_level || 0;
-        }).filter((level: number) => level > 0); // Filter out invalid levels
+        const trend = marginHistoryData
+          .map((d: any) => d.margin_level)
+          .filter((level: number) => level > 0); // Filter out invalid levels
         
         if (trend.length > 0) {
           setMarginTrend(trend);
