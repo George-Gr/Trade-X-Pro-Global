@@ -2,8 +2,35 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
-import type { Plugin } from "vite";
+import type { Plugin, Connect } from "vite";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+
+// CORS middleware for development - handles cross-origin requests
+const corsMiddleware = (): Plugin => ({
+  name: 'cors-middleware',
+  apply: 'serve',
+  configResolved() {
+    // Middleware is configured in server.middlewares
+  },
+});
+
+// Custom middleware to add CORS headers and handle OPTIONS requests
+const corsHeadersMiddleware = (req: Connect.IncomingMessage, res: Connect.ServerResponse, next: Connect.NextFunction) => {
+  // Add CORS headers to all responses
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin,X-Requested-With');
+  res.setHeader('Access-Control-Max-Age', '3600');
+  
+  // Handle OPTIONS (preflight) requests
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+  
+  next();
+};
 
 // Safely load lovable-tagger plugin - fails gracefully if not available
 let componentTaggerPlugin: Plugin | undefined = undefined;
@@ -124,11 +151,37 @@ const PWA_CONFIG = {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
+    host: "0.0.0.0",
     port: 8080,
+    strictPort: false,
+    hmr: {
+      // GitHub Codespaces detection and configuration
+      ...(process.env.CODESPACE_NAME ? {
+        protocol: 'wss',
+        host: `${process.env.CODESPACE_NAME}-8080.app.github.dev`,
+        port: 443,
+        clientPort: 443,
+      } : {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 8080,
+      })
+    },
+    // Add CORS headers for development
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type,Authorization,Accept',
+      'Access-Control-Max-Age': '3600',
+    },
+    // Add custom middleware for CORS handling
+    middlewares: [corsHeadersMiddleware],
+    // Middleware mode
+    middlewareMode: false,
   },
   plugins: [
     react(),
+    corsMiddleware(),
     componentTaggerPlugin,
     process.env.ANALYZE && visualizer({ filename: 'dist/bundle-analysis.html', open: false, gzipSize: true }),
     // Sentry source map upload plugin (production only)
@@ -172,6 +225,8 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-tooltip",
       "@radix-ui/react-hover-card",
     ],
+    // Force re-optimization to fix dependency issues
+    force: true,
   },
   build: {
     // Reduced from 600 to 400 - encourages better code splitting
