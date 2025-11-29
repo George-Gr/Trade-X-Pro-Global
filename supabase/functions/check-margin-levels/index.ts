@@ -400,6 +400,18 @@ async function checkMarginLevels(
 }
 
 serve(async (req) => {
+  // Validate CRON_SECRET to prevent unauthorized access
+  const CRON_SECRET = Deno.env.get('CRON_SECRET');
+  const providedSecret = req.headers.get('X-Cron-Secret');
+
+  if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
+    console.error('Unauthorized access attempt to check-margin-levels');
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   const result = await checkMarginLevels(req);
   return new Response(JSON.stringify(result), {
     headers: { 'Content-Type': 'application/json' },
