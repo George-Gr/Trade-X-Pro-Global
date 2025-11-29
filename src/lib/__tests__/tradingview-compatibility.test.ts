@@ -26,7 +26,7 @@ describe('TradingView Compatibility Layer', () => {
     });
     
     // Reset any previous modifications
-    delete (globalThis as any).__tradingViewCompatibilityApplied;
+    delete (globalThis as Record<string, unknown>).__tradingViewCompatibilityApplied;
   });
 
   afterEach(() => {

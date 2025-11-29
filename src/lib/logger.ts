@@ -675,7 +675,7 @@ export const logger = {
     if (isSentryActive()) {
       // Capture as Sentry event with appropriate level
       const sentryLevel = severity === 'critical' ? 'fatal' : severity === 'high' ? 'error' : 'warning';
-      Sentry.captureMessage(message, sentryLevel as any);
+      Sentry.captureMessage(message, sentryLevel as 'fatal' | 'error' | 'warning');
       
       // Add context
       Sentry.setContext('risk_event', {
@@ -715,7 +715,7 @@ export const logger = {
 
     if (isSentryActive()) {
       // Add to Sentry context for performance monitoring
-      Sentry.setMeasurement(name, value, unit as any);
+      Sentry.setMeasurement(name, value, unit as 'nanosecond' | 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'custom');
       
       // Add breadcrumb
       this.addBreadcrumb('metric', `${name}: ${value}${unit}`);

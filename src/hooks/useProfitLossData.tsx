@@ -9,6 +9,7 @@ import * as React from "react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useAuth } from "./useAuth";
 import type { Position, Order, Fill } from "@/integrations/supabase/types/tables";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 const getSupabaseClient = async () => {
   const { supabase } = await import("@/lib/supabaseBrowserClient");
@@ -68,19 +69,24 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
 
   // Calculate profit/loss metrics
   const calculateProfitLossMetrics = useCallback((
-    profile: any,
+    profile: unknown,
     positions: Position[],
-    fills: any[],
+    fills: unknown[],
     dailyData: DailyPnLData[]
   ): ProfitLossMetrics => {
     // Current equity
-    const currentEquity = profile?.equity || 50000;
+    const profileObj = profile as Record<string, unknown>;
+    const currentEquity = typeof profileObj.equity === 'number' ? profileObj.equity : 50000;
 
     // Total realized P&L
-    const totalRealizedPnL = fills.reduce((sum, fill) => sum + (fill.pnl || 0), 0);
+    const totalRealizedPnL = (fills.reduce((sum: number, fill) => {
+      const fillObj = fill as Record<string, unknown>;
+      const pnl = typeof fillObj.pnl === 'number' ? fillObj.pnl : 0;
+      return sum + pnl;
+    }, 0) as number);
 
     // Total unrealized P&L
-    const totalUnrealizedPnL = positions.reduce((sum, pos) => sum + (pos.unrealized_pnl || 0), 0);
+    const totalUnrealizedPnL = positions.reduce((sum: number, pos) => sum + (pos.unrealized_pnl || 0), 0);
 
     // Total P&L
     const totalPnL = totalRealizedPnL + totalUnrealizedPnL;
@@ -134,7 +140,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
   const calculateDailyPnLData = useCallback((
     startDate: Date,
     daysCount: number,
-    fills: any[],
+    fills: unknown[],
     positions: Position[]
   ): DailyPnLData[] => {
     const dailyData: DailyPnLData[] = [];
@@ -145,31 +151,34 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       const dateStr = date.toISOString().split('T')[0];
 
       // Calculate realized P&L for this day
-      const dailyFills = fills.filter(f => 
-        f.executed_at?.split('T')[0] === dateStr
-      );
+      const dailyFills = fills.filter(f => {
+        const fillObj = f as Record<string, unknown>;
+        const executedAt = fillObj.executed_at;
+        return typeof executedAt === 'string' && executedAt.split('T')[0] === dateStr;
+      });
       
-      const realizedPnL = dailyFills.reduce((sum, fill) => {
+      const realizedPnL = (dailyFills.reduce((sum: number, fill) => {
         // Calculate P&L for this fill
-        const pnl = fill.pnl || 0;
+        const fillObj = fill as Record<string, unknown>;
+        const pnl = typeof fillObj.pnl === 'number' ? fillObj.pnl : 0;
         return sum + pnl;
-      }, 0);
+      }, 0) as number);
 
       // Calculate unrealized P&L (from open positions)
-      const unrealizedPnL = positions.reduce((sum, pos) => {
+      const unrealizedPnLValue = positions.reduce((sum: number, pos) => {
         const currentPnL = pos.unrealized_pnl || 0;
         return sum + currentPnL;
       }, 0);
 
       // Estimate equity for this day (simplified calculation)
       const baseEquity = 50000; // Starting balance
-      const equity = baseEquity + realizedPnL + unrealizedPnL;
+      const equity = baseEquity + realizedPnL + unrealizedPnLValue;
 
       dailyData.push({
         date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         realizedPnL,
-        unrealizedPnL,
-        totalPnL: realizedPnL + unrealizedPnL,
+        unrealizedPnL: unrealizedPnLValue,
+        totalPnL: realizedPnL + unrealizedPnLValue,
         equity
       });
     }
@@ -217,7 +226,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       startDate.setDate(startDate.getDate() - daysCount);
 
       const { data: fillsData, error: fillsError } = await supabase
-        .from("fills" as any)
+        .from("fills" as const)
         .select("*")
         .eq("user_id", user.id)
         .gte("executed_at", startDate.toISOString())
@@ -271,9 +280,9 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
   // Set up real-time subscriptions
   useEffect(() => {
     let isMounted = true;
-    let profileChannel: any = null;
-    let positionsChannel: any = null;
-    let fillsChannel: any = null;
+    let profileChannel: RealtimeChannel | null = null;
+    let positionsChannel: RealtimeChannel | null = null;
+    let fillsChannel: RealtimeChannel | null = null;
 
     const setup = async () => {
       if (!user) return;

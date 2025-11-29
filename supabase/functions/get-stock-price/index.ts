@@ -18,7 +18,7 @@ const FOREX_MOCK_DATA: Record<string, { base: number, volatility: number }> = {
   'OANDA:USD_CAD': { base: 1.3850, volatility: 0.0012 },
 };
 
-function generateForexPrice(symbol: string): any {
+function generateForexPrice(symbol: string): Record<string, unknown> | null {
   const mock = FOREX_MOCK_DATA[symbol];
   if (!mock) {
     return null;
@@ -43,7 +43,7 @@ function generateForexPrice(symbol: string): any {
   };
 }
 
-function generateStockFallbackPrice(symbol: string): any {
+function generateStockFallbackPrice(symbol: string): Record<string, unknown> | null {
   const BASELINES: Record<string, { base: number; volatility: number }> = {
     AAPL: { base: 180, volatility: 1.5 },
     TSLA: { base: 230, volatility: 3 },
@@ -74,7 +74,7 @@ function generateStockFallbackPrice(symbol: string): any {
 
 // In-memory cache to reduce rate limiting for stock symbols
 const STOCK_CACHE_TTL_MS = 10000; // 10 seconds
-const stockCache = new Map<string, { data: any; timestamp: number }>();
+const stockCache = new Map<string, { data: unknown; timestamp: number }>();
 
 serve(async (req) => {
   // Handle CORS preflight

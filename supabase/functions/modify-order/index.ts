@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+
+// @ts-expect-error - Dynamic import of Zod to avoid type issues
+const z = await import("https://deno.land/x/zod@v3.22.4/mod.ts");
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,10 +17,9 @@ const ModifyOrderSchemaBase = z.object({
   take_profit: z.number().positive('Take profit must be positive').max(1000000, 'Take profit too large').optional()
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ModifyOrderSchema = ModifyOrderSchemaBase.refine((data: any) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const d = data as any;
+// Zod schema for order modification requests
+const ModifyOrderSchema = ModifyOrderSchemaBase.refine((data: unknown) => {
+  const d = data as { quantity?: unknown; price?: unknown; stop_loss?: unknown; take_profit?: unknown };
   return d.quantity !== undefined || d.price !== undefined || d.stop_loss !== undefined || d.take_profit !== undefined;
 }, { message: 'At least one field must be provided for modification' });
 

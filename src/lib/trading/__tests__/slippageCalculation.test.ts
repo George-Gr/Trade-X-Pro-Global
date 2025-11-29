@@ -350,7 +350,7 @@ describe('Slippage Calculation Engine', () => {
             orderSizePercentage: 1,
             isAfterHours: false,
           },
-        } as any)
+        } as Record<string, unknown>)
       ).toThrow();
     });
 

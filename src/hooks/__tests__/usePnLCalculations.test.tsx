@@ -29,8 +29,15 @@ interface MockPosition {
   currentPrice: number;
   marginRequired?: number;
 }
-// Return type changed to any for test compatibility
-function createMockPosition(overrides?: Partial<MockPosition>): any {
+
+interface MockPnLPosition extends MockPosition {
+  margin_required?: number;
+  entry_price: number;
+  current_price: number;
+}
+
+// Return type changed to proper typing for test compatibility
+function createMockPosition(overrides?: Partial<MockPosition>): MockPnLPosition {
   const mockPosition: MockPosition = {
     id: 'pos-1',
     symbol: 'EURUSD',
@@ -44,16 +51,11 @@ function createMockPosition(overrides?: Partial<MockPosition>): any {
 
   // Return a PnLPosition-like object for usePnLCalculations
   return {
-    id: mockPosition.id,
-    symbol: mockPosition.symbol,
-    side: mockPosition.side === 'long' ? 'long' : 'short',
-    quantity: mockPosition.quantity,
-    entryPrice: mockPosition.entryPrice,
-    currentPrice: mockPosition.currentPrice,
+    ...mockPosition,
     margin_required: mockPosition.marginRequired,
     entry_price: mockPosition.entryPrice,
     current_price: mockPosition.currentPrice,
-  } as any;
+  };
 }
 
 // ============================================================================
@@ -73,7 +75,7 @@ describe('usePnLCalculations Hook: Initialization', () => {
   });
 
   it('should handle single position with profitable state', () => {
-    const positions: unknown[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.0900,
         currentPrice: 1.1000,
@@ -92,7 +94,7 @@ describe('usePnLCalculations Hook: Initialization', () => {
   });
 
   it('should handle single position with loss state', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.0900,
         currentPrice: 1.0800,
@@ -117,7 +119,7 @@ describe('usePnLCalculations Hook: Initialization', () => {
 
 describe('usePnLCalculations Hook: Multiple Positions', () => {
   it('should aggregate P&L from multiple positions', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         id: 'pos-1',
         symbol: 'EURUSD',
@@ -146,7 +148,7 @@ describe('usePnLCalculations Hook: Multiple Positions', () => {
   });
 
   it('should track win rate from multiple positions', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({ id: 'pos-1', currentPrice: 1.1000 }), // profit if price is 1.1000
       createMockPosition({ id: 'pos-2', currentPrice: 1.0800 }), // loss
     ];
@@ -174,7 +176,7 @@ describe('usePnLCalculations Hook: Multiple Positions', () => {
 
 describe('usePnLCalculations Hook: Memoization', () => {
   it('should memoize position P&L map', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.0900,
         currentPrice: 1.0900,
@@ -200,7 +202,7 @@ describe('usePnLCalculations Hook: Memoization', () => {
   });
 
   it('should recalculate when price changes', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.0900,
         currentPrice: 1.0900,
@@ -234,7 +236,7 @@ describe('usePnLCalculations Hook: Memoization', () => {
 
 describe('usePnLCalculations Hook: Real-Time Updates', () => {
   it('should handle rapid price updates', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.0900,
         currentPrice: 1.0900,
@@ -300,7 +302,7 @@ describe('usePnLCalculations Hook: Utility Functions', () => {
   });
 
   it('should get position P&L by position', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         id: 'pos-1',
         entryPrice: 1.0900,
@@ -321,7 +323,7 @@ describe('usePnLCalculations Hook: Utility Functions', () => {
   });
 
   it('should handle missing price gracefully', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({ symbol: 'EURUSD' }),
     ];
 
@@ -341,7 +343,7 @@ describe('usePnLCalculations Hook: Utility Functions', () => {
 
 describe('usePnLCalculations Hook: Edge Cases', () => {
   it('should handle very large position quantities', () => {
-    const positions: any[] = [
+    const positions: MockPnLPosition[] = [
       createMockPosition({
         quantity: 1000000,
         entryPrice: 1.0900,
@@ -367,7 +369,7 @@ describe('usePnLCalculations Hook: Edge Cases', () => {
       currentPrice: 1.0901, // Use the updated currentPrice in prices map
     });
 
-    const positions: any[] = [position];
+    const positions: MockPnLPosition[] = [position];
     // Provide a price that matches the position's symbol
     const prices = new Map([['EURUSD', 1.0901]]);
 

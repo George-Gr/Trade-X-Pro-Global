@@ -6,13 +6,13 @@
 interface ChartCalculationRequest {
   id: string;
   type: 'calculateTrend' | 'normalizeData' | 'generateSparkline' | 'optimizeData';
-  data: any;
+  data: Record<string, unknown>;
 }
 
 interface ChartCalculationResponse {
   id: string;
   success: boolean;
-  result?: any;
+  result?: Record<string, unknown> | Record<string, unknown>[];
   error?: string;
 }
 
@@ -58,7 +58,7 @@ const normalizeData = (data: { value: number }[]): { value: number }[] => {
   }));
 };
 
-const generateSparkline = (values: number[], labels?: string[]): any[] => {
+const generateSparkline = (values: number[], labels?: string[]): Array<{ date: string; value: number; label?: string }> => {
   return values.map((value, index) => ({
     date: labels?.[index] || new Date(Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000)
       .toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }),
@@ -67,14 +67,15 @@ const generateSparkline = (values: number[], labels?: string[]): any[] => {
   }));
 };
 
-const optimizeLargeDataset = (data: any[], maxPoints: number = 1000): any[] => {
-  if (data.length <= maxPoints) return data;
+const optimizeLargeDataset = (data: unknown | unknown[], maxPoints: number = 1000): unknown[] => {
+  const arr = Array.isArray(data) ? data : [];
+  if (arr.length <= maxPoints) return arr;
 
-  const step = Math.ceil(data.length / maxPoints);
+  const step = Math.ceil(arr.length / maxPoints);
   const optimized = [];
 
-  for (let i = 0; i < data.length; i += step) {
-    optimized.push(data[i]);
+  for (let i = 0; i < arr.length; i += step) {
+    optimized.push(arr[i]);
   }
 
   return optimized;
@@ -82,20 +83,20 @@ const optimizeLargeDataset = (data: any[], maxPoints: number = 1000): any[] => {
 
 const performCalculation = (request: ChartCalculationRequest): ChartCalculationResponse => {
   try {
-    let result: any;
+    let result: Record<string, unknown> | Record<string, unknown>[] | unknown[];
 
     switch (request.type) {
       case 'calculateTrend':
-        result = calculateTrend(request.data.values);
+        result = calculateTrend((request.data.values as number[]) || []);
         break;
       case 'normalizeData':
-        result = normalizeData(request.data.data);
+        result = normalizeData((request.data.data as Array<{ value: number }>) || []);
         break;
       case 'generateSparkline':
-        result = generateSparkline(request.data.values, request.data.labels);
+        result = generateSparkline((request.data.values as number[]) || [], request.data.labels as string[] | undefined);
         break;
       case 'optimizeData':
-        result = optimizeLargeDataset(request.data.data, request.data.maxPoints || 1000);
+        result = optimizeLargeDataset(request.data.data, (request.data.maxPoints as number) || 1000);
         break;
       default:
         throw new Error(`Unknown calculation type: ${request.type}`);
@@ -104,7 +105,7 @@ const performCalculation = (request: ChartCalculationRequest): ChartCalculationR
     return {
       id: request.id,
       success: true,
-      result
+      result: result as Record<string, unknown> | Record<string, unknown>[]
     };
   } catch (error) {
     return {

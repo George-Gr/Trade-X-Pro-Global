@@ -1,7 +1,9 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+
+// @ts-expect-error - Deno dynamic import
+const z = await import("https://deno.land/x/zod@v3.22.4/mod.ts");
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -47,7 +49,7 @@ const ClosePositionSchema = z.object({
     .optional(),
 });
 
-serve(async (req) => {
+Deno.serve(async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -105,7 +107,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-          details: validation.error.issues.map((i: any) => `${i.path.join('.')}: ${i.message}`).join(', ')
+          details: validation.error.issues.map((issue: unknown) => `${(issue as { path: string[]; message: string }).path.join('.')}: ${(issue as { path: string[]; message: string }).message}`).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -230,7 +232,7 @@ serve(async (req) => {
     const normalSlippage = 0.1; // 0.1%
     let slippagePercent = normalSlippage;
     
-    const reason: ClosureReason = (validation.data as any).reason || ClosureReason.MANUAL_USER;
+    const reason: ClosureReason = ((validation.data as unknown) as Record<string, unknown>).reason as ClosureReason || ClosureReason.MANUAL_USER;
     
     if (reason === ClosureReason.LIQUIDATION || reason === ClosureReason.MARGIN_CALL) {
       slippagePercent = normalSlippage * 1.5; // 1.5x worse

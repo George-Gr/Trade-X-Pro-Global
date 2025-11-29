@@ -3,6 +3,12 @@
 
 import { describe, it, expect, vi } from 'vitest';
 
+interface ZodIssue {
+  message: string;
+  path: string[];
+  code: string;
+}
+
 // Mock the supabase client used by the Edge function
 vi.mock('https://esm.sh/@supabase/supabase-js@2.79.0', () => ({
   createClient: () => ({
@@ -49,7 +55,7 @@ vi.mock('https://esm.sh/@supabase/supabase-js@2.79.0', () => ({
               }
             })
           }),
-          update: (payload: any) => ({
+          update: (payload: Record<string, unknown>) => ({
             eq: (col: string, val: string) => ({
               select: () => ({
                 single: async () => {
@@ -62,7 +68,7 @@ vi.mock('https://esm.sh/@supabase/supabase-js@2.79.0', () => ({
       }
       if (table === 'kyc_audit') {
         return {
-          insert: async (payload: any) => {
+          insert: async (payload: Record<string, unknown>) => {
             if (!payload.kyc_request_id) return { error: { message: 'Missing kyc_request_id' } };
             return { data: { id: 'audit-1', ...payload }, error: null };
           }

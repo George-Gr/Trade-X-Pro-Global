@@ -323,7 +323,7 @@ describe('Task 1.2: Margin Call & Liquidation System', () => {
       const notification = generateMarginCallNotification(marginCall);
       expect(notification.type).toBe('MARGIN_CALL');
       expect(notification.priority).toBe('CRITICAL');
-      expect((notification.actions as any[]).length).toBeGreaterThan(0);
+      expect((notification.actions as unknown[]).length).toBeGreaterThan(0);
     });
 
     it('should generate liquidation notification after execution', () => {
@@ -367,7 +367,7 @@ describe('Task 1.2: Margin Call & Liquidation System', () => {
       const notification = generateLiquidationNotification(liquidationEvent, mockResult);
       expect(notification.type).toBe('LIQUIDATION');
       expect(notification.priority).toBe('CRITICAL');
-      expect((notification.metadata as any).positionsClosed).toBe(3);
+      expect(((notification.metadata as unknown) as Record<string, unknown>).positionsClosed).toBe(3);
     });
 
     it('should include specific action items in margin call notification', () => {

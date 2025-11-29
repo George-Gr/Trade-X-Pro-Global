@@ -448,7 +448,7 @@ describe("useRealtimePositions: Connection Status", () => {
 
 describe("useRealtimePositions: Lifecycle & Cleanup", () => {
   it("should cleanup subscription on unmount", () => {
-    let channel: any = { id: "test-channel" };
+    let channel: Record<string, unknown> = { id: "test-channel" };
     const cleanup = () => {
       channel = null;
     };
@@ -468,7 +468,7 @@ describe("useRealtimePositions: Lifecycle & Cleanup", () => {
   });
 
   it("should prevent memory leaks with multiple mount/unmount cycles", () => {
-    const subscriptions: any[] = [];
+    const subscriptions: unknown[] = [];
 
     for (let i = 0; i < 10; i++) {
       const sub = { id: `sub-${i}` };

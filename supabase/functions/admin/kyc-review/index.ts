@@ -2,12 +2,18 @@
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
 
+interface ZodIssue {
+  message: string;
+  path: string[];
+  code: string;
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -124,7 +130,7 @@ serve(async (req: Request) => {
     }
 
     // Update user profile KYC status
-    const profileUpdate: any = { kyc_status: statusAfter };
+    const profileUpdate: Record<string, unknown> = { kyc_status: statusAfter };
     if (action === 'approve') {
       profileUpdate.kyc_status = 'approved';
       profileUpdate.kyc_verified_at = new Date().toISOString();

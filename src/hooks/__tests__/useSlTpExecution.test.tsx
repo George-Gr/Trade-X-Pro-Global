@@ -44,7 +44,7 @@ describe('useSlTpExecution', () => {
     vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
       data: { data: mockResponse },
       error: null,
-    } as any);
+    } as { data: Record<string, unknown>; error: unknown });
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -88,7 +88,7 @@ describe('useSlTpExecution', () => {
     vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
       data: { data: mockResponse },
       error: null,
-    } as any);
+    } as { data: Record<string, unknown>; error: unknown });
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -135,7 +135,7 @@ describe('useSlTpExecution', () => {
       .mockResolvedValueOnce({
         data: { data: mockResponse },
         error: null,
-      } as any);
+      } as { data: Record<string, unknown>; error: unknown });
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -243,7 +243,7 @@ describe('useSlTpExecution', () => {
     vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
       data: { data: mockResponse },
       error: null,
-    } as any);
+    } as { data: Record<string, unknown>; error: unknown });
 
     const { result } = renderHook(() => useSlTpExecution());
 

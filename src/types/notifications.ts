@@ -5,7 +5,7 @@ export interface TradingAlertData {
   symbol: string;
   message: string;
   severity: 'info' | 'warning' | 'critical';
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 export interface UserNotification {
@@ -16,7 +16,7 @@ export interface UserNotification {
   icon?: string;
   badge?: string;
   tag?: string;
-  data?: any;
+  data?: Record<string, unknown>;
   read: boolean;
   createdAt: Date;
   expiresAt?: Date;
@@ -155,7 +155,7 @@ export interface CreateNotificationRequest {
   target?: 'all' | 'segment' | 'specific';
   segment?: string;
   users?: string[];
-  data?: any;
+  data?: Record<string, unknown>;
   scheduledFor?: Date;
   priority?: 'low' | 'normal' | 'high' | 'urgent';
 }
@@ -175,7 +175,7 @@ export interface TestNotificationRequest {
   type: 'push' | 'email' | 'inapp';
   title: string;
   body: string;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 // Response types
@@ -213,6 +213,6 @@ export interface WebSocketSubscriptionEvent {
   type: 'subscription_update';
   data: {
     action: 'created' | 'updated' | 'deleted';
-    subscription: any;
+    subscription: Record<string, unknown>;
   };
 }

@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
-declare const Deno: any;
+// Deno type declarations are now in types/deno.d.ts
 
 import {
   validateOrderInput,
@@ -67,9 +67,9 @@ interface AssetSpec {
   pip_size?: number;
 }
 
-serve(async (req: any) => {
+serve(async (req: unknown) => {
   // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
+  if ((req as Request).method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -77,10 +77,8 @@ serve(async (req: any) => {
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // Get user from JWT
-    const authHeader = req.headers.get('Authorization');
+    const supabase = createClient(supabaseUrl, supabaseKey);    // Get user from JWT
+    const authHeader = (req as Request).headers.get('Authorization');
     if (!authHeader) {
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
@@ -101,7 +99,8 @@ serve(async (req: any) => {
     // Rate limit already handled via RPC in existing code; standardized to 100/min
 
     // Restore proper rate limit check (100/min)
-    const { data: rateLimitOk } = await (supabase as any).rpc('check_rate_limit', {
+    // @ts-expect-error - Supabase type casting
+    const { data: rateLimitOk } = await (supabase as unknown).rpc('check_rate_limit', {
       p_user_id: user.id,
       p_endpoint: 'execute-order',
       p_max_requests: 100,
@@ -116,7 +115,7 @@ serve(async (req: any) => {
     }
 
     // Parse and validate request body using shared validators
-    const body = await req.json();
+    const body = await (req as Request).json();
     let orderRequest: OrderRequest;
     try {
       orderRequest = await validateOrderInput(body);
@@ -239,7 +238,8 @@ serve(async (req: any) => {
       }
 
       // Check max open positions
-      const { count: openPositionsCount } = await (supabase as any)
+      // @ts-expect-error - Supabase type casting
+      const { count: openPositionsCount } = await (supabase as unknown)
         .from('positions')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id)
@@ -470,7 +470,8 @@ serve(async (req: any) => {
     // =========================================
     if (orderRequest.order_type !== 'market') {
       
-      const { data: pendingOrder, error: pendingError } = await (supabase as any)
+      // @ts-expect-error - Supabase type casting
+      const { data: pendingOrder, error: pendingError } = await (supabase as unknown)
         .from('orders')
         .insert({
           user_id: user.id,
@@ -529,7 +530,8 @@ serve(async (req: any) => {
     // STEP 11: Execute order atomically via stored procedure (market orders only)
     // =========================================
     
-    const { data: result, error: execError } = await (supabase as any).rpc('execute_order_atomic', {
+    // @ts-expect-error - Supabase type casting
+    const { data: result, error: execError } = await (supabase as unknown).rpc('execute_order_atomic', {
       p_user_id: user.id,
       p_symbol: orderRequest.symbol,
       p_order_type: orderRequest.order_type,

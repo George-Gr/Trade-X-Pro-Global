@@ -285,7 +285,7 @@ export class AlertManager {
   /**
    * Trigger an alert
    */
-  async triggerAlert(rule: AlertRule, metrics: Record<string, number>, context?: any): Promise<void> {
+  async triggerAlert(rule: AlertRule, metrics: Record<string, number>, context?: Record<string, unknown>): Promise<void> {
     this.lastAlertTime.set(rule.id, Date.now());
     
     console.warn(`[ALERT] ${rule.severity.toUpperCase()}: ${rule.name}`, {
@@ -308,7 +308,7 @@ export class AlertManager {
     channel: AlertChannel,
     rule: AlertRule,
     metrics: Record<string, number>,
-    context?: any
+    context?: Record<string, unknown>
   ): Promise<void> {
     const message = this.formatAlertMessage(rule, metrics, context);
     
@@ -334,7 +334,7 @@ export class AlertManager {
   private formatAlertMessage(
     rule: AlertRule,
     metrics: Record<string, number>,
-    context?: any
+    context?: Record<string, unknown>
   ): string {
     const timestamp = new Date().toISOString();
     const environment = import.meta.env.MODE;
@@ -391,7 +391,7 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
   /**
    * Get alert statistics
    */
-  getAlertStats(): Record<string, any> {
+  getAlertStats(): Record<string, unknown> {
     return {
       totalRules: CRITICAL_ALERT_RULES.length,
       enabledRules: CRITICAL_ALERT_RULES.filter(rule => rule.enabled).length,

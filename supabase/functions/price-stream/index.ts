@@ -33,7 +33,7 @@ const CACHE_TTL_MS = 2000; // 2 seconds
 /**
  * Fetch price from Finnhub (primary provider)
  */
-async function fetchFromFinnhub(symbol: string): Promise<any> {
+async function fetchFromFinnhub(symbol: string): Promise<Record<string, unknown>> {
   const apiKey = Deno.env.get('FINNHUB_API_KEY');
   if (!apiKey) throw new Error('Finnhub API key not configured');
 
@@ -49,7 +49,7 @@ async function fetchFromFinnhub(symbol: string): Promise<any> {
 /**
  * Fetch price from Twelve Data (secondary provider)
  */
-async function fetchFromTwelveData(symbol: string): Promise<any> {
+async function fetchFromTwelveData(symbol: string): Promise<Record<string, unknown>> {
   const apiKey = Deno.env.get('TWELVE_DATA_API_KEY');
   if (!apiKey) throw new Error('Twelve Data API key not configured');
 
@@ -77,7 +77,7 @@ async function fetchFromTwelveData(symbol: string): Promise<any> {
 /**
  * Fetch price from Alpha Vantage (tertiary provider)
  */
-async function fetchFromAlphaVantage(symbol: string): Promise<any> {
+async function fetchFromAlphaVantage(symbol: string): Promise<Record<string, unknown>> {
   const apiKey = Deno.env.get('ALPHA_VANTAGE_API_KEY');
   if (!apiKey) throw new Error('Alpha Vantage API key not configured');
 
@@ -108,7 +108,7 @@ async function fetchFromAlphaVantage(symbol: string): Promise<any> {
 /**
  * Generate fallback price for common symbols
  */
-function generateFallbackPrice(symbol: string): any {
+function generateFallbackPrice(symbol: string): Record<string, unknown> {
   const BASELINES: Record<string, { base: number; volatility: number }> = {
     AAPL: { base: 180, volatility: 1.5 },
     TSLA: { base: 230, volatility: 3 },
@@ -123,7 +123,7 @@ function generateFallbackPrice(symbol: string): any {
   };
   
   const mock = BASELINES[symbol];
-  if (!mock) return null;
+  if (!mock) return {};
   
   const randomChange = (Math.random() - 0.5) * 2 * mock.volatility;
   const current = mock.base + randomChange;
@@ -144,7 +144,7 @@ function generateFallbackPrice(symbol: string): any {
 /**
  * Fetch price with automatic fallback
  */
-async function fetchPriceWithFallback(symbol: string): Promise<any> {
+async function fetchPriceWithFallback(symbol: string): Promise<Record<string, unknown>> {
   const now = Date.now();
   const cached = priceCache[symbol];
   
@@ -170,7 +170,7 @@ async function fetchPriceWithFallback(symbol: string): Promise<any> {
       console.log(`Trying ${provider.name} for ${symbol}`);
       const data = await provider.fn(symbol);
       
-      if (data && data.c > 0) {
+      if (data && typeof data.c === 'number' && data.c > 0) {
         priceCache[symbol] = {
           price: data.c,
           timestamp: now,
@@ -198,10 +198,10 @@ async function fetchPriceWithFallback(symbol: string): Promise<any> {
   
   // Generate fallback
   const fallback = generateFallbackPrice(symbol);
-  if (fallback) {
+  if (fallback && Object.keys(fallback).length > 0) {
     console.warn(`All providers failed, using fallback for ${symbol}`);
     priceCache[symbol] = {
-      price: fallback.c,
+      price: (fallback.c as number) || 0,
       timestamp: now,
       provider: 'fallback',
     };
@@ -211,7 +211,7 @@ async function fetchPriceWithFallback(symbol: string): Promise<any> {
   throw new Error(`Unable to fetch price for ${symbol}`);
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -221,6 +221,7 @@ serve(async (req) => {
   
   // WebSocket connection for streaming
   if (upgradeHeader.toLowerCase() === 'websocket') {
+    // @ts-expect-error - Deno WebSocket upgrade API (not in types)
     const { socket, response } = Deno.upgradeWebSocket(req);
     
     let intervalId: number | null = null;
@@ -231,9 +232,10 @@ serve(async (req) => {
       socket.send(JSON.stringify({ type: 'connected', timestamp: Date.now() }));
     };
     
-    socket.onmessage = async (event) => {
+    socket.onmessage = async (event: Event) => {
       try {
-        const message = JSON.parse(event.data);
+        const messageEvent = event as MessageEvent;
+        const message = JSON.parse(messageEvent.data);
         console.log('Received message:', message);
         
         if (message.type === 'subscribe') {
@@ -247,7 +249,7 @@ serve(async (req) => {
           
           // Start streaming prices
           intervalId = setInterval(async () => {
-            const prices: any = {};
+            const prices: Record<string, unknown> = {};
             
             for (const symbol of subscribedSymbols) {
               try {
@@ -301,7 +303,7 @@ serve(async (req) => {
       }
     };
     
-    socket.onerror = (error) => {
+    socket.onerror = (error: Event) => {
       console.error('WebSocket error:', error);
     };
     

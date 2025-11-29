@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 
 /**
  * Advanced Margin Call System with Escalation
@@ -221,7 +221,7 @@ serve(async (req) => {
             severity: newSeverity,
             status: shouldLiquidate ? 'escalated' : existingCall.status,
             escalated_at: new Date().toISOString(),
-            escalation_count: (existingCall as any).escalation_count + 1,
+            escalation_count: ((existingCall as unknown) as Record<string, unknown>).escalation_count as number + 1,
             margin_level: marginLevel,
             account_equity: user.equity,
             margin_used: user.margin_used,

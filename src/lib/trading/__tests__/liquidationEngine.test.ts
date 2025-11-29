@@ -580,7 +580,7 @@ describe('Liquidation Engine - Validation', () => {
       updatedAt: new Date(),
     };
 
-    expect(validateLiquidationEvent(event as any)).toBe(false);
+    expect(validateLiquidationEvent(event as unknown as LiquidationEvent)).toBe(false);
   });
 
   it('should reject negative margin levels', () => {
@@ -608,6 +608,6 @@ describe('Liquidation Engine - Validation', () => {
       updatedAt: new Date(),
     };
 
-    expect(validateLiquidationEvent(event as any)).toBe(false);
+    expect(validateLiquidationEvent(event as unknown as LiquidationEvent)).toBe(false);
   });
 });

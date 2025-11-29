@@ -98,7 +98,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       usersToCheck = (users || []).map((u: { id: string }) => u.id);
     }
 
-    const results: any[] = [];
+    const results: unknown[] = [];
     let alertsCreated = 0;
     let statusChanges = 0;
 

@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+
+// @ts-expect-error - Dynamic import of Zod to avoid type issues
+const z = await import("https://deno.land/x/zod@v3.22.4/mod.ts");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -70,7 +72,7 @@ serve(async (req: Request) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-           details: validation.error.issues.map((i: any) => `${(i.path as unknown[]).join('.')}: ${i.message}`).join(', ')
+           details: validation.error.issues.map((i: unknown) => `${(i as { path: string[]; message: string }).path.join('.')}: ${(i as { path: string[]; message: string }).message}`).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

@@ -15,6 +15,7 @@ import {
   PortfolioRiskAssessment,
 } from "@/lib/risk/riskMetrics";
 import type { Position } from "@/integrations/supabase/types/tables";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 const getSupabaseClient = async () => {
   const { supabase } = await import("@/lib/supabaseBrowserClient");
@@ -78,7 +79,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       if (positionsError) throw positionsError;
 
       // Fetch margin call events for margin trend (last 7 days) for sparkline
-      let marginHistoryData: any[] = [];
+      let marginHistoryData: unknown[] = [];
       
       try {
         const { data: callEventsData, error: callEventsError } = await supabase
@@ -115,7 +116,10 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       // Set margin trend from history
       if (marginHistoryData && marginHistoryData.length > 0) {
         const trend = marginHistoryData
-          .map((d: any) => d.margin_level)
+          .map((d: unknown) => {
+            const dObj = d as Record<string, unknown>;
+            return typeof dObj.margin_level === 'number' ? dObj.margin_level : 0;
+          })
           .filter((level: number) => level > 0); // Filter out invalid levels
         
         if (trend.length > 0) {
@@ -157,8 +161,8 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
   // Set up real-time subscriptions
   useEffect(() => {
     let isMounted = true;
-    let profileChannel: any = null;
-    let positionsChannel: any = null;
+    let profileChannel: RealtimeChannel | null = null;
+    let positionsChannel: RealtimeChannel | null = null;
 
     const setup = async () => {
       if (!user) return;

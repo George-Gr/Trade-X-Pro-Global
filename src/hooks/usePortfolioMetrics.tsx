@@ -103,9 +103,10 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       // Build equity history (using realized_pnl as proxy since equity column doesn't exist in daily_pnl_tracking)
       const history: number[] = [];
       if (portfolioHistory && Array.isArray(portfolioHistory)) {
-        portfolioHistory.forEach((h: any) => {
-          if (h && typeof h.realized_pnl === 'number') {
-            history.push(h.realized_pnl);
+        portfolioHistory.forEach((h: unknown) => {
+          const historyObj = h as Record<string, unknown>;
+          if (historyObj && typeof historyObj.realized_pnl === 'number') {
+            history.push(historyObj.realized_pnl);
           }
         });
       }
@@ -114,10 +115,13 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       }
 
       // Build trade statistics from closed positions
-      const trades = (closedPositions || []).map((p: any) => ({
-        pnl: p.realized_pnl || 0,
-        isProfit: (p.realized_pnl || 0) > 0,
-      }));
+      const trades = (closedPositions || []).map((p: unknown) => {
+        const posObj = p as Record<string, unknown>;
+        return {
+          pnl: typeof posObj.realized_pnl === 'number' ? posObj.realized_pnl : 0,
+          isProfit: (typeof posObj.realized_pnl === 'number' ? posObj.realized_pnl : 0) > 0,
+        };
+      });
 
       // Calculate unrealized P&L from open positions
       const unrealizedPnL = (positionsData as Position[]).reduce(
@@ -168,8 +172,9 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
         .in("symbol", positionValues.map(p => p.symbol).filter(Boolean));
 
       if (assetSpecs.data) {
-        assetSpecs.data.forEach((spec: any) => {
-          symbolToAssetClass[spec.symbol] = spec.asset_class || "Other";
+        assetSpecs.data.forEach((spec: unknown) => {
+          const specObj = spec as Record<string, unknown>;
+          symbolToAssetClass[specObj.symbol as string] = (specObj.asset_class as string) || "Other";
         });
       }
 
@@ -258,7 +263,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
  */
 export const useDrawdownAnalysis = () => {
   const { user } = useAuth();
-  const [drawdownData, setDrawdownData] = useState<any>(null);
+  const [drawdownData, setDrawdownData] = useState<DrawdownAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -286,7 +291,10 @@ export const useDrawdownAnalysis = () => {
           .gte("date", thirtyDaysAgo.toISOString())
           .order("date", { ascending: true });
 
-        const equityValues = (history || []).map((h: any) => 'equity' in h ? Number(h.equity) || 0 : 0);
+        const equityValues = (history || []).map((h: unknown) => {
+          const hObj = h as Record<string, unknown>;
+          return 'equity' in hObj ? Number(hObj.equity) || 0 : 0;
+        });
         const peakEquity = Math.max(...equityValues, profile?.equity || 0);
 
         const analysis = analyzeDrawdown(

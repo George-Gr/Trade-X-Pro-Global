@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, expect, describe, it } from 'vitest';
 
 // Polyfill ResizeObserver
-const globalObj = globalThis as any;
+const globalObj = globalThis as Record<string, unknown>;
 if (typeof globalObj.ResizeObserver === 'undefined') {
   globalObj.ResizeObserver = class {
     observe() {}

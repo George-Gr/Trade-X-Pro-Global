@@ -21,10 +21,24 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
-  // Re-enable stricter typing rules incrementally. Start with warning so we can
-  // address usages progressively without failing CI locally.
-  "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-object-type": "off",
+      
+      // Prevent listener leaks
+      "no-restricted-globals": [
+        "error",
+        {
+          name: "addEventListener",
+          message: "Use React's useEffect hook with proper cleanup instead of direct addEventListener"
+        },
+        {
+          name: "removeEventListener", 
+          message: "Use React's useEffect cleanup instead of direct removeEventListener"
+        }
+      ],
+      
+      // Enforce proper cleanup
+      "react-hooks/exhaustive-deps": "warn",
     },
   },
 );

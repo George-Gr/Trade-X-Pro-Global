@@ -64,7 +64,7 @@ export interface LiquidationEvent {
   total_realized_pnl: number;
   totalSlippageApplied: number;
   details: {
-    closedPositions: any[];
+    closedPositions: unknown[];
     failedPositions: Array<{ positionId: string; error: string }>;
   };
   notes: string | null;
@@ -283,27 +283,29 @@ export function checkLiquidationSafety(
  */
 export function generateLiquidationNotification(
   event: LiquidationEvent,
-  result: any,
+  result: unknown,
 ): {
   type: string;
   priority: string;
   title: string;
   message: string;
-  metadata: any;
+  metadata: unknown;
 } {
+  const resultTyped = result as Record<string, unknown>;
   return {
     type: 'LIQUIDATION',
     priority: 'CRITICAL',
-    title: result.success ? 'Account Liquidated' : 'Liquidation Failed',
-    message: result.message,
+    title: (resultTyped.success as boolean) ? 'Account Liquidated' : 'Liquidation Failed',
+    message: resultTyped.message as string,
     metadata: {
       liquidationEventId: event.id,
-      positionsClosed: result.totalPositionsClosed,
-      totalLoss: result.totalLossRealized,
-      finalMarginLevel: result.finalMarginLevel,
+      positionsClosed: resultTyped.totalPositionsClosed,
+      totalLoss: resultTyped.totalLossRealized,
+      finalMarginLevel: resultTyped.finalMarginLevel,
       initialMarginLevel: event.initialMarginLevel,
-      executionTimeMs: result.executionTimeMs,
-      closedPositions: result.closedPositions.map((p: any) => ({
+      executionTimeMs: resultTyped.executionTimeMs,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      closedPositions: (resultTyped.closedPositions as any[]).map((p: any) => ({
         symbol: p.symbol,
         quantity: p.quantity,
         realizedPnL: p.realizedPnL,
@@ -344,9 +346,11 @@ export function calculateLiquidationMetrics(event: LiquidationEvent): {
     };
   }
 
-  const losses = positions.map((p: any) => p.realizedPnL || p.pnlPercentage || 0);
+  // @ts-expect-error - Position type inference
+  const losses = positions.map((p: { realizedPnL?: number; pnlPercentage?: number }) => p.realizedPnL || p.pnlPercentage || 0);
   const totalLoss = losses.reduce((a, b) => a + b, 0);
-  const slippages = positions.map((p: any) => p.slippage || 0);
+  // @ts-expect-error - Position type inference
+  const slippages = positions.map((p: { slippage?: number }) => p.slippage || 0);
   const totalSlippage = slippages.reduce((a, b) => a + b, 0);
 
   return {
@@ -385,7 +389,7 @@ export function formatLiquidationStatus(status: LiquidationStatus): {
   color: string;
   bgColor: string;
 } {
-  const styles: Record<LiquidationStatus, any> = {
+  const styles: Record<LiquidationStatus, { label: string; color: string; bgColor: string }> = {
     [LiquidationStatus.PENDING]: {
       label: 'Pending',
       color: 'text-yellow-600',
@@ -432,7 +436,7 @@ export function estimateExecutionTime(positionCount: number): number {
 /**
  * Validates liquidation event structure
  */
-export function validateLiquidationEvent(event: any): boolean {
+export function validateLiquidationEvent(event: { id: string; userId: string; initialMarginLevel: number; finalMarginLevel: number; status: LiquidationStatus; reason: LiquidationReason }): boolean {
   try {
     if (!event.id || typeof event.id !== 'string') return false;
     if (!event.userId || typeof event.userId !== 'string') return false;

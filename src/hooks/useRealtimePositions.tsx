@@ -287,7 +287,7 @@ export function useRealtimePositions(
               table: 'positions',
               filter: `user_id=eq.${userId}`,
             },
-            (payload: any) => {
+            (payload: unknown) => {
               if (debounceTimerRef.current) {
                 clearTimeout(debounceTimerRef.current);
               }
@@ -330,7 +330,7 @@ export function useRealtimePositions(
   const unsubscribe = useCallback(async () => {
     if (subscriptionRef.current) {
       try {
-        await supabase.removeChannel(subscriptionRef.current as any);
+        await supabase.removeChannel(subscriptionRef.current as ReturnType<typeof supabase.channel>);
         subscriptionRef.current = null;
         setIsSubscribed(false);
         setConnectionStatus("disconnected");

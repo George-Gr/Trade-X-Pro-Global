@@ -4,13 +4,13 @@ export class ValidationError extends Error {
   constructor(status: number, message: string, details?: string);
 }
 
-export function validateOrderInput(body: unknown): Promise<any>;
-export function validateAssetExists(supabase: any, symbol: string): Promise<any>;
-export function validateQuantity(orderRequest: any, assetSpec: any): void;
-export function validateAccountStatus(profile: any): void;
-export function validateKYCStatus(profile: any): void;
-export function validateMarketHours(assetSpec: any, now?: Date): boolean;
-export function validateLeverage(profile: any, assetSpec: any): boolean;
+export function validateOrderInput(body: unknown): Promise<Record<string, unknown>>;
+export function validateAssetExists(supabase: unknown, symbol: string): Promise<Record<string, unknown>>;
+export function validateQuantity(orderRequest: unknown, assetSpec: unknown): void;
+export function validateAccountStatus(profile: unknown): void;
+export function validateKYCStatus(profile: unknown): void;
+export function validateMarketHours(assetSpec: unknown, now?: Date): boolean;
+export function validateLeverage(profile: unknown, assetSpec: unknown): boolean;
 
 declare const _default: {
   validateOrderInput: typeof validateOrderInput;

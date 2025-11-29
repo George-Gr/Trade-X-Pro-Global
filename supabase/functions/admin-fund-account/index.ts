@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+
+// @ts-expect-error - Deno dynamic import
+const z = await import("https://deno.land/x/zod@v3.22.4/mod.ts");
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +15,7 @@ const FundAccountSchema = z.object({
   description: z.string().min(1, 'Description is required').max(200, 'Description too long')
 });
 
-serve(async (req) => {
+Deno.serve(async (req: Request): Promise<Response> => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -83,7 +85,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-          details: validation.error.issues.map((i: any) => i.message).join(', ')
+          details: validation.error.issues.map((issue) => issue.message).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

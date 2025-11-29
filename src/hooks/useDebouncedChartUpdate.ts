@@ -162,11 +162,11 @@ export const useDebouncedChartUpdate = <T>(
  * Hook for managing chart update batching
  */
 export const useChartUpdateBatcher = (batchSize: number = 10) => {
-  const updatesRef = useRef<any[]>([]);
+  const updatesRef = useRef<unknown[]>([]);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>();
-  const callbackRef = useRef<((updates: any[]) => void) | null>(null);
+  const callbackRef = useRef<((updates: unknown[]) => void) | null>(null);
 
-  const setCallback = useCallback((callback: (updates: any[]) => void) => {
+  const setCallback = useCallback((callback: (updates: unknown[]) => void) => {
     callbackRef.current = callback;
   }, []);
 
@@ -183,7 +183,7 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
     }
   }, []);
 
-  const addUpdate = useCallback((update: any) => {
+  const addUpdate = useCallback((update: unknown) => {
     updatesRef.current.push(update);
     
     if (updatesRef.current.length >= batchSize) {
@@ -209,14 +209,14 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
  * Hook for progressive chart loading
  */
 export const useProgressiveChartLoading = (
-  data: any[],
+  data: unknown[],
   chunkSize: number = 50,
-  onLoadProgress?: (progress: number, loadedData: any[]) => void
+  onLoadProgress?: (progress: number, loadedData: unknown[]) => void
 ) => {
-  const [loadedData, setLoadedData] = useState<any[]>([]);
+  const [loadedData, setLoadedData] = useState<unknown[]>([]);
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const chunkRef = useRef<any[]>([]);
+  const chunkRef = useRef<unknown[]>([]);
   const indexRef = useRef(0);
 
   useEffect(() => {

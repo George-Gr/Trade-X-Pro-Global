@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -67,8 +67,8 @@ serve(async (req) => {
 
     for (const position of positions) {
       try {
-        const assetClass = (position.asset_specs as any)?.asset_class || 'forex';
-        const swapRate = SWAP_RATES[assetClass] || SWAP_RATES.forex;
+        const assetClass = ((position.asset_specs as unknown) as Record<string, unknown>)?.asset_class || 'forex';
+        const swapRate = SWAP_RATES[assetClass as string] || SWAP_RATES.forex;
         
         // Calculate daily swap rate (annualized rate / 365)
         const dailyRate = position.side === 'buy' 

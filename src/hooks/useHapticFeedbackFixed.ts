@@ -91,14 +91,14 @@ export const useHapticFeedback = (defaultEnabled = true): HapticFeedbackReturn =
       if ('vibrate' in navigator) {
         navigator.vibrate(patternArray);
       } else if (Object.prototype.hasOwnProperty.call(window, 'TapticEngine')) {
-        const taptic = (window as any).TapticEngine;
-        if (taptic && taptic.notification) {
-          taptic.notification(pattern);
+        const taptic = (window as unknown as Record<string, unknown>).TapticEngine as Record<string, unknown>;
+        if (taptic && (taptic as { notification: (p: unknown) => void }).notification) {
+          (taptic as { notification: (p: unknown) => void }).notification(pattern);
         }
       } else if (Object.prototype.hasOwnProperty.call(window, 'HapticFeedback')) {
-        const haptic = (window as any).HapticFeedback;
-        if (haptic && haptic.trigger) {
-          haptic.trigger(pattern);
+        const haptic = (window as unknown as Record<string, unknown>).HapticFeedback as Record<string, unknown>;
+        if (haptic && (haptic as { trigger: (p: unknown) => void }).trigger) {
+          (haptic as { trigger: (p: unknown) => void }).trigger(pattern);
         }
       }
     } catch (error) {

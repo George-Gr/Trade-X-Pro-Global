@@ -25,12 +25,12 @@ export const DEFAULT_PERFORMANCE_CONFIG: ChartPerformanceConfig = {
  * Virtualizes large datasets by showing only visible portion
  */
 export class ChartDataVirtualizer {
-  private data: any[] = [];
+  private data: unknown[] = [];
   private viewportSize: number = 100;
   private offset: number = 0;
   private frameId: number | null = null;
 
-  constructor(data: any[], viewportSize: number = 100) {
+  constructor(data: unknown[], viewportSize: number = 100) {
     this.data = data;
     this.viewportSize = viewportSize;
   }
@@ -40,7 +40,7 @@ export class ChartDataVirtualizer {
     this.viewportSize = size;
   }
 
-  getVisibleData(): any[] {
+  getVisibleData(): unknown[] {
     const start = this.offset;
     const end = Math.min(this.offset + this.viewportSize, this.data.length);
     return this.data.slice(start, end);
@@ -150,7 +150,7 @@ export class DebouncedChartUpdater {
     this.delay = delay;
   }
 
-  update(...args: any[]): void {
+  update(...args: unknown[]): void {
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
@@ -174,7 +174,7 @@ export class DebouncedChartUpdater {
  * Pool of chart components for reuse
  */
 export class ChartPool {
-  private pool: Map<string, any[]> = new Map();
+  private pool: Map<string, unknown[]> = new Map();
   private maxSize: number = 10;
   private usageCount: Map<string, number> = new Map();
   private lastUsed: Map<string, number> = new Map();
@@ -194,12 +194,19 @@ export class ChartPool {
     
     if (pool.length > 0) {
       // Get least recently used item
-      pool.sort((a, b) => (this.lastUsed.get(a._poolId!) || 0) - (this.lastUsed.get(b._poolId!) || 0));
-      const instance = pool.pop()!;
+      pool.sort((a, b) => {
+        const aId = (a as { _poolId?: string })?._poolId;
+        const bId = (b as { _poolId?: string })?._poolId;
+        return (this.lastUsed.get(aId || '') || 0) - (this.lastUsed.get(bId || '') || 0);
+      });
+      const instance = pool.pop()! as T;
       
       // Update usage tracking
-      this.usageCount.set(instance._poolId!, (this.usageCount.get(instance._poolId!) || 0) + 1);
-      this.lastUsed.set(instance._poolId!, Date.now());
+      const poolId = (instance as { _poolId?: string })?._poolId;
+      if (poolId) {
+        this.usageCount.set(poolId, (this.usageCount.get(poolId) || 0) + 1);
+        this.lastUsed.set(poolId, Date.now());
+      }
       
       return instance;
     }
@@ -216,8 +223,9 @@ export class ChartPool {
     return newInstance;
   }
 
-  release(key: string, instance: any): void {
-    if (!instance._poolId) {
+  release(key: string, instance: unknown): void {
+    const poolId = (instance as { _poolId?: string })?._poolId;
+    if (!poolId) {
       console.warn('Attempting to release non-pooled instance');
       return;
     }
@@ -233,19 +241,22 @@ export class ChartPool {
     // If pool is full, instance will be garbage collected
   }
 
-  private resetInstance(instance: any): void {
+  private resetInstance(instance: unknown): void {
     // Reset common chart instance properties
-    if (instance.clear) {
-      instance.clear();
+    const inst = instance as Record<string, unknown>;
+    if (typeof inst.clear === 'function') {
+      (inst.clear as () => void)();
     }
-    if (instance.reset) {
-      instance.reset();
+    if (typeof inst.reset === 'function') {
+      (inst.reset as () => void)();
     }
     // Reset canvas context if applicable
-    if (instance.getContext) {
-      const ctx = instance.getContext('2d');
+    if (typeof inst.getContext === 'function') {
+      const ctx = (inst.getContext as (contextId: string) => unknown)('2d') as { clearRect: (x: number, y: number, w: number, h: number) => void } | null;
       if (ctx) {
-        ctx.clearRect(0, 0, instance.width, instance.height);
+        const w = typeof inst.width === 'number' ? inst.width : 0;
+        const h = typeof inst.height === 'number' ? inst.height : 0;
+        ctx.clearRect(0, 0, w, h);
       }
     }
   }
@@ -263,8 +274,11 @@ export class ChartPool {
   getUsageStats(key?: string): { totalInstances: number; totalUsage: number; avgUsage: number } {
     if (key) {
       const pool = this.pool.get(key) || [];
-      const usageCounts = pool.map(item => this.usageCount.get(item._poolId) || 0);
-      const totalUsage = usageCounts.reduce((sum, count) => sum + count, 0);
+      const usageCounts = pool.map(item => {
+        const poolId = (item as Record<string, unknown>)._poolId;
+        return typeof poolId === 'string' ? (this.usageCount.get(poolId) || 0) : 0;
+      });
+      const totalUsage = usageCounts.reduce((sum: number, count) => sum + (typeof count === 'number' ? count : 0), 0);
       
       return {
         totalInstances: pool.length,
@@ -275,12 +289,17 @@ export class ChartPool {
 
     // Overall stats
     const allPools = Array.from(this.pool.values()).flat();
-    const totalUsage = allPools.reduce((sum, item) => sum + (this.usageCount.get(item._poolId) || 0), 0);
+    let totalUsageSum = 0;
+    allPools.forEach(item => {
+      const poolId = (item as Record<string, unknown>)._poolId;
+      const count = typeof poolId === 'string' ? (this.usageCount.get(poolId) || 0) : 0;
+      totalUsageSum += typeof count === 'number' ? count : 0;
+    });
     
     return {
       totalInstances: allPools.length,
-      totalUsage,
-      avgUsage: allPools.length > 0 ? totalUsage / allPools.length : 0
+      totalUsage: totalUsageSum,
+      avgUsage: allPools.length > 0 ? totalUsageSum / allPools.length : 0
     };
   }
 
@@ -290,7 +309,8 @@ export class ChartPool {
     
     for (const [key, pool] of this.pool) {
       const activeItems = pool.filter(item => {
-        const lastUsed = this.lastUsed.get(item._poolId) || 0;
+        const poolId = (item as Record<string, unknown>)._poolId;
+        const lastUsed = typeof poolId === 'string' ? (this.lastUsed.get(poolId) || 0) : 0;
         return (now - lastUsed) < maxAge;
       });
       
@@ -299,8 +319,11 @@ export class ChartPool {
       // Remove tracking data for cleaned items
       pool.forEach(item => {
         if (!activeItems.includes(item)) {
-          this.usageCount.delete(item._poolId);
-          this.lastUsed.delete(item._poolId);
+          const poolId = (item as Record<string, unknown>)._poolId;
+          if (typeof poolId === 'string') {
+            this.usageCount.delete(poolId);
+            this.lastUsed.delete(poolId);
+          }
         }
       });
     }
@@ -323,13 +346,13 @@ export class ChartPool {
  */
 export class ChartFactory {
   private pool: ChartPool = new ChartPool();
-  private factories: Map<string, (...args: any[]) => any> = new Map();
+  private factories: Map<string, (...args: unknown[]) => unknown> = new Map();
 
-  registerChartType(type: string, factory: (...args: any[]) => any): void {
+  registerChartType(type: string, factory: (...args: unknown[]) => unknown): void {
     this.factories.set(type, factory);
   }
 
-  createChart(type: string, ...args: any[]): any {
+  createChart(type: string, ...args: unknown[]): unknown {
     if (!this.factories.has(type)) {
       throw new Error(`Unknown chart type: ${type}`);
     }
@@ -341,18 +364,19 @@ export class ChartFactory {
     });
 
     // Initialize chart with arguments
-    if (chart.initialize) {
-      chart.initialize(...args);
+    const chartObj = chart as Record<string, unknown>;
+    if (typeof chartObj.initialize === 'function') {
+      (chartObj.initialize as (...args: unknown[]) => void)(...args);
     }
 
     return chart;
   }
 
-  releaseChart(type: string, chart: any): void {
+  releaseChart(type: string, chart: unknown): void {
     this.pool.release(type, chart);
   }
 
-  getStats(): any {
+  getStats(): Record<string, unknown> {
     return this.pool.getUsageStats();
   }
 
@@ -365,11 +389,11 @@ export class ChartFactory {
  * Hook for managing chart performance optimizations
  */
 export const useChartPerformance = (
-  data: any[],
+  data: unknown[],
   config: Partial<ChartPerformanceConfig> = DEFAULT_PERFORMANCE_CONFIG
 ) => {
   const mergedConfig = { ...DEFAULT_PERFORMANCE_CONFIG, ...config };
-  const [visibleData, setVisibleData] = useState<any[]>(data);
+  const [visibleData, setVisibleData] = useState<unknown[]>(data);
   const [isVirtualized, setIsVirtualized] = useState(false);
   
   const virtualizerRef = useRef<ChartDataVirtualizer>(
@@ -425,7 +449,7 @@ export const useChartPerformance = (
     return poolRef.current.acquire(key, factory);
   }, []);
 
-  const releaseToPool = useCallback((key: string, instance: any) => {
+  const releaseToPool = useCallback((key: string, instance: unknown) => {
     poolRef.current.release(key, instance);
   }, []);
 
@@ -457,13 +481,13 @@ export const useChartPerformance = (
  * Progressive data loader for large datasets
  */
 export class ProgressiveDataLoader {
-  private data: any[] = [];
+  private data: unknown[] = [];
   private chunkSize: number;
   private currentIndex: number = 0;
   private isLoading: boolean = false;
-  private onChunkLoaded: (chunk: any[], isComplete: boolean) => void;
+  private onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void;
 
-  constructor(data: any[], chunkSize: number, onChunkLoaded: (chunk: any[], isComplete: boolean) => void) {
+  constructor(data: unknown[], chunkSize: number, onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void) {
     this.data = data;
     this.chunkSize = chunkSize;
     this.onChunkLoaded = onChunkLoaded;
@@ -551,7 +575,7 @@ export class ChartPerformanceMonitor {
 /**
  * Optimized data processing for charts
  */
-export const optimizeChartData = (data: any[], config: ChartPerformanceConfig = DEFAULT_PERFORMANCE_CONFIG): any[] => {
+export const optimizeChartData = (data: unknown[], config: ChartPerformanceConfig = DEFAULT_PERFORMANCE_CONFIG): unknown[] => {
   if (data.length <= config.maxDataPoints) {
     return data;
   }

@@ -43,14 +43,22 @@ VITE_SENTRY_DSN=<for-error-tracking>
 
 ### 2. Essential Commands
 ```bash
-npm run dev              # Start dev server (localhost:8080)
-npm run build           # Production build
-npm run lint            # ESLint check
-npm run test            # Vitest (add --ui for interactive)
-npm run sync-validators # Sync Zod schemas with Supabase
-npm run supabase:push   # Deploy database migrations
-npm run supabase:pull   # Regenerate types from database
+npm run dev              # Start dev server (localhost:8080, Vite HMR enabled)
+npm run build           # Production build (generates bundle-analysis.html with ANALYZE=true)
+npm run lint            # ESLint check (auto-fix with --fix)
+npm run test            # Vitest (add --ui for interactive, watch mode default)
+npm run test:e2e        # Playwright end-to-end tests
+npm run type:strict     # Full TypeScript strict mode check (tsconfig.strict.json)
+npm run sync-validators # Sync Zod schemas with Supabase validation rules
+npm run supabase:push   # Deploy database migrations to Supabase
+npm run supabase:pull   # Regenerate types from database schema (runs after schema changes)
+npm run supabase:functions:deploy # Deploy Edge Functions to Supabase
 ```
+
+**Development Workflow Tips:**
+- Use three terminals: `npm run dev` | `npm run test:ui` | monitor lint errors
+- GitHub Codespaces users: HMR configured with websocket on port 443 (auto-detected)
+- For slow builds: `npm run dev:clean` removes Vite cache, `npm run dev:fresh` does full rebuild
 
 ### 3. Before Submitting Any Code
 - ✅ **Read relevant PRD section** (PRD.md)
@@ -69,11 +77,14 @@ npm run supabase:pull   # Regenerate types from database
 src/
 ├── components/          # UI components (by feature: auth/, trading/, kyc/, etc.)
 ├── contexts/           # Global state (Auth, Notifications, Layout)
-├── hooks/              # Custom React hooks (30+ specialized hooks)
-│   ├── useAuth.tsx     # Session + admin role
-│   ├── useRealtimePositions.tsx   # Live position updates
-│   ├── usePriceStream.tsx         # Market data stream
-│   └── ... (trading, margin, liquidation, etc.)
+├── hooks/              # Custom React hooks (40+ specialized hooks)
+│   ├── useAuth.tsx     # Session + admin role + session management
+│   ├── useRealtimePositions.tsx   # Live position updates via Realtime
+│   ├── usePriceStream.tsx         # Market data stream with price updates
+│   ├── useMarginMonitoring.tsx    # Real-time margin level tracking
+│   ├── useLiquidationExecution.tsx # Force close positions on margin breach
+│   ├── usePortfolioMetrics.tsx    # Aggregate portfolio analytics
+│   └── ... (40+ total: margin, liquidation, KYC, export, position analysis, etc.)
 ├── pages/              # Route pages (lazy-loaded in App.tsx)
 ├── lib/                # Business logic & services
 │   ├── trading/        # Order matching, margin, commission, liquidation
@@ -123,7 +134,110 @@ UI Re-render
 
 ---
 
-## Common Implementation Patterns
+## Realtime Data & Live Updates (Critical Pattern)
+
+This codebase relies heavily on **Supabase Realtime** for live market data, position updates, and margin monitoring. **Memory leaks are the #1 bug** when subscriptions aren't properly cleaned up.
+
+### ✅ Correct Realtime Pattern
+
+```typescript
+// src/hooks/useRealtimePositions.tsx - Production-ready template
+import { useEffect, useState, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import type { Position } from '@/types';
+
+export const useRealtimePositions = (userId: string | null) => {
+  const [positions, setPositions] = useState<Position[]>([]);
+  const subscriptionRef = useRef<ReturnType<typeof supabase.channel>>();
+
+  useEffect(() => {
+    if (!userId) return;
+
+    // Step 1: Initial fetch (bootstrap data)
+    const loadPositions = async () => {
+      const { data, error } = await supabase
+        .from('positions')
+        .select('*')
+        .eq('user_id', userId);
+      
+      if (!error) setPositions(data ?? []);
+      else console.error('Position fetch failed:', error);
+    };
+
+    loadPositions();
+
+    // Step 2: Subscribe to real-time changes
+    subscriptionRef.current = supabase
+      .channel(`positions:${userId}`)
+      .on(
+        'postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'positions', 
+          filter: `user_id=eq.${userId}` 
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setPositions(prev => [...prev, payload.new]);
+          } else if (payload.eventType === 'UPDATE') {
+            setPositions(prev =>
+              prev.map(p => p.id === payload.new.id ? payload.new : p)
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setPositions(prev => prev.filter(p => p.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    // Step 3: CRITICAL CLEANUP - prevents memory leak
+    return () => {
+      if (subscriptionRef.current) {
+        supabase.removeChannel(subscriptionRef.current);
+      }
+    };
+  }, [userId]);
+
+  return { positions };
+};
+```
+
+### ❌ Common Mistakes
+
+```typescript
+// MEMORY LEAK: Missing cleanup
+useEffect(() => {
+  const sub = supabase.channel('x').on(...).subscribe();
+  // Missing: return () => supabase.removeChannel(sub);
+}, []);
+
+// MEMORY LEAK: Not saving subscription ref
+useEffect(() => {
+  supabase.channel('x').on(...).subscribe();
+  // Can't unsubscribe without reference
+}, []);
+
+// TYPE MISMATCH: subscription.unsubscribe() doesn't exist
+useEffect(() => {
+  const sub = supabase.channel('x').on(...).subscribe();
+  return () => sub.unsubscribe(); // ❌ Supabase channels don't have unsubscribe()
+}, []);
+```
+
+### Real-time Hooks in This Codebase
+
+These are production-tested hooks that handle realtime correctly:
+
+- `useRealtimePositions()` — position opens/closes
+- `usePriceStream()` — live market prices
+- `useMarginMonitoring()` — real-time margin calculations
+- `useRiskEvents()` — margin call alerts, liquidation warnings
+- Check `src/hooks/` for full list
+
+**Rule:** Always use existing hooks; never create inline subscriptions.
+
+---
 
 ### Pattern 1: Real-Time Data Hook (Realtime + Cleanup)
 
@@ -333,20 +447,25 @@ export class ErrorBoundary extends React.Component<
 
 ### Core Modules in `src/lib/trading/`
 
-These are the business logic backbone. All are pure functions with comprehensive test coverage.
+These are the business logic backbone. All are pure functions (no side effects) with comprehensive test coverage in `__tests__/`.
 
-| Module | Responsibility | Example |
-|--------|---|---|
-| `orderMatching.ts` | Order execution (market, limit, stop, OCO) | Execute market orders at best available price |
-| `marginCalculations.ts` | Leverage, collateral, required margin | Calculate margin required for 2:1 leverage on $1k |
-| `commissionCalculation.ts` | Fee structure per asset class | 0.1% commission + spread |
-| `liquidationEngine.ts` | Force position closure on margin breach | Liquidate at market if equity < maintenance margin |
-| `pnlCalculation.ts` | Profit/loss tracking | Long EUR/USD: entry $1.10, current $1.12, P&L = +$200 |
-| `slippageCalculation.ts` | Market impact on large orders | Impact increases with order size |
-| `marginCallDetection.ts` | Identify at-risk accounts | Flag when margin level < 30% |
-| `marginMonitoring.ts` | Real-time margin monitoring | Broadcast alerts when approaching limits |
-| `orderValidation.ts` | Pre-execution checks | Verify size, leverage, collateral |
-| `riskThresholdMonitoring.ts` | Risk limit enforcement | Block orders exceeding daily loss limit |
+| Module | Responsibility | Key Exports | Testing |
+|--------|---|---|---|
+| `orderMatching.ts` | Order execution (market, limit, stop, OCO) | `executeMarketOrder()`, `executeLimitOrder()` | ✅ Fully tested |
+| `marginCalculations.ts` | Leverage, collateral, required margin | `calculateRequiredMargin()`, `calculateMaxSize()` | ✅ Fully tested |
+| `marginMonitoring.ts` | Real-time margin level calculation | `calculateMarginLevel()`, `getMarginStatus()` | ✅ Fully tested |
+| `commissionCalculation.ts` | Fee structure per asset class | `calculateCommission()`, `getAssetCommissionRate()` | ✅ Fully tested |
+| `liquidationEngine.ts` | Force position closure on margin breach | `shouldLiquidate()`, `executeLiquidation()` | ✅ Fully tested |
+| `pnlCalculation.ts` | Profit/loss tracking (open + closed) | `calculatePnL()`, `calculateROI()` | ✅ Fully tested |
+| `slippageCalculation.ts` | Market impact on order size + volatility | `calculateSlippage()`, `getExecutionPrice()` | ✅ Fully tested |
+| `marginCallDetection.ts` | Identify at-risk accounts | `shouldTriggerMarginCall()`, `getWarningThreshold()` | ✅ Fully tested |
+| `orderValidation.ts` | Pre-execution checks (size, leverage, funds) | `validateOrder()`, `validateCollateral()` | ✅ Fully tested |
+| `orderStatusUtils.ts` | Order state tracking (pending → filled → closed) | `updateOrderStatus()`, `isOrderValid()` | ✅ Fully tested |
+| `positionCalculations.ts` | Position sizing and breakeven | `calculateBreakeven()`, `calculateTargetPrice()` | ✅ Fully tested |
+| `positionClosureEngine.ts` | Position close logic (partial/full) | `closePosition()`, `executePartialClose()` | ✅ Fully tested |
+| `riskThresholdMonitoring.ts` | Risk limit enforcement (daily loss limits) | `checkRiskThreshold()`, `enforcePositionLimit()` | ✅ Fully tested |
+
+**Pattern:** Import these in components/hooks, never implement trading logic in UI. All functions are **pure and deterministic**.
 
 **Pattern:** Import from these modules in components/hooks, never implement trading logic in UI.
 
@@ -362,10 +481,11 @@ These are the business logic backbone. All are pure functions with comprehensive
 
 ### React Components
 - ✅ **Functional components only** — no class components (except Error Boundaries)
-- ✅ **Props must be destructured with interface**: `interface Props { label: string }; export const MyComponent: React.FC<Props> = ({ label }) => { }`
-- ✅ **Component files < 300 lines** — extract if larger
-- ✅ **Hooks over HOCs** — extract reusable logic to custom hooks
-- ✅ **Memoization only with profiler proof** — don't assume it helps
+- ✅ **Props interface always defined**: `interface ComponentProps { label: string }; export const MyComponent: React.FC<ComponentProps> = ({ label }) => { }`
+- ✅ **Component files < 300 lines** — extract if larger (split using feature folders)
+- ✅ **Hooks over HOCs** — extract reusable logic to `src/hooks/` as custom hooks
+- ✅ **Memoization only with profiler proof** — don't assume premature optimization helps
+- ✅ **Use React Router v6 lazy loading** — pages imported with `lazy(() => import('...'))`
 
 ### Tailwind CSS + Styling
 - ✅ **Utility-first only** — no inline styles, no custom CSS
@@ -391,10 +511,11 @@ import { cn } from "@/lib/utils";
 - ✅ **Display field errors** from `form.formState.errors`
 
 ### Testing
-- ✅ **Business logic**: Unit tests in `__tests__/` next to source
-- ✅ **Components**: Use `@testing-library/react` with `render()` + `screen`
-- ✅ **Mocking Supabase**: Use `vi.mock()` in test setup
-- ✅ **Run tests**: `npm run test` or `npm run test:ui` for interactive debugging
+- ✅ **Business logic**: Unit tests in `__tests__/` next to source file (e.g., `src/lib/trading/__tests__/orderMatching.test.ts`)
+- ✅ **Component tests**: Use `@testing-library/react` with `render()` + `screen` queries
+- ✅ **Mocking Supabase**: Use `vi.mock('@/integrations/supabase/client')` in test setup
+- ✅ **E2E tests**: Playwright specs in `e2e/` directory (run with `npm run test:e2e`)
+- ✅ **Run tests**: `npm run test` (watch mode) or `npm run test:ui` (interactive UI)
 
 ---
 
@@ -406,7 +527,7 @@ import { cn } from "@/lib/utils";
    ```typescript
    useEffect(() => {
      const sub = supabase.channel('x').on(...).subscribe();
-     return () => sub.unsubscribe(); // CRITICAL
+     return () => supabase.removeChannel(sub); // CRITICAL
    }, []);
    ```
 
@@ -429,6 +550,7 @@ import { cn } from "@/lib/utils";
    ```bash
    npm run supabase:pull  # Regenerates src/integrations/supabase/types.ts
    ```
+   **Why?** Types are auto-generated from the database schema. Manual edits will be overwritten and cause type mismatches. Always run `npm run supabase:pull` after schema changes (new tables, columns, etc.).
 
 5. **Create RLS policies for new tables** — without them, queries fail silently
    ```sql

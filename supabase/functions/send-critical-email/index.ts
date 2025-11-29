@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { Resend } from "https://esm.sh/resend@2.0.0";
 
 /**
  * Edge Function: send-critical-email
@@ -27,9 +26,10 @@ interface EmailRequest {
   };
 }
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+// Resend API key from environment
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
-function getEmailTemplate(type: string, data: any): { subject: string; html: string } {
+function getEmailTemplate(type: string, data: unknown): { subject: string; html: string } {
   const baseStyle = `
     <style>
       body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
@@ -47,6 +47,27 @@ function getEmailTemplate(type: string, data: any): { subject: string; html: str
       .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
     </style>
   `;
+
+  // Type guard to ensure data has required properties
+  const hasRequiredData = (d: unknown): d is {
+    margin_level: number;
+    equity: number;
+    margin_used: number;
+    actions?: string[];
+    time_to_liquidation?: number;
+  } => {
+    return typeof d === 'object' && d !== null &&
+           typeof (d as Record<string, unknown>).margin_level === 'number' &&
+           typeof (d as Record<string, unknown>).equity === 'number' &&
+           typeof (d as Record<string, unknown>).margin_used === 'number';
+  };
+
+  if (!hasRequiredData(data)) {
+    return {
+      subject: 'Notification from TradeX Pro',
+      html: '<p>You have a new notification</p>',
+    };
+  }
 
   if (type === 'margin_warning') {
     return {
@@ -198,7 +219,7 @@ function getEmailTemplate(type: string, data: any): { subject: string; html: str
   };
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -227,17 +248,32 @@ serve(async (req) => {
 
     const template = getEmailTemplate(emailRequest.type, emailRequest.data);
     
-    const result = await resend.emails.send({
-      from: 'TradeX Pro Alerts <alerts@tradexpro.com>',
-      to: emailRequest.to,
-      subject: template.subject,
-      html: template.html,
+    if (!RESEND_API_KEY) {
+      return new Response(
+        JSON.stringify({ error: 'RESEND_API_KEY not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const result = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'TradeX Pro Alerts <alerts@tradexpro.com>',
+        to: emailRequest.to,
+        subject: template.subject,
+        html: template.html,
+      }),
     });
 
-    console.log('Email sent:', result);
+    const data = await result.json();
+    console.log('Email sent:', data);
 
     return new Response(
-      JSON.stringify({ success: true, data: result }),
+      JSON.stringify({ success: true, data }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

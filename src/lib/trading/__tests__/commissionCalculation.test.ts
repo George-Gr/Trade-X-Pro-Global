@@ -409,7 +409,7 @@ describe('Commission Calculation Engine', () => {
         calculateCommission({
           symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: 'invalid' as any,
+          side: 'invalid' as unknown as 'buy' | 'sell',
           quantity: 100,
           executionPrice: 150.0,
         });

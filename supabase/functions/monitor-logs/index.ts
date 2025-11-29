@@ -121,8 +121,8 @@ export default async function (req: Request) {
     } else {
       // Default request for GET
       requestData = {
-        type: (url.searchParams.get('type') as any) || 'performance',
-        time_range: (url.searchParams.get('time_range') as any) || '24h',
+        type: (url.searchParams.get('type') as 'performance' | 'errors' | 'user_activity' | 'risk_events' | 'database_metrics' | 'api_analytics') || 'performance',
+        time_range: (url.searchParams.get('time_range') as '1h' | '24h' | '7d' | '30d') || '24h',
         filters: {}
       }
     }
@@ -172,9 +172,9 @@ export default async function (req: Request) {
 }
 
 async function processMonitoringRequest(
-  supabase: any,
+  supabase: unknown,
   request: MonitoringRequest
-): Promise<{ data?: any; error?: string }> {
+): Promise<{ data?: unknown; error?: string }> {
   try {
     const timeRange = getTimeRange(request.time_range || '24h')
 
@@ -234,8 +234,9 @@ function getTimeRange(timeRange: string): { start: string; end: string } {
 }
 
 async function getPerformanceMetrics(
-  supabase: any,
+  supabase: unknown,
   timeRange: { start: string; end: string },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filters?: any
 ): Promise<{ data: PerformanceMetrics }> {
   // This would typically query performance logs
@@ -254,13 +255,14 @@ async function getPerformanceMetrics(
 }
 
 async function getErrorMetrics(
-  supabase: any,
+  supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: any
+  filters?: Record<string, unknown>
 ): Promise<{ data: ErrorMetrics }> {
   // Query error logs from logging system
-  const { data, error } = await supabase
-    .from('error_logs')
+  const supabaseClient = supabase as { from: (name: string) => unknown };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabaseClient.from('error_logs') as any)
     .select('*')
     .gte('created_at', timeRange.start)
     .lte('created_at', timeRange.end)
@@ -280,8 +282,10 @@ async function getErrorMetrics(
 
   // Process error data
   const errors = data || []
-  const errorCounts = errors.reduce((acc: any, error: any) => {
-    const key = error.message || 'Unknown Error'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const errorCounts = errors.reduce((acc: Record<string, number>, error: any) => {
+    const errorObj = error as { message?: string };
+    const key = errorObj.message || 'Unknown Error'
     acc[key] = (acc[key] || 0) + 1
     return acc
   }, {})
@@ -316,13 +320,14 @@ async function getErrorMetrics(
 }
 
 async function getUserActivityMetrics(
-  supabase: any,
+  supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: any
-): Promise<{ data: any }> {
+  filters?: Record<string, unknown>
+): Promise<{ data: Record<string, unknown> }> {
   // Query user activity logs
-  const { data, error } = await supabase
-    .from('user_activity_logs')
+  const supabaseClient = supabase as { from: (name: string) => unknown };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabaseClient.from('user_activity_logs') as any)
     .select('*')
     .gte('created_at', timeRange.start)
     .lte('created_at', timeRange.end)
@@ -335,7 +340,10 @@ async function getUserActivityMetrics(
 
   // Process activity data
   const activities = data || []
-  const uniqueUsers = new Set(activities.map((a: any) => a.user_id))
+  const uniqueUsers = new Set(activities.map((a: unknown) => {
+    const activity = a as Record<string, unknown>;
+    return activity.user_id;
+  }))
   
   return {
     data: {
@@ -349,13 +357,14 @@ async function getUserActivityMetrics(
 }
 
 async function getRiskEventMetrics(
-  supabase: any,
+  supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: any
-): Promise<{ data: any }> {
+  filters?: Record<string, unknown>
+): Promise<{ data: Record<string, unknown> }> {
   // Query risk event logs
-  const { data, error } = await supabase
-    .from('risk_events')
+  const supabaseClient = supabase as { from: (name: string) => unknown };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabaseClient.from('risk_events') as any)
     .select('*')
     .gte('created_at', timeRange.start)
     .lte('created_at', timeRange.end)
@@ -369,14 +378,18 @@ async function getRiskEventMetrics(
   const events = data || []
   
   // Calculate severity breakdown
-  const severityCounts = events.reduce((acc: any, event: any) => {
-    acc[event.severity] = (acc[event.severity] || 0) + 1
+  const severityCounts = events.reduce((acc: Record<string, number>, event: unknown) => {
+    const eventObj = event as Record<string, unknown>;
+    const severity = eventObj.severity as string || 'unknown';
+    acc[severity] = (acc[severity] || 0) + 1
     return acc
   }, {})
 
   // Top risk types
-  const riskTypeCounts = events.reduce((acc: any, event: any) => {
-    acc[event.type] = (acc[event.type] || 0) + 1
+  const riskTypeCounts = events.reduce((acc: Record<string, number>, event: unknown) => {
+    const eventObj = event as Record<string, unknown>;
+    const type = eventObj.type as string || 'unknown';
+    acc[type] = (acc[type] || 0) + 1
     return acc
   }, {})
 
@@ -390,14 +403,18 @@ async function getRiskEventMetrics(
       total_events: events.length,
       severity_breakdown: severityCounts,
       top_risks: topRisks,
-      critical_events: events.filter((e: any) => e.severity === 'critical').length
+      critical_events: events.filter((e: unknown) => {
+        const event = e as Record<string, unknown>;
+        return event.severity === 'critical';
+      }).length
     }
   }
 }
 
 async function getDatabaseMetrics(
-  supabase: any,
+  supabase: unknown,
   timeRange: { start: string; end: string },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filters?: any
 ): Promise<{ data: DatabaseMetrics }> {
   // This would typically query database performance metrics
@@ -422,13 +439,14 @@ async function getDatabaseMetrics(
 }
 
 async function getApiAnalytics(
-  supabase: any,
+  supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: any
-): Promise<{ data: any }> {
+  filters?: Record<string, unknown>
+): Promise<{ data: Record<string, unknown> }> {
   // Query API usage logs
-  const { data, error } = await supabase
-    .from('api_usage_logs')
+  const supabaseClient = supabase as { from: (name: string) => unknown };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabaseClient.from('api_usage_logs') as any)
     .select('*')
     .gte('created_at', timeRange.start)
     .lte('created_at', timeRange.end)
@@ -442,13 +460,22 @@ async function getApiAnalytics(
   const requests = data || []
   
   // Analyze by endpoint
-  const endpointCounts = requests.reduce((acc: any, req: any) => {
-    acc[req.endpoint] = (acc[req.endpoint] || 0) + 1
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const endpointCounts = requests.reduce((acc: Record<string, number>, req: any) => {
+    const reqObj = req as Record<string, unknown>;
+    const endpoint = reqObj.endpoint as string || 'unknown';
+    acc[endpoint] = (acc[endpoint] || 0) + 1
     return acc
   }, {})
 
   // Response time analysis
-  const avgResponseTime = requests.reduce((sum: number, req: any) => sum + (req.response_time || 0), 0) / requests.length
+  const avgResponseTime = requests.length > 0
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? requests.reduce((sum: number, req: any) => {
+        const reqObj = req as Record<string, unknown>;
+        return sum + ((reqObj.response_time as number) || 0)
+      }, 0) / requests.length
+    : 0
 
   return {
     data: {

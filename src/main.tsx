@@ -7,6 +7,9 @@ import "./index.css";
 import { initializeSentry } from "./lib/logger";
 import React from "react";
 
+// Import polyfills to fix navigator global errors and other Node.js compatibility issues
+import './polyfills';
+
 // Initialize Sentry for error tracking and performance monitoring
 if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
