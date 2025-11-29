@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { formatToastError } from "@/lib/errorMessageService";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +14,11 @@ import { RiskSettingsForm } from "@/components/risk/RiskSettingsForm";
 import { RiskManagementLoading } from "@/components/risk/RiskManagementLoading";
 import { Shield, TrendingDown, Lock, AlertTriangle } from "lucide-react";
 import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
+
+const getSupabaseClient = async () => {
+  const { supabase } = await import("@/integrations/supabase/client");
+  return supabase;
+};
 
 interface RiskSettings {
   margin_call_level: number;
@@ -49,6 +53,7 @@ export default function RiskManagement() {
     if (!user) return;
 
     try {
+      const supabase = await getSupabaseClient();
       const { data, error } = await supabase
         .from('risk_settings')
         .select('*')
@@ -90,6 +95,7 @@ export default function RiskManagement() {
 
     setSaving(true);
     try {
+      const supabase = await getSupabaseClient();
       const { error } = await supabase
         .from('risk_settings')
         .update(settings)
