@@ -7,9 +7,13 @@
 
 import * as React from "react";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import type { Position, Order, Fill } from "@/integrations/supabase/types/tables";
+
+const getSupabaseClient = async () => {
+  const { supabase } = await import("@/integrations/supabase/client");
+  return supabase;
+};
 
 interface DailyPnLData {
   date: string;
@@ -183,6 +187,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
     try {
       setLoading(true);
       setError(null);
+      const supabase = await getSupabaseClient();
 
       // Fetch current profile data
       const { data: profileData, error: profileError } = await supabase
@@ -267,65 +272,81 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
 
   // Set up real-time subscriptions
   useEffect(() => {
-    fetchProfitLossData();
+    let isMounted = true;
+    let profileChannel: any = null;
+    let positionsChannel: any = null;
+    let fillsChannel: any = null;
 
-    if (!user) return;
+    const setup = async () => {
+      if (!user) return;
+      await fetchProfitLossData();
 
-    // Subscribe to profile changes
-    const profileChannel = supabase
-      .channel(`pnl-profile-${user.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
-          filter: `id=eq.${user.id}`,
-        },
-        () => {
-          fetchProfitLossData();
-        }
-      )
-      .subscribe();
+      try {
+        const supabase = await getSupabaseClient();
+        if (!isMounted) return;
 
-    // Subscribe to position changes
-    const positionsChannel = supabase
-      .channel(`pnl-positions-${user.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "positions",
-          filter: `user_id=eq.${user.id}`,
-        },
-        () => {
-          fetchProfitLossData();
-        }
-      )
-      .subscribe();
+        // Subscribe to profile changes
+        profileChannel = supabase
+          .channel(`pnl-profile-${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "UPDATE",
+              schema: "public",
+              table: "profiles",
+              filter: `id=eq.${user.id}`,
+            },
+            () => {
+              fetchProfitLossData();
+            }
+          )
+          .subscribe();
 
-    // Subscribe to fill changes
-    const fillsChannel = supabase
-      .channel(`pnl-fills-${user.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "fills",
-          filter: `user_id=eq.${user.id}`,
-        },
-        () => {
-          fetchProfitLossData();
-        }
-      )
-      .subscribe();
+        // Subscribe to position changes
+        positionsChannel = supabase
+          .channel(`pnl-positions-${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "positions",
+              filter: `user_id=eq.${user.id}`,
+            },
+            () => {
+              fetchProfitLossData();
+            }
+          )
+          .subscribe();
+
+        // Subscribe to fill changes
+        fillsChannel = supabase
+          .channel(`pnl-fills-${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "fills",
+              filter: `user_id=eq.${user.id}`,
+            },
+            () => {
+              fetchProfitLossData();
+            }
+          )
+          .subscribe();
+      } catch (error) {
+        console.error("Failed to set up profit/loss subscriptions", error);
+      }
+    };
+
+    setup();
 
     return () => {
-      profileChannel.unsubscribe();
-      positionsChannel.unsubscribe();
-      fillsChannel.unsubscribe();
+      isMounted = false;
+      profileChannel?.unsubscribe();
+      positionsChannel?.unsubscribe();
+      fillsChannel?.unsubscribe();
     };
   }, [user, fetchProfitLossData, timeRange]);
 

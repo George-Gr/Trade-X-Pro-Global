@@ -6,7 +6,6 @@
  */
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import {
   calculateRiskMetrics,
@@ -16,6 +15,11 @@ import {
   PortfolioRiskAssessment,
 } from "@/lib/risk/riskMetrics";
 import type { Position } from "@/integrations/supabase/types/tables";
+
+const getSupabaseClient = async () => {
+  const { supabase } = await import("@/integrations/supabase/client");
+  return supabase;
+};
 
 // Interface for position risk data
 interface PositionRiskData {
@@ -53,6 +57,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
     try {
       setLoading(true);
+      const supabase = await getSupabaseClient();
 
       // Fetch profile data
       const { data: profileData, error: profileError } = await supabase
@@ -175,47 +180,62 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
   // Set up real-time subscriptions
   useEffect(() => {
-    fetchRiskData();
+    let isMounted = true;
+    let profileChannel: any = null;
+    let positionsChannel: any = null;
 
-    if (!user) return;
+    const setup = async () => {
+      if (!user) return;
+      await fetchRiskData();
 
-    // Subscribe to profile changes
-    const profileChannel = supabase
-      .channel(`risk-profile-${user.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
-          filter: `id=eq.${user.id}`,
-        },
-        () => {
-          fetchRiskData();
-        }
-      )
-      .subscribe();
+      try {
+        const supabase = await getSupabaseClient();
+        if (!isMounted) return;
 
-    // Subscribe to position changes
-    const positionsChannel = supabase
-      .channel(`risk-positions-${user.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "positions",
-          filter: `user_id=eq.${user.id}`,
-        },
-        () => {
-          fetchRiskData();
-        }
-      )
-      .subscribe();
+        // Subscribe to profile changes
+        profileChannel = supabase
+          .channel(`risk-profile-${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "UPDATE",
+              schema: "public",
+              table: "profiles",
+              filter: `id=eq.${user.id}`,
+            },
+            () => {
+              fetchRiskData();
+            }
+          )
+          .subscribe();
+
+        // Subscribe to position changes
+        positionsChannel = supabase
+          .channel(`risk-positions-${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "positions",
+              filter: `user_id=eq.${user.id}`,
+            },
+            () => {
+              fetchRiskData();
+            }
+          )
+          .subscribe();
+      } catch (error) {
+        console.error("Failed to set up risk metrics subscriptions", error);
+      }
+    };
+
+    setup();
 
     return () => {
-      profileChannel.unsubscribe();
-      positionsChannel.unsubscribe();
+      isMounted = false;
+      profileChannel?.unsubscribe();
+      positionsChannel?.unsubscribe();
     };
   }, [user, fetchRiskData]);
 
