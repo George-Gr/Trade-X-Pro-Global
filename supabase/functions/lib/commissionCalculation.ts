@@ -12,7 +12,6 @@
  * - IMPLEMENTATION_TASKS_DETAILED.md TASK 1.1.5
  */
 
-// @ts-expect-error - Deno URL import in editor - resolved at deploy time
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 /**

@@ -1,6 +1,4 @@
-// @ts-expect-error - Deno URL imports (VSCode Node context; deploys fine)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-// @ts-expect-error - Deno URL imports
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 declare const Deno: any;
