@@ -9,7 +9,7 @@ import { usePnLCalculations } from '@/hooks/usePnLCalculations';
 import { usePositionClose } from '@/hooks/usePositionClose';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { PositionsHeader, SortHeader } from './PositionsHeader';
+import { PositionsHeader, SortHeader, type SortConfig } from './PositionsHeader';
 import { PositionsMetrics } from './PositionsMetrics';
 import {
   Dialog,
@@ -30,11 +30,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import type { Position } from '@/types/position';
 import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
-
-interface SortConfig {
-  key: keyof Position | 'pnl' | 'margin_level';
-  direction: 'asc' | 'desc';
-}
 
 type FilterType = 'all' | 'long' | 'short' | 'profit' | 'loss';
 
@@ -102,12 +97,12 @@ const EnhancedPositionsTable: React.FC = () => {
   // Filter positions
   const filteredPositions = useMemo(() => {
     if (!positions) return [];
-    
+
     return positions.filter(pos => {
       if (filterType === 'all') return true;
       if (filterType === 'long') return pos.side === 'long';
       if (filterType === 'short') return pos.side === 'short';
-      
+
       const pnlData = getPositionPnL(pos);
       if (filterType === 'profit') return pnlData.unrealizedPnL > 0;
       if (filterType === 'loss') return pnlData.unrealizedPnL < 0;
@@ -146,7 +141,7 @@ const EnhancedPositionsTable: React.FC = () => {
 
   const handleClosePosition = async () => {
     if (!selectedForClose) return;
-    
+
     try {
       await closePosition({ position_id: selectedForClose });
       setShowConfirmClose(false);
@@ -358,11 +353,10 @@ const EnhancedPositionsTable: React.FC = () => {
                   <h3 className="font-bold text-lg">{position.symbol}</h3>
                   <Badge
                     variant={position.side === 'long' ? 'default' : 'secondary'}
-                    className={`mt-2 ${
-                      position.side === 'long'
+                    className={`mt-2 ${position.side === 'long'
                         ? 'bg-buy text-foreground'
                         : 'bg-sell text-foreground'
-                    }`}
+                      }`}
                   >
                     {position.side.toUpperCase()}
                   </Badge>

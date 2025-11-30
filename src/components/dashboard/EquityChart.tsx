@@ -167,7 +167,7 @@ export const EquityChart: React.FC = () => {
         </div>
 
         {/* Chart */}
-        <div className="aspect-[16/9] w-full">
+        <div className="aspect-video w-full">
           <Suspense fallback={<ChartLoadingSkeleton />}>
             <DynamicResponsiveContainer>
               <DynamicLineChart data={visibleData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
@@ -191,7 +191,7 @@ export const EquityChart: React.FC = () => {
                   y={stats.avgEquity}
                   stroke="#94a3b8"
                   strokeDasharray="5 5"
-                  label={{ value: 'Avg', position: 'right', fill: '#94a3b8', fontSize: 12 } as { value: string; position: string; fill: string; fontSize: number }}
+                  label={{ value: 'Avg', position: 'right', fill: '#94a3b8', fontSize: 12 }}
                 />
                 <DynamicLine
                   type="monotone"

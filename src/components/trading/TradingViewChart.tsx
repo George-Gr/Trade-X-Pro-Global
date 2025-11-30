@@ -41,6 +41,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
     let mounted = true;
     let chart: ChartInstance | null = null;
     let candlestickSeries: CandlestickSeries | null = null;
+    let initialData: CandleData[] = [];
 
     // Dynamically import lightweight-charts to avoid bundling it in the initial chunk
     import("lightweight-charts").then((lc) => {
@@ -107,7 +108,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
         return data;
       };
 
-      const initialData = generateData();
+      initialData = generateData();
       candlestickSeries.setData(initialData);
 
       // Fit content
@@ -152,23 +153,17 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
       }, 2000);
 
       // Store cleanup closure
-      (chart as ChartInstance & { _cleanup?: () => void })._cleanup = () => {
+      (chart as Record<string, unknown>)._cleanup = () => {
         window.removeEventListener("resize", handleResize);
         clearInterval(updateInterval);
-        chart!.remove();
+        if (chart) chart.remove();
       };
-    });
+    }).catch(console.error);
 
     return () => {
       mounted = false;
-      // If chart has been created, call its cleanup
-      try {
-        const chartWithCleanup = chart as ChartInstance & { _cleanup?: () => void };
-        if (chartWithCleanup?._cleanup) {
-          chartWithCleanup._cleanup();
-        }
-      } catch (e) {
-        // ignore
+      if (chart?._cleanup) {
+        chart._cleanup();
       }
     };
   }, [symbol]);

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "chatParticipants": ["claude-code"],
+
   "scripts": {
     "dev": "cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 node scripts/setup-node-env.js && cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 vite",
     "dev:clean": "rm -rf node_modules/.vite .vite dist && npm run dev",

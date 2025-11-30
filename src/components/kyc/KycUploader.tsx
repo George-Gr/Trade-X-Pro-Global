@@ -375,11 +375,10 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
                   {/* Upload Area */}
                   <div
-                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-[280px] flex flex-col items-center justify-center ${
-                      isDragActive
+                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-[280px] flex flex-col items-center justify-center ${isDragActive
                         ? 'border-primary bg-primary/5 scale-105'
                         : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2'
-                    } ${upload?.status === 'validated' ? 'bg-buy/5 border-buy/30' : ''}`}
+                      } ${upload?.status === 'validated' ? 'bg-buy/5 border-buy/30' : ''}`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
@@ -390,8 +389,8 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                         {/* Thumbnail Preview for Images */}
                         {upload.thumbnail ? (
                           <div className="flex justify-center mb-4">
-                            <img 
-                              src={upload.thumbnail} 
+                            <img
+                              src={upload.thumbnail}
                               alt={upload.file.name}
                               className="max-w-[120px] max-h-[120px] rounded-lg border border-muted-foreground/20 shadow-sm object-cover"
                             />
@@ -484,13 +483,13 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               return (
                 <li key={doc.type} className="flex items-center gap-3 transition-all duration-200">
                   {uploaded?.status === 'validated' ? (
-                    <CheckCircle className="h-5 w-5 text-buy flex-shrink-0 animate-in zoom-in-50" />
+                    <CheckCircle className="h-5 w-5 text-buy shrink-0 animate-in zoom-in-50" />
                   ) : uploaded?.status === 'uploading' ? (
-                    <Loader2 className="h-5 w-5 text-primary flex-shrink-0 animate-spin" />
+                    <Loader2 className="h-5 w-5 text-primary shrink-0 animate-spin" />
                   ) : uploaded?.status === 'error' ? (
-                    <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+                    <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
                   ) : (
-                    <div className="h-5 w-5 border-2 border-muted-foreground/30 rounded-full flex-shrink-0" />
+                    <div className="h-5 w-5 border-2 border-muted-foreground/30 rounded-full shrink-0" />
                   )}
                   <span className={uploaded?.status === 'validated' ? 'text-buy font-medium' : ''}>
                     {doc.label}

@@ -205,12 +205,9 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
         description: message,
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
-    variant: "destructive",
-      });
-} finally {
-  setIsLoading(false);
-}
   }, [isAdmin, sortBy, sortOrder, toast]);
 
 useEffect(() => {

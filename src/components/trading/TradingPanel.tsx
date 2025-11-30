@@ -48,15 +48,15 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<OrderFormData | null>(null);
-  
+
   // Hooks (moved to hooks directory for better separation)
   const { toast } = useToast();
   const { executeOrder, isExecuting } = useOrderExecution();
   const { leverage: assetLeverage, isLoading: isAssetLoading } = useAssetSpecs(symbol);
-  
+
   // SL/TP Monitoring
   const { isMonitoring, monitoredCount, pricesConnected } = useSLTPMonitoring();
-  
+
   // Real-time price updates
   const { getPrice } = usePriceUpdates({
     symbols: [symbol],
@@ -162,125 +162,124 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       takeProfitPrice: template.take_profit,
     }));
     setOrderType(template.order_type as OrderType);
-    
     toast({
       title: "Template Applied",
       description: `"${template.name}" settings loaded. (Leverage is set per asset: 1:${assetLeverage})`,
     });
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Trading Panel Container */}
-      <Card className="panel border-border p-4">
-        {/* SL/TP Monitoring Status Badge */}
-        {isMonitoring && pricesConnected && (
-          <div className="bg-[hsl(var(--status-info))] dark:bg-[hsl(var(--status-info-dark))] border-b border-[hsl(var(--status-info-border))] dark:border-[hsl(var(--status-info-dark-border))] px-4 py-4">
-            <p className="text-sm text-[hsl(var(--status-info-foreground))] dark:text-[hsl(var(--status-info-dark-foreground))]">
-              ✓ Monitoring SL/TP for {monitoredCount} position{monitoredCount !== 1 ? 's' : ''}
+return (
+  <div className="space-y-4">
+    {/* Trading Panel Container */}
+    <Card className="panel border-border p-4">
+      {/* SL/TP Monitoring Status Badge */}
+      {isMonitoring && pricesConnected && (
+        <div className="bg-[hsl(var(--status-info))] dark:bg-[hsl(var(--status-info-dark))] border-b border-[hsl(var(--status-info-border))] dark:border-[hsl(var(--status-info-dark-border))] px-4 py-4">
+          <p className="text-sm text-[hsl(var(--status-info-foreground))] dark:text-[hsl(var(--status-info-dark-foreground))]">
+            ✓ Monitoring SL/TP for {monitoredCount} position{monitoredCount !== 1 ? 's' : ''}
+          </p>
+        </div>
+      )}
+
+      {/* Header with Symbol and Current Price */}
+      <div className="panel-header border-b border-panel px-4 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-lg">{symbol}</h3>
+            <p className="text-sm text-muted-foreground">
+              Current Price:
+              <span className={`font-mono font-semibold transition-colors duration-300 ${priceData?.isStale ? 'text-destructive' : 'text-foreground'}`}>
+                ${currentPrice.toFixed(5)}
+                {priceData?.isStale && (
+                  <Loader2 className="ml-1 inline-block h-3 w-3 animate-spin text-destructive" />
+                )}
+              </span>
             </p>
+            {priceData?.isStale && (
+              <p className="text-xs text-destructive mt-1">Price updating...</p>
+            )}
           </div>
-        )}
-        
-        {/* Header with Symbol and Current Price */}
-        <div className="panel-header border-b border-panel px-4 py-4">
+          <OrderTemplatesDialog onApplyTemplate={handleApplyTemplate} />
+        </div>
+      </div>
+
+      {/* Main Trading Area */}
+      <div className="panel-content p-4 space-y-4">
+        {/* Order Type Selector */}
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-lg">{symbol}</h3>
-              <p className="text-sm text-muted-foreground">
-                Current Price: 
-                <span className={`font-mono font-semibold transition-colors duration-300 ${priceData?.isStale ? 'text-destructive' : 'text-foreground'}`}>
-                  ${currentPrice.toFixed(5)}
-                  {priceData?.isStale && (
-                    <Loader2 className="ml-1 inline-block h-3 w-3 animate-spin text-destructive" />
-                  )}
-                </span>
-              </p>
-              {priceData?.isStale && (
-                <p className="text-xs text-destructive mt-1">Price updating...</p>
-              )}
-            </div>
-            <OrderTemplatesDialog onApplyTemplate={handleApplyTemplate} />
+            <h4 className="text-sm font-medium">Order Type</h4>
+            {isExecuting && (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Executing...</span>
+              </div>
+            )}
           </div>
+          <OrderTypeSelector
+            value={orderType}
+            onChange={handleOrderTypeChange}
+            disabled={isExecuting}
+          />
         </div>
 
-        {/* Main Trading Area */}
-        <div className="panel-content p-4 space-y-4">
-          {/* Order Type Selector */}
+        {/* Order Form and Preview Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Order Form */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Order Type</h4>
-              {isExecuting && (
+              <h4 className="font-medium text-sm">Order Details</h4>
+              {(isExecuting || isAssetLoading) && (
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Executing...</span>
+                  <span className="text-xs text-muted-foreground">Loading...</span>
                 </div>
               )}
             </div>
-            <OrderTypeSelector
-              value={orderType}
-              onChange={handleOrderTypeChange}
-              disabled={isExecuting}
-            />
+            <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
+              <OrderForm
+                symbol={symbol}
+                orderType={orderType}
+                currentPrice={currentPrice}
+                onOrderTypeChange={handleOrderTypeChange}
+                onSubmit={handleFormSubmit}
+                isLoading={isExecuting || isAssetLoading}
+                assetLeverage={assetLeverage}
+              />
+            </Suspense>
           </div>
 
-          {/* Order Form and Preview Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Order Form */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-sm">Order Details</h4>
-                {(isExecuting || isAssetLoading) && (
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Loading...</span>
-                  </div>
-                )}
-              </div>
-              <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
-                <OrderForm
-                  symbol={symbol}
-                  orderType={orderType}
-                  currentPrice={currentPrice}
-                  onOrderTypeChange={handleOrderTypeChange}
-                  onSubmit={handleFormSubmit}
-                  isLoading={isExecuting || isAssetLoading}
-                  assetLeverage={assetLeverage}
-                />
-              </Suspense>
-            </div>
-
-            {/* Order Preview */}
-            <div className="space-y-3">
-              <h4 className="font-medium text-sm">Order Preview</h4>
-              <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
-                <OrderPreview
-                  formData={formData}
-                  currentPrice={currentPrice}
-                  assetLeverage={assetLeverage}
-                  commission={0.0005}
-                  slippage={orderType === 'market' ? 0.0001 : 0}
-                />
-              </Suspense>
-            </div>
+          {/* Order Preview */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Order Preview</h4>
+            <Suspense fallback={<div className="h-64 bg-muted/50 rounded-lg animate-pulse" />}>
+              <OrderPreview
+                formData={formData}
+                currentPrice={currentPrice}
+                assetLeverage={assetLeverage}
+                commission={0.0005}
+                slippage={orderType === 'market' ? 0.0001 : 0}
+              />
+            </Suspense>
           </div>
         </div>
-      </Card>
+      </div>
+    </Card>
 
-      {/* Confirmation Dialog */}
-      <Suspense fallback={<div />}>
-        <AlertDialogComponent
-          open={confirmDialogOpen}
-          onOpenChange={setConfirmDialogOpen}
-          pendingOrder={pendingOrder}
-          isExecuting={isExecuting}
-          assetLeverage={assetLeverage}
-          onConfirm={handleConfirmOrder}
-          onCancel={handleCancelOrder}
-        />
-      </Suspense>
-    </div>
-  );
+    {/* Confirmation Dialog */}
+    <Suspense fallback={<div />}>
+      <AlertDialogComponent
+        open={confirmDialogOpen}
+        onOpenChange={setConfirmDialogOpen}
+        pendingOrder={pendingOrder}
+        isExecuting={isExecuting}
+        assetLeverage={assetLeverage}
+        onConfirm={handleConfirmOrder}
+        onCancel={handleCancelOrder}
+      />
+    </Suspense>
+  </div>
+);
 };
 
 export default TradingPanel;

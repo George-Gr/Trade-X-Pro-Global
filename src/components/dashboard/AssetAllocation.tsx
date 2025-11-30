@@ -4,19 +4,19 @@ import { usePortfolioData } from '@/hooks/usePortfolioData';
 
 // Dynamic import wrapper for recharts components
 const DynamicPieChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.PieChart as React.ComponentType<unknown>,
+  default: m.PieChart,
 })));
 
 const DynamicPie = React.lazy(() => import('recharts').then(m => ({
-  default: m.Pie as React.ComponentType<unknown>,
+  default: m.Pie,
 })));
 
 const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell as React.ComponentType<unknown>,
+  default: m.Cell,
 })));
 
 const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip as React.ComponentType<unknown>,
+  default: m.Tooltip,
 })));
 
 const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
@@ -55,7 +55,7 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
   return (
     <Card elevation="1" variant="primary" className="p-4 bg-card">
       <h3 className="font-semibold mb-2">Asset Allocation</h3>
-      <div className="aspect-[16/9] w-full">
+      <div className="aspect-video w-full">
         <Suspense fallback={<ChartLoadingSkeleton />}>
           <DynamicResponsiveContainer>
             <DynamicPieChart>

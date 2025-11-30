@@ -45,17 +45,17 @@ export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({ order 
           <div className="font-mono font-semibold">${order.slippage.toFixed(4)}</div>
         </div>
       )}
-      {order.realized_pnl !== undefined && (
-        <div>
-          <span className="text-muted-foreground text-xs">Realized P&L</span>
-          <div
-            className="font-mono font-semibold"
-            style={{ color: order.realized_pnl >= 0 ? '#10b981' : '#ef4444' }}
-          >
-            ${order.realized_pnl.toFixed(2)}
-          </div>
+    {order.realized_pnl !== undefined && (
+      <div>
+        <span className="text-muted-foreground text-xs">Realized P&L</span>
+        <div
+          className="font-mono font-semibold"
+          style={{ color: order.realized_pnl >= 0 ? '#10b981' : '#ef4444' }}
+        >
+          ${order.realized_pnl.toFixed(2)}
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 };

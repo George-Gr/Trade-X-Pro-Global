@@ -37,7 +37,7 @@ const BREADCRUMB_CONFIG = {
     title: "Glossary",
     path: "/education",
   },
-  
+
   // Company pages
   "/company": {
     title: "Company",
@@ -62,7 +62,7 @@ const BREADCRUMB_CONFIG = {
     title: "Contact Us",
     path: "/company",
   },
-  
+
   // Authenticated pages
   "/dashboard": {
     title: "Dashboard",
@@ -94,7 +94,7 @@ const BREADCRUMB_CONFIG = {
   "/risk-management": {
     title: "Risk Management",
   },
-  
+
   // Admin pages
   "/admin": {
     title: "Admin",
@@ -118,7 +118,7 @@ const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWi
     <ol
       ref={ref}
       className={cn(
-        "flex flex-wrap items-center break-words gap-4.5 sm:gap-4.5 text-sm text-muted-foreground",
+        "flex flex-wrap items-center wrap-break-word gap-4.5 sm:gap-4.5 text-sm text-muted-foreground",
         className,
       )}
       {...props}
@@ -190,21 +190,21 @@ export const AutoBreadcrumb = React.forwardRef<
 >(({ maxItems = 5, truncateLength = 20, className, ...props }, ref) => {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Generate breadcrumb items based on current path
   const getBreadcrumbItems = (): (BreadcrumbItemConfig & { path?: string })[] => {
-    const pathSegments = location.pathname.split('/').filter(segment => segment.length > 0);
+    const pathSegments = location.pathname.split('/').filter((segment: string) => segment.length > 0);
     const items: (BreadcrumbItemConfig & { path?: string })[] = [];
-    
+
     // Always start with Home
     items.push(BREADCRUMB_CONFIG['/'] || { title: 'Home' });
-    
+
     let currentPath = '';
-    
+
     for (let i = 0; i < pathSegments.length; i++) {
       const segment = pathSegments[i];
       currentPath += `/${segment}`;
-      
+
       const config = BREADCRUMB_CONFIG[currentPath];
       if (config && !config.hideInBreadcrumb) {
         items.push({
@@ -213,24 +213,24 @@ export const AutoBreadcrumb = React.forwardRef<
         });
       }
     }
-    
+
     return items;
   };
-  
+
   const breadcrumbItems = getBreadcrumbItems();
-  
+
   // Handle navigation
   const handleNavigation = (path?: string) => {
     if (path && path !== location.pathname) {
       navigate(path);
     }
   };
-  
+
   // Truncate long breadcrumb titles
   const truncateTitle = (title: string, maxLength: number) => {
     return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
   };
-  
+
   if (breadcrumbItems.length <= 1) {
     return null; // Don't show breadcrumb if only on home page
   }
@@ -245,7 +245,7 @@ export const AutoBreadcrumb = React.forwardRef<
         {breadcrumbItems.map((item, index) => {
           const isLast = index === breadcrumbItems.length - 1;
           const isFirst = index === 0;
-          
+
           return (
             <BreadcrumbItem key={isFirst ? 'home' : item.path || item.title}>
               {isFirst ? (
@@ -273,7 +273,7 @@ export const AutoBreadcrumb = React.forwardRef<
                   </BreadcrumbPage>
                 )
               )}
-              
+
               {!isLast && <BreadcrumbSeparator className="opacity-70" />}
             </BreadcrumbItem>
           );

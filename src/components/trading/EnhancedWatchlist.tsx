@@ -179,7 +179,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-2 top-1/2 transform -top-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute right-2 top-1/2 text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Clear search"
             >
               <span className="w-6 h-6 bg-muted/50 rounded-full flex items-center justify-center text-xs">
@@ -234,8 +234,8 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                   ))}
                 </TabsList>
               </ScrollArea>
-              
-              <AddSymbolDialog 
+
+              <AddSymbolDialog
                 onAddSymbol={async (symbol) => {
                   if (activeWatchlistId) {
                     await addSymbolToWatchlist(activeWatchlistId, symbol);
@@ -252,7 +252,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                   onSymbolClick={handleSymbolClick}
                   onQuickTrade={handleQuickTrade}
                   onRemoveSymbol={handleRemoveSymbol}
-                  onAddSymbolClick={() => {/* Dialog opens on button click */}}
+                  onAddSymbolClick={() => {/* Dialog opens on button click */ }}
                 />
               </TabsContent>
             ))}

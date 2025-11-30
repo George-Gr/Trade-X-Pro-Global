@@ -14,8 +14,8 @@ interface WatchlistTabsProps {
   onQuickTrade?: (symbol: string, side: "buy" | "sell") => void;
 }
 
-export const WatchlistTabs = ({ 
-  activeWatchlistId, 
+export const WatchlistTabs = ({
+  activeWatchlistId,
   onActiveWatchlistChange,
   onDeleteWatchlist,
   onSelectSymbol,
@@ -75,16 +75,16 @@ export const WatchlistTabs = ({
         const listItems = Array.isArray(watchlistItems)
           ? watchlistItems.filter(item => item.watchlist_id === list.id)
           : [];
-        
+
         return (
           <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
             <WatchlistItems
               items={listItems}
               onSymbolClick={onSelectSymbol}
               onQuickTrade={onQuickTrade}
-              getPrice={(symbol: string) => null} // TODO: Replace with actual price getter
-              onRemoveSymbol={(symbol: string) => {}} // TODO: Implement remove logic
-              onAddSymbolClick={() => {}} // TODO: Implement add symbol logic
+              getPrice={(symbol: string) => null as number | null} // TODO: Replace with actual price getter
+              onRemoveSymbol={(symbol: string) => { }} // TODO: Implement remove logic
+              onAddSymbolClick={() => { }} // TODO: Implement add symbol logic
             />
           </TabsContent>
         );

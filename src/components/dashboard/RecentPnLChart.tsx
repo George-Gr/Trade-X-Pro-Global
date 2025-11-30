@@ -3,35 +3,35 @@ import { Card } from '@/components/ui/card';
 
 // Dynamic import wrapper for recharts components
 const DynamicBarChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.BarChart as React.ComponentType<unknown>,
+  default: m.BarChart as React.ComponentType<React.ComponentProps<typeof m.BarChart>>,
 })));
 
 const DynamicBar = React.lazy(() => import('recharts').then(m => ({
-  default: m.Bar as React.ComponentType<unknown>,
+  default: m.Bar as React.ComponentType<React.ComponentProps<typeof m.Bar>>,
 })));
 
 const DynamicXAxis = React.lazy(() => import('recharts').then(m => ({
-  default: m.XAxis as React.ComponentType<unknown>,
+  default: m.XAxis as React.ComponentType<React.ComponentProps<typeof m.XAxis>>,
 })));
 
 const DynamicYAxis = React.lazy(() => import('recharts').then(m => ({
-  default: m.YAxis as React.ComponentType<unknown>,
+  default: m.YAxis as React.ComponentType<React.ComponentProps<typeof m.YAxis>>,
 })));
 
 const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip,
+  default: m.Tooltip as React.ComponentType<React.ComponentProps<typeof m.Tooltip>>,
 })));
 
 const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
-  default: m.ResponsiveContainer,
+  default: m.ResponsiveContainer as React.ComponentType<React.ComponentProps<typeof m.ResponsiveContainer>>,
 })));
 
 const DynamicCartesianGrid = React.lazy(() => import('recharts').then(m => ({
-  default: m.CartesianGrid,
+  default: m.CartesianGrid as React.ComponentType<React.ComponentProps<typeof m.CartesianGrid>>,
 })));
 
 const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell,
+  default: m.Cell as React.ComponentType<React.ComponentProps<typeof m.Cell>>,
 })));
 
 // Loading component for charts
@@ -96,7 +96,7 @@ export const RecentPnLChart: React.FC = () => {
         </div>
 
         {/* Chart */}
-        <div className="aspect-[16/9] w-full">
+        <div className="aspect-video w-full">
           <Suspense fallback={<ChartLoadingSkeleton />}>
             <DynamicResponsiveContainer>
               <DynamicBarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>

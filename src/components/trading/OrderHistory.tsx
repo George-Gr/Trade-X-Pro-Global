@@ -5,7 +5,7 @@ import { useOrdersTable, type OrderTableItem } from '@/hooks/useOrdersTable';
 import { useToast } from '@/hooks/use-toast';
 import { OrderFilter, type OrderFilterType } from '@/components/trading/OrderFilter';
 import { OrderDetailExpander } from '@/components/trading/OrderDetailExpander';
-import DesktopOrderTable from '@/components/trading/DesktopOrderTable';
+import DesktopOrderTable, { type OrderSortKey } from '@/components/trading/DesktopOrderTable';
 import MobileOrderCards from '@/components/trading/MobileOrderCards';
 import {
   AlertDialog,
@@ -18,10 +18,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-type OrderSortKey = 'created_at' | 'symbol' | 'quantity' | 'price';
-
 interface SortConfig {
-  key: OrderSortKey;
+  key: 'created_at' | 'symbol' | 'quantity' | 'price';
   direction: 'asc' | 'desc';
 }
 
@@ -53,7 +51,7 @@ const OrderHistory: React.FC = () => {
   // Filter orders
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
-    
+
     return orders.filter(order => {
       if (filterStatus === 'all') return true;
       return order.status === filterStatus;
@@ -88,12 +86,12 @@ const OrderHistory: React.FC = () => {
     try {
       // Placeholder: actual reorder would be implemented with useOrderExecution
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       toast({
         title: 'Order Resubmitted',
         description: `${selectedForReorder.symbol} ${selectedForReorder.side.toUpperCase()} order placed`,
       });
-      
+
       setShowReorderConfirm(false);
       setSelectedForReorder(null);
     } catch (err) {
@@ -149,9 +147,8 @@ const OrderHistory: React.FC = () => {
         {label}
         {isActive && (
           <ChevronDown
-            className={`h-3 w-3 transition-transform ${
-              sortConfig.direction === 'asc' ? 'rotate-180' : ''
-            }`}
+            className={`h-3 w-3 transition-transform ${sortConfig.direction === 'asc' ? 'rotate-180' : ''
+              }`}
             aria-hidden="true"
           />
         )}

@@ -47,7 +47,7 @@ const ChartContainer = React.forwardRef<
 
   React.useEffect(() => {
     let mounted = true;
-    import("recharts").then((m) => {
+    import("recharts").then((m: typeof import('recharts')) => {
       if (mounted) setRecharts(m);
     });
     return () => {
@@ -123,12 +123,12 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, itemConfig]) => {
-    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    // Validate color before rendering to prevent CSS injection
-    return color && isValidColor(color) ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
+                .map(([key, itemConfig]) => {
+                  const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+                  // Validate color before rendering to prevent CSS injection
+                  return color && isValidColor(color) ? `  --color-${key}: ${color};` : null;
+                })
+                .join("\n")}
 }
 `,
           )
@@ -226,7 +226,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
       <div
         ref={ref}
         className={cn(
-          "grid min-w-[8rem] items-start gap-4.5",
+          "grid min-w-32 items-start gap-4.5",
           "rounded-lg border border-border/50",
           "bg-background px-4.5 py-4.5 text-xs shadow-xl",
           className,
@@ -259,7 +259,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
                     ) : (
                       !hideIndicator && (
                         <div
-                          className={cn("shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]", {
+                          className={cn("shrink-0 rounded-xs border-[--color-border] bg-[--color-bg]", {
                             "h-2.5 w-2.5": indicator === "dot",
                             "w-1": indicator === "line",
                             "w-0 border-[1.5px] border-dashed bg-transparent": indicator === "dashed",
@@ -314,53 +314,53 @@ interface ChartLegendContentProps {
 
 const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentProps>(
   ({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
-  const { config } = useChart();
+    const { config } = useChart();
 
-  if (!payload?.length) {
-    return null;
-  }
+    if (!payload?.length) {
+      return null;
+    }
 
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "flex items-center justify-center gap-4 flex-wrap",
-        verticalAlign === "top" ? "pb-4" : "pt-4",
-        className
-      )}
-    >
-      {payload.map((item) => {
-        const key = `${nameKey || item.dataKey || "value"}`;
-        const itemConfig = getPayloadConfigFromPayload(config, item, key);
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex items-center justify-center gap-4 flex-wrap",
+          verticalAlign === "top" ? "pb-4" : "pt-4",
+          className
+        )}
+      >
+        {payload.map((item) => {
+          const key = `${nameKey || item.dataKey || "value"}`;
+          const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
-        return (
-          <div
-            key={String(item.value) || item.dataKey}
-            className={cn(
-              "flex items-center gap-1.5 chart-icon text-sm",
-              "px-2 py-1 rounded-md",
-              "hover:bg-muted/50 transition-colors cursor-default"
-            )}
-          >
-            {itemConfig?.icon && !hideIcon ? (
-              <itemConfig.icon />
-            ) : (
-              <div
-                className="h-2.5 w-2.5 shrink-0 rounded-sm border border-transparent"
-                style={{
-                  backgroundColor: item.color || "",
-                }}
-              />
-            )}
-            <span className="text-muted-foreground font-medium">
-              {itemConfig?.label || null}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
+          return (
+            <div
+              key={String(item.value) || item.dataKey}
+              className={cn(
+                "flex items-center gap-1.5 chart-icon text-sm",
+                "px-2 py-1 rounded-md",
+                "hover:bg-muted/50 transition-colors cursor-default"
+              )}
+            >
+              {itemConfig?.icon && !hideIcon ? (
+                <itemConfig.icon />
+              ) : (
+                <div
+                  className="h-2.5 w-2.5 shrink-0 rounded-sm border border-transparent"
+                  style={{
+                    backgroundColor: item.color || "",
+                  }}
+                />
+              )}
+              <span className="text-muted-foreground font-medium">
+                {itemConfig?.label || null}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  });
 ChartLegendContent.displayName = "ChartLegend";
 
 // Helper to extract item config from a payload.

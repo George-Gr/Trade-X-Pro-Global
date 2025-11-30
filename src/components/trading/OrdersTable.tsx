@@ -145,7 +145,7 @@ export const OrdersTable = ({
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4 text-destructive bg-background p-4 rounded-lg">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 shrink-0" />
             <span>Error loading orders: {error.message}</span>
           </div>
         </CardContent>
@@ -166,8 +166,8 @@ export const OrdersTable = ({
         {/* Error State */}
         {error && (
           <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
-            <span className="text-sm text-destructive">Error loading orders: {error.message}</span>
+            <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+            <span className="text-sm text-destructive">Error loading orders: {error instanceof Error ? error.message : String(error)}</span>
           </div>
         )}
 
@@ -195,7 +195,7 @@ export const OrdersTable = ({
         {/* Empty State */}
         {!isLoading && sortedOrders.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <AlertCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
+            <AlertCircle className="h-12 w-12 text-muted-foreground/50 mb-4 shrink-0" />
             <p className="text-muted-foreground">
               {orders.length === 0
                 ? 'No orders yet. Start trading to see orders here.'

@@ -11,13 +11,13 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
   useEffect(() => {
     // Initialize TradingView compatibility fixes
     initTradingViewCompatibility();
-    
+
     if (!containerRef.current) return;
 
     // Clear previous widget
     containerRef.current.innerHTML = "";
 
-    const script = document.createElement("script");
+    const script: HTMLScriptElement = document.createElement("script");
     script.src = "https://s3.tradingview.com/tv.js";
     script.async = true;
     script.onload = () => {

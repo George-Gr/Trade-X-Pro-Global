@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { Position } from '@/types/position';
 
-interface SortConfig {
+export interface SortConfig {
   key: keyof Position | 'pnl' | 'margin_level';
   direction: 'asc' | 'desc';
 }
@@ -55,7 +55,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
         <div>
           <h3 className="font-semibold text-lg">Open Positions ({positionCount})</h3>
         </div>
-        
+
         {/* Filter Buttons */}
         <div className="flex items-center gap-3 flex-wrap">
           {(['all', 'long', 'short', 'profit', 'loss'] as FilterType[]).map((filter) => (
@@ -70,8 +70,8 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
               {filter === 'long'
                 ? 'Buy'
                 : filter === 'short'
-                ? 'Sell'
-                : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                  ? 'Sell'
+                  : filter.charAt(0).toUpperCase() + filter.slice(1)}
             </Button>
           ))}
         </div>

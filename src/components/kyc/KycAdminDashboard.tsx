@@ -87,20 +87,21 @@ const KycAdminDashboard: React.FC = () => {
       // Fetch user profiles for each request
       const enrichedRequests = await Promise.all(
         (requestsData || []).map(async (req: KycRequest) => {
-          const r = req;
+          const r = req as Record<string, unknown>;
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('id, email, full_name, phone, kyc_status')
             .eq('id', String(r.user_id))
             .single();
 
+          if (profileError) {
+            console.error('Profile fetch error:', profileError);
+          }
+
           return {
             ...r,
             userProfile: profile,
             kycDocuments: (r.kyc_documents as KycDocument[]) || [],
-          };
-        })
-      );
           } as KycRequest & { userProfile?: UserProfile; kycDocuments?: KycDocument[] };
         })
       );

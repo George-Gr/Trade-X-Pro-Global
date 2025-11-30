@@ -159,10 +159,11 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         portfolioRiskAssessment={portfolioRiskAssessment}
       />
 
-      {/* Charts and Analysis */}
+{/* Charts and Analysis */}
       <RiskChartsPanel
         equityHistory={equityHistory}
         assetClassMetrics={assetClassMetrics}
+        portfolioMetrics={portfolioMetrics}
         stressTests={{
           ...stressTests,
           scenarios: stressTests.scenarios.map(s => ({
@@ -173,7 +174,6 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         diversification={diversification}
         concentration={concentration}
         riskMetrics={riskMetrics}
-        portfolioMetrics={portfolioMetrics}
       />
     </div>
   );
