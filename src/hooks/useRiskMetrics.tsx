@@ -138,7 +138,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       const assessment = assessPortfolioRisk(
         metrics,
         Array.isArray(positionsData)
-          ? positionsData.map((p: Position) => ({
+          ? positionsData.map((p: any) => ({
               symbol: typeof p.symbol === 'string' ? p.symbol : String(p.symbol ?? ''),
               quantity: typeof p.quantity === 'number' ? p.quantity : Number(p.quantity ?? 0),
               positionValue: (Number(p.quantity ?? 0)) * (Number(p.current_price ?? 0)),

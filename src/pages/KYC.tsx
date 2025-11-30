@@ -39,7 +39,7 @@ const KYC = () => {
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status);
+      setKycStatus(data.kyc_status || null);
     }
   }, [user]);
 

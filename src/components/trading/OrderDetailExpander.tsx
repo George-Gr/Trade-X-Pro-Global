@@ -33,16 +33,16 @@ export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({ order 
       </div>
       <div>
         <span className="text-muted-foreground text-xs">Price</span>
-        <div className="font-mono font-semibold">${order.price.toFixed(5)}</div>
+        <div className="font-mono font-semibold">${(order.price || 0).toFixed(5)}</div>
       </div>
       <div>
         <span className="text-muted-foreground text-xs">Commission</span>
-        <div className="font-mono font-semibold">${order.commission?.toFixed(2) || '0.00'}</div>
+        <div className="font-mono font-semibold">${(order.commission || 0).toFixed(2)}</div>
       </div>
       {order.slippage !== undefined && (
         <div>
           <span className="text-muted-foreground text-xs">Slippage</span>
-          <div className="font-mono font-semibold">${order.slippage.toFixed(4)}</div>
+          <div className="font-mono font-semibold">${(order.slippage || 0).toFixed(4)}</div>
         </div>
       )}
     {order.realized_pnl !== undefined && (

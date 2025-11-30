@@ -340,7 +340,7 @@ describe('Slippage Calculation Engine', () => {
           symbol: 'EURUSD',
           marketPrice: -100, // Invalid: negative
           orderQuantity: 10,
-          side: 'buy',
+          side: 'buy' as const,
           conditions: {
             currentVolatility: 15,
             averageVolatility: 15,

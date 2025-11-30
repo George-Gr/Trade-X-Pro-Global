@@ -61,9 +61,12 @@ const OrderHistory: React.FC = () => {
   // Sort orders
   const sortedOrders = useMemo(() => {
     const sorted = [...filteredOrders].sort((a, b) => {
-      const aVal = a[sortConfig.key];
-      const bVal = b[sortConfig.key];
+      const aVal = a[sortConfig.key] as number | string;
+      const bVal = b[sortConfig.key] as number | string;
 
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+      }
       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;

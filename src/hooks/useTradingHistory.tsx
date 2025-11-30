@@ -99,7 +99,7 @@ export const useTradingHistory = () => {
       if (ledgerError) throw ledgerError;
 
       // Process closed positions into trade history
-      const trades: TradeHistoryItem[] = (positionsData || []).map((pos) => ({
+      const trades: TradeHistoryItem[] = (positionsData || []).map((pos: any) => ({
         id: pos.id,
         symbol: pos.symbol,
         side: pos.side,

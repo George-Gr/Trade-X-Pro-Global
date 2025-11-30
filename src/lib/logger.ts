@@ -467,10 +467,10 @@ export const logger = {
 
     // Log slow transactions as warnings
     if (duration > 1000) { // Log transactions slower than 1 second
-      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, undefined, {
+      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, {} as Error, {
         ...fullContext,
         metadata: {
-          ...fullContext.metadata,
+          ...(fullContext.metadata as any),
           transactionName: transaction.name,
           duration,
           operation: transaction.operation,

@@ -197,7 +197,7 @@ export const AutoBreadcrumb = React.forwardRef<
     const items: (BreadcrumbItemConfig & { path?: string })[] = [];
 
     // Always start with Home
-    items.push(BREADCRUMB_CONFIG['/'] || { title: 'Home' });
+    items.push((BREADCRUMB_CONFIG['/'] as BreadcrumbItemConfig) || { title: 'Home' });
 
     let currentPath = '';
 

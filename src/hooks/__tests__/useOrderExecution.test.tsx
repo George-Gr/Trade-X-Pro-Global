@@ -387,7 +387,7 @@ describe('useOrderExecution', () => {
     });
 
     // Extract idempotency keys from invoke calls
-    mockInvoke.mock.calls.forEach((call) => {
+    mockInvoke.mock.calls.forEach((call: any) => {
       if (call[1]?.body?.idempotency_key) {
         idempotencyKeys.push(call[1].body.idempotency_key);
       }

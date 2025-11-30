@@ -262,7 +262,7 @@ describe('Accessibility Tests', () => {
       // Mock the media query
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: vi.fn().mockImplementation(query => ({
+        value: vi.fn().mockImplementation((query): MediaQueryList => ({
           matches: query.includes('prefers-reduced-motion: reduce'),
           media: query,
           onchange: null,
@@ -270,8 +270,9 @@ describe('Accessibility Tests', () => {
           removeListener: vi.fn(),
           addEventListener: vi.fn(),
           removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(() => true),
         })),
-      }) as unknown as MediaQueryList;
+      });
 
       render(<Dashboard />);
 

@@ -105,7 +105,7 @@ describe('useSlTpExecution', () => {
     });
 
     expect(executionResult?.reason).toBe('take_profit');
-    expect(executionResult?.realized_pnl).toBe(200);
+    expect(executionResult?.realized_pnl).toBe(200 as any);
   });
 
   /**

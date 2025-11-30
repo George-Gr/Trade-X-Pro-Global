@@ -47,8 +47,8 @@ const ChartContainer = React.forwardRef<
 
   React.useEffect(() => {
     let mounted = true;
-    import("recharts").then((m: typeof import('recharts')) => {
-      if (mounted) setRecharts(m);
+    import("recharts").then((m: any) => {
+      if (mounted) setRecharts(m as typeof import('recharts'));
     });
     return () => {
       mounted = false;

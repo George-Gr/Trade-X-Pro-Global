@@ -24,10 +24,11 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
       // Add extra safety checks and delay to ensure TradingView is fully loaded
       setTimeout(() => {
         try {
-          if (typeof window.TradingView !== "undefined" && 
-              window.TradingView.widget && 
+          if (typeof window !== 'undefined' && 
+              typeof (window as any).TradingView !== "undefined" && 
+              (window as any).TradingView.widget && 
               containerRef.current) {
-            new window.TradingView.widget({
+            new (window as any).TradingView.widget({
               autosize: true,
               symbol: symbol,
               interval: "15",

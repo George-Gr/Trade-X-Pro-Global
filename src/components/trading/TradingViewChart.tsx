@@ -153,7 +153,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
       }, 2000);
 
       // Store cleanup closure
-      (chart as unknown as Record<string, unknown>)._cleanup = () => {
+      (chart as any)._cleanup = () => {
         window.removeEventListener("resize", handleResize);
         clearInterval(updateInterval);
         if (chart) chart.remove();

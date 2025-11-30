@@ -252,7 +252,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                   onSymbolClick={handleSymbolClick}
                   onQuickTrade={handleQuickTrade}
                   onRemoveSymbol={handleRemoveSymbol}
-                  onAddSymbolClick={() => {/* Dialog opens on button click */ }}
+                  onAddSymbolClick={() => {/* Dialog opens on button click */}}
                 />
               </TabsContent>
             ))}

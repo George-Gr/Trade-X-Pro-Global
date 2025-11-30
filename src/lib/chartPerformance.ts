@@ -360,11 +360,11 @@ export class ChartFactory {
     // Try to acquire from pool first
     const factoryFn = this.factories.get(type)!;
     const chart = this.pool.acquire(type, () => {
-      return factoryFn(...args);
+      return factoryFn(...args as any);
     });
 
     // Initialize chart with arguments
-    const chartObj = chart as Record<string, unknown>;
+    const chartObj = chart as any;
     if (typeof chartObj.initialize === 'function') {
       (chartObj.initialize as (...args: unknown[]) => void)(...args);
     }

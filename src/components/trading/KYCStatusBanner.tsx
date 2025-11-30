@@ -17,7 +17,7 @@ export function KYCStatusBanner() {
       const { data, error } = await supabase
         .from('profiles')
         .select('kyc_status, account_status')
-        .eq('id', user?.id)
+        .eq('id', user?.id!)
         .single();
 
       if (error) throw error;
@@ -80,7 +80,7 @@ export function KYCStatusBanner() {
   }
 };
 
-const config = getStatusConfig(profile.kyc_status);
+const config = getStatusConfig(profile.kyc_status || 'pending');
 const StatusIcon = config.icon;
 
 return (

@@ -21,12 +21,12 @@ describe('TradingView Compatibility Layer', () => {
     
     // Mock console.warn to capture warnings
     consoleWarnings = [];
-    console.warn = vi.fn((...args) => {
+    console.warn = vi.fn((...args: any[]) => {
       consoleWarnings.push(args.join(' '));
     });
     
     // Reset any previous modifications
-    delete (globalThis as Record<string, unknown>).__tradingViewCompatibilityApplied;
+    delete (globalThis as any).__tradingViewCompatibilityApplied;
   });
 
   afterEach(() => {
