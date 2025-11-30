@@ -130,7 +130,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         symbol,
         side: 'buy',
         quantity: 0.01,
-        type: 'market',
+        type: OrderType.Market,
       });
       toast({
         title: "Order Executed",
@@ -157,9 +157,9 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       ...prev,
       quantity: template.volume,
       // NOTE: Leverage is now fixed per asset - template.leverage is ignored
-      type: template.order_type as 'market' | 'limit' | 'stop' | 'stop_limit',
+      type: template.order_type as OrderType,
       stopLossPrice: template.stop_loss || undefined,
-      takeProfitPrice: template.take_profit,
+      takeProfitPrice: template.take_profit ?? undefined,
     }));
     setOrderType(template.order_type as OrderType);
     toast({
@@ -188,16 +188,10 @@ return (
             <h3 className="font-semibold text-lg">{symbol}</h3>
             <p className="text-sm text-muted-foreground">
               Current Price:
-              <span className={`font-mono font-semibold transition-colors duration-300 ${priceData?.isStale ? 'text-destructive' : 'text-foreground'}`}>
+              <span className="font-mono font-semibold">
                 ${currentPrice.toFixed(5)}
-                {priceData?.isStale && (
-                  <Loader2 className="ml-1 inline-block h-3 w-3 animate-spin text-destructive" />
-                )}
               </span>
             </p>
-            {priceData?.isStale && (
-              <p className="text-xs text-destructive mt-1">Price updating...</p>
-            )}
           </div>
           <OrderTemplatesDialog onApplyTemplate={handleApplyTemplate} />
         </div>

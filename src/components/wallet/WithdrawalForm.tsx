@@ -89,7 +89,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
       const { data, error } = await supabase
         .from('crypto_transactions')
         .select('usd_amount')
-        .eq('user_id', user?.id)
+        .eq('user_id', user?.id || '')
         .eq('transaction_type', 'withdrawal')
         .in('status', ['completed', 'confirming'])
         .gte('created_at', today.toISOString());

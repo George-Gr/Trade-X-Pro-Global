@@ -184,7 +184,16 @@ export const EquityChart: React.FC = () => {
                   label={{ value: 'Equity ($)', angle: -90, position: 'insideLeft' }}
                 />
                 <DynamicTooltip
-                  formatter={(value: any) => `$${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
+                  content={({ active, payload }: { active?: boolean; payload?: Array<{ value: number | string }> }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-background border border-border rounded p-2 text-xs">
+                          <p className="text-foreground">{`$${Number(payload[0].value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
                   contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
                 />
                 <DynamicReferenceLine

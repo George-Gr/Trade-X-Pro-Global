@@ -33,7 +33,24 @@ export const PriceAlertsManager = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setAlerts(data || []);
+      const mappedAlerts = (data || []).map(alert => ({
+        id: alert.id,
+        userId: alert.user_id,
+        symbol: alert.symbol,
+        condition: alert.condition as 'above' | 'below' | 'change',
+        threshold: alert.target_price,
+        currentValue: 0,
+        message: `Price ${alert.condition} ${alert.target_price}`,
+        enabled: !alert.triggered,
+        createdAt: new Date(alert.created_at),
+        lastTriggeredAt: alert.triggered_at ? new Date(alert.triggered_at) : undefined,
+        triggerCount: 0,
+        notificationType: 'inapp' as 'inapp',
+        target_price: alert.target_price,
+        triggered: alert.triggered,
+        created_at: alert.created_at,
+      }));
+      setAlerts(mappedAlerts);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
       toast({

@@ -233,7 +233,7 @@ const Portfolio = () => {
                                 side={position.side}
                                 currentPrice={currentPrice}
                                 trailingStopEnabled={position.trailing_stop_enabled || false}
-                                trailingStopDistance={position.trailing_stop_distance || null}
+                                trailingStopDistance={position.trailing_stop_distance ?? undefined}
                               />
                               <Button
                                 size="sm"

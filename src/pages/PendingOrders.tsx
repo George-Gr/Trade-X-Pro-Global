@@ -56,7 +56,7 @@ const PendingOrders = () => {
       updates.take_profit = modifyTakeProfit ? parseFloat(modifyTakeProfit) : null;
     }
 
-    const success = await modifyOrder(selectedOrder.id, updates as any);
+    const success = await modifyOrder(selectedOrder.id, updates as Record<string, unknown>);
     if (success) {
       setModifyDialogOpen(false);
       setSelectedOrder(null);

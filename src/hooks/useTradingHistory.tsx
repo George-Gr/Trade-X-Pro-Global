@@ -99,26 +99,47 @@ export const useTradingHistory = () => {
       if (ledgerError) throw ledgerError;
 
       // Process closed positions into trade history
-      const trades: TradeHistoryItem[] = (positionsData || []).map((pos: any) => ({
-        id: pos.id,
-        symbol: pos.symbol,
-        side: pos.side,
-        quantity: pos.quantity,
-        entry_price: pos.entry_price,
-        exit_price: pos.current_price || pos.entry_price,
-        realized_pnl: pos.realized_pnl || 0,
-        commission: 0, // Will be calculated from orders if needed
-        opened_at: pos.opened_at,
-        closed_at: pos.closed_at || pos.opened_at,
-        margin_used: pos.margin_used,
-      }));
+      const trades: TradeHistoryItem[] = (positionsData || []).map((pos: unknown) => {
+        const p = pos as Record<string, unknown>;
+        return {
+          id: p.id as string,
+          symbol: p.symbol as string,
+          side: p.side as 'buy' | 'sell',
+          quantity: p.quantity as number,
+          entry_price: p.entry_price as number,
+          exit_price: (p.current_price as number) || (p.entry_price as number),
+          realized_pnl: (p.realized_pnl as number) || 0,
+          commission: 0, // Will be calculated from orders if needed
+          opened_at: p.opened_at as string,
+          closed_at: (p.closed_at as string) || (p.opened_at as string),
+          margin_used: p.margin_used as number,
+        };
+      });
 
       // Calculate statistics
       const stats = calculateStatistics(trades);
 
       setClosedPositions(trades);
-      setOrders(ordersData || []);
-      setLedger(ledgerData || []);
+      setOrders((ordersData || []).map((order: unknown): OrderHistoryItem => {
+        const o = order as Record<string, unknown>;
+        return {
+          ...o,
+          price: (o.price as number) ?? undefined,
+          fill_price: (o.fill_price as number) ?? undefined,
+          created_at: (o.created_at as string) ?? '',
+          filled_at: (o.filled_at as string) ?? undefined,
+          commission: (o.commission as number) ?? 0,
+        } as OrderHistoryItem;
+      }));
+      setLedger((ledgerData || []).map((entry: unknown): LedgerEntry => {
+        const e = entry as Record<string, unknown>;
+        return {
+          ...e,
+          description: (e.description as string) ?? 'No description',
+          created_at: (e.created_at as string) ?? '',
+          reference_id: (e.reference_id as string) ?? undefined,
+        } as LedgerEntry;
+      }));
       setStatistics(stats);
       setError(null);
     } catch (err) {

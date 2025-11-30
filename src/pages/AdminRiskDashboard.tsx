@@ -31,7 +31,7 @@ const AdminRiskDashboard = () => {
         .in("status", ["pending", "notified", "escalated"])
         .order("triggered_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return data as MarginCallEvent[];
     },
     refetchInterval: 10000,
   });
@@ -95,12 +95,12 @@ const AdminRiskDashboard = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  marginCalls?.map((call: any) => (
+                  marginCalls?.map((call: MarginCallEvent) => (
                     <TableRow key={call.id}>
                       <TableCell>
-                        <div className="font-medium">{call.profiles?.full_name || "Unknown"}</div>
+                        <div className="font-medium">{call.profiles?.full_name ?? "Unknown"}</div>
                       </TableCell>
-                      <TableCell>{Number(call.margin_level).toFixed(2)}%</TableCell>
+                      <TableCell>{Number(call.margin_level ?? 0).toFixed(2)}%</TableCell>
                       <TableCell>
                         <Badge variant={call.severity === "CRITICAL" ? "destructive" : "outline"}>
                           {call.severity}

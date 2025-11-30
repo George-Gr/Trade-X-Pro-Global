@@ -56,8 +56,25 @@ export const usePortfolioData = () => {
 
       if (positionsError) throw positionsError;
 
-      setProfile(profileData);
-      setPositions(positionsData || []);
+      setProfile({
+        ...profileData,
+        free_margin: profileData.free_margin ?? 0,
+        margin_level: profileData.margin_level ?? 0,
+      });
+      setPositions((positionsData || []).map((p: unknown): PositionWithPnL => {
+        const pos = p as Record<string, unknown>;
+        return {
+          ...pos,
+          unrealized_pnl: (pos.unrealized_pnl as number) ?? 0,
+          current_price: (pos.current_price as number) ?? 0,
+          highest_price: (pos.highest_price as number) ?? 0,
+          lowest_price: (pos.lowest_price as number) ?? 0,
+          closed_at: (pos.closed_at as string) ?? undefined,
+          opened_at: (pos.opened_at as string) ?? '',
+          trailing_stop_distance: (pos.trailing_stop_distance as number) ?? undefined,
+          trailing_stop_price: (pos.trailing_stop_price as number) ?? undefined,
+        } as PositionWithPnL;
+      }));
       setError(null);
     } catch (err: unknown) {
       // Error fetching portfolio data

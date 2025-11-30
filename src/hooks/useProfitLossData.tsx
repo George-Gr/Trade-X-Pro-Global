@@ -235,8 +235,11 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       if (fillsError) throw fillsError;
 
       // Calculate daily P&L data
-      const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], positionsData || []);
-      setDailyData(calculatedDailyData as any);
+      const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], (positionsData || []).map((p: unknown) => {
+        const pos = p as Record<string, unknown>;
+        return { ...pos, current_price: (pos.current_price as number) ?? undefined };
+      }) as Position[]);
+      setDailyData(calculatedDailyData);
 
       // Calculate chart data (equity values)
       const chartData = calculatedDailyData.map(d => d.equity);
@@ -244,7 +247,10 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       // Calculate profit/loss metrics
       const calculatedMetrics = calculateProfitLossMetrics(
         profileData,
-        positionsData || [],
+        (positionsData || []).map((p: unknown) => {
+          const pos = p as Record<string, unknown>;
+          return { ...pos, current_price: (pos.current_price as number) ?? undefined };
+        }) as Position[],
         fillsData || [],
         calculatedDailyData
       );

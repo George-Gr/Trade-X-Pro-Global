@@ -1,6 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { OrderType } from "@/lib/trading/orderMatching";
 
-export type OrderType = 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
+export { OrderType };
 
 interface OrderTypeSelectorProps {
   value: OrderType;
@@ -25,27 +26,27 @@ export const OrderTypeSelector = ({
 }: OrderTypeSelectorProps) => {
   const orderTypes: { value: OrderType; label: string; description: string }[] = [
     {
-      value: 'market',
+      value: OrderType.Market,
       label: 'Market',
       description: 'Buy/sell at current market price immediately',
     },
     {
-      value: 'limit',
+      value: OrderType.Limit,
       label: 'Limit',
       description: 'Buy/sell at specified price or better',
     },
     {
-      value: 'stop',
+      value: OrderType.Stop,
       label: 'Stop',
       description: 'Market order triggered at stop price',
     },
     {
-      value: 'stop_limit',
+      value: OrderType.StopLimit,
       label: 'Stop-Limit',
       description: 'Limit order triggered at stop price',
     },
     {
-      value: 'trailing_stop',
+      value: OrderType.TrailingStop,
       label: 'Trailing',
       description: 'Stop that follows price movement',
     },

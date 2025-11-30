@@ -66,10 +66,11 @@ export const usePnLCalculations = (
 
     for (const position of positions) {
       const currentPrice = prices.get(position.symbol) || position.currentPrice;
-      if (!currentPrice) continue;
+      const entryPrice = position.entry_price ?? 0;
+      if (!currentPrice || entryPrice === 0) continue;
 
       const pnlResult = calculateUnrealizedPnL(
-        position.entry_price || 0,
+        entryPrice,
         currentPrice,
         position.quantity,
         (position.side || 'long') as "long" | "short"
@@ -87,8 +88,8 @@ export const usePnLCalculations = (
       // Simplified liquidation price (50% of entry for long, 150% for short)
       const liquidationPrice =
         position.side === "long"
-          ? position.entry_price * 0.5
-          : position.entry_price * 1.5;
+          ? entryPrice * 0.5
+          : entryPrice * 1.5;
 
       // Calculate ROI
       const roi =
@@ -101,7 +102,7 @@ export const usePnLCalculations = (
         symbol: position.symbol,
         side: position.side as "long" | "short",
         quantity: position.quantity,
-        entryPrice: position.entry_price,
+        entryPrice,
         currentPrice,
         unrealizedPnL: pnlResult.pnl,
         unrealizedPnLPercentage: pnlResult.pnlPercentage,
@@ -169,7 +170,7 @@ export const usePnLCalculations = (
     const netPnL = grossPnL;
 
     // Calculate portfolio metrics
-    const totalCost = positions.reduce((sum, p) => sum + p.entry_price * p.quantity, 0);
+    const totalCost = positions.reduce((sum, p) => sum + (p.entry_price ?? 0) * p.quantity, 0);
     const pnlPercentage = totalCost > 0 ? (netPnL / totalCost) * 100 : 0;
 
     // Calculate profit factor

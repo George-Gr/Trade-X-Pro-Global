@@ -143,15 +143,20 @@ export const usePriceUpdates = ({
     };
   }, [symbols, intervalMs, enabled]);
 
-  const getPrice = (symbol: string): PriceData | null => {
+  const getPrice = (symbol: string): { currentPrice: number; change: number; changePercent: number; isStale: boolean } | undefined => {
     const priceData = prices.get(symbol) || null;
     if (priceData) {
       const now = Date.now();
       // Mark as stale if price is older than intervalMs + 500ms
       const isStale = (now - priceData.timestamp) > (intervalMs + 500);
-      return { ...priceData, isStale };
+      return { 
+        currentPrice: priceData.currentPrice,
+        change: priceData.change,
+        changePercent: priceData.changePercent,
+        isStale
+      };
     }
-    return null;
+    return undefined;
   };
 
   const refreshPrice = async (symbol: string) => {

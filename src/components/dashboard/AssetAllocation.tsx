@@ -1,26 +1,27 @@
 import React, { Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
+import type { PieProps, TooltipProps, CellProps, ResponsiveContainerProps } from 'recharts';
 
-// Dynamic import wrapper for recharts components
+// Dynamic import wrapper for recharts components with proper type assertions
 const DynamicPieChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.PieChart as React.ComponentType<any>,
+  default: m.PieChart as React.ComponentType<ResponsiveContainerProps>,
 })));
 
 const DynamicPie = React.lazy(() => import('recharts').then(m => ({
-  default: m.Pie as React.ComponentType<any>,
+  default: m.Pie as React.ComponentType<PieProps>,
 })));
 
 const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell as React.ComponentType<any>,
+  default: m.Cell as React.ComponentType<CellProps>,
 })));
 
 const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip as React.ComponentType<any>,
+  default: m.Tooltip as React.ComponentType<TooltipProps<number, string>>,
 })));
 
 const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
-  default: m.ResponsiveContainer as React.ComponentType<any>,
+  default: m.ResponsiveContainer as React.ComponentType<ResponsiveContainerProps>,
 })));
 
 const COLORS = ['#4ade80', '#f97316', '#60a5fa', '#f87171', '#c084fc', '#94a3b8'];
@@ -57,14 +58,14 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
       <h3 className="font-semibold mb-2">Asset Allocation</h3>
       <div className="aspect-video w-full">
         <Suspense fallback={<ChartLoadingSkeleton />}>
-          <DynamicResponsiveContainer>
+          <DynamicResponsiveContainer width="100%" height="100%">
             <DynamicPieChart>
               <DynamicPie dataKey="value" data={data} innerRadius={40} outerRadius={80} paddingAngle={2}>
                 {data.map((entry, index) => (
                   <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </DynamicPie>
-              <DynamicTooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+              <DynamicTooltip formatter={(value: number) => [`$${value.toLocaleString()}`, 'Value']} />
             </DynamicPieChart>
           </DynamicResponsiveContainer>
         </Suspense>

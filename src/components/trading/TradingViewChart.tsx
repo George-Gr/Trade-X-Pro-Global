@@ -148,12 +148,12 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
           };
 
           initialData.push(newCandle);
-          candlestickSeries.update(newCandle);
+          candlestickSeries?.update(newCandle);
         }
       }, 2000);
 
       // Store cleanup closure
-      (chart as any)._cleanup = () => {
+      (chart as unknown as Record<string, unknown>)._cleanup = () => {
         window.removeEventListener("resize", handleResize);
         clearInterval(updateInterval);
         if (chart) chart.remove();

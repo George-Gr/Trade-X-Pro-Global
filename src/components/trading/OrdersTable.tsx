@@ -146,7 +146,7 @@ export const OrdersTable = ({
         <CardContent>
           <div className="flex items-center gap-4 text-destructive bg-background p-4 rounded-lg">
             <AlertCircle className="w-5 h-5 shrink-0" />
-            <span>Error loading orders: {error.message}</span>
+            <span>Error loading orders: {error.message || 'Unknown error'}</span>
           </div>
         </CardContent>
       </Card>
@@ -167,7 +167,9 @@ export const OrdersTable = ({
         {error && (
           <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
             <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
-            <span className="text-sm text-destructive">Error loading orders: {error instanceof Error ? error.message : 'Unknown error'}</span>
+            <span className="text-sm text-destructive">
+              Error loading orders: {(error as Error | null)?.message || 'Unknown error'}
+            </span>
           </div>
         )}
 

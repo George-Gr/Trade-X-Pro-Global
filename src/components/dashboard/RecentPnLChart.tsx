@@ -104,7 +104,16 @@ export const RecentPnLChart: React.FC = () => {
                 <DynamicXAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <DynamicYAxis tick={{ fontSize: 11 }} />
                 <DynamicTooltip
-                  formatter={(value: any) => `$${Number(value).toLocaleString()}`}
+                  content={({ active, payload }: { active?: boolean; payload?: Array<{ value: number | string }> }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-background border border-border rounded p-2 text-xs">
+                          <p className="text-foreground">{`$${Number(payload[0].value).toLocaleString()}`}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
                   contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
                 />
                 <DynamicBar dataKey="pnl" isAnimationActive={false}>

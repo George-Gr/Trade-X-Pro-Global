@@ -189,7 +189,7 @@ export class ChartPool {
     }
   }
 
-  acquire<T extends { _poolId?: string }>(key: string, factory: () => T): T {
+  acquire<T = { _poolId?: string }>(key: string, factory: () => T): T {
     const pool = this.pool.get(key) || [];
     
     if (pool.length > 0) {
@@ -360,11 +360,11 @@ export class ChartFactory {
     // Try to acquire from pool first
     const factoryFn = this.factories.get(type)!;
     const chart = this.pool.acquire(type, () => {
-      return factoryFn(...args as any);
+      return factoryFn(...(args as unknown[]));
     });
 
     // Initialize chart with arguments
-    const chartObj = chart as any;
+    const chartObj = chart as Record<string, unknown>;
     if (typeof chartObj.initialize === 'function') {
       (chartObj.initialize as (...args: unknown[]) => void)(...args);
     }
@@ -437,7 +437,7 @@ export const useChartPerformance = (
     }
   }, []);
 
-  const debouncedUpdate = useCallback(<T>(callback: (...args: T[]) => void, ...args: T[]) => {
+  const debouncedUpdate = useCallback((callback: (...args: unknown[]) => void, ...args: unknown[]) => {
     if (!debouncerRef.current) {
       debouncerRef.current = new DebouncedChartUpdater(callback, mergedConfig.debounceDelay);
     }

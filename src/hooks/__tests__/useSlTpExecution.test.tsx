@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useSlTpExecution, SLTPExecutionOptions, ClosureResponse } from '../useSlTpExecution';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -42,7 +42,7 @@ describe('useSlTpExecution', () => {
     };
 
     vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
-      data: { data: mockResponse },
+      data: mockResponse as unknown as Record<string, unknown>,
       error: null,
     } as { data: Record<string, unknown>; error: unknown });
 
@@ -71,22 +71,22 @@ describe('useSlTpExecution', () => {
    */
   it('should execute take profit and return closure response', async () => {
     const mockResponse: ClosureResponse = {
-      closure_id: 'closure-124',
-      position_id: 'pos-124',
+      closure_id: 'closure-456',
+      position_id: 'pos-456',
       reason: 'take_profit',
       status: 'completed',
-      entry_price: 1.0800,
-      exit_price: 1.0900,
-      quantity_closed: 2.0,
+      entry_price: 1.0900,
+      exit_price: 1.1100,
+      quantity_closed: 1.0,
       quantity_remaining: 0,
       realized_pnl: 200,
-      pnl_percentage: 0.093,
-      commission: 10,
+      pnl_percentage: 0.184,
+      commission: 5,
       slippage: 1,
     };
 
     vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
-      data: { data: mockResponse },
+      data: mockResponse as unknown as Record<string, unknown>,
       error: null,
     } as { data: Record<string, unknown>; error: unknown });
 
@@ -104,8 +104,8 @@ describe('useSlTpExecution', () => {
       executionResult = await result.current.executeStopLossOrTakeProfit(options);
     });
 
-    expect(executionResult?.reason).toBe('take_profit');
-    expect(executionResult?.realized_pnl).toBe(200 as any);
+    expect((executionResult as any)?.reason).toBe('take_profit');
+    expect((executionResult as any)?.realized_pnl).toBe(200);
   });
 
   /**
@@ -133,7 +133,7 @@ describe('useSlTpExecution', () => {
     invokeMock
       .mockRejectedValueOnce(new Error('ECONNREFUSED'))
       .mockResolvedValueOnce({
-        data: { data: mockResponse },
+        data: mockResponse as unknown as Record<string, unknown>,
         error: null,
       } as { data: Record<string, unknown>; error: unknown });
 
@@ -184,7 +184,7 @@ describe('useSlTpExecution', () => {
     });
 
     expect(thrownError).not.toBeNull();
-    expect(thrownError?.message).toContain('Invalid position ID');
+    expect((thrownError as any)?.message).toContain('Invalid position ID');
     // Should only be called once (no retry)
     expect(invokeMock).toHaveBeenCalledTimes(1);
   });
@@ -241,7 +241,7 @@ describe('useSlTpExecution', () => {
     };
 
     vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
-      data: { data: mockResponse },
+      data: mockResponse as unknown as Record<string, unknown>,
       error: null,
     } as { data: Record<string, unknown>; error: unknown });
 

@@ -47,11 +47,12 @@ function fixDataViewSymbolToStringTag(): void {
     }
     
     // Override the assignment to handle read-only case gracefully
-    const originalDefineProperty = Object.defineProperty;
-    Object.defineProperty = function(obj: any, prop: PropertyKey, descriptor: PropertyDescriptor) {
+    const originalDefineProperty = Object.defineProperty as unknown as typeof Object.defineProperty;
+    (Object.defineProperty as unknown as typeof Object.defineProperty) = function<T extends object>(obj: T, prop: PropertyKey, descriptor: PropertyDescriptor): T {
       try {
-        return originalDefineProperty.call(this, obj, prop, descriptor);
-      } catch (error: any) {
+        const result = originalDefineProperty.call(undefined, obj, prop, descriptor) as T;
+        return result;
+      } catch (error: unknown) {
         // If assignment fails due to read-only property, log and continue
         if (error instanceof TypeError &&
             error.message.includes('Cannot assign to read only property') &&
@@ -68,7 +69,7 @@ function fixDataViewSymbolToStringTag(): void {
     const originalSet = Object.getOwnPropertyDescriptor(DataView.prototype, Symbol.toStringTag)?.set;
     if (!originalSet) {
       Object.defineProperty(DataView.prototype, Symbol.toStringTag, {
-        set(value) {
+        set(value: string | undefined) {
           // Silently ignore assignments in modern environments
           if (typeof value === 'string') {
             console.debug('TradingView: Ignoring DataView Symbol.toStringTag assignment:', value);
@@ -103,7 +104,7 @@ function fixDataViewSymbolToStringTag(): void {
 function patchCommonAssignmentPatterns(): void {
   // Patch common patterns used by TradingView
   const originalAssign = Object.assign;
-  Object.assign = function(target, ...sources) {
+  Object.assign = function(target: object, ...sources: object[]) {
     try {
       return originalAssign.call(this, target, ...sources);
     } catch (error) {
