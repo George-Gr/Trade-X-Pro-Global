@@ -157,8 +157,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       ...prev,
       quantity: template.volume,
       // NOTE: Leverage is now fixed per asset - template.leverage is ignored
-      type: template.order_type as OrderType,
-      stopLossPrice: template.stop_loss,
+      type: template.order_type as 'market' | 'limit' | 'stop' | 'stop_limit',
+      stopLossPrice: template.stop_loss || undefined,
       takeProfitPrice: template.take_profit,
     }));
     setOrderType(template.order_type as OrderType);

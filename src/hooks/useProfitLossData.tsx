@@ -236,7 +236,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
 
       // Calculate daily P&L data
       const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], positionsData || []);
-      setDailyData(calculatedDailyData);
+      setDailyData(calculatedDailyData as any);
 
       // Calculate chart data (equity values)
       const chartData = calculatedDailyData.map(d => d.equity);

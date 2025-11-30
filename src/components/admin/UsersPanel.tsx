@@ -190,7 +190,7 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
         .order(sortBy, { ascending: sortOrder === "asc" });
 
       if (data && !error) {
-        setUserAccounts(data);
+        setUserAccounts(data as typeof userAccounts);
       } else if (error) {
         toast({
           title: "Error",

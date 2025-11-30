@@ -48,12 +48,12 @@ function fixDataViewSymbolToStringTag(): void {
     
     // Override the assignment to handle read-only case gracefully
     const originalDefineProperty = Object.defineProperty;
-    Object.defineProperty = function(obj, prop, descriptor) {
+    Object.defineProperty = function(obj: any, prop: PropertyKey, descriptor: PropertyDescriptor) {
       try {
         return originalDefineProperty.call(this, obj, prop, descriptor);
-      } catch (error) {
+      } catch (error: any) {
         // If assignment fails due to read-only property, log and continue
-        if (error instanceof TypeError && 
+        if (error instanceof TypeError &&
             error.message.includes('Cannot assign to read only property') &&
             prop === Symbol.toStringTag &&
             obj === DataView.prototype) {

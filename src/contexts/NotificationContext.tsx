@@ -164,12 +164,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                 user_id: user.id,
                 type: "position_update",
                 title: "Position Closed",
-                message: `Your ${position.side} position for ${position.symbol} has been closed with a ${position.realized_pnl >= 0 ? 'profit' : 'loss'} of ${Math.abs(position.realized_pnl).toFixed(2)}`,
+                message: `Your ${position.side} position for ${position.symbol} has been closed with a ${(position.realized_pnl || 0) >= 0 ? 'profit' : 'loss'} of ${Math.abs(position.realized_pnl || 0).toFixed(2)}`,
                 data: {
                   position_id: position.id,
                   symbol: position.symbol,
                   side: position.side,
-                  realized_pnl: position.realized_pnl,
+                  realized_pnl: position.realized_pnl || 0,
                 },
               },
             });

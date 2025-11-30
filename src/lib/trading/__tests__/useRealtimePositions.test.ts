@@ -448,7 +448,7 @@ describe("useRealtimePositions: Connection Status", () => {
 
 describe("useRealtimePositions: Lifecycle & Cleanup", () => {
   it("should cleanup subscription on unmount", () => {
-    let channel: Record<string, unknown> = { id: "test-channel" };
+    let channel: Record<string, unknown> | null = { id: "test-channel" };
     const cleanup = () => {
       channel = null;
     };

@@ -113,8 +113,8 @@ const EnhancedPositionsTable: React.FC = () => {
   // Sort positions
   const sortedPositions = useMemo(() => {
     const sorted = [...filteredPositions].sort((a, b) => {
-      let aVal: unknown = a[sortConfig.key as keyof Position];
-      let bVal: unknown = b[sortConfig.key as keyof Position];
+      let aVal: number | string = 0;
+      let bVal: number | string = 0;
 
       if (sortConfig.key === 'pnl') {
         aVal = getPositionPnL(a).unrealizedPnL || 0;
@@ -122,6 +122,9 @@ const EnhancedPositionsTable: React.FC = () => {
       } else if (sortConfig.key === 'margin_level') {
         aVal = a.margin_used || 0;
         bVal = b.margin_used || 0;
+      } else {
+        aVal = a[sortConfig.key as keyof Position] as number | string || 0;
+        bVal = b[sortConfig.key as keyof Position] as number | string || 0;
       }
 
       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;

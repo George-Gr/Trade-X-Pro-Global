@@ -42,7 +42,7 @@ export const usePendingOrders = () => {
       if (fetchError) throw fetchError;
 
       setOrders(data || []);
-    } catch (err) {
+    } catch (err: unknown) {
       // Error fetching pending orders
       setError(err instanceof Error ? err.message : "Failed to fetch pending orders");
     } finally {

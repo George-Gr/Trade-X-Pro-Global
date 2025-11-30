@@ -83,8 +83,8 @@ export const WatchlistTabs = ({
               onSymbolClick={onSelectSymbol}
               onQuickTrade={onQuickTrade}
               getPrice={() => ({ currentPrice: 0, change: 0, changePercent: 0 })}
-              onRemoveSymbol={(symbol: string) => { }} // TODO: Implement remove logic
-              onAddSymbolClick={() => { }} // TODO: Implement add symbol logic
+              onRemoveSymbol={(_symbol: string) => {}}
+              onAddSymbolClick={() => {}}
             />
           </TabsContent>
         );

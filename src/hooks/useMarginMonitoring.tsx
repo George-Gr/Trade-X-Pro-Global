@@ -178,7 +178,7 @@ export function useMarginMonitoring(
    * Subscribe to real-time position updates
    * This triggers margin recalculation when positions change
    */
-  const { positions } = useRealtimePositions(user?.id);
+  const { positions } = useRealtimePositions(user?.id || '');
 
   // Recalculate margin when positions change
   useEffect(() => {

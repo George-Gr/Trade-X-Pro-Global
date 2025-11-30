@@ -217,7 +217,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         });
 
         xhr.open('PUT', signedUrl);
-        xhr.setRequestHeader('Content-Type', upload.file.type || 'application/octet-stream');
+        xhr.setRequestHeader('Content-Type', (upload.file as File).type || 'application/octet-stream');
         xhr.send(upload.file);
       });
 

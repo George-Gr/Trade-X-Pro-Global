@@ -240,7 +240,7 @@ describe('Commission Calculation Engine', () => {
       const result = calculateCommission({
         symbol: 'MSFT',
         assetClass: AssetClass.Stock,
-        side: 'buy',
+        side: 'buy' as const,
         quantity: 100,
         executionPrice: 300.0,
       });

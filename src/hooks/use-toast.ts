@@ -176,10 +176,10 @@ function toast({ variant = "default", duration, ...props }: Toast) {
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
   // Use provided duration or fall back to default based on variant
-  const toastDuration = duration || DEFAULT_DURATIONS[variant as keyof typeof DEFAULT_DURATIONS] || DEFAULT_DURATIONS.default;
+  const toastDuration = duration || DEFAULT_DURATIONS[(variant || 'default') as keyof typeof DEFAULT_DURATIONS] || DEFAULT_DURATIONS.default;
 
   // Trigger haptic feedback on mobile devices
-  triggerHapticFeedback(variant);
+  triggerHapticFeedback(variant as 'default' | 'destructive' | undefined);
 
   dispatch({
     type: "ADD_TOAST",

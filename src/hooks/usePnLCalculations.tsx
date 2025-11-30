@@ -69,10 +69,10 @@ export const usePnLCalculations = (
       if (!currentPrice) continue;
 
       const pnlResult = calculateUnrealizedPnL(
-        position.entry_price,
+        position.entry_price || 0,
         currentPrice,
         position.quantity,
-        position.side as "long" | "short"
+        (position.side || 'long') as "long" | "short"
       );
 
       const positionValue = Math.round(currentPrice * position.quantity * 10000) / 10000;

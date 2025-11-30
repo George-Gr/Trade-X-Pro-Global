@@ -59,7 +59,7 @@ export const usePortfolioData = () => {
       setProfile(profileData);
       setPositions(positionsData || []);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       // Error fetching portfolio data
       setError(err instanceof Error ? err.message : "Failed to fetch portfolio data");
     } finally {
