@@ -7,7 +7,7 @@ import { useEffect, useRef, useCallback } from 'react';
 export const usePerformanceMonitoring = () => {
   const listenersRef = useRef<Map<string, number>>(new Map());
   const timersRef = useRef<Map<string, number>>(new Map());
-  const memoryRef = useRef<NodeJS.Timeout | null>(null);
+  const memoryRef = useRef<number | null>(null);
 
   // Track event listeners to prevent leaks
   const trackListener = useCallback((type: string, add: boolean = true) => {

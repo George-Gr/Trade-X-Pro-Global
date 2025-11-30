@@ -1,8 +1,6 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-
-// @ts-expect-error - Deno dynamic import
-const z = await import("https://deno.land/x/zod@v3.22.4/mod.ts");
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -85,7 +83,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input', 
-          details: validation.error.issues.map((issue) => issue.message).join(', ')
+          details: validation.error.issues.map((issue: { message: string }) => issue.message).join(', ')
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

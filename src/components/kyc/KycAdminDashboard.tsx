@@ -72,7 +72,6 @@ const KycAdminDashboard: React.FC = () => {
         throw new Error('Failed to get user session');
       }
 
-      // Fetch KYC requests
       const { data: requestsData, error: requestsError } = await supabase
         .from('kyc_documents') // Change to a valid table name, e.g., 'kyc_documents'
         .select(`
@@ -86,7 +85,7 @@ const KycAdminDashboard: React.FC = () => {
 
       // Fetch user profiles for each request
       const enrichedRequests = await Promise.all(
-        (requestsData || []).map(async (req: KycRequest) => {
+        (requestsData || []).map(async (req) => {
           const r = req as Record<string, unknown>;
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
