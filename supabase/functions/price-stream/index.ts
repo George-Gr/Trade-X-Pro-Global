@@ -221,7 +221,6 @@ serve(async (req: Request) => {
   
   // WebSocket connection for streaming
   if (upgradeHeader.toLowerCase() === 'websocket') {
-    // @ts-expect-error - Deno WebSocket upgrade API (not in types)
     const { socket, response } = Deno.upgradeWebSocket(req);
     
     let intervalId: number | null = null;

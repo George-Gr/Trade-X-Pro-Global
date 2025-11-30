@@ -45,7 +45,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input parameters',
-          details: validation.error.issues.map(i => `${i.path.join('.')}: ${i.message}`)
+          details: validation.error.issues.map((i: { path: (string | number)[]; message: string }) => `${i.path.join('.')}: ${i.message}`)
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

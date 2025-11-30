@@ -25,8 +25,8 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
       vendorSub: '',
       appName: 'Node.js',
       appCodeName: 'Node.js',
-      appVersion: process.version,
-      hardwareConcurrency: navigator?.hardwareConcurrency || 1,
+      appVersion: '0.0.0',
+      hardwareConcurrency: (navigator as Navigator | undefined)?.hardwareConcurrency || 1,
       maxTouchPoints: 0,
       clipboard: {
         readText: async () => '',
@@ -150,8 +150,6 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
       dir: console.dir,
       dirxml: console.dirxml,
       table: console.table,
-      profile: console.profile,
-      profileEnd: console.profileEnd,
       timeStamp: console.timeStamp,
     };
   }

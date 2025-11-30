@@ -291,7 +291,7 @@ async function executeLiquidationForEvent(
     }
 
     // 6. Call atomic stored procedure to execute liquidation in single transaction
-    const { data: atomicResult, error: atomicError } = await supabaseClient.rpc(
+    const { data: atomicResult, error: atomicError } = await (supabaseClient as any).rpc(
       'execute_liquidation_atomic',
       {
         p_user_id: marginCallEvent.userId,
@@ -398,12 +398,12 @@ async function executeLiquidationForEvent(
           slippage: p.slippage,
         })),
         failedPositions: [],
-        message: `Liquidation executed: ${atomicResult.total_positions_closed} positions closed`,
+        message: `Liquidation executed: ${atomicResultTyped.total_positions_closed} positions closed`,
       }
     );
 
     // Send via Supabase Realtime
-    const { error: notifError } = await supabaseClient
+    const { error: notifError } = await (supabaseClient as any)
       .from('notifications')
       .insert({
         user_id: marginCallEvent.userId,
@@ -414,7 +414,7 @@ async function executeLiquidationForEvent(
         data: notification.metadata as unknown,
         read: false,
         created_at: new Date().toISOString(),
-       } as unknown);
+      });
     
     if (notifError) {
       console.error('Failed to send notification:', notifError);
@@ -442,7 +442,7 @@ async function executeLiquidationForEvent(
         slippage: p.slippage,
       })),
       failedPositions: [],
-      message: `Liquidation completed: ${atomicResult.total_positions_closed} positions closed`,
+      message: `Liquidation completed: ${atomicResultTyped.total_positions_closed} positions closed`,
     };
 
   } catch (error) {
