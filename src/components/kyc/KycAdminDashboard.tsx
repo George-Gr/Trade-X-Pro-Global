@@ -73,11 +73,8 @@ const KycAdminDashboard: React.FC = () => {
       }
 
       const { data: requestsData, error: requestsError } = await supabase
-        .from('kyc_documents') // Change to a valid table name, e.g., 'kyc_documents'
-        .select(`
-          *,
-          kyc_requests (*)
-        `)
+        .from('kyc_documents')
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
 
