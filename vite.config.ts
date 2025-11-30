@@ -210,11 +210,6 @@ export default defineConfig(({ mode }) => ({
     'process.env.VITE_SENTRY_DSN': JSON.stringify(process.env.VITE_SENTRY_DSN || ''),
     'process.env.VITE_APP_VERSION': JSON.stringify(process.env.VITE_APP_VERSION || '0.0.0'),
     'process.env.VITE_FINNHUB_API_KEY': JSON.stringify(process.env.VITE_FINNHUB_API_KEY || ''),
-    // Fix the navigator global for libraries that check for it during bundling.
-    // By default, Vite will treat navigator as undefined for server-side bundles.
-    // This reduces console noise and prevents libraries from incorrectly
-    // assuming a browser environment when bundling for Node-like contexts.
-    'navigator': 'undefined',
   },
   resolve: {
     alias: {
