@@ -25,7 +25,7 @@ import {
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
-import heroImage from "@/assets/hero-trading-professional.jpg";
+import heroImage from "@/assets/hero-trading-professional.webp";
 
 export default function Index() {
   return (

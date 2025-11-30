@@ -8,6 +8,10 @@ import tsParser from "@typescript-eslint/parser";
 export default [
   js.configs.recommended,
   {
+    // ⭐ ADD: Cache for faster linting
+    cache: true,
+    cacheLocation: '.eslintcache',
+    
     ignores: ["dist", "node_modules", "e2e", "docs", "playwright.config.ts", "public/sw.js", "src/**/*.d.ts", "supabase/functions/**/__tests__/**", "src/**/__tests__/**", "src/**/*.test.{ts,tsx}", "*.config.js", "scripts/**/*.js"],
   },
   {

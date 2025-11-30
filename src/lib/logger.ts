@@ -237,6 +237,18 @@ function mergeContext(context?: LogContext): LogContext {
 }
 
 /**
+ * Socket connection event tracking
+ */
+export interface ConnectionEvent {
+  event: 'connect' | 'disconnect' | 'timeout' | 'error' | 'reconnect';
+  timestamp: string;
+  details: Record<string, unknown>;
+}
+
+const connectionEvents: ConnectionEvent[] = [];
+const MAX_CONNECTION_EVENTS = 100;
+
+/**
  * Centralized logger with context support and Sentry integration
  */
 export const logger = {
@@ -762,6 +774,83 @@ export const logger = {
    */
   clearPerformanceMetrics(): void {
     performanceMetrics.length = 0;
+  },
+
+  /**
+   * Log socket/connection event
+   */
+  logConnectionEvent(
+    event: 'connect' | 'disconnect' | 'timeout' | 'error' | 'reconnect',
+    details: Record<string, unknown>
+  ): void {
+    const connectionEvent: ConnectionEvent = {
+      event,
+      timestamp: getTimestamp(),
+      details,
+    };
+
+    // Add to history
+    connectionEvents.push(connectionEvent);
+    if (connectionEvents.length > MAX_CONNECTION_EVENTS) {
+      connectionEvents.shift();
+    }
+
+    // Add breadcrumb
+    this.addBreadcrumb('connection', `${event}: ${JSON.stringify(details)}`);
+
+    // Log critical connection events
+    if (event === 'timeout' || event === 'error') {
+      this.warn(`Connection ${event}`, {
+        component: 'Connection',
+        action: 'connection_event',
+        metadata: details,
+      });
+    }
+
+    if (isDevelopment) {
+      console.log(`[CONNECTION] ${event}`, details);
+    }
+
+    if (isSentryActive()) {
+      // Track connection timeouts as performance issues
+      if (event === 'timeout') {
+        Sentry.addBreadcrumb({
+          category: 'connection',
+          message: `Socket timeout: ${JSON.stringify(details)}`,
+          level: 'warning',
+          timestamp: Date.now() / 1000,
+        });
+      }
+    }
+  },
+
+  /**
+   * Get connection events history
+   */
+  getConnectionEvents(): ConnectionEvent[] {
+    return [...connectionEvents];
+  },
+
+  /**
+   * Clear connection events
+   */
+  clearConnectionEvents(): void {
+    connectionEvents.length = 0;
+  },
+
+  /**
+   * Log performance metric for operations
+   */
+  logPerformance(operationName: string, durationMs: number): void {
+    const level = durationMs > 1000 ? 'warn' : 'debug';
+    this[level](`Performance: ${operationName} took ${durationMs}ms`, {
+      component: 'Performance',
+      action: 'performance_metric',
+      metadata: { duration: durationMs, operation: operationName },
+    });
+
+    // Record as metric
+    this.recordMetric(`operation_${operationName.replace(/\s+/g, '_').toLowerCase()}`, durationMs, 'ms');
   },
 
   /**

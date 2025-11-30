@@ -1,54 +1,1465 @@
-# Style Guide - TradePro v10
+# Frontend Style Guide - Trade-X-Pro-Global
 
-A comprehensive guide to code standards, conventions, and best practices for the TradePro v10 codebase.
+A comprehensive guide to design standards, coding conventions, and best practices for the Trade-X-Pro-Global frontend transformation project.
 
 ## Table of Contents
 
-1. [TypeScript Standards](#typescript-standards)
-2. [React Component Conventions](#react-component-conventions)
-3. [File Organization](#file-organization)
-4. [Naming Conventions](#naming-conventions)
-5. [Tailwind CSS & Styling](#tailwind-css--styling)
-6. [Form Validation](#form-validation)
-7. [Supabase Integration](#supabase-integration)
-8. [Error Handling](#error-handling)
-9. [Testing Patterns](#testing-patterns)
-10. [Performance Optimization](#performance-optimization)
-11. [Common Pitfalls](#common-pitfalls)
-12. [Code Examples](#code-examples)
+1. [Design System Guidelines](#design-system-guidelines)
+2. [Typography System](#typography-system)
+3. [Color Psychology & Usage](#color-psychology--usage)
+4. [Component Architecture](#component-architecture)
+5. [Code Standards](#code-standards)
+6. [Implementation Rules](#implementation-rules)
+7. [Dos and Don'ts](#dos-and-donts)
+8. [Best Practices](#best-practices)
+9. [Accessibility Standards](#accessibility-standards)
+10. [Performance Guidelines](#performance-guidelines)
+11. [Testing Requirements](#testing-requirements)
+12. [Documentation Standards](#documentation-standards)
 
 ---
 
-## TypeScript Standards
+## 1. Design System Guidelines
 
-### Type Configuration
+### 1.1 Color Psychology Framework
 
-TradePro uses **intentionally loose TypeScript configuration** for incremental adoption:
+#### Primary Color Palette
+```
+NAVY (#1E3A8A) - Trust, Professionalism, Authority
+  Psychology: Banker aesthetic, institutional confidence
+  Usage: Headers, primary buttons, navigation
+  Application: 60% of interface elements
 
+GOLD (#D4AF37) - Exclusivity, Premium, Luxury
+  Psychology: Scarcity principle (Cialdini), wealth signal
+  Usage: CTAs, badges, highlights, premium indicators
+  Application: 10% of interface elements (accent only)
+
+EMERALD (#10B981) - Growth, Success, Positive Action
+  Psychology: Natural growth association, calm confidence
+  Usage: Buy orders, profit indicators, success states
+  Application: 15% of interface elements
+
+CRIMSON (#DC2626) - Urgency, Loss, Action Required
+  Psychology: Loss aversion (fear of loss > desire for gain)
+  Usage: Sell orders, losses, warnings, errors
+  Application: 10% of interface elements
+
+WARM WHITE (#FAFAF5) - Approachability, Inviting
+  Psychology: Warmth vs. clinical coldness
+  Usage: Backgrounds, cards, creating breathing room
+  Application: 70% of background elements
+```
+
+#### Color Application Rules
+
+**Primary Color (Navy) Usage**:
+- ✅ Headers, navigation, primary CTAs
+- ✅ Form labels, body text, secondary elements
+- ✅ Border elements, dividers
+- ❌ Backgrounds (too heavy)
+- ❌ Small text (reduces readability)
+
+**Accent Color (Gold) Usage**:
+- ✅ Premium CTAs, verified badges, highlights
+- ✅ Hover states on primary elements
+- ✅ Success indicators, achievement markers
+- ❌ Backgrounds (too overwhelming)
+- ❌ Body text (poor readability)
+- ❌ Overuse (loses premium signal)
+
+**Success Color (Emerald) Usage**:
+- ✅ Buy orders, profit displays, positive metrics
+- ✅ Success messages, confirmation states
+- ✅ Growth indicators, progress bars
+- ❌ Error states (psychological mismatch)
+- ❌ Backgrounds (too dominant)
+
+**Warning Color (Crimson) Usage**:
+- ✅ Sell orders, loss indicators, error states
+- ✅ Warning messages, critical alerts
+- ✅ Delete actions, destructive operations
+- ❌ Positive states (psychological mismatch)
+- ❌ Backgrounds (too alarming)
+
+### 1.2 Color Contrast Requirements
+
+**WCAG AAA Compliance (Target)**:
+- Body text: 7:1 contrast ratio minimum
+- Large text: 4.5:1 contrast ratio minimum
+- UI elements: 3:1 contrast ratio minimum
+
+**Implementation**:
+```css
+/* Primary text on white */
+--text-primary: hsl(220 13% 13%); /* Navy-based, 7:1 contrast */
+--text-secondary: hsl(220 13% 30%); /* Medium contrast */
+--text-muted: hsl(220 13% 50%); /* Low priority text */
+
+/* Backgrounds */
+--bg-primary: hsl(0 0% 99%); /* Warm white, accessible */
+--bg-secondary: hsl(0 0% 97%); /* Slightly darker */
+--bg-tertiary: hsl(0 0% 95%); /* Card backgrounds */
+
+/* Interactive states */
+--btn-primary: hsl(220 60% 20%); /* Navy button */
+--btn-primary-hover: hsl(220 60% 15%); /* Darker on hover */
+--btn-gold: hsl(43 74% 49%); /* Gold accent */
+--btn-gold-hover: hsl(43 74% 42%); /* Darker gold */
+```
+
+### 1.3 Spacing & Layout Standards
+
+#### Grid System
+```
+BASE GRID: 4px (all spacing multiples of 4)
+SMALL SCALE: 4px, 8px, 12px, 16px (tight elements)
+MEDIUM SCALE: 20px, 24px, 32px (card spacing)
+LARGE SCALE: 40px, 48px, 64px (section spacing)
+EXTRA LARGE: 80px, 96px, 128px (hero sections)
+```
+
+#### Component Spacing Rules
+
+**Card Spacing**:
+- Internal padding: 16px (md) for standard cards
+- Internal padding: 24px (lg) for featured cards
+- Internal padding: 32px (xl) for premium cards
+- Margin between cards: 16px (md)
+- Gap in grid layouts: 16px (md)
+
+**Form Spacing**:
+- Label to input: 6px
+- Input to input: 12px
+- Group spacing: 24px
+- Form to button: 20px
+
+**Typography Spacing**:
+- Line height: 1.4-1.6 (body), 1.2-1.4 (headings)
+- Paragraph spacing: 16px (md)
+- Heading to content: 12px
+- List item spacing: 8px
+
+**Navigation Spacing**:
+- Menu item height: 40px minimum
+- Menu item padding: 12px 16px
+- Dropdown spacing: 8px padding, 4px gaps
+- Sidebar width: 240px-280px
+
+### 1.4 Elevation & Depth System
+
+#### Shadow Hierarchy
+```
+LEVEL 0 (Flat): No shadow
+  Usage: Background elements, disabled states
+  CSS: box-shadow: none;
+
+LEVEL 1 (Subtle): 0 1px 2px rgba(0,0,0,0.05)
+  Usage: Secondary cards, input fields
+  Psychology: Slight separation, not prominent
+
+LEVEL 2 (Standard): 0 4px 6px -1px rgba(0,0,0,0.1)
+  Usage: Primary cards, buttons, modals
+  Psychology: Standard elevation, important
+
+LEVEL 3 (Prominent): 0 10px 15px -3px rgba(0,0,0,0.1)
+  Usage: Featured content, primary CTAs
+  Psychology: High importance, demands attention
+
+LEVEL 4 (Premium): 0 20px 25px -5px rgba(0,0,0,0.1)
+  Usage: Premium badges, hero elements
+  Psychology: Maximum importance, exclusive
+
+LEVEL 5 (Gold Glow): 0 0 20px hsl(43 74% 49% / 0.3)
+  Usage: Premium indicators, success states
+  Psychology: Luxury signal, achievement
+```
+
+#### Border Radius Standards
+```
+SMALL: 4px (sharp, technical elements)
+  Usage: Input fields, checkboxes, radio buttons
+
+MEDIUM: 8px (standard, friendly)
+  Usage: Buttons, cards, modals, badges
+
+LARGE: 12px (soft, approachable)
+  Usage: Mobile cards, rounded elements
+
+EXTRA LARGE: 16px (very soft)
+  Usage: Mobile-first designs, pill shapes
+
+CIRCULAR: 50% (perfect circles)
+  Usage: Avatars, icons, progress indicators
+```
+
+---
+
+## 2. Typography System
+
+### 2.1 Font Selection & Hierarchy
+
+#### Primary Font Stack
+```
+HEADINGS (Authority & Premium): Playfair Display
+  Weights: 600 (Semibold), 700 (Bold)
+  Usage: H1, H2, H3, premium badges, section titles
+  Psychology: Serif = trust + authority (Nielsen Norman: +23% trust perception)
+  Target: 60% of headings should use serif
+
+BODY TEXT (Clarity & Readability): Manrope
+  Weights: 400 (Regular), 500 (Medium), 600 (Semibold)
+  Usage: Body text, labels, forms, navigation
+  Psychology: Sans-serif = modern + approachable
+  Target: 40% of headings + all body text
+
+MONOSPACE (Data & Precision): JetBrains Mono
+  Weights: 400 (Regular), 600 (Semibold)
+  Usage: Numbers, prices, code, data displays
+  Psychology: Technical precision, financial data
+  Target: All trading data, statistics
+```
+
+#### Typography Scale (Desktop)
+
+| Element | Font | Size | Weight | Line Height | Letter Spacing | Usage |
+|---------|------|------|--------|-------------|----------------|-------|
+| H1 (Page Title) | Playfair Display | 48px | 700 | 1.2 | -0.02em | Landing hero, main pages |
+| H2 (Section) | Playfair Display | 36px | 600 | 1.33 | -0.01em | Major sections, cards |
+| H3 (Subsection) | Playfair Display | 28px | 600 | 1.33 | 0 | Card titles, features |
+| H4 (Component) | Manrope | 22px | 600 | 1.375 | 0 | Modal titles, headers |
+| H5 (Label) | Manrope | 16px | 600 | 1.5 | 0 | Form labels, UI text |
+| Body (Regular) | Manrope | 16px | 400 | 1.625 | 0 | Main content, descriptions |
+| Body (Small) | Manrope | 14px | 400 | 1.6 | 0 | Secondary info, help text |
+| Caption | Manrope | 12px | 500 | 1.4 | 0 | Timestamps, metadata |
+| Mono (Data) | JetBrains Mono | 13px | 400 | 1.5 | 0 | Numbers, prices, code |
+
+#### Typography Scale (Mobile)
+```
+H1: 36px (maintain hierarchy, fit screen)
+H2: 28px
+H3: 22px
+H4: 18px
+Body: 16px (iOS minimum for no zoom)
+Small: 14px
+Caption: 12px
+```
+
+### 2.2 Typography Application Rules
+
+#### Font Weight Hierarchy
+```
+700 Bold:       Only H1 (page titles) in serif
+600 Semibold:   Headers, button text, labels (emphasis)
+500 Medium:     Captions, secondary text (hierarchy)
+400 Regular:    Body text, form inputs (baseline)
+
+Rule: Never use 4+ font weights in one view
+Max 3: One bold, one semibold, one regular
+```
+
+#### Typography Psychology Guidelines
+
+**Serif Usage (Playfair Display)**:
+- ✅ Page titles (H1)
+- ✅ Section headers (H2)
+- ✅ Premium badges ("Verified Trader")
+- ✅ Important metrics (profit/loss displays)
+- ✅ Trust indicators (security badges)
+- ❌ Body text (hard to read long-form)
+- ❌ Form labels (feels out of place)
+- ❌ Button text (too formal)
+- ❌ Navigation items (too heavy)
+
+**Sans-Serif Usage (Manrope)**:
+- ✅ Body copy (excellent readability)
+- ✅ Form inputs (technical, precise)
+- ✅ Button text (action-oriented)
+- ✅ Navigation (clean, scannable)
+- ✅ Data/numbers (technical feel)
+- ❌ Long headings (lacks authority)
+
+**Monospace Usage (JetBrains Mono)**:
+- ✅ Numbers, prices, statistics
+- ✅ Code examples, API keys
+- ✅ Trading data (prices, volumes)
+- ✅ Technical specifications
+- ❌ Body text (poor readability)
+
+### 2.3 Typography Accessibility Standards
+
+#### WCAG AAA Compliance
+- **Font Size**: Minimum 16px for body text (14px for captions)
+- **Line Height**: Minimum 1.5 for body, 1.2 for headings
+- **Letter Spacing**: Increase by 0.12em for dyslexia-friendly
+- **Word Spacing**: Increase by 0.16em for dyslexia-friendly
+- **Contrast**: 7:1 for body text, 4.5:1 for large text
+
+#### Typography for Cognitive Load
+```
+READING COMFORT:
+- Line length: 45-75 characters (ideal: 66)
+- Paragraph length: 3-4 lines maximum
+- Column width: 600px maximum
+- Text alignment: Left-aligned (never justified)
+
+SCANNING FRIENDLINESS:
+- Use bullet points for 3+ items
+- Highlight keywords in headings
+- Use consistent hierarchy
+- White space around text blocks
+
+MOBILE READABILITY:
+- Font size: 16px minimum (iOS requirement)
+- Line height: 1.5 minimum
+- Touch targets: 44px height for text buttons
+- No hover states (mobile limitation)
+```
+
+### 2.4 Typography CSS Custom Properties
+
+```css
+:root {
+  /* Font families */
+  --font-serif: 'Playfair Display', 'Georgia', serif;
+  --font-sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  
+  /* Font sizes */
+  --text-xs: 0.75rem;       /* 12px */
+  --text-sm: 0.875rem;      /* 14px */
+  --text-base: 1rem;        /* 16px */
+  --text-lg: 1.125rem;      /* 18px */
+  --text-xl: 1.25rem;       /* 20px */
+  --text-2xl: 1.5rem;       /* 24px */
+  --text-3xl: 1.875rem;     /* 30px */
+  --text-4xl: 2.25rem;      /* 36px */
+  --text-5xl: 3rem;         /* 48px */
+  --text-6xl: 3.75rem;      /* 60px */
+  
+  /* Font weights */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  
+  /* Line heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.875;
+  
+  /* Heading-specific */
+  --h1-size: 2rem;
+  --h1-weight: 700;
+  --h1-line-height: 1.2;
+  --h1-letter-spacing: -0.02em;
+  
+  --h2-size: 1.5rem;
+  --h2-weight: 600;
+  --h2-line-height: 1.33;
+  --h2-letter-spacing: -0.01em;
+  
+  --h3-size: 1.125rem;
+  --h3-weight: 600;
+  --h3-line-height: 1.33;
+  --h3-letter-spacing: 0;
+  
+  --h4-size: 1rem;
+  --h4-weight: 600;
+  --h4-line-height: 1.375;
+  --h4-letter-spacing: 0;
+}
+```
+
+---
+
+## 3. Color Psychology & Usage
+
+### 3.1 Psychological Design Principles
+
+#### Cialdini's 6 Principles of Influence
+
+**1. Authority (Expert Perception)**
+```
+Application: Clean, organized interfaces → "Professional"
+Color: Navy + Gold = banker aesthetic
+Typography: Serif headers = institutional confidence
+Micro-copy: "Bank-grade security", "Regulated platform"
+```
+
+**2. Social Proof (Community Validation)**
+```
+Application: Leaderboards, verified badges
+Color: Gold for verified status, emerald for success
+Typography: Bold statistics, user testimonials
+Micro-copy: "2,500+ traders trading now", "Join our community"
+```
+
+**3. Reciprocity (Value-First Mentality)**
+```
+Application: Free tutorials, webinars before upsell
+Color: Warm, inviting palette
+Typography: Friendly, approachable
+Micro-copy: "Learn for free", "No credit card required"
+```
+
+**4. Scarcity (Exclusivity Perception)**
+```
+Application: "Verified Trader" badge (premium status)
+Color: Gold accents = luxury/premium
+Typography: Elegant, premium fonts
+Micro-copy: "Join our exclusive trading community"
+```
+
+**5. Consistency (Predictable Experience)**
+```
+Application: Every interaction feels familiar
+Color: Consistent palette usage
+Typography: Consistent hierarchy
+Micro-copy: Consistent tone of voice
+```
+
+**6. Liking (Aesthetic Appeal)**
+```
+Application: Beautiful, not just functional
+Color: Harmonious, warm palette
+Typography: Pleasing combinations
+Micro-copy: Friendly, helpful tone
+```
+
+#### Consumer Psychology Biases
+
+**Loss Aversion**
+```
+Principle: Users fear losses ~2x more than gains appeal them
+Application: Make stop-loss prominent in trading interface
+Color: Use crimson for loss warnings, emerald for profit
+Typography: Clear, urgent messaging for risk
+Micro-copy: "Protect your capital", "Set stop-loss"
+```
+
+**Status Quo Bias**
+```
+Principle: Users fear complexity and change
+Application: Gradual changes, progressive disclosure
+Color: Familiar, trustworthy palette
+Typography: Clear, reassuring messaging
+Micro-copy: "Take your time", "We'll guide you"
+```
+
+**Availability Heuristic**
+```
+Principle: Easy-to-recall info feels trustworthy
+Application: Real-time metrics prominently displayed
+Color: High-contrast, attention-grabbing for key info
+Typography: Large, bold for important metrics
+Micro-copy: "Live prices", "Real-time updates"
+```
+
+**Anchoring Effect**
+```
+Principle: First number seen sets expectations
+Application: Show starting balance as anchor point
+Color: Gold for positive anchors, navy for neutral
+Typography: Large, prominent for anchor points
+Micro-copy: "Starting balance: $10,000", "You could earn 5%"
+```
+
+**Endowment Effect**
+```
+Principle: Users value what they have
+Application: Portfolio growth visualization
+Color: Emerald for growth, warm colors for ownership
+Typography: Personal, possessive language
+Micro-copy: "Your portfolio", "Your positions", "Your gains"
+```
+
+**Sunk Cost**
+```
+Principle: Users committed to invested time/money
+Application: Gamification (badges, streaks)
+Color: Gold for achievements, emerald for progress
+Typography: Achievement-focused messaging
+Micro-copy: "10-day streak!", "Level up", "Achievement unlocked"
+```
+
+### 3.2 Trading-Specific Psychology
+
+#### Risk & Reward Psychology
+
+**Margin Call Design**
+```
+Current Problem: Users panic, make poor decisions
+Psychological Solution: Calm, solution-oriented design
+Color: Gold warning (caution, not alarming)
+Typography: Clear, instructional
+Micro-copy: "Your margin is at 87%. Consider adding funds or closing positions."
+Animation: Gentle pulse, not flashing
+```
+
+**Profit Visualization**
+```
+Current Problem: Users don't feel wins
+Psychological Solution: Celebrate successes
+Color: Emerald with gold accents
+Typography: Bold, positive
+Micro-copy: "Great job!", "You're up $245 today!"
+Animation: Confetti, checkmarks, upward arrows
+```
+
+**Loss Display**
+```
+Current Problem: Users get discouraged
+Psychological Solution: Educational, not punitive
+Color: Crimson (acknowledge loss)
+Typography: Calm, educational
+Micro-copy: "Learn from this trade", "Every trader has losses"
+Animation: Subtle, not jarring
+```
+
+#### Trust Building Through Design
+
+**Security Perception**
+```
+Visual Elements:
+- Lock icons (not overused)
+- Shield badges (verified status)
+- SSL indicators (subtle)
+- Regulation mentions (prominent)
+
+Color Psychology:
+- Navy = stability, trust
+- Gold = premium, exclusive
+- Emerald = growth, safety
+
+Typography:
+- Serif = institutional trust
+- Clean sans-serif = modern security
+
+Micro-copy:
+- "Bank-grade security"
+- "Your funds are safe"
+- "GDPR compliant"
+```
+
+**Expertise Signaling**
+```
+Visual Elements:
+- Professional charts (TradingView)
+- Clean data displays
+- Expert testimonials
+- Educational content
+
+Color Psychology:
+- Navy = professional, serious
+- Gold = premium knowledge
+- Neutral backgrounds = focus on content
+
+Typography:
+- Clear hierarchy = organized expertise
+- Readable fonts = accessible knowledge
+- Consistent styling = professional standards
+
+Micro-copy:
+- "Expert analysis"
+- "Professional tools"
+- "Learn from the best"
+```
+
+### 3.3 Micro-Interaction Psychology
+
+#### Button Press Feedback
+```
+Psychology: Confirms action received (trust)
+Trigger: User clicks button
+Animation:
+  1. Scale down 2% (0ms)
+  2. Shadow increase (responsive tactile feel)
+  3. Scale back (200ms ease-out)
+  4. Result: Satisfying, game-like feedback
+
+Implementation:
+  @keyframes button-press {
+    0% { transform: scale(0.98); box-shadow: 0 1px 2px; }
+    100% { transform: scale(1); box-shadow: 0 4px 8px; }
+  }
+  animation: button-press 150ms ease-out;
+
+Benefit: Makes interface feel responsive (+20% perceived speed)
+```
+
+#### Order Placement Success
+```
+Psychology: Peak-end rule (remember the high point)
+Trigger: Order filled successfully
+Sequence:
+  1. Subtle gold flash on button (0ms)
+  2. Checkmark animation (100ms)
+  3. Success toast slides in from top (200ms)
+  4. Card animates into positions table (300ms)
+  5. Number counter animates from 0 to size (500ms)
+
+Total Duration: 1.2 seconds (optimal for memory)
+
+Benefit: Creates memorable positive moment (increases retention)
+```
+
+#### Loading State Confidence
+```
+Psychology: Reduces anxiety during wait times
+Trigger: API call in progress
+Visual Feedback:
+  1. Skeleton loader (matches final layout exactly)
+  2. Subtle pulse animation (not jarring)
+  3. "Processing your order securely..." (reassurance copy)
+  4. Real-time progress indicator (estimated 2 seconds)
+
+Duration: Show spinner after 200ms delay (prevent flash)
+
+Benefit: Users feel in control, reduce churn during wait
+```
+
+#### Profit/Loss Animation
+```
+Psychology: Makes gains visible, celebrates wins
+Trigger: Real-time P&L update
+Current Price Change:
+  - Price increases: +2% scale briefly (drawing attention)
+  - Color flash: Green tint (0.5s fade)
+  - Number counter: Increments smoothly (visual satisfaction)
+  
+Profit Accumulation:
+  - Equity metric grows with animation
+  - Number counter from old → new value
+  - Emerald highlight pulses (celebration)
+
+Benefit: Gamification psychology (makes winning visible)
+```
+
+#### Margin Call Warning
+```
+Psychology: Urgency without panic
+Trigger: Margin level < 100%
+Visual Warning:
+  1. Card border turns gold (caution, not alarming)
+  2. Subtle pulse animation (recurring attention)
+  3. Icon appears with animation
+  4. Action button appears (solution-oriented)
+
+Copy: "Your margin is at 87%. Consider closing positions or adding funds."
+(Empowering, not panicking)
+
+Duration: Persistent until resolved
+Benefit: Prevents liquidation through early warning
+```
+
+---
+
+## 4. Component Architecture
+
+### 4.1 Component Design Principles
+
+#### Premium Component Specifications
+
+**Button Component (Enhanced)**
+```
+VARIANTS:
+├── Primary (Navy base)
+│   Default: Navy bg, white text
+│   Hover:   Navy bg + gold glow, 2% scale
+│   Active:  Navy bg darker, shadow inside
+│   
+├── Gold (Premium CTA)
+│   Default: Gold bg, navy text
+│   Hover:   Gold bg darker + glow, 2% scale
+│   Active:  Gold bg darker, shadow inside
+│   
+├── Secondary (Outline)
+│   Default: Transparent, navy border 1px
+│   Hover:   Navy bg (5% opacity), navy border
+│   Active:  Navy bg (10% opacity), navy border
+│   
+├── Danger (Sell/Warning)
+│   Default: Red bg, white text
+│   Hover:   Red darker, 2% scale
+│   Active:  Red darker, shadow inside
+│   
+└── Ghost (Minimal)
+    Default: Transparent, navy text
+    Hover:   Navy bg (5% opacity)
+    Active:  Navy bg (10% opacity)
+
+SIZING:
+├── Small:  32px height, 12px-16px padding
+├── Medium: 40px height, 16px-24px padding (default)
+├── Large:  48px height, 20px-32px padding
+└── Icon:   40px square (perfect circle)
+
+LOADING STATE:
+├── Spinner: 1.25rem spinning inside button
+├── Opacity: 70% while loading
+├── Text:    "Loading..." or just spinner
+├── Disabled: Yes (prevent double-click)
+
+FOCUS STATE:
+├── Ring: 3px solid focus-color
+├── Offset: 2px
+├── Animation: Pulse if needed (optional)
+
+MICRO-INTERACTION:
+@keyframes button-hover {
+  0% { transform: translateY(0) }
+  100% { transform: translateY(-2px); box-shadow: 0 8px 16px... }
+}
+
+animation: button-hover 200ms ease-out;
+```
+
+**Card Component (Premium Elevation)**
+```
+CARD HIERARCHY:
+├── Level 1 (Content)
+│   Shadow: --shadow-sm
+│   Border-radius: 8px
+│   Padding: 16px-24px
+│   Background: card color
+│   Use: Secondary info
+│   
+├── Level 2 (Primary)
+│   Shadow: --shadow-md
+│   Border-radius: 8px
+│   Padding: 20px-24px
+│   Background: card color
+│   Use: Main content
+│   
+├── Level 3 (Featured)
+│   Shadow: --shadow-lg
+│   Border-radius: 8px
+│   Padding: 24px
+│   Background: card color + gradient overlay
+│   Border: Gold accent (1px)
+│   Use: Featured content
+│   
+└── Level 4 (Premium)
+    Shadow: --shadow-xl + --shadow-gold
+    Border-radius: 8px
+    Padding: 24px-32px
+    Background: card color + premium gradient
+    Border: Gold (2px)
+    Badge: "Premium" or icon
+
+HOVER EFFECTS:
+- Lift: Box-shadow upgrades (+1 level)
+- Scale: 1.02x scale on hover
+- Duration: 300ms ease-out
+- Cursor: pointer
+
+INTERACTIVE CARDS:
+├── Positions Card
+│   Layout: Grid (symbol | side | qty | entry | current | P&L)
+│   Highlight: P&L column (green/red)
+│   Border-left: 4px (buy=green, sell=red)
+│   
+├── Metrics Card
+│   Layout: Single metric centered
+│   Title: Serif font (Playfair Display)
+│   Value: Largest text, navy or gold
+│   Change: Sparkline or % with arrow
+│   
+└── Trading Card
+    Layout: Input fields + Button
+    Background: Slight tint (buy=green tint, sell=red)
+    Border: 1px gold on focus
+```
+
+**Form Components (Enhanced Validation)**
+```
+INPUT FIELD:
+├── Default State
+│   Background: input color (light gray)
+│   Border: 1px gray
+│   Padding: 10px 12px
+│   Border-radius: 6px
+│   
+├── Focus State
+│   Border: 2px navy or gold
+│   Box-shadow: 0 0 0 4px focus-color/10
+│   Outline: None
+│   
+├── Valid State ✓
+│   Border: 2px green
+│   Icon: Checkmark (green)
+│   Message: "Perfect! ✓"
+│   
+├── Invalid State ✗
+│   Border: 2px red
+│   Icon: X mark (red)
+│   Message: "Email already taken"
+│   
+└── Loading State ⟳
+    Border: 1px gold
+    Icon: Spinner (gold)
+    Message: "Checking availability..."
+
+LABEL + INPUT:
+├── Label
+│   Font: Manrope, 12px-14px, 600 weight
+│   Color: Navy (primary-contrast)
+│   Margin-bottom: 6px
+│   
+└── Required Indicator
+    Text: "*" in gold
+    Margin-left: 2px
+
+HELPER TEXT:
+├── Below field
+├── Font: 12px, muted
+├── Color: secondary-contrast
+├── Margin-top: 4px
+
+ERROR MESSAGE:
+├── Below field
+├── Font: 12px bold, danger-contrast
+├── Icon: Warning icon (red)
+├── Animation: Shake + fade-in
+```
+
+**Modal/Dialog (Premium)**
+```
+MODAL STRUCTURE:
+├── Backdrop
+│   Color: rgba(0,0,0,0.5)
+│   Animation: Fade-in 200ms
+│   Click: Close modal (escape key too)
+│   
+├── Dialog Box
+│   Background: Card color
+│   Border-radius: 12px
+│   Shadow: --shadow-xl
+│   Max-width: 500px (desktop), 100% - 32px (mobile)
+│   Position: Center screen
+│   Animation: Scale-in + fade-in 300ms
+│   
+├── Header
+│   Title: Serif (Playfair), navy, large
+│   Close button: Top-right, minimal style
+│   Divider: Subtle border-bottom
+│   Padding: 24px
+│   
+├── Content
+│   Scrollable if needed (max-height: 60vh)
+│   Padding: 24px
+│   Font: Regular Manrope
+│   
+└── Footer
+    Actions: Buttons (right-aligned)
+    Primary: Gold CTA
+    Secondary: Navy outline
+    Padding: 24px
+    Border-top: Subtle
+
+MODAL VARIANTS:
+├── Confirmation: "Are you sure?"
+├── Form: Input fields in modal
+├── Alert: Info/warning/error message
+├── Document viewer: Image/PDF preview
+└── Settings: Toggles + sliders
+```
+
+**Badge/Status Component (New)**
+```
+STATUS BADGES:
+├── Verified
+│   Background: Gold (#D4AF37)
+│   Foreground: Navy
+│   Icon: Checkmark
+│   Text: "Verified"
+│   Border-radius: 20px
+│   Padding: 6px 12px
+│   Font: 12px semibold
+│   
+├── Active
+│   Background: Green
+│   Foreground: White
+│   Icon: Dot (animated pulse)
+│   Text: "Active" or just icon
+│   
+├── Warning
+│   Background: Orange/amber
+│   Foreground: Navy
+│   Icon: Alert triangle
+│   Text: "Warning"
+│   
+├── Error
+│   Background: Red
+│   Foreground: White
+│   Icon: X or alert
+│   Text: "Error"
+│   
+├── Neutral
+│   Background: Gray
+│   Foreground: Navy
+│   Icon: None
+│   Text: "Pending"
+│   
+└── Premium
+    Background: Gold with glow
+    Foreground: Navy
+    Icon: Star or crown
+    Text: "Verified Trader"
+    Glow: Gold shadow
+
+POSITIONING:
+- Top-left: Status corner
+- Top-right: Premium/featured
+- Inline: Mid-sentence badges
+- Stacked: Multiple badges separated by 4px
+```
+
+### 4.2 Component State Management
+
+#### State Variants Matrix
+
+**Button States (6 required)**:
+```
+Default → Hover → Active → Disabled → Loading → Focus
+```
+
+**Card States (4 required)**:
+```
+Default → Hover → Active → Disabled
+```
+
+**Form States (6 required)**:
+```
+Default → Focus → Valid → Invalid → Loading → Disabled
+```
+
+**Modal States (3 required)**:
+```
+Hidden → Visible → Animating
+```
+
+#### Component Props Interface Standards
+
+```typescript
+// ✅ Good: Consistent interface naming and structure
+interface ButtonProps {
+  // Content
+  children: React.ReactNode;
+  label?: string;
+  
+  // Behavior
+  onClick?: () => void;
+  disabled?: boolean;
+  
+  // Styling
+  variant?: 'primary' | 'gold' | 'secondary' | 'danger' | 'ghost';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
+  className?: string;
+  
+  // State
+  isLoading?: boolean;
+  isActive?: boolean;
+  
+  // ARIA
+  ariaLabel?: string;
+  ariaDescribedBy?: string;
+  
+  // HTML attributes
+  id?: string;
+  dataTestId?: string;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  isLoading = false,
+  isActive = false,
+  onClick,
+  className,
+  ariaLabel,
+  ...htmlProps
+}) => {
+  // Implementation
+};
+```
+
+### 4.3 Component Composition Patterns
+
+#### Layout Components
+```
+Container → Wrapper → Section → Card → Content
+```
+
+#### Interactive Components
+```
+Form → Fieldset → Label + Input + HelpText + ErrorMessage
+```
+
+#### Navigation Components
+```
+Nav → NavItem → NavLink + Submenu (optional)
+```
+
+#### Data Display Components
+```
+Table → TableRow → TableCell + TableHeader
+```
+
+#### Modal Components
+```
+Modal → ModalOverlay → ModalContent → ModalHeader/Body/Footer
+```
+
+### 4.4 Component Accessibility Standards
+
+#### ARIA Roles & Properties
+```typescript
+// ✅ Good: Proper ARIA implementation
+interface ButtonProps {
+  role?: 'button' | 'link';
+  ariaLabel?: string;
+  ariaPressed?: boolean;
+  ariaDisabled?: boolean;
+  ariaExpanded?: boolean;
+  ariaHaspopup?: boolean | 'dialog' | 'menu' | 'listbox' | 'tree' | 'grid';
+}
+
+// ✅ Good: Keyboard navigation
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    onClick?.();
+  }
+};
+```
+
+#### Focus Management
+```typescript
+// ✅ Good: Focus trap for modals
+useEffect(() => {
+  if (!isOpen) return;
+  
+  const focusableElements = modalRef.current?.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  
+  const firstElement = focusableElements?.[0] as HTMLElement;
+  const lastElement = focusableElements?.[focusableElements.length - 1] as HTMLElement;
+  
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    }
+  };
+  
+  document.addEventListener('keydown', handleKeyDown);
+  firstElement?.focus();
+  
+  return () => document.removeEventListener('keydown', handleKeyDown);
+}, [isOpen]);
+```
+
+#### Screen Reader Support
+```typescript
+// ✅ Good: Screen reader announcements
+const { toast } = useToast();
+
+const handleSuccess = () => {
+  toast({
+    title: "Success",
+    description: "Order placed successfully",
+    ariaLive: "polite", // For screen readers
+  });
+};
+```
+
+---
+
+## 5. Code Standards
+
+### 5.1 TypeScript Standards
+
+#### Type Configuration
 ```jsonc
 // tsconfig.json
 {
   "compilerOptions": {
-    "noImplicitAny": false,           // Allow implicit any
-    "strictNullChecks": false,        // Allow null in unions
-    "noUnusedLocals": false,          // Don't warn on unused locals
-    "noUnusedParameters": false,      // Don't warn on unused params
-    "skipLibCheck": true,             // Skip type checking external libs
-    "allowJs": true                   // Allow JavaScript imports
-  }
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
 ```
 
-**Why?** This allows developers to gradually adopt strict typing without blocking contributions.
+#### Type Guidelines
+```typescript
+// ✅ Good: Use unknown then narrow
+const parseData = (data: unknown): User => {
+  if (typeof data === 'object' && data !== null && 'id' in data) {
+    return data as User;
+  }
+  throw new Error('Invalid user data');
+};
 
-### Type Guidelines
+// ✅ Good: Import types from Supabase
+import type { Database } from '@/integrations/supabase/types';
+type User = Database['public']['Tables']['users']['Row'];
 
-- **Use `unknown` then narrow**: When dealing with uncertain types, use `unknown` and narrow the type scope:
-  ```typescript
-  const parseData = (data: unknown): User => {
-    if (typeof data === 'object' && data !== null && 'id' in data) {
-      return data as User;
+// ✅ Good: Path aliases
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+
+// ✅ Good: Type assertions (when necessary)
+function isUser(data: unknown): data is User {
+  return typeof data === 'object' && data !== null && 'id' in data;
+}
+```
+
+### 5.2 React Component Conventions
+
+#### Functional Components Only
+```typescript
+// ✅ Good: Functional component
+export const Dashboard: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  return <div>Dashboard</div>;
+};
+
+// ❌ Bad: Class component
+export class Dashboard extends React.Component {
+  // ...
+}
+```
+
+#### Component Structure Template
+```typescript
+import React, { useState, useCallback, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import type { Order } from '@/types';
+
+interface TradeFormProps {
+  symbol: string;
+  onSubmit: (order: Order) => Promise<void>;
+  isDisabled?: boolean;
+}
+
+/**
+ * TradeForm - Manages order creation and submission
+ * 
+ * @param symbol - The trading symbol (e.g., 'EURUSD')
+ * @param onSubmit - Callback when order is submitted
+ * @param isDisabled - Whether the form should be disabled
+ */
+export const TradeForm: React.FC<TradeFormProps> = ({ 
+  symbol, 
+  onSubmit, 
+  isDisabled = false 
+}) => {
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = useCallback(async (data: OrderInput) => {
+    setIsLoading(true);
+    try {
+      await onSubmit(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
     }
+  }, [onSubmit]);
+
+  if (!user) {
+    return <div>Please log in first</div>;
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form content */}
+    </form>
+  );
+};
+```
+
+#### Component Size & Modularity
+- **Max 300 lines per component**: Refactor larger components into smaller, reusable pieces
+- **Single responsibility**: Each component should have one clear purpose
+- **Extract reusable logic**: Move business logic into custom hooks
+
+#### Props Destructuring
+```typescript
+// ✅ Good: Destructured with types
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+}
+
+export const CustomButton: React.FC<ButtonProps> = ({ 
+  label, 
+  onClick, 
+  variant = 'primary' 
+}) => {
+  // ...
+};
+
+// ❌ Bad: Not destructured
+export const CustomButton: React.FC<any> = (props) => {
+  // ...
+};
+```
+
+#### JSDoc Comments
+```typescript
+/**
+ * OrderBook - Displays real-time order book for a symbol
+ * 
+ * Subscribes to Supabase Realtime for live updates.
+ * 
+ * @component
+ * @example
+ * return <OrderBook symbol="EURUSD" />
+ * 
+ * @param symbol - Trading symbol to display orders for
+ * @returns React component showing bid/ask orders
+ */
+export const OrderBook: React.FC<{ symbol: string }> = ({ symbol }) => {
+  // ...
+};
+```
+
+#### Memoization Guidelines
+```typescript
+// ✅ Use only if Profiler shows repeated calculations
+const memoizedValue = useMemo(() => {
+  return expensiveCalculation(data);
+}, [data]);
+
+// ✅ Use only if dependencies are complex
+const handleClick = useCallback(() => {
+  processOrder(orderId, symbol);
+}, [orderId, symbol]);
+
+// ❌ Don't use without justification
+const name = useMemo(() => user.name, [user.name]);
+```
+
+### 5.3 File Organization
+
+#### Project Structure
+```
+src/
+├── components/
+│   ├── ui/                          # shadcn-ui primitives
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   └── ...
+│   ├── auth/                        # Feature components
+│   │   ├── LoginForm.tsx
+│   │   ├── SignupForm.tsx
+│   │   └── __tests__/
+│   │       └── LoginForm.test.tsx
+│   ├── trading/
+│   │   ├── TradeForm.tsx
+│   │   ├── OrderBook.tsx
+│   │   └── __tests__/
+│   ├── kyc/
+│   └── ...
+├── contexts/
+│   ├── notificationContext.tsx
+│   └── errorContext.tsx
+├── hooks/
+│   ├── useAuth.ts
+│   ├── usePriceStream.ts
+│   ├── use-toast.ts
+│   └── __tests__/
+│       └── useAuth.test.ts
+├── pages/
+│   ├── Trade.tsx
+│   ├── Dashboard.tsx
+│   ├── Admin.tsx
+│   └── __tests__/
+├── lib/
+│   ├── trading/
+│   │   ├── orderMatching.ts
+│   │   ├── marginCalculations.ts
+│   │   ├── commissionCalculation.ts
+│   │   ├── liquidationEngine.ts
+│   │   ├── pnlCalculation.ts
+│   │   ├── slippageCalculation.ts
+│   │   └── __tests__/
+│   ├── kyc/
+│   │   ├── kycService.ts
+│   │   ├── documentValidation.ts
+│   │   └── __tests__/
+│   ├── export/
+│   │   ├── csvExport.ts
+│   │   ├── pdfExport.ts
+│   │   └── __tests__/
+│   ├── logger.ts
+│   ├── utils.ts
+│   └── supabaseClient.ts
+├── integrations/
+│   └── supabase/
+│       ├── client.ts
+│       └── types.ts                 # Auto-generated
+├── types/
+│   ├── orders.ts
+│   ├── positions.ts
+│   ├── users.ts
+│   └── index.ts
+├── assets/
+│   ├── icons/
+│   ├── images/
+│   └── flags/
+├── App.tsx
+├── main.tsx
+├── index.css
+└── vite-env.d.ts
+```
+
+#### Feature-Based Organization
+```
+components/trading/
+├── TradeForm.tsx
+├── OrderBook.tsx
+├── PositionList.tsx
+├── ChartWidget.tsx
+├── __tests__/
+│   ├── TradeForm.test.tsx
+│   └── OrderBook.test.tsx
+└── index.ts               # Optional: re-export exports
+```
+
+#### Tests Co-location
+```
+hooks/
+├── useAuth.ts
+├── usePriceStream.ts
+└── __tests__/
+    ├── useAuth.test.ts
+    └── usePriceStream.test.ts
+```
+
+### 5.4 Naming Conventions
+
+#### Components (PascalCase)
+```typescript
+// ✅ Good
+export const TradeForm: React.FC = () => { };         // File: TradeForm.tsx
+export const OrderBook: React.FC = () => { };         // File: OrderBook.tsx
+export const PositionList: React.FC = () => { };      // File: PositionList.tsx
+
+// ❌ Bad
+export const tradeForm: React.FC = () => { };         // File: tradeForm.tsx
+export const trade_form: React.FC = () => { };        // File: trade_form.tsx
+```
+
+#### Hooks (camelCase with use prefix)
+```typescript
+// ✅ Good: Hooks use `use` prefix
+export const useAuth = () => { };                     // File: useAuth.ts
+export const usePriceStream = (symbols) => { };       // File: usePriceStream.ts
+export const useRealtimePositions = (userId) => { };  // File: useRealtimePositions.ts
+
+// ❌ Bad
+export const auth = () => { };                        // Missing 'use' prefix
+export const getPriceStream = () => { };              // Should use 'use' prefix
+```
+
+#### Utilities (camelCase)
+```typescript
+// ✅ Good
+export const orderMatching = (orders) => { };         // File: orderMatching.ts
+export const calculateMargin = (leverage, equity) => { };
+export const validateKycDocument = (doc) => { };      // File: documentValidation.ts
+export const exportPortfolioToCSV = (positions) => { };
+
+// ❌ Bad
+export const OrderMatching = () => { };               // Should be camelCase
+export const calculate_margin = () => { };            // Snake_case
+```
+
+#### Constants (UPPER_SNAKE_CASE)
+```typescript
+// ✅ Good
+const MAX_LEVERAGE = 50;
+const MIN_ORDER_SIZE = 0.01;
+const COMMISSION_RATE = 0.0002;
+const KYC_VERIFICATION_TIMEOUT = 86400000; // ms
+const API_BASE_URL = 'https://api.example.com';
+
+// ❌ Bad
+const maxLeverage = 50;           // Use UPPER_SNAKE_CASE
+const max-leverage = 50;          // Invalid syntax
+```
+
+#### Types & Interfaces (PascalCase)
+```typescript
+// ✅ Good
+interface User { }
+interface Order { }
+type OrderStatus = 'pending' | 'filled' | 'cancelled';
+type PriceUpdate = { symbol: string; price: number };
+
+// ❌ Bad
+interface user { }
+type order_status = 'pending' | 'filled';
+```
+
+#### Event Handlers (handle prefix)
+```typescript
+// ✅ Good
+const handleSubmit = (e: React.FormEvent) => { };
+const handleClick = () => { };
+const handlePriceUpdate = (price: number) => { };
+const handleError = (error: Error) => { };
+
+// ❌ Bad
+const submit = () => { };
+const onClick = () => { };
+const onPriceUpdate = (price: number) => { };
+```
     throw new Error('Invalid user data');
   };
   ```

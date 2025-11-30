@@ -24,6 +24,14 @@ class BreadcrumbTracker {
   private interactions: UserInteraction[] = [];
   private maxInteractions = 100;
   private lastNavigationTime = Date.now();
+  
+  // Event handler references for cleanup
+  private clickHandler: ((event: Event) => void) | null = null;
+  private submitHandler: ((event: Event) => void) | null = null;
+  private keydownHandler: ((event: KeyboardEvent) => void) | null = null;
+  private popstateHandler: (() => void) | null = null;
+  private visibilityHandler: (() => void) | null = null;
+  private activityHandler: (() => void) | null = null;
 
   constructor() {
     this.initializeEventListeners();
@@ -36,7 +44,7 @@ class BreadcrumbTracker {
    */
   private initializeEventListeners(): void {
     // Track clicks on interactive elements
-    document.addEventListener('click', (event) => {
+    this.clickHandler = (event) => {
       const target = event.target as HTMLElement;
       const clickableElement = this.findClickableElement(target);
       
@@ -49,10 +57,11 @@ class BreadcrumbTracker {
           target: this.getEventTarget(event),
         });
       }
-    });
+    };
+    document.addEventListener('click', this.clickHandler);
 
     // Track form interactions
-    document.addEventListener('submit', (event) => {
+    this.submitHandler = (event) => {
       const form = event.target as HTMLFormElement;
       if (form.tagName === 'FORM') {
         this.recordInteraction('form_submit', this.getFormDescription(form), {
@@ -61,10 +70,11 @@ class BreadcrumbTracker {
           formData: this.getFormData(form),
         });
       }
-    });
+    };
+    document.addEventListener('submit', this.submitHandler);
 
     // Track keyboard interactions
-    document.addEventListener('keydown', (event) => {
+    this.keydownHandler = (event) => {
       if (event.key === 'Enter' || event.key === 'Escape') {
         const activeElement = document.activeElement;
         if (activeElement && activeElement !== document.body) {
@@ -75,7 +85,8 @@ class BreadcrumbTracker {
           });
         }
       }
-    });
+    };
+    document.addEventListener('keydown', this.keydownHandler);
   }
 
   /**
@@ -84,16 +95,17 @@ class BreadcrumbTracker {
   private initializeNavigationTracking(): void {
     // Track React Router navigation (would need router integration)
     // For now, track basic navigation events
-    window.addEventListener('popstate', () => {
+    this.popstateHandler = () => {
       this.recordInteraction('navigation', `Navigation: ${window.location.pathname}`, {
         url: window.location.href,
         referrer: document.referrer,
         navigationType: 'popstate',
       });
-    });
+    };
+    window.addEventListener('popstate', this.popstateHandler);
 
     // Track page visibility changes
-    document.addEventListener('visibilitychange', () => {
+    this.visibilityHandler = () => {
       const visibility = document.visibilityState;
       this.recordInteraction('session', `Visibility: ${visibility}`, {
         visibility,
@@ -103,7 +115,8 @@ class BreadcrumbTracker {
       if (visibility === 'visible') {
         this.lastNavigationTime = Date.now();
       }
-    });
+    };
+    document.addEventListener('visibilitychange', this.visibilityHandler);
   }
 
   /**
@@ -123,12 +136,12 @@ class BreadcrumbTracker {
     const activityEvents = ['mousemove', 'scroll', 'keydown', 'click'];
     let lastActivity = Date.now();
     
-    const resetActivity = () => {
+    this.activityHandler = () => {
       lastActivity = Date.now();
     };
 
     activityEvents.forEach(event => {
-      document.addEventListener(event, resetActivity, { passive: true });
+      document.addEventListener(event, this.activityHandler, { passive: true });
     });
 
     // Check for inactivity periodically
@@ -315,6 +328,27 @@ class BreadcrumbTracker {
    */
   clearInteractions(): void {
     this.interactions.length = 0;
+  }
+
+  /**
+   * Cleanup all event listeners to prevent memory leaks
+   */
+  cleanup(): void {
+    // Clear all interactions
+    this.clearInteractions();
+    
+    // Remove all event listeners
+    document.removeEventListener('click', this.clickHandler as EventListener);
+    document.removeEventListener('submit', this.submitHandler as EventListener);
+    document.removeEventListener('keydown', this.keydownHandler as EventListener);
+    window.removeEventListener('popstate', this.popstateHandler as EventListener);
+    document.removeEventListener('visibilitychange', this.visibilityHandler as EventListener);
+    
+    // Remove activity event listeners
+    const activityEvents = ['mousemove', 'scroll', 'keydown', 'click'];
+    activityEvents.forEach(event => {
+      document.removeEventListener(event, this.activityHandler as EventListener);
+    });
   }
 
   /**
