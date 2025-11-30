@@ -38,6 +38,11 @@ export const useHapticFeedback = (defaultEnabled = true): HapticFeedbackReturn =
   const [isEnabled, setIsEnabled] = useState(defaultEnabled);
 
   const isSupported = useMemo(() => {
+    // Check if we're in a browser environment with navigator
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return false;
+    }
+    
     return 'vibrate' in navigator || 
            ('vibration' in navigator) ||
            Object.prototype.hasOwnProperty.call(window, 'TapticEngine') ||
