@@ -35,9 +35,8 @@ export default function Index() {
       {/* Hero Section - Professional & Trust-Building */}
       <section className="relative overflow-hidden bg-primary py-20 md:py-28">
         <div className="absolute inset-0 z-0">
-          <OptimizedImage 
-            webpSrc="/assets/hero-trading-professional.webp"
-            fallbackSrc={heroImage} 
+          <img 
+            src={heroImage} 
             alt="Professional trading desk" 
             className="h-full w-full object-cover opacity-20"
           />

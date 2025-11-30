@@ -40,7 +40,7 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.get-stock-price]
-verify_jwt = true
+verify_jwt = false
 
 [functions.execute-pending-orders]
 verify_jwt = false

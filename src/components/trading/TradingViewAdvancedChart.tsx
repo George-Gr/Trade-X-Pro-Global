@@ -21,32 +21,45 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
     script.src = "https://s3.tradingview.com/tv.js";
     script.async = true;
     script.onload = () => {
-      if (typeof window.TradingView !== "undefined" && containerRef.current) {
-        new window.TradingView.widget({
-          autosize: true,
-          symbol: symbol,
-          interval: "15",
-          timezone: "Etc/UTC",
-          theme: "dark",
-          style: "1",
-          locale: "en",
-          toolbar_bg: "hsl(var(--card))",
-          enable_publishing: false,
-          withdateranges: true,
-          hide_side_toolbar: false,
-          allow_symbol_change: false,
-          save_image: false,
-          container_id: containerRef.current.id,
-          studies: [
-            "STD;SMA",
-            "STD;MACD",
-            "STD;RSI",
-            "STD;Volume"
-          ],
-          disabled_features: ["use_localstorage_for_settings"],
-          enabled_features: ["study_templates"],
-        });
-      }
+      // Add extra safety checks and delay to ensure TradingView is fully loaded
+      setTimeout(() => {
+        try {
+          if (typeof window.TradingView !== "undefined" && 
+              window.TradingView.widget && 
+              containerRef.current) {
+            new window.TradingView.widget({
+              autosize: true,
+              symbol: symbol,
+              interval: "15",
+              timezone: "Etc/UTC",
+              theme: "dark",
+              style: "1",
+              locale: "en",
+              toolbar_bg: "hsl(var(--card))",
+              enable_publishing: false,
+              withdateranges: true,
+              hide_side_toolbar: false,
+              allow_symbol_change: false,
+              save_image: false,
+              container_id: containerRef.current.id,
+              studies: [
+                "STD;SMA",
+                "STD;MACD",
+                "STD;RSI",
+                "STD;Volume"
+              ],
+              disabled_features: ["use_localstorage_for_settings"],
+              enabled_features: ["study_templates"],
+            });
+          }
+        } catch (error) {
+          console.error('TradingView widget initialization error:', error);
+        }
+      }, 100);
+    };
+    
+    script.onerror = (error) => {
+      console.error('Failed to load TradingView script:', error);
     };
 
     const uniqueId = `tradingview_${Math.random().toString(36).substring(7)}`;
