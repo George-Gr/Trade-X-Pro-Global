@@ -8,7 +8,7 @@
  **Status:** Phase 1 MVP ~85% Complete → Production Launch Ready  
  **Last Updated:** November 30, 2025  
  **Audience:** Developers, Product Managers, Compliance, Stakeholders  
- **Major Changes in v1.1:** Fixed state management (React Context + React Query, not Zustand), removed unimplemented OCO orders, added actual component/route inventory (184 components, 43 routes, 41 hooks), clarified copy trading as Phase 2, documented 120 curated assets
+ **Major Changes in v1.1:** Fixed state management (Redux Toolkit + RTK Query, not Zustand), removed unimplemented OCO orders, added actual component/route inventory (184 components, 43 routes, 41 hooks), clarified copy trading as Phase 2, documented 120 curated assets
 
 ---
 
@@ -387,7 +387,7 @@ To empower global traders through a **unified, professional-grade CFD simulation
 | **Frontend**    | React 18 \+ TypeScript \+ Vite          | Type-safe, fast builds, component reusability       |
 | **UI Library**  | ShadCN UI \+ TailwindCSS                | Accessible, consistent, theming support             |
 | **Charts**      | TradingView Lightweight                 | Professional-grade, low-latency, white-labeled      |
-| **State Mgmt**  | Zustand                                 | Lightweight, performant, no boilerplate             |
+| **State Mgmt**  | Redux Toolkit + RTK Query               | Predictable state, cached data fetching, strong dev tools |
 | **Forms**       | React Hook Form \+ Zod                  | Schema validation, minimal re-renders               |
 | **Backend**     | Supabase (PostgreSQL \+ Edge Functions) | Serverless, built-in auth, Realtime, RLS            |
 | **Database**    | PostgreSQL 14+                          | ACID compliance, rich indexing, JSON support        |
@@ -910,12 +910,12 @@ tradepro/
 │ │ ├── CopyTradingPage.tsx  
 │ │ ├── AdminDashboard.tsx  
 │ │ └── AdminKYCReview.tsx  
-│ ├── stores/ (Zustand)  
-│ │ ├── authStore.ts  
-│ │ ├── tradingStore.ts  
-│ │ ├── portfolioStore.ts  
-│ │ ├── marketDataStore.ts  
-│ │ └── notificationStore.ts  
+│ ├── stores/ (Redux Toolkit slices)  
+│ ├── authSlice.ts  
+│ ├── tradingSlice.ts  
+│ ├── portfolioSlice.ts  
+│ ├── marketSlice.ts  
+│ └── notificationSlice.ts  
 │ ├── lib/  
 │ │ ├── supabase.ts  
 │ │ ├── trading/  
@@ -947,35 +947,44 @@ tradepro/
 
 ### **5.0.2 State Management Architecture (Updated v1.1)**
 
-**React Context + React Query** (primary approach - UPDATED from Zustand in v1.0):
+**Redux Toolkit + RTK Query** (primary approach - UPDATED from Zustand in v1.0):
 
-- **AuthContext:** User session, profile, admin role, authentication state
-- **NotificationContext:** Global alerts, unread count, toast messages
-- **React Query:** Server state management with automatic caching, refetching, and optimistic updates
-  - useQuery for data fetching (orders, positions, portfolio, market data)
-  - useMutation for mutations (order placement, position closure, KYC submission)
-  - Automatic refetching on window focus
-  - Built-in error handling and retry logic
-  - Infinite queries for pagination (order history, trade history)
+- **Store & Slices:** Centralized store using Redux Toolkit slices:
+   - `authSlice` (session, profile, roles)
+   - `tradingSlice` (open positions, order metadata, fills)
+   - `portfolioSlice` (holdings, aggregated metrics)
+   - `marketSlice` (symbol metadata, local cache of price history)
+   - `notificationSlice` (toasts, unread counts)
 
-**Realtime Subscriptions** (via Supabase Realtime):
+- **RTK Query (api slice):** Server state and data fetching handled via RTK Query endpoints:
+   - Endpoint examples: `getPositions`, `getOrders`, `getOHLC`, `getMarketSymbols`
+   - Auto-generated hooks: `useGetPositionsQuery`, `usePlaceOrderMutation`, etc.
+   - Benefits: caching, automatic refetching, optimistic updates, invalidation and fine-grained cache updates
 
-- Position updates → Real-time channel 'positions:{userId}' → React Query invalidation → UI re-render
-- Order updates → Real-time channel 'orders:{userId}' → Query cache update
-- Price updates → Broadcast channel 'prices' → Local component state in TradingPanel
-- Notifications → Real-time channel 'notifications:{userId}' → NotificationContext update
+- **Realtime Integration (Supabase Realtime):**
+   - Supabase Realtime feeds deliver low-latency updates.
+   - Use `api.util.updateQueryData` or dispatch slice actions to keep RTK Query cache and slices in sync.
+   - Example flows:
+      - Position update → Realtime payload → `api.util.updateQueryData('getPositions', ...)` → UI updates
+      - Order fill → Realtime payload → `invalidateTags` or update affected queries to reflect fills
+   - Reconnection logic with exponential backoff; reconciling missed updates via periodic refetchs
 
-**Component-Level State:**
-- Local useState for UI-only state (tab selection, drawer open/close, form input)
-- useMemo for expensive calculations (portfolio metrics recalculation, position aggregation)
-- useCallback for event handlers to prevent unnecessary re-renders
+- **Component-Level State:**
+   - Local `useState` / `useReducer` for UI-only concerns (modals, form inputs, ephemeral UI state)
+   - Selectors (reselect/createSelector) for derived data and memoized computations
 
-**Session Persistence:**
-- JWT stored in secure httpOnly cookie (Supabase Auth manages)
-- Session validated on app load via useAuth hook
-- Auto-refresh on token expiry (Supabase handles automatically)
-- No localStorage usage; all user data fetched fresh on login
-- Realtime channels maintain live connection during session
+- **Optimistic Updates & Error Handling:**
+   - Use RTK Query mutation lifecycle for optimistic UI updates and rollback on failure
+   - Centralized error handling middleware and toast notifications via `notificationSlice`
+
+- **Session Persistence & Security:**
+   - Supabase Auth manages JWT and secure httpOnly cookie/session handling
+   - Session validated on app load and persisted by Supabase client
+   - No sensitive user data in localStorage; ephemeral UI state may be persisted if explicitly needed and secured
+
+- **Testing & Dev Tools:**
+   - Use Redux DevTools in development; write unit tests for slices and RTK Query endpoints
+   - Mock RTK Query endpoints in tests and e2e flows
 
 ---
 
@@ -2599,7 +2608,7 @@ supabase functions deploy update-positions
 **Next Review:** End of December 2025 (pre-beta launch)
 
 **Critical Changes in v1.1 (Nov 30, 2025):**
-- ✅ Fixed state management: React Context + React Query (v1.0 incorrectly listed Zustand)
+- ✅ Fixed state management: Redux Toolkit + RTK Query (v1.0 incorrectly listed Zustand)
 - ✅ Removed unimplemented OCO orders from specification
 - ✅ Added actual component/route inventory (184 components, 43 routes, 41 hooks)
 - ✅ Updated roadmap with realistic Phase 2/3/4 timelines (Q2 2026 onwards)
