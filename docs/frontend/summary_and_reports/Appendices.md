@@ -128,7 +128,7 @@
 
 ```
 PRIMARY NAVY (Trust, Authority):
-  Light Mode: #1E3A8A (dark navy, button default)
+  Light Mode: #0A1628 (deep navy, button default)
   Dark Mode: #38A3E8 (slightly lighter for contrast)
   Usage: Buttons, headers, primary CTAs
 

@@ -13,7 +13,7 @@
 
 #### Primary Color: Deep Navy Blue
 ```
-Current: #1E3A8A (blue-900)
+Current: #0A1628 (deep navy)
 Psychology: Trust, stability, professionalism
 Application: Buttons, headers, sidebar, primary CTAs
 Reason: Banker aesthetic (Cialdini's Authority principle)

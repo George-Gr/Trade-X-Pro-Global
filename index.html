@@ -1,55 +1,67 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <!-- Conditionally load manifest only in production or when not in auth flow -->
-    <script>
-      // Only load manifest if not being redirected for auth
-      if (!window.location.href.includes('pf-signin') && !window.location.href.includes('auth/postback')) {
-        var link = document.createElement('link');
-        link.rel = 'manifest';
-        link.href = '/manifest.json';
-        link.crossOrigin = 'use-credentials';
-        document.head.appendChild(link);
-      }
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#3b82f6" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="TradeX Pro" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="msapplication-TileColor" content="#3b82f6" />
-    <meta name="msapplication-config" content="/browserconfig.xml" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preload fonts for faster loading with fallback -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Manrope:wght@300;400;500;600;700&display=swap" as="style" 
-          onload="this.onload=null;this.rel='stylesheet'" 
-          onerror="this.rel='stylesheet';this.href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Manrope:300,400,500,600,700&display=swap';">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Manrope:wght@300;400;500;600;700&display=swap"></noscript>
-    <!-- Premium display + modern UI body fonts for TradeX Pro -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;" onerror="this.href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Manrope:300,400,500,600,700&display=swap';">
-    
-    <title>TradeX Pro - #1 Multi Asset CFD Trading Platform | Trusted Broker</title>
-    <meta name="description" content="Practice CFD trading risk-free with TradeX Pro. Trade forex, stocks, indices, commodities, and crypto with virtual funds on a professional IC Markets-inspired platform." />
-    <meta name="author" content="TradeX Pro" />
-    <meta name="keywords" content="paper trading, CFD trading, forex simulator, stock trading practice, trading platform, demo account" />
 
-    <meta property="og:title" content="TradeX Pro - #1 Multi Asset CFD Trading Platform | Trusted Broker" />
-    <meta property="og:description" content="Master trading across 5 asset classes with virtual funds. Professional trading terminal with real-time data and zero risk." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <!-- Conditionally load manifest only in production or when not in auth flow -->
+  <script>
+    // Only load manifest if not being redirected for auth
+    if (!window.location.href.includes('pf-signin') && !window.location.href.includes('auth/postback')) {
+      var link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = '/manifest.json';
+      link.crossOrigin = 'use-credentials';
+      document.head.appendChild(link);
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="TradeX Pro" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="msapplication-TileColor" content="#3b82f6" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preload fonts for faster loading with fallback -->
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'"
+    onerror="this.rel='stylesheet';this.href='https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700|JetBrains+Mono:400,500&display=swap';">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  </noscript>
+  <!-- Modern sans-serif + monospace fonts for TradeX Pro -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"
+    onerror="this.href='https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700|JetBrains+Mono:400,500&display=swap';">
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <title>TradeX Pro - #1 Multi Asset CFD Trading Platform | Trusted Broker</title>
+  <meta name="description"
+    content="Practice CFD trading risk-free with TradeX Pro. Trade forex, stocks, indices, commodities, and crypto with virtual funds on a professional IC Markets-inspired platform." />
+  <meta name="author" content="TradeX Pro" />
+  <meta name="keywords"
+    content="paper trading, CFD trading, forex simulator, stock trading practice, trading platform, demo account" />
+
+  <meta property="og:title" content="TradeX Pro - #1 Multi Asset CFD Trading Platform | Trusted Broker" />
+  <meta property="og:description"
+    content="Master trading across 5 asset classes with virtual funds. Professional trading terminal with real-time data and zero risk." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://tradexprocinemx.com/social-preview.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@TradeXProApp" />
+  <meta name="twitter:image" content="https://tradexprocinemx.com/social-preview.png" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

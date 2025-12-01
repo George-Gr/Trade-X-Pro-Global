@@ -32,13 +32,13 @@
 **Problem 1a: Font Family Inconsistency**
 
 The app uses **2 primary fonts without clear strategy**:
-- **Manrope** (sans-serif): UI, body text
-- **Playfair Display** (serif): Display/headings
+- **Inter** (sans-serif): All text, headings, body
+- **JetBrains Mono** (monospace): Financial data, prices
 
 But:
 - No clear rule for when to use each
-- Manrope used for headings in some places
-- Playfair mixed into body text occasionally
+- JetBrains Mono used for all numeric/financial data
+- Inter used consistently throughout
 - Results in jarring transitions between components
 
 **Problem 1b: Inconsistent Font Sizes**

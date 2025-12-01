@@ -125,7 +125,7 @@ Comprehensive cross-references, quick links, search index
 
 ### Design Transformation
 - **Color**: Navy primary + Gold accent (premium aesthetic)
-- **Typography**: Playfair 60% of headings (trust, authority)
+- **Typography**: Inter for all text, JetBrains Mono for financial data
 - **Animations**: 15+ micro-interactions (perceived responsiveness +20%)
 - **Accessibility**: WCAG AA → AAA compliance (95%+ coverage)
 - **Performance**: Lighthouse 82 → 90+ (all categories)

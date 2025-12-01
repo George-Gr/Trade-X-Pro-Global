@@ -132,7 +132,7 @@ Every design element must serve user acquisition and monetization. Clarity drive
 ### **3.1 Color Psychology Framework**
 
 #### **Primary Palette**
-- **Deep Navy Blue (#1E3A8A)**: Trust, stability, professionalism. Banker aesthetic (Cialdini's Authority principle)
+- **Deep Navy Blue (#0A1628)**: Trust, stability, professionalism. Banker aesthetic (Cialdini's Authority principle)
 - **Gold Accent (#D4AF37)**: Luxury, exclusivity, premium status. Signals scarcity and differentiation
 - **Emerald Green (#10B981)**: Growth, success, positive momentum. Natural association with gains
 - **Crimson Red (#DC2626)**: Loss, caution, action-required. Universal danger signal

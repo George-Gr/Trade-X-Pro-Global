@@ -107,7 +107,7 @@ The Trade-X-Pro-Global frontend documentation consists of two major consolidated
 **Category:** Content Conflict  
 **Severity:** High  
 **Description:** Different color specifications between documents
-- Technical doc: Navy (#1E3A8A) + Green (#10B981)
+- Technical doc: Navy (#0A1628) + Green (#00C896)
 - Design doc: Navy (#002B5B) + Gold (#FFD700)
 **Impact:** Design implementation confusion, brand inconsistency
 **Location:** Design system sections
@@ -245,8 +245,8 @@ The Trade-X-Pro-Global frontend documentation consists of two major consolidated
 ```css
 /* Standardized Color Variables */
 :root {
-  --navy-primary: #002B5B;      /* From design doc */
-  --navy-secondary: #1E3A8A;    /* From technical doc */
+  --navy-primary: #0A1628;      /* Authoritative color */
+  --navy-secondary: #0A1628;    /* Authoritative color (same as primary) */
   --gold-accent: #FFD700;       /* From design doc */
   --gold-wealth: #D4AF37;       /* From technical doc */
   --success-emerald: #50C878;   /* From design doc */

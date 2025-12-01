@@ -208,7 +208,7 @@ docs/frontend-transformation/
 
 ### Color Psychology
 ```
-Navy (#1E3A8A)        → Trust, professionalism, banking
+Navy (#0A1628)        → Trust, professionalism, banking
 Gold (#D4AF37)        → Exclusivity, premium, Cialdini scarcity
 Emerald (#10B981)     → Profit, growth, buy signals
 Crimson (#DC2626)     → Loss, urgency, margin calls

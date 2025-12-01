@@ -98,7 +98,7 @@ Navigate the complete transformation strategy:
 ## 💡 Key Design Decisions
 
 ### Color Palette
-- **Primary**: Navy (#1E3A8A) — Trust, professionalism, banking aesthetic
+- **Primary**: Navy (#0A1628) — Trust, professionalism, banking aesthetic
 - **Accent**: Gold (#D4AF37) — Premium signals, exclusivity (Cialdini scarcity principle)
 - **Success**: Emerald (#10B981) — Profit, growth, positive action
 - **Loss**: Crimson (#DC2626) — Loss aversion, urgency (psychological principle)

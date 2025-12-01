@@ -68,7 +68,7 @@
 
 **Premium Psychology Elements**:
 - **Trust Architecture**: Authority + Social Proof + Reciprocity + Scarcity + Consistency + Liking
-- **Color Palette**: Navy (#1E3A8A) + Gold (#D4AF37) + Emerald (success)
+- **Color Palette**: Navy (#0A1628) + Gold (#F39C12) + Emerald (#00C896)
 - **Typography**: Playfair Display (premium authority) + Manrope (technical clarity)
 - **Micro-interactions**: Button press feedback, success animations, profit visualization
 

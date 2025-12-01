@@ -7,10 +7,10 @@
 #### Primary Color System
 | Role | Hex Code | Usage | Contrast Ratio | Enforcement |
 |------|----------|-------|----------------|-------------|
-| **Deep Navy Blue** | #1E3A8A | Primary buttons, headers, sidebar, primary CTAs | 4.6:1 (vs white) | Mandatory for all primary interactive elements |
-| **Gold Accents** | #D4AF37 | Premium badges, borders, highlights | 3.2:1 (vs navy) | Maximum 5% of UI surface area |
-| **Emerald Green** | #10B981 | Buy orders, profit indicators, success states | 5.1:1 (vs charcoal) | Use only for positive financial actions |
-| **Crimson Red** | #DC2626 | Sell orders, losses, warnings | 3.8:1 (vs charcoal) | Never use for primary actions |
+| **Deep Navy Blue** | #0A1628 | Primary buttons, headers, sidebar, primary CTAs | 4.6:1 (vs white) | Mandatory for all primary interactive elements |
+| **Gold Accents** | #F39C12 | Premium badges, borders, highlights | 3.2:1 (vs navy) | Maximum 5% of UI surface area |
+| **Emerald Green** | #00C896 | Buy orders, profit indicators, success states | 5.1:1 (vs charcoal) | Use only for positive financial actions |
+| **Crimson Red** | #FF4757 | Sell orders, losses, warnings | 3.8:1 (vs charcoal) | Never use for primary actions |
 | **Warm White** | #FAFAF5 | Light mode backgrounds | N/A | Minimum 40% whitespace ratio |
 | **Dark Charcoal** | #0F1419 | Dark mode backgrounds | N/A | Pure black (#000000) strictly prohibited |
 
@@ -119,10 +119,10 @@
 #### Button System
 | Type | Background | Text Color | Border | Padding | Height | Hover Effect |
 |------|------------|------------|--------|---------|--------|--------------|
-| **Primary** | #D4AF37 (gold) | #0F1419 (charcoal) | none | 12px 24px | 48px | Darken gold 5% |
-| **Secondary** | transparent | #1E3A8A (navy) | 2px solid #1E3A8A | 10px 22px | 46px | Navy background |
-| **Danger** | #DC2626 (crimson) | #FAFAF5 (white) | none | 12px 24px | 48px | Darken red 10% |
-| **Ghost** | transparent | #FAFAF5 | 1px solid #FAFAF5 | 10px 20px | 46px | Background #1E3A8A |
+| **Primary** | #F39C12 (gold) | #0F1419 (charcoal) | none | 12px 24px | 48px | Darken gold 5% |
+| **Secondary** | transparent | #0A1628 (navy) | 2px solid #0A1628 | 10px 22px | 46px | Navy background |
+| **Danger** | #FF4757 (crimson) | #FAFAF5 (white) | none | 12px 24px | 48px | Darken red 10% |
+| **Ghost** | transparent | #FAFAF5 | 1px solid #FAFAF5 | 10px 20px | 46px | Background #0A1628 |
 
 #### Button Implementation Rules
 ```css
@@ -209,7 +209,7 @@ src/
 /* design-system/tokens/colors.css */
 :root {
   /* Primary Colors */
-  --color-navy: #1E3A8A;
+  --color-navy: #0A1628;
   --color-navy-light: #3B5DBA;
   --color-gold: #D4AF37;
   --color-gold-light: #E6C35C;
