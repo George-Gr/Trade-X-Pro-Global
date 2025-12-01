@@ -1,0 +1,94 @@
+# Welcome to your Lovable project
+
+## Project info
+
+**URL**: https://lovable.dev/projects/1e7611c8-45ab-43a7-a132-06a1abb5c046
+
+## How can I edit this code?
+
+There are several ways of editing your application.
+
+**Use Lovable**
+
+Simply visit the [Lovable Project](https://lovable.dev/projects/1e7611c8-45ab-43a7-a132-06a1abb5c046) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
+
+**Edit a file directly in GitHub**
+
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
+
+**Use GitHub Codespaces**
+
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
+
+## What technologies are used for this project?
+
+This project is built with:
+
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
+
+## How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/1e7611c8-45ab-43a7-a132-06a1abb5c046) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Troubleshooting: Node.js polyfills & DEV environment
+
+If you see errors like `navigator is now a global in nodejs`, `DEP0040 punycode`, or other Node.js deprecation/compatibility warnings, the project provides a helper script used by dev and build commands to add optional polyfills.
+
+By default, these polyfills are opt-in to avoid creating globals that could affect other processes or extensions.
+
+To enable the navigator polyfill for your local dev server, run:
+
+```bash
+cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 npm run dev
+```
+
+To enable the SQLite polyfill (for tests that require sqlite3), run:
+
+```bash
+cross-env FORCE_NODE_POLYFILL_SQLITE=1 npm run dev
+```
+
+We recommend using these flags only when necessary. They are present to make development and testing easier, but shouldn't be enabled globally on shared or CI environments.
+
