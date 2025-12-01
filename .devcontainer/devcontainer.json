@@ -76,7 +76,19 @@
         "remote.connectionTimeout": 120000,
         // FIXED: Disable auto-update during development
         "extensions.autoUpdate": false,
-        "extensions.autoCheckUpdates": false
+        "extensions.autoCheckUpdates": false,
+        "workbench.secondarySideBar.enableDefaultVisibilityInOldWorkspace": false,
+        "extensions.requestTimeout": 60000,
+        "github.copilot.chat.agent.terminal.allowList": [],
+        "github.copilot.chat.agent.terminal.denyList": [
+          "*"
+        ],
+        "terminal.integrated.developer.devMode": false,
+        "terminal.integrated.developer.ptyHost.latency": false,
+        "terminal.integrated.developer.ptyHost.startupDelay": false,
+        "github.copilot.chat.experimental.cloudAgent": false,
+        "chat.experimental.sweAgent.enabled": false,
+        "eslint.useFlatConfig": true
       }
     }
   },
