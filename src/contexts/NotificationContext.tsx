@@ -176,120 +176,120 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           }
         }
       )
-    .subscribe();
+      .subscribe();
 
-  // Listen to KYC status changes
-  const kycChannel = supabase
-    .channel("kyc-notifications")
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "kyc_documents",
-        filter: `user_id=eq.${user.id}`,
-      },
-      async (payload) => {
-        const doc = payload.new as SupabaseKycDoc;
-        const oldDoc = payload.old as SupabaseKycDoc;
+    // Listen to KYC status changes
+    const kycChannel = supabase
+      .channel("kyc-notifications")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "kyc_documents",
+          filter: `user_id=eq.${user.id}`,
+        },
+        async (payload) => {
+          const doc = payload.new as SupabaseKycDoc;
+          const oldDoc = payload.old as SupabaseKycDoc;
 
-        if (oldDoc.status !== doc.status) {
+          if (oldDoc.status !== doc.status) {
+            await supabase.functions.invoke("send-notification", {
+              body: {
+                user_id: user.id,
+                type: "kyc_update",
+                title: "KYC Status Update",
+                message: `Your ${doc.document_type} document status has been updated to: ${doc.status}`,
+                data: {
+                  document_id: doc.id,
+                  document_type: doc.document_type,
+                  status: doc.status,
+                  rejection_reason: doc.rejection_reason,
+                },
+              },
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    // Listen to risk events
+    const riskChannel = supabase
+      .channel("risk-notifications")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "risk_events",
+          filter: `user_id=eq.${user.id}`,
+        },
+        async (payload) => {
+          const event = payload.new as SupabaseRiskEvent;
+
           await supabase.functions.invoke("send-notification", {
             body: {
               user_id: user.id,
-              type: "kyc_update",
-              title: "KYC Status Update",
-              message: `Your ${doc.document_type} document status has been updated to: ${doc.status}`,
+              type: "risk_event",
+              title: `Risk Alert: ${event.event_type}`,
+              message: event.description,
               data: {
-                document_id: doc.id,
-                document_type: doc.document_type,
-                status: doc.status,
-                rejection_reason: doc.rejection_reason,
+                event_id: event.id,
+                event_type: event.event_type,
+                severity: event.severity,
+                details: event.details,
               },
             },
           });
         }
-      }
-    )
-    .subscribe();
+      )
+      .subscribe();
 
-  // Listen to risk events
-  const riskChannel = supabase
-    .channel("risk-notifications")
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "risk_events",
-        filter: `user_id=eq.${user.id}`,
-      },
-      async (payload) => {
-        const event = payload.new as SupabaseRiskEvent;
+    return () => {
+      // Properly unsubscribe from all channels before removing them
+      // This prevents WebSocket connection leaks and memory accumulation
+      channel.unsubscribe();
+      ordersChannel.unsubscribe();
+      positionsChannel.unsubscribe();
+      kycChannel.unsubscribe();
+      riskChannel.unsubscribe();
 
-        await supabase.functions.invoke("send-notification", {
-          body: {
-            user_id: user.id,
-            type: "risk_event",
-            title: `Risk Alert: ${event.event_type}`,
-            message: event.description,
-            data: {
-              event_id: event.id,
-              event_type: event.event_type,
-              severity: event.severity,
-              details: event.details,
-            },
-          },
-        });
-      }
-    )
-    .subscribe();
+      // Then remove channel references from Supabase client
+      supabase.removeChannel(channel);
+      supabase.removeChannel(ordersChannel);
+      supabase.removeChannel(positionsChannel);
+      supabase.removeChannel(kycChannel);
+      supabase.removeChannel(riskChannel);
+    };
+  }, [user, toast]);
 
-  return () => {
-    // Properly unsubscribe from all channels before removing them
-    // This prevents WebSocket connection leaks and memory accumulation
-    channel.unsubscribe();
-    ordersChannel.unsubscribe();
-    positionsChannel.unsubscribe();
-    kycChannel.unsubscribe();
-    riskChannel.unsubscribe();
+  const markAsRead = async (id: string) => {
+    if (!user) return;
 
-    // Then remove channel references from Supabase client
-    supabase.removeChannel(channel);
-    supabase.removeChannel(ordersChannel);
-    supabase.removeChannel(positionsChannel);
-    supabase.removeChannel(kycChannel);
-    supabase.removeChannel(riskChannel);
+    await supabase
+      .from("notifications")
+      .update({ read: true })
+      .eq("id", id)
+      .eq("user_id", user.id);
   };
-}, [user, toast]);
 
-const markAsRead = async (id: string) => {
-  if (!user) return;
+  const markAllAsRead = async () => {
+    if (!user) return;
 
-  await supabase
-    .from("notifications")
-    .update({ read: true })
-    .eq("id", id)
-    .eq("user_id", user.id);
-};
+    await supabase
+      .from("notifications")
+      .update({ read: true })
+      .eq("user_id", user.id)
+      .eq("read", false);
 
-const markAllAsRead = async () => {
-  if (!user) return;
+    setUnreadCount(0);
+  };
 
-  await supabase
-    .from("notifications")
-    .update({ read: true })
-    .eq("user_id", user.id)
-    .eq("read", false);
-
-  setUnreadCount(0);
-};
-
-return (
-  <NotificationContext.Provider value={{ unreadCount, markAsRead, markAllAsRead }}>
-    {children}
-  </NotificationContext.Provider>
-);
+  return (
+    <NotificationContext.Provider value={{ unreadCount, markAsRead, markAllAsRead }}>
+      {children}
+    </NotificationContext.Provider>
+  );
 }
 
 // The `useNotifications` hook is exported from `notificationContextHelpers.tsx`.

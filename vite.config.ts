@@ -249,21 +249,39 @@ export default defineConfig(({ mode }) => ({
         // Optimized manual chunks for better bundle splitting
         // Each vendor chunk is split separately to enable parallel loading
         manualChunks: (id) => {
-          // Vendor chunks - split charts into separate chunks
+          // Vendor chunks - split large libraries into focused bundles so the
+          // browser can parallelize downloads and cache them independently.
           if (id.includes('node_modules')) {
+            // React runtime and DOM (keep small and cacheable)
+            if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/') || id.includes('/node_modules/react/jsx-runtime')) return 'vendor-react';
+
+            // Icon + small UI libs
+            if (id.includes('lucide-react')) return 'vendor-lucide';
+
+            // Radix UI components and similar UI primitives
+            if (id.includes('@radix-ui')) return 'vendor-radix';
+
+            // Split Supabase client into its own chunk
+            if (id.includes('@supabase')) return 'vendor-supabase';
+
+            // Recharts & charting libraries separated by major families
             if (id.includes('lightweight-charts')) return 'vendor-lightweight-charts';
-            // Split recharts into smaller chunks based on specific components
             if (id.includes('recharts') && id.includes('cartesian')) return 'vendor-recharts-cartesian';
             if (id.includes('recharts') && id.includes('pie')) return 'vendor-recharts-pie';
             if (id.includes('recharts') && id.includes('bar')) return 'vendor-recharts-bar';
             if (id.includes('recharts') && id.includes('line')) return 'vendor-recharts-line';
             if (id.includes('recharts')) return 'vendor-recharts-core';
-            if (id.includes('@supabase')) return 'vendor-supabase';
-            if (id.includes('@radix-ui')) return 'vendor-ui';
+
+            // Forms / validation / query tooling
             if (id.includes('react-hook-form') || id.includes('zod')) return 'vendor-forms';
             if (id.includes('@tanstack')) return 'vendor-query';
+
+            // Monitoring & date utilities
             if (id.includes('@sentry')) return 'vendor-monitoring';
             if (id.includes('date-fns')) return 'vendor-date';
+
+            // Fallback for other node_modules to keep them off the main entry
+            return 'vendor';
           }
         },
         // Ensure chunks are optimized for caching

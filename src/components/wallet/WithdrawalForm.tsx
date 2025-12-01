@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { getSupabase } from "@/lib/supabaseLazy";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -68,6 +68,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   const { data: profile } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
+      const supabase = await getSupabase();
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -83,9 +84,10 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   const { data: todayWithdrawals } = useQuery({
     queryKey: ['today_withdrawals', user?.id],
     queryFn: async () => {
+      const supabase = await getSupabase();
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       const { data, error } = await supabase
         .from('crypto_transactions')
         .select('usd_amount')
@@ -93,7 +95,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
         .eq('transaction_type', 'withdrawal')
         .in('status', ['completed', 'confirming'])
         .gte('created_at', today.toISOString());
-      
+
       if (error) throw error;
       return data;
     },
@@ -176,6 +178,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     setLoading(true);
     try {
       const formValues = form.getValues();
+      const supabase = await getSupabase();
       const { data, error } = await supabase.functions.invoke('initiate-withdrawal', {
         body: {
           currency: formValues.currency,
@@ -310,7 +313,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                 )}
               />
 
-          <FormField
+              <FormField
                 control={form.control}
                 name="amount"
                 render={() => (
@@ -419,28 +422,28 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
             </div>
 
             <FormField
-                control={form.control}
-                name="twoFACode"
-                render={() => (
-                  <FormItem>
-                    <FormLabel htmlFor="twofa">2FA Code (Email)</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="twofa"
-                        placeholder="Enter 6-digit code"
-                        {...register("twoFACode", {
-                          required: "2FA code is required",
-                          minLength: { value: 6, message: "Enter a 6-digit code" },
-                          maxLength: { value: 6, message: "Enter a 6-digit code" },
-                        })}
-                        maxLength={6}
-                        pattern="[0-9]*"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              control={form.control}
+              name="twoFACode"
+              render={() => (
+                <FormItem>
+                  <FormLabel htmlFor="twofa">2FA Code (Email)</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="twofa"
+                      placeholder="Enter 6-digit code"
+                      {...register("twoFACode", {
+                        required: "2FA code is required",
+                        minLength: { value: 6, message: "Enter a 6-digit code" },
+                        maxLength: { value: 6, message: "Enter a 6-digit code" },
+                      })}
+                      maxLength={6}
+                      pattern="[0-9]*"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Alert>
               <CheckCircle2 className="h-4 w-4" />
