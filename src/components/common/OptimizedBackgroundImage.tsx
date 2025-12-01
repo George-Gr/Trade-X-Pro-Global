@@ -27,6 +27,17 @@ export const OptimizedBackgroundImage = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
 
+  // Check WebP support
+  const checkWebPSupport = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const webP = new Image();
+      webP.onload = webP.onerror = () => {
+        resolve(webP.height === 2);
+      };
+      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+    });
+  };
+
   useEffect(() => {
     const loadImage = async () => {
       setIsLoading(true);
@@ -35,11 +46,9 @@ export const OptimizedBackgroundImage = ({
       try {
         // Check if WebP is supported
         const supportsWebP = await checkWebPSupport();
-        
+
         // Use WebP if supported and available, otherwise fallback to original
-        const finalSrc = supportsWebP && webpSrc ? webpSrc : src;
-        
-        // Preload the image to ensure it's loaded before setting
+        const finalSrc = supportsWebP && webpSrc ? webpSrc : src;        // Preload the image to ensure it's loaded before setting
         const img = new Image();
         img.onload = () => {
           setImageSrc(finalSrc);
@@ -67,12 +76,12 @@ export const OptimizedBackgroundImage = ({
             onError?.();
           }
         };
-        
+
         // Add loading priority hint if specified
         if (priority) {
           img.fetchPriority = 'high';
         }
-        
+
         img.src = finalSrc;
       } catch (error) {
         setIsLoading(false);
@@ -83,17 +92,6 @@ export const OptimizedBackgroundImage = ({
 
     loadImage();
   }, [src, webpSrc, priority, onLoad, onError]);
-
-  // Check WebP support
-  const checkWebPSupport = (): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const webP = new Image();
-      webP.onload = webP.onerror = () => {
-        resolve(webP.height === 2);
-      };
-      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
-    });
-  };
 
   // Show loading placeholder or error state
   if (isLoading) {

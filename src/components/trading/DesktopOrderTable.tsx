@@ -12,6 +12,7 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import type { OrderTableItem } from '@/hooks/useOrdersTable';
 
 interface DesktopOrderTableProps {
@@ -74,47 +75,49 @@ const DesktopOrderTable: React.FC<DesktopOrderTableProps> = ({
     });
   };
 
-  const SortHeader = ({ label, sortKey }: { label: string; sortKey: OrderSortKey }) => {
+  const handleSort = (key: OrderSortKey) => {
+    onSortClick(key);
+  };
+
+  const SortHeaderContent = React.memo(({ label, sortKey }: { label: string; sortKey: OrderSortKey }) => {
     const isActive = sortConfig.key === sortKey;
     return (
-      <button
-        onClick={() => onSortClick(sortKey)}
-        className="flex items-center gap-2 hover:text-primary transition-colors text-sm"
-        aria-label={`Sort by ${label}`}
-        aria-pressed={isActive}
-      >
+      <>
         {label}
         {isActive && (
           <ChevronDown
-            className={`h-3 w-3 transition-transform ${
-              sortConfig.direction === 'asc' ? 'rotate-180' : ''
-            }`}
+            className={`h-3 w-3 transition-transform inline-ml-2 ${sortConfig.direction === 'asc' ? 'rotate-180' : ''
+              }`}
             aria-hidden="true"
           />
         )}
-      </button>
+      </>
     );
-  };
+  });
+
+  const renderSortHeader = (label: string, sortKey: OrderSortKey) => (
+    <th
+      className={cn(
+        "text-left py-4 px-4 font-semibold cursor-pointer select-none hover:text-foreground/80",
+        sortConfig.key === sortKey && "text-foreground"
+      )}
+      onClick={() => handleSort(sortKey)}
+    >
+      <SortHeaderContent label={label} sortKey={sortKey} />
+    </th>
+  );
 
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left py-4 px-4 font-semibold">
-              <SortHeader label="Date" sortKey="created_at" />
-            </th>
-            <th className="text-left py-4 px-4 font-semibold">
-              <SortHeader label="Symbol" sortKey="symbol" />
-            </th>
+            {renderSortHeader("Date", "created_at")}
+            {renderSortHeader("Symbol", "symbol")}
             <th className="text-center py-4 px-4 font-semibold">Type</th>
             <th className="text-left py-4 px-4 font-semibold">Side</th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Qty" sortKey="quantity" />
-            </th>
-            <th className="text-right py-4 px-4 font-semibold">
-              <SortHeader label="Price" sortKey="price" />
-            </th>
+            {renderSortHeader("Qty", "quantity")}
+            {renderSortHeader("Price", "price")}
             <th className="text-center py-4 px-4 font-semibold">Status</th>
             <th className="text-right py-4 px-4 font-semibold">Comm.</th>
             <th className="text-center py-4 px-4 font-semibold">Actions</th>

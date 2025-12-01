@@ -60,12 +60,14 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
         <Suspense fallback={<ChartLoadingSkeleton />}>
           <DynamicResponsiveContainer width="100%" height="100%">
             <DynamicPieChart>
-              <DynamicPie dataKey="value" data={data} innerRadius={40} outerRadius={80} paddingAngle={2}>
-                {data.map((entry, index) => (
-                  <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </DynamicPie>
-              <DynamicTooltip formatter={(value: number) => [`$${value.toLocaleString()}`, 'Value']} />
+              <React.Fragment>
+                <DynamicPie dataKey="value" data={data} innerRadius={40} outerRadius={80} paddingAngle={2}>
+                  {data.map((entry, index) => (
+                    <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </DynamicPie>
+                <DynamicTooltip formatter={(value: number) => [`$${value.toLocaleString()}`, 'Value']} />
+              </React.Fragment>
             </DynamicPieChart>
           </DynamicResponsiveContainer>
         </Suspense>

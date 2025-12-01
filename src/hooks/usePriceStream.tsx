@@ -50,13 +50,15 @@ export const usePriceStream = ({
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptsRef = useRef(0);
+  const connectRef = useRef<() => void>(() => { }); // Ref to store connect function
   const maxReconnectAttempts = 5;
   const reconnectDelayMs = 3000;
 
+  // Define the connect function using useCallback
   const connect = useCallback(() => {
     if (!enabled || symbols.length === 0) {
       setIsLoading(false);
@@ -129,9 +131,9 @@ export const usePriceStream = ({
         onDisconnected?.();
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
-          
+
           reconnectTimeoutRef.current = setTimeout(() => {
-            connect();
+            connectRef.current();
           }, reconnectDelayMs);
         } else {
           setError('Max reconnection attempts reached');
@@ -143,18 +145,21 @@ export const usePriceStream = ({
     }
   }, [enabled, symbols, onConnected, onDisconnected, onError]);
 
-  const disconnect = useCallback(() => {
+  // Store the connect function in ref so it can be called from the timeout
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]); const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
       reconnectTimeoutRef.current = null;
     }
-    
+
     if (wsRef.current) {
       wsRef.current.send(JSON.stringify({ type: 'unsubscribe' }));
       wsRef.current.close();
       wsRef.current = null;
     }
-    
+
     setIsConnected(false);
   }, []);
 
@@ -165,7 +170,8 @@ export const usePriceStream = ({
   }, [connect, disconnect]);
 
   useEffect(() => {
-    connect();
+    // Defer connection to avoid synchronous setState in effect
+    Promise.resolve().then(connect);
     return () => disconnect();
   }, [connect, disconnect]);
 

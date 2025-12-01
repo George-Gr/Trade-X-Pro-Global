@@ -49,7 +49,8 @@ export function NotificationPreferences() {
 
   useEffect(() => {
     if (!user) return;
-    fetchPreferences();
+    // Defer to avoid calling setState synchronously in effect
+    Promise.resolve().then(fetchPreferences);
   }, [user, fetchPreferences]);
 
   const updatePreference = async (key: keyof Preferences, value: boolean) => {

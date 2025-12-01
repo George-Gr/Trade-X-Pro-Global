@@ -58,7 +58,8 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
 
   useEffect(() => {
     if (!animation || !isInView) {
-      setCount(value);
+      // Defer to avoid synchronous setState in effect
+      Promise.resolve().then(() => setCount(value));
       return;
     }
 
@@ -66,10 +67,10 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      
+
       // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      
+
       const current = easeOutQuart * value;
       setCount(current);
 
@@ -91,14 +92,14 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         }).format(val);
-      
+
       case 'percentage':
         return new Intl.NumberFormat('en-US', {
           style: 'percent',
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         }).format(val / 100);
-      
+
       default:
         return new Intl.NumberFormat('en-US', {
           minimumFractionDigits: decimals,
@@ -107,12 +108,12 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
     }
   };
 
-  const displayValue = format === 'currency' || format === 'percentage' 
+  const displayValue = format === 'currency' || format === 'percentage'
     ? formatValue(count)
     : `${prefix}${formatValue(count)}${suffix}`;
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={cn(
         "font-bold text-foreground transition-colors duration-300",

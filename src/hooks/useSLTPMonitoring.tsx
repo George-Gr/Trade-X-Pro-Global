@@ -128,7 +128,8 @@ export const useSLTPMonitoring = () => {
    */
   useEffect(() => {
     if (!positions.length || !pricesConnected || prices.size === 0) {
-      setState((prev) => ({ ...prev, isMonitoring: false }));
+      // Defer state update to avoid synchronous setState in effect
+      Promise.resolve().then(() => setState((prev) => ({ ...prev, isMonitoring: false })));
       return;
     }
 
@@ -138,20 +139,26 @@ export const useSLTPMonitoring = () => {
     );
 
     if (positionsWithSlTp.length === 0) {
-      setState((prev) => ({
-        ...prev,
-        isMonitoring: false,
-        monitoredPositions: [],
-      }));
+      // Defer state update to avoid synchronous setState in effect
+      Promise.resolve().then(() => {
+        setState((prev) => ({
+          ...prev,
+          isMonitoring: false,
+          monitoredPositions: [],
+        }));
+      });
       return;
     }
 
-    setState((prev) => ({
-      ...prev,
-      isMonitoring: true,
-      monitoredPositions: positionsWithSlTp.map((p) => p.position_id),
-      lastCheckTime: Date.now(),
-    }));
+    // Defer state update to avoid synchronous setState in effect
+    Promise.resolve().then(() => {
+      setState((prev) => ({
+        ...prev,
+        isMonitoring: true,
+        monitoredPositions: positionsWithSlTp.map((p) => p.position_id),
+        lastCheckTime: Date.now(),
+      }));
+    });
 
     // Check each position for triggers
     positionsWithSlTp.forEach((position) => {

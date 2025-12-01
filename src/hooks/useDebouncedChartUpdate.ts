@@ -28,7 +28,7 @@ export const useDebouncedChartUpdate = <T>(
   const shouldInvoke = useCallback((time: number) => {
     const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
     const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
-    
+
     return (
       lastCallTimeRef.current === undefined ||
       timeSinceLastCall >= delay ||
@@ -45,18 +45,18 @@ export const useDebouncedChartUpdate = <T>(
   const getRemainingWait = useCallback((time: number) => {
     const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
     const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
-    
-    const timeWaiting = maxWait > 0 
-      ? Math.min(maxWait - timeSinceLastInvoke, delay - timeSinceLastCall) 
+
+    const timeWaiting = maxWait > 0
+      ? Math.min(maxWait - timeSinceLastInvoke, delay - timeSinceLastCall)
       : delay - timeSinceLastCall;
-    
+
     return Math.max(timeWaiting, 0);
   }, [maxWait, delay]);
 
   // Declare functions after their dependencies
   const trailingEdge = useCallback((...args: T[]) => {
     timeoutRef.current = undefined;
-    
+
     if (trailing && lastArgsRef.current) {
       return invokeFunc(...args);
     }
@@ -91,11 +91,11 @@ export const useDebouncedChartUpdate = <T>(
   const debouncedCallback = useCallback((...args: T[]) => {
     const time = Date.now();
     const isInvoking = shouldInvoke(time);
-    
+
     lastArgsRef.current = args;
     lastThisRef.current = undefined;
     lastCallTimeRef.current = time;
-    
+
     if (isInvoking) {
       if (timeoutRef.current === undefined) {
         return leadingEdge(...args);
@@ -106,11 +106,11 @@ export const useDebouncedChartUpdate = <T>(
         return invokeFunc(...args);
       }
     }
-    
+
     if (timeoutRef.current === undefined) {
       timeoutRef.current = setTimeout(() => timerExpired(...args), delay);
     }
-    
+
     if (maxWait > 0) {
       if (maxTimeoutRef.current === undefined) {
         maxTimeoutRef.current = setTimeout(() => {
@@ -120,7 +120,7 @@ export const useDebouncedChartUpdate = <T>(
         }, maxWait);
       }
     }
-    
+
     return undefined;
   }, [shouldInvoke, leadingEdge, timerExpired, delay, maxWait, invokeFunc, trailingEdge]);
 
@@ -131,7 +131,7 @@ export const useDebouncedChartUpdate = <T>(
     if (maxTimeoutRef.current) {
       clearTimeout(maxTimeoutRef.current);
     }
-    
+
     timeoutRef.current = undefined;
     maxTimeoutRef.current = undefined;
     lastCallTimeRef.current = undefined;
@@ -175,7 +175,7 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }
-    
+
     if (updatesRef.current.length > 0 && callbackRef.current) {
       const updates = [...updatesRef.current];
       updatesRef.current = [];
@@ -185,7 +185,7 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
 
   const addUpdate = useCallback((update: unknown) => {
     updatesRef.current.push(update);
-    
+
     if (updatesRef.current.length >= batchSize) {
       flushUpdates();
     } else if (!timeoutRef.current) {
@@ -221,34 +221,39 @@ export const useProgressiveChartLoading = (
 
   useEffect(() => {
     if (data.length === 0) {
-      setLoadedData([]);
-      setProgress(1);
-      setIsComplete(true);
+      // Defer state updates to avoid synchronous setState in effect
+      Promise.resolve().then(() => {
+        setLoadedData([]);
+        setProgress(1);
+        setIsComplete(true);
+      });
       return;
     }
 
-    // Reset on data change
+    // Reset on data change (defer updates to avoid synchronous setState in effect)
     chunkRef.current = [];
     indexRef.current = 0;
-    setLoadedData([]);
-    setProgress(0);
-    setIsComplete(false);
+    Promise.resolve().then(() => {
+      setLoadedData([]);
+      setProgress(0);
+      setIsComplete(false);
+    });
 
     const loadNextChunk = () => {
       const endIndex = Math.min(indexRef.current + chunkSize, data.length);
       const chunk = data.slice(indexRef.current, endIndex);
-      
+
       chunkRef.current = [...chunkRef.current, ...chunk];
       indexRef.current = endIndex;
-      
+
       const newProgress = endIndex / data.length;
       setProgress(newProgress);
       setLoadedData([...chunkRef.current]);
-      
+
       if (onLoadProgress) {
         onLoadProgress(newProgress, [...chunkRef.current]);
       }
-      
+
       if (endIndex < data.length) {
         // Continue loading after 16ms for smooth 60fps
         setTimeout(loadNextChunk, 16);

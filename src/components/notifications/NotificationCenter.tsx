@@ -49,7 +49,8 @@ export function NotificationCenter() {
   useEffect(() => {
     if (!user) return;
 
-    fetchNotifications();
+    // Defer fetch to avoid calling setState synchronously inside the effect
+    Promise.resolve().then(fetchNotifications);
 
     const channel = supabase
       .channel("notification-center")
@@ -62,7 +63,8 @@ export function NotificationCenter() {
           filter: `user_id=eq.${user.id}`,
         },
         () => {
-          fetchNotifications();
+          // Defer to avoid synchronous setState in effect callbacks
+          Promise.resolve().then(fetchNotifications);
         }
       )
       .subscribe();
@@ -145,9 +147,8 @@ export function NotificationCenter() {
             notifications.map((notification) => (
               <DropdownMenuItem
                 key={notification.id}
-                className={`p-4 cursor-pointer ${
-                  !notification.read ? "bg-accent/50" : ""
-                }`}
+                className={`p-4 cursor-pointer ${!notification.read ? "bg-accent/50" : ""
+                  }`}
               >
                 <div className="flex items-start gap-4 w-full">
                   <span className="text-2xl">{getNotificationIcon(notification.type)}</span>

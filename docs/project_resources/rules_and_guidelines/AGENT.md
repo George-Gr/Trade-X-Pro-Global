@@ -22,6 +22,7 @@ Comprehensive guidelines for AI coding agents (Copilot, Claude, etc.) working on
 **TradePro v10** is a **broker-independent CFD trading platform** with these core features:
 
 ### Key Features
+
 - **Multi-asset trading**: Forex, stocks, commodities, crypto, indices, ETFs, bonds
 - **Paper trading**: Risk-free trading simulation
 - **Social trading**: Copy verified traders with performance tracking
@@ -31,12 +32,14 @@ Comprehensive guidelines for AI coding agents (Copilot, Claude, etc.) working on
 - **Educational**: Resources and community features
 
 ### Target Users
+
 - Retail traders (paper and live trading)
 - Social traders (copy trading followers)
 - Professional traders (risk management, analytics)
 - Admins (KYC oversight, risk dashboards)
 
 ### Project Maturity
+
 - **Version**: 10.0 (stable foundation)
 - **Status**: Active development with incremental improvements
 - **Code Quality**: Intentionally loose TypeScript for incremental adoption
@@ -47,6 +50,7 @@ Comprehensive guidelines for AI coding agents (Copilot, Claude, etc.) working on
 ## Tech Stack Overview
 
 ### Frontend
+
 - **Framework**: React 18 + TypeScript
 - **Build**: Vite with SWC transpilation
 - **UI**: shadcn-ui (Radix UI + Tailwind CSS v4)
@@ -55,12 +59,14 @@ Comprehensive guidelines for AI coding agents (Copilot, Claude, etc.) working on
 - **Charts**: TradingView Lightweight Charts + Recharts
 
 ### Backend/Database
+
 - **Platform**: Supabase (managed PostgreSQL)
 - **Auth**: Supabase Auth (JWT, magic links, OAuth)
 - **Realtime**: Supabase Realtime (PostgreSQL subscriptions)
 - **Edge Functions**: TypeScript functions on Supabase edge
 
 ### Key Dependencies
+
 ```json
 {
   "react": "18.x",
@@ -77,6 +83,7 @@ Comprehensive guidelines for AI coding agents (Copilot, Claude, etc.) working on
 ```
 
 ### Environment Setup
+
 - **Dev Server**: Vite on `localhost:8080`
 - **Database**: Supabase cloud (managed)
 - **Testing**: Vitest + @testing-library/react
@@ -119,17 +126,17 @@ Each file should have one clear purpose:
 ```typescript
 // ✅ Good: Single responsibility
 // orderMatching.ts - Just order matching logic
-export const executeOrder = (order: Order): ExecutionResult => { };
+export const executeOrder = (order: Order): ExecutionResult => {};
 
 // marginCalculations.ts - Just margin calculations
-export const calculateRequiredMargin = (leverage, size): number => { };
+export const calculateRequiredMargin = (leverage, size): number => {};
 
 // ❌ Bad: Multiple responsibilities
 // tradingEngine.ts - Everything at once
-export const executeOrder = () => { };
-export const calculateMargin = () => { };
-export const calculateCommission = () => { };
-export const checkLiquidation = () => { };
+export const executeOrder = () => {};
+export const calculateMargin = () => {};
+export const calculateCommission = () => {};
+export const checkLiquidation = () => {};
 ```
 
 ### 4. Data Flow Pattern
@@ -153,28 +160,33 @@ UI re-render (React)
 ### 5. State Management Layers
 
 **Layer 1: Local Component State**
+
 ```typescript
-const [isOpen, setIsOpen] = useState(false);  // UI only
+const [isOpen, setIsOpen] = useState(false); // UI only
 ```
 
 **Layer 2: Custom Hooks**
+
 ```typescript
-const { user, logout } = useAuth();           // Cross-component
+const { user, logout } = useAuth(); // Cross-component
 ```
 
 **Layer 3: Context (Global)**
+
 ```typescript
 const { notifications } = useNotifications(); // App-wide
 ```
 
 **Layer 4: React Query**
+
 ```typescript
 const { data: orders } = useQuery(...);       // Server state
 ```
 
 **Layer 5: Supabase Realtime**
+
 ```typescript
-const positions = useRealtimePositions();     // Live data
+const positions = useRealtimePositions(); // Live data
 ```
 
 ---
@@ -184,6 +196,7 @@ const positions = useRealtimePositions();     // Live data
 ### 1. Understand the PRD
 
 Read `PRD.md` first to understand feature requirements:
+
 - What problem does it solve?
 - Who are the users?
 - What are the constraints?
@@ -192,6 +205,7 @@ Read `PRD.md` first to understand feature requirements:
 ### 2. Check Existing Implementation
 
 Search for related features:
+
 - Are there similar components?
 - Does this feature already exist?
 - What patterns were used?
@@ -210,6 +224,7 @@ ls docs/tasks_and_implementations/
 ### 3. Review Task Documentation
 
 Check if task is documented:
+
 - `docs/tasks_and_implementations/` - Implementation status
 - `docs/assessments_and_reports/` - Previous analysis
 - `IMPLEMENTATION_ROADMAP.md` - Overall plan
@@ -218,6 +233,7 @@ Check if task is documented:
 ### 4. Identify Dependencies
 
 Map dependencies before coding:
+
 ```
 New Feature
 ├── Depends on: Auth system (useAuth)
@@ -230,6 +246,7 @@ New Feature
 ### 5. Verify RLS Policies
 
 For database work, check Row-Level Security:
+
 ```sql
 -- Must exist for new tables
 CREATE POLICY "Users see only their data"
@@ -245,32 +262,35 @@ USING (auth.uid() = user_id);
 ### TypeScript Practices
 
 **1. Use path aliases**
+
 ```typescript
 // ✅ Good
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 // ❌ Bad
-import { Button } from '../../../components/ui/button';
+import { Button } from "../../../components/ui/button";
 ```
 
 **2. Import types explicitly**
+
 ```typescript
 // ✅ Good
-import type { Order } from '@/types';
-import type { Database } from '@/integrations/supabase/types';
+import type { Order } from "@/types";
+import type { Database } from "@/integrations/supabase/types";
 
 // ❌ Bad
-import { Order } from '@/types'; // Should be type import
+import { Order } from "@/types"; // Should be type import
 ```
 
 **3. Handle async errors**
+
 ```typescript
 // ✅ Good
 try {
   await riskyOperation();
 } catch (error) {
-  console.error('Failed:', error);
-  throw new Error('Operation failed');
+  console.error("Failed:", error);
+  throw new Error("Operation failed");
 }
 
 // ❌ Bad
@@ -280,33 +300,36 @@ const result = await riskyOperation(); // May throw unhandled
 ### React Component Quality
 
 **1. Proper prop destructuring**
+
 ```typescript
 // ✅ Good
 interface ButtonProps {
   label: string;
   onClick: () => void;
 }
-export const CustomButton: React.FC<ButtonProps> = ({ label, onClick }) => { };
+export const CustomButton: React.FC<ButtonProps> = ({ label, onClick }) => {};
 
 // ❌ Bad
 export const CustomButton = (props: any) => props;
 ```
 
 **2. Clean dependencies**
+
 ```typescript
 // ✅ Good
 useEffect(() => {
-  const subscription = supabase.channel('x').subscribe();
+  const subscription = supabase.channel("x").subscribe();
   return () => subscription.unsubscribe(); // Cleanup
 }, [userId]); // Minimal deps
 
 // ❌ Bad
 useEffect(() => {
-  supabase.channel('x').subscribe(); // No cleanup = memory leak
+  supabase.channel("x").subscribe(); // No cleanup = memory leak
 }, []); // Empty deps, won't re-run
 ```
 
 **3. Memoization discipline**
+
 ```typescript
 // ✅ Only memoize when profiler proves it's needed
 const expensiveValue = useMemo(() => calculate(data), [data]);
@@ -318,33 +341,36 @@ const name = useMemo(() => user.name, [user.name]);
 ### Test Coverage
 
 **1. Unit tests for business logic**
+
 ```typescript
 // Required for: trading engine, KYC logic, calculations
-describe('OrderMatching', () => {
-  it('should execute market orders immediately', () => {
+describe("OrderMatching", () => {
+  it("should execute market orders immediately", () => {
     const result = executeOrder(marketOrder);
-    expect(result.status).toBe('filled');
+    expect(result.status).toBe("filled");
   });
 });
 ```
 
 **2. Component tests for UI**
+
 ```typescript
 // Required for: forms, modals, complex interactions
-describe('TradeForm', () => {
-  it('should validate required fields', async () => {
+describe("TradeForm", () => {
+  it("should validate required fields", async () => {
     render(<TradeForm />);
-    await user.click(screen.getByText('Submit'));
+    await user.click(screen.getByText("Submit"));
     expect(screen.getByText(/required/)).toBeInTheDocument();
   });
 });
 ```
 
 **3. Integration tests sparingly**
+
 ```typescript
 // Use only for critical flows
-describe('Order Flow', () => {
-  it('should create order and update positions', async () => {
+describe("Order Flow", () => {
+  it("should create order and update positions", async () => {
     // Full flow test
   });
 });
@@ -357,11 +383,11 @@ describe('Order Flow', () => {
 ### Pattern 1: Custom Hook with Realtime
 
 ```typescript
-import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import type { Tables } from '@/integrations/supabase/types';
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
-type Position = Tables<'positions'>['Row'];
+type Position = Tables<"positions">["Row"];
 
 /**
  * useRealtimePositions - Subscribe to live position updates
@@ -380,9 +406,9 @@ export const useRealtimePositions = (userId: string | undefined) => {
     // Initial fetch
     const fetchPositions = async () => {
       const { data, error } = await supabase
-        .from('positions')
-        .select('*')
-        .eq('user_id', userId);
+        .from("positions")
+        .select("*")
+        .eq("user_id", userId);
 
       if (!error) setPositions(data ?? []);
       setIsLoading(false);
@@ -394,17 +420,24 @@ export const useRealtimePositions = (userId: string | undefined) => {
     const subscription = supabase
       .channel(`positions:${userId}`)
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'positions', filter: `user_id=eq.${userId}` },
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "positions",
+          filter: `user_id=eq.${userId}`,
+        },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setPositions(prev => [...prev, payload.new as Position]);
-          } else if (payload.eventType === 'UPDATE') {
-            setPositions(prev =>
-              prev.map(p => p.id === payload.new.id ? (payload.new as Position) : p)
+          if (payload.eventType === "INSERT") {
+            setPositions((prev) => [...prev, payload.new as Position]);
+          } else if (payload.eventType === "UPDATE") {
+            setPositions((prev) =>
+              prev.map((p) =>
+                p.id === payload.new.id ? (payload.new as Position) : p
+              )
             );
-          } else if (payload.eventType === 'DELETE') {
-            setPositions(prev => prev.filter(p => p.id !== payload.old.id));
+          } else if (payload.eventType === "DELETE") {
+            setPositions((prev) => prev.filter((p) => p.id !== payload.old.id));
           }
         }
       )
@@ -421,9 +454,9 @@ export const useRealtimePositions = (userId: string | undefined) => {
 ### Pattern 2: Form with Validation
 
 ```typescript
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const schema = z.object({
   email: z.string().email(),
@@ -440,20 +473,20 @@ export const MyForm: React.FC = () => {
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       await submitToServer(data);
-      toast({ title: 'Success' });
+      toast({ title: "Success" });
     } catch (error) {
-      toast({ title: 'Error', description: error.message });
+      toast({ title: "Error", description: error.message });
     }
   });
 
   return (
     <form onSubmit={handleSubmit}>
-      <input {...form.register('email')} />
+      <input {...form.register("email")} />
       {form.formState.errors.email && (
         <span>{form.formState.errors.email.message}</span>
       )}
       <button type="submit" disabled={form.formState.isSubmitting}>
-        {form.formState.isSubmitting ? 'Loading...' : 'Submit'}
+        {form.formState.isSubmitting ? "Loading..." : "Submit"}
       </button>
     </form>
   );
@@ -463,7 +496,7 @@ export const MyForm: React.FC = () => {
 ### Pattern 3: Business Logic Service
 
 ```typescript
-import type { Order } from '@/types';
+import type { Order } from "@/types";
 
 /**
  * Order matching engine
@@ -472,8 +505,8 @@ import type { Order } from '@/types';
 
 export const executeMarketOrder = (order: Order): ExecutionResult => {
   // Validate
-  if (!order.symbol) throw new Error('Symbol required');
-  if (order.size <= 0) throw new Error('Invalid size');
+  if (!order.symbol) throw new Error("Symbol required");
+  if (order.size <= 0) throw new Error("Invalid size");
 
   // Calculate
   const executionPrice = getCurrentMarketPrice(order.symbol);
@@ -482,7 +515,7 @@ export const executeMarketOrder = (order: Order): ExecutionResult => {
 
   // Execute
   return {
-    status: 'filled',
+    status: "filled",
     executedPrice: finalPrice,
     executedSize: order.size,
     timestamp: new Date(),
@@ -491,16 +524,16 @@ export const executeMarketOrder = (order: Order): ExecutionResult => {
 
 export const executeLimitOrder = (order: Order): ExecutionResult => {
   const marketPrice = getCurrentMarketPrice(order.symbol);
-  
-  if (order.direction === 'buy' && marketPrice <= order.price) {
+
+  if (order.direction === "buy" && marketPrice <= order.price) {
     return executeMarketOrder(order);
-  } else if (order.direction === 'sell' && marketPrice >= order.price) {
+  } else if (order.direction === "sell" && marketPrice >= order.price) {
     return executeMarketOrder(order);
   }
 
   return {
-    status: 'pending',
-    message: 'Waiting for price target',
+    status: "pending",
+    message: "Waiting for price target",
   };
 };
 ```
@@ -508,8 +541,8 @@ export const executeLimitOrder = (order: Order): ExecutionResult => {
 ### Pattern 4: Error Boundary
 
 ```typescript
-import React from 'react';
-import { logger } from '@/lib/logger';
+import React from "react";
+import { logger } from "@/lib/logger";
 
 interface Props {
   children: React.ReactNode;
@@ -531,8 +564,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error caught:', error);
-    logger.error('Component error', { error, errorInfo });
+    console.error("Error caught:", error);
+    logger.error("Component error", { error, errorInfo });
   }
 
   render() {
@@ -555,6 +588,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 ## Critical Constraints
 
 ### DO
+
 - ✅ Use `@/` path aliases
 - ✅ Import Supabase types from `@/integrations/supabase/types`
 - ✅ Unsubscribe from Realtime channels in cleanup
@@ -567,6 +601,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 - ✅ Follow Tailwind utility-first approach
 
 ### DON'T
+
 - ❌ Use hardcoded URLs or API keys
 - ❌ Import Supabase from `@/lib/supabaseClient`
 - ❌ Cache auth state outside React context
@@ -611,11 +646,13 @@ useEffect(() => {
 ### When to Create a Custom Hook
 
 **Create when:**
+
 - Logic used in 2+ components
 - Side effect needs cleanup
 - Complex state management
 
 **Don't create when:**
+
 - Single-component use
 - Just wrapping Supabase query
 - Simple calculation
@@ -626,24 +663,28 @@ export const usePriceStream = (symbols: string[]) => {
   const [prices, setPrices] = useState({});
   useEffect(() => {
     // Subscribe to prices
-    return () => { /* cleanup */ };
+    return () => {
+      /* cleanup */
+    };
   }, [symbols]);
   return prices;
 };
 
 // ❌ Don't create: Single-use wrapper
 // Instead: use directly in component
-const { data } = await supabase.from('orders').select();
+const { data } = await supabase.from("orders").select();
 ```
 
 ### When to Extract to Service
 
 **Extract when:**
+
 - Complex business logic (>50 lines)
 - Tested independently
 - Used by hooks/components
 
 **Keep in component when:**
+
 - Simple transformation
 - UI-specific logic
 - One-off calculation
@@ -659,17 +700,19 @@ export const calculateLiquidationPrice = (
 };
 
 // ❌ Keep in component: Simple filter
-const filteredOrders = orders.filter(o => o.status === 'filled');
+const filteredOrders = orders.filter((o) => o.status === "filled");
 ```
 
 ### When to Use Context
 
 **Use Context when:**
+
 - Data needed by many components (3+)
 - Data rarely changes
 - App-level state (user, theme, notifications)
 
 **Don't use when:**
+
 - Frequently updated (use React Query)
 - Only used by 1-2 components
 - Can pass as props
@@ -685,12 +728,14 @@ export const useNotifications = () => useContext(NotificationContext);
 ### When to Use React Query
 
 **Use React Query when:**
+
 - Fetching from server
 - Caching important
 - Refetch on focus/interval
 - Pagination/infinite scroll
 
 **Don't use when:**
+
 - Real-time data (use Realtime)
 - Local component state
 - Client-side only
@@ -698,7 +743,7 @@ export const useNotifications = () => useContext(NotificationContext);
 ```typescript
 // ✅ Use React Query: Server data
 const { data: orders } = useQuery({
-  queryKey: ['orders', userId],
+  queryKey: ["orders", userId],
   queryFn: () => fetchOrders(userId),
 });
 
@@ -766,12 +811,14 @@ const { data: orders } = useQuery({
 ### Before Submitting Any Code
 
 **TypeScript**
+
 - [ ] No `@ts-ignore` comments
 - [ ] No `any` types (use `unknown` or proper types)
 - [ ] Path aliases used (`@/`)
 - [ ] Imports properly typed (`import type`)
 
 **React**
+
 - [ ] Functional components only
 - [ ] Props destructured with types
 - [ ] JSDoc documentation included
@@ -779,18 +826,21 @@ const { data: orders } = useQuery({
 - [ ] No prop drilling (3+ levels)
 
 **State Management**
+
 - [ ] Supabase types from `@/integrations/supabase/types`
 - [ ] Realtime subscriptions unsubscribed in cleanup
 - [ ] Error handling on async operations
 - [ ] No stale auth state caching
 
 **Styling**
+
 - [ ] Tailwind utilities only (no inline styles)
 - [ ] CSS variables for colors (no hardcoded hex)
 - [ ] Responsive design tested (sm, md, lg breakpoints)
 - [ ] Dark mode support included
 
 **Forms**
+
 - [ ] Zod schema defined first
 - [ ] React Hook Form with zodResolver
 - [ ] Field validation displayed
@@ -798,6 +848,7 @@ const { data: orders } = useQuery({
 - [ ] Loading state shown
 
 **Testing**
+
 - [ ] Business logic has unit tests
 - [ ] Complex components have tests
 - [ ] Tests use @testing-library/react
@@ -805,6 +856,7 @@ const { data: orders } = useQuery({
 - [ ] All error cases covered
 
 **Performance**
+
 - [ ] No unnecessary renders (check Profiler)
 - [ ] Lazy loading for large chunks
 - [ ] No memory leaks (intervals, subscriptions)
@@ -812,6 +864,7 @@ const { data: orders } = useQuery({
 - [ ] Debouncing for high-frequency updates
 
 **Documentation**
+
 - [ ] JSDoc on all exported functions
 - [ ] Complex logic has inline comments
 - [ ] README updated if needed
@@ -819,6 +872,7 @@ const { data: orders } = useQuery({
 - [ ] Types clearly documented
 
 **Security**
+
 - [ ] No hardcoded secrets
 - [ ] Proper error messages (no internal details)
 - [ ] RLS policies verified for data
@@ -826,6 +880,7 @@ const { data: orders } = useQuery({
 - [ ] CORS headers correct
 
 **Database**
+
 - [ ] RLS policies created
 - [ ] Indexes on frequently-queried columns
 - [ ] Migration properly tested
@@ -833,10 +888,11 @@ const { data: orders } = useQuery({
 - [ ] No N+1 queries
 
 **Git**
+
 - [ ] Meaningful commit messages
 - [ ] No console.log() or debug code
 - [ ] No commented-out code
-- [ ] Files formatted (prettier/eslint)
+  - [ ] Files formatted (ESLint / TypeScript formatter)
 - [ ] PR description explains changes
 
 ---
@@ -844,34 +900,35 @@ const { data: orders } = useQuery({
 ## File Structure Template
 
 ### New Component
+
 ```typescript
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface ComponentProps {
   label: string;
   onClick?: () => void;
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
 }
 
 /**
  * Component - Brief description
- * 
+ *
  * Longer explanation if needed.
- * 
+ *
  * @component
  * @example
  * return <Component label="Click me" onClick={handleClick} />
  */
-export const Component: React.FC<ComponentProps> = ({ 
-  label, 
+export const Component: React.FC<ComponentProps> = ({
+  label,
   onClick,
-  variant = 'primary',
+  variant = "primary",
 }) => {
   return (
-    <button 
+    <button
       onClick={onClick}
-      className={cn('px-4 py-2', variant === 'primary' && 'bg-primary')}
+      className={cn("px-4 py-2", variant === "primary" && "bg-primary")}
     >
       {label}
     </button>
@@ -880,12 +937,13 @@ export const Component: React.FC<ComponentProps> = ({
 ```
 
 ### New Hook
+
 ```typescript
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 /**
  * useCustomHook - Description of what hook does
- * 
+ *
  * @param param - Parameter description
  * @returns Object with { data, isLoading, error }
  */
@@ -900,7 +958,7 @@ export const useCustomHook = (param: string) => {
         const result = await fetchFromServer(param);
         setData(result);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown'));
+        setError(err instanceof Error ? err : new Error("Unknown"));
       } finally {
         setIsLoading(false);
       }
@@ -914,13 +972,14 @@ export const useCustomHook = (param: string) => {
 ```
 
 ### New Service
+
 ```typescript
-import type { Order } from '@/types';
+import type { Order } from "@/types";
 
 /**
  * Trading engine service
  * Handles order execution, matching, and validation
- * 
+ *
  * All operations are pure functions (no side effects)
  * Unit tested with comprehensive edge cases
  */
@@ -934,11 +993,11 @@ export const validateOrder = (order: Order): boolean => {
 
 export const executeOrder = (order: Order): ExecutionResult => {
   if (!validateOrder(order)) {
-    throw new Error('Invalid order');
+    throw new Error("Invalid order");
   }
-  
+
   // Implementation
-  return { status: 'filled' };
+  return { status: "filled" };
 };
 ```
 
@@ -947,29 +1006,32 @@ export const executeOrder = (order: Order): ExecutionResult => {
 ## Common Mistakes to Avoid
 
 ### 1. Forgetting Cleanup
+
 ```typescript
 // ❌ BAD
 useEffect(() => {
-  const sub = supabase.channel('x').subscribe();
+  const sub = supabase.channel("x").subscribe();
 }, []);
 
 // ✅ GOOD
 useEffect(() => {
-  const sub = supabase.channel('x').subscribe();
+  const sub = supabase.channel("x").subscribe();
   return () => sub.unsubscribe();
 }, []);
 ```
 
 ### 2. Wrong Supabase Import
+
 ```typescript
 // ❌ BAD
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from "@/lib/supabaseClient";
 
 // ✅ GOOD
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from "@/integrations/supabase/client";
 ```
 
 ### 3. Stale Auth
+
 ```typescript
 // ❌ BAD
 const user = getUser(); // Cached
@@ -979,6 +1041,7 @@ const { user } = useAuth(); // Fresh
 ```
 
 ### 4. Missing Error Handling
+
 ```typescript
 // ❌ BAD
 const data = await query();
@@ -989,34 +1052,38 @@ if (error) throw error;
 ```
 
 ### 5. Untyped Props
+
 ```typescript
 // ❌ BAD
-export const Component = (props: any) => { };
+export const Component = (props: any) => {};
 
 // ✅ GOOD
-interface ComponentProps { }
-export const Component: React.FC<ComponentProps> = ({ }) => { };
+interface ComponentProps {}
+export const Component: React.FC<ComponentProps> = ({}) => {};
 ```
 
 ### 6. Hardcoded Values
+
 ```typescript
 // ❌ BAD
-const url = 'https://api.example.com';
+const url = "https://api.example.com";
 
 // ✅ GOOD
 const url = import.meta.env.VITE_API_URL;
 ```
 
 ### 7. Over-Memoization
+
 ```typescript
 // ❌ BAD
 const name = useMemo(() => user.name, [user.name]);
 
 // ✅ GOOD: Only when profiler proves needed
-const expensiveValue = useMemo(() => { }, [dep]);
+const expensiveValue = useMemo(() => {}, [dep]);
 ```
 
 ### 8. Large Files
+
 ```typescript
 // ❌ BAD: 500+ line component
 // ✅ GOOD: Split into smaller components
@@ -1026,9 +1093,10 @@ const expensiveValue = useMemo(() => { }, [dep]);
 ```
 
 ### 9. Prop Drilling
+
 ```typescript
 // ❌ BAD: Drilling through 5 levels
-<Parent user={user} theme={theme} orders={orders} />
+<Parent user={user} theme={theme} orders={orders} />;
 
 // ✅ GOOD: Use Context
 const { user } = useAuth();
@@ -1036,12 +1104,13 @@ const { theme } = useTheme();
 ```
 
 ### 10. Console Logs in Production
+
 ```typescript
 // ❌ BAD
-console.log('Debug:', user);
+console.log("Debug:", user);
 
 // ✅ GOOD: Use logger (removed in prod)
-logger.debug('User loaded', { userId: user.id });
+logger.debug("User loaded", { userId: user.id });
 ```
 
 ---
@@ -1049,6 +1118,7 @@ logger.debug('User loaded', { userId: user.id });
 ## Quick Reference
 
 ### Directory Structure
+
 ```
 src/
 ├── components/ui/          # shadcn-ui primitives
@@ -1064,6 +1134,7 @@ src/
 ```
 
 ### Key Commands
+
 ```bash
 npm run dev                  # Start dev server
 npm run build               # Build for production
@@ -1075,6 +1146,7 @@ ANALYZE=true npm run build  # Analyze bundle
 ```
 
 ### Important Files
+
 - `PRD.md` — Feature specifications
 - `STYLE_GUIDE.md` — Code standards
 - `tsconfig.json` — TypeScript config

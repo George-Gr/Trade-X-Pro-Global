@@ -4,7 +4,7 @@ import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import type { Plugin } from "vite";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
-
+// Enhanced manualChunks integrated into rollup fn
 // CORS middleware for development - handles cross-origin requests
 const corsMiddleware = (): Plugin => ({
   name: 'cors-middleware',

@@ -216,7 +216,7 @@ export function useLiquidationExecution() {
         throw error;
       }
     },
-    [user?.id]
+    [user]
   );
 
   /**

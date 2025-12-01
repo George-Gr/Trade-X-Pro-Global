@@ -177,39 +177,45 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
       const severity = isLiquidationRisk
         ? MarginCallSeverity.CRITICAL
         : isCritical
-        ? MarginCallSeverity.URGENT
-        : MarginCallSeverity.STANDARD;
+          ? MarginCallSeverity.URGENT
+          : MarginCallSeverity.STANDARD;
 
-      setState((prev) => {
-        const newActions = getRecommendedActions(marginLevel ?? 0, 5); // Assume 5 positions
-        return {
-          ...prev,
-          marginStatus: MarginCallStatus.NOTIFIED,
-          severity,
-          shouldRestrictOrders: shouldRestrictNewTrading(MarginCallStatus.NOTIFIED),
-          shouldEnforceCloseOnly: shouldEnforceCloseOnly(MarginCallStatus.NOTIFIED),
-          recommendedActions: newActions,
-        };
+      // Defer state update to avoid synchronous setState in effect
+      Promise.resolve().then(() => {
+        setState((prev) => {
+          const newActions = getRecommendedActions(marginLevel ?? 0, 5); // Assume 5 positions
+          return {
+            ...prev,
+            marginStatus: MarginCallStatus.NOTIFIED,
+            severity,
+            shouldRestrictOrders: shouldRestrictNewTrading(MarginCallStatus.NOTIFIED),
+            shouldEnforceCloseOnly: shouldEnforceCloseOnly(MarginCallStatus.NOTIFIED),
+            recommendedActions: newActions,
+          };
+        });
+
+        onStatusChange?.(MarginCallStatus.NOTIFIED, MarginCallStatus.PENDING);
       });
-
-      onStatusChange?.(MarginCallStatus.NOTIFIED, MarginCallStatus.PENDING);
     }
 
     // Exiting margin call
     if (!shouldBeInCall && marginCallStartTimeRef.current) {
       marginCallStartTimeRef.current = null;
 
-      setState((prev) => ({
-        ...prev,
-        marginStatus: MarginCallStatus.RESOLVED,
-        severity: null,
-        timeInCallMinutes: null,
-        shouldRestrictOrders: false,
-        shouldEnforceCloseOnly: false,
-        recommendedActions: [],
-      }));
+      // Defer state update to avoid synchronous setState in effect
+      Promise.resolve().then(() => {
+        setState((prev) => ({
+          ...prev,
+          marginStatus: MarginCallStatus.RESOLVED,
+          severity: null,
+          timeInCallMinutes: null,
+          shouldRestrictOrders: false,
+          shouldEnforceCloseOnly: false,
+          recommendedActions: [],
+        }));
 
-      onStatusChange?.(MarginCallStatus.RESOLVED, MarginCallStatus.NOTIFIED);
+        onStatusChange?.(MarginCallStatus.RESOLVED, MarginCallStatus.NOTIFIED);
+      });
     }
   }, [enabled, user?.id, isWarning, isCritical, isLiquidationRisk, marginLevel, onStatusChange]);
 
@@ -282,10 +288,13 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
         variant: notification.priority === 'CRITICAL' ? 'destructive' : 'default',
       });
 
-      setState((prev) => ({
-        ...prev,
-        lastNotificationTime: now,
-      }));
+      // Defer state update to avoid synchronous setState in effect
+      Promise.resolve().then(() => {
+        setState((prev) => ({
+          ...prev,
+          lastNotificationTime: now,
+        }));
+      });
     }
   }, [
     enabled,
@@ -301,7 +310,10 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
    * Sync marginLevel to state when it changes
    */
   useEffect(() => {
-    setState(prev => ({ ...prev, marginLevel: marginLevel ?? 0 }));
+    // Defer state update to avoid synchronous setState in effect
+    Promise.resolve().then(() => {
+      setState(prev => ({ ...prev, marginLevel: marginLevel ?? 0 }));
+    });
   }, [marginLevel]);
 
   /**

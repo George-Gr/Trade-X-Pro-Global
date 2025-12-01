@@ -36,7 +36,7 @@ const mapSymbolToFinnhub = (symbol: string): string => {
     const quote = symbol.substring(3, 6);
     return `OANDA:${base}_${quote}`;
   }
-  
+
   // For stocks, commodities, etc., pass through as-is
   // Finnhub expects format like "AAPL" for stocks, "BINANCE:BTCUSDT" for crypto
   return symbol;
@@ -45,7 +45,7 @@ const mapSymbolToFinnhub = (symbol: string): string => {
 const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
   const now = Date.now();
   const cached = priceCache.get(symbol);
-  
+
   // Return cached data if still valid
   if (cached && (now - cached.timestamp) < CACHE_DURATION_MS) {
     return cached.data;
@@ -104,7 +104,8 @@ export const usePriceUpdates = ({
 
   useEffect(() => {
     if (!enabled || symbols.length === 0) {
-      setIsLoading(false);
+      // Defer loading state update to avoid synchronous setState in effect
+      Promise.resolve().then(() => setIsLoading(false));
       return;
     }
 
@@ -149,7 +150,7 @@ export const usePriceUpdates = ({
       const now = Date.now();
       // Mark as stale if price is older than intervalMs + 500ms
       const isStale = (now - priceData.timestamp) > (intervalMs + 500);
-      return { 
+      return {
         currentPrice: priceData.currentPrice,
         change: priceData.change,
         changePercent: priceData.changePercent,

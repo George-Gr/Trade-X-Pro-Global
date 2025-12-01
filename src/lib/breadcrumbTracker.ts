@@ -24,7 +24,7 @@ class BreadcrumbTracker {
   private interactions: UserInteraction[] = [];
   private maxInteractions = 100;
   private lastNavigationTime = Date.now();
-  
+
   // Event handler references for cleanup
   private clickHandler: ((event: Event) => void) | null = null;
   private submitHandler: ((event: Event) => void) | null = null;
@@ -47,7 +47,7 @@ class BreadcrumbTracker {
     this.clickHandler = (event) => {
       const target = event.target as HTMLElement;
       const clickableElement = this.findClickableElement(target);
-      
+
       if (clickableElement) {
         this.recordInteraction('click', this.getElementDescription(clickableElement), {
           element: clickableElement.tagName,
@@ -135,13 +135,13 @@ class BreadcrumbTracker {
     // Track session activity
     const activityEvents = ['mousemove', 'scroll', 'keydown', 'click'];
     let lastActivity = Date.now();
-    
+
     this.activityHandler = () => {
       lastActivity = Date.now();
     };
 
     activityEvents.forEach(event => {
-      document.addEventListener(event, this.activityHandler, { passive: true });
+      document.addEventListener(event as keyof DocumentEventMap, this.activityHandler!, { passive: true });
     });
 
     // Check for inactivity periodically
@@ -160,7 +160,7 @@ class BreadcrumbTracker {
    */
   private findClickableElement(element: HTMLElement): HTMLElement | null {
     const interactiveSelectors = [
-      'button', 'a', 'input[type="button"]', 'input[type="submit"]', 
+      'button', 'a', 'input[type="button"]', 'input[type="submit"]',
       'input[type="checkbox"]', 'input[type="radio"]', '[role="button"]',
       '[data-clickable]', '[onclick]'
     ];
@@ -209,7 +209,7 @@ class BreadcrumbTracker {
   private getFormData(form: HTMLFormElement): Record<string, unknown> {
     const formData: Record<string, unknown> = {};
     const elements = form.elements;
-    
+
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i] as HTMLInputElement;
       if (element.name) {
@@ -233,14 +233,14 @@ class BreadcrumbTracker {
   private getEventTarget(event: Event): string {
     const target = event.target as HTMLElement;
     const path = event.composedPath();
-    
+
     if (path.length > 1) {
       const parent = path[1] as HTMLElement;
       if (parent && parent.tagName) {
         return `${target.tagName} > ${parent.tagName}`;
       }
     }
-    
+
     return target.tagName || 'unknown';
   }
 
@@ -248,8 +248,8 @@ class BreadcrumbTracker {
    * Record a user interaction
    */
   recordInteraction(
-    type: UserInteraction['type'], 
-    target: string, 
+    type: UserInteraction['type'],
+    target: string,
     metadata?: Record<string, unknown>
   ): void {
     const interaction: UserInteraction = {
@@ -283,7 +283,7 @@ class BreadcrumbTracker {
    */
   recordTradeAction(action: string, details: Record<string, unknown>): void {
     this.recordInteraction('trade_action', action, details);
-    
+
     // Add specific trading breadcrumb
     logger.addBreadcrumb('trading', action, 'info');
   }
@@ -294,7 +294,7 @@ class BreadcrumbTracker {
   recordAPICall(method: string, url: string, status?: number, duration?: number): void {
     const target = `${method} ${url}`;
     const metadata: Record<string, unknown> = { method, url };
-    
+
     if (status) metadata.status = status;
     if (duration) metadata.duration = duration;
 
@@ -306,13 +306,13 @@ class BreadcrumbTracker {
    */
   recordNavigation(path: string, fromPath?: string): void {
     const target = fromPath ? `Navigation: ${fromPath} → ${path}` : `Navigation: ${path}`;
-    
+
     this.recordInteraction('navigation', target, {
       path,
       fromPath,
       timeSinceLastNavigation: Date.now() - this.lastNavigationTime,
     });
-    
+
     this.lastNavigationTime = Date.now();
   }
 
@@ -336,14 +336,14 @@ class BreadcrumbTracker {
   cleanup(): void {
     // Clear all interactions
     this.clearInteractions();
-    
+
     // Remove all event listeners
     document.removeEventListener('click', this.clickHandler as EventListener);
     document.removeEventListener('submit', this.submitHandler as EventListener);
     document.removeEventListener('keydown', this.keydownHandler as EventListener);
     window.removeEventListener('popstate', this.popstateHandler as EventListener);
     document.removeEventListener('visibilitychange', this.visibilityHandler as EventListener);
-    
+
     // Remove activity event listeners
     const activityEvents = ['mousemove', 'scroll', 'keydown', 'click'];
     activityEvents.forEach(event => {
@@ -356,11 +356,11 @@ class BreadcrumbTracker {
    */
   getInteractionSummary(): Record<string, number> {
     const summary: Record<string, number> = {};
-    
+
     this.interactions.forEach(interaction => {
       summary[interaction.type] = (summary[interaction.type] || 0) + 1;
     });
-    
+
     return summary;
   }
 }

@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect, Suspense } from 'react';
+import type { TooltipContentProps } from 'recharts';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
@@ -184,11 +185,16 @@ export const EquityChart: React.FC = () => {
                   label={{ value: 'Equity ($)', angle: -90, position: 'insideLeft' }}
                 />
                 <DynamicTooltip
-                  content={({ active, payload }: { active?: boolean; payload?: Array<{ value: number | string }> }) => {
-                    if (active && payload && payload.length) {
+                  content={(props) => {
+                    const { active, payload } = props as { active?: boolean; payload?: readonly { value?: number | string }[] };
+                    if (active && payload && payload.length > 0) {
+                      const raw = payload[0] as { value?: number | string } | undefined;
+                      const val = raw?.value;
+                      const num = typeof val === 'number' ? val : Number(val ?? 0);
+
                       return (
                         <div className="bg-background border border-border rounded p-2 text-xs">
-                          <p className="text-foreground">{`$${Number(payload[0].value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</p>
+                          <p className="text-foreground">{`$${Number(num).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</p>
                         </div>
                       );
                     }

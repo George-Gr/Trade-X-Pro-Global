@@ -53,7 +53,6 @@
  */
 
 import * as Sentry from "@sentry/react";
-import { Transaction, Span } from "@sentry/types";
 
 /**
  * Log context information
@@ -439,7 +438,7 @@ export const logger = {
   startTransaction(name: string, operation: string, context?: LogContext): string {
     const startTime = performance.now();
     const transactionId = `${name}-${startTime}-${Math.random().toString(36).substring(2, 8)}`;
-    
+
     const transaction: PerformanceTransaction = {
       name,
       operation,
@@ -688,7 +687,7 @@ export const logger = {
       // Capture as Sentry event with appropriate level
       const sentryLevel = severity === 'critical' ? 'fatal' : severity === 'high' ? 'error' : 'warning';
       Sentry.captureMessage(message, sentryLevel as 'fatal' | 'error' | 'warning');
-      
+
       // Add context
       Sentry.setContext('risk_event', {
         type,
@@ -728,7 +727,7 @@ export const logger = {
     if (isSentryActive()) {
       // Add to Sentry context for performance monitoring
       Sentry.setMeasurement(name, value, unit as 'nanosecond' | 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'custom');
-      
+
       // Add breadcrumb
       this.addBreadcrumb('metric', `${name}: ${value}${unit}`);
     }
