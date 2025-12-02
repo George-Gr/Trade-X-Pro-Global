@@ -72,12 +72,7 @@ const ThemeTesting = lazy(() => import("./pages/ThemeTesting"));
 
 const queryClient = new QueryClient();
 
-// Layout Components
-const MobileBottomNavigation = lazy(() =>
-  import("./components/layout/MobileBottomNavigation").then(module => ({
-    default: module.MobileBottomNavigation
-  }))
-);
+// MobileBottomNavigation is now included in AuthenticatedLayoutInner
 
 const App = () => {
   // Initialize Sentry and monitoring on app load (production only)
@@ -183,8 +178,6 @@ const App = () => {
                             <ProtectedRoute>
                               <AuthenticatedLayoutProvider>
                                 <Dashboard />
-                                {/* Mobile bottom navigation for dashboard */}
-                                <MobileBottomNavigation />
                               </AuthenticatedLayoutProvider>
                             </ProtectedRoute>
                           </ErrorBoundary>
