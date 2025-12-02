@@ -37,7 +37,7 @@ export const NAVIGATION_CONFIG = {
       id: 'dashboard',
       path: '/dashboard',
       icon: LayoutDashboard,
-      label: 'navigation.dashboard',
+      label: 'Dashboard',
       requiredRoles: ['user', 'admin'],
       order: 1,
       isVisible: true
@@ -46,7 +46,7 @@ export const NAVIGATION_CONFIG = {
       id: 'trade',
       path: '/trade',
       icon: TrendingUp,
-      label: 'navigation.trade',
+      label: 'Trade',
       requiredRoles: ['user', 'admin'],
       order: 2,
       isVisible: true
@@ -55,7 +55,7 @@ export const NAVIGATION_CONFIG = {
       id: 'portfolio',
       path: '/portfolio',
       icon: Briefcase,
-      label: 'navigation.portfolio',
+      label: 'Portfolio',
       requiredRoles: ['user', 'admin'],
       order: 3,
       isVisible: true
@@ -64,7 +64,7 @@ export const NAVIGATION_CONFIG = {
       id: 'wallet',
       path: '/wallet',
       icon: Wallet,
-      label: 'navigation.wallet',
+      label: 'Wallet',
       requiredRoles: ['user', 'admin'],
       order: 4,
       isVisible: true
@@ -73,7 +73,7 @@ export const NAVIGATION_CONFIG = {
       id: 'history',
       path: '/history',
       icon: History,
-      label: 'navigation.history',
+      label: 'History',
       requiredRoles: ['user', 'admin'],
       order: 5,
       isVisible: true
@@ -82,7 +82,7 @@ export const NAVIGATION_CONFIG = {
       id: 'pending-orders',
       path: '/pending-orders',
       icon: Clock,
-      label: 'navigation.pendingOrders',
+      label: 'Pending Orders',
       requiredRoles: ['user', 'admin'],
       order: 6,
       isVisible: true
@@ -91,7 +91,7 @@ export const NAVIGATION_CONFIG = {
       id: 'risk-management',
       path: '/risk-management',
       icon: Shield,
-      label: 'navigation.riskManagement',
+      label: 'Risk Management',
       requiredRoles: ['user', 'admin'],
       order: 7,
       isVisible: true
@@ -100,7 +100,7 @@ export const NAVIGATION_CONFIG = {
       id: 'notifications',
       path: '/notifications',
       icon: Bell,
-      label: 'navigation.notifications',
+      label: 'Notifications',
       requiredRoles: ['user', 'admin'],
       order: 8,
       isVisible: true
@@ -111,7 +111,7 @@ export const NAVIGATION_CONFIG = {
       id: 'settings',
       path: '/settings',
       icon: Settings,
-      label: 'navigation.settings',
+      label: 'Settings',
       requiredRoles: ['user', 'admin'],
       order: 1,
       isVisible: true
@@ -120,7 +120,7 @@ export const NAVIGATION_CONFIG = {
       id: 'profile',
       path: '/settings/profile',
       icon: User,
-      label: 'navigation.profile',
+      label: 'Profile',
       requiredRoles: ['user', 'admin'],
       order: 2,
       isVisible: true
@@ -131,7 +131,7 @@ export const NAVIGATION_CONFIG = {
       id: 'logout',
       path: '',
       icon: LogOut,
-      label: 'navigation.logout',
+      label: 'Sign Out',
       requiredRoles: ['user', 'admin'],
       order: 1,
       isVisible: true,
@@ -146,19 +146,19 @@ export const NAVIGATION_CONFIG = {
 export const NAVIGATION_SECTIONS = {
   main: {
     id: 'main',
-    label: 'navigation.mainNavigation',
+    label: 'Main Navigation',
     order: 1,
     items: NAVIGATION_CONFIG.main
   },
   settings: {
     id: 'settings', 
-    label: 'navigation.settings',
+    label: 'Settings',
     order: 2,
     items: NAVIGATION_CONFIG.settings
   },
   actions: {
     id: 'actions',
-    label: 'navigation.actions',
+    label: 'Actions',
     order: 3,
     items: NAVIGATION_CONFIG.actions
   }

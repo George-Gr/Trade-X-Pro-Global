@@ -65,9 +65,11 @@
     --header-padding: var(--space-3);         /* 24px - Header internal padding */
     --header-margin: var(--space-1);          /* 8px - Header external margin */
 
-    --sidebar-width: 240px;                   /* Fixed sidebar width */
-    --sidebar-padding: var(--space-3);        /* 24px - Sidebar internal padding */
+    --sidebar-width: 280px;                   /* Fixed sidebar width (matches spacing.ts) */
+    --sidebar-width-collapsed: 64px;          /* Collapsed sidebar width */
+    --sidebar-padding: var(--space-2);        /* 16px - Sidebar internal padding */
     --sidebar-gap: var(--space-2);            /* 16px - Sidebar item spacing */
+    --sidebar-item-height: 40px;              /* Sidebar nav item height */
 
     /* Layout Spacing */
     --layout-padding: var(--space-4);         /* 32px - Main layout padding */
