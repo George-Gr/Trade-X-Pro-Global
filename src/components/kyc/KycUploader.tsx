@@ -1,14 +1,13 @@
 // KycUploader: Comprehensive user UI for uploading KYC documents
 import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, CheckCircle, AlertCircle, Loader2, FileText, Image as ImageIcon, X } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { DocumentUploadArea } from './DocumentUploadArea';
+import { UploadStatusList } from './UploadStatusList';
 
 interface DocumentUpload {
   id: string;
@@ -358,148 +357,32 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
             return (
               <TabsContent key={doc.type} value={doc.type} className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium">
-                      {doc.label}
-                      {isRequired && <span className="text-destructive ml-2">*</span>}
-                    </label>
-                    {upload?.status === 'validated' && (
-                      <Badge className="bg-profit">
-                        <CheckCircle className="h-3 w-3 mr-2" />
-                        Uploaded
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">{doc.description}</p>
-
-                  {/* Upload Area */}
-                  <div
-                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-[280px] flex flex-col items-center justify-center ${isDragActive
-                        ? 'border-primary bg-primary/5 scale-105'
-                        : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2'
-                      } ${upload?.status === 'validated' ? 'bg-buy/5 border-buy/30' : ''}`}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={(e) => handleDrop(e, doc.type)}
-                  >
-                    {upload && upload.file ? (
-                      <div className="space-y-3 w-full">
-                        {/* Thumbnail Preview for Images */}
-                        {upload.thumbnail ? (
-                          <div className="flex justify-center mb-4">
-                            <img
-                              src={upload.thumbnail}
-                              alt={upload.file.name}
-                              className="max-w-[120px] max-h-[120px] rounded-lg border border-muted-foreground/20 shadow-sm object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex justify-center mb-4">
-                            {upload.file.type.includes('pdf') ? (
-                              <FileText className="h-12 w-12 text-muted-foreground" />
-                            ) : (
-                              <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                            )}
-                          </div>
-                        )}
-                        <p className="text-sm font-semibold">{upload.file.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {(upload.file.size / 1024 / 1024).toFixed(2)} MB
-                        </p>
-
-                        {upload.status === 'uploading' && (
-                          <div className="space-y-2 mt-4 w-full">
-                            <Progress value={upload.progress} className="h-2" />
-                            <p className="text-xs font-medium text-primary">{upload.progress}% uploaded</p>
-                          </div>
-                        )}
-
-                        {upload.status === 'error' && (
-                          <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-                            <p className="text-xs text-destructive font-medium">{upload.error}</p>
-                          </div>
-                        )}
-
-                        {upload.status === 'validated' && (
-                          <div className="flex items-center justify-center gap-2 mt-3">
-                            <CheckCircle className="h-5 w-5 text-buy animate-in fade-in zoom-in-50" />
-                            <p className="text-xs font-medium text-buy">Validated successfully</p>
-                          </div>
-                        )}
-
-                        {upload.status !== 'uploading' && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeDocument(upload.id)}
-                            className="mt-2"
-                          >
-                            <X className="h-4 w-4 mr-2" />
-                            Remove
-                          </Button>
-                        )}
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => {
-                          fileInputRef.current?.click();
-                          // Store which doc type was clicked
-                          if (fileInputRef.current) {
-                            (fileInputRef.current as unknown as Record<string, unknown>).dataset = { docType: doc.type };
-                          }
-                        }}
-                        className="cursor-pointer space-y-3 w-full"
-                      >
-                        <Upload className="h-10 w-10 mx-auto text-muted-foreground" />
-                        <div>
-                          <p className="text-sm font-semibold mb-1">
-                            Drag and drop your file here
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            or click to select from your computer
-                          </p>
-                        </div>
-                        <p className="text-xs text-muted-foreground font-medium">
-                          JPEG, PNG, or PDF (max 10MB)
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <DocumentUploadArea
+                  upload={upload}
+                  docType={doc.type}
+                  docLabel={doc.label}
+                  docDescription={doc.description}
+                  isRequired={isRequired}
+                  isDragActive={isDragActive}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={(e) => handleDrop(e, doc.type)}
+                  onFileSelect={() => {
+                    fileInputRef.current?.click();
+                    if (fileInputRef.current) {
+                      (fileInputRef.current as unknown as Record<string, unknown>).dataset = { docType: doc.type };
+                    }
+                  }}
+                  onRemove={removeDocument}
+                />
               </TabsContent>
             );
           })}
         </Tabs>
 
         {/* Submission Info */}
-        <div className="bg-muted/50 rounded-lg p-4 space-y-3 border border-muted">
-          <h4 className="text-sm font-semibold">Upload Status</h4>
-          <ul className="text-sm space-y-2">
-            {REQUIRED_DOCUMENTS.map(doc => {
-              const uploaded = uploads.find(u => u.type === doc.type);
-              return (
-                <li key={doc.type} className="flex items-center gap-3 transition-all duration-200">
-                  {uploaded?.status === 'validated' ? (
-                    <CheckCircle className="h-5 w-5 text-buy shrink-0 animate-in zoom-in-50" />
-                  ) : uploaded?.status === 'uploading' ? (
-                    <Loader2 className="h-5 w-5 text-primary shrink-0 animate-spin" />
-                  ) : uploaded?.status === 'error' ? (
-                    <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
-                  ) : (
-                    <div className="h-5 w-5 border-2 border-muted-foreground/30 rounded-full shrink-0" />
-                  )}
-                  <span className={uploaded?.status === 'validated' ? 'text-buy font-medium' : ''}>
-                    {doc.label}
-                    {doc.required && <span className="text-destructive ml-2">*</span>}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <UploadStatusList documents={REQUIRED_DOCUMENTS} uploads={uploads} />
 
         {/* Submit Button */}
         <Button
