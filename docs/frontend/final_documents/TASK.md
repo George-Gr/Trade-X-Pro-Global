@@ -37,6 +37,7 @@ Based on comprehensive analysis of the Enhanced Design Plan, Present State Asses
 **Priority:** Critical  
 **Complexity:** Medium  
 **Dependencies:** None
+**Reference:** Design tokens defined in `src/constants/designTokens.ts`, `src/constants/typography.ts`, `src/constants/spacing.ts`, and `docs/DESIGN_SYSTEM.md`
 
 **Action Items:**
 1. Resolve color palette inconsistencies between documents:
@@ -46,15 +47,18 @@ Based on comprehensive analysis of the Enhanced Design Plan, Present State Asses
    - Ensure all color combinations meet WCAG AAA (7:1 contrast)
 
 2. Unify typography system:
-   - Replace Playfair Display with Inter for headings
-   - Standardize Manrope as primary body font
-   - Implement JetBrains Mono for numerical data
-   - Create consistent font weight limitations (max 4 per view)
+   - Use Inter for all headings and body text (replaces Playfair Display and Manrope)
+   - Use JetBrains Mono for numerical data and trading symbols
+   - Implement H1-H5 with responsive scaling (48px→36px mobile)
+   - Limit font weights to 3 per view: 400 (regular), 600 (semibold), 700 (bold)
 
-3. Standardize spacing system:
-   - Implement 8px grid system consistently
-   - Ensure 40% whitespace ratio across all views
-   - Standardize page margins (48px desktop, 24px mobile)
+3. Standardize spacing system (8px grid - all multiples of 8px):
+   - Implement 8px scale: 0, 4, 8, 16, 24, 32, 48, 64, 80, 96, 128px
+   - Page margins: 48px desktop, 32px tablet, 24px mobile
+   - Section gaps: 48px between major sections
+   - Card padding: 16px (sm), 24px (md), 32px (lg)
+   - Touch targets: 44px minimum (WCAG requirement)
+   - Maintain 40% whitespace ratio across all views
 
 **Acceptance Criteria:**
 - All color combinations pass WCAG AAA standards
@@ -510,3 +514,29 @@ Based on comprehensive analysis of the Enhanced Design Plan, Present State Asses
 - Security review for authentication changes
 
 This comprehensive task list provides a complete roadmap for transforming the current TradeX Pro frontend into an institutional-grade CFD trading platform that meets all specified requirements and exceeds industry standards.
+
+---
+
+## 📌 Authoritative Design System Reference
+
+All implementation tasks must conform to the authoritative design system:
+
+| Component | Location | Authority |
+|-----------|----------|-----------|
+| **Color Tokens** | `src/constants/designTokens.ts` | Definitive color palette (8 colors, WCAG AAA) |
+| **Typography Tokens** | `src/constants/typography.ts` | Font families, sizes, weights, responsive scaling |
+| **Spacing Tokens** | `src/constants/spacing.ts` | 8px grid system (0, 4, 8, 16, 24, 32, 48, 64, 80, 96, 128px) |
+| **Design Documentation** | `docs/DESIGN_SYSTEM.md` | Complete usage guide and best practices |
+| **Tests & Validation** | `src/__tests__/designTokens.test.ts` | 58 automated tests validating all standards |
+
+**Non-Compliance Resolution:** If task specifications conflict with authoritative design tokens, the design tokens take precedence. Update task descriptions to align with actual token values.
+
+---
+
+## 🔗 Document Alignment Summary
+
+This TASK.md aligns with:
+- ✅ **Unified-Frontend-Guidelines.md** - All spacing levels (0-10), typography weights (400/600/700), and color codes
+- ✅ **TradeX-Pro-Global-Frontend-Design-Complete-Reference-Enhanced.md** - Complete color palette and typography system
+- ✅ **Implementation-Analysis-Summary.md** - Same timeline, metrics, and deliverables
+- ✅ **DESIGN_SYSTEM.md** - Authoritative design tokens and usage rules

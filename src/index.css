@@ -44,7 +44,7 @@ All colors MUST be HSL.
     --primary: 220 60% 20%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 220 60% 35%;
-    
+
     /* Gold Accents - Premium */
     --gold: 43 74% 49%;
     --gold-hover: 43 74% 42%;
@@ -70,11 +70,11 @@ All colors MUST be HSL.
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 217 91% 60%;
-    
+
     /* Focus ring colors - WCAG AA compliant */
     --focus-color: 217 91% 60%;
     --focus-ring-color: 217 91% 60%;
-    
+
     /* Sidebar colors */
     --sidebar: 0 0% 100%;
     --sidebar-foreground: 222 47% 11%;
@@ -85,71 +85,321 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    /* ========================================================================
+       UNIFIED DESIGN SYSTEM COLOR TOKENS (Hex Values)
+       Source: src/constants/designTokens.ts
+       Last Updated: December 2, 2025
+       WCAG Compliance: AAA (7:1 contrast ratio minimum for text)
+       ======================================================================== */
+
+    /* Primary Colors */
+    --color-deep-navy: #0A1628;
+    /* Primary background - 60-70% usage */
+    --color-electric-blue: #00D4FF;
+    /* Interactive elements - CTAs, highlights */
+    --color-emerald-green: #00C896;
+    /* Success, buy indicators */
+    --color-crimson-red: #FF4757;
+    /* Danger, sell indicators */
+
+    /* Secondary Colors */
+    --color-charcoal-gray: #2C3E50;
+    /* Secondary backgrounds - 20-30% usage */
+    --color-silver-gray: #95A5A6;
+    /* Text, borders, secondary info */
+    --color-pure-white: #FFFFFF;
+    /* Primary text on dark only */
+    --color-warm-gold: #F39C12;
+    /* Premium features - max 5% usage */
+
+    /* Semantic Background Colors */
+    --bg-primary: var(--color-deep-navy);
+    --bg-secondary: var(--color-charcoal-gray);
+    --bg-tertiary: rgba(44, 62, 80, 0.5);
+    --bg-overlay: rgba(10, 22, 40, 0.95);
+    --bg-panel: rgba(44, 62, 80, 0.3);
+
+    /* Semantic Text Colors */
+    --text-primary: var(--color-pure-white);
+    /* 21:1 on navy */
+    --text-secondary: var(--color-silver-gray);
+    /* 7.1:1 on charcoal */
+    --text-disabled: rgba(255, 255, 255, 0.5);
+    --text-muted: rgba(149, 165, 166, 0.7);
+    --text-inverse: var(--color-deep-navy);
+
+    /* Semantic Interactive Colors */
+    --interactive-primary: var(--color-electric-blue);
+    --interactive-hover: #00B8E6;
+    /* Darker electric blue */
+    --interactive-active: #009FCC;
+    /* Even darker for active */
+    --interactive-disabled: rgba(0, 212, 255, 0.3);
+    --interactive-focus: rgba(0, 212, 255, 0.5);
+
+    /* Trading Action Colors */
+    --trading-buy: var(--color-emerald-green);
+    --trading-buy-hover: #00A67D;
+    --trading-buy-active: #008060;
+
+    --trading-sell: var(--color-crimson-red);
+    --trading-sell-hover: #E6303F;
+    --trading-sell-active: #CC1F2E;
+
+    --trading-profit: var(--color-emerald-green);
+    --trading-loss: var(--color-crimson-red);
+
+    /* State Colors */
+    --state-success: var(--color-emerald-green);
+    --state-success-light: rgba(0, 200, 150, 0.1);
+
+    --state-warning: var(--color-warm-gold);
+    --state-warning-light: rgba(243, 156, 18, 0.1);
+
+    --state-error: var(--color-crimson-red);
+    --state-error-light: rgba(255, 71, 87, 0.1);
+
+    --state-info: var(--color-electric-blue);
+    --state-info-light: rgba(0, 212, 255, 0.1);
+
+    /* Border Colors */
+    --border-primary: rgba(149, 165, 166, 0.3);
+    --border-secondary: rgba(255, 255, 255, 0.1);
+    --border-interactive: var(--color-electric-blue);
+    --border-divider: rgba(44, 62, 80, 0.5);
+
+    /* Shadow Colors */
+    --shadow-light: rgba(10, 22, 40, 0.1);
+    --shadow-medium: rgba(10, 22, 40, 0.2);
+    --shadow-heavy: rgba(10, 22, 40, 0.3);
+
+    /* ========================================================================
+       TYPOGRAPHY SYSTEM TOKENS (Aligned with constants/typography.ts)
+       Authoritative definitions for fonts, weights, sizes, and spacing
+       ======================================================================== */
+
+    /* Font Families */
+    --font-family-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    --font-family-mono: "JetBrains Mono", "Courier New", monospace;
+    --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+
+    /* Font Weights - Standardized to 3 weights */
+    --font-weight-regular: 400;
+    /* Standard body text */
+    --font-weight-semibold: 600;
+    /* Headings, emphasis */
+    --font-weight-bold: 700;
+    /* Hero titles, key emphasis */
+
+    /* Heading Scales (Desktop sizes) */
+    --h1-font-size: 48px;
+    --h1-line-height: 1.2;
+    --h1-letter-spacing: -0.02em;
+    --h1-weight: var(--font-weight-bold);
+
+    --h2-font-size: 36px;
+    --h2-line-height: 1.3;
+    --h2-letter-spacing: -0.01em;
+    --h2-weight: var(--font-weight-semibold);
+
+    --h3-font-size: 28px;
+    --h3-line-height: 1.4;
+    --h3-letter-spacing: 0;
+    --h3-weight: var(--font-weight-semibold);
+
+    --h4-font-size: 22px;
+    --h4-line-height: 1.4;
+    --h4-letter-spacing: 0;
+    --h4-weight: var(--font-weight-semibold);
+
+    --h5-font-size: 16px;
+    --h5-line-height: 1.5;
+    --h5-letter-spacing: 0;
+    --h5-weight: var(--font-weight-semibold);
+
+    /* Body Text */
+    --body-font-size: 16px;
+    --body-line-height: 1.6;
+    --body-letter-spacing: 0;
+    --body-weight: var(--font-weight-regular);
+
+    /* Secondary Text */
+    --small-font-size: 14px;
+    --small-line-height: 1.5;
+    --small-weight: var(--font-weight-regular);
+
+    --caption-font-size: 12px;
+    --caption-line-height: 1.4;
+    --caption-letter-spacing: 0.5px;
+    --caption-weight: var(--font-weight-regular);
+
+    /* Monospace (Data, Prices, Code) */
+    --mono-font-size: 14px;
+    --mono-line-height: 1.5;
+    --mono-weight: 500;
+    --mono-family: var(--font-family-mono);
+
+    --mono-small-font-size: 12px;
+    --mono-small-line-height: 1.4;
+    --mono-small-weight: 500;
+
+    /* ========================================================================
+       SPACING SYSTEM TOKENS (8px Grid System)
+       Source: src/constants/spacing.ts
+       Last Updated: December 2, 2025
+       Base Unit: 8px (all values must be multiples of 8px)
+       ======================================================================== */
+
+    /* Base Spacing Scale (multiples of 8px) */
+    --space-0: 0px;
+    /* No spacing */
+    --space-1: 4px;
+    /* Half unit (edge cases) */
+    --space-2: 8px;
+    /* Base unit */
+    --space-3: 16px;
+    /* 2 units */
+    --space-4: 24px;
+    /* 3 units */
+    --space-5: 32px;
+    /* 4 units */
+    --space-6: 48px;
+    /* 6 units */
+    --space-7: 64px;
+    /* 8 units */
+    --space-8: 80px;
+    /* 10 units */
+    --space-9: 96px;
+    /* 12 units */
+    --space-10: 128px;
+    /* 16 units */
+
+    /* Responsive Spacing - Page Margins */
+    --page-margin-desktop: 48px;
+    --page-margin-tablet: 32px;
+    --page-margin-mobile: 24px;
+
+    /* Responsive Spacing - Section Gap */
+    --section-gap-desktop: 48px;
+    --section-gap-tablet: 32px;
+    --section-gap-mobile: 32px;
+
+    /* Element Gaps */
+    --element-gap-tight: 8px;
+    --element-gap-normal: 16px;
+    --element-gap-loose: 24px;
+
+    /* Card Spacing */
+    --card-margin: 24px;
+    --card-padding-sm: 16px;
+    --card-padding-md: 24px;
+    --card-padding-lg: 32px;
+
+    /* Button Spacing */
+    --button-padding-x-sm: 12px;
+    --button-padding-x-md: 16px;
+    --button-padding-x-lg: 24px;
+
+    --button-padding-y-sm: 8px;
+    --button-padding-y-md: 12px;
+    --button-padding-y-lg: 16px;
+
+    /* Input Field Spacing */
+    --input-padding-x: 16px;
+    --input-padding-y: 12px;
+
+    --input-height-sm: 40px;
+    --input-height-md: 44px;
+    /* Touch target minimum */
+    --input-height-lg: 48px;
+
+    /* Badge Spacing */
+    --badge-padding: 4px 12px;
+    --badge-height: 24px;
+
+    /* Divider Spacing */
+    --divider-spacing-vertical: 16px;
+    --divider-spacing-horizontal: 24px;
+
+    /* Touch Target Sizes (Mobile Accessibility) */
+    --touch-target-minimum: 44px;
+    --touch-target-comfortable: 48px;
+    --touch-target-large: 56px;
+
+    /* List/Table Spacing */
+    --list-item-height: 48px;
+    --table-row-height: 40px;
+    --table-row-compact-height: 32px;
+
+    /* Modal/Dialog Spacing */
+    --modal-padding-desktop: 32px;
+    --modal-padding-mobile: 24px;
+
     /* Trading specific colors */
     --buy: 142 76% 36%;
     --buy-hover: 142 76% 42%;
     --buy-foreground: 0 0% 100%;
-    
+
     --sell: 0 84% 60%;
     --sell-hover: 0 84% 66%;
     --sell-foreground: 0 0% 100%;
-    
+
     --profit: 142 76% 36%;
     --loss: 0 84% 60%;
-    
+
     --panel-bg: 0 0% 100%;
     --panel-border: 214 32% 91%;
-    
+
     /* Status indicator colors - HSL design tokens */
     --status-safe: 142 76% 96%;
     --status-safe-foreground: 142 76% 40%;
     --status-safe-border: 142 76% 80%;
-    
+
     --status-warning: 38 92% 96%;
     --status-warning-foreground: 38 92% 45%;
     --status-warning-border: 38 92% 80%;
-    
+
     --status-critical: 16 92% 95%;
     --status-critical-foreground: 16 92% 50%;
     --status-critical-border: 16 92% 80%;
-    
+
     --status-error: 0 84% 96%;
     --status-error-foreground: 0 84% 45%;
     --status-error-border: 0 84% 80%;
-    
+
     --status-info: 217 91% 96%;
     --status-info-foreground: 217 91% 40%;
     --status-info-border: 217 91% 80%;
-    
+
     --status-neutral: 222 12% 96%;
     --status-neutral-foreground: 222 12% 45%;
     --status-neutral-border: 222 12% 80%;
-    
+
     /* Dark mode status colors */
     --status-safe-dark: 142 76% 15%;
     --status-safe-dark-foreground: 142 76% 70%;
     --status-safe-dark-border: 142 76% 25%;
-    
+
     --status-warning-dark: 38 92% 15%;
     --status-warning-dark-foreground: 38 92% 70%;
     --status-warning-dark-border: 38 92% 25%;
-    
+
     --status-critical-dark: 16 92% 15%;
     --status-critical-dark-foreground: 16 92% 70%;
     --status-critical-dark-border: 16 92% 25%;
-    
+
     --status-error-dark: 0 84% 15%;
     --status-error-dark-foreground: 0 84% 70%;
     --status-error-dark-border: 0 84% 25%;
-    
+
     --status-info-dark: 217 91% 15%;
     --status-info-dark-foreground: 217 91% 70%;
     --status-info-dark-border: 217 91% 25%;
-    
+
     --status-neutral-dark: 222 12% 15%;
     --status-neutral-dark-foreground: 222 12% 70%;
     --status-neutral-dark-border: 222 12% 25%;
-    
+
     /* Price change indicators */
     --price-up: 142 76% 36%;
     --price-down: 0 84% 60%;
@@ -158,7 +408,7 @@ All colors MUST be HSL.
     /* Chart colors */
     --chart-grid: 214 32% 91%;
     --chart-line: 217 91% 60%;
-    
+
     /* Premium Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(220 60% 20%), hsl(220 60% 35%));
     --gradient-hero: linear-gradient(135deg, hsl(220 60% 20% / 0.97), hsl(220 60% 35% / 0.95));
@@ -168,7 +418,7 @@ All colors MUST be HSL.
     --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 66%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.4));
     --gradient-premium: linear-gradient(135deg, hsl(220 60% 20%), hsl(43 74% 49%));
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.06);
@@ -176,29 +426,44 @@ All colors MUST be HSL.
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 10px 10px -5px hsl(0 0% 0% / 0.04);
     --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.3);
-    
+
     /* WCAG AA Compliant Accessibility Colors - Light Mode */
-    --primary-contrast: 222 47% 11%;          /* Pure dark for maximum contrast on light backgrounds */
-    --primary-contrast-light: 210 40% 98%;    /* Pure white for dark backgrounds */
-    --secondary-contrast: 215 16% 35%;        /* Enhanced gray - 4.5:1 contrast on white */
-    --secondary-contrast-light: 215 20% 65%;  /* Light gray for dark backgrounds */
-    --tertiary-contrast: 215 16% 47%;         /* Medium gray - 7:1 contrast on white */
-    --tertiary-contrast-light: 215 20% 55%;   /* Medium gray for dark backgrounds */
-    --muted-contrast: 215 16% 50%;            /* Improved muted - 3:1 contrast for large text */
-    --muted-contrast-light: 215 20% 45%;      /* Light muted for dark backgrounds */
-    --success-contrast: 142 76% 28%;          /* Green - 4.5:1 contrast */
-    --warning-contrast: 38 92% 42%;           /* Orange - 4.5:1 contrast */
-    --danger-contrast: 0 84% 45%;             /* Red - 4.5:1 contrast */
-    --focus-color: 217 91% 60%;               /* Focus ring color */
-    --focus-ring-color: 217 91% 60%;          /* Focus ring background */
-    --contrast-auto-high: 222 47% 8%;         /* High contrast text */
-    --contrast-auto-bg-high: 0 0% 100%;       /* High contrast background */
-    
+    --primary-contrast: 222 47% 11%;
+    /* Pure dark for maximum contrast on light backgrounds */
+    --primary-contrast-light: 210 40% 98%;
+    /* Pure white for dark backgrounds */
+    --secondary-contrast: 215 16% 35%;
+    /* Enhanced gray - 4.5:1 contrast on white */
+    --secondary-contrast-light: 215 20% 65%;
+    /* Light gray for dark backgrounds */
+    --tertiary-contrast: 215 16% 47%;
+    /* Medium gray - 7:1 contrast on white */
+    --tertiary-contrast-light: 215 20% 55%;
+    /* Medium gray for dark backgrounds */
+    --muted-contrast: 215 16% 50%;
+    /* Improved muted - 3:1 contrast for large text */
+    --muted-contrast-light: 215 20% 45%;
+    /* Light muted for dark backgrounds */
+    --success-contrast: 142 76% 28%;
+    /* Green - 4.5:1 contrast */
+    --warning-contrast: 38 92% 42%;
+    /* Orange - 4.5:1 contrast */
+    --danger-contrast: 0 84% 45%;
+    /* Red - 4.5:1 contrast */
+    --focus-color: 217 91% 60%;
+    /* Focus ring color */
+    --focus-ring-color: 217 91% 60%;
+    /* Focus ring background */
+    --contrast-auto-high: 222 47% 8%;
+    /* High contrast text */
+    --contrast-auto-bg-high: 0 0% 100%;
+    /* High contrast background */
+
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-duration: 300ms;
-    
+
     /* Enhanced loading animations */
     --animation-loading-slow: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     --animation-loading-fast: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
@@ -220,7 +485,7 @@ All colors MUST be HSL.
     --primary: 220 60% 45%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 220 60% 60%;
-    
+
     /* Gold Accents */
     --gold: 43 74% 55%;
     --gold-hover: 43 74% 49%;
@@ -246,7 +511,7 @@ All colors MUST be HSL.
     --border: 217 33% 17%;
     --input: 217 33% 17%;
     --ring: 217 91% 60%;
-    
+
     /* Sidebar colors - Dark mode */
     --sidebar: 217 33% 17%;
     --sidebar-foreground: 210 40% 98%;
@@ -259,42 +524,42 @@ All colors MUST be HSL.
     --buy: 142 76% 36%;
     --buy-hover: 142 76% 42%;
     --buy-foreground: 0 0% 100%;
-    
+
     --sell: 0 84% 60%;
     --sell-hover: 0 84% 66%;
     --sell-foreground: 0 0% 100%;
-    
+
     --profit: 142 76% 36%;
     --loss: 0 84% 60%;
-    
+
     --panel-bg: 217 33% 17%;
     --panel-border: 217 33% 17%;
-    
+
     /* Status indicator colors - HSL design tokens */
     --status-safe: 142 76% 15%;
     --status-safe-foreground: 142 76% 70%;
     --status-safe-border: 142 76% 25%;
-    
+
     --status-warning: 38 92% 15%;
     --status-warning-foreground: 38 92% 70%;
     --status-warning-border: 38 92% 25%;
-    
+
     --status-critical: 16 92% 15%;
     --status-critical-foreground: 16 92% 70%;
     --status-critical-border: 16 92% 25%;
-    
+
     --status-error: 0 84% 15%;
     --status-error-foreground: 0 84% 70%;
     --status-error-border: 0 84% 25%;
-    
+
     --status-info: 217 91% 15%;
     --status-info-foreground: 217 91% 70%;
     --status-info-border: 217 91% 25%;
-    
+
     --status-neutral: 222 12% 15%;
     --status-neutral-foreground: 222 12% 70%;
     --status-neutral-border: 222 12% 25%;
-    
+
     /* Price change indicators */
     --price-up: 142 76% 36%;
     --price-down: 0 84% 60%;
@@ -303,7 +568,7 @@ All colors MUST be HSL.
     /* Chart colors */
     --chart-grid: 217 33% 17%;
     --chart-line: 217 91% 60%;
-    
+
     /* Premium Gradients (Dark Mode) */
     --gradient-primary: linear-gradient(135deg, hsl(220 60% 45%), hsl(220 60% 60%));
     --gradient-hero: linear-gradient(135deg, hsl(220 60% 45% / 0.97), hsl(220 60% 60% / 0.95));
@@ -313,7 +578,7 @@ All colors MUST be HSL.
     --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 66%));
     --gradient-card: linear-gradient(145deg, hsl(217 33% 17% / 0.8), hsl(217 33% 17% / 0.4));
     --gradient-premium: linear-gradient(135deg, hsl(220 60% 45%), hsl(43 74% 55%));
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.5), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
@@ -321,23 +586,38 @@ All colors MUST be HSL.
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5), 0 4px 6px -2px hsl(0 0% 0% / 0.3);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 10px 10px -5px hsl(0 0% 0% / 0.3);
     --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.4);
-    
+
     /* WCAG AA Compliant Accessibility Colors - Dark Mode */
-    --primary-contrast: 210 40% 98%;           /* White text on dark - 15.3:1 contrast */
-    --primary-contrast-light: 222 47% 11%;     /* Dark text on light - 15.3:1 contrast */
-    --secondary-contrast: 215 20% 70%;         /* Enhanced gray for dark mode - 7:1 contrast */
-    --secondary-contrast-light: 215 16% 35%;   /* Gray for light mode - 7:1 contrast */
-    --tertiary-contrast: 215 20% 60%;          /* Medium gray for dark mode - 4.5:1 contrast */
-    --tertiary-contrast-light: 215 16% 47%;    /* Medium gray for light mode - 4.5:1 contrast */
-    --muted-contrast: 215 20% 50%;             /* Improved muted for dark mode - 3:1 contrast for large text */
-    --muted-contrast-light: 215 16% 55%;       /* Muted for light mode - 3:1 contrast for large text */
-    --success-contrast: 142 76% 50%;           /* Green for dark mode - 4.5:1 contrast */
-    --warning-contrast: 38 92% 60%;            /* Orange for dark mode - 4.5:1 contrast */
-    --danger-contrast: 0 84% 65%;              /* Red for dark mode - 4.5:1 contrast */
-    --focus-color: 217 91% 60%;                /* Focus ring color (same for both modes) */
-    --focus-ring-color: 217 91% 60%;           /* Focus ring background (same for both modes) */
-    --contrast-auto-high: 210 40% 95%;         /* High contrast text for dark mode */
-    --contrast-auto-bg-high: 217 33% 17%;      /* High contrast background for dark mode */
+    --primary-contrast: 210 40% 98%;
+    /* White text on dark - 15.3:1 contrast */
+    --primary-contrast-light: 222 47% 11%;
+    /* Dark text on light - 15.3:1 contrast */
+    --secondary-contrast: 215 20% 70%;
+    /* Enhanced gray for dark mode - 7:1 contrast */
+    --secondary-contrast-light: 215 16% 35%;
+    /* Gray for light mode - 7:1 contrast */
+    --tertiary-contrast: 215 20% 60%;
+    /* Medium gray for dark mode - 4.5:1 contrast */
+    --tertiary-contrast-light: 215 16% 47%;
+    /* Medium gray for light mode - 4.5:1 contrast */
+    --muted-contrast: 215 20% 50%;
+    /* Improved muted for dark mode - 3:1 contrast for large text */
+    --muted-contrast-light: 215 16% 55%;
+    /* Muted for light mode - 3:1 contrast for large text */
+    --success-contrast: 142 76% 50%;
+    /* Green for dark mode - 4.5:1 contrast */
+    --warning-contrast: 38 92% 60%;
+    /* Orange for dark mode - 4.5:1 contrast */
+    --danger-contrast: 0 84% 65%;
+    /* Red for dark mode - 4.5:1 contrast */
+    --focus-color: 217 91% 60%;
+    /* Focus ring color (same for both modes) */
+    --focus-ring-color: 217 91% 60%;
+    /* Focus ring background (same for both modes) */
+    --contrast-auto-high: 210 40% 95%;
+    /* High contrast text for dark mode */
+    --contrast-auto-bg-high: 217 33% 17%;
+    /* High contrast background for dark mode */
     --transition-duration: 300ms;
   }
 }
@@ -352,23 +632,29 @@ All colors MUST be HSL.
     color: hsl(var(--foreground));
     line-height: 1.6;
     font-family: var(--font-family-base);
-    transition: background-color var(--transition-duration, 300ms) ease-in-out, 
-                color var(--transition-duration, 300ms) ease-in-out;
+    transition: background-color var(--transition-duration, 300ms) ease-in-out,
+      color var(--transition-duration, 300ms) ease-in-out;
   }
 
   /* Apply transitions to common theme-related properties */
-  [class*="bg-"], 
-  [class*="text-"], 
+  [class*="bg-"],
+  [class*="text-"],
   [class*="border-"] {
     transition: background-color var(--transition-duration, 300ms) ease-in-out,
-                color var(--transition-duration, 300ms) ease-in-out,
-                border-color var(--transition-duration, 300ms) ease-in-out;
+      color var(--transition-duration, 300ms) ease-in-out,
+      border-color var(--transition-duration, 300ms) ease-in-out;
   }
 
   /* Typography hierarchy */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     line-height: 1.2;
   }
+
   /* Prose content - for legal pages and rich text */
   .prose {
     line-height: 1.625;
@@ -414,13 +700,14 @@ All colors MUST be HSL.
   [tabindex="0"]:focus-visible {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
-    box-shadow: 
+    box-shadow:
       0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
       0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
   }
 
   /* Fallback for browsers without focus-visible support */
   @supports not (selector(:focus-visible)) {
+
     input:focus,
     select:focus,
     textarea:focus,
@@ -431,7 +718,7 @@ All colors MUST be HSL.
     [tabindex="0"]:focus {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
-      box-shadow: 
+      box-shadow:
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
@@ -448,13 +735,14 @@ All colors MUST be HSL.
   .dark [tabindex="0"]:focus-visible {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
-    box-shadow: 
+    box-shadow:
       0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
       0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
   }
 
   /* Fallback for dark mode without focus-visible */
   @supports not (selector(:focus-visible)) {
+
     .dark input:focus,
     .dark select:focus,
     .dark textarea:focus,
@@ -465,7 +753,7 @@ All colors MUST be HSL.
     .dark [tabindex="0"]:focus {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
-      box-shadow: 
+      box-shadow:
         0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
     }
@@ -473,13 +761,16 @@ All colors MUST be HSL.
 
   /* Animated Focus Rings for Interactive Elements */
   @keyframes focus-pulse {
-    0%, 100% {
-      box-shadow: 
+
+    0%,
+    100% {
+      box-shadow:
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
+
     50% {
-      box-shadow: 
+      box-shadow:
         0 0 0 8px hsl(var(--focus-ring-color) / 0.4),
         0 0 0 10px hsl(var(--focus-ring-color) / 0.3);
     }
@@ -497,6 +788,7 @@ All colors MUST be HSL.
 
   /* Fallback for browsers without focus-visible */
   @supports not (selector(:focus-visible)) {
+
     .trading-interface input:focus,
     .trading-interface button:focus,
     .trading-panel input:focus,
@@ -509,6 +801,7 @@ All colors MUST be HSL.
 
   /* High contrast mode focus enhancement */
   @media (prefers-contrast: high) {
+
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -519,7 +812,7 @@ All colors MUST be HSL.
     [tabindex="0"]:focus-visible {
       outline: 4px solid hsl(var(--primary-contrast));
       outline-offset: 2px;
-      box-shadow: 
+      box-shadow:
         0 0 0 8px hsl(var(--primary-contrast-light) / 0.8),
         0 0 0 10px hsl(var(--primary-contrast-light) / 0.6);
     }
@@ -527,18 +820,24 @@ All colors MUST be HSL.
 
   /* Enhanced loading animations */
   @keyframes pulse-slow {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.4;
     }
   }
 
   @keyframes pulse-fast {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.6;
     }
@@ -548,6 +847,7 @@ All colors MUST be HSL.
     0% {
       transform: translateX(-100%);
     }
+
     100% {
       transform: translateX(100%);
     }
@@ -594,6 +894,7 @@ All colors MUST be HSL.
 
   /* FE-052: Firefox Focus Ring Enhancement - Enhanced for 3px width */
   @supports (-moz-appearance: none) {
+
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -602,7 +903,7 @@ All colors MUST be HSL.
     [role="link"]:focus-visible {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
-      box-shadow: 
+      box-shadow:
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
@@ -610,13 +911,16 @@ All colors MUST be HSL.
 
   /* Animated Focus Rings for Interactive Elements */
   @keyframes focus-pulse {
-    0%, 100% {
-      box-shadow: 
+
+    0%,
+    100% {
+      box-shadow:
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
+
     50% {
-      box-shadow: 
+      box-shadow:
         0 0 0 8px hsl(var(--focus-ring-color) / 0.4),
         0 0 0 10px hsl(var(--focus-ring-color) / 0.3);
     }
@@ -634,6 +938,7 @@ All colors MUST be HSL.
 
   /* Fallback for browsers without focus-visible */
   @supports not (selector(:focus-visible)) {
+
     .trading-interface input:focus,
     .trading-interface button:focus,
     .trading-panel input:focus,
@@ -646,6 +951,7 @@ All colors MUST be HSL.
 
   /* High contrast mode focus enhancement */
   @media (prefers-contrast: high) {
+
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -656,7 +962,7 @@ All colors MUST be HSL.
     [tabindex="0"]:focus-visible {
       outline: 4px solid hsl(var(--contrast-auto-high));
       outline-offset: 2px;
-      box-shadow: 
+      box-shadow:
         0 0 0 8px hsl(var(--contrast-auto-bg-high) / 0.8),
         0 0 0 10px hsl(var(--contrast-auto-bg-high) / 0.6);
     }
@@ -664,11 +970,12 @@ All colors MUST be HSL.
 
   /* FE-053: Mobile Landscape Orientation Support */
   @media (max-height: 600px) and (orientation: landscape) {
+
     /* Reduce vertical spacing in landscape mode */
     .space-y-6 {
       row-gap: 0.75rem;
     }
-    
+
     .space-y-4 {
       row-gap: 0.5rem;
     }
@@ -688,6 +995,7 @@ All colors MUST be HSL.
   /* FE-054: Android Chrome Animation Fixes */
   /* Force hardware acceleration for smooth animations */
   @media (max-width: 768px) {
+
     .animate-fade-in,
     .animate-scale-in,
     .animate-slide-in-right,
@@ -701,6 +1009,7 @@ All colors MUST be HSL.
 
   /* Reduce motion for accessibility and Android performance */
   @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {

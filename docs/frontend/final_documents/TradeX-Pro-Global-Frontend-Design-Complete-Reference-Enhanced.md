@@ -8,9 +8,15 @@
 
 ---
 
-## 📋 Document Overview
+## Document Overview & References
 
-This enhanced document consolidates and optimizes all frontend design documentation into a single, complete reference. It merges the comprehensive CFD trading platform requirements with the existing strategic framework, providing both high-level vision and detailed implementation guidance.
+This enhanced document consolidates and optimizes all frontend design documentation. The authoritative design tokens are defined in:
+- **Color Tokens:** `src/constants/designTokens.ts` - 8 primary colors with WCAG AAA compliance
+- **Typography Tokens:** `src/constants/typography.ts` - Inter + JetBrains Mono with responsive scaling
+- **Spacing Tokens:** `src/constants/spacing.ts` - 8px grid system (0-128px scale)
+- **Design Documentation:** `docs/DESIGN_SYSTEM.md` - Comprehensive design system guide
+
+All frontend development must reference these authoritative sources for consistency.
 
 **Integration Scope:**
 - ✅ Original 12 frontend design documents (167,715+ characters)
@@ -58,22 +64,29 @@ Create a premium, institutional-grade CFD trading platform frontend that combine
 - Pure White: #FFFFFF (Text on dark backgrounds)
 - Warm Gold: #F39C12 (Premium features, warnings)
 
-### Typography System
+### Typography System (Authoritative from typography.ts)
 **Primary Font:** Inter (Sans-serif)
-- Headings: 600-700 weight
-- Body text: 400-500 weight
-- Data/Numbers: 500-600 weight (tabular nums)
+- H1: 700 weight, 48px desktop / 36px mobile, line-height 1.2, letter-spacing -0.02em
+- H2: 600 weight, 36px desktop / 28px mobile, line-height 1.3, letter-spacing -0.01em
+- H3: 600 weight, 28px desktop / 22px mobile, line-height 1.4
+- H4: 600 weight, 22px desktop / 18px mobile, line-height 1.4
+- H5: 600 weight, 16px, line-height 1.5
+- Body: 400 weight, 16px, line-height 1.6
+- Body Medium: 500 weight, 16px, line-height 1.6
+- Small: 400 weight, 14px, line-height 1.6
+- Caption: 500 weight, 12px, line-height 1.4
 
 **Secondary Font:** JetBrains Mono (Monospace)
-- Code snippets, API responses
-- Trading symbols, precise numerical data
+- Data/Prices: 500 weight, 16px, line-height 1.5
+- Code snippets, trading symbols, precise numerical data
 
 ### Component Design Principles
-- **Minimalist Approach:** Clean lines, ample whitespace
+- **Minimalist Approach:** Clean lines, ample whitespace (40% minimum)
 - **Data-First Design:** Information hierarchy prioritizes trading data
-- **Consistent Spacing:** 8px grid system (8, 16, 24, 32, 48, 64px)
+- **Consistent Spacing:** 8px grid system (0, 4, 8, 16, 24, 32, 48, 64, 80, 96, 128px)
 - **Subtle Animations:** 200-300ms transitions, easing functions
 - **Glass Morphism:** Subtle transparency effects for modern appeal
+- **Accessibility First:** WCAG AAA compliance (7:1 text contrast), 44px minimum touch targets, full keyboard navigation
 
 ---
 
@@ -872,3 +885,29 @@ The plan addresses all critical aspects of modern web application development, f
 - Continuous testing and optimization
 
 The result will be a trading platform that not only meets but exceeds industry standards, providing users with a professional, reliable, and intuitive trading experience.
+
+---
+
+## 🔗 Authoritative Design System Reference
+
+All specifications in this document reference and conform to the authoritative design system:
+
+| Component | Source File | Authority |
+|-----------|-------------|-----------|
+| **Colors** | `src/constants/designTokens.ts` | 8 primary colors with WCAG AAA compliance verified |
+| **Typography** | `src/constants/typography.ts` | Inter + JetBrains Mono, responsive scales, component definitions |
+| **Spacing** | `src/constants/spacing.ts` | 8px grid system, levels 0-10 (0, 4, 8, 16, 24, 32, 48, 64, 80, 96, 128px) |
+| **Design Guide** | `docs/DESIGN_SYSTEM.md` | Complete usage documentation and best practices |
+| **Validation** | `src/__tests__/designTokens.test.ts` | 58 automated tests ensuring all standards compliance |
+
+**Note:** If any specification in this document conflicts with authoritative design tokens, the design tokens take precedence as the source of truth.
+
+---
+
+## 📌 Document Alignment
+
+This Frontend Design Document aligns with:
+- ✅ **Unified-Frontend-Guidelines.md** - All color codes, spacing levels (0-10), typography weights (400/600/700)
+- ✅ **TASK.md** - 47 implementation tasks aligned to design standards
+- ✅ **Implementation-Analysis-Summary.md** - Same timeline and metrics
+- ✅ **DESIGN_SYSTEM.md** - Authoritative design tokens and complete reference

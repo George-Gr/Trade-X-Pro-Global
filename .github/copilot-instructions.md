@@ -1,6 +1,6 @@
 # AI Coding Agent Instructions for TradePro v10
 
-**Version:** 3.0 (Updated Dec 2025)  
+**Version:** 3.1 (Updated Dec 1, 2025)  
 **Purpose:** Guide AI agents to be immediately productive on this CFD trading simulation platform
 
 ---
@@ -53,19 +53,23 @@ UI Re-render
 ```bash
 VITE_SUPABASE_URL=https://...supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=eyJ...
-VITE_SENTRY_DSN=https://...sentry.io  # Optional
-VITE_FINNHUB_API_KEY=...              # Optional
+VITE_SENTRY_DSN=https://...sentry.io  # Error tracking (vite.config.ts integration)
+VITE_FINNHUB_API_KEY=...              # Optional market data
 ```
 
 ### 2. Essential Commands
 ```bash
-npm run dev              # Vite dev server (localhost:8080, HMR enabled)
+npm run dev              # Vite dev server (localhost:5173, HMR enabled)
 npm run dev:clean        # Remove Vite cache + rebuild
+npm run dev:fresh        # Clean install + dev
 npm run lint             # ESLint (add --fix to auto-fix)
 npm run test             # Vitest watch mode
 npm run test:ui          # Vitest interactive UI
 npm run build            # Production build
+npm run build:sentry     # Build + upload sourcemaps
 npm run supabase:pull    # Regenerate types from DB schema
+npm run supabase:push    # Push migrations
+npm run supabase:functions:deploy  # Deploy edge functions
 npm run type:strict      # Full strict TypeScript check
 ```
 
@@ -339,5 +343,5 @@ Before starting, clarify if:
 
 - **AGENT.md** — Comprehensive workflow guide (deep dive reference)
 - **TradingView Lightweight Charts** — Chart library for candlestick display
-- **Sentry** — Error tracking (optional, set `VITE_SENTRY_DSN`)
+- **Sentry** — Error tracking (`npm run build:sentry` uploads sourcemaps)
 - **Bundle Analysis**: `ANALYZE=true npm run build` → view `dist/bundle-analysis.html`

@@ -65,37 +65,49 @@ This document unifies and resolves inconsistencies between the Enhanced Design P
 | **Mono (Data/Prices)** | JetBrains Mono | 16px | 16px | 500 | 1.5 | Numbers, prices, code |
 
 #### Typography Rules (Unified)
-- **DO:** Use Inter for all headings and body text (replaces Playfair Display)
-- **DO:** Use JetBrains Mono for all numerical data and prices
-- **DO:** Limit font weights to 3 per view (bold, semibold, regular)
+- **DO:** Use Inter for all headings and body text (replaces Playfair Display and Manrope)
+- **DO:** Use JetBrains Mono for all numerical data, prices, and trading symbols
+- **DO:** Limit font weights to 3 per view: 400 (regular), 600 (semibold), 700 (bold)
 - **DO:** Maintain minimum 16px body text on mobile
+- **DO:** Use responsive heading scales (H1: 48px→36px, H2: 36px→28px, H3: 28px→22px, H4: 22px→18px, H5: 16px)
+- **DO:** Maintain heading line-heights: H1 1.2, H2-H4 1.3-1.4, H5+ 1.5+
 - **DON'T:** Use serif fonts for body text or form inputs
 - **DON'T:** Justify text alignment (always left-aligned)
-- **DON'T:** Use more than 4 font weights in any interface
+- **DON'T:** Use more than 3 font weights in any single interface
 
 ---
 
 ### Spacing & Layout System (Unified)
 
-#### 8px Grid System
-| Level | Desktop | Mobile | Usage |
-|-------|---------|--------|-------|
-| **0** | 0px | 0px | No spacing |
-| **1** | 4px | 4px | Small internal padding |
-| **2** | 8px | 8px | Standard spacing unit |
-| **3** | 16px | 12px | Card padding, element spacing |
-| **4** | 24px | 16px | Section padding, card margins |
-| **5** | 32px | 24px | Major section gaps |
-| **6** | 48px | 32px | Page margins, section gaps |
-| **7** | 64px | 48px | Large section gaps |
+#### 8px Grid System (All Multiples of 8px)
+| Level | Value | Usage |
+|-------|-------|-------|
+| **0** | 0px | No spacing |
+| **1** | 4px | Half unit (edge cases only) |
+| **2** | 8px | Standard spacing unit |
+| **3** | 16px | Card padding, element spacing |
+| **4** | 24px | Section padding, card margins |
+| **5** | 32px | Major section gaps, tablet margins |
+| **6** | 48px | Page margins (desktop), section gaps |
+| **7** | 64px | Large section gaps |
+| **8** | 80px | Extra-large gaps |
+| **9** | 96px | Full-page sections |
+| **10** | 128px | Maximum spacing |
+
+**Responsive Spacing:**
+- Page margins: 48px desktop, 32px tablet, 24px mobile
+- Section gaps: 48px desktop/tablet, 32px mobile
+- Card padding: 16px (sm), 24px (md), 32px (lg)
 
 #### Layout Requirements (Unified)
-- **Page margins:** 48px desktop, 24px mobile (minimum)
-- **Section gaps:** 48px between major sections
+- **Page margins:** 48px desktop, 32px tablet, 24px mobile (minimum)
+- **Section gaps:** 48px between major sections (responsive: 32px mobile)
 - **Card margins:** 24px minimum
+- **Card padding:** 16px (sm), 24px (md), 32px (lg)
 - **Element padding:** 16px-24px (never less than 16px)
 - **Whitespace ratio:** Minimum 40% blank space in all views
-- **Touch targets:** Minimum 44px for mobile interactions
+- **Touch targets:** 44px minimum (WCAG requirement), 48px comfortable, 56px large
+- **Input heights:** sm 40px, md 44px (standard), lg 48px
 
 ---
 
@@ -428,3 +440,33 @@ interface EnvironmentConfig {
 - [ ] Monitoring configured
 
 This unified guidelines document resolves all inconsistencies between the Enhanced Design Plan and Implementation Standards, providing a single authoritative source for all frontend development standards for the TradeX Pro institutional-grade CFD trading platform.
+
+---
+
+## 🔗 Authoritative Design System Integration
+
+All guidelines in this document reference and conform to:
+
+| Source | Authority Level | Usage |
+|--------|-----------------|-------|
+| `src/constants/designTokens.ts` | ⭐ PRIMARY | Color palette - 8 colors, WCAG AAA verified |
+| `src/constants/typography.ts` | ⭐ PRIMARY | Typography - Inter + JetBrains Mono, responsive scales |
+| `src/constants/spacing.ts` | ⭐ PRIMARY | Spacing - 8px grid (levels 0-10) |
+| `docs/DESIGN_SYSTEM.md` | ⭐ PRIMARY | Design documentation and usage examples |
+| This Guideline Doc | ✅ SECONDARY | Consolidates and references primary sources |
+| TASK.md | ✅ SECONDARY | Implementation roadmap aligned to tokens |
+| Frontend Design Doc | ✅ SECONDARY | Architecture reference using tokens |
+
+**When Guidelines Conflict:** Always reference the authoritative design token files as the source of truth.
+
+---
+
+## 📌 Design System Compliance
+
+All frontend development MUST conform to:
+
+1. **Color Standards:** Deep Navy #0A1628, Electric Blue #00D4FF, Emerald Green #00C896, Crimson Red #FF4757 + secondaries
+2. **Typography Standards:** Inter (primary), JetBrains Mono (data), 3 font weights max per view (400/600/700)
+3. **Spacing Standards:** 8px grid system with values at levels 0-10 (0, 4, 8, 16, 24, 32, 48, 64, 80, 96, 128px)
+4. **Accessibility Standards:** WCAG AAA minimum, 44px touch targets, 7:1 text contrast
+5. **Component Standards:** Semantic components (H1-H5, Body, Price, Symbol) from `@/components/common/Typography` and `@/components/common/Layout`
