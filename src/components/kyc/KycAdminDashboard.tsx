@@ -12,8 +12,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Eye, ChevronDown, AlertCircle, CheckCircle, Clock, X } from 'lucide-react';
+import { KycStatistics } from './KycStatistics';
+import { KycQueueControls, type FilterStatus } from './KycQueueControls';
+import { KycQueueTable } from './KycQueueTable';
 
-interface KycDocument {
+export interface KycDocument {
   id: string;
   kyc_request_id: string;
   type: string;
@@ -24,7 +27,7 @@ interface KycDocument {
   notes?: string | null;
 }
 
-interface KycRequest {
+export interface KycRequest {
   id: string;
   user_id: string;
   status: string;
@@ -37,15 +40,13 @@ interface KycRequest {
   kyc_documents?: KycDocument[];
 }
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   email: string;
   full_name?: string;
   phone?: string;
   kyc_status: string;
 }
-
-type FilterStatus = 'all' | 'pending' | 'submitted' | 'approved' | 'rejected' | 'manual_review';
 
 const KycAdminDashboard: React.FC = () => {
   const { user, isAdmin, loading } = useAuth();
@@ -247,44 +248,12 @@ const KycAdminDashboard: React.FC = () => {
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.pending}</div>
-            <p className="text-xs text-muted-foreground mt-2">Awaiting decision</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-medium">Approved</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-profit">{stats.approved}</div>
-            <p className="text-xs text-muted-foreground mt-2">Verified users</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-medium">Rejected</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">{stats.rejected}</div>
-            <p className="text-xs text-muted-foreground mt-2">Resubmit allowed</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-medium">Manual Review</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-amber-500">{stats.manual_review}</div>
-            <p className="text-xs text-muted-foreground mt-2">Escalated</p>
-          </CardContent>
-        </Card>
-      </div>
+      <KycStatistics
+        pending={stats.pending}
+        approved={stats.approved}
+        rejected={stats.rejected}
+        manualReview={stats.manual_review}
+      />
 
       {/* Error Alert */}
       {error && (

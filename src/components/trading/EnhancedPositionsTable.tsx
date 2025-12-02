@@ -11,6 +11,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { PositionsHeader, SortHeader, type SortConfig } from './PositionsHeader';
 import { PositionsMetrics } from './PositionsMetrics';
+import { PositionRow } from './PositionRow';
+import { PositionCard } from './PositionCard';
+import { PositionDetails } from './PositionDetails';
 import {
   Dialog,
   DialogContent,
@@ -245,90 +248,20 @@ const EnhancedPositionsTable: React.FC = () => {
             const pnlColor = getPnLColor(pnlData?.unrealizedPnL || 0);
 
             return (
-              <React.Fragment key={position.id}>
-                <tr
-                  className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
-                  onClick={() => setExpandedPositionId(isExpanded ? null : position.id)}
-                >
-                  <td className="py-4 px-4 font-semibold">{position.symbol}</td>
-                  <td className="py-4 px-4">
-                    <Badge
-                      variant={position.side === 'long' ? 'default' : 'secondary'}
-                      className={
-                        position.side === 'long'
-                          ? 'bg-buy text-foreground'
-                          : 'bg-sell text-foreground'
-                      }
-                    >
-                      {position.side.toUpperCase()}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-4 text-right font-mono text-sm">
-                    {position.quantity.toFixed(2)}
-                  </td>
-                  <td className="py-4 px-4 text-right font-mono text-sm">
-                    ${position.entry_price.toFixed(5)}
-                  </td>
-                  <td className="py-4 px-4 text-right font-mono text-sm">
-                    ${position.current_price.toFixed(5)}
-                  </td>
-                  {/* Bold P&L Display */}
-                  <td className="py-4 px-4 text-right">
-                    <div className="font-mono font-bold text-base" style={{ color: pnlColor }}>
-                      ${(pnlData?.unrealizedPnL || 0).toFixed(2)}
-                    </div>
-                    <div className="text-xs font-semibold" style={{ color: pnlColor }}>
-                      {(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 text-right font-mono text-sm">
-                    ${position.margin_used?.toFixed(2) || '0.00'}
-                  </td>
-                  <td className="py-4 px-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditPosition(position);
-                        }}
-                        className="h-8 w-8 p-0 hover:bg-muted"
-                        aria-label={`Edit stop loss and take profit for ${position.symbol} position`}
-                        title="Edit Stop Loss & Take Profit"
-                      >
-                        <Edit2 className="h-4 w-4" aria-hidden="true" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedForClose(position.id);
-                          setShowConfirmClose(true);
-                        }}
-                        className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                        disabled={isClosing}
-                        aria-label={`Close ${position.symbol} position`}
-                        title="Close Position"
-                      >
-                        {isClosing ? (
-                          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                        ) : (
-                          <X className="h-4 w-4" aria-hidden="true" />
-                        )}
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-                {isExpanded && (
-                  <tr className="border-b border-border/50 bg-muted/20">
-                    <td colSpan={8} className="py-4 px-4">
-                      <PositionDetails position={position} pnlData={pnlData} />
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
+              <PositionRow
+                key={position.id}
+                position={position}
+                pnlData={pnlData}
+                isExpanded={isExpanded}
+                pnlColor={pnlColor}
+                isClosing={isClosing}
+                onExpand={() => setExpandedPositionId(isExpanded ? null : position.id)}
+                onEdit={() => handleEditPosition(position)}
+                onClose={() => {
+                  setSelectedForClose(position.id);
+                  setShowConfirmClose(true);
+                }}
+              />
             );
           })}
         </tbody>
@@ -344,109 +277,24 @@ const EnhancedPositionsTable: React.FC = () => {
         const pnlColor = getPnLColor(pnlData?.unrealizedPnL || 0);
 
         return (
-          <Card
+          <PositionCard
             key={position.id}
-            className="p-4 cursor-pointer hover:bg-muted/50 transition-colors border-border/50"
-            onClick={() => setExpandedPositionId(isExpanded ? null : position.id)}
-          >
-            <div className="space-y-4">
-              {/* Header with Symbol and Side */}
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg">{position.symbol}</h3>
-                  <Badge
-                    variant={position.side === 'long' ? 'default' : 'secondary'}
-                    className={`mt-2 ${position.side === 'long'
-                        ? 'bg-buy text-foreground'
-                        : 'bg-sell text-foreground'
-                      }`}
-                  >
-                    {position.side.toUpperCase()}
-                  </Badge>
-                </div>
-                {/* P&L Display - Bold and Prominent */}
-                <div className="text-right">
-                  <div className="text-sm font-mono text-muted-foreground">
-                    Qty: {position.quantity.toFixed(2)}
-                  </div>
-                  <div className="font-mono font-bold text-lg mt-2" style={{ color: pnlColor }}>
-                    ${(pnlData?.unrealizedPnL || 0).toFixed(2)}
-                  </div>
-                  <div className="text-sm font-semibold" style={{ color: pnlColor }}>
-                    {(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%
-                  </div>
-                </div>
-              </div>
-
-              {/* Prices Grid */}
-              <div className="grid grid-cols-2 gap-4 text-sm border-t border-border/50 pt-4">
-                <div>
-                  <span className="text-xs text-muted-foreground font-medium">Entry</span>
-                  <div className="font-mono font-semibold mt-1">
-                    ${position.entry_price.toFixed(5)}
-                  </div>
-                </div>
-                <div>
-                  <span className="text-xs text-muted-foreground font-medium">Current</span>
-                  <div className="font-mono font-semibold mt-1">
-                    ${position.current_price.toFixed(5)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Expanded Details */}
-              {isExpanded && (
-                <div className="border-t border-border/50 pt-4 mt-4">
-                  <PositionDetails position={position} pnlData={pnlData} />
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-border/50">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditPosition(position);
-                  }}
-                >
-                  <Edit2 className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  className="flex-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedForClose(position.id);
-                    setShowConfirmClose(true);
-                  }}
-                  disabled={isClosing}
-                >
-                  {isClosing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Closing...
-                    </>
-                  ) : (
-                    <>
-                      <X className="h-4 w-4 mr-2" />
-                      Close
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </Card>
+            position={position}
+            pnlData={pnlData}
+            isExpanded={isExpanded}
+            pnlColor={pnlColor}
+            isClosing={isClosing}
+            onExpand={() => setExpandedPositionId(isExpanded ? null : position.id)}
+            onEdit={() => handleEditPosition(position)}
+            onClose={() => {
+              setSelectedForClose(position.id);
+              setShowConfirmClose(true);
+            }}
+          />
         );
       })}
     </div>
-  );
-
-  if (positionsLoading) {
+  ); if (positionsLoading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -570,44 +418,6 @@ const EnhancedPositionsTable: React.FC = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
-  );
-};
-
-/**
- * PositionDetails Sub-component
- * Displays expanded details for a position
- */
-const PositionDetails: React.FC<{
-  position: Position;
-  pnlData: PositionPnLDetails | { unrealizedPnL: number; unrealizedPnLPercentage: number };
-}> = ({ position, pnlData }) => {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-      <div>
-        <span className="text-muted-foreground text-xs">Entry Price</span>
-        <div className="font-mono font-semibold">${position.entry_price.toFixed(5)}</div>
-      </div>
-      <div>
-        <span className="text-muted-foreground text-xs">Current Price</span>
-        <div className="font-mono font-semibold">${position.current_price.toFixed(5)}</div>
-      </div>
-      <div>
-        <span className="text-muted-foreground text-xs">Margin Used</span>
-        <div className="font-mono font-semibold">${position.margin_used?.toFixed(2) || '0.00'}</div>
-      </div>
-      {position.stop_loss && (
-        <div>
-          <span className="text-muted-foreground text-xs">Stop Loss</span>
-          <div className="font-mono font-semibold text-sell">${position.stop_loss.toFixed(5)}</div>
-        </div>
-      )}
-      {position.take_profit && (
-        <div>
-          <span className="text-muted-foreground text-xs">Take Profit</span>
-          <div className="font-mono font-semibold text-buy">${position.take_profit.toFixed(5)}</div>
-        </div>
-      )}
     </div>
   );
 };

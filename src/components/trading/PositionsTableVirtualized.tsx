@@ -27,10 +27,13 @@ const VirtualizedPositionRow: React.FC<VirtualizedRowProps> = ({ index, style, d
     <div style={style}>
       <PositionRow
         position={position}
-        selectable
-        selected={!!data.selectedIds[position.id]}
-        onSelect={(id, checked) => data.onToggleSelect(id, checked)}
-        onView={() => data.onView(position.id)}
+        pnlData={{ unrealizedPnL: 0, unrealizedPnLPercentage: 0 }}
+        isExpanded={false}
+        pnlColor="#000"
+        isClosing={false}
+        onExpand={() => data.onView(position.id)}
+        onEdit={() => { }}
+        onClose={() => { }}
       />
     </div>
   );
