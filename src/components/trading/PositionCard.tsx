@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Edit2, X, Loader2 } from 'lucide-react';
 import type { Position } from '@/types/position';
 import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
+import { PositionDetails } from './PositionDetails';
 
 export interface PositionCardProps {
     position: Position;
@@ -66,7 +67,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
             </div>
             {isExpanded && (
                 <div className="border-t border-border/50 pt-4 mt-4">
-                    {/* PositionDetails will be rendered here by parent */}
+                    <PositionDetails position={position} pnlData={pnlData} />
                 </div>
             )}
             <div className="flex gap-3 pt-4 border-t border-border/50">

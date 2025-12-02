@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Edit2, X, Loader2 } from 'lucide-react';
 import type { Position } from '@/types/position';
 import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
+import { PositionDetails } from './PositionDetails';
 
 export interface PositionRowProps {
   position: Position;
@@ -85,7 +86,7 @@ export const PositionRow: React.FC<PositionRowProps> = ({
     {isExpanded && (
       <tr className="border-b border-border/50 bg-muted/20">
         <td colSpan={8} className="py-4 px-4">
-          {/* PositionDetails will be rendered here by parent */}
+          <PositionDetails position={position} pnlData={pnlData} />
         </td>
       </tr>
     )}
