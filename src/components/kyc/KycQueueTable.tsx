@@ -6,15 +6,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Eye, CheckCircle, X, Clock, AlertCircle } from 'lucide-react';
 import type { KycRequest, UserProfile, KycDocument } from './KycAdminDashboard';
 
+type EnrichedKycRequest = KycRequest & { userProfile?: UserProfile; kycDocuments?: KycDocument[] };
+
 interface KycQueueTableProps {
-    requests: (KycRequest & { userProfile?: UserProfile; kycDocuments?: KycDocument[] })[];
+    requests: EnrichedKycRequest[];
     isLoading: boolean;
     actionLoading: string | null;
-    selectedRequest: (typeof requests)[0] | null;
-    onRequestSelect: (request: (typeof requests)[0]) => void;
-    onReview: (request: (typeof requests)[0]) => void;
-    onApprove: (docId: string) => void;
-    onReject: (docId: string) => void;
+    selectedRequest: EnrichedKycRequest | null;
+    onRequestSelect: (request: EnrichedKycRequest) => void;
+    onReview: (request: EnrichedKycRequest) => void;
+    onApprove: (docId: string, notes?: string) => void;
+    onReject: (docId: string, reason?: string) => void;
     onRequestMoreInfo: (docId: string, notes: string) => void;
     children?: React.ReactNode;
 }

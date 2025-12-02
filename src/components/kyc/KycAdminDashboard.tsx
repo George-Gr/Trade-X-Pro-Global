@@ -254,9 +254,9 @@ const KycAdminDashboard: React.FC = () => {
             selectedRequest={selectedRequest}
             onRequestSelect={setSelectedRequest}
             onReview={setSelectedRequest}
-            onApprove={(id, notes) => performAdminAction(id, 'approve', notes)}
-            onReject={(id, reason) => performAdminAction(id, 'reject', reason)}
-            onRequestMoreInfo={(id, notes) => performAdminAction(id, 'request_more_info', notes)}
+            onApprove={(id, notes) => { performAdminAction(id, 'approve', notes); }}
+            onReject={(id, reason) => { performAdminAction(id, 'reject', reason); }}
+            onRequestMoreInfo={(id, notes) => { performAdminAction(id, 'request_more_info', notes); }}
           >
             <KycReviewDialog
               request={selectedRequest}
