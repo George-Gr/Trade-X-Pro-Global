@@ -223,25 +223,86 @@ Proceed to extraction and refactoring for this component.
 
 ---
 
-### Extraction & Refactoring: `kyc/KycAdminDashboard.tsx` (In Progress)
+### Extraction & Refactoring: `kyc/KycAdminDashboard.tsx` (Completed)
 
 **Changes Made:**
 - Created `KycStatistics.tsx` (4 stat cards component)
 - Created `KycQueueControls.tsx` (search and filter controls)
 - Created `KycQueueTable.tsx` (requests table with review dialog integration)
+- Created `KycReviewDialog.tsx` (review dialog with approval/rejection workflow)
 - Exported KycDocument, KycRequest, UserProfile interfaces for sub-components
-- Updated imports in main component
+- Updated main component to use all extracted sub-components
 
 **Files Created:**
 - `src/components/kyc/KycStatistics.tsx` (53 lines)
 - `src/components/kyc/KycQueueControls.tsx` (78 lines)
 - `src/components/kyc/KycQueueTable.tsx` (95 lines)
+- `src/components/kyc/KycReviewDialog.tsx` (143 lines)
 
-**Current Status:**
-- Sub-components created and validated
-- Build passes: ✓ built in 12.13s
+**Result:**
+- Reduced `KycAdminDashboard.tsx` from 555 lines to 298 lines (257 lines removed, 46% reduction)
+- Improved code organization and maintainability
+- Each component has single responsibility
+- TypeScript strict mode compliance
+- Build passes successfully: ✓ built in 9.60s
 - Linting passes with no errors
-- Main component refactoring in progress (will reduce from 556 to ~380 lines estimated)
+- All type imports properly exported and resolved
+
+---
+
+### Extraction & Refactoring: `kyc/KycUploader.tsx` (Completed)
+
+**Changes Made:**
+- Created `DocumentUploadArea.tsx` (document upload UI with drag-and-drop)
+- Created `UploadStatusList.tsx` (upload status display for all documents)
+- Updated main component to use extracted sub-components
+- Preserved all upload logic, validation, and error handling
+
+**Files Created:**
+- `src/components/kyc/DocumentUploadArea.tsx` (148 lines)
+- `src/components/kyc/UploadStatusList.tsx` (61 lines)
+
+**Result:**
+- Reduced `KycUploader.tsx` from 548 lines to 431 lines (117 lines removed, 21% reduction)
+- Improved code organization and maintainability
+- Each component has single responsibility
+- TypeScript strict mode compliance
+- Build passes successfully: ✓ built in 9.60s
+- Linting passes with no errors
+- All functionality preserved, no breaking changes
+
+---
+
+## Progress Summary
+
+### Completed Refactorings (3 components)
+
+1. **EnhancedPositionsTable.tsx**: 615 → 511 lines (17% reduction)
+2. **RiskPanel.tsx**: 704 → 334 lines (52% reduction)
+3. **KYCPanel.tsx**: 626 → 418 lines (33% reduction)
+4. **KycAdminDashboard.tsx**: 555 → 298 lines (46% reduction)
+5. **KycUploader.tsx**: 548 → 431 lines (21% reduction)
+
+### Components Skipped
+
+- **ui/sidebar.tsx** (600 lines): UI library component, intentionally comprehensive. Provides 20+ related sidebar primitives following compound component pattern. Should NOT be refactored.
+
+### Remaining Large Components (>400 lines)
+
+| Component File | Line Count | Status |
+|----------------|------------|--------|
+| admin/UsersPanel.tsx | 492 | Pending |
+| ui/LoadingSkeleton.tsx | 489 | Pending |
+| ui/DarkModeTest.tsx | 483 | Pending |
+| wallet/WithdrawalForm.tsx | 470 | Pending |
+| trading/PortfolioDashboard.tsx | 423 | Pending |
+| trading/OrderForm.tsx | 401 | Pending |
+
+### Pull Request
+
+- **PR #10**: https://github.com/George-Gr/Trade-X-Pro-Global/pull/10
+- **Branch**: `feature/component-refactoring-kyc-components`
+- **Status**: Open, awaiting review
 
 ---
 
