@@ -49,16 +49,17 @@ const KYC = () => {
 
     setIsLoading(true);
     try {
-      const response = await supabase
+      const { data, error } = await supabase
         .from("kyc_documents")
-        .select("*")
-        .eq("kyc_request_id", user.id)
+        .select("id, document_type, status, created_at, reviewed_at, rejection_reason")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      const { data, error } = response as { data: unknown[]; error: unknown };
-
       if (!error && data) {
-        setDocuments(data as KYCDocument[]);
+        setDocuments(data.map(doc => ({
+          ...doc,
+          type: doc.document_type,
+        })) as KYCDocument[]);
       }
     } catch (err) {
       console.error("Error fetching documents:", err);
