@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
