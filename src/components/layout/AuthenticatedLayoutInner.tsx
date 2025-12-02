@@ -1,3 +1,4 @@
+import * as React from "react";
 import { ReactNode, useState, useEffect } from "react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
