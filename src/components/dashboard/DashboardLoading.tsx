@@ -94,24 +94,24 @@ export function DashboardLoading() {
               <Skeleton variant="text" className="h-5 w-1/3" />
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-xl">
+          <CardContent className="space-y-8">
             {/* Quick Actions */}
-            <div className="space-y-lg">
-              <Skeleton variant="text" className="h-4 w-1/4 mb-md" />
-              <div className="flex gap-md flex-wrap">
+            <div className="space-y-6">
+              <Skeleton variant="text" className="h-4 w-1/4 mb-4" />
+              <div className="flex gap-4 flex-wrap">
                 <Skeleton variant="button" />
                 <Skeleton variant="button" />
               </div>
             </div>
 
             {/* Ready to Start Trading */}
-            <div className="space-y-lg">
-              <Skeleton variant="text" className="h-4 w-1/3 mb-md" />
-              <div className="space-y-lg">
+            <div className="space-y-6">
+              <Skeleton variant="text" className="h-4 w-1/3 mb-4" />
+              <div className="space-y-6">
                 <Skeleton variant="text" className="h-5 w-full" />
-                <div className="bg-quick-actions/50 rounded-lg p-lg border border-primary/20 space-y-md">
+                <div className="bg-quick-actions/50 rounded-lg p-6 border border-primary/20 space-y-4">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="flex items-start gap-md">
+                    <div key={i} className="flex items-start gap-4">
                       <Skeleton variant="avatarSm" />
                       <div>
                         <Skeleton variant="text" className="h-3 w-3/4" />
@@ -125,11 +125,11 @@ export function DashboardLoading() {
             </div>
 
             {/* Recent Activity */}
-            <div className="space-y-lg">
-              <Skeleton variant="text" className="h-4 w-1/4 mb-md" />
-              <div className="space-y-md">
+            <div className="space-y-6">
+              <Skeleton variant="text" className="h-4 w-1/4 mb-4" />
+              <div className="space-y-4">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="flex items-center justify-between border-b border-border/50 pb-md last:border-0 last:pb-0">
+                  <div key={i} className="flex items-center justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0">
                     <div>
                       <Skeleton variant="text" className="h-4 w-1/3" />
                       <Skeleton variant="text" className="h-3 w-1/4" />
