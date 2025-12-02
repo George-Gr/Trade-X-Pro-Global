@@ -5,7 +5,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import App from "./App.tsx";
 import "./index.css";
 import { initializeSentry } from "./lib/logger";
-import React from "react";
+import * as React from "react";
 
 // Import polyfills to fix navigator global errors and other Node.js compatibility issues
 import './polyfills';
