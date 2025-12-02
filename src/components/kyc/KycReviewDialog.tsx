@@ -103,15 +103,6 @@ export const KycReviewDialog: React.FC<KycReviewDialogProps> = ({
                                 className="min-h-20"
                             />
 
-                            {request.status === 'rejected' && (
-                                <Textarea
-                                    placeholder="Rejection reason (required)"
-                                    value={rejectionReason}
-                                    onChange={(e) => onRejectionReasonChange(e.target.value)}
-                                    className="min-h-20"
-                                />
-                            )}
-
                             <div className="flex gap-4">
                                 <Button
                                     className="flex-1 bg-profit hover:bg-profit/90"
