@@ -1,11 +1,11 @@
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from "react-router-dom";
+import * as React from "react";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import App from "./App.tsx";
 import "./index.css";
 import { initializeSentry } from "./lib/logger";
-import React from "react";
 
 // Import polyfills to fix navigator global errors and other Node.js compatibility issues
 import './polyfills';
