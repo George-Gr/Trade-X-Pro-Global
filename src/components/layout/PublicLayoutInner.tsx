@@ -1,8 +1,9 @@
-import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-import { TrendingUp } from "lucide-react";
+import { ParallaxAuroraLayout } from "@/components/ParallaxAuroraLayout";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { TrendingUp } from "lucide-react";
+import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -21,7 +22,7 @@ const PublicLayoutInner = ({ children }: PublicLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <ParallaxAuroraLayout sections={3}>
       {/* Main Navigation */}
       <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
         <div className="flex items-center gap-4">
@@ -101,7 +102,7 @@ const PublicLayoutInner = ({ children }: PublicLayoutProps) => {
           </div>
         </div>
       </footer>
-    </div>
+    </ParallaxAuroraLayout>
   );
 };
 
