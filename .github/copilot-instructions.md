@@ -152,196 +152,79 @@ if (error) throw error;             // ✅ Always throw or handle
 
 ### Validated Form (React Hook Form + Zod)
 ```typescript
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+## AI Coding Agent Quick Guide — Trade-X-Pro-Global
 
-const schema = z.object({
-  symbol: z.string().min(1, 'Required'),
-  size: z.number().positive(),
-});
+This file is a concise, actionable checklist for AI coding agents working on this repo.
 
-export const MyForm = () => {
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: { symbol: '', size: 1 },
-  });
+- **Stack & entry points**: React 18 + TypeScript + Vite. Key paths: `src/lib/trading/`, `src/hooks/`, `src/components/`, `src/contexts/`, `src/lib/supabaseBrowserClient.ts`.
+- **Supabase client**: Always import from `@/lib/supabaseBrowserClient` (do NOT import from `@/integrations/supabase/client`).
+- **Auto-generated types**: Never edit `src/integrations/supabase/types.ts` manually — run `npm run supabase:pull` after DB changes.
+- **Realtime pattern (mandatory)**: Use initial fetch + `supabase.channel(...).on('postgres_changes', ...)` and always cleanup with `supabase.removeChannel(subscriptionRef)` in `useEffect` return to avoid memory leaks.
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    try {
-      await submitToAPI(data);
-    } catch (err) {
-      form.setError('root', { message: err.message });
-    }
-  });
+Short example (use this pattern in hooks):
 
-  return (
-    <form onSubmit={onSubmit}>
-      <input {...form.register('symbol')} />
-      {form.formState.errors.symbol && <span>{form.formState.errors.symbol.message}</span>}
-      <button disabled={form.formState.isSubmitting}>Submit</button>
-    </form>
-  );
-};
-```
-
-### Trading Engine Module (Pure Functions)
 ```typescript
-import type { Order, ExecutionResult } from '@/types';
+import { useEffect, useRef, useState } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
-export const validateOrder = (order: Order): boolean => {
-  if (!order.symbol) return false;
-  if (order.size <= 0) return false;
-  if (order.leverage > 50) return false;
-  return true;
-};
+export function useMyTable(userId: string | null) {
+  const [rows, setRows] = useState<any[]>([]);
+  const subRef = useRef<any>(null);
 
-export const executeMarketOrder = (order: Order): ExecutionResult => {
-  if (!validateOrder(order)) throw new Error('Invalid order');
-  
-  const marketPrice = getCurrentPrice(order.symbol);
-  const slippage = calculateSlippage(order.size);
-  const executionPrice = order.direction === 'buy'
-    ? marketPrice + slippage
-    : marketPrice - slippage;
+  useEffect(() => {
+    if (!userId) return;
+    const fetch = async () => {
+      const { data, error } = await supabase.from('my_table').select('*').eq('user_id', userId);
+      if (error) throw error;
+      setRows(data ?? []);
+    };
+    fetch();
 
-  return { status: 'filled', executedPrice: executionPrice };
-};
+    subRef.current = supabase
+      .channel(`my_table:${userId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'my_table', filter: `user_id=eq.${userId}` }, payload => {
+        // handle INSERT/UPDATE/DELETE
+      })
+      .subscribe();
+
+    return () => { if (subRef.current) supabase.removeChannel(subRef.current); };
+  }, [userId]);
+
+  return rows;
+}
 ```
 
----
+- **Important scripts** (use these exact npm scripts):
+  - `npm run dev` — start dev server (Vite)
+  - `npm run lint` — run ESLint (`--fix` available)
+  - `npm run test` / `npm run test:ui` — unit tests (Vitest)
+  - `npm run supabase:pull` / `npm run supabase:push` — keep DB types and migrations in sync
+  - `npm run build` / `npm run build:sentry` — production build (+sourcemaps)
 
-## Code Conventions
+- **TypeScript config**: Project intentionally permits looser typing (`noImplicitAny: false`). Prefer `import type` for types and avoid introducing `any` when possible.
 
-✅ **Use `@/` path aliases everywhere**: `import { Button } from '@/components/ui/button'`  
-✅ **Props interface always defined**: `interface Props { label: string }; export const Comp: React.FC<Props>`  
-✅ **Component files < 300 lines** — extract larger components to subdirectories  
-✅ **`import type` for types**: `import type { Order } from '@/types'`  
-✅ **Functional components only** (except Error Boundaries)  
-✅ **Tailwind utility-first** — no inline styles, use `cn()` for conditionals  
-✅ **Use fallback values gracefully** — see `supabaseBrowserClient.ts` for example
+- **Architecture & conventions**:
+  - Business logic belongs in `src/lib/trading/` (pure functions). UI code must not contain core trading logic.
+  - Hooks provide realtime/state behavior (e.g., `useRealtimePositions`, `usePriceStream`). Reuse existing hooks; do not add direct Supabase subscriptions inside components.
+  - Component files should generally remain under ~300 lines; extract large components.
 
----
+- **Supabase & security rules**:
+  - RLS policies are required for DB access. If queries fail, check `supabase/migrations/` for missing policies.
+  - Never hardcode secrets or URLs. Use `.env.local` with `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, etc.
 
-## Trading Engine Architecture
+- **Testing & mocks**:
+  - Unit tests live next to code in `__tests__/` and `src/lib/trading/__tests__/`.
+  - Mock Supabase in tests via `vi.mock('@/lib/supabaseBrowserClient')`.
 
-Core business logic lives in `src/lib/trading/` — all pure functions with test coverage:
+- **Common failure modes** (what to check first):
+  - "Cannot find module '@/...'": verify `@/` imports and `tsconfig` path aliases.
+  - Memory leaks: missing `supabase.removeChannel(...)` cleanup.
+  - Stale DB types: run `npm run supabase:pull` after schema changes.
 
-| Module | Responsibility | Example Export |
-|--------|---|---|
-| `orderMatching.ts` | Order execution (market, limit, stop) | `executeMarketOrder()` |
-| `marginCalculations.ts` | Leverage, collateral, required margin | `calculateRequiredMargin()` |
-| `marginMonitoring.ts` | Real-time margin level calculation | `calculateMarginLevel()` |
-| `commissionCalculation.ts` | Fee structure per asset class | `calculateCommission()` |
-| `liquidationEngine.ts` | Force position closure on margin breach | `shouldLiquidate()` |
-| `pnlCalculation.ts` | Profit/loss tracking | `calculatePnL()` |
-| `slippageCalculation.ts` | Market impact on order size | `calculateSlippage()` |
-| `marginCallDetection.ts` | Identify at-risk accounts | `shouldTriggerMarginCall()` |
-| `orderValidation.ts` | Pre-execution checks | `validateOrder()` |
-| `positionClosureEngine.ts` | Position close logic (partial/full) | `closePosition()` |
-| `riskThresholdMonitoring.ts` | Risk limit enforcement | `checkRiskThreshold()` |
+- **DO / DON'T (brief)**
+  - DO handle Supabase errors (throw or handle returned `error`).
+  - DO reuse hooks and business logic modules.
+  - DON'T edit auto-generated files in `src/integrations/`.
+  - DON'T leave `console.log` or debug artifacts in production code.
 
-**Rule**: Import from these in components/hooks; never implement trading logic in UI.
-
----
-
-## Key Hooks (40+ Specialized)
-
-Most-used realtime/state hooks:
-- `useAuth()` — Session + admin role
-- `useRealtimePositions()` — Live position updates
-- `usePriceStream()` — Market data streaming
-- `useMarginMonitoring()` — Real-time margin tracking
-- `useLiquidationExecution()` — Force close on margin breach
-- `usePortfolioMetrics()` — Aggregate portfolio analytics
-- `useKyc()` — KYC verification workflow
-- `useNotifications()` — Global toast system
-
-**Rule**: Use existing hooks; never create inline Realtime subscriptions.
-
----
-
-## Testing
-
-- **Business logic**: Unit tests in `__tests__/` next to source (e.g., `src/lib/trading/__tests__/orderMatching.test.ts`)
-- **Components**: `@testing-library/react` with `render()` + `screen` queries
-- **Supabase mocking**: `vi.mock('@/lib/supabaseBrowserClient')`
-- **E2E tests**: Playwright in `e2e/` directory
-- **Run**: `npm run test` (watch) or `npm run test:ui` (interactive)
-
----
-
-## CRITICAL Constraints
-
-### 🔴 MUST DO
-1. **Always unsubscribe Realtime in cleanup**: `return () => supabase.removeChannel(sub)`
-2. **Always handle Supabase errors**: `if (error) throw error`
-3. **Use correct Supabase import**: `@/lib/supabaseBrowserClient` only
-4. **Never manually edit**: `src/integrations/supabase/types.ts` — run `npm run supabase:pull`
-5. **Create RLS policies for new tables** — queries fail silently without them
-
-### 🔴 NEVER DO
-- ❌ Hardcode API URLs, keys, or secrets
-- ❌ Use `any` type (use `unknown` then narrow)
-- ❌ Leave `console.log()` in production code
-- ❌ Forget timer/interval cleanup in effects
-- ❌ Create objects/arrays inline in render
-- ❌ Drill props through 3+ component levels (use Context)
-- ❌ Create component files > 300 lines
-
----
-
-## Common Issues & Solutions
-
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| "Cannot find module '@/...'" | Wrong path alias | Use `@/` prefix with correct path |
-| Memory leak warnings | Unsubscribed Realtime | Add cleanup: `return () => supabase.removeChannel(sub)` |
-| Type mismatch with DB | Stale types | Run `npm run supabase:pull` |
-| RLS policy denies access | Missing policy | Check `supabase/migrations/` for table policy |
-| Excessive re-renders | Missing useEffect deps | Check ESLint for `useEffect` exhaustive-deps |
-
----
-
-## Before Submitting Code
-
-✅ Read relevant PRD.md section  
-✅ Check `docs/tasks_and_implementations/` for duplicate work  
-✅ Run `npm run lint` — fix all errors  
-✅ Run `npm run test` — add tests for business logic  
-✅ Add JSDoc comments for exported functions  
-✅ Verify Supabase RLS policies exist (new tables)  
-✅ Test in dev server: `npm run dev`
-
----
-
-## Key Files to Read
-
-1. **PRD.md** — Feature scope, requirements, success criteria
-2. **docs/project_resources/rules_and_guidelines/AGENT.md** — Detailed patterns (1100+ lines)
-3. **src/App.tsx** — Route setup, providers, lazy-loaded pages
-4. **src/lib/trading/** — Business logic modules (pure functions)
-5. **src/hooks/useRealtimePositions.tsx** — Realtime pattern reference
-6. **supabase/migrations/** — Database schema and RLS policies
-7. **tsconfig.json** — Type checking config (intentionally loose)
-
----
-
-## When to Ask for Help
-
-Before starting, clarify if:
-- Feature is in PRD (or aspirational)
-- Similar feature already exists (check `src/components/` and `src/hooks/`)
-- Requires database schema changes (new table? run `npm run supabase:pull` after)
-- Affects multiple features/modules
-- Unknown tech pattern for this project
-- Security/performance implications
-
----
-
-## Additional Resources
-
-- **AGENT.md** — Comprehensive workflow guide (deep dive reference)
-- **TradingView Lightweight Charts** — Chart library for candlestick display
-- **Sentry** — Error tracking (`npm run build:sentry` uploads sourcemaps)
-- **Bundle Analysis**: `ANALYZE=true npm run build` → view `dist/bundle-analysis.html`
+If anything here is unclear or you'd like the guide expanded with examples (short code snippets, common file locations to change for a feature, or a checklist for PRs), tell me which area to expand and I'll iterate. 

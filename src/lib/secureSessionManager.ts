@@ -7,7 +7,7 @@
 
 import { SecureStorage } from './encryption';
 import { logger } from './logger';
-import { SecureAuthStorage, SecureUserProfile } from './secureAuthStorage';
+import { SecureAuthStorage } from './secureAuthStorage';
 
 /**
  * Session storage keys
@@ -48,15 +48,19 @@ export class SecureSessionManager {
       await SecureStorage.setSessionData(SESSION_KEYS.USER_SESSION, sessionData);
       await SecureStorage.setSessionData(SESSION_KEYS.LAST_ACTIVITY, Date.now());
 
-      logger.logSecurityEvent('secure_session_stored', {
-        userId: sessionData.userId,
-        sessionId: sessionData.sessionId,
-        reason: 'Session data encrypted and stored',
+      logger.info('Secure session stored', {
+        metadata: {
+          userId: sessionData.userId,
+          sessionId: sessionData.sessionId,
+          reason: 'Session data encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_session_store_failed', {
-        reason: 'Failed to store encrypted session data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session store failed', {
+        metadata: {
+          reason: 'Failed to store encrypted session data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -80,9 +84,11 @@ export class SecureSessionManager {
 
       return session;
     } catch (error) {
-      logger.logSecurityEvent('secure_session_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted session data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted session data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -94,13 +100,17 @@ export class SecureSessionManager {
   static async storeAuthToken(token: string): Promise<void> {
     try {
       await SecureStorage.setSessionData(SESSION_KEYS.AUTH_TOKEN, token);
-      logger.logSecurityEvent('secure_auth_token_stored', {
-        reason: 'Authentication token encrypted and stored',
+      logger.info('Secure auth token stored', {
+        metadata: {
+          reason: 'Authentication token encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_auth_token_store_failed', {
-        reason: 'Failed to store encrypted authentication token',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure auth token store failed', {
+        metadata: {
+          reason: 'Failed to store encrypted authentication token',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -113,9 +123,11 @@ export class SecureSessionManager {
     try {
       return await SecureStorage.getSessionData<string>(SESSION_KEYS.AUTH_TOKEN);
     } catch (error) {
-      logger.logSecurityEvent('secure_auth_token_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted authentication token',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure auth token retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted authentication token',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -127,13 +139,17 @@ export class SecureSessionManager {
   static async storeRefreshToken(token: string): Promise<void> {
     try {
       await SecureStorage.setSessionData(SESSION_KEYS.REFRESH_TOKEN, token);
-      logger.logSecurityEvent('secure_refresh_token_stored', {
-        reason: 'Refresh token encrypted and stored',
+      logger.info('Secure refresh token stored', {
+        metadata: {
+          reason: 'Refresh token encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_refresh_token_store_failed', {
-        reason: 'Failed to store encrypted refresh token',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure refresh token store failed', {
+        metadata: {
+          reason: 'Failed to store encrypted refresh token',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -146,9 +162,11 @@ export class SecureSessionManager {
     try {
       return await SecureStorage.getSessionData<string>(SESSION_KEYS.REFRESH_TOKEN);
     } catch (error) {
-      logger.logSecurityEvent('secure_refresh_token_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted refresh token',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure refresh token retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted refresh token',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -161,9 +179,11 @@ export class SecureSessionManager {
     try {
       await SecureStorage.setSessionData(SESSION_KEYS.LAST_ACTIVITY, Date.now());
     } catch (error) {
-      logger.logSecurityEvent('secure_activity_update_failed', {
-        reason: 'Failed to update last activity time',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure activity update failed', {
+        metadata: {
+          reason: 'Failed to update last activity timestamp',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -187,9 +207,11 @@ export class SecureSessionManager {
 
       return true;
     } catch (error) {
-      logger.logSecurityEvent('secure_session_check_failed', {
-        reason: 'Failed to check session status',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session check failed', {
+        metadata: {
+          reason: 'Failed to check session status',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return false;
     }
@@ -206,13 +228,17 @@ export class SecureSessionManager {
       SecureStorage.removeSessionData(SESSION_KEYS.SESSION_EXPIRY);
       SecureStorage.removeSessionData(SESSION_KEYS.LAST_ACTIVITY);
 
-      logger.logSecurityEvent('secure_session_cleared', {
-        reason: 'Session data cleared from secure storage',
+      logger.info('Secure session cleared', {
+        metadata: {
+          reason: 'Session data cleared from secure storage',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_session_clear_failed', {
-        reason: 'Failed to clear session data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session clear failed', {
+        metadata: {
+          reason: 'Failed to clear session data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -225,8 +251,10 @@ export class SecureSessionManager {
       await this.clearSession();
       SecureAuthStorage.clearAllSecureData();
 
-      logger.logSecurityEvent('secure_session_timeout', {
-        reason: 'Session timed out and was cleared',
+      logger.info('Secure session timeout', {
+        metadata: {
+          reason: 'Session timed out and was cleared',
+        },
       });
 
       // Dispatch custom event for components to handle
@@ -234,9 +262,11 @@ export class SecureSessionManager {
         detail: { message: 'Your session has expired. Please log in again.' }
       }));
     } catch (error) {
-      logger.logSecurityEvent('secure_session_timeout_failed', {
-        reason: 'Failed to handle session timeout',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session timeout failed', {
+        metadata: {
+          reason: 'Failed to handle session timeout',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -293,17 +323,21 @@ export class SecureSessionManager {
       // Start monitoring
       this.startSessionMonitoring();
 
-      logger.logSecurityEvent('secure_session_initialized', {
-        userId: userData.userId,
-        sessionId: sessionData.sessionId,
-        reason: 'Secure session initialized',
+      logger.info('Secure session initialized', {
+        metadata: {
+          userId: userData.userId,
+          sessionId: sessionData.sessionId,
+          reason: 'Secure session initialized',
+        },
       });
 
       return sessionData;
     } catch (error) {
-      logger.logSecurityEvent('secure_session_initialization_failed', {
-        reason: 'Failed to initialize secure session',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session initialization failed', {
+        metadata: {
+          reason: 'Failed to initialize secure session',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -339,13 +373,17 @@ export class SecureSessionManager {
         await this.storeSession(session);
       }
 
-      logger.logSecurityEvent('secure_session_refreshed', {
-        reason: 'Session tokens refreshed',
+      logger.info('Secure session refreshed', {
+        metadata: {
+          reason: 'Session tokens refreshed',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_session_refresh_failed', {
-        reason: 'Failed to refresh session tokens',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session refresh failed', {
+        metadata: {
+          reason: 'Failed to refresh session tokens',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }

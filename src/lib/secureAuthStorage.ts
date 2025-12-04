@@ -124,14 +124,18 @@ export class SecureAuthStorage {
   static async setUserProfile(profile: SecureUserProfile): Promise<void> {
     try {
       await SecureStorage.setUserData(SECURE_AUTH_KEYS.USER_PROFILE, profile);
-      logger.logSecurityEvent('secure_profile_saved', {
-        userId: profile.id,
-        reason: 'User profile encrypted and stored',
+      logger.info('Secure profile saved', {
+        metadata: {
+          userId: profile.id,
+          reason: 'User profile encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_profile_save_failed', {
-        reason: 'Failed to save encrypted user profile',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure profile save failed', {
+        metadata: {
+          reason: 'Failed to save encrypted user profile',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -144,9 +148,11 @@ export class SecureAuthStorage {
     try {
       return await SecureStorage.getUserData<SecureUserProfile>(SECURE_AUTH_KEYS.USER_PROFILE);
     } catch (error) {
-      logger.logSecurityEvent('secure_profile_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted user profile',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure profile retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted user profile',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -158,13 +164,17 @@ export class SecureAuthStorage {
   static removeUserProfile(): void {
     try {
       SecureStorage.removeUserData(SECURE_AUTH_KEYS.USER_PROFILE);
-      logger.logSecurityEvent('secure_profile_removed', {
-        reason: 'User profile removed from secure storage',
+      logger.info('Secure profile removed', {
+        metadata: {
+          reason: 'User profile removed from secure storage',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_profile_removal_failed', {
-        reason: 'Failed to remove encrypted user profile',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure profile removal failed', {
+        metadata: {
+          reason: 'Failed to remove encrypted user profile',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -175,13 +185,17 @@ export class SecureAuthStorage {
   static async setUserPreferences(preferences: SecureUserPreferences): Promise<void> {
     try {
       await SecureStorage.setUserData(SECURE_AUTH_KEYS.USER_PREFERENCES, preferences);
-      logger.logSecurityEvent('secure_preferences_saved', {
-        reason: 'User preferences encrypted and stored',
+      logger.info('Secure preferences saved', {
+        metadata: {
+          reason: 'User preferences encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_preferences_save_failed', {
-        reason: 'Failed to save encrypted user preferences',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure preferences save failed', {
+        metadata: {
+          reason: 'Failed to save encrypted user preferences',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -194,9 +208,11 @@ export class SecureAuthStorage {
     try {
       return await SecureStorage.getUserData<SecureUserPreferences>(SECURE_AUTH_KEYS.USER_PREFERENCES);
     } catch (error) {
-      logger.logSecurityEvent('secure_preferences_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted user preferences',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure preferences retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted user preferences',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -208,13 +224,17 @@ export class SecureAuthStorage {
   static async setAPIKeys(apiKeys: SecureAPIKeys): Promise<void> {
     try {
       await SecureStorage.setUserData(SECURE_AUTH_KEYS.API_KEYS, apiKeys);
-      logger.logSecurityEvent('secure_api_keys_saved', {
-        reason: 'API keys encrypted and stored',
+      logger.info('Secure API keys saved', {
+        metadata: {
+          reason: 'API keys encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_api_keys_save_failed', {
-        reason: 'Failed to save encrypted API keys',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure API keys save failed', {
+        metadata: {
+          reason: 'Failed to save encrypted API keys',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -227,9 +247,11 @@ export class SecureAuthStorage {
     try {
       return await SecureStorage.getUserData<SecureAPIKeys>(SECURE_AUTH_KEYS.API_KEYS);
     } catch (error) {
-      logger.logSecurityEvent('secure_api_keys_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted API keys',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure API keys retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted API keys',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -241,13 +263,17 @@ export class SecureAuthStorage {
   static removeAPIKeys(): void {
     try {
       SecureStorage.removeUserData(SECURE_AUTH_KEYS.API_KEYS);
-      logger.logSecurityEvent('secure_api_keys_removed', {
-        reason: 'API keys removed from secure storage',
+      logger.info('Secure API keys removed', {
+        metadata: {
+          reason: 'API keys removed from secure storage',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_api_keys_removal_failed', {
-        reason: 'Failed to remove encrypted API keys',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure API keys removal failed', {
+        metadata: {
+          reason: 'Failed to remove encrypted API keys',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -258,13 +284,17 @@ export class SecureAuthStorage {
   static async setTradingSettings(settings: SecureTradingSettings): Promise<void> {
     try {
       await SecureStorage.setUserData(SECURE_AUTH_KEYS.TRADING_SETTINGS, settings);
-      logger.logSecurityEvent('secure_trading_settings_saved', {
-        reason: 'Trading settings encrypted and stored',
+      logger.info('Secure trading settings saved', {
+        metadata: {
+          reason: 'Trading settings encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_trading_settings_save_failed', {
-        reason: 'Failed to save encrypted trading settings',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure trading settings save failed', {
+        metadata: {
+          reason: 'Failed to save encrypted trading settings',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -277,9 +307,11 @@ export class SecureAuthStorage {
     try {
       return await SecureStorage.getUserData<SecureTradingSettings>(SECURE_AUTH_KEYS.TRADING_SETTINGS);
     } catch (error) {
-      logger.logSecurityEvent('secure_trading_settings_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted trading settings',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure trading settings retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted trading settings',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -291,13 +323,17 @@ export class SecureAuthStorage {
   static async setRiskSettings(settings: SecureRiskSettings): Promise<void> {
     try {
       await SecureStorage.setUserData(SECURE_AUTH_KEYS.RISK_SETTINGS, settings);
-      logger.logSecurityEvent('secure_risk_settings_saved', {
-        reason: 'Risk settings encrypted and stored',
+      logger.info('Secure risk settings saved', {
+        metadata: {
+          reason: 'Risk settings encrypted and stored',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_risk_settings_save_failed', {
-        reason: 'Failed to save encrypted risk settings',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure risk settings save failed', {
+        metadata: {
+          reason: 'Failed to save encrypted risk settings',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }
@@ -310,9 +346,11 @@ export class SecureAuthStorage {
     try {
       return await SecureStorage.getUserData<SecureRiskSettings>(SECURE_AUTH_KEYS.RISK_SETTINGS);
     } catch (error) {
-      logger.logSecurityEvent('secure_risk_settings_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted risk settings',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure risk settings retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted risk settings',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -324,13 +362,17 @@ export class SecureAuthStorage {
   static clearAllSecureData(): void {
     try {
       SecureStorage.clearAll();
-      logger.logSecurityEvent('secure_data_cleared', {
-        reason: 'All encrypted authentication data cleared',
+      logger.info('Secure data cleared', {
+        metadata: {
+          reason: 'All encrypted authentication data cleared',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_data_clear_failed', {
-        reason: 'Failed to clear encrypted authentication data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure data clear failed', {
+        metadata: {
+          reason: 'Failed to clear encrypted authentication data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -342,9 +384,11 @@ export class SecureAuthStorage {
     try {
       // This would be called during app initialization
       // to migrate any existing unencrypted data to secure storage
-      
-      logger.logSecurityEvent('secure_migration_started', {
-        reason: 'Starting migration of existing data to secure storage',
+
+      logger.info('Secure migration started', {
+        metadata: {
+          reason: 'Starting migration of existing data to secure storage',
+        },
       });
 
       // Example migration logic (would need to be customized based on existing data)
@@ -354,13 +398,17 @@ export class SecureAuthStorage {
       //   localStorage.removeItem('user_profile');
       // }
 
-      logger.logSecurityEvent('secure_migration_completed', {
-        reason: 'Migration of existing data to secure storage completed',
+      logger.info('Secure migration completed', {
+        metadata: {
+          reason: 'Migration of existing data to secure storage completed',
+        },
       });
     } catch (error) {
-      logger.logSecurityEvent('secure_migration_failed', {
-        reason: 'Failed to migrate existing data to secure storage',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure migration failed', {
+        metadata: {
+          reason: 'Failed to migrate existing data to secure storage',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw error;
     }

@@ -78,7 +78,7 @@ class KeyManager {
     return crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
-        salt: salt,
+        salt: salt as BufferSource,
         iterations: ENCRYPTION_CONFIG.iterations,
         hash: 'SHA-256',
       },
@@ -146,9 +146,11 @@ class KeyManager {
         this.keyCache.set('master', key);
         return key;
       } catch (error) {
-        logger.logSecurityEvent('key_import_failed', {
-          reason: 'Failed to import stored key',
-          error: error instanceof Error ? error.message : 'Unknown error',
+        logger.warn('Key import failed', {
+          metadata: {
+            reason: 'Failed to import stored key',
+            error: error instanceof Error ? error.message : 'Unknown error',
+          },
         });
       }
     }
@@ -169,9 +171,11 @@ class KeyManager {
     try {
       localStorage.setItem(this.keyStoreKey, JSON.stringify(jwk));
     } catch (error) {
-      logger.logSecurityEvent('key_save_failed', {
-        reason: 'Failed to save encryption key',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Key save failed', {
+        metadata: {
+          reason: 'Failed to save encryption key',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw new EncryptionError('Failed to save encryption key', 'KEY_SAVE_ERROR', error as Error);
     }
@@ -185,9 +189,11 @@ class KeyManager {
       const stored = localStorage.getItem(this.keyStoreKey);
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      logger.logSecurityEvent('key_load_failed', {
-        reason: 'Failed to load encryption key',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Key load failed', {
+        metadata: {
+          reason: 'Failed to load encryption key',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -201,9 +207,11 @@ class KeyManager {
       localStorage.removeItem(this.keyStoreKey);
       this.keyCache.clear();
     } catch (error) {
-      logger.logSecurityEvent('key_clear_failed', {
-        reason: 'Failed to clear encryption key',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Key clear failed', {
+        metadata: {
+          reason: 'Failed to clear encryption key',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -246,8 +254,8 @@ class EncryptionService {
 
       // Convert to base64
       const encryptedBase64 = this.arrayBufferToBase64(encryptedBuffer);
-      const ivBase64 = this.arrayBufferToBase64(iv);
-      const saltBase64 = this.arrayBufferToBase64(salt);
+      const ivBase64 = this.arrayBufferToBase64(iv as unknown as ArrayBuffer);
+      const saltBase64 = this.arrayBufferToBase64(salt as unknown as ArrayBuffer);
 
       const encryptedData: EncryptedData = {
         data: encryptedBase64,
@@ -259,7 +267,7 @@ class EncryptionService {
 
       return encryptedData;
     } catch (error) {
-      logger.logSecurityEvent('encryption_failed', {
+      logger.error('Encryption failed', {
         reason: 'Failed to encrypt data',
         error: error instanceof Error ? error.message : 'Unknown error',
       });
@@ -293,7 +301,7 @@ class EncryptionService {
       const decoder = new TextDecoder();
       return decoder.decode(decryptedBuffer);
     } catch (error) {
-      logger.logSecurityEvent('decryption_failed', {
+      logger.error('Decryption failed', {
         reason: 'Failed to decrypt data',
         error: error instanceof Error ? error.message : 'Unknown error',
       });
@@ -310,9 +318,11 @@ class EncryptionService {
       const storageKey = this.getStorageKey(key);
       localStorage.setItem(storageKey, JSON.stringify(encrypted));
     } catch (error) {
-      logger.logSecurityEvent('secure_storage_failed', {
-        reason: 'Failed to store encrypted data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure storage failed', {
+        metadata: {
+          reason: 'Failed to store encrypted data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw new EncryptionError('Failed to store encrypted data', 'STORAGE_ERROR', error as Error);
     }
@@ -333,9 +343,11 @@ class EncryptionService {
       const encryptedData: EncryptedData = JSON.parse(stored);
       return await this.decrypt(encryptedData);
     } catch (error) {
-      logger.logSecurityEvent('secure_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -349,9 +361,11 @@ class EncryptionService {
       const storageKey = this.getStorageKey(key);
       localStorage.removeItem(storageKey);
     } catch (error) {
-      logger.logSecurityEvent('secure_removal_failed', {
-        reason: 'Failed to remove encrypted data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure removal failed', {
+        metadata: {
+          reason: 'Failed to remove encrypted data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -365,9 +379,11 @@ class EncryptionService {
       const storageKey = this.getStorageKey(key);
       sessionStorage.setItem(storageKey, JSON.stringify(encrypted));
     } catch (error) {
-      logger.logSecurityEvent('secure_session_storage_failed', {
-        reason: 'Failed to store encrypted session data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session storage failed', {
+        metadata: {
+          reason: 'Failed to store encrypted session data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       throw new EncryptionError('Failed to store encrypted session data', 'SESSION_STORAGE_ERROR', error as Error);
     }
@@ -388,9 +404,11 @@ class EncryptionService {
       const encryptedData: EncryptedData = JSON.parse(stored);
       return await this.decrypt(encryptedData);
     } catch (error) {
-      logger.logSecurityEvent('secure_session_retrieval_failed', {
-        reason: 'Failed to retrieve encrypted session data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session retrieval failed', {
+        metadata: {
+          reason: 'Failed to retrieve encrypted session data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return null;
     }
@@ -404,9 +422,11 @@ class EncryptionService {
       const storageKey = this.getStorageKey(key);
       sessionStorage.removeItem(storageKey);
     } catch (error) {
-      logger.logSecurityEvent('secure_session_removal_failed', {
-        reason: 'Failed to remove encrypted session data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure session removal failed', {
+        metadata: {
+          reason: 'Failed to remove encrypted session data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -439,9 +459,11 @@ class EncryptionService {
       // Clear encryption key
       this.keyManager.clearKey();
     } catch (error) {
-      logger.logSecurityEvent('secure_clear_failed', {
-        reason: 'Failed to clear encrypted data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      logger.warn('Secure clear failed', {
+        metadata: {
+          reason: 'Failed to clear encrypted data',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
     }
   }
@@ -481,9 +503,9 @@ class EncryptionService {
    * Check if Web Crypto API is available
    */
   static isAvailable(): boolean {
-    return typeof crypto !== 'undefined' && 
-           typeof crypto.subtle !== 'undefined' &&
-           typeof crypto.getRandomValues !== 'undefined';
+    return typeof crypto !== 'undefined' &&
+      typeof crypto.subtle !== 'undefined' &&
+      typeof crypto.getRandomValues !== 'undefined';
   }
 }
 
@@ -627,8 +649,10 @@ export function isEncryptionAvailable(): boolean {
  */
 export async function initializeEncryption(): Promise<boolean> {
   if (!isEncryptionAvailable()) {
-    logger.logSecurityEvent('encryption_unavailable', {
-      reason: 'Web Crypto API not available in this environment',
+    logger.warn('Encryption unavailable', {
+      metadata: {
+        reason: 'Web Crypto API not available in this environment',
+      },
     });
     return false;
   }
@@ -643,15 +667,19 @@ export async function initializeEncryption(): Promise<boolean> {
       throw new Error('Encryption test failed');
     }
 
-    logger.logSecurityEvent('encryption_initialized', {
-      reason: 'Encryption service initialized successfully',
+    logger.info('Encryption initialized', {
+      metadata: {
+        reason: 'Encryption service initialized successfully',
+      },
     });
 
     return true;
   } catch (error) {
-    logger.logSecurityEvent('encryption_initialization_failed', {
-      reason: 'Failed to initialize encryption service',
-      error: error instanceof Error ? error.message : 'Unknown error',
+    logger.error('Encryption initialization failed', {
+      metadata: {
+        reason: 'Failed to initialize encryption service',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
     });
     return false;
   }

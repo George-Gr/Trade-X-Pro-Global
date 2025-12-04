@@ -75,7 +75,7 @@ export function logSecurityEvent(
     console.log(`[SECURITY] ${eventType}`, {
       timestamp,
       ...details,
-      ...context?.metadata,
+      ...(context?.metadata || {}),
     });
   }
 
@@ -85,7 +85,7 @@ export function logSecurityEvent(
     logger.info(`Security Event: ${eventType}`, {
       ...context,
       metadata: {
-        ...context?.metadata,
+        ...(context?.metadata || {}),
         security: {
           eventType,
           timestamp,
