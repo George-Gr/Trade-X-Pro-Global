@@ -272,7 +272,7 @@ describe('Design System - Spacing Tokens', () => {
             const spacingValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
             spacingValues.forEach((level) => {
-                const value = parseInt(SPACING[level]);
+                const value = parseInt(SPACING[level as keyof typeof SPACING] as string);
                 // All should be 0 or multiples of 4 (or 8 for most)
                 if (value > 0) {
                     expect(value % 4).toBe(0);
