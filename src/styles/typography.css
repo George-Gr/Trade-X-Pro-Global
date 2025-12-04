@@ -6,83 +6,120 @@
 @layer base {
   :root {
     /* Typography Scale - Font Sizes */
-    --text-xs: 0.75rem;      /* 12px */
-    --text-sm: 0.875rem;     /* 14px */
-    --text-base: 1rem;       /* 16px */
-    --text-lg: 1.125rem;     /* 18px */
-    --text-xl: 1.25rem;      /* 20px */
-    --text-2xl: 1.5rem;      /* 24px */
-    --text-3xl: 1.875rem;    /* 30px */
-    --text-4xl: 2.25rem;     /* 36px */
-    --text-5xl: 3rem;        /* 48px */
-    --text-6xl: 3.75rem;     /* 60px */
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.875rem;
+    /* 14px */
+    --text-base: 1rem;
+    /* 16px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+    --text-3xl: 1.875rem;
+    /* 30px */
+    --text-4xl: 2.25rem;
+    /* 36px */
+    --text-5xl: 3rem;
+    /* 48px */
+    --text-6xl: 3.75rem;
+    /* 60px */
 
-    /* Font Weights */
+    /* Font Weights - Standardized (400, 600, 700 only) */
     --font-light: 300;
+    /* DEPRECATED */
     --font-normal: 400;
-    --font-medium: 500;
+    --font-medium: 600;
+    /* Mapped to Semibold as Medium(500) is deprecated */
     --font-semibold: 600;
     --font-bold: 700;
     --font-extrabold: 800;
+    /* DEPRECATED */
 
     /* Line Heights */
     --leading-tight: 1.2;
-    --leading-snug: 1.375;
+    --leading-snug: 1.3;
     --leading-normal: 1.5;
-    --leading-relaxed: 1.625;
-    --leading-loose: 1.875;
+    --leading-relaxed: 1.6;
+    --leading-loose: 1.8;
 
     /* Letter Spacing */
     --tracking-tight: -0.02em;
     --tracking-normal: 0;
     --tracking-wide: 0.05em;
 
-    /* H1 - Page Titles (32px, weight 700) */
-    --h1-size: 2rem;          /* 32px */
-    --h1-weight: 700;         /* bold */
-    --h1-line-height: 1.2;    /* 38.4px */
+    /* H1 - Page Titles (48px desktop, weight 700) */
+    --h1-size: 3rem;
+    /* 48px */
+    --h1-weight: 700;
+    /* bold */
+    --h1-line-height: 1.2;
     --h1-letter-spacing: -0.02em;
 
-    /* H2 - Section Headers (24px, weight 600) */
-    --h2-size: 1.5rem;        /* 24px */
-    --h2-weight: 600;         /* semibold */
-    --h2-line-height: 1.33;   /* 32px */
+    /* H2 - Section Headers (36px desktop, weight 600) */
+    --h2-size: 2.25rem;
+    /* 36px */
+    --h2-weight: 600;
+    /* semibold */
+    --h2-line-height: 1.3;
     --h2-letter-spacing: -0.01em;
 
-    /* H3 - Card Titles (18px, weight 600) */
-    --h3-size: 1.125rem;      /* 18px */
-    --h3-weight: 600;         /* semibold */
-    --h3-line-height: 1.33;   /* 24px */
+    /* H3 - Card Titles (30px desktop, weight 600) */
+    --h3-size: 1.875rem;
+    /* 30px */
+    --h3-weight: 600;
+    /* semibold */
+    --h3-line-height: 1.3;
     --h3-letter-spacing: 0;
 
-    /* H4 - Subsection Headers (16px, weight 600) */
-    --h4-size: 1rem;          /* 16px */
-    --h4-weight: 600;         /* semibold */
-    --h4-line-height: 1.375;  /* 22px */
+    /* H4 - Subsection Headers (24px desktop, weight 600) */
+    --h4-size: 1.5rem;
+    /* 24px */
+    --h4-weight: 600;
+    /* semibold */
+    --h4-line-height: 1.4;
     --h4-letter-spacing: 0;
 
-    /* Body - Regular Text (14px, weight 400) */
-    --body-size: 0.875rem;    /* 14px */
-    --body-weight: 400;       /* normal */
-    --body-line-height: 1.625; /* 22.75px */
+    /* H5 - Small Headers (20px desktop, weight 600) */
+    --h5-size: 1.25rem;
+    /* 20px */
+    --h5-weight: 600;
+    /* semibold */
+    --h5-line-height: 1.4;
+    --h5-letter-spacing: 0;
+
+    /* Body - Regular Text (16px, weight 400) */
+    --body-size: 1rem;
+    /* 16px */
+    --body-weight: 400;
+    /* normal */
+    --body-line-height: 1.6;
     --body-letter-spacing: 0;
 
-    /* Small Text - Helper Text (12px, weight 400) */
-    --small-size: 0.75rem;    /* 12px */
-    --small-weight: 400;      /* normal */
-    --small-line-height: 1.5; /* 18px */
+    /* Small Text - Helper Text (14px, weight 400) */
+    --small-size: 0.875rem;
+    /* 14px */
+    --small-weight: 400;
+    /* normal */
+    --small-line-height: 1.5;
     --small-letter-spacing: 0;
 
-    /* Label - Form Labels (14px, weight 500) */
-    --label-size: 0.875rem;   /* 14px */
-    --label-weight: 500;      /* medium */
-    --label-line-height: 1.43; /* 20px */
+    /* Label - Form Labels (14px, weight 600) */
+    --label-size: 0.875rem;
+    /* 14px */
+    --label-weight: 600;
+    /* semibold (was 500) */
+    --label-line-height: 1.4;
     --label-letter-spacing: 0;
 
-    /* Caption - Metadata/Timestamps (12px, weight 500) */
-    --caption-size: 0.75rem;  /* 12px */
-    --caption-weight: 500;    /* medium */
-    --caption-line-height: 1.5; /* 18px */
+    /* Caption - Metadata/Timestamps (12px, weight 400) */
+    --caption-size: 0.75rem;
+    /* 12px */
+    --caption-weight: 400;
+    /* normal (was 500) */
+    --caption-line-height: 1.5;
     --caption-letter-spacing: 0;
 
     /* Default Font Family - Inter for all text */
@@ -102,6 +139,7 @@
 
 /* Typography Component Classes */
 @layer components {
+
   /* H1 - Page Titles */
   .typography-h1 {
     font-size: var(--h1-size);
@@ -135,6 +173,15 @@
     font-weight: var(--h4-weight);
     line-height: var(--h4-line-height);
     letter-spacing: var(--h4-letter-spacing);
+    font-family: var(--font-family-display);
+  }
+
+  /* H5 - Small Headers */
+  .typography-h5 {
+    font-size: var(--h5-size);
+    font-weight: var(--h5-weight);
+    line-height: var(--h5-line-height);
+    letter-spacing: var(--h5-letter-spacing);
     font-family: var(--font-family-display);
   }
 
@@ -209,19 +256,19 @@
 
   /* H5 HTML Element - Small Headers */
   h5 {
-    font-size: var(--body-size);
-    font-weight: var(--h4-weight);
-    line-height: var(--h4-line-height);
-    letter-spacing: var(--h4-letter-spacing);
+    font-size: var(--h5-size);
+    font-weight: var(--h5-weight);
+    line-height: var(--h5-line-height);
+    letter-spacing: var(--h5-letter-spacing);
     font-family: var(--font-family-display);
   }
 
   /* H6 HTML Element - Very Small Headers */
   h6 {
-    font-size: var(--label-size);
-    font-weight: var(--h4-weight);
-    line-height: var(--label-line-height);
-    letter-spacing: var(--label-letter-spacing);
+    font-size: var(--body-size);
+    font-weight: var(--h5-weight);
+    line-height: var(--h5-line-height);
+    letter-spacing: var(--h5-letter-spacing);
     font-family: var(--font-family-display);
   }
 
@@ -279,6 +326,13 @@
     letter-spacing: var(--h4-letter-spacing);
   }
 
+  .text-h5 {
+    font-size: var(--h5-size);
+    font-weight: var(--h5-weight);
+    line-height: var(--h5-line-height);
+    letter-spacing: var(--h5-letter-spacing);
+  }
+
   .text-body {
     font-size: var(--body-size);
     font-weight: var(--body-weight);
@@ -311,56 +365,52 @@
   @media (max-width: 768px) {
     :root {
       /* Scale down on mobile */
-      --h1-size: 1.75rem;     /* 28px */
-      --h2-size: 1.375rem;    /* 22px */
-      --h3-size: 1rem;        /* 16px */
-      --h4-size: 0.938rem;    /* 15px */
-      --body-size: 0.813rem;  /* 13px */
-      --label-size: 0.813rem; /* 13px */
+      --h1-size: 2.25rem;
+      /* 36px */
+      --h2-size: 1.75rem;
+      /* 28px */
+      --h3-size: 1.5rem;
+      /* 24px */
+      --h4-size: 1.25rem;
+      /* 20px */
+      --h5-size: 1.125rem;
+      /* 18px */
+      --body-size: 1rem;
+      /* 16px (Keep body readable) */
+      --label-size: 0.875rem;
+      /* 14px */
     }
   }
 
   @media (max-width: 640px) {
     :root {
       /* Further scale down on very small screens */
-      --h1-size: 1.5rem;      /* 24px */
-      --h2-size: 1.25rem;     /* 20px */
-      --h3-size: 0.938rem;    /* 15px */
-      --h4-size: 0.875rem;    /* 14px */
-      --body-size: 0.813rem;  /* 13px */
+      --h1-size: 2rem;
+      /* 32px */
+      --h2-size: 1.5rem;
+      /* 24px */
+      --h3-size: 1.25rem;
+      /* 20px */
+      --h4-size: 1.125rem;
+      /* 18px */
+      --h5-size: 1rem;
+      /* 16px */
     }
   }
 
   /* Print Styles */
   @media print {
-    h1, h2, h3, h4, h5, h6, p, small {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    small {
       page-break-after: avoid;
       page-break-inside: avoid;
     }
-  }
-}
-
-/* Ensure consistent typography spacing */
-@layer utilities {
-  /* Margin resets for typography elements */
-  .no-margin-heading {
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Common heading margins */
-  .heading-spacing {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .heading-spacing-small {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .heading-spacing-large {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
   }
 }

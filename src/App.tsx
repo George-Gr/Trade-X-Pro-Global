@@ -118,10 +118,10 @@ const App = () => {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <div className="text-lg font-semibold text-primary-contrast">
+                          <div className="text-lg font-semibold text-foreground">
                             <Skeleton variant="text" className="h-6 w-32 mx-auto" />
                           </div>
-                          <div className="text-sm text-secondary-contrast">
+                          <div className="text-sm text-muted-foreground">
                             <Skeleton variant="text" className="h-4 w-24 mx-auto" />
                           </div>
                         </div>

@@ -14,13 +14,13 @@ import { cn } from "@/lib/utils";
 
 export const PublicHeader = () => {
   return (
-    <nav className="fixed top-4 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg" aria-label="Main navigation">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-header" aria-label="Main navigation">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Logo - Luxury Brand */}
           <Link to="/" className="flex items-center gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-4" aria-label="TradeX Pro - Home">
-            <TrendingUp className="h-8 w-8 text-primary" aria-hidden="true" />
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+            <TrendingUp className="h-8 w-8" style={{ color: '#FFD700' }} aria-hidden="true" />
+            <span className="text-xl font-bold" style={{ color: '#FFFFFF' }}>
               TradeX Pro
             </span>
           </Link>
@@ -32,7 +32,7 @@ export const PublicHeader = () => {
                 {/* Trading Menu */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Trading</NavigationMenuTrigger>
-                  <NavigationMenuContent>
+                  <NavigationMenuContent className="z-50 bg-[#F5F5DC]/95 border border-[#FFD700]/20 shadow-xl rounded-xl">
                     <ul className="grid w-[400px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
@@ -91,7 +91,7 @@ export const PublicHeader = () => {
                 {/* Markets Menu */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Markets</NavigationMenuTrigger>
-                  <NavigationMenuContent>
+                  <NavigationMenuContent className="z-50 bg-[#F5F5DC]/95 border border-[#FFD700]/20 shadow-xl rounded-xl">
                     <ul className="grid w-[300px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
@@ -135,7 +135,7 @@ export const PublicHeader = () => {
                 {/* Education Menu */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Education</NavigationMenuTrigger>
-                  <NavigationMenuContent>
+                  <NavigationMenuContent className="z-50 bg-[#F5F5DC]/95 border border-[#FFD700]/20 shadow-xl rounded-xl">
                     <ul className="grid w-[300px] gap-4 p-4">
                       <li>
                         <NavigationMenuLink asChild>
@@ -179,8 +179,8 @@ export const PublicHeader = () => {
                 {/* Company Menu */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Company</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-4 p-4">
+                  <NavigationMenuContent className="z-50 bg-[#F5F5DC]/95 border border-[#FFD700]/20 shadow-xl rounded-xl">
+                    <ul className="grid w-[300px] gap-4 p-4" style={{ position: 'absolute', left: 0, top: '100%', zIndex: 50, background: '#1a2d42', border: '1px solid #FFD700', boxShadow: '0 8px 32px #0A162822', borderRadius: '0.75rem', minWidth: '300px' }}>
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/company/about" className={linkClassName}>
@@ -223,8 +223,8 @@ export const PublicHeader = () => {
                 {/* Legal Menu */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Legal</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-4 p-4">
+                  <NavigationMenuContent className="z-50 bg-[#F5F5DC]/95 border border-[#FFD700]/20 shadow-xl rounded-xl">
+                    <ul className="grid w-[300px] gap-4 p-4" style={{ position: 'absolute', left: 0, top: '100%', zIndex: 50, background: '#1a2d42', border: '1px solid #FFD700', boxShadow: '0 8px 32px #0A162822', borderRadius: '0.75rem', minWidth: '300px' }}>
                       <li>
                         <NavigationMenuLink asChild>
                           <Link to="/legal/privacy" className={linkClassName}>
@@ -267,16 +267,16 @@ export const PublicHeader = () => {
             </NavigationMenu>
           </div>
 
-          {/* Right Actions */}
+          {/* Right Actions - Luxury Buttons */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Link to="/login">
-              <Button variant="ghost" size="sm" className="focus-visible:ring-2 focus-visible:ring-primary" aria-label="Login to your account">
+              <Button variant="ghost" size="sm" className="focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300" style={{ color: '#F5F5DC' }} aria-label="Login to your account">
                 Login
               </Button>
             </Link>
             <Link to="/register">
-              <Button size="sm" className="bg-gradient-to-r from-primary to-primary-glow focus-visible:ring-2 focus-visible:ring-primary" aria-label="Create new account">
+              <Button size="sm" className="focus-visible:ring-2 focus-visible:ring-primary transition-all duration-300 hover:opacity-90" style={{ background: '#FFD700', color: '#0A1628' }} aria-label="Create new account">
                 Get Started
               </Button>
             </Link>
@@ -288,5 +288,5 @@ export const PublicHeader = () => {
 };
 
 const linkClassName = cn(
-  "block select-none space-y-2 rounded-md p-4 leading-tight no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+  "block select-none space-y-2 rounded-md p-4 leading-tight no-underline outline-none transition-colors hover:bg-[#F5F5DC]/10 hover:text-[#FFD700] focus:bg-[#F5F5DC]/10 focus:text-[#FFD700]"
 );

@@ -20,7 +20,8 @@
   background: hsl(var(--card));
   color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  /* Smoother transition */
 }
 
 /* ============================================
@@ -30,35 +31,41 @@
 /* Level 1: Base Elevation - Subtle depth for primary content cards */
 .card-elevation-1,
 .card[data-elevation="1"] {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Level 2: Mid Elevation - Medium depth for featured/section cards */
 .card-elevation-2,
 .card[data-elevation="2"] {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
+  border-color: hsl(var(--border) / 0.8);
 }
 
 /* Level 3: High Elevation - Strong depth for modals/floating elements */
 .card-elevation-3,
 .card[data-elevation="3"] {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
+  border-color: hsl(var(--border) / 0.6);
 }
 
 /* Hover states for interactive cards */
 .card-elevation-1:hover {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: hsl(var(--primary) / 0.3);
+  /* Subtle primary border on hover */
 }
 
 .card-elevation-2:hover {
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: hsl(var(--primary) / 0.4);
 }
 
 .card-elevation-3:hover {
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+  border-color: hsl(var(--primary) / 0.5);
 }
 
 /* ============================================
@@ -69,21 +76,18 @@
 .card-primary,
 .card[data-variant="primary"] {
   background: hsl(var(--card));
-  /* Light mode: #FFFFFF (solid white) */
 }
 
 /* Secondary Cards - Slightly muted for supporting content */
 .card-secondary,
 .card[data-variant="secondary"] {
   background: hsl(var(--secondary));
-  /* Light mode: Subtle gray background */
 }
 
 /* Tertiary Cards - Most muted for background elements */
 .card-tertiary,
 .card[data-variant="tertiary"] {
   background: hsl(var(--muted));
-  /* Light mode: Very light gray */
 }
 
 /* ============================================
@@ -92,61 +96,54 @@
 
 .dark .card-primary,
 .dark .card[data-variant="primary"] {
-  /* Dark mode primary: #1A202C */
-  background: hsl(218 30% 13%);
+  background: hsl(var(--card));
+  /* Uses new Charcoal Gray */
 }
 
 .dark .card-secondary,
 .dark .card[data-variant="secondary"] {
-  /* Dark mode secondary: #2D3748 */
-  background: hsl(217 24% 22%);
+  background: hsl(var(--secondary));
 }
 
 .dark .card-tertiary,
 .dark .card[data-variant="tertiary"] {
-  /* Dark mode tertiary: Slightly lighter */
-  background: hsl(217 20% 28%);
+  background: hsl(var(--muted));
 }
 
-/* Enhanced shadows for dark mode */
+/* Enhanced shadows for dark mode with Glow effects */
 .dark .card-elevation-1,
 .dark .card[data-elevation="1"] {
-  box-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.5),
-    0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
 .dark .card-elevation-2,
 .dark .card[data-elevation="2"] {
-  box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.5),
-    0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  /* Subtle glow for elevation 2 */
+  border: 1px solid hsl(var(--primary) / 0.1);
 }
 
 .dark .card-elevation-3,
 .dark .card[data-elevation="3"] {
-  box-shadow: 
-    0 10px 15px rgba(0, 0, 0, 0.6),
-    0 4px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  /* Stronger glow for elevation 3 */
+  border: 1px solid hsl(var(--primary) / 0.2);
 }
 
 /* Dark mode hover enhancements */
 .dark .card-elevation-1:hover {
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.6),
-    0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  border-color: hsl(var(--primary) / 0.3);
 }
 
 .dark .card-elevation-2:hover {
-  box-shadow: 
-    0 6px 8px rgba(0, 0, 0, 0.6),
-    0 3px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 10px 10px -5px rgba(0, 0, 0, 0.5), 0 0 15px hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary) / 0.4);
 }
 
 .dark .card-elevation-3:hover {
-  box-shadow: 
-    0 12px 20px rgba(0, 0, 0, 0.7),
-    0 6px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 25px hsl(var(--primary) / 0.15);
+  border-color: hsl(var(--primary) / 0.5);
 }
 
 /* ============================================
@@ -156,11 +153,11 @@
 /* Interactive cards with pointer cursor */
 .card-interactive {
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .card-interactive:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 /* Disabled card state */
@@ -180,17 +177,12 @@
 .card-focusable:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
-  box-shadow: 
-    0 0 0 4px hsl(var(--ring) / 0.2),
-    0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
 }
 
 /* ============================================
    COMPONENT-SPECIFIC STYLES
    ============================================ */
-
-/* Stat Cards - Level 1 elevation with primary background */
-/* Removed empty ruleset as it was not used */
 
 /* Feature Cards - Level 2 elevation with primary background */
 .card-feature {
@@ -206,7 +198,7 @@
   padding: 2rem;
   border-radius: var(--radius);
   background: hsl(var(--card));
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-xl);
   border: 1px solid hsl(var(--border));
 }
 
@@ -217,18 +209,20 @@
 /* Reduce elevation on mobile for better touch interaction */
 @media (max-width: 768px) {
   .card-elevation-2 {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
   }
-  
+
   .card-elevation-3 {
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-lg);
   }
-  
+
   /* Reduce hover effects on mobile */
   .card-elevation-1:hover,
   .card-elevation-2:hover,
   .card-elevation-3:hover {
     transform: none;
+    box-shadow: inherit;
+    /* Reset shadow on hover for mobile */
   }
 }
 
@@ -238,6 +232,7 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
   .card,
   .card-elevation-1,
   .card-elevation-2,
@@ -252,7 +247,7 @@
   .card {
     border: 2px solid hsl(var(--border));
   }
-  
+
   .card-elevation-1,
   .card-elevation-2,
   .card-elevation-3 {
@@ -263,6 +258,7 @@
 
 /* Print styles - remove shadows for better printing */
 @media print {
+
   .card-elevation-1,
   .card-elevation-2,
   .card-elevation-3 {
@@ -270,47 +266,3 @@
     border: 1px solid #000 !important;
   }
 }
-
-/* ============================================
-   USAGE GUIDELINES (DOCUMENTATION)
-   ============================================ */
-
-/*
- * ELEVATION LEVEL GUIDELINES:
- * 
- * Level 1 (Subtle) - Base Elevation
- * - Use for: Stat cards, content cards, list items
- * - Visual weight: Subtle depth
- * - Example: Dashboard stat cards, account summary
- * 
- * Level 2 (Medium) - Feature Elevation
- * - Use for: Section cards, feature cards, emphasized content
- * - Visual weight: Noticeable depth
- * - Example: Market watch widget, recent activity panel
- * 
- * Level 3 (Strong) - High Elevation
- * - Use for: Modals, dialogs, tooltips, dropdown menus
- * - Visual weight: Prominent depth
- * - Example: Trading modal, confirmation dialogs
- * 
- * BACKGROUND VARIANT GUIDELINES:
- * 
- * Primary (Solid)
- * - Use for: Main content cards, primary information
- * - Visual hierarchy: Highest priority
- * 
- * Secondary (Muted)
- * - Use for: Supporting content, grouped information
- * - Visual hierarchy: Medium priority
- * 
- * Tertiary (Most Muted)
- * - Use for: Background elements, less important content
- * - Visual hierarchy: Lowest priority
- * 
- * COMBINING ELEVATION + VARIANT:
- * 
- * High Priority: elevation-2 + variant-primary
- * Medium Priority: elevation-1 + variant-primary
- * Low Priority: elevation-1 + variant-secondary
- * Background: elevation-1 + variant-tertiary
- */
