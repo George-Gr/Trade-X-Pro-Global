@@ -667,7 +667,7 @@ export async function initializeEncryption(): Promise<boolean> {
       throw new Error('Encryption test failed');
     }
 
-    logger.info('Encryption initialized', {
+    logger.debug('Encryption initialized', {
       metadata: {
         reason: 'Encryption service initialized successfully',
       },

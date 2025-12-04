@@ -46,7 +46,7 @@ const corsMiddleware = (): Plugin => ({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
-        "connect-src 'self' https://oaegicsinxhpilsihjxv.supabase.co https://api.vercel.com",
+        "connect-src 'self' https://oaegicsinxhpilsihjxv.supabase.co wss://oaegicsinxhpilsihjxv.supabase.co https://api.vercel.com",
         "frame-src 'none'",
         "object-src 'none'",
         "base-uri 'self'",
@@ -65,7 +65,8 @@ const corsMiddleware = (): Plugin => ({
       // Additional security headers
       res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
       res.setHeader('X-Download-Options', 'noopen');
-      res.setHeader('Clear-Site-Data', '"cache","cookies","storage"');
+      // Note: Clear-Site-Data header removed - was causing console spam and clearing user data on every request
+      // Only use Clear-Site-Data on specific routes like logout if needed
       res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
       res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
       res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');

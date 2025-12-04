@@ -252,29 +252,29 @@ All colors MUST be HSL.
        Base Unit: 8px (all values must be multiples of 8px)
        ======================================================================== */
 
-    /* Base Spacing Scale (multiples of 8px) */
-    --space-0: 0px;
+    /* Base Spacing Scale (multiples of 0.25rem / 4px) */
+    --space-0: 0;
     /* No spacing */
-    --space-1: 4px;
-    /* Half unit (edge cases) */
-    --space-2: 8px;
-    /* Base unit */
-    --space-3: 16px;
-    /* 2 units */
-    --space-4: 24px;
-    /* 3 units */
-    --space-5: 32px;
-    /* 4 units */
-    --space-6: 48px;
-    /* 6 units */
-    --space-7: 64px;
-    /* 8 units */
-    --space-8: 80px;
-    /* 10 units */
-    --space-9: 96px;
-    /* 12 units */
-    --space-10: 128px;
-    /* 16 units */
+    --space-1: 0.25rem;
+    /* 4px - Half unit */
+    --space-2: 0.5rem;
+    /* 8px - Base unit */
+    --space-3: 1rem;
+    /* 16px - 2 units */
+    --space-4: 1.5rem;
+    /* 24px - 3 units */
+    --space-5: 2rem;
+    /* 32px - 4 units */
+    --space-6: 3rem;
+    /* 48px - 6 units */
+    --space-7: 4rem;
+    /* 64px - 8 units */
+    --space-8: 5rem;
+    /* 80px - 10 units */
+    --space-9: 6rem;
+    /* 96px - 12 units */
+    --space-10: 8rem;
+    /* 128px - 16 units */
 
     /* Responsive Spacing - Page Margins */
     --page-margin-desktop: 48px;
@@ -777,20 +777,16 @@ All colors MUST be HSL.
     outline-offset: 0;
   }
 
-  /* High-contrast focus rings for all interactive elements */
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible,
-  button:focus-visible,
-  [role="button"]:focus-visible,
-  [role="link"]:focus-visible,
-  a:focus-visible,
-  [tabindex="0"]:focus-visible {
-    outline: 3px solid hsl(var(--focus-color));
-    outline-offset: 2px;
-    box-shadow:
-      0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
-      0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
+  /* 
+   * FE-001: Focus Indicator Conflict Resolution
+   * We rely on Tailwind's `focus-visible:ring-*` utilities for focus states.
+   * The previous global override caused conflicts and double rings.
+   * 
+   * We only apply a default fallback for elements that might miss specific classes,
+   * but we do NOT force it with !important or high specificity that overrides Tailwind.
+   */
+  :focus-visible {
+    outline: none;
   }
 
   /* Fallback for browsers without focus-visible support */

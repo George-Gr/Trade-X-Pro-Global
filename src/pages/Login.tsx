@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
+import { SocialProof } from "@/components/trust/SocialProof";
+import { TrustBadge } from "@/components/trust/TrustBadge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { validationRules } from "@/lib/validationRules";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
-import { TrendingUp, AlertCircle, X } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { validationRules } from "@/lib/validationRules";
+import { AlertCircle, TrendingUp, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TrustBadge } from "@/components/trust/TrustBadge";
-import { SocialProof } from "@/components/trust/SocialProof";
+import { Link, useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -179,6 +179,7 @@ const Login = () => {
                           id="email"
                           type="email"
                           placeholder="Enter your email"
+                          autoComplete="username"
                           className="text-primary-contrast"
                           {...register("email", validationRules.email)}
                           disabled={isLoading}
@@ -201,6 +202,7 @@ const Login = () => {
                           id="password"
                           type="password"
                           placeholder="Enter your password"
+                          autoComplete="current-password"
                           className="text-primary-contrast"
                           {...register("password", validationRules.password)}
                           disabled={isLoading}

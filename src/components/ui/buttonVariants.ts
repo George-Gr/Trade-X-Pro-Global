@@ -18,7 +18,7 @@ export const buttonVariants = cva(
         sell: "bg-sell text-sell-foreground hover:bg-sell-hover active:scale-[0.98] shadow-sm hover:shadow-md hover:shadow-sell/20",
 
         // Premium variants
-        premium: "bg-gradient-to-r from-gold to-yellow-500 text-black font-bold hover:brightness-110 active:scale-[0.98] shadow-md hover:shadow-lg hover:shadow-gold/20 border border-yellow-400/50",
+        premium: "bg-gradient-to-r from-premium to-premium-gradient-end text-premium-foreground font-bold hover:brightness-110 active:scale-[0.98] shadow-md hover:shadow-lg hover:shadow-premium/20 border border-premium-border/50",
         glass: "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 active:scale-[0.98]",
 
         // Status variants (mapped to semantic colors)
@@ -27,12 +27,12 @@ export const buttonVariants = cva(
         loading: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-[0.98] shadow-sm opacity-75 cursor-wait",
       },
       size: {
-        default: "h-12 px-5 py-2", // 48px - Standard touch target
+        default: "h-12 px-4 py-2", // 48px - Standard touch target
         sm: "h-10 rounded-md px-3 text-xs", // 40px
-        lg: "h-14 rounded-md px-8 text-base", // 56px
+        lg: "h-14 rounded-md px-6 text-base", // 56px
         icon: "h-12 w-12", // 48px square
-        xl: "h-16 rounded-md px-10 text-lg", // 64px
-        xs: "h-8 rounded-sm px-2 text-[10px]", // 32px (Dense UI only)
+        xl: "h-16 rounded-md px-8 text-lg", // 64px
+        xs: "h-8 rounded-sm px-2 text-xs", // 32px (Dense UI only)
       },
       animation: {
         none: "",

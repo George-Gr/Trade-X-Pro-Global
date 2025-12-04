@@ -1,8 +1,7 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-import { COLORS, SEMANTIC_COLORS } from "./src/constants/designTokens";
-import { FONT_FAMILIES, FONT_WEIGHTS } from "./src/constants/typography";
-import { SPACING, CONTAINER_SIZES } from "./src/constants/spacing";
+import { SPACING } from "./src/constants/spacing";
+import { FONT_FAMILIES } from "./src/constants/typography";
 
 const config: Config = {
   darkMode: "class",
@@ -116,6 +115,15 @@ const config: Config = {
           neutral: "hsl(var(--price-neutral))",
         },
         "quick-actions": "hsl(var(--quick-actions))",
+        premium: {
+          DEFAULT: "hsl(var(--gold))",
+          foreground: "#000000",
+          gradient: {
+            start: "hsl(var(--gold))",
+            end: "#EAB308", // yellow-500
+          },
+          border: "#FACC15", // yellow-400
+        },
       },
       borderRadius: {
         // Standardized border-radius scale
