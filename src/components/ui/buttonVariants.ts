@@ -12,18 +12,19 @@ export const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-[0.98] shadow-sm",
         ghost: "hover:bg-accent hover:text-accent-foreground active:scale-[0.98]",
         link: "text-primary underline-offset-4 hover:underline",
-        
+
         // Trading specific variants
         buy: "bg-buy text-buy-foreground hover:bg-buy-hover active:scale-[0.98] shadow-sm hover:shadow-md hover:shadow-buy/20",
         sell: "bg-sell text-sell-foreground hover:bg-sell-hover active:scale-[0.98] shadow-sm hover:shadow-md hover:shadow-sell/20",
-        
+
         // Premium variants
         premium: "bg-gradient-to-r from-gold to-yellow-500 text-black font-bold hover:brightness-110 active:scale-[0.98] shadow-md hover:shadow-lg hover:shadow-gold/20 border border-yellow-400/50",
         glass: "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 active:scale-[0.98]",
-        
+
         // Status variants (mapped to semantic colors)
         success: "bg-buy text-buy-foreground hover:bg-buy-hover active:scale-[0.98] shadow-sm",
         warning: "bg-gold text-gold-foreground hover:bg-gold-hover active:scale-[0.98] shadow-sm",
+        loading: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-[0.98] shadow-sm opacity-75 cursor-wait",
       },
       size: {
         default: "h-12 px-5 py-2", // 48px - Standard touch target

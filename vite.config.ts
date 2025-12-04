@@ -1,9 +1,9 @@
-import { defineConfig } from "vite";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import type { Plugin } from "vite";
-import { sentryVitePlugin } from "@sentry/vite-plugin";
+import { defineConfig } from "vite";
 // Enhanced manualChunks integrated into rollup fn
 // CORS middleware for development - handles cross-origin requests
 const corsMiddleware = (): Plugin => ({
@@ -11,14 +11,81 @@ const corsMiddleware = (): Plugin => ({
   apply: 'serve',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
-      // Conditional CORS: * in dev, whitelisted in prod
+      // Secure CORS configuration with whitelist-based approach
+      const allowedOrigins = [
+        'http://localhost:8080',
+        'http://127.0.0.1:8080',
+        'https://tradepro.vercel.app',
+        'https://app.tradexpro.com'
+      ];
+
+      const origin = req.headers.origin;
+      let allowedOrigin = '*'; // Default for development
+
+      if (origin && allowedOrigins.includes(origin)) {
+        allowedOrigin = origin;
+      }
+
+      // In production, only allow specific origins
       const isProd = process.env.NODE_ENV === 'production';
-      res.setHeader('Access-Control-Allow-Origin', isProd
-        ? 'https://tradepro.vercel.app,https://*.vercel.app'
-        : '*');
+      if (isProd && !allowedOrigins.includes(origin || '')) {
+        res.setHeader('Access-Control-Allow-Origin', 'https://tradepro.vercel.app');
+      } else {
+        res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+      }
+
       res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin,X-Requested-With');
       res.setHeader('Access-Control-Max-Age', '3600');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+      // Content Security Policy headers
+      const cspDirectives = [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data: https:",
+        "connect-src 'self' https://oaegicsinxhpilsihjxv.supabase.co https://api.vercel.com",
+        "frame-src 'none'",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+        "upgrade-insecure-requests"
+      ];
+
+      res.setHeader('Content-Security-Policy', cspDirectives.join('; '));
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('X-XSS-Protection', '1; mode=block');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+      res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), speaker=(), vibrate=(), fullscreen=()');
+
+      // Additional security headers
+      res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+      res.setHeader('X-Download-Options', 'noopen');
+      res.setHeader('Clear-Site-Data', '"cache","cookies","storage"');
+      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      res.setHeader('Expect-CT', 'max-age=86400, enforce');
+      res.setHeader('Server', 'TradeX Pro');
+      res.setHeader('X-Powered-By', 'TradeX Pro');
+
+      // HTTPS enforcement and HSTS headers (production only)
+      if (isProd) {
+        // HTTP Strict Transport Security (HSTS)
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+
+        // Force HTTPS redirect (for development/testing environments)
+        const protocol = req.headers['x-forwarded-proto'] as string || 'http';
+        if (protocol !== 'https' && !req.headers.host?.includes('localhost')) {
+          res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+          res.end();
+          return;
+        }
+      }
 
       if (req.method === 'OPTIONS') {
         res.writeHead(204);
@@ -29,9 +96,7 @@ const corsMiddleware = (): Plugin => ({
       next();
     });
   },
-});
-
-// Safely load lovable-tagger plugin - fails gracefully if not available
+});// Safely load lovable-tagger plugin - fails gracefully if not available
 let componentTaggerPlugin: Plugin | undefined = undefined;
 (async () => {
   try {

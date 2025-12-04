@@ -66,7 +66,12 @@ export const OrderRequestSchema = z.object({
 export function validateOrderInput(body: unknown) {
   const validation = OrderRequestSchema.safeParse(body);
   if (!validation.success) {
-    const details = validation.error.issues.map((issue: { path: PropertyKey[]; message: string }) => `${issue.path.join('.')}: ${issue.message}`).join(', ');
+    // Environment-aware error handling to prevent information disclosure
+    const isProduction = import.meta.env.PROD;
+    const details = isProduction
+      ? 'Invalid request format'
+      : validation.error.issues.map((issue: { path: PropertyKey[]; message: string }) => `${issue.path.join('.')}: ${issue.message}`).join(', ');
+
     throw new ValidationError(400, 'Invalid input', details);
   }
   return validation.data;

@@ -1,10 +1,7 @@
-import { useState, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { LoadingButton } from "@/components/ui/LoadingButton";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ErrorState } from "@/components/ui/ErrorState";
-import { formatFieldError } from "@/lib/errorMessageService";
+import { LoadingButton } from "@/components/ui/LoadingButton";
 import {
   Select,
   SelectContent,
@@ -12,8 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatFieldError } from "@/lib/errorMessageService";
 import { Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { OrderType } from "./OrderTypeSelector";
+import { validateOrderInput, ValidationError } from "@/lib/trading/orderValidation";
 
 export interface OrderFormData {
   symbol: string;
@@ -84,65 +84,50 @@ export const OrderForm = ({
   const validateForm = (): boolean => {
     setValidationError(null);
 
-    const qty = parseFloat(volume);
-    if (isNaN(qty) || qty <= 0) {
-      setValidationError("Volume must be greater than 0");
+    try {
+      // Validate quantity using comprehensive validation
+      const qty = validateOrderInput(volume);
+
+      // Validate order type specific fields
+      if (orderType === 'limit' || orderType === 'stop_limit') {
+        if (limitPrice) {
+          validateOrderInput(limitPrice);
+        }
+      }
+
+      if (orderType === 'stop' || orderType === 'stop_limit') {
+        if (stopPrice) {
+          validateOrderInput(stopPrice);
+        }
+      }
+
+      if (orderType === 'trailing_stop') {
+        if (trailingDistance) {
+          const td = parseFloat(trailingDistance);
+          if (td <= 0) {
+            throw new ValidationError(400, "Trailing distance must be greater than 0");
+          }
+        }
+      }
+
+      // Optional TP/SL validation
+      if (takeProfit) {
+        validateOrderInput(takeProfit);
+      }
+
+      if (stopLoss) {
+        validateOrderInput(stopLoss);
+      }
+
+      return true;
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        setValidationError(error.details || error.message);
+      } else {
+        setValidationError("Invalid input format");
+      }
       return false;
     }
-
-    if (qty < 0.01) {
-      setValidationError("Minimum volume is 0.01 lots");
-      return false;
-    }
-
-    if (qty > 1000) {
-      setValidationError("Maximum volume is 1000 lots");
-      return false;
-    }
-
-    // Validate order type specific fields
-    if (orderType === 'limit' || orderType === 'stop_limit') {
-      const lp = parseFloat(limitPrice);
-      if (isNaN(lp) || lp <= 0) {
-        setValidationError("Limit price must be greater than 0");
-        return false;
-      }
-    }
-
-    if (orderType === 'stop' || orderType === 'stop_limit') {
-      const sp = parseFloat(stopPrice);
-      if (isNaN(sp) || sp <= 0) {
-        setValidationError("Stop price must be greater than 0");
-        return false;
-      }
-    }
-
-    if (orderType === 'trailing_stop') {
-      const td = parseFloat(trailingDistance);
-      if (isNaN(td) || td <= 0) {
-        setValidationError("Trailing distance must be greater than 0");
-        return false;
-      }
-    }
-
-    // Optional TP/SL validation
-    if (takeProfit) {
-      const tp = parseFloat(takeProfit);
-      if (isNaN(tp) || tp <= 0) {
-        setValidationError("Take profit price must be greater than 0");
-        return false;
-      }
-    }
-
-    if (stopLoss) {
-      const sl = parseFloat(stopLoss);
-      if (isNaN(sl) || sl <= 0) {
-        setValidationError("Stop loss price must be greater than 0");
-        return false;
-      }
-    }
-
-    return true;
   };
 
   const handleSubmit = async (side: 'buy' | 'sell') => {

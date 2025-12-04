@@ -26,7 +26,12 @@
     "supabase:push": "supabase push",
     "supabase:pull": "supabase pull",
     "supabase:migrations": "supabase migrations list",
-    "supabase:functions:deploy": "supabase functions deploy"
+    "supabase:functions:deploy": "supabase functions deploy",
+    "security:audit": "npm audit --audit-level=moderate",
+    "security:audit:fix": "npm audit fix",
+    "security:check": "npm run security:audit && npm run security:licenses",
+    "security:licenses": "license-checker --production --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;Unlicense;0BSD;BSD-4-Clause;CC0-1.0'",
+    "security:scan": "npm run security:check"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -101,6 +106,7 @@
     "@types/react-window": "^1.8.8",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",
+    "@upstash/context7-mcp": "^1.0.31",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "@vitest/ui": "^4.0.8",
     "autoprefixer": "^10.4.21",
@@ -114,6 +120,7 @@
     "playwright": "^1.43.0",
     "postcss": "^8.5.6",
     "rollup-plugin-visualizer": "^5.14.0",
+    "shadcn": "^3.5.1",
     "sharp": "^0.34.5",
     "supabase": "^2.64.2",
     "tailwindcss": "^4.1.17",
