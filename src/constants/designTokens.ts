@@ -24,8 +24,8 @@
  */
 export const COLORS = {
   /**
-   * Deep Navy - #0A1628
-   * PRIMARY BACKGROUND COLOR
+   * Deep Navy - #1a1d29
+   * PRIMARY BACKGROUND COLOR (per Design Plan v1.0)
    * 
    * Usage:
    * - Page backgrounds (60-70% of UI)
@@ -34,12 +34,12 @@ export const COLORS = {
    * - Main UI containers
    * 
    * Contrast Ratios:
-   * - Against Pure White text: 21:1 (AAA - exceeds requirements)
-   * - Against Silver Gray text: 12.1:1 (AAA - exceeds requirements)
+   * - Against Pure White text: 16.5:1 (AAA - exceeds requirements)
+   * - Against Silver Gray text: 9.8:1 (AAA - exceeds requirements)
    * 
    * CSS Variable: --color-deep-navy
    */
-  deepNavy: '#0A1628',
+  deepNavy: '#1a1d29',
 
   /**
    * Electric Blue - #00D4FF
@@ -177,6 +177,24 @@ export const COLORS = {
    * ⚠️ CRITICAL: LIMITED to 5% maximum UI coverage
    */
   warmGold: '#F39C12',
+
+  /**
+   * Soft White - #f8f9fa
+   * CARD/PANEL BACKGROUND COLOR
+   * 
+   * Usage:
+   * - Card backgrounds on light mode
+   * - Panel overlays
+   * - Light-themed content areas
+   * - Secondary backgrounds
+   * 
+   * Contrast Ratios:
+   * - Against Deep Navy text: 15.8:1 (AAA)
+   * - Against Silver Gray text: 3.2:1 (AA for large text)
+   * 
+   * CSS Variable: --color-soft-white
+   */
+  softWhite: '#f8f9fa',
 } as const;
 
 // ============================================================================

@@ -94,8 +94,8 @@ All colors MUST be HSL.
        WCAG Compliance: AAA (7:1 contrast ratio minimum for text)
        ======================================================================== */
 
-    /* Primary Colors */
-    --color-deep-navy: #0A1628;
+    /* Primary Colors - Design Plan v1.0 */
+    --color-deep-navy: #1a1d29;
     /* Primary background - 60-70% usage */
     --color-electric-blue: #00D4FF;
     /* Interactive elements - CTAs, highlights */
@@ -113,13 +113,16 @@ All colors MUST be HSL.
     /* Primary text on dark only */
     --color-warm-gold: #F39C12;
     /* Premium features - max 5% usage */
+    --color-soft-white: #f8f9fa;
+    /* Card backgrounds, light panels */
 
     /* Semantic Background Colors */
     --bg-primary: var(--color-deep-navy);
     --bg-secondary: var(--color-charcoal-gray);
-    --bg-tertiary: rgba(44, 62, 80, 0.5);
-    --bg-overlay: rgba(10, 22, 40, 0.95);
+    --bg-tertiary: rgba(26, 29, 41, 0.5);
+    --bg-overlay: rgba(26, 29, 41, 0.95);
     --bg-panel: rgba(44, 62, 80, 0.3);
+    --bg-soft: var(--color-soft-white);
 
     /* Semantic Text Colors */
     --text-primary: var(--color-pure-white);
@@ -473,9 +476,9 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode - Premium trading terminal */
-    --background: 216 60% 10%;
-    /* Deep Navy #0A1628 */
+    /* Dark mode - Premium trading terminal - Design Plan v1.0 */
+    --background: 230 23% 13%;
+    /* Deep Navy #1a1d29 */
     --foreground: 0 0% 100%;
     /* Pure White #FFFFFF */
 

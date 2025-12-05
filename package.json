@@ -35,7 +35,10 @@
     "security:scan": "npm run security:check"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^3.10.0",
+    "@mui/material": "^7.3.6",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
@@ -77,6 +80,7 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.25",
     "github-mcp-server": "^1.8.7",
+    "gsap": "^3.13.0",
     "input-otp": "^1.4.2",
     "lightweight-charts": "^5.0.9",
     "lucide-react": "^0.555.0",
@@ -143,5 +147,8 @@
     "*.{css,scss,md}": [
       "prettier --write"
     ]
-  }
+  },
+  "chatParticipants": [
+    "claude-code"
+  ]
 }

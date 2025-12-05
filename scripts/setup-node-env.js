@@ -14,8 +14,10 @@ if (process.env.NODE_OPTIONS === undefined) {
 process.on('warning', (warning) => {
   try {
     // Some warnings have a 'code' field (e.g., DEP0040)
-    if (warning.code === 'DEP0040') {
-      // Ignore punycode-specific deprecation warning
+    if (warning.code === 'DEP0040' ||
+      (warning.message && warning.message.includes('punycode')) ||
+      (warning.message && warning.message.includes('SQLite is an experimental feature'))) {
+      // Ignore punycode and SQLite experimental warnings
       return;
     }
   } catch (e) {
@@ -79,9 +81,9 @@ if (_forceNavigator) {
 if (_forceNavigator && typeof global.document === 'undefined') {
   global.document = {
     createElement: () => ({
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      setAttribute: () => {},
+      addEventListener: () => { },
+      removeEventListener: () => { },
+      setAttribute: () => { },
       getAttribute: () => null,
       style: {},
     }),
@@ -92,16 +94,16 @@ if (_forceNavigator && typeof global.document === 'undefined') {
     getElementById: () => null,
     getElementsByTagName: () => [],
     getElementsByClassName: () => [],
-    addEventListener: () => {},
-    removeEventListener: () => {},
+    addEventListener: () => { },
+    removeEventListener: () => { },
     body: {
-      addEventListener: () => {},
-      removeEventListener: () => {},
+      addEventListener: () => { },
+      removeEventListener: () => { },
       style: {},
     },
     head: {
-      addEventListener: () => {},
-      removeEventListener: () => {},
+      addEventListener: () => { },
+      removeEventListener: () => { },
       style: {},
     },
     location: {
@@ -121,7 +123,7 @@ if (_forceNavigator && typeof global.document === 'undefined') {
     readyState: 'complete',
     visibilityState: 'hidden',
     hidden: true,
-    };
+  };
 }
 
 // Fix location global error
@@ -224,7 +226,7 @@ if (process.env.FORCE_NODE_POLYFILL_SQLITE === '1' && typeof global.SQLite === '
     // sqlite3 not available, create minimal stub
     global.SQLite = {
       Database: class Database {
-        constructor() {}
+        constructor() { }
         run() { return Promise.resolve(this); }
         get() { return Promise.resolve(null); }
         all() { return Promise.resolve([]); }
