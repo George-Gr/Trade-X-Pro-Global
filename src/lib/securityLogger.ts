@@ -71,11 +71,13 @@ export function logSecurityEvent(
   // Add to breadcrumbs
   logger.addBreadcrumb('security', `${eventType}: ${details.email || details.userId || 'unknown'}`, 'info');
 
+  const contextMetadata = context?.metadata && typeof context.metadata === 'object' ? context.metadata as Record<string, unknown> : {};
+
   if (import.meta.env.MODE === 'development') {
     console.log(`[SECURITY] ${eventType}`, {
       timestamp,
       ...details,
-      ...(context?.metadata || {}),
+      ...contextMetadata,
     });
   }
 
@@ -85,7 +87,7 @@ export function logSecurityEvent(
     logger.info(`Security Event: ${eventType}`, {
       ...context,
       metadata: {
-        ...(context?.metadata || {}),
+        ...contextMetadata,
         security: {
           eventType,
           timestamp,
