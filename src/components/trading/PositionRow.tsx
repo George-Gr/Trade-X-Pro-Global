@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Edit2, X, Loader2 } from 'lucide-react';

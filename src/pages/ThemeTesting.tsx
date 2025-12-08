@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import DarkModeTest from '@/components/ui/DarkModeTest';
 import ThemePreview from '@/components/ui/ThemePreview';

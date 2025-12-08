@@ -2,7 +2,7 @@ import { FadeInUp } from '@/components/animations/MotionWrappers';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { Calculator, DollarSign, Percent, TrendingUp } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 const ProfitCalculator: React.FC = () => {
   const [investment, setInvestment] = React.useState(10000);

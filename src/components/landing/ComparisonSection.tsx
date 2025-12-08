@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Check, X } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 const ComparisonSection: React.FC = () => {

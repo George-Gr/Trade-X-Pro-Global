@@ -5,7 +5,7 @@
  * Shows entry/exit details, commission, and additional info
  */
 
-import React from 'react';
+import * as React from 'react';
 import type { OrderTableItem } from '@/hooks/useOrdersTable';
 
 interface OrderDetailExpanderProps {

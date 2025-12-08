@@ -5,7 +5,7 @@
  * critical trading errors with enhanced logging and user-friendly fallbacks.
  */
 
-import React from 'react';
+import * as React from 'react';
 import { AlertTriangle, RefreshCw, Home, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
