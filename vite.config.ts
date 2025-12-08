@@ -295,9 +295,13 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-runtime",
       "@radix-ui/react-tooltip",
       "@radix-ui/react-hover-card",
+      "clsx",
+      "tailwind-merge",
     ],
     // Force re-optimization to fix dependency issues
     force: true,
+    // Exclude problematic circular dependencies
+    exclude: [],
   },
   build: {
     // Reduced from 600 to 400 - encourages better code splitting
@@ -321,11 +325,17 @@ export default defineConfig(({ mode }) => ({
             // React runtime and DOM (keep small and cacheable)
             if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/') || id.includes('/node_modules/react/jsx-runtime')) return 'vendor-react';
 
-            // Icon + small UI libs
-            if (id.includes('lucide-react')) return 'vendor-lucide';
+            // Icon + small UI libs - include clsx and tailwind-merge here to avoid circular deps
+            if (id.includes('lucide-react') || id.includes('clsx') || id.includes('tailwind-merge')) return 'vendor-lucide';
 
-            // Radix UI components and similar UI primitives
-            if (id.includes('@radix-ui')) return 'vendor-radix';
+            // Radix UI components - split into smaller chunks to reduce circular deps
+            if (id.includes('@radix-ui/react-dialog') || id.includes('@radix-ui/react-alert-dialog') || id.includes('@radix-ui/react-popover')) return 'vendor-radix-dialogs';
+            if (id.includes('@radix-ui/react-dropdown-menu') || id.includes('@radix-ui/react-context-menu') || id.includes('@radix-ui/react-navigation-menu')) return 'vendor-radix-menus';
+            if (id.includes('@radix-ui/react-select') || id.includes('@radix-ui/react-combobox')) return 'vendor-radix-selects';
+            if (id.includes('@radix-ui/react-tabs') || id.includes('@radix-ui/react-accordion') || id.includes('@radix-ui/react-collapsible')) return 'vendor-radix-structure';
+            if (id.includes('@radix-ui/react-tooltip') || id.includes('@radix-ui/react-hover-card')) return 'vendor-radix-popovers';
+            if (id.includes('@radix-ui/react-slider') || id.includes('@radix-ui/react-scroll-area') || id.includes('@radix-ui/react-progress')) return 'vendor-radix-inputs';
+            if (id.includes('@radix-ui')) return 'vendor-radix-core';
 
             // Split Supabase client into its own chunk
             if (id.includes('@supabase')) return 'vendor-supabase';
