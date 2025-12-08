@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import React from 'react';
+import * as React from 'react';
 
 // Fade in from bottom animation
 export const FadeInUp: React.FC<{

@@ -8,7 +8,7 @@
  * - Reorder buttons
  */
 
-import React from 'react';
+import * as React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

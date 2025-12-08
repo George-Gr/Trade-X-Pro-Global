@@ -1,5 +1,5 @@
 import { BarChart3, Clock, Globe, TrendingUp, Users, Zap } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 const StatsBanner: React.FC = () => {
   const stats = [

@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Quote, Star } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 interface Testimonial {
   id: number;

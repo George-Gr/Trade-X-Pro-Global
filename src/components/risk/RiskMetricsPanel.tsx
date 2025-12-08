@@ -8,7 +8,7 @@
  * - Capital at Risk
  */
 
-import React from 'react';
+import * as React from 'react';
 import {
   Target,
   DollarSign,

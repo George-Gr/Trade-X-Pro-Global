@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Card } from '@/components/ui/card';
 import type { Position } from '@/types/position';
 import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/react';
 

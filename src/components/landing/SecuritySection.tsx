@@ -1,5 +1,5 @@
 import { Award, Eye, FileCheck, Lock, Server, Shield } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 const SecuritySection: React.FC = () => {
   const certifications = [

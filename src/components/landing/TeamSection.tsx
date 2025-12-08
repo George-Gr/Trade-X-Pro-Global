@@ -1,7 +1,7 @@
 import { FadeInUp, StaggerContainer, StaggerItem } from '@/components/animations/MotionWrappers';
 import { Card, CardContent } from '@/components/ui/card';
 import { Linkedin, Twitter } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 interface TeamMember {
   name: string;

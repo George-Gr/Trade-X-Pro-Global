@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { ExternalLink, FileText, ShieldCheck } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 const RegulatorySection: React.FC = () => {
   return (

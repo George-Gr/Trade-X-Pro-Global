@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, BookOpen, FileText, GraduationCap, Video } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 const EducationalSection: React.FC = () => {

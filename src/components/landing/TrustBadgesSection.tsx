@@ -1,5 +1,5 @@
 import { Award, Shield, Star, Trophy } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 
 const TrustBadgesSection: React.FC = () => {
   const awards = [
