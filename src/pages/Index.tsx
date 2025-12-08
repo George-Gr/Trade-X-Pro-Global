@@ -1,4 +1,3 @@
-import heroImage from "@/assets/hero-trading-professional.webp";
 import ComparisonSection from "@/components/landing/ComparisonSection";
 import EducationalSection from "@/components/landing/EducationalSection";
 import FAQSection from "@/components/landing/FAQSection";
@@ -17,6 +16,7 @@ import Seo from "@/components/seo/Seo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Galaxy from "@/components/ui/Galaxy";
 import {
   ArrowRight,
   Award,
@@ -93,17 +93,32 @@ export default function Index() {
       />
       <PublicHeader />
 
-      {/* Hero Section - Financial CodeWiki: Simple yet Elegant */}
-      <section className="relative overflow-hidden py-32 md:py-40" style={{
-        background: 'linear-gradient(180deg, #1a1d29 0%, #2C3E50 100%)'
-      }}>
-        {/* Remove particles - too busy for luxury aesthetic */}
-
+      {/* Hero Section - Galaxy Background */}
+      <section className="relative overflow-hidden py-32 md:py-40">
         <div className="absolute inset-0 z-0">
-          <img
-            src={heroImage}
-            alt="Professional trading desk"
-            className="h-full w-full object-cover opacity-10"
+          <Galaxy
+            focal={[0.5, 0.5]}
+            rotation={[1.0, 0.0]}
+            starSpeed={0.5}
+            density={1}
+            hueShift={140}
+            disableAnimation={false}
+            speed={1.0}
+            mouseInteraction={true}
+            glowIntensity={0.3}
+            saturation={0.0}
+            mouseRepulsion={true}
+            repulsionStrength={2}
+            twinkleIntensity={0.3}
+            rotationSpeed={0.1}
+            autoCenterRepulsion={0}
+            transparent={true}
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              inset: 0
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary-glow/90 to-accent/85"></div>
         </div>
