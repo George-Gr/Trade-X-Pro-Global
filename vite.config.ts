@@ -331,8 +331,7 @@ export default defineConfig(({ mode }) => ({
             // Keep small utilities together to reduce extra chunks
             if (id.includes('clsx') || id.includes('tailwind-merge')) return 'vendor-lucide';
 
-            // Bundle all @radix-ui packages together to avoid circular dependency issues
-            if (id.includes('@radix-ui')) return 'vendor-radix';
+            // Do not manually chunk @radix-ui packages; let Vite/Rollup handle them to avoid circular dependency issues
 
             // Split Supabase client into its own chunk
             if (id.includes('@supabase')) return 'vendor-supabase';
