@@ -325,8 +325,11 @@ export default defineConfig(({ mode }) => ({
             // React runtime and DOM (keep small and cacheable)
             if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/') || id.includes('/node_modules/react/jsx-runtime')) return 'vendor-react';
 
-            // Icon + small UI libs - include clsx and tailwind-merge here to avoid circular deps
-            if (id.includes('lucide-react') || id.includes('clsx') || id.includes('tailwind-merge')) return 'vendor-lucide';
+            // Icon + small UI libs - co-locate lucide-react with React runtime
+            // so runtime React APIs (eg. forwardRef) are available when icons execute.
+            if (id.includes('lucide-react')) return 'vendor-react';
+            // Keep small utilities together to reduce extra chunks
+            if (id.includes('clsx') || id.includes('tailwind-merge')) return 'vendor-lucide';
 
             // Radix UI components - split into smaller chunks to reduce circular deps
             if (id.includes('@radix-ui/react-dialog') || id.includes('@radix-ui/react-alert-dialog') || id.includes('@radix-ui/react-popover')) return 'vendor-radix-dialogs';
