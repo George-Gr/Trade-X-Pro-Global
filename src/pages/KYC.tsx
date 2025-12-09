@@ -42,11 +42,11 @@ const KYC = () => {
       const { data, error } = await supabase
         .from("kyc_documents")
         .select("*")
-        .eq("kyc_request_id", user.id)
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (!error && data) {
-        setDocuments(data as KYCDocument[]);
+        setDocuments(data);
       }
     } catch (err) {
       console.error("Error fetching documents:", err);
@@ -209,7 +209,7 @@ const KYC = () => {
                       {documents.map((doc) => (
                         <TableRow key={doc.id}>
                           <TableCell className="font-medium capitalize">
-                            {(doc.type || doc.document_type).replace(/_/g, " ")}
+                            {doc.document_type.replace(/_/g, " ")}
                           </TableCell>
                           <TableCell className="text-sm">
                             {new Date(doc.created_at).toLocaleString()}
