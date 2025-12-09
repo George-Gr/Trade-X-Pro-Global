@@ -39,7 +39,7 @@ const KYC = () => {
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status || null);
+      setKycStatus(data.kyc_status || '');
     }
   }, [user]);
 
@@ -48,7 +48,6 @@ const KYC = () => {
 
     setIsLoading(true);
     try {
-      // @ts-expect-error - Supabase type inference issue with kyc_documents
       const { data, error } = await supabase
         .from("kyc_documents")
         .select("*")

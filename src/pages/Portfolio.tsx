@@ -43,7 +43,15 @@ const Portfolio = () => {
   const priceMap = new Map(mappedPositions.map((p) => [p.symbol, p.currentPrice]));
 
   const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor, getPnLStatus } =
-    usePnLCalculations(mappedPositions, priceMap, undefined, { enabled: positions.length > 0 });
+    usePnLCalculations(
+      mappedPositions.map(p => ({
+        ...p,
+        currentPrice: p.currentPrice ?? 0,
+      })),
+      priceMap,
+      undefined,
+      { enabled: positions.length > 0 }
+    );
 
   const symbols = positions.map((p) => p.symbol);
   const { prices, getPrice } = usePriceUpdates({
@@ -233,7 +241,7 @@ const Portfolio = () => {
                                 side={position.side}
                                 currentPrice={currentPrice}
                                 trailingStopEnabled={position.trailing_stop_enabled || false}
-                                trailingStopDistance={position.trailing_stop_distance || null}
+                                trailingStopDistance={position.trailing_stop_distance ?? undefined}
                               />
                               <Button
                                 size="sm"

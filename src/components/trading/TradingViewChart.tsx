@@ -48,9 +48,10 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
       if (!mounted) return;
 
       // Create chart
-      chart = lc.createChart(chartContainerRef.current!, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      chart = (lc.createChart(chartContainerRef.current!, {
         layout: {
-          background: { type: lc.ColorType.Solid, color: "transparent" },
+          background: { type: 'solid' as any, color: "transparent" },
           textColor: "#9ca3af",
         },
         grid: {
@@ -70,7 +71,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
         crosshair: {
           mode: 0,
         },
-      }) as unknown as ChartInstance;
+      })) as unknown as ChartInstance;
 
       // Add candlestick series using the provided helper
       candlestickSeries = chart.addCandlestickSeries({
@@ -148,12 +149,14 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
           };
 
           initialData.push(newCandle);
-          candlestickSeries.update(newCandle);
+          if (candlestickSeries) {
+            candlestickSeries.update(newCandle);
+          }
         }
       }, 2000);
 
       // Store cleanup closure
-      (chart as any)._cleanup = () => {
+      (chart as unknown as Record<string, unknown>)._cleanup = () => {
         window.removeEventListener("resize", handleResize);
         clearInterval(updateInterval);
         if (chart) chart.remove();

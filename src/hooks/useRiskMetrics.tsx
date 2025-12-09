@@ -99,7 +99,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       }
 
       // Convert positions to format needed for calculations
-      const positions = (positionsData as Position[]).map(p => ({
+      const positions = (positionsData as Position[]).map((p: Position) => ({
         positionValue: (p.quantity || 0) * (p.current_price || 0),
         marginRequired: p.margin_used || 0,
       }));
@@ -138,11 +138,14 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       const assessment = assessPortfolioRisk(
         metrics,
         Array.isArray(positionsData)
-          ? positionsData.map((p: any) => ({
-              symbol: typeof p.symbol === 'string' ? p.symbol : String(p.symbol ?? ''),
-              quantity: typeof p.quantity === 'number' ? p.quantity : Number(p.quantity ?? 0),
-              positionValue: (Number(p.quantity ?? 0)) * (Number(p.current_price ?? 0)),
-            }))
+          ? positionsData.map((p: unknown) => {
+              const pObj = p as Record<string, unknown>;
+              return {
+                symbol: typeof pObj.symbol === 'string' ? pObj.symbol : String(pObj.symbol ?? ''),
+                quantity: typeof pObj.quantity === 'number' ? pObj.quantity : Number(pObj.quantity ?? 0),
+                positionValue: (Number(pObj.quantity ?? 0)) * (Number(pObj.current_price ?? 0)),
+              };
+            })
           : [],
         concentration
       );

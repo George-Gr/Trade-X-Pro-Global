@@ -8,7 +8,7 @@ import { useSLTPMonitoring } from "@/hooks/useSLTPMonitoring";
 import { OrderTemplate } from "@/hooks/useOrderTemplates";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { OrderType } from "@/lib/trading/orderMatching";
+import { OrderType } from "./OrderTypeSelector";
 import { OrderFormData } from "./OrderForm";
 
 // Lazy load heavy components
@@ -39,12 +39,12 @@ interface TradingPanelProps {
  */
 const TradingPanel = ({ symbol }: TradingPanelProps) => {
   // State
-  const [orderType, setOrderType] = useState<OrderType>(OrderType.Market);
+  const [orderType, setOrderType] = useState<OrderType>('market');
   const [formData, setFormData] = useState<Partial<OrderFormData>>({
     symbol,
     side: 'buy',
     quantity: 0.01,
-    type: OrderType.Market,
+    type: 'market',
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<OrderFormData | null>(null);
@@ -159,7 +159,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
       // NOTE: Leverage is now fixed per asset - template.leverage is ignored
       type: template.order_type as 'market' | 'limit' | 'stop' | 'stop_limit',
       stopLossPrice: template.stop_loss || undefined,
-      takeProfitPrice: template.take_profit,
+      takeProfitPrice: template.take_profit ?? undefined,
     }));
     setOrderType(template.order_type as OrderType);
     toast({

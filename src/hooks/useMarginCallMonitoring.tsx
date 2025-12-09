@@ -110,7 +110,7 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
 
   const [state, setState] = useState<MarginCallState>({
     marginStatus: mapMarginStatusToCallStatus(marginStatus),
-    marginLevel,
+    marginLevel: marginLevel ?? 0,
     severity: (isCritical ? MarginCallSeverity.URGENT : isWarning ? MarginCallSeverity.STANDARD : null) as MarginCallSeverity | null,
     timeInCallMinutes: null,
     shouldEscalate: Boolean(isLiquidationRisk),
@@ -159,8 +159,8 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
       notes: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      timeInCallMinutes: getTimeInCall(),
-      estimatedTimeToLiquidationMinutes: isLiquidationRisk ? 30 : null,
+      timeInCallMinutes: getTimeInCall() ?? undefined,
+      estimatedTimeToLiquidationMinutes: isLiquidationRisk ? 30 : undefined,
     };
   }, [state.marginLevel, state.severity, state.shouldEscalate, state.recommendedActions, user?.id, getTimeInCall, isLiquidationRisk]);
 
@@ -183,7 +183,7 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
         : MarginCallSeverity.STANDARD;
 
       setState((prev) => {
-        const newActions = getRecommendedActions(marginLevel, 5); // Assume 5 positions
+        const newActions = getRecommendedActions(marginLevel ?? 0, 5); // Assume 5 positions
         return {
           ...prev,
           marginStatus: MarginCallStatus.NOTIFIED,
@@ -226,7 +226,7 @@ export function useMarginCallMonitoring(options: UseMarginCallMonitoringOptions 
 
       setState((prev) => {
         // Check if should escalate
-        const shouldEscalateNow = shouldEscalateToLiquidation(marginLevel, timeInCallMinutes || 0);
+        const shouldEscalateNow = shouldEscalateToLiquidation(marginLevel ?? 0, timeInCallMinutes ?? 0);
 
         if (shouldEscalateNow && !prev.shouldEscalate) {
           onEscalation?.(MarginCallSeverity.CRITICAL);

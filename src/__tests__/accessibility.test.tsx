@@ -262,7 +262,7 @@ describe('Accessibility Tests', () => {
       // Mock the media query
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: vi.fn().mockImplementation((query): MediaQueryList => ({
+        value: vi.fn().mockImplementation((query: string): MediaQueryList => ({
           matches: query.includes('prefers-reduced-motion: reduce'),
           media: query,
           onchange: null,
@@ -286,7 +286,7 @@ describe('Accessibility Tests', () => {
       // Mock the high contrast media query
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: vi.fn().mockImplementation(query => ({
+        value: vi.fn().mockImplementation((query: string) => ({
           matches: query.includes('prefers-contrast: high'),
           media: query,
           onchange: null,

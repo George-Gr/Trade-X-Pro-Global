@@ -14,7 +14,7 @@ interface PriceAlert {
   condition: string;
   triggered: boolean;
   created_at: string;
-  triggered_at?: string;
+  triggered_at: string | null;
 }
 
 export const PriceAlertsManager = () => {

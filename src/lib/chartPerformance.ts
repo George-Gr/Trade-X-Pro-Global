@@ -359,12 +359,10 @@ export class ChartFactory {
 
     // Try to acquire from pool first
     const factoryFn = this.factories.get(type)!;
-    const chart = this.pool.acquire(type, () => {
-      return factoryFn(...args as any);
-    });
-
+    const chart = this.pool.acquire(type, () => ({}));
+    
     // Initialize chart with arguments
-    const chartObj = chart as any;
+    const chartObj = chart as unknown as Record<string, unknown>;
     if (typeof chartObj.initialize === 'function') {
       (chartObj.initialize as (...args: unknown[]) => void)(...args);
     }
@@ -437,16 +435,16 @@ export const useChartPerformance = (
     }
   }, []);
 
-  const debouncedUpdate = useCallback(<T>(callback: (...args: T[]) => void, ...args: T[]) => {
+  const debouncedUpdate = useCallback(<T,>(callback: (...args: T[]) => void, ...args: T[]) => {
     if (!debouncerRef.current) {
-      debouncerRef.current = new DebouncedChartUpdater(callback, mergedConfig.debounceDelay);
+      debouncerRef.current = new DebouncedChartUpdater((callback as (...args: unknown[]) => void), mergedConfig.debounceDelay);
     }
     
-    debouncerRef.current.update(...args);
+    debouncerRef.current.update(...(args as unknown[]));
   }, [mergedConfig.debounceDelay]);
 
-  const acquireFromPool = useCallback(<T>(key: string, factory: () => T): T => {
-    return poolRef.current.acquire(key, factory);
+    const acquireFromPool = useCallback(<T extends { _poolId?: string }>(key: string, factory: () => T): T => {
+    return poolRef.current.acquire(key, factory) as T;
   }, []);
 
   const releaseToPool = useCallback((key: string, instance: unknown) => {

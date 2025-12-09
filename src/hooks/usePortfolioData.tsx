@@ -7,12 +7,13 @@ interface ProfileData {
   balance: number;
   equity: number;
   margin_used: number;
-  free_margin: number;
-  margin_level: number;
+  free_margin: number | null;
+  margin_level: number | null;
 }
 
-interface PositionWithPnL extends Position {
+interface PositionWithPnL extends Omit<Position, 'closed_at'> {
   unrealized_pnl: number;
+  closed_at: string | undefined; // Override Supabase's null to TypeScript's undefined
   asset_class?: string;
   trailing_stop_enabled?: boolean;
   trailing_stop_distance?: number | null;
@@ -20,7 +21,8 @@ interface PositionWithPnL extends Position {
   highest_price?: number | null;
   lowest_price?: number | null;
   entry_price: number; // Added to align with PnLPosition
-  current_price: number; // Added to align with PnLPosition
+  current_price: number; // Changed from null to number to match calculations
+  realized_pnl: number; // Add this to match Position's nullable value
 }
 
 export const usePortfolioData = () => {
@@ -57,7 +59,15 @@ export const usePortfolioData = () => {
       if (positionsError) throw positionsError;
 
       setProfile(profileData);
-      setPositions(positionsData || []);
+      setPositions(positionsData?.map(pos => ({
+        ...pos,
+        opened_at: (pos.opened_at ?? new Date().toISOString()) as string,
+        closed_at: pos.closed_at ?? undefined,
+        status: (pos.status ?? 'open') as 'open' | 'closed',
+        current_price: pos.current_price ?? 0,
+        realized_pnl: pos.realized_pnl ?? 0,
+        unrealized_pnl: pos.unrealized_pnl ?? 0,
+      })) || []);
       setError(null);
     } catch (err: unknown) {
       // Error fetching portfolio data

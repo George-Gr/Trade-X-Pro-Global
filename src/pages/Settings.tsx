@@ -26,7 +26,7 @@ const Settings = () => {
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status || null);
+      setKycStatus(data.kyc_status || '');
     }
     setIsLoading(false);
   }, [user]);

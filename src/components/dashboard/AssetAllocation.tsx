@@ -1,26 +1,27 @@
 import React, { Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
+import type { PieProps } from 'recharts';
 
 // Dynamic import wrapper for recharts components
 const DynamicPieChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.PieChart as React.ComponentType<any>,
+  default: m.PieChart,
 })));
 
 const DynamicPie = React.lazy(() => import('recharts').then(m => ({
-  default: m.Pie as React.ComponentType<any>,
+  default: m.Pie as React.ComponentType<PieProps>,
 })));
 
 const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell as React.ComponentType<any>,
+  default: m.Cell,
 })));
 
 const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip as React.ComponentType<any>,
+  default: m.Tooltip,
 })));
 
 const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
-  default: m.ResponsiveContainer as React.ComponentType<any>,
+  default: m.ResponsiveContainer,
 })));
 
 const COLORS = ['#4ade80', '#f97316', '#60a5fa', '#f87171', '#c084fc', '#94a3b8'];
@@ -64,7 +65,8 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
                   <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </DynamicPie>
-              <DynamicTooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <DynamicTooltip formatter={(value: any) => `$${Number(value).toLocaleString()}`} />
             </DynamicPieChart>
           </DynamicResponsiveContainer>
         </Suspense>

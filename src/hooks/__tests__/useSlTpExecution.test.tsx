@@ -104,8 +104,8 @@ describe('useSlTpExecution', () => {
       executionResult = await result.current.executeStopLossOrTakeProfit(options);
     });
 
-    expect(executionResult?.reason).toBe('take_profit');
-    expect(executionResult?.realized_pnl).toBe(200 as any);
+    expect(executionResult!.reason).toBe('take_profit');
+    expect(executionResult!.realized_pnl).toBe(200);
   });
 
   /**
@@ -184,7 +184,7 @@ describe('useSlTpExecution', () => {
     });
 
     expect(thrownError).not.toBeNull();
-    expect(thrownError?.message).toContain('Invalid position ID');
+    expect((thrownError as unknown as Error)?.message).toContain('Invalid position ID');
     // Should only be called once (no retry)
     expect(invokeMock).toHaveBeenCalledTimes(1);
   });

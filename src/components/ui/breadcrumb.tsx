@@ -197,7 +197,8 @@ export const AutoBreadcrumb = React.forwardRef<
     const items: (BreadcrumbItemConfig & { path?: string })[] = [];
 
     // Always start with Home
-    items.push((BREADCRUMB_CONFIG['/'] as BreadcrumbItemConfig) || { title: 'Home' });
+    const homeConfig = (BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>)['/'];
+    items.push(homeConfig || { title: 'Home' });
 
     let currentPath = '';
 
@@ -205,7 +206,7 @@ export const AutoBreadcrumb = React.forwardRef<
       const segment = pathSegments[i];
       currentPath += `/${segment}`;
 
-      const config = BREADCRUMB_CONFIG[currentPath];
+      const config = (BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>)[currentPath];
       if (config && !config.hideInBreadcrumb) {
         items.push({
           ...config,

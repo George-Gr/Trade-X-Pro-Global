@@ -467,10 +467,10 @@ export const logger = {
 
     // Log slow transactions as warnings
     if (duration > 1000) { // Log transactions slower than 1 second
-      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, {} as Error, {
+      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, {
         ...fullContext,
         metadata: {
-          ...(fullContext.metadata as any),
+          ...(fullContext.metadata as Record<string, unknown> | undefined),
           transactionName: transaction.name,
           duration,
           operation: transaction.operation,
@@ -498,7 +498,7 @@ export const logger = {
       url,
       duration,
       status,
-      success: !error && status && status < 400,
+  success: Boolean(!error && status && status < 400),
       error,
     };
 
@@ -547,7 +547,7 @@ export const logger = {
 
     // Log slow API calls
     if (duration > 2000) {
-      this.warn(`Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`, undefined, {
+        this.warn(`Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`, {
         component: 'API',
         action: 'api_slow_response',
         metadata: {
@@ -611,7 +611,7 @@ export const logger = {
 
       // Track slow queries
       if (duration > 1000) { // Queries slower than 1 second
-        this.warn(`Slow Supabase query: ${operation} ${table} took ${duration.toFixed(2)}ms`, undefined, {
+        this.warn(`Slow Supabase query: ${operation} ${table} took ${duration.toFixed(2)}ms`, {
           component: 'Supabase',
           action: 'slow_query',
           metadata: {

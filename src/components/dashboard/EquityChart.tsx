@@ -184,7 +184,7 @@ export const EquityChart: React.FC = () => {
                   label={{ value: 'Equity ($)', angle: -90, position: 'insideLeft' }}
                 />
                 <DynamicTooltip
-                  formatter={(value: any) => `$${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
+                  formatter={(value: number | string) => `$${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
                   contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
                 />
                 <DynamicReferenceLine

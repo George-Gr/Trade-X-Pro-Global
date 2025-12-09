@@ -5,14 +5,14 @@ import { useToast } from "@/hooks/use-toast";
 export interface PendingOrder {
   id: string;
   symbol: string;
-  order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
-  side: 'buy' | 'sell';
+  order_type: string;
+  side: string;
   quantity: number;
-  price?: number;
-  stop_loss?: number;
-  take_profit?: number;
-  status: string;
-  created_at: string;
+  price?: number | null;
+  stop_loss?: number | null;
+  take_profit?: number | null;
+  status?: string | null;
+  created_at: string | null;
 }
 
 export const usePendingOrders = () => {

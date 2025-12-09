@@ -235,8 +235,16 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       if (fillsError) throw fillsError;
 
       // Calculate daily P&L data
-      const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], positionsData || []);
-      setDailyData(calculatedDailyData as any);
+      const calculatedDailyData = calculateDailyPnLData(startDate, daysCount, fillsData || [], positionsData?.map(p => ({
+        ...p,
+        opened_at: (p.opened_at ?? new Date().toISOString()) as string,
+        closed_at: (p.closed_at ?? undefined) as string | undefined,
+        current_price: p.current_price ?? 0,
+        realized_pnl: p.realized_pnl ?? 0,
+        unrealized_pnl: p.unrealized_pnl ?? 0,
+        status: (p.status ?? 'open') as 'open' | 'closed',
+      })) || []);
+      setDailyData(calculatedDailyData);
 
       // Calculate chart data (equity values)
       const chartData = calculatedDailyData.map(d => d.equity);
@@ -244,7 +252,15 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       // Calculate profit/loss metrics
       const calculatedMetrics = calculateProfitLossMetrics(
         profileData,
-        positionsData || [],
+        positionsData?.map(p => ({
+          ...p,
+          opened_at: (p.opened_at ?? new Date().toISOString()) as string,
+          closed_at: (p.closed_at ?? undefined) as string | undefined,
+          current_price: p.current_price ?? 0,
+          realized_pnl: p.realized_pnl ?? 0,
+          unrealized_pnl: p.unrealized_pnl ?? 0,
+          status: (p.status ?? 'open') as 'open' | 'closed',
+        })) || [],
         fillsData || [],
         calculatedDailyData
       );

@@ -50,7 +50,9 @@ const EnhancedPortfolioDashboard: React.FC = () => {
   const priceMap = useMemo(() => {
     const map = new Map<string, number>();
     positions.forEach(pos => {
-      map.set(pos.symbol, pos.current_price);
+      if (pos.current_price !== null) {
+        map.set(pos.symbol, pos.current_price);
+      }
     });
     return map;
   }, [positions]);

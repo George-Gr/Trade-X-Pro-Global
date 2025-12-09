@@ -10,10 +10,10 @@ import { toast } from "sonner";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 
 import type { Database } from "@/integrations/supabase/types";
-type MarginCallEvent = Database["public"]["Tables"]["margin_call_events"]["Row"] & {
+type MarginCallEventWithProfiles = Database["public"]["Tables"]["margin_call_events"]["Row"] & {
   profiles?: {
     email: string;
-    full_name: string;
+    full_name: string | null;
     equity: number;
     margin_used: number;
   };
@@ -95,7 +95,7 @@ const AdminRiskDashboard = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  marginCalls?.map((call: any) => (
+                  marginCalls?.map((call: MarginCallEventWithProfiles) => (
                     <TableRow key={call.id}>
                       <TableCell>
                         <div className="font-medium">{call.profiles?.full_name || "Unknown"}</div>

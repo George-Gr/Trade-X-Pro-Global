@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { useAuth } from "./useAuth";
+import type { Position } from "@/integrations/supabase/types/tables";
 
 export interface TradeHistoryItem {
   id: string;
@@ -99,17 +100,17 @@ export const useTradingHistory = () => {
       if (ledgerError) throw ledgerError;
 
       // Process closed positions into trade history
-      const trades: TradeHistoryItem[] = (positionsData || []).map((pos: any) => ({
+      const trades: TradeHistoryItem[] = (positionsData || []).map((pos) => ({
         id: pos.id,
         symbol: pos.symbol,
-        side: pos.side,
+        side: pos.side as 'buy' | 'sell',
         quantity: pos.quantity,
         entry_price: pos.entry_price,
-        exit_price: pos.current_price || pos.entry_price,
-        realized_pnl: pos.realized_pnl || 0,
+        exit_price: (pos.current_price ?? pos.entry_price) as number,
+        realized_pnl: pos.realized_pnl ?? 0,
         commission: 0, // Will be calculated from orders if needed
-        opened_at: pos.opened_at,
-        closed_at: pos.closed_at || pos.opened_at,
+        opened_at: pos.opened_at ?? new Date().toISOString(),
+        closed_at: (pos.closed_at ?? pos.opened_at ?? new Date().toISOString()) as string,
         margin_used: pos.margin_used,
       }));
 
@@ -117,8 +118,18 @@ export const useTradingHistory = () => {
       const stats = calculateStatistics(trades);
 
       setClosedPositions(trades);
-      setOrders(ordersData || []);
-      setLedger(ledgerData || []);
+      // Filter orders to ensure proper types
+      const typedOrders = (ordersData || []).map(o => ({
+        ...o,
+        price: o.fill_price ?? o.price ?? undefined,
+        commission: o.commission ?? 0,
+      }));
+      const typedLedger = (ledgerData || []).map(l => ({
+        ...l,
+        description: l.description ?? '',
+      }));
+      setOrders(typedOrders as OrderHistoryItem[]);
+      setLedger(typedLedger as LedgerEntry[]);
       setStatistics(stats);
       setError(null);
     } catch (err) {

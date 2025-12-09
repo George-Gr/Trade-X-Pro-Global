@@ -243,6 +243,7 @@ describe('Commission Calculation Engine', () => {
         side: 'buy' as const,
         quantity: 100,
         executionPrice: 300.0,
+        accountTier: AccountTier.Standard,
       });
 
       expect(result.tierMultiplier).toBe(1.0);
@@ -400,6 +401,7 @@ describe('Commission Calculation Engine', () => {
           side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });
@@ -412,6 +414,7 @@ describe('Commission Calculation Engine', () => {
           side: 'invalid' as unknown as 'buy' | 'sell',
           quantity: 100,
           executionPrice: 150.0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });
@@ -424,6 +427,7 @@ describe('Commission Calculation Engine', () => {
           side: 'buy',
           quantity: 0,
           executionPrice: 150.0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });
@@ -436,6 +440,7 @@ describe('Commission Calculation Engine', () => {
           side: 'buy',
           quantity: -100,
           executionPrice: 150.0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });
@@ -448,6 +453,7 @@ describe('Commission Calculation Engine', () => {
           side: 'buy',
           quantity: 100,
           executionPrice: 0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });
@@ -460,6 +466,7 @@ describe('Commission Calculation Engine', () => {
           side: 'buy',
           quantity: 100,
           executionPrice: -150.0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });
@@ -472,6 +479,7 @@ describe('Commission Calculation Engine', () => {
           side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
+          accountTier: AccountTier.Standard,
         });
       }).toThrow();
     });

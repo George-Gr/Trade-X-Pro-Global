@@ -50,9 +50,9 @@ export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({ order 
         <span className="text-muted-foreground text-xs">Realized P&L</span>
         <div
           className="font-mono font-semibold"
-          style={{ color: order.realized_pnl >= 0 ? '#10b981' : '#ef4444' }}
+          style={{ color: (order.realized_pnl ?? 0) >= 0 ? '#10b981' : '#ef4444' }}
         >
-          ${order.realized_pnl.toFixed(2)}
+          ${order.realized_pnl?.toFixed(2) ?? '0.00'}
         </div>
       </div>
     )}

@@ -41,14 +41,12 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId();
-  const [recharts, setRecharts] = React.useState<
-    { ResponsiveContainer: React.ComponentType<{ children: React.ReactNode }> } | null
-  >(null);
+  const [recharts, setRecharts] = React.useState<typeof import('recharts') | null>(null);
 
   React.useEffect(() => {
     let mounted = true;
-    import("recharts").then((m: any) => {
-      if (mounted) setRecharts(m as typeof import('recharts'));
+    import("recharts").then((m) => {
+      if (mounted) setRecharts(m);
     });
     return () => {
       mounted = false;
@@ -82,7 +80,7 @@ const ChartContainer = React.forwardRef<
       >
         <ChartStyle id={chartId} config={config} />
         {recharts ? (
-          <recharts.ResponsiveContainer>{children}</recharts.ResponsiveContainer>
+          <recharts.ResponsiveContainer>{children as React.ReactElement}</recharts.ResponsiveContainer>
         ) : (
           // Placeholder while recharts is loading. Keep the layout so sizes
           // don't jump when the real chart mounts.

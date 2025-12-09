@@ -54,8 +54,10 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
     
     // Calculate unrealized P&L from positions
     const unrealizedPnL = (positions || []).reduce((sum, pos) => {
-      const posValue = (pos.current_price || 0) * pos.quantity * 100000;
-      const entryValue = (pos.entry_price || 0) * pos.quantity * 100000;
+      const currentPrice = pos.current_price ?? 0;
+      const entryPrice = pos.entry_price ?? 0;
+      const posValue = currentPrice * pos.quantity * 100000;
+      const entryValue = entryPrice * pos.quantity * 100000;
       const pnl = pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
       return sum + pnl;
     }, 0);
@@ -89,24 +91,30 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
     if (!positions || positions.length === 0) return [];
 
     const totalValue = positions.reduce((sum, pos) => {
-      const value = Math.abs(pos.current_price * pos.quantity * 100000);
+      const currentPrice = pos.current_price ?? 0;
+      const value = Math.abs(currentPrice * pos.quantity * 100000);
       return sum + value;
     }, 0);
 
-    return positions.map(pos => ({
-      symbol: pos.symbol,
-      value: Math.abs(pos.current_price * pos.quantity * 100000),
-      percentage: totalValue > 0 ? (Math.abs(pos.current_price * pos.quantity * 100000) / totalValue) * 100 : 0,
-      side: pos.side,
-    })).sort((a, b) => b.value - a.value);
+    return positions.map(pos => {
+      const currentPrice = pos.current_price ?? 0;
+      const value = Math.abs(currentPrice * pos.quantity * 100000);
+      return {
+        symbol: pos.symbol,
+        value,
+        percentage: totalValue > 0 ? (value / totalValue) * 100 : 0,
+        side: pos.side,
+      };
+    }).sort((a, b) => b.value - a.value);
   }, [positions]);
 
   // Calculate performance metrics
   const performanceMetrics = useMemo(() => {
     const returns = (positions || []).map(pos => {
+      const currentPrice = pos.current_price ?? 0;
       const pnl = pos.side === 'buy'
-        ? (pos.current_price - pos.entry_price) / pos.entry_price
-        : (pos.entry_price - pos.current_price) / pos.entry_price;
+        ? (currentPrice - pos.entry_price) / pos.entry_price
+        : (pos.entry_price - currentPrice) / pos.entry_price;
       return pnl;
     });
 
@@ -311,7 +319,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                     </thead>
                     <tbody>
                       {positions.map(pos => {
-                        const posValue = pos.current_price * pos.quantity * 100000;
+                        const posValue = (pos.current_price ?? 0) * pos.quantity * 100000;
                         const entryValue = pos.entry_price * pos.quantity * 100000;
                         const pnl = pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
                         const roi = entryValue > 0 ? (pnl / entryValue) * 100 : 0;
@@ -324,7 +332,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                             </td>
                             <td className="text-right font-mono text-xs">{pos.quantity}</td>
                             <td className="text-right font-mono text-xs">{pos.entry_price.toFixed(5)}</td>
-                            <td className="text-right font-mono text-xs">{pos.current_price.toFixed(5)}</td>
+                            <td className="text-right font-mono text-xs">{pos.current_price ? pos.current_price.toFixed(5) : '0.00000'}</td>
                             <td className={`text-right font-mono text-xs font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}>
                               {pnl >= 0 ? '+' : ''}{pnl.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                             </td>
@@ -365,7 +373,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                           </div>
                           <div>
                             <span className="text-muted-foreground">Current:</span>
-                            <p className="font-mono font-semibold">{pos.current_price.toFixed(5)}</p>
+                            <p className="font-mono font-semibold">{pos.current_price ? pos.current_price.toFixed(5) : '0.00000'}</p>
                           </div>
                           <div>
                             <span className="text-muted-foreground">ROI:</span>

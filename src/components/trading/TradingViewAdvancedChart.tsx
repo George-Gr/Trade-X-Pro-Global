@@ -25,10 +25,11 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
       setTimeout(() => {
         try {
           if (typeof window !== 'undefined' && 
-              typeof (window as any).TradingView !== "undefined" && 
-              (window as any).TradingView.widget && 
+              typeof (window as unknown as Record<string, unknown>).TradingView !== "undefined" && 
+              ((window as unknown as Record<string, unknown>).TradingView as Record<string, unknown>).widget && 
               containerRef.current) {
-            new (window as any).TradingView.widget({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            new ((window as any).TradingView as any).widget({
               autosize: true,
               symbol: symbol,
               interval: "15",

@@ -56,7 +56,7 @@ const PendingOrders = () => {
       updates.take_profit = modifyTakeProfit ? parseFloat(modifyTakeProfit) : null;
     }
 
-    const success = await modifyOrder(selectedOrder.id, updates as any);
+    const success = await modifyOrder(selectedOrder.id, updates as Record<string, number | null | undefined>);
     if (success) {
       setModifyDialogOpen(false);
       setSelectedOrder(null);
@@ -162,7 +162,7 @@ const PendingOrders = () => {
                             {order.take_profit ? `$${order.take_profit.toFixed(5)}` : '-'}
                           </TableCell>
                           <TableCell>
-                            {format(new Date(order.created_at), 'MMM dd, HH:mm')}
+                            {order.created_at ? format(new Date(order.created_at), 'MMM dd, HH:mm') : 'N/A'}
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-4">
@@ -199,7 +199,7 @@ const PendingOrders = () => {
                           <div>
                             <h3 className="font-semibold text-lg">{order.symbol}</h3>
                             <p className="text-xs text-muted-foreground">
-                              {format(new Date(order.created_at), 'MMM dd, HH:mm')}
+                              {order.created_at ? format(new Date(order.created_at), 'MMM dd, HH:mm') : ''}
                             </p>
                           </div>
                           <div className="flex flex-col gap-2">

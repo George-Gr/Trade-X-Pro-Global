@@ -48,10 +48,10 @@ function fixDataViewSymbolToStringTag(): void {
     
     // Override the assignment to handle read-only case gracefully
     const originalDefineProperty = Object.defineProperty;
-    Object.defineProperty = function(obj: any, prop: PropertyKey, descriptor: PropertyDescriptor) {
+    (Object as any).defineProperty = function(obj: unknown, prop: PropertyKey, descriptor: PropertyDescriptor) {
       try {
         return originalDefineProperty.call(this, obj, prop, descriptor);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // If assignment fails due to read-only property, log and continue
         if (error instanceof TypeError &&
             error.message.includes('Cannot assign to read only property') &&
@@ -68,13 +68,13 @@ function fixDataViewSymbolToStringTag(): void {
     const originalSet = Object.getOwnPropertyDescriptor(DataView.prototype, Symbol.toStringTag)?.set;
     if (!originalSet) {
       Object.defineProperty(DataView.prototype, Symbol.toStringTag, {
-        set(value) {
+        set(value: unknown) {
           // Silently ignore assignments in modern environments
           if (typeof value === 'string') {
             console.debug('TradingView: Ignoring DataView Symbol.toStringTag assignment:', value);
           }
         },
-        get() {
+        get(this: unknown): string {
           return 'DataView';
         },
         configurable: true,
@@ -103,9 +103,9 @@ function fixDataViewSymbolToStringTag(): void {
 function patchCommonAssignmentPatterns(): void {
   // Patch common patterns used by TradingView
   const originalAssign = Object.assign;
-  Object.assign = function(target, ...sources) {
+  (Object as any).assign = function(target: unknown, ...sources: unknown[]) {
     try {
-      return originalAssign.call(this, target, ...sources);
+      return originalAssign.call(this as any, target as any, ...sources);
     } catch (error) {
       if (error instanceof TypeError && 
           error.message.includes('Cannot assign to read only property') &&

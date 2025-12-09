@@ -248,7 +248,15 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
               <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
                 <WatchlistItems
                   items={filteredItems}
-                  getPrice={getPrice}
+                  getPrice={(symbol) => {
+                    const price = getPrice(symbol);
+                    if (!price) return undefined;
+                    return {
+                      currentPrice: price.currentPrice,
+                      change: price.change,
+                      changePercent: price.changePercent
+                    };
+                  }}
                   onSymbolClick={handleSymbolClick}
                   onQuickTrade={handleQuickTrade}
                   onRemoveSymbol={handleRemoveSymbol}
