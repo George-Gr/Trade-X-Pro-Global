@@ -270,9 +270,6 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      react: path.resolve(__dirname, "node_modules/react"),
-      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
-      "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
     },
     // Force single React instance across app and deps
     dedupe: ["react", "react-dom", "react/jsx-runtime"],
@@ -283,10 +280,6 @@ export default defineConfig(({ mode }) => ({
       "react",
       "react-dom",
       "react/jsx-runtime",
-      "@radix-ui/react-tooltip",
-      "@radix-ui/react-hover-card",
-      "clsx",
-      "tailwind-merge",
     ],
     // Don't force re-optimization - can cause initialization issues
     force: false,
