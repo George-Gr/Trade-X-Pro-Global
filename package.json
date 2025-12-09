@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 NODE_NO_WARNINGS=1 node scripts/setup-node-env.js && cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 NODE_NO_WARNINGS=1 vite",
+    "dev:simple": "vite",
     "dev:clean": "rm -rf node_modules/.vite .vite dist && npm run dev",
     "dev:fresh": "rm -rf node_modules/.vite .vite dist && npm cache clean --force && npm install && npm run dev",
     "dev:rebuild": "npm run lint -- --fix && npm run dev:clean",

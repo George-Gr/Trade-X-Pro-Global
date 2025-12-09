@@ -5,8 +5,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import "./index.css";
 import { initializeSentry } from "./lib/logger";
 
-// Import polyfills to fix navigator global errors and other Node.js compatibility issues
-import './polyfills';
+// Polyfills import removed: not needed for browser builds
 
 // Initialize Sentry for error tracking and performance monitoring
 // Only initialize if we have a valid DSN configured
