@@ -1,7 +1,7 @@
-import { Database } from '@/integrations/supabase/types';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseBrowserClient';
-import { useCallback, useEffect, useState } from 'react';
 import { useToast } from './use-toast';
+import { type Database } from '@/integrations/supabase/types';
 
 export type OrderType = 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
 export type OrderSide = 'buy' | 'sell';
@@ -49,17 +49,6 @@ export interface UseOrdersTableOptions {
   initialStatus?: string | 'all';
 }
 
-// Helper function to calculate filled quantity from fills
-const calculateFilledQuantity = (fills: Array<{ quantity: number }> | null): number => {
-  if (!fills || !Array.isArray(fills)) return 0;
-  return fills.reduce((sum, fill) => sum + (fill.quantity || 0), 0);
-};
-
-// Database order with fills type
-type OrderWithFills = Database["public"]["Tables"]["orders"]["Row"] & {
-  fills: Array<{ quantity: number }> | null;
-};
-
 export const useOrdersTable = (options?: UseOrdersTableOptions) => {
   const [orders, setOrders] = useState<OrderTableItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,21 +65,21 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
 
       const { data, error: fetchError } = await supabase
         .from('orders')
-        .select('*, fills(quantity)')
+        .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
-      const mappedOrders: OrderTableItem[] = (data || []).map((order: OrderWithFills) => ({
+      const mappedOrders: OrderTableItem[] = (data || []).map((order: Database["public"]["Tables"]["orders"]["Row"]) => ({
         id: typeof order.id === 'string' ? order.id : String(order.id ?? ''),
         user_id: typeof order.user_id === 'string' ? order.user_id : String(order.user_id ?? ''),
         symbol: typeof order.symbol === 'string' ? order.symbol : String(order.symbol ?? ''),
         type: order.order_type as OrderType,
         side: order.side as OrderSide,
         quantity: typeof order.quantity === 'number' ? order.quantity : Number(order.quantity ?? 0),
-        filled_quantity: calculateFilledQuantity(order.fills),
+        filled_quantity: 0, // TODO: Calculate from fills table
         price: typeof order.price === 'number' ? order.price : null,
         limit_price: typeof order.price === 'number' ? order.price : null,
         stop_price: typeof order.price === 'number' ? order.price : null,
@@ -105,11 +94,11 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
 
       setOrders(mappedOrders);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch orders'));
-    } finally {
-      setLoading(false);
-    }
-  }, []); const cancelOrder = useCallback(async (orderId: string) => {
+       setError(err instanceof Error ? err : new Error('Failed to fetch orders'));
+     } finally {
+       setLoading(false);
+     }
+   }, []);  const cancelOrder = useCallback(async (orderId: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('cancel-order', {
         body: { order_id: orderId },
@@ -121,16 +110,16 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       toast({ title: 'Order cancelled', description: 'Order cancelled successfully' });
       await fetchOrders();
       return true;
-    } catch (err) {
-      // Cancel error silently handled
-      toast({
-        title: 'Cancellation failed',
-        description: err instanceof Error ? err.message : 'Failed to cancel order',
-        variant: 'destructive',
-      });
-      return false;
-    }
-  }, [fetchOrders, toast]); const modifyOrder = useCallback(async (orderId: string, updates: Record<string, unknown>) => {
+     } catch (err) {
+       // Cancel error silently handled
+       toast({
+         title: 'Cancellation failed',
+         description: err instanceof Error ? err.message : 'Failed to cancel order',
+         variant: 'destructive',
+       });
+       return false;
+     }
+   }, [fetchOrders, toast]);  const modifyOrder = useCallback(async (orderId: string, updates: Record<string, unknown>) => {
     try {
       const { data, error } = await supabase.functions.invoke('modify-order', {
         body: { order_id: orderId, ...updates },
@@ -142,16 +131,16 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       toast({ title: 'Order modified', description: 'Order updated successfully' });
       await fetchOrders();
       return true;
-    } catch (err) {
-      // Modify error silently handled
-      toast({
-        title: 'Modification failed',
-        description: err instanceof Error ? err.message : 'Failed to modify order',
-        variant: 'destructive',
-      });
-      return false;
-    }
-  }, [fetchOrders, toast]); useEffect(() => {
+     } catch (err) {
+       // Modify error silently handled
+       toast({
+         title: 'Modification failed',
+         description: err instanceof Error ? err.message : 'Failed to modify order',
+         variant: 'destructive',
+       });
+       return false;
+     }
+   }, [fetchOrders, toast]);  useEffect(() => {
     fetchOrders();
 
     // subscribe to real-time changes on orders for current user

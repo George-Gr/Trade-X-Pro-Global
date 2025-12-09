@@ -11,7 +11,7 @@ export function AuthenticatedLayoutProvider({ children }: { children: React.Reac
   const { unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  
   const handleLogout = async () => {
     try {
       const { error } = await signOut();
@@ -36,34 +36,33 @@ export function AuthenticatedLayoutProvider({ children }: { children: React.Reac
       });
     }
   };
-
+  
   // Reset sidebar when auth state changes
   useEffect(() => {
     if (!user) {
-      // Defer to avoid calling setState synchronously in effect
-      Promise.resolve().then(() => setSidebarOpen(false));
+      setSidebarOpen(false);
     }
   }, [user]);
-
+  
   const value: AuthenticatedLayoutContextType = {
     // Auth state
     user,
     isAdmin,
     authLoading,
-
+    
     // Notification state
     unreadCount,
     markAsRead,
     markAllAsRead,
-
+    
     // Layout state
     sidebarOpen,
     setSidebarOpen,
-
+    
     // Header actions
     handleLogout,
   };
-
+  
   return (
     <AuthenticatedLayoutContext.Provider value={value}>
       {children}

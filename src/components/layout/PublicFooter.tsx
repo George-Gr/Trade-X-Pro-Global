@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { TrendingUp, Facebook, Twitter, Linkedin, Youtube, Instagram } from "lucide-react";
-import { TrustBadge } from "@/components/trust/TrustBadge";
 
 export const PublicFooter = () => {
   const currentYear = new Date().getFullYear();
@@ -18,9 +17,6 @@ export const PublicFooter = () => {
             <p className="text-sm text-muted-foreground mb-4">
               Professional CFD trading platform with advanced tools and risk management features.
             </p>
-
-            <TrustBadge className="mb-6" variant="light" />
-
             <div className="flex gap-4">
               <a href="https://facebook.com" className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-4" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-4 w-4" />
@@ -93,7 +89,7 @@ export const PublicFooter = () => {
         <div className="border-t border-border pt-8 mb-8">
           <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 mb-6">
             <p className="text-sm text-muted-foreground">
-              <strong className="text-warning">Risk Warning:</strong> CFDs are complex instruments and come with a high risk of losing money rapidly due to leverage.
+              <strong className="text-warning">Risk Warning:</strong> CFDs are complex instruments and come with a high risk of losing money rapidly due to leverage. 
               <strong> 75% of retail investor accounts lose money when trading CFDs.</strong> You should consider whether you understand how CFDs work and whether you can afford to take the high risk of losing your money.
             </p>
           </div>

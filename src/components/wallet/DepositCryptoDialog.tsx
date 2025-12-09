@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getSupabase } from "@/lib/supabaseLazy";
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -64,7 +64,6 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
 
     setLoadingState(true);
     try {
-      const supabase = await getSupabase();
       const { data, error } = await supabase.functions.invoke('create-crypto-payment', {
         body: {
           amount: parseFloat(amt),
@@ -131,7 +130,7 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
         <DialogHeader>
           <DialogTitle>Deposit Cryptocurrency</DialogTitle>
           <DialogDescription>
-            {paymentData
+            {paymentData 
               ? "Send cryptocurrency to the address below"
               : "Choose your cryptocurrency and amount to deposit"
             }

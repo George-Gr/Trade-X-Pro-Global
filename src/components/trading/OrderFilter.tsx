@@ -8,7 +8,7 @@
  * - Cancelled
  */
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 
 export type OrderFilterType = 'all' | 'pending' | 'filled' | 'cancelled';

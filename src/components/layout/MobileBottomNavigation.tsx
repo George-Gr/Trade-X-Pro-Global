@@ -1,12 +1,16 @@
-import * as React from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 import {
   Home,
   BarChart3,
+  ShoppingBag,
   Wallet,
+  Settings,
   Compass,
-  TrendingUp
+  TrendingUp,
+  Users
 } from 'lucide-react';
 
 interface MobileBottomNavigationProps {
@@ -51,12 +55,21 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path: string, label: string) => {
     // Haptic feedback for mobile
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
+
+    // Visual feedback
+    toast({
+      title: `${label} Selected`,
+      description: `Navigating to ${label}`,
+      duration: 1000,
+    });
+
     navigate(path);
   };
 
@@ -84,7 +97,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
           return (
             <button
               key={path}
-              onClick={() => handleNavigation(path)}
+              onClick={() => handleNavigation(path, label)}
               className={cn(
                 'flex flex-col items-center justify-center py-2 px-1',
                 'min-h-[60px] min-w-[60px]', // Ensure 44x44px minimum touch target

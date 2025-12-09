@@ -1,7 +1,5 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-import { SPACING } from "./src/constants/spacing";
-import { FONT_FAMILIES } from "./src/constants/typography";
 
 const config: Config = {
   darkMode: "class",
@@ -17,26 +15,21 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        // Primary font - Inter for headings and body
-        sans: [
-          FONT_FAMILIES.primary,
-        ],
-        // Monospace - JetBrains Mono for data and prices
-        mono: [FONT_FAMILIES.mono],
+        // Body / UI font - modern, technical
+        sans: ['Manrope', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        // Display / Headings font - premium serif for authority
+        display: ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
+        // Preserve default serif mapping for explicit usage
+        serif: ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
       },
       spacing: {
-        // 8px Grid System spacing scale
-        0: SPACING[0],
-        1: SPACING[1],
-        2: SPACING[2],
-        3: SPACING[3],
-        4: SPACING[4],
-        5: SPACING[5],
-        6: SPACING[6],
-        7: SPACING[7],
-        8: SPACING[8],
-        9: SPACING[9],
-        10: SPACING[10],
+        // Standard spacing scale (4px baseline)
+        'xs': '4px',   // Use for minimal gaps
+        'sm': '8px',   // Use for component gaps
+        'md': '16px',  // Use for section gaps
+        'lg': '24px',  // Use for major sections
+        'xl': '32px',  // Use for page padding
+        'xxl': '48px', // Use for hero sections
       },
       colors: {
         border: "hsl(var(--border))",
@@ -115,25 +108,16 @@ const config: Config = {
           neutral: "hsl(var(--price-neutral))",
         },
         "quick-actions": "hsl(var(--quick-actions))",
-        premium: {
-          DEFAULT: "hsl(var(--gold))",
-          foreground: "#000000",
-          gradient: {
-            start: "hsl(var(--gold))",
-            end: "#EAB308", // yellow-500
-          },
-          border: "#FACC15", // yellow-400
-        },
       },
       borderRadius: {
         // Standardized border-radius scale
         lg: "var(--radius)",              // 8px - Use for: cards, modals, containers, drawers
         md: "calc(var(--radius) - 2px)",  // 6px - Use for: buttons, inputs, badges, small components
         sm: "calc(var(--radius) - 4px)",  // 4px - Use for: very small elements (rare)
-
+        
         // Special cases (use sparingly)
         "rounded-full": "9999px",         // Use for: circular elements, avatars, badges
-
+        
         // ⚠️ Deprecated - don't use in new code:
         // - rounded-none (0px) - removed from UI system
         // - rounded-xl (20px+) - use lg (8px) instead
@@ -166,11 +150,11 @@ const config: Config = {
           to: { opacity: "0" },
         },
         "slideInUp": {
-          from: {
+          from: { 
             opacity: "0",
             transform: "translateY(20px)"
           },
-          to: {
+          to: { 
             opacity: "1",
             transform: "translateY(0)"
           },
@@ -374,7 +358,7 @@ const config: Config = {
   },
   plugins: [
     tailwindcssAnimate,
-    function ({
+    function({
       addVariant,
       addUtilities,
     }: {
@@ -384,7 +368,7 @@ const config: Config = {
       // Add reduced-motion variants
       addVariant('motion-safe', '@media (prefers-reduced-motion: no-preference)');
       addVariant('motion-reduce', '@media (prefers-reduced-motion: reduce)');
-
+      
       // Add utilities for reduced motion
       addUtilities({
         '.animate-none': {
@@ -418,7 +402,7 @@ const config: Config = {
           'height': '1.75rem',
           'width': '1.75rem',
         },
-
+        
         // Icon spacing utilities for specific components
         '.icon-inline': {
           'pointer-events': 'none',
@@ -443,7 +427,7 @@ const config: Config = {
           'width': '1.25rem',
           'color': 'hsl(var(--muted-foreground))',
         },
-
+        
         // Component-specific utilities
         '.sidebar-trigger': {
           'width': '1rem',
@@ -465,7 +449,7 @@ const config: Config = {
           'width': '0.75rem',
           'color': 'hsl(var(--muted-foreground))',
         },
-
+        
         // Trading-specific color utilities
         '.trading-buy': {
           'color': 'hsl(var(--buy))',
@@ -497,7 +481,7 @@ const config: Config = {
         '.ring-trading-sell': {
           'box-shadow': '0 0 0 3px hsl(var(--sell) / 0.1)',
         },
-
+        
         // Panel-specific utilities
         '.panel': {
           'background-color': 'hsl(var(--panel-bg))',
@@ -520,7 +504,7 @@ const config: Config = {
           'background-color': 'hsl(var(--panel-bg))',
           'border-top': '1px solid hsl(var(--panel-border))',
         },
-
+        
         // Gradient utilities
         '.gradient-primary': {
           'background': 'var(--gradient-primary)',
@@ -553,7 +537,7 @@ const config: Config = {
           'background': 'var(--gradient-card)',
         },
       };
-
+      
       addUtilities(newUtilities);
     },
   ],

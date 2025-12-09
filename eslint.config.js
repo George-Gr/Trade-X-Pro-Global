@@ -56,12 +56,6 @@ export default [
 
       // Enforce proper cleanup
       'react-hooks/exhaustive-deps': 'warn',
-      // Defer stylistic formatting to the TypeScript language service (tsserver)
-      'indent': 'off',
-      'quotes': 'off',
-      'semi': 'off',
-      'comma-dangle': 'off',
-      'max-len': 'off',
     },
   },
   {

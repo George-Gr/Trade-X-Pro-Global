@@ -13,10 +13,7 @@ export interface BreadcrumbItemConfig {
 }
 
 // Breadcrumb configuration for all routes
-const BREADCRUMB_CONFIG: Record<string, BreadcrumbItemConfig> = {
-  "/": {
-    title: "Home",
-  },
+const BREADCRUMB_CONFIG = {
   "/education": {
     title: "Education",
   },

@@ -25,16 +25,16 @@ const TradingViewWatchlist = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
-
+  
   // Define initializeTradingView first
   const initializeTradingView = useCallback(() => {
     if (!containerRef.current || !isVisible) return;
 
     setIsLoading(true);
-
+    
     // Initialize TradingView compatibility fixes
     initTradingViewCompatibility();
-
+    
     const container = containerRef.current;
     container.innerHTML = "";
 
@@ -97,7 +97,7 @@ const TradingViewWatchlist = () => {
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
     script.async = true;
     script.defer = true; // Load after page is ready
-
+    
     // Set script content with optimized config
     script.innerHTML = JSON.stringify({
       ...config,
@@ -122,7 +122,7 @@ const TradingViewWatchlist = () => {
       loader.reset();
     };
   }, [isVisible]);
-
+  
   // Use debounced updates for performance
   const [debouncedUpdate] = useDebouncedChartUpdate(
     useCallback(() => {
@@ -136,7 +136,7 @@ const TradingViewWatchlist = () => {
       const rect = containerRef.current.getBoundingClientRect();
       const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
       setIsVisible(isVisible);
-
+      
       if (isVisible && isLoading) {
         debouncedUpdate();
       }
@@ -145,17 +145,16 @@ const TradingViewWatchlist = () => {
 
   // Handle visibility changes and resize
   useEffect(() => {
-    // Defer initial visibility check to avoid synchronous setState in effect
-    Promise.resolve().then(checkVisibility);
-
+    checkVisibility();
+    
     const handleScroll = () => checkVisibility();
     const handleResize = () => checkVisibility();
-
+    
     // Use passive listeners for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
-
-    // Initial check (observer will also handle visibility changes)
+    
+    // Initial check
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -190,7 +189,7 @@ const TradingViewWatchlist = () => {
   return (
     <div className="tradingview-widget-container h-full relative">
       <div ref={containerRef} className="tradingview-widget-container__widget h-full" />
-
+      
       {/* Loading overlay */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg">
@@ -200,7 +199,7 @@ const TradingViewWatchlist = () => {
           </div>
         </div>
       )}
-
+      
       {/* Placeholder when not visible */}
       {!isVisible && !isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted rounded-lg">

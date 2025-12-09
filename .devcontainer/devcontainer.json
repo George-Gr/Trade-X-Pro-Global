@@ -1,102 +1,40 @@
 {
   "name": "TradePro v10 Development",
-  // FIXED: Updated from Node 20 to Node 22 to fix navigator polyfill issues
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bullseye",
-  // ⭐ CRITICAL: Increase machine size to handle extension workload
-  "hostRequirements": {
-    "cpus": 4,
-    "memory": "16gb"
-  },
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "remoteEnv": {
-    "NODE_OPTIONS": "--max-old-space-size=4096",
-    "NODE_NO_WARNINGS": "1",
-    "NODE_ENV": "development",
-    "FORCE_COLOR": "1"
+    "NODE_OPTIONS": "--max-old-space-size=4096"
   },
-  // ⭐ Shell integration settings to fix exit code issues
-  "containerEnv": {
-    "TERM": "xterm-256color",
-    "SHELL": "/bin/bash"
-  },
-  // FIXED: Added lock file cleanup and npm cache clearing
-  "postCreateCommand": "bash -c 'find ~/.vscode-remote/data/User/workspaceStorage -name vscode.lock -delete 2>/dev/null || true' && npm cache clean --force && npm install && npm run lint -- --cache && echo \"alias find='find'\" >> ~/.bashrc",
-  // NEW: Task to clean locks on container start
-  "initializeCommand": "bash -c 'find ~/.vscode-remote/data/User/workspaceStorage -name vscode.lock -delete 2>/dev/null || true && echo \"alias find='find'\" >> ~/.bashrc'",
+  "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
-      // ⭐ CRITICAL: Remove heavy extensions that cause latency
       "extensions": [
-        "dbaeumer.vscode-eslint",
         "GitHub.copilot",
-        "firsttry.gitcommit"
-        // REMOVED: Heavy debuggers, explorers, themes that cause latency
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint",
+        "Vue.volar"
       ],
       "settings": {
         "typescript.tsserver.maxMemory": 4096,
         "typescript.enablePromptUseWorkspaceTsdk": true,
-        // Use the built-in TypeScript formatter as the default workspace formatter
-        "editor.defaultFormatter": "vscode.typescript-language-features",
-        // FIXED: Disable experimental Copilot features causing crashes
-        "github.copilot.model": "gpt-4",
-        "github.copilot.chat.experimental.agents": false,
-        "github.copilot.chat.experimental.webAPI": false,
-        "github.copilot.experimental.restrictedAgent": false,
-        "github.copilot.chat.agent.terminal.enable": false,
-        // FIXED: ESLint stability
+        // Enable Copilot Raptor mini (Preview) in Codespaces/devcontainer environment
+        "github.copilot.experimental.raptorMiniEnabled": true,
+        "github.copilot.experimental.raptorMiniForAllClients": true,
+        "github.copilot.model": "raptor-mini",
+        // Fix ESLint duplicate diagnostic collection
         "eslint.lintTask.enable": true,
         "eslint.onIgnoredFiles": "off",
-        // ⭐ Connection stability
-        "remote.SSH.showLoginTerminal": true,
-        "[remote]": {
-          "extensions.recommendations": false,
-          "extensions.ignoreRecommendations": true
-        },
-        // ⭐ Disable telemetry (reduces background work)
-        "telemetry.telemetryLevel": "off",
-        "telemetry.enableCrashReporter": false,
-        // ⭐ Suppress deprecation warnings
-        "NO_DEPRECATION_WARNINGS": "1",
-        // ⭐ Language server timeouts
-        "typescript.tsserver.logVerbosity": "off",
-        // ⭐ Format on save optimization
-        "editor.formatOnSave": true,
-        "editor.formatOnSaveTimeout": 3000,
-        // ⭐ Avoid excessive indexing
-        "search.exclude": {
-          "**/node_modules": true,
-          "**/.git": true,
-          "**/dist": true,
-          "**/build": true
-        },
-        // FIXED: Increase socket timeouts for reliability
-        "remote.timeoutInSeconds": 120,
-        "remote.connectionTimeout": 120000,
-        // FIXED: Disable auto-update during development
-        "extensions.autoUpdate": false,
-        "extensions.autoCheckUpdates": false,
-        "workbench.secondarySideBar.enableDefaultVisibilityInOldWorkspace": false,
-        "extensions.requestTimeout": 60000,
-        "github.copilot.chat.agent.terminal.allowList": [],
-        "github.copilot.chat.agent.terminal.denyList": [
-          "*"
-        ],
-        "terminal.integrated.developer.devMode": false,
-        "terminal.integrated.developer.ptyHost.latency": false,
-        "terminal.integrated.developer.ptyHost.startupDelay": false,
-        "github.copilot.chat.experimental.cloudAgent": false,
-        "chat.experimental.sweAgent.enabled": false,
-        "eslint.useFlatConfig": true
+        // Fix chatParticipant error with claude-code
+        "github.copilot.chat.experimental.agents": false,
+        "github.copilot.experimental.restrictedAgent": false
       }
     }
   },
-  "forwardPorts": [
-    8080,
-    3000
-  ],
+  "forwardPorts": [8080, 3000],
   "portsAttributes": {
     "8080": {
       "label": "Dev Server",

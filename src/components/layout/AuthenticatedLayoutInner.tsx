@@ -1,8 +1,7 @@
-import * as React from "react";
 import { ReactNode, useState, useEffect } from "react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
-import { User, Clock, RotateCw } from "lucide-react";
+import { TrendingUp, LogOut, User, Clock, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
@@ -10,7 +9,6 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { useSidebar } from "@/components/ui/sidebarContext";
 import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "./AppSidebar";
-import { MobileBottomNavigation } from "./MobileBottomNavigation";
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -83,16 +81,18 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
       {/* Main Content Area with SidebarInset - positioned below sidebar */}
       <SidebarInset className="flex flex-col transition-all duration-300 ease-in-out">
         {/* Top Header - sticky with z-50 to stay above main content */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm transition-all duration-300 ease-in-out">
-          <div className="flex items-center gap-3">
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-lg sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm transition-all duration-300 ease-in-out">
+          <div className="flex items-center gap-lg">
             <SidebarTrigger className="h-10 w-10" />
-            {/* Breadcrumb Navigation */}
-            <AutoBreadcrumb className="hidden md:flex" />
+            <div className="flex items-center gap-md">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <span className="font-bold text-lg text-primary-contrast">TradeX Pro</span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 md:gap-4">
-            {/* Last Updated Timestamp - hidden on small screens */}
-            <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-xl">
+            {/* Last Updated Timestamp */}
+            <div className="flex items-center gap-sm text-xs text-secondary-contrast">
               <Clock className="h-4 w-4" />
               <span>Last updated: {currentTime || "--:-- --"}</span>
             </div>
@@ -106,32 +106,29 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
               className="h-10 w-10"
               aria-label={isRefreshing ? "Refreshing data..." : "Refresh data"}
             >
-              <RotateCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''} text-muted-foreground`} />
+              <RotateCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''} text-secondary-contrast`} />
             </Button>
 
-            {/* Account Info - hidden on small screens */}
-            <div className="hidden md:flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Account:</span>
-              <span className="font-medium text-foreground">{user?.email || "Trading Account"}</span>
+            <div className="hidden md:block text-sm">
+              <span className="text-secondary-contrast">Account:</span>
+              <span className="ml-sm font-semibold text-primary-contrast">{user?.email || "Trading Account"}</span>
             </div>
-            
             <NotificationCenter />
-            
             <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
               <User className="h-5 w-5 text-primary" />
             </div>
+            <Button variant="ghost" size="icon" onClick={handleLogoutClick} aria-label="Logout">
+              <LogOut className="h-5 w-5" aria-hidden="true" />
+            </Button>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-background transition-all duration-300 ease-in-out pb-16 md:pb-0">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6">
+        <main className="flex-1 overflow-auto bg-background transition-all duration-300 ease-in-out">
+          <div className="container mx-auto px-lg py-lg">
             {children}
           </div>
         </main>
-        
-        {/* Mobile Bottom Navigation */}
-        <MobileBottomNavigation />
       </SidebarInset>
     </div>
   );

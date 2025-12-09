@@ -5,7 +5,7 @@
  * Provides detailed error logging and retry mechanisms for network failures.
  */
 
-import * as React from 'react';
+import React from 'react';
 import { Wifi, WifiOff, RefreshCw, ExternalLink, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

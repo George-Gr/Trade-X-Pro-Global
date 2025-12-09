@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Bin wrapper to intercept find commands via PATH
-# This script forwards arguments to the auto-approve wrapper script
-set -euo pipefail
-exec /workspaces/Trade-X-Pro-Global/scripts/auto_approve_find.sh "$@"

@@ -5,11 +5,7 @@ import React, { useState, useEffect } from 'react';
  * Returns true if user has requested reduced motion
  */
 export const useReducedMotion = (): boolean => {
-  const [reducedMotion, setReducedMotion] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    return mq.matches;
-  });
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -20,6 +16,9 @@ export const useReducedMotion = (): boolean => {
     const updateMotionPreference = (e: MediaQueryListEvent) => {
       setReducedMotion(e.matches);
     };
+
+    // Set initial value
+    setReducedMotion(mq.matches);
 
     // Listen for changes
     mq.addEventListener('change', updateMotionPreference);
@@ -40,11 +39,11 @@ export const useAnimationClasses = (
   reducedMotionClasses: string = ''
 ): string => {
   const reducedMotion = useReducedMotion();
-
+  
   if (reducedMotion) {
     return reducedMotionClasses;
   }
-
+  
   return animationClasses;
 };
 
@@ -53,7 +52,7 @@ export const useAnimationClasses = (
  */
 export const shouldReduceMotion = (): boolean => {
   if (typeof window === 'undefined') return false;
-
+  
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
@@ -66,11 +65,11 @@ export const withReducedMotion = <P extends object>(
 ): React.FC<P> => {
   return (props: P) => {
     const reducedMotion = useReducedMotion();
-
+    
     if (reducedMotion && fallbackProps) {
       return React.createElement(Component, { ...props, ...fallbackProps } as P);
     }
-
+    
     return React.createElement(Component, props as P);
   };
 };

@@ -1,349 +1,94 @@
-# TradeX Pro - Institutional CFD Trading Platform
+# Welcome to your Lovable project
 
-## 🎯 Overview
+## Project info
 
-TradeX Pro is a professional-grade CFD (Contract for Difference) trading platform frontend built with modern web technologies. This project delivers an institutional-quality trading environment featuring real-time market data, advanced charting capabilities, comprehensive portfolio management, and seamless trade execution.
+**URL**: https://lovable.dev/projects/1e7611c8-45ab-43a7-a132-06a1abb5c046
 
-**Key Features:**
+## How can I edit this code?
 
-- Real-time market data streaming
-- Advanced charting with TradingView integration
-- Professional order management system
-- Comprehensive portfolio analytics
-- Responsive design for all devices
-- WCAG 2.1 AA accessibility compliance
+There are several ways of editing your application.
 
-## 🚀 Quick Start
+**Use Lovable**
 
-### Prerequisites
+Simply visit the [Lovable Project](https://lovable.dev/projects/1e7611c8-45ab-43a7-a132-06a1abb5c046) and start prompting.
 
-- Node.js 18+
-- pnpm package manager
-- Modern web browser
+Changes made via Lovable will be committed automatically to this repo.
 
-### Installation
+**Use your preferred IDE**
 
-1. Clone the repository:
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
+
+**Edit a file directly in GitHub**
+
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
+
+**Use GitHub Codespaces**
+
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
+
+## What technologies are used for this project?
+
+This project is built with:
+
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
+
+## How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/1e7611c8-45ab-43a7-a132-06a1abb5c046) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Troubleshooting: Node.js polyfills & DEV environment
+
+If you see errors like `navigator is now a global in nodejs`, `DEP0040 punycode`, or other Node.js deprecation/compatibility warnings, the project provides a helper script used by dev and build commands to add optional polyfills.
+
+By default, these polyfills are opt-in to avoid creating globals that could affect other processes or extensions.
+
+To enable the navigator polyfill for your local dev server, run:
 
 ```bash
-git clone https://github.com/your-org/tradex-pro.git
-cd tradex-pro
+cross-env FORCE_NODE_POLYFILL_NAVIGATOR=1 npm run dev
 ```
 
-2. Install dependencies:
+To enable the SQLite polyfill (for tests that require sqlite3), run:
 
 ```bash
-pnpm install
+cross-env FORCE_NODE_POLYFILL_SQLITE=1 npm run dev
 ```
 
-3. Start the development server:
+We recommend using these flags only when necessary. They are present to make development and testing easier, but shouldn't be enabled globally on shared or CI environments.
 
-```bash
-pnpm dev
-```
-
-4. Open your browser and navigate to `http://localhost:3000`
-
-### Login Credentials
-
-For demo purposes, you can use any username/password combination to access the platform.
-
-## 🏗️ Architecture
-
-### Technology Stack
-
-- **Frontend Framework:** React 18+ with TypeScript
-- **State Management:** Redux Toolkit + RTK Query
-- **Styling:** Tailwind CSS with custom components
-- **Charts:** TradingView Charting Library + ECharts
-- **Real-time Data:** WebSocket simulation
-- **Build Tool:** Vite
-- **Package Manager:** pnpm
-
-### Project Structure
-
-```
-src/
-├── components/           # Reusable UI components
-├── pages/               # Route-level components
-├── hooks/               # Custom React hooks
-├── store/               # Redux store configuration
-├── services/            # API and WebSocket services
-├── utils/               # Helper functions
-├── types/               # TypeScript type definitions
-├── constants/           # Application constants
-└── assets/              # Static assets
-```
-
-## 📱 Pages & Features
-
-### Dashboard (`/dashboard`)
-
-- Portfolio summary cards with real-time P&L
-- Market overview with top movers
-- Portfolio allocation charts
-- Watchlist with mini charts
-- Recent transactions feed
-
-### Trading Interface (`/trading`)
-
-- Advanced candlestick charts
-- Real-time price updates
-- Order management system
-- Position tracking
-- Risk management tools
-
-### Portfolio Management (`/portfolio`)
-
-- Holdings overview
-- Performance analytics
-- Risk metrics
-- Transaction history
-- Asset allocation visualization
-
-### Market Analysis (`/markets`)
-
-- Market screener with 50+ filters
-- Economic calendar
-- Real-time market data
-- Export functionality
-
-## 🎨 Design System
-
-### Color Palette
-
-- **Deep Navy:** #0A1628 (Main background)
-- **Electric Blue:** #00D4FF (Primary actions)
-- **Emerald Green:** #00C896 (Profit indicators)
-- **Crimson Red:** #FF4757 (Loss indicators)
-- **Charcoal Gray:** #2C3E50 (Secondary backgrounds)
-- **Silver Gray:** #95A5A6 (Text, borders)
-- **Warm Gold:** #F39C12 (Premium features)
-
-### Typography
-
-- **Primary:** Inter (Sans-serif)
-- **Monospace:** JetBrains Mono (Numbers, code)
-
-### Components
-
-The platform includes a comprehensive component library with:
-
-- Buttons (primary, secondary, danger, ghost variants)
-- Form inputs with real-time validation
-- Modal dialogs with accessibility features
-- Charts and data visualizations
-- Trading-specific components (PriceDisplay, OrderBook, etc.)
-
-## ⚡ Performance
-
-### Optimization Features
-
-- Code splitting for faster initial load
-- Virtual scrolling for large datasets
-- Canvas-based charts for smooth rendering
-- Debounced updates for price displays
-- Memory-efficient data structures
-
-### Performance Targets
-
-- Initial page load: < 2 seconds
-- Real-time updates: < 100ms latency
-- Smooth animations: 60fps
-- Memory usage: < 50MB for dashboard data
-
-## 🔒 Security
-
-### Frontend Security
-
-- JWT token management
-- Input sanitization
-- XSS prevention
-- CSRF protection
-- Content Security Policy
-
-### Trading Security
-
-- Client-side order validation
-- Double confirmation for large orders
-- Position size limits
-- Margin requirement checks
-
-## ♿ Accessibility
-
-### WCAG 2.1 AA Compliance
-
-- Keyboard navigation support
-- Screen reader compatibility
-- Color contrast ratios (4.5:1 minimum)
-- Focus management
-- Alternative text for charts
-
-### Trading Accessibility
-
-- Price change announcements
-- Audio alerts for significant movements
-- Keyboard shortcuts for trading actions
-- High contrast mode support
-
-## 🧪 Testing
-
-### Test Coverage
-
-- Unit tests for all components
-- Integration tests for user flows
-- E2E tests for critical paths
-- Performance regression testing
-- Accessibility auditing
-
-### Testing Tools
-
-- Jest for unit testing
-- React Testing Library for components
-- Cypress for E2E testing
-- Lighthouse for performance auditing
-
-## 📊 Real-time Data
-
-### Market Data Simulation
-
-The platform includes a sophisticated market data simulation system that:
-
-- Generates realistic price movements
-- Simulates market volatility
-- Updates prices in real-time
-- Maintains historical data
-
-### WebSocket Implementation
-
-- Automatic reconnection with exponential backoff
-- Message buffering during disconnections
-- Efficient data streaming
-- Error handling and recovery
-
-## 🛠️ Development
-
-### Available Scripts
-
-```bash
-# Start development server
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Run tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Lint code
-pnpm lint
-
-# Type checking
-pnpm type-check
-```
-
-### Code Style
-
-- ESLint for JavaScript/TypeScript
-- Built-in TypeScript formatter (tsserver) for code formatting
-- Husky for pre-commit hooks
-- Conventional commits
-
-## 📈 Monitoring & Analytics
-
-### Performance Monitoring
-
-- Core Web Vitals tracking
-- Custom performance metrics
-- Error tracking and reporting
-- User satisfaction metrics
-
-### Trading Analytics
-
-- Feature usage patterns
-- User journey analysis
-- Conversion funnel tracking
-- A/B testing framework
-
-## 🚀 Deployment
-
-### Production Build
-
-```bash
-pnpm build
-```
-
-The build output will be in the `dist/` directory, ready for deployment to any static hosting service.
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```env
-VITE_API_URL=https://api.tradex-pro.com
-VITE_WS_URL=wss://ws.tradex-pro.com
-VITE_ENV=production
-```
-
-## 📚 Documentation
-
-### Architecture Documentation
-
-- [Complete Design Reference](./TradeX-Pro-Global-Frontend-Design-Complete-Reference-Enhanced.md)
-- Component specifications
-- API documentation
-- Deployment guides
-
-### User Documentation
-
-- Platform overview
-- Trading guides
-- Feature explanations
-- FAQ section
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
-
-### Commit Convention
-
-Follow conventional commits:
-
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation changes
-- `style:` Code style changes
-- `refactor:` Code refactoring
-- `test:` Test additions/changes
-- `chore:` Build process changes
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-
-- Create an issue in the GitHub repository
-- Check the documentation
-- Contact the development team
-
-## 🙏 Acknowledgments
-
-- TradingView for charting library
-- Font Awesome for icons
-- Tailwind CSS for styling framework
-- React community for excellent tools and libraries
-
----
-
-**Built with ❤️ for the trading community**

@@ -6,7 +6,7 @@
  * Note: Error notifications are displayed via the UI fallback, not toast.
  */
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 

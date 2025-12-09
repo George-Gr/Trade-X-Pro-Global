@@ -26,15 +26,14 @@ const Settings = () => {
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status || 'pending');
+      setKycStatus(data.kyc_status || null);
     }
     setIsLoading(false);
   }, [user]);
 
   useEffect(() => {
     if (user) {
-      // Defer to avoid synchronous setState inside effect
-      Promise.resolve().then(fetchKYCStatus);
+      fetchKYCStatus();
     }
   }, [user, fetchKYCStatus]);
 
@@ -231,8 +230,8 @@ const Settings = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                TradeX Pro is a paper trading platform for educational and practice purposes only.
-                No real funds are involved. All trading activity is simulated. This platform is not
+                TradeX Pro is a paper trading platform for educational and practice purposes only. 
+                No real funds are involved. All trading activity is simulated. This platform is not 
                 affiliated with IC Markets or any regulated financial institution.
               </p>
             </CardContent>

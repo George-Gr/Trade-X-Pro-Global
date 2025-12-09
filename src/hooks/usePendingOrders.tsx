@@ -41,21 +41,7 @@ export const usePendingOrders = () => {
 
       if (fetchError) throw fetchError;
 
-      setOrders((data || []).map((order: unknown): PendingOrder => {
-        const o = order as Record<string, unknown>;
-        return {
-          id: o.id as string,
-          symbol: o.symbol as string,
-          order_type: o.order_type as 'market' | 'limit' | 'stop' | 'stop_limit',
-          side: o.side as 'buy' | 'sell',
-          quantity: o.quantity as number,
-          price: (o.price as number | undefined) ?? undefined,
-          stop_loss: (o.stop_loss as number | undefined) ?? undefined,
-          take_profit: (o.take_profit as number | undefined) ?? undefined,
-          status: o.status as string,
-          created_at: (o.created_at as string) ?? '',
-        };
-      }));
+      setOrders(data || []);
     } catch (err: unknown) {
       // Error fetching pending orders
       setError(err instanceof Error ? err.message : "Failed to fetch pending orders");

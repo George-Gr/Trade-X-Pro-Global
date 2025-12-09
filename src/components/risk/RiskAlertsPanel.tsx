@@ -7,7 +7,7 @@
  * - Recommended Actions
  */
 
-import * as React from 'react';
+import React from 'react';
 import {
   AlertTriangle,
   Activity,

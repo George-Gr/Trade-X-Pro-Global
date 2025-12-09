@@ -19,8 +19,7 @@ export const useRiskEvents = (limit = 5) => {
 
   useEffect(() => {
     if (!user) {
-      // Defer loading state update to avoid synchronous setState in effect
-      Promise.resolve().then(() => setLoading(false));
+      setLoading(false);
       return;
     }
 

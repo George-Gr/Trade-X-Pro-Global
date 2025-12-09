@@ -20,8 +20,6 @@
 
 /* Import visual feedback states */
 @import "./styles/states.css";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
@@ -46,7 +44,7 @@ All colors MUST be HSL.
     --primary: 220 60% 20%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 220 60% 35%;
-
+    
     /* Gold Accents - Premium */
     --gold: 43 74% 49%;
     --gold-hover: 43 74% 42%;
@@ -72,11 +70,11 @@ All colors MUST be HSL.
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 217 91% 60%;
-
+    
     /* Focus ring colors - WCAG AA compliant */
     --focus-color: 217 91% 60%;
     --focus-ring-color: 217 91% 60%;
-
+    
     /* Sidebar colors */
     --sidebar: 0 0% 100%;
     --sidebar-foreground: 222 47% 11%;
@@ -87,324 +85,71 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    /* ========================================================================
-       UNIFIED DESIGN SYSTEM COLOR TOKENS (Hex Values)
-       Source: src/constants/designTokens.ts
-       Last Updated: December 2, 2025
-       WCAG Compliance: AAA (7:1 contrast ratio minimum for text)
-       ======================================================================== */
-
-    /* Primary Colors - Design Plan v1.0 */
-    --color-deep-navy: #1a1d29;
-    /* Primary background - 60-70% usage */
-    --color-electric-blue: #00D4FF;
-    /* Interactive elements - CTAs, highlights */
-    --color-emerald-green: #00C896;
-    /* Success, buy indicators */
-    --color-crimson-red: #FF4757;
-    /* Danger, sell indicators */
-
-    /* Secondary Colors */
-    --color-charcoal-gray: #2C3E50;
-    /* Secondary backgrounds - 20-30% usage */
-    --color-silver-gray: #95A5A6;
-    /* Text, borders, secondary info */
-    --color-pure-white: #FFFFFF;
-    /* Primary text on dark only */
-    --color-warm-gold: #F39C12;
-    /* Premium features - max 5% usage */
-    --color-soft-white: #f8f9fa;
-    /* Card backgrounds, light panels */
-
-    /* Semantic Background Colors */
-    --bg-primary: var(--color-deep-navy);
-    --bg-secondary: var(--color-charcoal-gray);
-    --bg-tertiary: rgba(26, 29, 41, 0.5);
-    --bg-overlay: rgba(26, 29, 41, 0.95);
-    --bg-panel: rgba(44, 62, 80, 0.3);
-    --bg-soft: var(--color-soft-white);
-
-    /* Semantic Text Colors */
-    --text-primary: var(--color-pure-white);
-    /* 21:1 on navy */
-    --text-secondary: var(--color-silver-gray);
-    /* 7.1:1 on charcoal */
-    --text-disabled: rgba(255, 255, 255, 0.5);
-    --text-muted: rgba(149, 165, 166, 0.7);
-    --text-inverse: var(--color-deep-navy);
-
-    /* Semantic Interactive Colors */
-    --interactive-primary: var(--color-electric-blue);
-    --interactive-hover: #00B8E6;
-    /* Darker electric blue */
-    --interactive-active: #009FCC;
-    /* Even darker for active */
-    --interactive-disabled: rgba(0, 212, 255, 0.3);
-    --interactive-focus: rgba(0, 212, 255, 0.5);
-
-    /* Trading Action Colors */
-    --trading-buy: var(--color-emerald-green);
-    --trading-buy-hover: #00A67D;
-    --trading-buy-active: #008060;
-
-    --trading-sell: var(--color-crimson-red);
-    --trading-sell-hover: #E6303F;
-    --trading-sell-active: #CC1F2E;
-
-    --trading-profit: var(--color-emerald-green);
-    --trading-loss: var(--color-crimson-red);
-
-    /* State Colors */
-    --state-success: var(--color-emerald-green);
-    --state-success-light: rgba(0, 200, 150, 0.1);
-
-    --state-warning: var(--color-warm-gold);
-    --state-warning-light: rgba(243, 156, 18, 0.1);
-
-    --state-error: var(--color-crimson-red);
-    --state-error-light: rgba(255, 71, 87, 0.1);
-
-    --state-info: var(--color-electric-blue);
-    --state-info-light: rgba(0, 212, 255, 0.1);
-
-    /* Border Colors */
-    --border-primary: rgba(149, 165, 166, 0.3);
-    --border-secondary: rgba(255, 255, 255, 0.1);
-    --border-interactive: var(--color-electric-blue);
-    --border-divider: rgba(44, 62, 80, 0.5);
-
-    /* Shadow Colors */
-    --shadow-light: rgba(10, 22, 40, 0.1);
-    --shadow-medium: rgba(10, 22, 40, 0.2);
-    --shadow-heavy: rgba(10, 22, 40, 0.3);
-
-    /* ========================================================================
-       TYPOGRAPHY SYSTEM TOKENS (Aligned with constants/typography.ts)
-       Authoritative definitions for fonts, weights, sizes, and spacing
-       ======================================================================== */
-
-    /* Font Families */
-    --font-family-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
-    --font-family-mono: "JetBrains Mono", "Courier New", monospace;
-    --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
-
-    /* Font Weights - Standardized to 3 weights */
-    --font-weight-regular: 400;
-    /* Standard body text */
-    --font-weight-semibold: 600;
-    /* Headings, emphasis */
-    --font-weight-bold: 700;
-    /* Hero titles, key emphasis */
-
-    /* Heading Scales (Desktop sizes) */
-    --h1-font-size: 48px;
-    --h1-line-height: 1.2;
-    --h1-letter-spacing: -0.02em;
-    --h1-weight: var(--font-weight-bold);
-
-    --h2-font-size: 36px;
-    --h2-line-height: 1.3;
-    --h2-letter-spacing: -0.01em;
-    --h2-weight: var(--font-weight-semibold);
-
-    --h3-font-size: 28px;
-    --h3-line-height: 1.4;
-    --h3-letter-spacing: 0;
-    --h3-weight: var(--font-weight-semibold);
-
-    --h4-font-size: 22px;
-    --h4-line-height: 1.4;
-    --h4-letter-spacing: 0;
-    --h4-weight: var(--font-weight-semibold);
-
-    --h5-font-size: 16px;
-    --h5-line-height: 1.5;
-    --h5-letter-spacing: 0;
-    --h5-weight: var(--font-weight-semibold);
-
-    /* Body Text */
-    --body-font-size: 16px;
-    --body-line-height: 1.6;
-    --body-letter-spacing: 0;
-    --body-weight: var(--font-weight-regular);
-
-    /* Secondary Text */
-    --small-font-size: 14px;
-    --small-line-height: 1.5;
-    --small-weight: var(--font-weight-regular);
-
-    --caption-font-size: 12px;
-    --caption-line-height: 1.4;
-    --caption-letter-spacing: 0.5px;
-    --caption-weight: var(--font-weight-regular);
-
-    /* Monospace (Data, Prices, Code) */
-    --mono-font-size: 14px;
-    --mono-line-height: 1.5;
-    --mono-weight: 500;
-    --mono-family: var(--font-family-mono);
-
-    --mono-small-font-size: 12px;
-    --mono-small-line-height: 1.4;
-    --mono-small-weight: 500;
-
-    /* ========================================================================
-       SPACING SYSTEM TOKENS (8px Grid System)
-       Source: src/constants/spacing.ts
-       Last Updated: December 2, 2025
-       Base Unit: 8px (all values must be multiples of 8px)
-       ======================================================================== */
-
-    /* Base Spacing Scale (multiples of 0.25rem / 4px) */
-    --space-0: 0;
-    /* No spacing */
-    --space-1: 0.25rem;
-    /* 4px - Half unit */
-    --space-2: 0.5rem;
-    /* 8px - Base unit */
-    --space-3: 1rem;
-    /* 16px - 2 units */
-    --space-4: 1.5rem;
-    /* 24px - 3 units */
-    --space-5: 2rem;
-    /* 32px - 4 units */
-    --space-6: 3rem;
-    /* 48px - 6 units */
-    --space-7: 4rem;
-    /* 64px - 8 units */
-    --space-8: 5rem;
-    /* 80px - 10 units */
-    --space-9: 6rem;
-    /* 96px - 12 units */
-    --space-10: 8rem;
-    /* 128px - 16 units */
-
-    /* Responsive Spacing - Page Margins */
-    --page-margin-desktop: 48px;
-    --page-margin-tablet: 32px;
-    --page-margin-mobile: 24px;
-
-    /* Responsive Spacing - Section Gap */
-    --section-gap-desktop: 48px;
-    --section-gap-tablet: 32px;
-    --section-gap-mobile: 32px;
-
-    /* Element Gaps */
-    --element-gap-tight: 8px;
-    --element-gap-normal: 16px;
-    --element-gap-loose: 24px;
-
-    /* Card Spacing */
-    --card-margin: 24px;
-    --card-padding-sm: 16px;
-    --card-padding-md: 24px;
-    --card-padding-lg: 32px;
-
-    /* Button Spacing */
-    --button-padding-x-sm: 12px;
-    --button-padding-x-md: 16px;
-    --button-padding-x-lg: 24px;
-
-    --button-padding-y-sm: 8px;
-    --button-padding-y-md: 12px;
-    --button-padding-y-lg: 16px;
-
-    /* Input Field Spacing */
-    --input-padding-x: 16px;
-    --input-padding-y: 12px;
-
-    --input-height-sm: 40px;
-    --input-height-md: 44px;
-    /* Touch target minimum */
-    --input-height-lg: 48px;
-
-    /* Badge Spacing */
-    --badge-padding: 4px 12px;
-    --badge-height: 24px;
-
-    /* Divider Spacing */
-    --divider-spacing-vertical: 16px;
-    --divider-spacing-horizontal: 24px;
-
-    /* Touch Target Sizes (Mobile Accessibility) */
-    --touch-target-minimum: 44px;
-    --touch-target-comfortable: 48px;
-    --touch-target-large: 56px;
-
-    /* List/Table Spacing */
-    --list-item-height: 48px;
-    --table-row-height: 40px;
-    --table-row-compact-height: 32px;
-
-    /* Modal/Dialog Spacing */
-    --modal-padding-desktop: 32px;
-    --modal-padding-mobile: 24px;
-
     /* Trading specific colors */
     --buy: 142 76% 36%;
     --buy-hover: 142 76% 42%;
     --buy-foreground: 0 0% 100%;
-
+    
     --sell: 0 84% 60%;
     --sell-hover: 0 84% 66%;
     --sell-foreground: 0 0% 100%;
-
+    
     --profit: 142 76% 36%;
     --loss: 0 84% 60%;
-
+    
     --panel-bg: 0 0% 100%;
     --panel-border: 214 32% 91%;
-
+    
     /* Status indicator colors - HSL design tokens */
     --status-safe: 142 76% 96%;
     --status-safe-foreground: 142 76% 40%;
     --status-safe-border: 142 76% 80%;
-
+    
     --status-warning: 38 92% 96%;
     --status-warning-foreground: 38 92% 45%;
     --status-warning-border: 38 92% 80%;
-
+    
     --status-critical: 16 92% 95%;
     --status-critical-foreground: 16 92% 50%;
     --status-critical-border: 16 92% 80%;
-
+    
     --status-error: 0 84% 96%;
     --status-error-foreground: 0 84% 45%;
     --status-error-border: 0 84% 80%;
-
+    
     --status-info: 217 91% 96%;
     --status-info-foreground: 217 91% 40%;
     --status-info-border: 217 91% 80%;
-
+    
     --status-neutral: 222 12% 96%;
     --status-neutral-foreground: 222 12% 45%;
     --status-neutral-border: 222 12% 80%;
-
+    
     /* Dark mode status colors */
     --status-safe-dark: 142 76% 15%;
     --status-safe-dark-foreground: 142 76% 70%;
     --status-safe-dark-border: 142 76% 25%;
-
+    
     --status-warning-dark: 38 92% 15%;
     --status-warning-dark-foreground: 38 92% 70%;
     --status-warning-dark-border: 38 92% 25%;
-
+    
     --status-critical-dark: 16 92% 15%;
     --status-critical-dark-foreground: 16 92% 70%;
     --status-critical-dark-border: 16 92% 25%;
-
+    
     --status-error-dark: 0 84% 15%;
     --status-error-dark-foreground: 0 84% 70%;
     --status-error-dark-border: 0 84% 25%;
-
+    
     --status-info-dark: 217 91% 15%;
     --status-info-dark-foreground: 217 91% 70%;
     --status-info-dark-border: 217 91% 25%;
-
+    
     --status-neutral-dark: 222 12% 15%;
     --status-neutral-dark-foreground: 222 12% 70%;
     --status-neutral-dark-border: 222 12% 25%;
-
+    
     /* Price change indicators */
     --price-up: 142 76% 36%;
     --price-down: 0 84% 60%;
@@ -413,7 +158,7 @@ All colors MUST be HSL.
     /* Chart colors */
     --chart-grid: 214 32% 91%;
     --chart-line: 217 91% 60%;
-
+    
     /* Premium Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(220 60% 20%), hsl(220 60% 35%));
     --gradient-hero: linear-gradient(135deg, hsl(220 60% 20% / 0.97), hsl(220 60% 35% / 0.95));
@@ -423,7 +168,7 @@ All colors MUST be HSL.
     --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 66%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.4));
     --gradient-premium: linear-gradient(135deg, hsl(220 60% 20%), hsl(43 74% 49%));
-
+    
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.06);
@@ -431,44 +176,29 @@ All colors MUST be HSL.
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 10px 10px -5px hsl(0 0% 0% / 0.04);
     --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.3);
-
+    
     /* WCAG AA Compliant Accessibility Colors - Light Mode */
-    --primary-contrast: 222 47% 11%;
-    /* Pure dark for maximum contrast on light backgrounds */
-    --primary-contrast-light: 210 40% 98%;
-    /* Pure white for dark backgrounds */
-    --secondary-contrast: 215 16% 35%;
-    /* Enhanced gray - 4.5:1 contrast on white */
-    --secondary-contrast-light: 215 20% 65%;
-    /* Light gray for dark backgrounds */
-    --tertiary-contrast: 215 16% 47%;
-    /* Medium gray - 7:1 contrast on white */
-    --tertiary-contrast-light: 215 20% 55%;
-    /* Medium gray for dark backgrounds */
-    --muted-contrast: 215 16% 50%;
-    /* Improved muted - 3:1 contrast for large text */
-    --muted-contrast-light: 215 20% 45%;
-    /* Light muted for dark backgrounds */
-    --success-contrast: 142 76% 28%;
-    /* Green - 4.5:1 contrast */
-    --warning-contrast: 38 92% 42%;
-    /* Orange - 4.5:1 contrast */
-    --danger-contrast: 0 84% 45%;
-    /* Red - 4.5:1 contrast */
-    --focus-color: 217 91% 60%;
-    /* Focus ring color */
-    --focus-ring-color: 217 91% 60%;
-    /* Focus ring background */
-    --contrast-auto-high: 222 47% 8%;
-    /* High contrast text */
-    --contrast-auto-bg-high: 0 0% 100%;
-    /* High contrast background */
-
+    --primary-contrast: 222 47% 11%;          /* Pure dark for maximum contrast on light backgrounds */
+    --primary-contrast-light: 210 40% 98%;    /* Pure white for dark backgrounds */
+    --secondary-contrast: 215 16% 35%;        /* Enhanced gray - 4.5:1 contrast on white */
+    --secondary-contrast-light: 215 20% 65%;  /* Light gray for dark backgrounds */
+    --tertiary-contrast: 215 16% 47%;         /* Medium gray - 7:1 contrast on white */
+    --tertiary-contrast-light: 215 20% 55%;   /* Medium gray for dark backgrounds */
+    --muted-contrast: 215 16% 50%;            /* Improved muted - 3:1 contrast for large text */
+    --muted-contrast-light: 215 20% 45%;      /* Light muted for dark backgrounds */
+    --success-contrast: 142 76% 28%;          /* Green - 4.5:1 contrast */
+    --warning-contrast: 38 92% 42%;           /* Orange - 4.5:1 contrast */
+    --danger-contrast: 0 84% 45%;             /* Red - 4.5:1 contrast */
+    --focus-color: 217 91% 60%;               /* Focus ring color */
+    --focus-ring-color: 217 91% 60%;          /* Focus ring background */
+    --contrast-auto-high: 222 47% 8%;         /* High contrast text */
+    --contrast-auto-bg-high: 0 0% 100%;       /* High contrast background */
+    
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-duration: 300ms;
-
+    
     /* Enhanced loading animations */
     --animation-loading-slow: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     --animation-loading-fast: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
@@ -476,176 +206,138 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode - Premium trading terminal - Design Plan v1.0 */
-    --background: 230 23% 13%;
-    /* Deep Navy #1a1d29 */
-    --foreground: 0 0% 100%;
-    /* Pure White #FFFFFF */
+    /* Dark mode - Premium trading terminal */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 210 29% 24%;
-    /* Charcoal Gray #2C3E50 */
-    --card-foreground: 0 0% 100%;
-    /* Pure White */
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 210 29% 24%;
-    /* Charcoal Gray */
-    --popover-foreground: 0 0% 100%;
-    /* Pure White */
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Deep Navy (lighter for dark mode) - kept for compatibility but background is main Deep Navy */
-    --primary: 190 100% 50%;
-    /* Electric Blue #00D4FF - Interactive */
-    --primary-foreground: 216 60% 10%;
-    /* Deep Navy text on Blue */
-    --primary-glow: 190 100% 50%;
-
+    /* Deep Navy (lighter for dark mode) */
+    --primary: 220 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 60% 60%;
+    
     /* Gold Accents */
-    --gold: 37 90% 51%;
-    /* Warm Gold #F39C12 */
-    --gold-hover: 37 90% 45%;
-    --gold-foreground: 216 60% 10%;
+    --gold: 43 74% 55%;
+    --gold-hover: 43 74% 49%;
+    --gold-foreground: 222 47% 11%;
 
-    --secondary: 210 29% 24%;
-    /* Charcoal Gray */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 29% 30%;
-    /* Lighter Charcoal */
-    --muted-foreground: 180 8% 62%;
-    /* Silver Gray #95A5A6 */
-    --placeholder-foreground: 180 8% 45%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --placeholder-foreground: 215 20% 45%;
 
     /* Emerald - Growth */
-    --accent: 165 100% 39%;
-    /* Emerald Green #00C896 */
+    --accent: 160 84% 45%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 355 100% 64%;
-    /* Crimson Red #FF4757 */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 37 90% 51%;
-    /* Warm Gold */
-    --warning-foreground: 216 60% 10%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
-    --border: 210 29% 30%;
-    /* Lighter Charcoal */
-    --input: 210 29% 24%;
-    /* Charcoal Gray */
-    --ring: 190 100% 50%;
-    /* Electric Blue */
-
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+    
     /* Sidebar colors - Dark mode */
-    --sidebar: 216 60% 10%;
-    /* Deep Navy */
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-accent: 210 29% 24%;
-    /* Charcoal Gray */
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 210 29% 24%;
-    --sidebar-ring: 190 100% 50%;
+    --sidebar: 217 33% 17%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-accent: 217 33% 27%;
+    --sidebar-accent-foreground: 210 40% 88%;
+    --sidebar-border: 217 33% 27%;
+    --sidebar-ring: 217 91% 60%;
 
     /* Trading specific colors */
-    --buy: 165 100% 39%;
-    /* Emerald Green */
-    --buy-hover: 165 100% 45%;
+    --buy: 142 76% 36%;
+    --buy-hover: 142 76% 42%;
     --buy-foreground: 0 0% 100%;
-
-    --sell: 355 100% 64%;
-    /* Crimson Red */
-    --sell-hover: 355 100% 70%;
+    
+    --sell: 0 84% 60%;
+    --sell-hover: 0 84% 66%;
     --sell-foreground: 0 0% 100%;
-
-    --profit: 165 100% 39%;
-    --loss: 355 100% 64%;
-
-    --panel-bg: 210 29% 24%;
-    /* Charcoal Gray */
-    --panel-border: 210 29% 30%;
-
+    
+    --profit: 142 76% 36%;
+    --loss: 0 84% 60%;
+    
+    --panel-bg: 217 33% 17%;
+    --panel-border: 217 33% 17%;
+    
     /* Status indicator colors - HSL design tokens */
-    --status-safe: 165 100% 15%;
-    --status-safe-foreground: 165 100% 70%;
-    --status-safe-border: 165 100% 25%;
-
-    --status-warning: 37 90% 15%;
-    --status-warning-foreground: 37 90% 70%;
-    --status-warning-border: 37 90% 25%;
-
-    --status-critical: 355 100% 15%;
-    --status-critical-foreground: 355 100% 70%;
-    --status-critical-border: 355 100% 25%;
-
-    --status-error: 355 100% 15%;
-    --status-error-foreground: 355 100% 70%;
-    --status-error-border: 355 100% 25%;
-
-    --status-info: 190 100% 15%;
-    --status-info-foreground: 190 100% 70%;
-    --status-info-border: 190 100% 25%;
-
-    --status-neutral: 210 29% 15%;
-    --status-neutral-foreground: 180 8% 70%;
-    --status-neutral-border: 210 29% 25%;
-
+    --status-safe: 142 76% 15%;
+    --status-safe-foreground: 142 76% 70%;
+    --status-safe-border: 142 76% 25%;
+    
+    --status-warning: 38 92% 15%;
+    --status-warning-foreground: 38 92% 70%;
+    --status-warning-border: 38 92% 25%;
+    
+    --status-critical: 16 92% 15%;
+    --status-critical-foreground: 16 92% 70%;
+    --status-critical-border: 16 92% 25%;
+    
+    --status-error: 0 84% 15%;
+    --status-error-foreground: 0 84% 70%;
+    --status-error-border: 0 84% 25%;
+    
+    --status-info: 217 91% 15%;
+    --status-info-foreground: 217 91% 70%;
+    --status-info-border: 217 91% 25%;
+    
+    --status-neutral: 222 12% 15%;
+    --status-neutral-foreground: 222 12% 70%;
+    --status-neutral-border: 222 12% 25%;
+    
     /* Price change indicators */
-    --price-up: 165 100% 39%;
-    --price-down: 355 100% 64%;
-    --price-neutral: 180 8% 62%;
+    --price-up: 142 76% 36%;
+    --price-down: 0 84% 60%;
+    --price-neutral: 215 20% 65%;
 
     /* Chart colors */
-    --chart-grid: 210 29% 24%;
-    --chart-line: 190 100% 50%;
-
+    --chart-grid: 217 33% 17%;
+    --chart-line: 217 91% 60%;
+    
     /* Premium Gradients (Dark Mode) */
-    --gradient-primary: linear-gradient(135deg, hsl(216 60% 10%), hsl(216 60% 20%));
-    --gradient-hero: linear-gradient(135deg, hsl(216 60% 10% / 0.97), hsl(216 60% 20% / 0.95));
-    --gradient-gold: linear-gradient(135deg, hsl(37 90% 51%), hsl(37 90% 45%));
-    --gradient-emerald: linear-gradient(135deg, hsl(165 100% 39%), hsl(165 100% 45%));
-    --gradient-buy: linear-gradient(135deg, hsl(165 100% 39%), hsl(165 100% 45%));
-    --gradient-sell: linear-gradient(135deg, hsl(355 100% 64%), hsl(355 100% 70%));
-    --gradient-card: linear-gradient(145deg, hsl(210 29% 24% / 0.8), hsl(210 29% 24% / 0.4));
-    --gradient-premium: linear-gradient(135deg, hsl(216 60% 10%), hsl(37 90% 51%));
-
+    --gradient-primary: linear-gradient(135deg, hsl(220 60% 45%), hsl(220 60% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 60% 45% / 0.97), hsl(220 60% 60% / 0.95));
+    --gradient-gold: linear-gradient(135deg, hsl(43 74% 55%), hsl(43 74% 49%));
+    --gradient-emerald: linear-gradient(135deg, hsl(160 84% 45%), hsl(160 84% 52%));
+    --gradient-buy: linear-gradient(135deg, hsl(160 84% 45%), hsl(160 84% 52%));
+    --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 66%));
+    --gradient-card: linear-gradient(145deg, hsl(217 33% 17% / 0.8), hsl(217 33% 17% / 0.4));
+    --gradient-premium: linear-gradient(135deg, hsl(220 60% 45%), hsl(43 74% 55%));
+    
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.5), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
-    --quick-actions: 210 29% 24%;
+    --quick-actions: 222 47% 11%;
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5), 0 4px 6px -2px hsl(0 0% 0% / 0.3);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 10px 10px -5px hsl(0 0% 0% / 0.3);
-    --shadow-glow: 0 0 40px hsl(190 100% 50% / 0.4);
-
+    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.4);
+    
     /* WCAG AA Compliant Accessibility Colors - Dark Mode */
-    --primary-contrast: 0 0% 100%;
-    /* White text on dark - 21:1 contrast */
-    --primary-contrast-light: 216 60% 10%;
-    /* Dark text on light - 21:1 contrast */
-    --secondary-contrast: 180 8% 70%;
-    /* Enhanced gray for dark mode */
-    --secondary-contrast-light: 210 29% 30%;
-    /* Gray for light mode */
-    --tertiary-contrast: 180 8% 60%;
-    /* Medium gray for dark mode */
-    --tertiary-contrast-light: 210 29% 40%;
-    /* Medium gray for light mode */
-    --muted-contrast: 180 8% 50%;
-    /* Improved muted for dark mode */
-    --muted-contrast-light: 210 29% 50%;
-    /* Muted for light mode */
-    --success-contrast: 165 100% 39%;
-    /* Green for dark mode */
-    --warning-contrast: 37 90% 51%;
-    /* Orange for dark mode */
-    --danger-contrast: 355 100% 64%;
-    /* Red for dark mode */
-    --focus-color: 190 100% 50%;
-    /* Focus ring color (same for both modes) */
-    --focus-ring-color: 190 100% 50%;
-    /* Focus ring background (same for both modes) */
-    --contrast-auto-high: 0 0% 100%;
-    /* High contrast text for dark mode */
-    --contrast-auto-bg-high: 216 60% 10%;
-    /* High contrast background for dark mode */
+    --primary-contrast: 210 40% 98%;           /* White text on dark - 15.3:1 contrast */
+    --primary-contrast-light: 222 47% 11%;     /* Dark text on light - 15.3:1 contrast */
+    --secondary-contrast: 215 20% 70%;         /* Enhanced gray for dark mode - 7:1 contrast */
+    --secondary-contrast-light: 215 16% 35%;   /* Gray for light mode - 7:1 contrast */
+    --tertiary-contrast: 215 20% 60%;          /* Medium gray for dark mode - 4.5:1 contrast */
+    --tertiary-contrast-light: 215 16% 47%;    /* Medium gray for light mode - 4.5:1 contrast */
+    --muted-contrast: 215 20% 50%;             /* Improved muted for dark mode - 3:1 contrast for large text */
+    --muted-contrast-light: 215 16% 55%;       /* Muted for light mode - 3:1 contrast for large text */
+    --success-contrast: 142 76% 50%;           /* Green for dark mode - 4.5:1 contrast */
+    --warning-contrast: 38 92% 60%;            /* Orange for dark mode - 4.5:1 contrast */
+    --danger-contrast: 0 84% 65%;              /* Red for dark mode - 4.5:1 contrast */
+    --focus-color: 217 91% 60%;                /* Focus ring color (same for both modes) */
+    --focus-ring-color: 217 91% 60%;           /* Focus ring background (same for both modes) */
+    --contrast-auto-high: 210 40% 95%;         /* High contrast text for dark mode */
+    --contrast-auto-bg-high: 217 33% 17%;      /* High contrast background for dark mode */
     --transition-duration: 300ms;
   }
 }
@@ -660,92 +352,23 @@ All colors MUST be HSL.
     color: hsl(var(--foreground));
     line-height: 1.6;
     font-family: var(--font-family-base);
-    transition: background-color var(--transition-duration, 300ms) ease-in-out,
-      color var(--transition-duration, 300ms) ease-in-out;
+    transition: background-color var(--transition-duration, 300ms) ease-in-out, 
+                color var(--transition-duration, 300ms) ease-in-out;
   }
 
   /* Apply transitions to common theme-related properties */
-  [class*="bg-"],
-  [class*="text-"],
+  [class*="bg-"], 
+  [class*="text-"], 
   [class*="border-"] {
     transition: background-color var(--transition-duration, 300ms) ease-in-out,
-      color var(--transition-duration, 300ms) ease-in-out,
-      border-color var(--transition-duration, 300ms) ease-in-out;
-  }
-
-  /* Glassmorphism Utilities */
-  .glass-panel {
-    background: hsl(var(--glass-bg));
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--glass-border));
-    box-shadow: var(--glass-shadow);
-  }
-
-  .glass-border {
-    border: 1px solid hsl(var(--glass-border));
-  }
-
-  .glass-header {
-    background: hsl(var(--glass-bg));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid hsl(var(--glass-border));
-  }
-
-  .glass-sidebar {
-    background: hsl(var(--glass-bg));
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid hsl(var(--glass-border));
-  }
-
-  /* Micro-interactions */
-  .hover-lift {
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .hover-glow {
-    transition: box-shadow 0.3s ease-in-out;
-  }
-
-  .hover-glow:hover {
-    box-shadow: 0 0 15px hsl(var(--primary) / 0.3);
-  }
-
-  .hover-scale {
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-scale:hover {
-    transform: scale(1.02);
-  }
-
-  /* Premium Iconography */
-  .icon-glow {
-    filter: drop-shadow(0 0 2px rgba(var(--primary), 0.5));
-    transition: filter 0.3s ease;
-  }
-
-  .icon-glow:hover {
-    filter: drop-shadow(0 0 5px rgba(var(--primary), 0.8));
+                color var(--transition-duration, 300ms) ease-in-out,
+                border-color var(--transition-duration, 300ms) ease-in-out;
   }
 
   /* Typography hierarchy */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     line-height: 1.2;
   }
-
   /* Prose content - for legal pages and rich text */
   .prose {
     line-height: 1.625;
@@ -780,21 +403,24 @@ All colors MUST be HSL.
     outline-offset: 0;
   }
 
-  /* 
-   * FE-001: Focus Indicator Conflict Resolution
-   * We rely on Tailwind's `focus-visible:ring-*` utilities for focus states.
-   * The previous global override caused conflicts and double rings.
-   * 
-   * We only apply a default fallback for elements that might miss specific classes,
-   * but we do NOT force it with !important or high specificity that overrides Tailwind.
-   */
-  :focus-visible {
-    outline: none;
+  /* High-contrast focus rings for all interactive elements */
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  [role="link"]:focus-visible,
+  a:focus-visible,
+  [tabindex="0"]:focus-visible {
+    outline: 3px solid hsl(var(--focus-color));
+    outline-offset: 2px;
+    box-shadow: 
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
+      0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
   }
 
   /* Fallback for browsers without focus-visible support */
   @supports not (selector(:focus-visible)) {
-
     input:focus,
     select:focus,
     textarea:focus,
@@ -805,7 +431,7 @@ All colors MUST be HSL.
     [tabindex="0"]:focus {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
-      box-shadow:
+      box-shadow: 
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
@@ -822,14 +448,13 @@ All colors MUST be HSL.
   .dark [tabindex="0"]:focus-visible {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
-    box-shadow:
+    box-shadow: 
       0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
       0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
   }
 
   /* Fallback for dark mode without focus-visible */
   @supports not (selector(:focus-visible)) {
-
     .dark input:focus,
     .dark select:focus,
     .dark textarea:focus,
@@ -840,7 +465,7 @@ All colors MUST be HSL.
     .dark [tabindex="0"]:focus {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
-      box-shadow:
+      box-shadow: 
         0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
     }
@@ -848,16 +473,13 @@ All colors MUST be HSL.
 
   /* Animated Focus Rings for Interactive Elements */
   @keyframes focus-pulse {
-
-    0%,
-    100% {
-      box-shadow:
+    0%, 100% {
+      box-shadow: 
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
-
     50% {
-      box-shadow:
+      box-shadow: 
         0 0 0 8px hsl(var(--focus-ring-color) / 0.4),
         0 0 0 10px hsl(var(--focus-ring-color) / 0.3);
     }
@@ -875,7 +497,6 @@ All colors MUST be HSL.
 
   /* Fallback for browsers without focus-visible */
   @supports not (selector(:focus-visible)) {
-
     .trading-interface input:focus,
     .trading-interface button:focus,
     .trading-panel input:focus,
@@ -888,7 +509,6 @@ All colors MUST be HSL.
 
   /* High contrast mode focus enhancement */
   @media (prefers-contrast: high) {
-
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -899,7 +519,7 @@ All colors MUST be HSL.
     [tabindex="0"]:focus-visible {
       outline: 4px solid hsl(var(--primary-contrast));
       outline-offset: 2px;
-      box-shadow:
+      box-shadow: 
         0 0 0 8px hsl(var(--primary-contrast-light) / 0.8),
         0 0 0 10px hsl(var(--primary-contrast-light) / 0.6);
     }
@@ -907,24 +527,18 @@ All colors MUST be HSL.
 
   /* Enhanced loading animations */
   @keyframes pulse-slow {
-
-    0%,
-    100% {
+    0%, 100% {
       opacity: 1;
     }
-
     50% {
       opacity: 0.4;
     }
   }
 
   @keyframes pulse-fast {
-
-    0%,
-    100% {
+    0%, 100% {
       opacity: 1;
     }
-
     50% {
       opacity: 0.6;
     }
@@ -934,7 +548,6 @@ All colors MUST be HSL.
     0% {
       transform: translateX(-100%);
     }
-
     100% {
       transform: translateX(100%);
     }
@@ -981,7 +594,6 @@ All colors MUST be HSL.
 
   /* FE-052: Firefox Focus Ring Enhancement - Enhanced for 3px width */
   @supports (-moz-appearance: none) {
-
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -990,7 +602,7 @@ All colors MUST be HSL.
     [role="link"]:focus-visible {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
-      box-shadow:
+      box-shadow: 
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
@@ -998,16 +610,13 @@ All colors MUST be HSL.
 
   /* Animated Focus Rings for Interactive Elements */
   @keyframes focus-pulse {
-
-    0%,
-    100% {
-      box-shadow:
+    0%, 100% {
+      box-shadow: 
         0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
         0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     }
-
     50% {
-      box-shadow:
+      box-shadow: 
         0 0 0 8px hsl(var(--focus-ring-color) / 0.4),
         0 0 0 10px hsl(var(--focus-ring-color) / 0.3);
     }
@@ -1025,7 +634,6 @@ All colors MUST be HSL.
 
   /* Fallback for browsers without focus-visible */
   @supports not (selector(:focus-visible)) {
-
     .trading-interface input:focus,
     .trading-interface button:focus,
     .trading-panel input:focus,
@@ -1038,7 +646,6 @@ All colors MUST be HSL.
 
   /* High contrast mode focus enhancement */
   @media (prefers-contrast: high) {
-
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -1049,7 +656,7 @@ All colors MUST be HSL.
     [tabindex="0"]:focus-visible {
       outline: 4px solid hsl(var(--contrast-auto-high));
       outline-offset: 2px;
-      box-shadow:
+      box-shadow: 
         0 0 0 8px hsl(var(--contrast-auto-bg-high) / 0.8),
         0 0 0 10px hsl(var(--contrast-auto-bg-high) / 0.6);
     }
@@ -1057,12 +664,11 @@ All colors MUST be HSL.
 
   /* FE-053: Mobile Landscape Orientation Support */
   @media (max-height: 600px) and (orientation: landscape) {
-
     /* Reduce vertical spacing in landscape mode */
     .space-y-6 {
       row-gap: 0.75rem;
     }
-
+    
     .space-y-4 {
       row-gap: 0.5rem;
     }
@@ -1082,7 +688,6 @@ All colors MUST be HSL.
   /* FE-054: Android Chrome Animation Fixes */
   /* Force hardware acceleration for smooth animations */
   @media (max-width: 768px) {
-
     .animate-fade-in,
     .animate-scale-in,
     .animate-slide-in-right,
@@ -1096,7 +701,6 @@ All colors MUST be HSL.
 
   /* Reduce motion for accessibility and Android performance */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
@@ -1106,416 +710,4 @@ All colors MUST be HSL.
       scroll-behavior: auto !important;
     }
   }
-
-  /* ========================================================================
-     PREMIUM LANDING PAGE ANIMATIONS & EFFECTS
-     High-end, exotic, professional financial platform aesthetics
-     ======================================================================== */
-
-  /* Animated Gradient Mesh Background */
-  @keyframes gradient-mesh {
-
-    0%,
-    100% {
-      background-position: 0% 50%;
-    }
-
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-
-  .gradient-mesh-animated {
-    background: linear-gradient(135deg,
-        hsl(var(--primary)) 0%,
-        hsl(var(--primary-glow)) 25%,
-        hsl(var(--accent)) 50%,
-        hsl(var(--primary-glow)) 75%,
-        hsl(var(--primary)) 100%);
-    background-size: 400% 400%;
-    animation: gradient-mesh 15s ease infinite;
-  }
-
-  /* Premium Shimmer Effect for CTAs */
-  @keyframes shimmer-slide {
-    0% {
-      transform: translateX(-100%) translateY(-100%) rotate(45deg);
-    }
-
-    100% {
-      transform: translateX(100%) translateY(100%) rotate(45deg);
-    }
-  }
-
-  .shimmer-effect {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .shimmer-effect::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
-    animation: shimmer-slide 3s infinite;
-  }
-
-  /* Glow Pulse Animation */
-  @keyframes glow-pulse {
-
-    0%,
-    100% {
-      box-shadow: 0 0 20px hsl(var(--gold) / 0.3),
-        0 0 40px hsl(var(--gold) / 0.2),
-        0 0 60px hsl(var(--gold) / 0.1);
-    }
-
-    50% {
-      box-shadow: 0 0 30px hsl(var(--gold) / 0.5),
-        0 0 60px hsl(var(--gold) / 0.3),
-        0 0 90px hsl(var(--gold) / 0.2);
-    }
-  }
-
-  .glow-pulse {
-    animation: glow-pulse 2s ease-in-out infinite;
-  }
-
-  /* Premium Badge Pulse */
-  @keyframes badge-pulse {
-
-    0%,
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 hsl(var(--gold) / 0.7);
-    }
-
-    50% {
-      transform: scale(1.05);
-      box-shadow: 0 0 0 10px hsl(var(--gold) / 0);
-    }
-  }
-
-  .badge-pulse {
-    animation: badge-pulse 2s ease-in-out infinite;
-  }
-
-  /* Staggered Entrance Animations */
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fade-in-up 0.6s ease-out forwards;
-  }
-
-  .stagger-1 {
-    animation-delay: 0.1s;
-  }
-
-  .stagger-2 {
-    animation-delay: 0.2s;
-  }
-
-  .stagger-3 {
-    animation-delay: 0.3s;
-  }
-
-  .stagger-4 {
-    animation-delay: 0.4s;
-  }
-
-  .stagger-5 {
-    animation-delay: 0.5s;
-  }
-
-  .stagger-6 {
-    animation-delay: 0.6s;
-  }
-
-  /* Premium Card Hover Effects */
-  .premium-card-hover {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .premium-card-hover:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px hsl(var(--primary) / 0.15),
-      0 10px 20px hsl(var(--primary) / 0.1);
-  }
-
-  /* Glassmorphism Enhanced */
-  .glass-premium {
-    background: linear-gradient(135deg,
-        hsl(var(--card) / 0.8),
-        hsl(var(--card) / 0.6));
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid hsl(var(--border) / 0.3);
-    box-shadow: 0 8px 32px hsl(var(--primary) / 0.1),
-      inset 0 1px 0 hsl(var(--foreground) / 0.1);
-  }
-
-  .glass-premium-dark {
-    background: linear-gradient(135deg,
-        hsl(var(--card) / 0.9),
-        hsl(var(--card) / 0.7));
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid hsl(var(--border) / 0.4);
-    box-shadow: 0 8px 32px hsl(0 0% 0% / 0.3),
-      inset 0 1px 0 hsl(var(--foreground) / 0.15);
-  }
-
-  /* Animated Counter */
-  @keyframes counter-pop {
-
-    0%,
-    100% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(1.1);
-    }
-  }
-
-  .counter-animate {
-    animation: counter-pop 0.5s ease-out;
-  }
-
-  /* Icon Glow on Hover */
-  .icon-glow-hover {
-    transition: all 0.3s ease;
-  }
-
-  .icon-glow-hover:hover {
-    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.6)) drop-shadow(0 0 16px hsl(var(--primary) / 0.4));
-    transform: scale(1.1) rotate(5deg);
-  }
-
-  /* Gradient Border Animation */
-  @keyframes gradient-border-rotate {
-    0% {
-      background-position: 0% 50%;
-    }
-
-    50% {
-      background-position: 100% 50%;
-    }
-
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .gradient-border-animated {
-    position: relative;
-    background: linear-gradient(90deg,
-        hsl(var(--primary)),
-        hsl(var(--gold)),
-        hsl(var(--accent)),
-        hsl(var(--primary)));
-    background-size: 300% 300%;
-    animation: gradient-border-rotate 3s ease infinite;
-    padding: 2px;
-    border-radius: var(--radius);
-  }
-
-  .gradient-border-animated>* {
-    background: hsl(var(--background));
-    border-radius: calc(var(--radius) - 2px);
-  }
-
-  /* Floating Animation for Badges */
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  .float-animation {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  /* Premium Button Hover */
-  .premium-button {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .premium-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-
-  .premium-button:hover::before {
-    width: 300px;
-    height: 300px;
-  }
-
-  .premium-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 30px hsl(var(--gold) / 0.4);
-  }
-
-  /* Particle Effect Container */
-  .particles-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  @keyframes particle-float {
-    0% {
-      transform: translateY(100vh) translateX(0) scale(0);
-      opacity: 0;
-    }
-
-    10% {
-      opacity: 1;
-    }
-
-    90% {
-      opacity: 1;
-    }
-
-    100% {
-      transform: translateY(-100vh) translateX(100px) scale(1);
-      opacity: 0;
-    }
-  }
-
-  .particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: #00D4FF;
-    border-radius: 50%;
-    animation: particle-float 15s infinite;
-    opacity: 0.6;
-  }
-}
-
-:root {
-  --background: hsl(209 40% 96%);
-  --foreground: hsl(222 47% 11%);
-  --card: hsl(210 40% 98%);
-  --card-foreground: hsl(222 47% 11%);
-  --popover: hsl(214 31% 91%);
-  --popover-foreground: hsl(222 47% 11%);
-  --primary: hsl(200 98% 39%);
-  --primary-foreground: hsl(204 100% 97%);
-  --secondary: hsl(215 24% 26%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(215 20% 65%);
-  --muted-foreground: hsl(222 47% 11%);
-  --accent: hsl(210 40% 98%);
-  --accent-foreground: hsl(215 19% 34%);
-  --destructive: hsl(0 72% 50%);
-  --destructive-foreground: hsl(0 85% 97%);
-  --border: hsl(212 26% 83%);
-  --input: hsl(212 26% 83%);
-  --ring: hsl(200 98% 39%);
-  --chart-1: hsl(198 93% 59%);
-  --chart-2: hsl(213 93% 67%);
-  --chart-3: hsl(215 20% 65%);
-  --chart-4: hsl(215 16% 46%);
-  --chart-5: hsl(215 19% 34%);
-  --sidebar: hsl(210 40% 98%);
-  --sidebar-foreground: hsl(222 47% 11%);
-  --sidebar-primary: hsl(200 98% 39%);
-  --sidebar-primary-foreground: hsl(204 100% 97%);
-  --sidebar-accent: hsl(215 24% 26%);
-  --sidebar-accent-foreground: hsl(210 40% 98%);
-  --sidebar-border: hsl(212 26% 83%);
-  --sidebar-ring: hsl(200 98% 39%);
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-  --font-serif: 'Lora', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-  --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --radius: 0.5rem;
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
-}
-
-.dark {
-  --background: hsl(222 47% 11%);
-  --foreground: hsl(210 40% 98%);
-  --card: hsl(217 32% 17%);
-  --card-foreground: hsl(210 40% 98%);
-  --popover: hsl(215 24% 26%);
-  --popover-foreground: hsl(210 40% 98%);
-  --primary: hsl(198 93% 59%);
-  --primary-foreground: hsl(204 80% 15%);
-  --secondary: hsl(212 26% 83%);
-  --secondary-foreground: hsl(228 84% 4%);
-  --muted: hsl(215 16% 46%);
-  --muted-foreground: hsl(210 40% 98%);
-  --accent: hsl(228 84% 4%);
-  --accent-foreground: hsl(215 20% 65%);
-  --destructive: hsl(0 84% 60%);
-  --destructive-foreground: hsl(0 85% 97%);
-  --border: hsl(215 19% 34%);
-  --input: hsl(215 19% 34%);
-  --ring: hsl(198 93% 59%);
-  --chart-1: hsl(199 95% 73%);
-  --chart-2: hsl(211 96% 78%);
-  --chart-3: hsl(215 20% 65%);
-  --chart-4: hsl(215 16% 46%);
-  --chart-5: hsl(215 19% 34%);
-  --sidebar: hsl(217 32% 17%);
-  --sidebar-foreground: hsl(210 40% 98%);
-  --sidebar-primary: hsl(198 93% 59%);
-  --sidebar-primary-foreground: hsl(204 80% 15%);
-  --sidebar-accent: hsl(215 20% 65%);
-  --sidebar-accent-foreground: hsl(228 84% 4%);
-  --sidebar-border: hsl(215 19% 34%);
-  --sidebar-ring: hsl(198 93% 59%);
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 }

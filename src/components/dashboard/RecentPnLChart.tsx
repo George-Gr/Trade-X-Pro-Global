@@ -51,14 +51,12 @@ export const RecentPnLChart: React.FC = () => {
   const data = useMemo((): DailyPnL[] => {
     // Generate synthetic last 30 days of P&L data
     const days = 30;
-    // Use a deterministic seed for synthetic data so lint rules stay happy
-    const seed = 12345;
     return Array.from({ length: days }).map((_, i) => {
       const date = new Date();
       date.setDate(date.getDate() - (days - 1 - i));
 
       // Simulate daily P&L with some volatility
-      const basePnL = (seed % 100 / 100 - 0.4) * 500;
+      const basePnL = (Math.random() - 0.4) * 500;
       const trend = (i / days) * 200; // Slight upward trend
       const pnl = basePnL + trend;
 
@@ -106,19 +104,7 @@ export const RecentPnLChart: React.FC = () => {
                 <DynamicXAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <DynamicYAxis tick={{ fontSize: 11 }} />
                 <DynamicTooltip
-                  content={(props: { active?: boolean; payload?: unknown }) => {
-                    const { active, payload } = props || {};
-                    if (active && Array.isArray(payload) && payload.length) {
-                      const first = payload[0] as { value: number } | undefined;
-                      const value = first?.value ?? 0;
-                      return (
-                        <div className="bg-background border border-border rounded p-2 text-xs">
-                          <p className="text-foreground">{`$${Number(value).toLocaleString()}`}</p>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
+                  formatter={(value: any) => `$${Number(value).toLocaleString()}`}
                   contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
                 />
                 <DynamicBar dataKey="pnl" isAnimationActive={false}>

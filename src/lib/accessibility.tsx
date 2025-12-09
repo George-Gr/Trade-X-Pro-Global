@@ -6,7 +6,7 @@
  * and WCAG compliance functions
  */
 
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 // Mock vitest for testing environment when needed
 if (typeof window !== 'undefined') {
@@ -25,7 +25,7 @@ export const useAnnouncement = () => {
     if (liveRegionRef.current) {
       liveRegionRef.current.setAttribute('aria-live', priority);
       liveRegionRef.current.textContent = message;
-
+      
       // Clear after a brief delay to allow for re-announcements
       setTimeout(() => {
         if (liveRegionRef.current) {
@@ -67,11 +67,11 @@ export const useFocusManagement = () => {
 
   const focusFirstElement = useCallback((container: HTMLElement | null) => {
     if (!container) return;
-
+    
     const focusableElement = container.querySelector(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as HTMLElement;
-
+    
     if (focusableElement) {
       focusableElement.focus();
     }
@@ -79,11 +79,11 @@ export const useFocusManagement = () => {
 
   const focusLastElement = useCallback((container: HTMLElement | null) => {
     if (!container) return;
-
+    
     const focusableElements = container.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
-
+    
     const lastElement = focusableElements[focusableElements.length - 1];
     if (lastElement) {
       lastElement.focus();
@@ -120,7 +120,7 @@ export const useSkipLink = (targetId: string) => {
  */
 
 export const useScreenReader = () => {
-  const [isScreenReaderDetected, setIsScreenReaderDetected] = useState(false);
+  const isScreenReaderDetected = useRef(false);
 
   useEffect(() => {
     // Detect screen reader using various methods
@@ -128,14 +128,13 @@ export const useScreenReader = () => {
       // Check for screen reader detection APIs
       if (window.speechSynthesis) {
         // Speech synthesis might indicate assistive technology
-        setIsScreenReaderDetected(true);
-        return;
+        isScreenReaderDetected.current = true;
       }
 
       // Check for specific CSS media queries
       const mediaQuery = window.matchMedia('(forced-colors: active)');
       if (mediaQuery.matches) {
-        setIsScreenReaderDetected(true);
+        isScreenReaderDetected.current = true;
       }
     };
 
@@ -149,9 +148,9 @@ export const useScreenReader = () => {
     element.setAttribute('aria-atomic', 'true');
     element.className = 'sr-only';
     element.textContent = message;
-
+    
     document.body.appendChild(element);
-
+    
     // Remove after announcement
     setTimeout(() => {
       if (document.body.contains(element)) {
@@ -161,7 +160,7 @@ export const useScreenReader = () => {
   }, []);
 
   return {
-    isScreenReaderDetected,
+    isScreenReaderDetected: isScreenReaderDetected.current,
     announceToScreenReader
   };
 };
@@ -255,24 +254,24 @@ export const useContrastChecker = () => {
 
     const fg = hexToRgb(foreground);
     const bg = hexToRgb(background);
-
+    
     const lum1 = getLuminance(fg.r, fg.g, fg.b);
     const lum2 = getLuminance(bg.r, bg.g, bg.b);
-
+    
     const brightest = Math.max(lum1, lum2);
     const darkest = Math.min(lum1, lum2);
-
+    
     return (brightest + 0.05) / (darkest + 0.05);
   }, []);
 
   const isContrastSufficient = useCallback((
-    foreground: string,
-    background: string,
+    foreground: string, 
+    background: string, 
     level: 'AA' | 'AAA' = 'AA',
     size: 'normal' | 'large' = 'normal'
   ): boolean => {
     const ratio = checkContrast(foreground, background);
-
+    
     if (level === 'AA') {
       return size === 'normal' ? ratio >= 4.5 : ratio >= 3;
     } else {
@@ -295,13 +294,13 @@ export const useTouchTarget = () => {
 
   const addTouchTargetPadding = useCallback((element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
-
+    
     if (rect.width < 44) {
       const padding = (44 - rect.width) / 2;
       element.style.paddingLeft = `calc(${window.getComputedStyle(element).paddingLeft} + ${padding}px)`;
       element.style.paddingRight = `calc(${window.getComputedStyle(element).paddingRight} + ${padding}px)`;
     }
-
+    
     if (rect.height < 44) {
       const padding = (44 - rect.height) / 2;
       element.style.paddingTop = `calc(${window.getComputedStyle(element).paddingTop} + ${padding}px)`;
@@ -317,24 +316,21 @@ export const useTouchTarget = () => {
  */
 
 export const useReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    return mediaQuery.matches;
-  });
+  const prefersReducedMotion = useRef(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
+    prefersReducedMotion.current = mediaQuery.matches;
+    
     const handler = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
+      prefersReducedMotion.current = e.matches;
     };
-
+    
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  return { prefersReducedMotion };
+  return { prefersReducedMotion: prefersReducedMotion.current };
 };
 
 /* 
@@ -342,24 +338,21 @@ export const useReducedMotion = () => {
  */
 
 export const useHighContrast = () => {
-  const [prefersHighContrast, setPrefersHighContrast] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const mediaQuery = window.matchMedia('(prefers-contrast: high)');
-    return mediaQuery.matches;
-  });
+  const prefersHighContrast = useRef(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-contrast: high)');
-
+    prefersHighContrast.current = mediaQuery.matches;
+    
     const handler = (e: MediaQueryListEvent) => {
-      setPrefersHighContrast(e.matches);
+      prefersHighContrast.current = e.matches;
     };
-
+    
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  return { prefersHighContrast };
+  return { prefersHighContrast: prefersHighContrast.current };
 };
 
 /* 
@@ -381,7 +374,7 @@ export const generateAccessibleColors = (baseColor: string, targetContrast: numb
     danger: '#DC2626',
     dangerContrast: '#FFFFFF'
   };
-
+  
   return colors;
 };
 
@@ -395,10 +388,10 @@ export const checkWCAGCompliance = (element: HTMLElement) => {
   const backgroundColor = styles.backgroundColor;
   const fontSize = parseFloat(styles.fontSize);
   const fontWeight = styles.fontWeight;
-
+  
   // Check if text meets AA standards
   const isLargeText = fontSize >= 18 || (fontSize >= 14 && (fontWeight === 'bold' || parseInt(fontWeight) >= 700));
-
+  
   return {
     color,
     backgroundColor,

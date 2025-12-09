@@ -80,8 +80,8 @@ export const WatchlistTabs = ({
           <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
             <WatchlistItems
               items={listItems}
-              onSymbolClick={onSelectSymbol || (() => {})}
-              onQuickTrade={onQuickTrade || (() => {})}
+              onSymbolClick={onSelectSymbol}
+              onQuickTrade={onQuickTrade}
               getPrice={() => ({ currentPrice: 0, change: 0, changePercent: 0 })}
               onRemoveSymbol={(_symbol: string) => {}}
               onAddSymbolClick={() => {}}

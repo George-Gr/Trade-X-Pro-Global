@@ -282,7 +282,7 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
     // Mock prefers-contrast media query
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation((query: string): MediaQueryList => ({
+      value: vi.fn().mockImplementation((query): MediaQueryList => ({
         matches: query === '(prefers-contrast: high)',
         media: query,
         onchange: null,

@@ -7,7 +7,7 @@
  * - Reorder buttons
  */
 
-import * as React from 'react';
+import React from 'react';
 import { RotateCcw } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

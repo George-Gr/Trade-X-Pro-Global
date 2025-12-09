@@ -166,13 +166,10 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         portfolioMetrics={portfolioMetrics}
         stressTests={{
           ...stressTests,
-          scenarios: stressTests?.scenarios?.map(s => ({
-            priceMovement: s.priceMovement.toString(),
-            estimatedLoss: s.estimatedLoss,
-            marginLevel: s.marginLevel
-          })) ?? [],
-          maxPossibleLoss: stressTests?.maxPossibleLoss ?? 0,
-          survivalRate: stressTests?.survivalRate ?? 0,
+          scenarios: stressTests.scenarios.map(s => ({
+            ...s,
+            priceMovement: String(s.priceMovement)
+          }))
         }}
         diversification={diversification}
         concentration={concentration}

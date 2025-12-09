@@ -41,8 +41,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setNextTheme(prefersDark ? 'dark' : 'light');
     }
-    // Defer to avoid synchronous setState in effect
-    Promise.resolve().then(() => setIsThemeLoaded(true));
+    setIsThemeLoaded(true);
   }, [setNextTheme]);
 
   // Update localStorage when theme changes

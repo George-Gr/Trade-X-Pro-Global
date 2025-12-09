@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { OrderTypeSelector, OrderType } from '../OrderTypeSelector';
+import { OrderTypeSelector, type OrderType } from '../OrderTypeSelector';
 import { OrderForm, type OrderFormData } from '../OrderForm';
 import { OrderPreview } from '../OrderPreview';
 
@@ -15,7 +15,7 @@ describe('OrderTypeSelector', () => {
   it('should render with all order type options visible', () => {
     render(
       <OrderTypeSelector
-        value={OrderType.Market}
+        value="market"
         onChange={mockOnChange}
       />
     );
@@ -26,7 +26,7 @@ describe('OrderTypeSelector', () => {
   it('should display tabs for each order type', () => {
     render(
       <OrderTypeSelector
-        value={OrderType.Market}
+        value="market"
         onChange={mockOnChange}
       />
     );
@@ -38,7 +38,7 @@ describe('OrderTypeSelector', () => {
   it('should call onChange when a different order type is clicked', async () => {
     render(
       <OrderTypeSelector
-        value={OrderType.Market}
+        value="market"
         onChange={mockOnChange}
       />
     );
@@ -52,7 +52,7 @@ describe('OrderTypeSelector', () => {
   it('should have proper ARIA labels for accessibility', () => {
     render(
       <OrderTypeSelector
-        value={OrderType.Market}
+        value="market"
         onChange={mockOnChange}
       />
     );
@@ -74,7 +74,7 @@ describe('OrderForm', () => {
 
   const defaultProps = {
     symbol: 'EURUSD',
-    orderType: OrderType.Market,
+    orderType: 'market' as OrderType,
     currentPrice: 1.0950,
     onOrderTypeChange: mockOnOrderTypeChange,
     onSubmit: mockOnSubmit,
@@ -144,14 +144,14 @@ describe('OrderForm', () => {
     const { rerender } = render(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.Market}
+        orderType="market"
       />
     );
 
     rerender(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.Limit}
+        orderType="limit"
       />
     );
 
@@ -162,14 +162,14 @@ describe('OrderForm', () => {
     const { rerender } = render(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.Market}
+        orderType="market"
       />
     );
 
     rerender(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.Stop}
+        orderType="stop"
       />
     );
 
@@ -180,7 +180,7 @@ describe('OrderForm', () => {
     render(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.StopLimit}
+        orderType="stop_limit"
       />
     );
 
@@ -192,7 +192,7 @@ describe('OrderForm', () => {
     render(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.TrailingStop}
+        orderType="trailing_stop"
       />
     );
 
@@ -203,7 +203,7 @@ describe('OrderForm', () => {
     render(
       <OrderForm
         {...defaultProps}
-        orderType={OrderType.Market}
+        orderType="market"
       />
     );
 
@@ -231,7 +231,7 @@ describe('OrderPreview', () => {
       side: 'buy' as const,
       quantity: 1,
       leverage: 100,
-      type: OrderType.Market,
+      type: 'market' as OrderType,
       takeProfitPrice: 1.1000,
       stopLossPrice: 1.0900,
     },
@@ -332,7 +332,7 @@ describe('OrderPreview', () => {
         {...defaultProps}
         formData={{
           ...defaultProps.formData,
-          type: OrderType.Market,
+          type: 'market',
         }}
       />
     );
@@ -347,7 +347,7 @@ describe('OrderPreview', () => {
         {...defaultProps}
         formData={{
           ...defaultProps.formData,
-          type: OrderType.Limit,
+          type: 'limit',
           limitPrice: 1.0920,
         }}
       />
@@ -362,7 +362,7 @@ describe('OrderPreview', () => {
         {...defaultProps}
         formData={{
           ...defaultProps.formData,
-          type: OrderType.Stop,
+          type: 'stop',
           stopPrice: 1.0900,
         }}
       />
@@ -377,7 +377,7 @@ describe('OrderPreview', () => {
         {...defaultProps}
         formData={{
           ...defaultProps.formData,
-          type: OrderType.TrailingStop,
+          type: 'trailing_stop',
           trailingDistance: 50,
         }}
       />
@@ -451,7 +451,7 @@ describe('OrderForm and OrderPreview Integration', () => {
       <div>
         <OrderForm
           symbol="EURUSD"
-          orderType={OrderType.Market}
+          orderType="market"
           currentPrice={1.0950}
           onOrderTypeChange={() => {}}
           onSubmit={mockOnSubmit}
@@ -462,7 +462,7 @@ describe('OrderForm and OrderPreview Integration', () => {
             symbol: 'EURUSD',
             side: 'buy',
             quantity: 1,
-            type: OrderType.Market,
+            type: 'market',
           } as Partial<OrderFormData>}
           currentPrice={1.0950}
         />

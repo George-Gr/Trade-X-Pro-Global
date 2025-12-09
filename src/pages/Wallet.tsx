@@ -43,7 +43,7 @@ const Wallet = () => {
       const { data, error } = await supabase
         .from('crypto_transactions')
         .select('*')
-        .eq('user_id', user!.id)
+        .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -271,7 +271,7 @@ const Wallet = () => {
 
                 <TabsContent value="deposits" className="mt-6">
                   <TransactionHistory 
-                    transactions={(transactions?.filter(t => t.transaction_type === 'deposit') || []).map(t => ({...t, confirmations: t.confirmations ?? 0 }))} 
+                    transactions={transactions?.filter(t => t.transaction_type === 'deposit') || []} 
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>
@@ -284,7 +284,7 @@ const Wallet = () => {
 
                 <TabsContent value="all" className="mt-6">
                   <TransactionHistory 
-                    transactions={(transactions || []).map(t => ({...t, confirmations: t.confirmations ?? 0 }))} 
+                    transactions={transactions || []} 
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>

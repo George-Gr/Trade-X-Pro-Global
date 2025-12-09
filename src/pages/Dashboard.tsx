@@ -224,14 +224,14 @@ const Dashboard = () => {
         <CardHeader>
           <CardTitle className="text-base font-semibold text-primary-contrast">Trading Actions & Activity</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-8">
+        <CardContent className="space-y-xl">
           {/* Quick Actions Section */}
-          <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-primary-contrast mb-4">Quick Actions</h3>
-            <div className="flex gap-4 flex-wrap">
+          <div className="space-y-lg">
+            <h3 className="text-sm font-semibold text-primary-contrast mb-md">Quick Actions</h3>
+            <div className="flex gap-md flex-wrap">
               <Button 
                 onClick={() => navigate("/trade")} 
-                className="gap-4 h-12 px-6 font-medium text-base hover:scale-105 active:scale-95 bg-primary hover:bg-primary/90 transition-all duration-200"
+                className="gap-md h-12 px-lg font-medium text-base hover:scale-105 active:scale-95 bg-primary hover:bg-primary/90 transition-all duration-200"
               >
                 <TrendingUp className="h-5 w-5" />
                 Start Trading
@@ -239,7 +239,7 @@ const Dashboard = () => {
               <Button 
                 variant="outline" 
                 onClick={() => navigate("/portfolio")} 
-                className="gap-4 h-12 px-6 font-medium text-base hover:scale-105 active:scale-95 hover:border-primary/50 transition-all duration-200"
+                className="gap-md h-12 px-lg font-medium text-base hover:scale-105 active:scale-95 hover:border-primary/50 transition-all duration-200"
               >
                 <Activity className="h-5 w-5" />
                 View Portfolio
@@ -248,29 +248,29 @@ const Dashboard = () => {
           </div>
 
           {/* Ready to Start Trading Section */}
-          <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-primary-contrast mb-4">Ready to Start Trading?</h3>
-            <div className="space-y-6">
+          <div className="space-y-lg">
+            <h3 className="text-sm font-semibold text-primary-contrast mb-md">Ready to Start Trading?</h3>
+            <div className="space-y-lg">
               <p className="text-base text-primary-contrast">
                 You currently have <strong>no open positions</strong>. Your account is fully funded and ready for trading.
               </p>
-              <div className="bg-quick-actions/50 rounded-lg p-6 border border-primary/20 space-y-4">
-                <div className="flex items-start gap-4">
-                  <ArrowRight className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+              <div className="bg-quick-actions/50 rounded-lg p-lg border border-primary/20 space-y-md">
+                <div className="flex items-start gap-md">
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
                   <div>
                     <p className="font-medium text-sm text-primary-contrast">Choose Your Instrument</p>
                     <p className="text-xs text-secondary-contrast">Forex, stocks, commodities, crypto, indices, ETFs, or bonds</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <ArrowRight className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+<div className="flex items-start gap-md">
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
                   <div>
                     <p className="font-medium text-sm text-primary-contrast">Set Your Trade Parameters</p>
                     <p className="text-xs text-secondary-contrast">Entry price, position size, stop loss, and take profit</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <ArrowRight className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                <div className="flex items-start gap-md">
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
                   <div>
                     <p className="font-medium text-sm text-primary-contrast">Execute Your Trade</p>
                     <p className="text-xs text-secondary-contrast">Review and confirm your position in real-time</p>
@@ -279,7 +279,7 @@ const Dashboard = () => {
               </div>
               <Button 
                 onClick={() => navigate("/trade")} 
-                className="w-full gap-4 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="w-full gap-md font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
                 size="lg"
                 aria-label="Open your first trading position"
               >
@@ -290,11 +290,11 @@ const Dashboard = () => {
           </div>
 
           {/* Recent Activity Section */}
-          <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-primary-contrast mb-4">Recent Activity</h3>
-            <div className="space-y-4">
+          <div className="space-y-lg">
+            <h3 className="text-sm font-semibold text-primary-contrast mb-md">Recent Activity</h3>
+            <div className="space-y-md">
               {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0">
+                <div key={index} className="flex items-center justify-between border-b border-border/50 pb-md last:border-0 last:pb-0">
                   <div>
                     <p className="font-medium text-primary-contrast">{activity.action}</p>
                     <p className="text-sm text-secondary-contrast">{activity.time}</p>

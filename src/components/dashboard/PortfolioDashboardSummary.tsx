@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AccountSummary from './AccountSummary';
 import EquityChart from './EquityChart';
 import AssetAllocation from './AssetAllocation';

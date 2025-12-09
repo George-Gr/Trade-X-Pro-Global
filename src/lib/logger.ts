@@ -53,6 +53,7 @@
  */
 
 import * as Sentry from "@sentry/react";
+import { Transaction, Span } from "@sentry/types";
 
 /**
  * Log context information
@@ -234,18 +235,6 @@ function mergeContext(context?: LogContext): LogContext {
     timestamp: context?.timestamp || getTimestamp(),
   };
 }
-
-/**
- * Socket connection event tracking
- */
-export interface ConnectionEvent {
-  event: 'connect' | 'disconnect' | 'timeout' | 'error' | 'reconnect';
-  timestamp: string;
-  details: Record<string, unknown>;
-}
-
-const connectionEvents: ConnectionEvent[] = [];
-const MAX_CONNECTION_EVENTS = 100;
 
 /**
  * Centralized logger with context support and Sentry integration
@@ -438,7 +427,7 @@ export const logger = {
   startTransaction(name: string, operation: string, context?: LogContext): string {
     const startTime = performance.now();
     const transactionId = `${name}-${startTime}-${Math.random().toString(36).substring(2, 8)}`;
-
+    
     const transaction: PerformanceTransaction = {
       name,
       operation,
@@ -478,10 +467,10 @@ export const logger = {
 
     // Log slow transactions as warnings
     if (duration > 1000) { // Log transactions slower than 1 second
-      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, {
+      this.warn(`Slow transaction: ${transaction.name} took ${duration.toFixed(2)}ms`, {} as Error, {
         ...fullContext,
         metadata: {
-          ...(fullContext.metadata as Record<string, unknown>),
+          ...(fullContext.metadata as any),
           transactionName: transaction.name,
           duration,
           operation: transaction.operation,
@@ -509,7 +498,7 @@ export const logger = {
       url,
       duration,
       status,
-      success: !error && status !== undefined && status < 400,
+      success: !error && status && status < 400,
       error,
     };
 
@@ -558,7 +547,7 @@ export const logger = {
 
     // Log slow API calls
     if (duration > 2000) {
-      this.warn(`Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`, {
+      this.warn(`Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`, undefined, {
         component: 'API',
         action: 'api_slow_response',
         metadata: {
@@ -622,7 +611,7 @@ export const logger = {
 
       // Track slow queries
       if (duration > 1000) { // Queries slower than 1 second
-        this.warn(`Slow Supabase query: ${operation} ${table} took ${duration.toFixed(2)}ms`, {
+        this.warn(`Slow Supabase query: ${operation} ${table} took ${duration.toFixed(2)}ms`, undefined, {
           component: 'Supabase',
           action: 'slow_query',
           metadata: {
@@ -687,7 +676,7 @@ export const logger = {
       // Capture as Sentry event with appropriate level
       const sentryLevel = severity === 'critical' ? 'fatal' : severity === 'high' ? 'error' : 'warning';
       Sentry.captureMessage(message, sentryLevel as 'fatal' | 'error' | 'warning');
-
+      
       // Add context
       Sentry.setContext('risk_event', {
         type,
@@ -727,7 +716,7 @@ export const logger = {
     if (isSentryActive()) {
       // Add to Sentry context for performance monitoring
       Sentry.setMeasurement(name, value, unit as 'nanosecond' | 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'custom');
-
+      
       // Add breadcrumb
       this.addBreadcrumb('metric', `${name}: ${value}${unit}`);
     }
@@ -773,83 +762,6 @@ export const logger = {
    */
   clearPerformanceMetrics(): void {
     performanceMetrics.length = 0;
-  },
-
-  /**
-   * Log socket/connection event
-   */
-  logConnectionEvent(
-    event: 'connect' | 'disconnect' | 'timeout' | 'error' | 'reconnect',
-    details: Record<string, unknown>
-  ): void {
-    const connectionEvent: ConnectionEvent = {
-      event,
-      timestamp: getTimestamp(),
-      details,
-    };
-
-    // Add to history
-    connectionEvents.push(connectionEvent);
-    if (connectionEvents.length > MAX_CONNECTION_EVENTS) {
-      connectionEvents.shift();
-    }
-
-    // Add breadcrumb
-    this.addBreadcrumb('connection', `${event}: ${JSON.stringify(details)}`);
-
-    // Log critical connection events
-    if (event === 'timeout' || event === 'error') {
-      this.warn(`Connection ${event}`, {
-        component: 'Connection',
-        action: 'connection_event',
-        metadata: details,
-      });
-    }
-
-    if (isDevelopment) {
-      console.log(`[CONNECTION] ${event}`, details);
-    }
-
-    if (isSentryActive()) {
-      // Track connection timeouts as performance issues
-      if (event === 'timeout') {
-        Sentry.addBreadcrumb({
-          category: 'connection',
-          message: `Socket timeout: ${JSON.stringify(details)}`,
-          level: 'warning',
-          timestamp: Date.now() / 1000,
-        });
-      }
-    }
-  },
-
-  /**
-   * Get connection events history
-   */
-  getConnectionEvents(): ConnectionEvent[] {
-    return [...connectionEvents];
-  },
-
-  /**
-   * Clear connection events
-   */
-  clearConnectionEvents(): void {
-    connectionEvents.length = 0;
-  },
-
-  /**
-   * Log performance metric for operations
-   */
-  logPerformance(operationName: string, durationMs: number): void {
-    const level = durationMs > 1000 ? 'warn' : 'debug';
-    this[level](`Performance: ${operationName} took ${durationMs}ms`, {
-      component: 'Performance',
-      action: 'performance_metric',
-      metadata: { duration: durationMs, operation: operationName },
-    });
-
-    // Record as metric
-    this.recordMetric(`operation_${operationName.replace(/\s+/g, '_').toLowerCase()}`, durationMs, 'ms');
   },
 
   /**

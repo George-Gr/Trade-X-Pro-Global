@@ -1,7 +1,10 @@
-import { ErrorState } from "@/components/ui/ErrorState";
+import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LoadingButton } from "@/components/ui/LoadingButton";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { formatFieldError } from "@/lib/errorMessageService";
 import {
   Select,
   SelectContent,
@@ -9,11 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatFieldError } from "@/lib/errorMessageService";
 import { Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
 import { OrderType } from "./OrderTypeSelector";
-import { validateOrderInput, ValidationError } from "@/lib/trading/orderValidation";
 
 export interface OrderFormData {
   symbol: string;
@@ -84,50 +84,65 @@ export const OrderForm = ({
   const validateForm = (): boolean => {
     setValidationError(null);
 
-    try {
-      // Validate quantity using comprehensive validation
-      const qty = validateOrderInput(volume);
-
-      // Validate order type specific fields
-      if (orderType === 'limit' || orderType === 'stop_limit') {
-        if (limitPrice) {
-          validateOrderInput(limitPrice);
-        }
-      }
-
-      if (orderType === 'stop' || orderType === 'stop_limit') {
-        if (stopPrice) {
-          validateOrderInput(stopPrice);
-        }
-      }
-
-      if (orderType === 'trailing_stop') {
-        if (trailingDistance) {
-          const td = parseFloat(trailingDistance);
-          if (td <= 0) {
-            throw new ValidationError(400, "Trailing distance must be greater than 0");
-          }
-        }
-      }
-
-      // Optional TP/SL validation
-      if (takeProfit) {
-        validateOrderInput(takeProfit);
-      }
-
-      if (stopLoss) {
-        validateOrderInput(stopLoss);
-      }
-
-      return true;
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        setValidationError(error.details || error.message);
-      } else {
-        setValidationError("Invalid input format");
-      }
+    const qty = parseFloat(volume);
+    if (isNaN(qty) || qty <= 0) {
+      setValidationError("Volume must be greater than 0");
       return false;
     }
+
+    if (qty < 0.01) {
+      setValidationError("Minimum volume is 0.01 lots");
+      return false;
+    }
+
+    if (qty > 1000) {
+      setValidationError("Maximum volume is 1000 lots");
+      return false;
+    }
+
+    // Validate order type specific fields
+    if (orderType === 'limit' || orderType === 'stop_limit') {
+      const lp = parseFloat(limitPrice);
+      if (isNaN(lp) || lp <= 0) {
+        setValidationError("Limit price must be greater than 0");
+        return false;
+      }
+    }
+
+    if (orderType === 'stop' || orderType === 'stop_limit') {
+      const sp = parseFloat(stopPrice);
+      if (isNaN(sp) || sp <= 0) {
+        setValidationError("Stop price must be greater than 0");
+        return false;
+      }
+    }
+
+    if (orderType === 'trailing_stop') {
+      const td = parseFloat(trailingDistance);
+      if (isNaN(td) || td <= 0) {
+        setValidationError("Trailing distance must be greater than 0");
+        return false;
+      }
+    }
+
+    // Optional TP/SL validation
+    if (takeProfit) {
+      const tp = parseFloat(takeProfit);
+      if (isNaN(tp) || tp <= 0) {
+        setValidationError("Take profit price must be greater than 0");
+        return false;
+      }
+    }
+
+    if (stopLoss) {
+      const sl = parseFloat(stopLoss);
+      if (isNaN(sl) || sl <= 0) {
+        setValidationError("Stop loss price must be greater than 0");
+        return false;
+      }
+    }
+
+    return true;
   };
 
   const handleSubmit = async (side: 'buy' | 'sell') => {
@@ -200,22 +215,22 @@ export const OrderForm = ({
           pattern="[0-9]+([\.][0-9]+)?"
         />
         {validationError && (
-          <p className="text-xs text-destructive mt-2" role="alert">
+          <p className="text-xs text-destructive mt-sm" role="alert">
             {formatFieldError(validationError, 'volume')}
           </p>
         )}
-        <p className="text-xs text-muted-foreground mt-2">
+        <p className="text-xs text-muted-foreground mt-sm">
           Pip value: ${pipValue.toFixed(2)}
         </p>
       </div>
 
       {/* Fixed Asset Leverage Display (Read-Only) */}
-      <div className="space-y-2">
+      <div className="space-y-sm">
         <Label className="text-sm font-semibold">
           Leverage (Fixed by Broker)
         </Label>
-        <div className="gradient-card border border-panel rounded-md p-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="gradient-card border border-panel rounded-md p-lg flex items-center justify-between">
+          <div className="flex items-center gap-md">
             <span className="font-mono font-semibold text-foreground">
               1:{assetLeverage.toFixed(0)}
             </span>
@@ -223,7 +238,7 @@ export const OrderForm = ({
               MARGIN REQUIRED
             </span>
           </div>
-          <span className="text-xs font-medium gradient-primary/20 text-foreground px-4 py-2 rounded">
+          <span className="text-xs font-medium gradient-primary/20 text-foreground px-md py-sm rounded">
             ${marginRequired.toFixed(2)}
           </span>
         </div>

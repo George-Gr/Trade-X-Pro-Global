@@ -1,96 +1,67 @@
-import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Edit2, X, Loader2 } from 'lucide-react';
+import React, { useState, memo } from 'react';
+import { calculateUnrealizedPnL, getPositionColor } from '@/lib/trading/positionUtils';
 import type { Position } from '@/types/position';
-import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
-import { PositionDetails } from './PositionDetails';
+import { PositionCloseDialog } from './PositionCloseDialog';
+import { usePositionClose } from '@/hooks/usePositionClose';
 
-export interface PositionRowProps {
-  position: Position;
-  pnlData: PositionPnLDetails | { unrealizedPnL: number; unrealizedPnLPercentage: number };
-  isExpanded: boolean;
-  pnlColor: string;
-  isClosing: boolean;
-  onExpand: () => void;
-  onEdit: () => void;
-  onClose: () => void;
-}
+export const PositionRow = memo(({ position, onView, selectable = false, selected = false, onSelect }: { position: Position; onView?: () => void; selectable?: boolean; selected?: boolean; onSelect?: (id: string, checked: boolean) => void }) => {
+  const pnl = calculateUnrealizedPnL(position);
+  const color = getPositionColor(position);
+  const [openClose, setOpenClose] = useState(false);
 
-export const PositionRow: React.FC<PositionRowProps> = ({
-  position,
-  pnlData,
-  isExpanded,
-  pnlColor,
-  isClosing,
-  onExpand,
-  onEdit,
-  onClose,
-}) => (
-  <>
-    <tr
-      className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
-      onClick={onExpand}
-    >
-      <td className="py-4 px-4 font-semibold">{position.symbol}</td>
-      <td className="py-4 px-4">
-        <Badge
-          variant={position.side === 'long' ? 'default' : 'secondary'}
-          className={position.side === 'long' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}
-        >
-          {position.side.toUpperCase()}
-        </Badge>
-      </td>
-      <td className="py-4 px-4 text-right font-mono text-sm">{position.quantity.toFixed(2)}</td>
-      <td className="py-4 px-4 text-right font-mono text-sm">${position.entry_price.toFixed(5)}</td>
-      <td className="py-4 px-4 text-right font-mono text-sm">${position.current_price.toFixed(5)}</td>
-      <td className="py-4 px-4 text-right">
-        <div className="font-mono font-bold text-base" style={{ color: pnlColor }}>
-          ${(pnlData?.unrealizedPnL || 0).toFixed(2)}
-        </div>
-        <div className="text-xs font-semibold" style={{ color: pnlColor }}>
-          {(pnlData?.unrealizedPnLPercentage || 0).toFixed(2)}%
-        </div>
-      </td>
-      <td className="py-4 px-4 text-right font-mono text-sm">${position.margin_used?.toFixed(2) || '0.00'}</td>
-      <td className="py-4 px-4 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => { e.stopPropagation(); onEdit(); }}
-            className="h-8 w-8 p-0 hover:bg-muted"
-            aria-label={`Edit stop loss and take profit for ${position.symbol} position`}
-            title="Edit Stop Loss & Take Profit"
-          >
-            <Edit2 className="h-4 w-4" aria-hidden="true" />
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-            disabled={isClosing}
-            aria-label={`Close ${position.symbol} position`}
-            title="Close Position"
-          >
-            {isClosing ? (
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <X className="h-4 w-4" aria-hidden="true" />
-            )}
-          </Button>
-        </div>
-      </td>
-    </tr>
-    {isExpanded && (
-      <tr className="border-b border-border/50 bg-muted/20">
-        <td colSpan={8} className="py-4 px-4">
-          <PositionDetails position={position} pnlData={pnlData} />
-        </td>
-      </tr>
-    )}
-  </>
-);
+  const { closePosition, isClosing } = usePositionClose();
+
+  const onCloseClicked = () => setOpenClose(true);
+
+  return (
+    <div role="row" className="grid grid-cols-6 gap-4 items-center py-4 border-b">
+      {selectable ? (
+        <div role="cell"><input aria-label={`select-${position.id}`} type="checkbox" checked={selected} onChange={(e) => onSelect && onSelect(position.id, e.target.checked)} /></div>
+      ) : null}
+
+      <div role="cell">{position.symbol}</div>
+      <div role="cell">{position.side}</div>
+      <div role="cell">{position.quantity}</div>
+      <div role="cell">{position.entry_price.toFixed(4)}</div>
+      <div role="cell">{position.current_price.toFixed(4)}</div>
+      <div role="cell" className={`font-medium ${color === 'green' ? 'text-buy text-green-600' : color === 'red' ? 'text-sell text-red-600' : ''}`}>
+        {pnl.toFixed(2)}
+      </div>
+
+      <div className="col-span-6 mt-2">
+        <button onClick={onCloseClicked} disabled={isClosing} className="btn btn-sm mr-2">Close</button>
+        <button onClick={onView} className="btn btn-ghost btn-sm">Details</button>
+      </div>
+
+      {openClose && (
+        <PositionCloseDialog
+          position={position}
+          onClose={() => setOpenClose(false)}
+          onConfirm={async (qty) => {
+            await closePosition({ position_id: position.id, quantity: qty });
+            setOpenClose(false);
+          }}
+        />
+      )}
+    </div>
+  );
+}, (prevProps, nextProps) => {
+  // Custom comparison to optimize re-renders
+  // Only re-render if position data changed or selection state changed
+  const positionChanged = prevProps.position.id !== nextProps.position.id ||
+    prevProps.position.symbol !== nextProps.position.symbol ||
+    prevProps.position.side !== nextProps.position.side ||
+    prevProps.position.quantity !== nextProps.position.quantity ||
+    prevProps.position.entry_price !== nextProps.position.entry_price ||
+    prevProps.position.current_price !== nextProps.position.current_price;
+  
+  const selectionChanged = prevProps.selected !== nextProps.selected ||
+    prevProps.selectable !== nextProps.selectable;
+  
+  const callbacksChanged = prevProps.onView !== nextProps.onView ||
+    prevProps.onSelect !== nextProps.onSelect;
+  
+  return !positionChanged && !selectionChanged && !callbacksChanged;
+});
 
 export default PositionRow;

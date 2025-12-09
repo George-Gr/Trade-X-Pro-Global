@@ -16,7 +16,7 @@
 export function initTradingViewCompatibility(): void {
   // Fix for DataView Symbol.toStringTag error
   fixDataViewSymbolToStringTag();
-
+  
   // Additional compatibility fixes can be added here
 }
 
@@ -32,10 +32,10 @@ export function initTradingViewCompatibility(): void {
 function fixDataViewSymbolToStringTag(): void {
   // Store original descriptor
   const originalDescriptor = Object.getOwnPropertyDescriptor(
-    DataView.prototype,
+    DataView.prototype, 
     Symbol.toStringTag
   );
-
+  
   try {
     // Make the property writable temporarily
     if (originalDescriptor) {
@@ -45,31 +45,30 @@ function fixDataViewSymbolToStringTag(): void {
         configurable: true
       });
     }
-
+    
     // Override the assignment to handle read-only case gracefully
-    const originalDefineProperty = Object.defineProperty as unknown as typeof Object.defineProperty;
-    (Object.defineProperty as unknown as typeof Object.defineProperty) = function <T>(obj: T, prop: PropertyKey, descriptor: PropertyDescriptor & ThisType<unknown>): T {
+    const originalDefineProperty = Object.defineProperty;
+    Object.defineProperty = function(obj: any, prop: PropertyKey, descriptor: PropertyDescriptor) {
       try {
-        const result = originalDefineProperty.call(undefined, obj, prop, descriptor) as T;
-        return result;
-      } catch (error: unknown) {
+        return originalDefineProperty.call(this, obj, prop, descriptor);
+      } catch (error: any) {
         // If assignment fails due to read-only property, log and continue
         if (error instanceof TypeError &&
-          error.message.includes('Cannot assign to read only property') &&
-          prop === Symbol.toStringTag &&
-          obj === DataView.prototype) {
+            error.message.includes('Cannot assign to read only property') &&
+            prop === Symbol.toStringTag &&
+            obj === DataView.prototype) {
           console.warn('TradingView: DataView Symbol.toStringTag assignment blocked (expected in modern environments)');
           return obj;
         }
         throw error;
       }
     };
-
+    
     // Override property assignment attempts
     const originalSet = Object.getOwnPropertyDescriptor(DataView.prototype, Symbol.toStringTag)?.set;
     if (!originalSet) {
       Object.defineProperty(DataView.prototype, Symbol.toStringTag, {
-        set(value: string | undefined) {
+        set(value) {
           // Silently ignore assignments in modern environments
           if (typeof value === 'string') {
             console.debug('TradingView: Ignoring DataView Symbol.toStringTag assignment:', value);
@@ -82,7 +81,7 @@ function fixDataViewSymbolToStringTag(): void {
         enumerable: false
       });
     }
-
+    
   } catch (error) {
     console.warn('TradingView compatibility fix failed:', error);
     // Fallback: at least try to prevent the error from propagating
@@ -104,13 +103,13 @@ function fixDataViewSymbolToStringTag(): void {
 function patchCommonAssignmentPatterns(): void {
   // Patch common patterns used by TradingView
   const originalAssign = Object.assign;
-  Object.assign = function (target: object, ...sources: object[]) {
+  Object.assign = function(target, ...sources) {
     try {
       return originalAssign.call(this, target, ...sources);
     } catch (error) {
-      if (error instanceof TypeError &&
-        error.message.includes('Cannot assign to read only property') &&
-        target === DataView.prototype) {
+      if (error instanceof TypeError && 
+          error.message.includes('Cannot assign to read only property') &&
+          target === DataView.prototype) {
         console.warn('TradingView: Blocked read-only property assignment to DataView.prototype');
         return target;
       }

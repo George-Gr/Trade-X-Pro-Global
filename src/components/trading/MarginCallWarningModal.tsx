@@ -55,14 +55,14 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   onClosePosition,
   onViewRisk,
 }) => {
-  const [countdownSeconds, setCountdownSeconds] = useState(() =>
-    timeToLiquidationMinutes ? Math.floor(timeToLiquidationMinutes * 60) : 0
-  );
+  const [countdownSeconds, setCountdownSeconds] = useState(0);
 
   useEffect(() => {
     if (!isOpen || !timeToLiquidationMinutes) return;
 
-    // Start countdown interval; initial value is set via useState lazy initializer
+    const remainingMs = timeToLiquidationMinutes * 60 * 1000;
+    setCountdownSeconds(Math.floor(remainingMs / 1000));
+
     const interval = setInterval(() => {
       setCountdownSeconds((prev) => Math.max(0, prev - 1));
     }, 1000);

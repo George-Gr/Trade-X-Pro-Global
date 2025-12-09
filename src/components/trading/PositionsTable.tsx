@@ -38,7 +38,7 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
     const { closePosition } = await import('@/hooks/usePositionClose').then((m) => m.usePositionClose());
 
     for (const id of ids) {
-
+       
       await closePosition({ position_id: id });
     }
 
@@ -62,8 +62,8 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
           </span>
           {selectedCount > 0 && (
             <div className="flex items-center gap-2">
-              <Button
-                onClick={bulkClose}
+              <Button 
+                onClick={bulkClose} 
                 variant="destructive"
                 size="sm"
                 className="transition-all duration-200"
@@ -122,16 +122,13 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
 
           <div role="rowgroup">
             {rows.map((p: Position) => (
-              <PositionRow
-                key={p.id}
-                position={p}
-                pnlData={{ unrealizedPnL: 0, unrealizedPnLPercentage: 0 }}
-                isExpanded={false}
-                pnlColor="#000"
-                isClosing={false}
-                onExpand={() => setSelected(p.id)}
-                onEdit={() => { }}
-                onClose={() => { }}
+              <PositionRow 
+                key={p.id} 
+                position={p} 
+                onView={() => setSelected(p.id)} 
+                selectable 
+                selected={!!selectedIds[p.id]} 
+                onSelect={toggleSelect} 
               />
             ))}
           </div>

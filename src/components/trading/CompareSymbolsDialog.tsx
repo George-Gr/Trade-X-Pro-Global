@@ -19,11 +19,8 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
   });
 
   // Convert prices Map to array and sort by change percent
-  const priceArray = symbols.map(symbol => ({ symbol, price: getPrice(symbol) })).filter(item => item.price).map(item => ({
-    ...item.price!,
-    symbol: item.symbol
-  }));
-  const sortedByChange = priceArray.sort((a, b) => b.changePercent - a.changePercent);
+  const priceArray = symbols.map(symbol => getPrice(symbol)).filter(Boolean);
+  const sortedByChange = priceArray.sort((a, b) => (b?.changePercent || 0) - (a?.changePercent || 0));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -68,11 +65,11 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
                     </div>
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">Bid</div>
-                      <div className="font-mono">-</div>
+                      <div className="font-mono">{price.bid.toFixed(5)}</div>
                     </div>
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">Ask</div>
-                      <div className="font-mono">-</div>
+                      <div className="font-mono">{price.ask.toFixed(5)}</div>
                     </div>
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">Change</div>
@@ -85,19 +82,19 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
                   <div className="grid grid-cols-4 gap-4 text-sm mt-4 pt-4 border-t border-border">
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">Open</div>
-                      <div className="font-mono text-xs">-</div>
+                      <div className="font-mono text-xs">{price.open?.toFixed(5) || "N/A"}</div>
                     </div>
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">High</div>
-                      <div className="font-mono text-xs text-profit">-</div>
+                      <div className="font-mono text-xs text-profit">{price.high?.toFixed(5) || "N/A"}</div>
                     </div>
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">Low</div>
-                      <div className="font-mono text-xs text-loss">-</div>
+                      <div className="font-mono text-xs text-loss">{price.low?.toFixed(5) || "N/A"}</div>
                     </div>
                     <div>
                       <div className="text-muted-foreground text-xs mb-2">Prev Close</div>
-                      <div className="font-mono text-xs">-</div>
+                      <div className="font-mono text-xs">{price.previousClose?.toFixed(5) || "N/A"}</div>
                     </div>
                   </div>
 

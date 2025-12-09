@@ -23,7 +23,6 @@ export enum OrderType {
   Limit = 'limit',
   Stop = 'stop',
   StopLimit = 'stop_limit',
-  TrailingStop = 'trailing_stop',
 }
 
 /**

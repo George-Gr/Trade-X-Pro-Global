@@ -3,15 +3,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabaseBrowserClient';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, AlertCircle } from 'lucide-react';
-import { KycStatistics } from './KycStatistics';
-import { KycQueueControls, type FilterStatus } from './KycQueueControls';
-import { KycQueueTable } from './KycQueueTable';
-import { KycReviewDialog } from './KycReviewDialog';
+import { Loader2, Eye, ChevronDown, AlertCircle, CheckCircle, Clock, X } from 'lucide-react';
 
-export interface KycDocument {
+interface KycDocument {
   id: string;
   kyc_request_id: string;
   type: string;
@@ -22,7 +24,7 @@ export interface KycDocument {
   notes?: string | null;
 }
 
-export interface KycRequest {
+interface KycRequest {
   id: string;
   user_id: string;
   status: string;
@@ -35,13 +37,15 @@ export interface KycRequest {
   kyc_documents?: KycDocument[];
 }
 
-export interface UserProfile {
+interface UserProfile {
   id: string;
   email: string;
   full_name?: string;
   phone?: string;
   kyc_status: string;
 }
+
+type FilterStatus = 'all' | 'pending' | 'submitted' | 'approved' | 'rejected' | 'manual_review';
 
 const KycAdminDashboard: React.FC = () => {
   const { user, isAdmin, loading } = useAuth();
@@ -206,6 +210,35 @@ const KycAdminDashboard: React.FC = () => {
     return <Alert variant="destructive"><AlertCircle className="h-4 w-4" /><AlertDescription>Access denied — admin only.</AlertDescription></Alert>;
   }
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return <Badge className="bg-profit">Approved</Badge>;
+      case 'rejected':
+        return <Badge variant="destructive">Rejected</Badge>;
+      case 'manual_review':
+      case 'escalated':
+        return <Badge variant="outline">Manual Review</Badge>;
+      case 'submitted':
+        return <Badge className="bg-amber-500">Under Review</Badge>;
+      default:
+        return <Badge variant="secondary">Pending</Badge>;
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return <CheckCircle className="h-4 w-4 text-profit" />;
+      case 'rejected':
+        return <X className="h-4 w-4 text-destructive" />;
+      case 'submitted':
+        return <Clock className="h-4 w-4 text-amber-500" />;
+      default:
+        return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -214,12 +247,44 @@ const KycAdminDashboard: React.FC = () => {
       </div>
 
       {/* Statistics */}
-      <KycStatistics
-        pending={stats.pending}
-        approved={stats.approved}
-        rejected={stats.rejected}
-        manualReview={stats.manual_review}
-      />
+      <div className="grid grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.pending}</div>
+            <p className="text-xs text-muted-foreground mt-2">Awaiting decision</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-medium">Approved</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-profit">{stats.approved}</div>
+            <p className="text-xs text-muted-foreground mt-2">Verified users</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-medium">Rejected</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-destructive">{stats.rejected}</div>
+            <p className="text-xs text-muted-foreground mt-2">Resubmit allowed</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-medium">Manual Review</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-amber-500">{stats.manual_review}</div>
+            <p className="text-xs text-muted-foreground mt-2">Escalated</p>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Error Alert */}
       {error && (
@@ -229,48 +294,240 @@ const KycAdminDashboard: React.FC = () => {
         </Alert>
       )}
 
-      {/* KYC Queue */}
+      {/* Filters and Search */}
       <Card>
         <CardHeader>
           <CardTitle>KYC Queue</CardTitle>
           <CardDescription>Manage and review KYC submissions</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <KycQueueControls
-            searchTerm={searchTerm}
-            filterStatus={filterStatus}
-            stats={stats}
-            loadingRequests={loadingRequests}
-            totalRequests={requests.length}
-            onSearchChange={setSearchTerm}
-            onStatusChange={setFilterStatus}
-            onRefresh={fetchRequests}
+          {/* Search */}
+          <Input
+            placeholder="Search by email, name, or request ID..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
 
-          <KycQueueTable
-            requests={filteredRequests}
-            isLoading={loadingRequests}
-            actionLoading={actionLoading}
-            selectedRequest={selectedRequest}
-            onRequestSelect={setSelectedRequest}
-            onReview={setSelectedRequest}
-            onApprove={(id, notes) => { performAdminAction(id, 'approve', notes); }}
-            onReject={(id, reason) => { performAdminAction(id, 'reject', reason); }}
-            onRequestMoreInfo={(id, notes) => { performAdminAction(id, 'request_more_info', notes); }}
+          {/* Status Filter Tabs */}
+          <Tabs value={filterStatus} onValueChange={(v) => setFilterStatus(v as FilterStatus)}>
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="all">All ({requests.length})</TabsTrigger>
+              <TabsTrigger value="pending">Pending ({stats.pending})</TabsTrigger>
+              <TabsTrigger value="approved">Approved ({stats.approved})</TabsTrigger>
+              <TabsTrigger value="rejected">Rejected ({stats.rejected})</TabsTrigger>
+              <TabsTrigger value="manual_review">Manual ({stats.manual_review})</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Refresh Button */}
+          <Button
+            onClick={fetchRequests}
+            disabled={loadingRequests}
+            variant="outline"
+            className="w-full"
           >
-            <KycReviewDialog
-              request={selectedRequest}
-              actionLoading={actionLoading}
-              adminNotes={adminNotes}
-              rejectionReason={rejectionReason}
-              onAdminNotesChange={setAdminNotes}
-              onRejectionReasonChange={setRejectionReason}
-              onApprove={(id, notes) => performAdminAction(id, 'approve', notes)}
-              onReject={(id, reason) => performAdminAction(id, 'reject', reason)}
-              onRequestMoreInfo={(id, notes) => performAdminAction(id, 'request_more_info', notes)}
-              onPreviewDocument={setPreviewUrl}
-            />
-          </KycQueueTable>
+            {loadingRequests ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Refreshing...
+              </>
+            ) : (
+              'Refresh Queue'
+            )}
+          </Button>
+
+          {/* Requests Table */}
+          {filteredRequests.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>No KYC requests found</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>User</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Submitted</TableHead>
+                    <TableHead>Documents</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredRequests.map(req => (
+                    <TableRow key={req.id}>
+                      <TableCell className="font-medium">
+                        {req.userProfile?.full_name || 'Unknown'}
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {req.userProfile?.email}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-4">
+                          {getStatusIcon(req.status)}
+                          {getStatusBadge(req.status)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {req.submitted_at
+                          ? new Date(req.submitted_at).toLocaleDateString()
+                          : new Date(req.created_at).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {req.kycDocuments?.length || 0} docs
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setSelectedRequest(req)}
+                              disabled={actionLoading === req.id}
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              Review
+                            </Button>
+                          </DialogTrigger>
+                          {selectedRequest?.id === req.id && (
+                            <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-3xl max-h-[90vh] overflow-y-auto">
+                              <DialogHeader>
+                                <DialogTitle>KYC Review: {selectedRequest.userProfile?.full_name}</DialogTitle>
+                                <DialogDescription>
+                                  {selectedRequest.userProfile?.email}
+                                </DialogDescription>
+                              </DialogHeader>
+
+                              <div className="space-y-6">
+                                {/* Documents */}
+                                <div className="space-y-4">
+                                  <h4 className="font-semibold">Documents ({selectedRequest.kycDocuments?.length || 0})</h4>
+                                  {selectedRequest.kycDocuments && selectedRequest.kycDocuments.length > 0 ? (
+                                    <div className="space-y-2">
+                                      {selectedRequest.kycDocuments.map((doc: KycDocument) => (
+                                        <div key={doc.id} className="border rounded-lg p-4 flex items-center justify-between">
+                                          <div>
+                                            <p className="text-sm font-medium capitalize">{doc.type.replace(/_/g, ' ')}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                              Uploaded: {new Date(doc.uploaded_at).toLocaleDateString()}
+                                            </p>
+                                          </div>
+                                          <div className="flex items-center gap-4">
+                                            <Badge variant="outline">{doc.status}</Badge>
+                                            <Button
+                                              size="sm"
+                                              variant="ghost"
+                                              onClick={() => setPreviewUrl(doc.url)}
+                                            >
+                                              <Eye className="h-4 w-4" />
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <p className="text-sm text-muted-foreground">No documents uploaded</p>
+                                  )}
+                                </div>
+
+                                {/* Decision Form */}
+                                <div className="space-y-4 border-t pt-4">
+                                  <h4 className="font-semibold">Admin Decision</h4>
+
+                                  {selectedRequest.status === 'rejected' && (
+                                    <Alert variant="destructive">
+                                      <AlertCircle className="h-4 w-4" />
+                                      <AlertDescription>
+                                        This request has been rejected.{' '}
+                                        {selectedRequest.notes && `Reason: ${selectedRequest.notes}`}
+                                      </AlertDescription>
+                                    </Alert>
+                                  )}
+
+                                  {selectedRequest.status === 'approved' && (
+                                    <Alert className="border-profit/20 bg-profit/5">
+                                      <CheckCircle className="h-4 w-4 text-profit" />
+                                      <AlertDescription>
+                                        This request has been approved.
+                                      </AlertDescription>
+                                    </Alert>
+                                  )}
+
+                                  {!['approved', 'rejected'].includes(selectedRequest.status) && (
+                                    <>
+                                      <Textarea
+                                        placeholder="Admin notes (optional)"
+                                        value={adminNotes}
+                                        onChange={(e) => setAdminNotes(e.target.value)}
+                                        className="min-h-20"
+                                      />
+
+                                      {selectedRequest.status === 'rejected' && (
+                                        <Textarea
+                                          placeholder="Rejection reason (required)"
+                                          value={rejectionReason}
+                                          onChange={(e) => setRejectionReason(e.target.value)}
+                                          className="min-h-20"
+                                        />
+                                      )}
+
+                                      <div className="flex gap-4">
+                                        <Button
+                                          className="flex-1 bg-profit hover:bg-profit/90"
+                                          onClick={() =>
+                                            performAdminAction(selectedRequest.id, 'approve', adminNotes)
+                                          }
+                                          disabled={actionLoading === selectedRequest.id}
+                                        >
+                                          <CheckCircle className="h-4 w-4 mr-2" />
+                                          Approve
+                                        </Button>
+                                        <Button
+                                          className="flex-1"
+                                          variant="destructive"
+                                          onClick={() =>
+                                            performAdminAction(
+                                              selectedRequest.id,
+                                              'reject',
+                                              rejectionReason || 'Document verification failed'
+                                            )
+                                          }
+                                          disabled={actionLoading === selectedRequest.id}
+                                        >
+                                          <X className="h-4 w-4 mr-2" />
+                                          Reject
+                                        </Button>
+                                        <Button
+                                          className="flex-1"
+                                          variant="outline"
+                                          onClick={() =>
+                                            performAdminAction(
+                                              selectedRequest.id,
+                                              'request_more_info',
+                                              adminNotes
+                                            )
+                                          }
+                                          disabled={actionLoading === selectedRequest.id}
+                                        >
+                                          <ChevronDown className="h-4 w-4 mr-2" />
+                                          Request More Info
+                                        </Button>
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </DialogContent>
+                          )}
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
 
