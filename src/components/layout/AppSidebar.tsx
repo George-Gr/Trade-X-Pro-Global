@@ -24,7 +24,7 @@ import {
   generateNavigationAriaLabel,
   getAriaCurrentState 
 } from "@/lib/utils";
-import { AlertCircle, LayoutDashboard, TrendingUp, Settings, User, LogOut } from "lucide-react";
+import { AlertCircle, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
