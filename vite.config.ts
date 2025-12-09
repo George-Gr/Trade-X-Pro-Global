@@ -264,19 +264,9 @@ export default defineConfig(({ mode }) => ({
     }) : null,
   ].filter(Boolean) as Plugin[],
 
-  // Fix environment variables for browser bundling
-  define: {
-    // Provide browser globals - these are handled by setup-node-env.js at build time
-    global: 'globalThis',
+  // REMOVED: define block was causing Radix UI circular dependency issues
+  // Vite handles import.meta.env automatically for VITE_ prefixed variables
 
-    // Define process.env variables that should be inlined into the bundle
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-    'process.env.VITE_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL || ''),
-    'process.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(process.env.VITE_SUPABASE_PUBLISHABLE_KEY || ''),
-    'process.env.VITE_SENTRY_DSN': JSON.stringify(process.env.VITE_SENTRY_DSN || ''),
-    'process.env.VITE_APP_VERSION': JSON.stringify(process.env.VITE_APP_VERSION || '0.0.0'),
-    'process.env.VITE_FINNHUB_API_KEY': JSON.stringify(process.env.VITE_FINNHUB_API_KEY || ''),
-  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -298,10 +288,12 @@ export default defineConfig(({ mode }) => ({
       "clsx",
       "tailwind-merge",
     ],
-    // Force re-optimization to fix dependency issues
-    force: true,
-    // Exclude problematic circular dependencies
+    // Don't force re-optimization - can cause initialization issues
+    force: false,
     exclude: [],
+    esbuildOptions: {
+      target: 'es2020',
+    },
   },
   build: {
     // Reduced from 600 to 400 - encourages better code splitting
