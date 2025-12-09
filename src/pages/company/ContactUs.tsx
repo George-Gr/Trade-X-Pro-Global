@@ -20,7 +20,7 @@ interface ContactFormData {
 
 export default function ContactUs() {
   const { toast } = useToast();
-  
+
   const form = useForm<ContactFormData>({
     defaultValues: {
       name: "",
@@ -32,12 +32,12 @@ export default function ContactUs() {
 
   const { register, handleSubmit, formState: { errors }, reset } = form;
 
-  const onSubmit = async (data: ContactFormData) => {
-    // Simulate form submission
-    console.log('Form data:', data);
+  const onSubmit = (data: ContactFormData) => {
+    // Form submission logic would go here
+    // In production, this would send data to an API endpoint
     toast({
-      title: "Message Sent",
-      description: "Thank you for your message. We'll get back to you soon.",
+      title: "Message Sent!",
+      description: "Thank you for contacting us. We'll get back to you soon.",
     });
     reset();
   };
@@ -45,7 +45,7 @@ export default function ContactUs() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      
+
       <main className="pt-24 pb-20">
         <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,7 +128,7 @@ export default function ContactUs() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="email"
@@ -153,7 +153,7 @@ export default function ContactUs() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="subject"
@@ -177,7 +177,7 @@ export default function ContactUs() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="message"
@@ -202,7 +202,7 @@ export default function ContactUs() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <Button type="submit" className="w-full bg-gradient-to-r from-primary to-primary-glow flex items-center justify-center gap-4">
                       <Send className="h-4 w-4" />
                       Send Message

@@ -60,7 +60,6 @@ export const PositionsTableVirtualized: React.FC<{ userId: string | null }> = ({
     for (const id of ids) {
       // Call via a proper hook in parent component
       // For now, this demonstrates the intent
-      console.log('Bulk closing position:', id);
     }
 
     setSelectedIds({});

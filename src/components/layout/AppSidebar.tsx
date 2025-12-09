@@ -12,17 +12,17 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { useSidebar } from "@/components/ui/sidebarContext";
-import { 
+import {
   filterNavigationSectionsByRoles,
   isPathActive,
   NAVIGATION_CONFIG
 } from "@/lib/navigationConfig";
 import { SidebarErrorBoundary } from "@/components/ui/SidebarErrorBoundary";
-import { 
-  cn, 
-  handleMenuKeyboardNavigation, 
+import {
+  cn,
+  handleMenuKeyboardNavigation,
   generateNavigationAriaLabel,
-  getAriaCurrentState 
+  getAriaCurrentState
 } from "@/lib/utils";
 import { AlertCircle, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ function AppSidebarLoading() {
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
         {/* Top spacing to prevent overlap with header */}
         <div className="h-6" />
-        
+
         {/* Loading Main Navigation Section */}
         <SidebarGroup className="pt-1 pb-0">
           <SidebarGroupLabel className="opacity-0 h-6">Loading</SidebarGroupLabel>
@@ -53,10 +53,10 @@ function AppSidebarLoading() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
+
         {/* Spacer to push user actions to bottom */}
         <div className="flex-1" />
-        
+
         {/* Loading User Actions Section */}
         <SidebarGroup className="pt-0 pb-1">
           <SidebarGroupContent>
@@ -84,16 +84,16 @@ function AppSidebarError() {
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
         {/* Top spacing to prevent overlap with header */}
         <div className="h-6" />
-        
+
         <div className="flex flex-col items-center justify-center h-64 text-center px-4">
           <div className="text-muted-foreground mb-3">
             <AlertCircle className="h-10 w-10 mx-auto" />
           </div>
           <p className="text-sm text-muted-foreground mb-3">Unable to load navigation</p>
           <p className="text-xs text-muted-foreground/70 mb-4">Please check your connection and try again</p>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="mt-2 border-border/50 hover:bg-sidebar-accent/50"
             onClick={() => window.location.reload()}
           >
@@ -136,7 +136,7 @@ function AppSidebarContent() {
   }, [navigationSections]);
 
   // Memoize isActive function to prevent recreation on every render
-  const isActive = useCallback((path: string) => 
+  const isActive = useCallback((path: string) =>
     isPathActive(activePath, path), [activePath]
   );
 
@@ -204,8 +204,8 @@ function AppSidebarContent() {
   }
 
   return (
-    <Sidebar 
-      collapsible="icon" 
+    <Sidebar
+      collapsible="icon"
       className="border-r border-border/50 backdrop-blur-none"
       variant="sidebar"
     >
@@ -225,7 +225,7 @@ function AppSidebarContent() {
             </div>
           )}
         </div>
-        
+
         {/* Dynamic Navigation Sections */}
         {memoizedNavigationSections.map((section) => {
           // Skip actions section as it will be handled separately
@@ -243,7 +243,7 @@ function AppSidebarContent() {
                 <SidebarMenu className="gap-1">
                   {section.items.map((item) => {
                     const Icon = item.icon;
-                    
+
                     return (
                       <SidebarMenuItem key={item.id}>
                         <SidebarMenuButton
@@ -290,7 +290,7 @@ function AppSidebarContent() {
               {/* Settings Navigation Items */}
               {settingsItems.map((item) => {
                 const Icon = item.icon;
-                
+
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
@@ -328,7 +328,7 @@ function AppSidebarContent() {
                 ?.items.filter(item => item.id === 'logout')
                 .map((item) => {
                   const Icon = item.icon;
-                  
+
                   return (
                     <SidebarMenuItem key={item.id}>
                       <SidebarMenuButton
@@ -366,10 +366,10 @@ function AppSidebarContent() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      
+
       {/* Visually hidden description for logout button accessibility */}
-      <div 
-        id="logout-description" 
+      <div
+        id="logout-description"
         className="sr-only"
         role="status"
         aria-live="polite"
@@ -388,8 +388,8 @@ export function AppSidebar() {
     <SidebarErrorBoundary
       enableLogging={true}
       onError={(error, errorInfo) => {
-        // Custom error handling for sidebar errors
-        console.log('AppSidebar error handled:', error.message);
+        // Error is already logged by SidebarErrorBoundary with enableLogging=true
+        // No additional logging needed here
       }}
     >
       <AppSidebarContent />

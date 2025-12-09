@@ -47,12 +47,12 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
     import("lightweight-charts").then((lc) => {
       if (!mounted) return;
 
-      // Create chart
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // Create chart - using type assertion due to lightweight-charts complex type definitions
       chart = (lc.createChart(chartContainerRef.current!, {
         layout: {
-          background: { type: 'solid' as any, color: "transparent" },
+          background: { type: lc.ColorType.Solid, color: "transparent" },
           textColor: "#9ca3af",
+
         },
         grid: {
           vertLines: { color: "rgba(255, 255, 255, 0.05)" },
@@ -71,7 +71,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
         crosshair: {
           mode: 0,
         },
-      })) as unknown as ChartInstance;
+      }) as unknown) as ChartInstance;
 
       // Add candlestick series using the provided helper
       candlestickSeries = chart.addCandlestickSeries({
