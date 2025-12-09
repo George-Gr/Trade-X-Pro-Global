@@ -10,16 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Loader2, AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { KYCLoading } from "@/components/common/PageLoadingStates";
-
-interface KYCDocument {
-  id: string;
-  document_type: string;
-  status: string;
-  created_at: string;
-  reviewed_at: string | null;
-  rejection_reason: string | null;
-  type?: string;
-}
+import type { KYCDocument } from "@/integrations/supabase/types/tables";
 
 const KYC = () => {
   const { user } = useAuth();
@@ -39,7 +30,7 @@ const KYC = () => {
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status || '');
+      setKycStatus(data.kyc_status || 'pending');
     }
   }, [user]);
 

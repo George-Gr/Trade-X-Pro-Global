@@ -46,7 +46,7 @@ const Portfolio = () => {
     usePnLCalculations(
       mappedPositions.map(p => ({
         ...p,
-        currentPrice: p.currentPrice ?? 0,
+        currentPrice: p.currentPrice ?? p.entryPrice,
       })),
       priceMap,
       undefined,

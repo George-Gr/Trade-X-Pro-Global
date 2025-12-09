@@ -86,9 +86,11 @@ export const usePnLCalculations = (
 
       // Simplified liquidation price (50% of entry for long, 150% for short)
       const liquidationPrice =
-        position.side === "long"
-          ? (position.entry_price ?? 0) * 0.5
-          : (position.entry_price ?? 0) * 1.5;
+        position.entry_price != null
+          ? position.side === "long"
+            ? position.entry_price * 0.5
+            : position.entry_price * 1.5
+          : null;
 
       // Calculate ROI
       const roi =
@@ -169,7 +171,9 @@ export const usePnLCalculations = (
     const netPnL = grossPnL;
 
     // Calculate portfolio metrics
-    const totalCost = positions.reduce((sum, p) => sum + (p.entry_price ?? 0) * p.quantity, 0);
+    const totalCost = positions
+      .filter(p => p.entry_price != null)
+      .reduce((sum, p) => sum + p.entry_price! * p.quantity, 0);
     const pnlPercentage = totalCost > 0 ? (netPnL / totalCost) * 100 : 0;
 
     // Calculate profit factor

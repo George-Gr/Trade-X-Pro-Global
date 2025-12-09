@@ -436,11 +436,8 @@ export const useChartPerformance = (
   }, []);
 
   const debouncedUpdate = useCallback(<T,>(callback: (...args: T[]) => void, ...args: T[]) => {
-    if (!debouncerRef.current) {
-      debouncerRef.current = new DebouncedChartUpdater((callback as (...args: unknown[]) => void), mergedConfig.debounceDelay);
-    }
-    
-    debouncerRef.current.update(...(args as unknown[]));
+    const updater = new DebouncedChartUpdater(() => callback(...(args as T[])), mergedConfig.debounceDelay);
+    updater.update();
   }, [mergedConfig.debounceDelay]);
 
     const acquireFromPool = useCallback(<T extends { _poolId?: string }>(key: string, factory: () => T): T => {

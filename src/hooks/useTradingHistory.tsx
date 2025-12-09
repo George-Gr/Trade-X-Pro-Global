@@ -103,7 +103,7 @@ export const useTradingHistory = () => {
       const trades: TradeHistoryItem[] = (positionsData || []).map((pos) => ({
         id: pos.id,
         symbol: pos.symbol,
-        side: pos.side as 'buy' | 'sell',
+        side: (pos.side === 'buy' || pos.side === 'sell') ? pos.side : 'buy',
         quantity: pos.quantity,
         entry_price: pos.entry_price,
         exit_price: (pos.current_price ?? pos.entry_price) as number,
@@ -121,15 +121,16 @@ export const useTradingHistory = () => {
       // Filter orders to ensure proper types
       const typedOrders = (ordersData || []).map(o => ({
         ...o,
-        price: o.fill_price ?? o.price ?? undefined,
+        price: o.fill_price ?? o.price,
         commission: o.commission ?? 0,
-      }));
+        side: (o.side === 'buy' || o.side === 'sell') ? o.side : 'buy',
+      })) as OrderHistoryItem[];
       const typedLedger = (ledgerData || []).map(l => ({
         ...l,
         description: l.description ?? '',
-      }));
-      setOrders(typedOrders as OrderHistoryItem[]);
-      setLedger(typedLedger as LedgerEntry[]);
+      })) as LedgerEntry[];
+      setOrders(typedOrders);
+      setLedger(typedLedger);
       setStatistics(stats);
       setError(null);
     } catch (err) {

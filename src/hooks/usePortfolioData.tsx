@@ -61,7 +61,12 @@ export const usePortfolioData = () => {
       setProfile(profileData);
       setPositions(positionsData?.map(pos => ({
         ...pos,
-        opened_at: (pos.opened_at ?? new Date().toISOString()) as string,
+        opened_at: (() => {
+          if (!pos.opened_at) {
+            console.warn(`Position ${pos.id} missing opened_at timestamp`);
+          }
+          return (pos.opened_at ?? new Date().toISOString()) as string;
+        })(),
         closed_at: pos.closed_at ?? undefined,
         status: (pos.status ?? 'open') as 'open' | 'closed',
         current_price: pos.current_price ?? 0,

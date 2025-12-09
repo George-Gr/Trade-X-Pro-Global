@@ -111,10 +111,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
   // Calculate performance metrics
   const performanceMetrics = useMemo(() => {
     const returns = (positions || []).map(pos => {
-      const currentPrice = pos.current_price ?? 0;
       const pnl = pos.side === 'buy'
-        ? (currentPrice - pos.entry_price) / pos.entry_price
-        : (pos.entry_price - currentPrice) / pos.entry_price;
+        ? (pos.current_price - pos.entry_price) / pos.entry_price
+        : (pos.entry_price - pos.current_price) / pos.entry_price;
       return pnl;
     });
 

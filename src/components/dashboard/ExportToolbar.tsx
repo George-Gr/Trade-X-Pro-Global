@@ -33,7 +33,7 @@ export const ExportToolbar: React.FC = () => {
         entryPrice: pos.entry_price,
         currentPrice: pos.current_price ?? 0,
         side: pos.side as 'buy' | 'sell',
-        pnl: pos.current_price ? (pos.current_price - pos.entry_price) * pos.quantity * 100000 * (pos.side === 'buy' ? 1 : -1) : 0,
+        pnl: pos.current_price != null ? (pos.current_price - pos.entry_price) * pos.quantity * 100000 * (pos.side === 'buy' ? 1 : -1) : 0,
       })),
       timestamp: new Date(),
     };
@@ -68,7 +68,7 @@ export const ExportToolbar: React.FC = () => {
         entryPrice: pos.entry_price,
         currentPrice: pos.current_price ?? 0,
         side: pos.side as 'buy' | 'sell',
-        pnl: pos.current_price ? (pos.current_price - pos.entry_price) * pos.quantity * 100000 * (pos.side === 'buy' ? 1 : -1) : 0,
+        pnl: pos.current_price != null ? (pos.current_price - pos.entry_price) * pos.quantity * 100000 * (pos.side === 'buy' ? 1 : -1) : 0,
       })),
       timestamp: new Date(),
     };

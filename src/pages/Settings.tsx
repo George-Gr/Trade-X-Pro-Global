@@ -25,8 +25,11 @@ const Settings = () => {
       .eq("id", user.id)
       .single();
 
-    if (data && !error) {
-      setKycStatus(data.kyc_status || '');
+    if (error) {
+      console.error('Failed to fetch KYC status:', error);
+      // Optionally set an error state or show a toast notification
+    } else if (data) {
+      setKycStatus(data.kyc_status || 'pending');
     }
     setIsLoading(false);
   }, [user]);

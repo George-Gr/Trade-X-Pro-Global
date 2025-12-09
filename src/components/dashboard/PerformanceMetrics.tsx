@@ -7,8 +7,8 @@ export const PerformanceMetrics: React.FC = () => {
 
   const totalTrades = positions.length;
   const profitable = positions.filter(p => {
-    const pnl = p.current_price ? (p.current_price - p.entry_price) * p.quantity * 100000 * (p.side === 'buy' ? 1 : -1) : 0;
-    return pnl > 0;
+    if (p.unrealized_pnl == null) return false;
+    return p.unrealized_pnl > 0;
   }).length;
 
   const winRate = totalTrades > 0 ? (profitable / totalTrades) * 100 : 0;

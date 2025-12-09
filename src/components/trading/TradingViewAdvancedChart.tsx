@@ -28,8 +28,7 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
               typeof (window as unknown as Record<string, unknown>).TradingView !== "undefined" && 
               ((window as unknown as Record<string, unknown>).TradingView as Record<string, unknown>).widget && 
               containerRef.current) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            new ((window as any).TradingView as any).widget({
+            new window.TradingView.widget({
               autosize: true,
               symbol: symbol,
               interval: "15",
