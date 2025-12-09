@@ -1,16 +1,12 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
 import {
-  Home,
-  BarChart3,
-  ShoppingBag,
-  Wallet,
-  Settings,
-  Compass,
+  LayoutDashboard,
   TrendingUp,
-  Users
+  Briefcase,
+  History,
+  Wallet
 } from 'lucide-react';
 
 interface MobileBottomNavigationProps {
@@ -20,25 +16,25 @@ interface MobileBottomNavigationProps {
 const navigationItems = [
   {
     path: '/dashboard',
-    icon: Home,
+    icon: LayoutDashboard,
     label: 'Dashboard',
     testId: 'nav-dashboard'
   },
   {
     path: '/trade',
-    icon: Compass,
+    icon: TrendingUp,
     label: 'Trade',
     testId: 'nav-trade'
   },
   {
     path: '/portfolio',
-    icon: BarChart3,
+    icon: Briefcase,
     label: 'Portfolio',
     testId: 'nav-portfolio'
   },
   {
     path: '/history',
-    icon: TrendingUp,
+    icon: History,
     label: 'History',
     testId: 'nav-history'
   },
@@ -55,21 +51,12 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
-  const handleNavigation = (path: string, label: string) => {
+  const handleNavigation = (path: string) => {
     // Haptic feedback for mobile
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
-
-    // Visual feedback
-    toast({
-      title: `${label} Selected`,
-      description: `Navigating to ${label}`,
-      duration: 1000,
-    });
-
     navigate(path);
   };
 
@@ -97,7 +84,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
           return (
             <button
               key={path}
-              onClick={() => handleNavigation(path, label)}
+              onClick={() => handleNavigation(path)}
               className={cn(
                 'flex flex-col items-center justify-center py-2 px-1',
                 'min-h-[60px] min-w-[60px]', // Ensure 44x44px minimum touch target
