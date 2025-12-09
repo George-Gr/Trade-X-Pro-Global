@@ -11,6 +11,10 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
   // Ensure navigator is properly defined for web libraries
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof (globalThis as any).navigator === 'undefined') {
+    // FIXED: Store reference to existing navigator BEFORE defining the polyfill
+    // This prevents the circular reference error
+    const existingNavigator = typeof navigator !== 'undefined' ? navigator : null;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).navigator = {
       userAgent: 'Node.js',
@@ -26,19 +30,20 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
       appName: 'Node.js',
       appCodeName: 'Node.js',
       appVersion: '0.0.0',
-      hardwareConcurrency: (navigator as Navigator | undefined)?.hardwareConcurrency || 1,
+      // FIXED: Use stored reference instead of trying to access navigator during definition
+      hardwareConcurrency: existingNavigator?.hardwareConcurrency || 4,
       maxTouchPoints: 0,
       clipboard: {
         readText: async () => '',
-        writeText: async () => {},
+        writeText: async () => { },
       },
       permissions: {
         query: async () => ({ state: 'denied' as const }),
       },
       geolocation: {
-        getCurrentPosition: () => {},
-        watchPosition: () => {},
-        clearWatch: () => {},
+        getCurrentPosition: () => { },
+        watchPosition: () => 0,
+        clearWatch: () => { },
       },
       mediaDevices: {
         getUserMedia: async () => Promise.reject(new Error('Not supported in Node.js')),
@@ -71,9 +76,9 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).document = {
       createElement: () => ({
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        setAttribute: () => {},
+        addEventListener: () => { },
+        removeEventListener: () => { },
+        setAttribute: () => { },
         getAttribute: () => null,
         style: {},
       }),
@@ -84,16 +89,16 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
       getElementById: () => null,
       getElementsByTagName: () => [],
       getElementsByClassName: () => [],
-      addEventListener: () => {},
-      removeEventListener: () => {},
+      addEventListener: () => { },
+      removeEventListener: () => { },
       body: {
-        addEventListener: () => {},
-        removeEventListener: () => {},
+        addEventListener: () => { },
+        removeEventListener: () => { },
         style: {},
       },
       head: {
-        addEventListener: () => {},
-        removeEventListener: () => {},
+        addEventListener: () => { },
+        removeEventListener: () => { },
         style: {},
       },
       location: {
@@ -156,4 +161,4 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
 }
 
 // Export to ensure this file is treated as a module
-export {};
+export { };
