@@ -331,14 +331,8 @@ export default defineConfig(({ mode }) => ({
             // Keep small utilities together to reduce extra chunks
             if (id.includes('clsx') || id.includes('tailwind-merge')) return 'vendor-lucide';
 
-            // Radix UI components - split into smaller chunks to reduce circular deps
-            if (id.includes('@radix-ui/react-dialog') || id.includes('@radix-ui/react-alert-dialog') || id.includes('@radix-ui/react-popover')) return 'vendor-radix-dialogs';
-            if (id.includes('@radix-ui/react-dropdown-menu') || id.includes('@radix-ui/react-context-menu') || id.includes('@radix-ui/react-navigation-menu')) return 'vendor-radix-menus';
-            if (id.includes('@radix-ui/react-select') || id.includes('@radix-ui/react-combobox')) return 'vendor-radix-selects';
-            if (id.includes('@radix-ui/react-tabs') || id.includes('@radix-ui/react-accordion') || id.includes('@radix-ui/react-collapsible')) return 'vendor-radix-structure';
-            if (id.includes('@radix-ui/react-tooltip') || id.includes('@radix-ui/react-hover-card')) return 'vendor-radix-popovers';
-            if (id.includes('@radix-ui/react-slider') || id.includes('@radix-ui/react-scroll-area') || id.includes('@radix-ui/react-progress')) return 'vendor-radix-inputs';
-            if (id.includes('@radix-ui')) return 'vendor-radix-core';
+            // Bundle all @radix-ui packages together to avoid circular dependency issues
+            if (id.includes('@radix-ui')) return 'vendor-radix';
 
             // Split Supabase client into its own chunk
             if (id.includes('@supabase')) return 'vendor-supabase';
