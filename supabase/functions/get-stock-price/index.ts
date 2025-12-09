@@ -9,6 +9,55 @@ interface PriceRequest {
   symbol: string;
 }
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute window
+const MAX_REQUESTS_PER_WINDOW = 60; // 60 requests per minute per IP
+const rateLimitStore = new Map<string, { count: number; windowStart: number }>();
+
+function getClientIP(req: Request): string {
+  // Check common headers for proxied requests
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  const realIP = req.headers.get('x-real-ip');
+  if (realIP) {
+    return realIP;
+  }
+  // Fallback to a default identifier
+  return 'unknown';
+}
+
+function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number; resetIn: number } {
+  const now = Date.now();
+  const record = rateLimitStore.get(clientIP);
+  
+  // Clean up old entries periodically (every 100 checks)
+  if (Math.random() < 0.01) {
+    const cutoff = now - RATE_LIMIT_WINDOW_MS * 2;
+    for (const [ip, data] of rateLimitStore.entries()) {
+      if (data.windowStart < cutoff) {
+        rateLimitStore.delete(ip);
+      }
+    }
+  }
+  
+  if (!record || (now - record.windowStart) >= RATE_LIMIT_WINDOW_MS) {
+    // New window
+    rateLimitStore.set(clientIP, { count: 1, windowStart: now });
+    return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - 1, resetIn: RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    const resetIn = RATE_LIMIT_WINDOW_MS - (now - record.windowStart);
+    return { allowed: false, remaining: 0, resetIn };
+  }
+  
+  record.count++;
+  const resetIn = RATE_LIMIT_WINDOW_MS - (now - record.windowStart);
+  return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - record.count, resetIn };
+}
+
 // Simulated forex data for development (Finnhub free tier doesn't support forex)
 const FOREX_MOCK_DATA: Record<string, { base: number, volatility: number }> = {
   'OANDA:EUR_USD': { base: 1.0850, volatility: 0.0015 },
@@ -80,6 +129,32 @@ serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Rate limiting check
+  const clientIP = getClientIP(req);
+  const rateLimit = checkRateLimit(clientIP);
+  
+  const rateLimitHeaders = {
+    ...corsHeaders,
+    'X-RateLimit-Limit': String(MAX_REQUESTS_PER_WINDOW),
+    'X-RateLimit-Remaining': String(rateLimit.remaining),
+    'X-RateLimit-Reset': String(Math.ceil(rateLimit.resetIn / 1000)),
+  };
+  
+  if (!rateLimit.allowed) {
+    console.warn(`Rate limit exceeded for IP: ${clientIP}`);
+    return new Response(
+      JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+      { 
+        status: 429, 
+        headers: { 
+          ...rateLimitHeaders, 
+          'Content-Type': 'application/json',
+          'Retry-After': String(Math.ceil(rateLimit.resetIn / 1000))
+        } 
+      }
+    );
   }
 
   try {
