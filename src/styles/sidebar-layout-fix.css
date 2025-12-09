@@ -13,15 +13,6 @@
   border-color: hsl(var(--sidebar-border));
 }
 
-/* Make sure the sidebar sits above page content but below modal overlays */
-.sidebar {
-  z-index: 50; /* default app sidebar stacking */
-}
-
-.sidebar--overlay,
-.sidebar-overlay {
-  z-index: 70; /* overlays should sit above sidebars */
-}
 
 /* Smooth, performant transitions for show/hide and theme changes */
 .sidebar,

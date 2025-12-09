@@ -26,9 +26,9 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <AuthenticatedLayoutContent 
-        children={children} 
-        user={user} 
+      <AuthenticatedLayoutContent
+        children={children}
+        user={user}
         handleLogoutClick={handleLogoutClick}
       />
     </SidebarProvider>
@@ -42,10 +42,10 @@ interface AuthenticatedLayoutContentProps {
   handleLogoutClick: () => void;
 }
 
-const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({ 
-  children, 
-  user, 
-  handleLogoutClick 
+const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
+  children,
+  user,
+  handleLogoutClick
 }) => {
   const { state, open } = useSidebar();
   const { setSidebarOpen } = useAuthenticatedLayout();
@@ -75,14 +75,14 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-background transition-all duration-300 ease-in-out">
-      {/* Sidebar - z-index managed by sidebar component (z-50) */}
+    <div className="min-h-screen flex w-full bg-background">
+      {/* Sidebar - uses relative positioning to participate in flex layout */}
       <AppSidebar />
 
-      {/* Main Content Area with SidebarInset - positioned below sidebar */}
-      <SidebarInset className="flex flex-col transition-all duration-300 ease-in-out">
-        {/* Top Header - sticky with z-50 to stay above main content */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm transition-all duration-300 ease-in-out">
+      {/* Main Content Area with SidebarInset - flows next to sidebar in flex layout */}
+      <SidebarInset className="flex flex-col">
+        {/* Top Header - sticky with z-40 to stay above main content */}
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-40 backdrop-blur-sm bg-card/95 shadow-sm">
           <div className="flex items-center gap-4">
             <SidebarTrigger className="h-10 w-10" />
             <AutoBreadcrumb />
@@ -112,9 +112,9 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
               <span className="text-muted-foreground">Account:</span>
               <span className="font-semibold text-foreground">{user?.email || "Trading Account"}</span>
             </div>
-            
+
             <NotificationCenter />
-            
+
             <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
               <User className="h-5 w-5 text-primary" />
             </div>
@@ -122,13 +122,13 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-background transition-all duration-300 ease-in-out pb-16 md:pb-0">
+        <main className="flex-1 overflow-auto bg-background pb-16 md:pb-0">
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6">
             {children}
           </div>
         </main>
       </SidebarInset>
-      
+
       {/* Mobile Bottom Navigation */}
       <MobileBottomNavigation />
     </div>
