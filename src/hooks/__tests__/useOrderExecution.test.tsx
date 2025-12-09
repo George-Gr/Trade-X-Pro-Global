@@ -1,15 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-
-// Vitest provides beforeEach/afterEach as globals when globals: true is set in vitest.config.ts
-// Add TypeScript declarations to avoid TS errors
-declare let beforeEach: (fn: () => void | Promise<void>) => void;
-declare let afterEach: (fn: () => void | Promise<void>) => void;
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useOrderExecution } from '../useOrderExecution';
-import { supabase } from '@/integrations/supabase/client';
 
-// Mock Supabase
-vi.mock('@/integrations/supabase/client', () => ({
+// Mock Supabase at the correct path used by the implementation
+vi.mock('@/lib/supabaseBrowserClient', () => ({
   supabase: {
     auth: {
       getSession: vi.fn(),
@@ -19,6 +13,8 @@ vi.mock('@/integrations/supabase/client', () => ({
     },
   },
 }));
+
+const { supabase } = await import('@/lib/supabaseBrowserClient');
 
 // Mock useToast hook
 vi.mock('@/hooks/use-toast', () => ({
@@ -30,6 +26,9 @@ vi.mock('@/hooks/use-toast', () => ({
 describe('useOrderExecution', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Ensure mock functions are properly initialized
+    vi.mocked(supabase.auth.getSession).mockClear();
+    vi.mocked(supabase.functions.invoke).mockClear();
   });
 
   afterEach(() => {
@@ -45,7 +44,7 @@ describe('useOrderExecution', () => {
     const mockGetSession = vi.spyOn(supabase.auth, 'getSession');
     mockGetSession.mockResolvedValueOnce({
       data: { session: null },
-    } as { data: { session: null } } );
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -75,7 +74,7 @@ describe('useOrderExecution', () => {
       data: {
         error: 'Insufficient balance',
       },
-    } as { data: { error: string } } );
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -120,7 +119,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as { data: { data: typeof mockOrderResponse } } );
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -151,7 +150,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as { data: { session: { user: { id: string } } } } );
+    } as any);
 
     const mockOrderResponse = {
       success: true,
@@ -173,7 +172,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as { data: { data: typeof mockOrderResponse } } );
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -223,7 +222,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as { data: { data: typeof mockOrderResponse } } );
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -260,7 +259,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as { data: { session: { user: { id: string } } } } );
+    } as any);
 
     const mockOrderResponse = {
       success: true,
@@ -282,7 +281,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as { data: { data: typeof mockOrderResponse } } );
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -344,10 +343,10 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as unknown);
+    } as any);
 
     const mockInvoke = vi.spyOn(supabase.functions, 'invoke');
-    mockInvoke.mockResolvedValue({
+mockInvoke.mockResolvedValue({
       data: {
         data: {
           success: true,
@@ -364,7 +363,7 @@ describe('useOrderExecution', () => {
           new_margin_level: 500,
         },
       },
-    } as unknown as Awaited<ReturnType<typeof supabase.functions.invoke>>);
+    } as any);
 
     const { result } = renderHook(() => useOrderExecution());
 

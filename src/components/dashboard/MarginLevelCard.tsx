@@ -151,6 +151,29 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
             value={Math.max(0, Math.min(100, marginLevel))} 
             className="h-2"
           />
+          {trend && trend.length > 0 && (
+            <div className="mt-3">
+              <svg width="100%" height="40" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden>
+                <polyline
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  points={(() => {
+                    const values = trend.slice();
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    const range = max - min || 1;
+                    const pts = values.map((v, i) => {
+                      const x = Math.round((i / (values.length - 1 || 1)) * 100);
+                      const y = Math.round((1 - (v - min) / range) * 30);
+                      return `${x},${y}`;
+                    });
+                    return pts.join(' ');
+                  })()}
+                />
+              </svg>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-xs">

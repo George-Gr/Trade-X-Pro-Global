@@ -133,7 +133,8 @@ describe('RiskAlertsCard', () => {
       
       // The badge should have critical styling (red colors)
       const badge = container.querySelector('[class*="text-red"]');
-      expect(badge || container.textContent).toContain(/critical|red/i);
+      const badgeText = badge ? badge.textContent : (container.textContent || '');
+      expect(badgeText).toMatch(/critical|red/i);
     });
 
     it('should render warning severity badge', () => {
@@ -144,7 +145,8 @@ describe('RiskAlertsCard', () => {
       
       // The badge should have warning styling (yellow colors)
       const badge = container.querySelector('[class*="text-yellow"]');
-      expect(badge || container.textContent).toContain(/warning|yellow/i);
+      const badgeText = badge ? badge.textContent : (container.textContent || '');
+      expect(badgeText).toMatch(/warning|yellow/i);
     });
 
     it('should render info severity badge', () => {
@@ -155,7 +157,8 @@ describe('RiskAlertsCard', () => {
       
       // The badge should have info styling (blue colors)
       const badge = container.querySelector('[class*="text-blue"]');
-      expect(badge || container.textContent).toContain(/info|blue/i);
+      const badgeText = badge ? badge.textContent : (container.textContent || '');
+      expect(badgeText).toMatch(/info|blue/i);
     });
 
     it('should render different action text for critical vs non-critical', () => {
@@ -207,10 +210,15 @@ describe('RiskAlertsCard', () => {
         { id: '2', level: 'warning', title: 'Second Alert' },
         { id: '3', level: 'critical', title: 'Third Alert' },
       ];
-      render(<RiskAlertsCard loading={false} alerts={alerts} />);
+      const { container } = render(<RiskAlertsCard loading={false} alerts={alerts} />);
       
-      const alertItems = screen.getAllByText(/Alert/);
-      expect(alertItems.length).toBe(3);
+      const titleElems = Array.from(container.querySelectorAll('[class*="font-medium"]'));
+      const titles = titleElems
+        .map(e => e.textContent?.trim())
+        .filter(Boolean)
+        .filter(t => /Alert/.test(t));
+      // Expect the alert titles (filtered) to match the provided alerts
+      expect(titles.slice(0, 3)).toEqual(['First Alert', 'Second Alert', 'Third Alert']);
     });
 
     it('should render alerts as list items', () => {
@@ -235,8 +243,9 @@ describe('RiskAlertsCard', () => {
       
       render(<RiskAlertsCard loading={false} alerts={alerts} />);
       
-      expect(screen.getByText(/Alert 1/)).toBeInTheDocument();
-      expect(screen.getByText(/Alert 20/)).toBeInTheDocument();
+      // Use exact text to avoid matching Alert 10/11 etc.
+      expect(screen.getByText('Alert 1')).toBeInTheDocument();
+      expect(screen.getByText('Alert 20')).toBeInTheDocument();
     });
   });
 
@@ -249,7 +258,8 @@ describe('RiskAlertsCard', () => {
       
       // Card heading should be present
       const heading = container.querySelector('h2');
-      expect(heading || container.textContent).toContain(/Risk Alerts/i);
+      const headingText = heading ? heading.textContent : (container.textContent || '');
+      expect(headingText).toMatch(/Risk Alerts/i);
     });
 
     it('should have descriptive subtitle', () => {
@@ -295,7 +305,8 @@ describe('RiskAlertsCard', () => {
       const { container } = render(<RiskAlertsCard loading={false} alerts={alerts} />);
       
       const heading = container.querySelector('h2');
-      expect(heading || container.textContent).toContain(/Risk Alerts/i);
+      const headingText = heading ? heading.textContent : (container.textContent || '');
+      expect(headingText).toMatch(/Risk Alerts/i);
     });
 
     it('should have semantic structure', () => {
@@ -316,7 +327,8 @@ describe('RiskAlertsCard', () => {
       
       // Badge should have distinct styling
       const badge = container.querySelector('[class*="px-2"][class*="rounded-full"]');
-      expect(badge || container.textContent).toContain(/critical/i);
+      const badgeText = badge ? badge.textContent : (container.textContent || '');
+      expect(badgeText).toMatch(/critical/i);
     });
   });
 

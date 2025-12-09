@@ -1,10 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+/// <reference types="vitest/globals" />
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import { useSlTpExecution, SLTPExecutionOptions, ClosureResponse } from '../useSlTpExecution';
-import { supabase } from '@/integrations/supabase/client';
 
-// Mock the Supabase client
-vi.mock('@/integrations/supabase/client', () => ({
+// Mock the Supabase client at the correct path used by the implementation
+vi.mock('@/lib/supabaseBrowserClient', () => ({
   supabase: {
     functions: {
       invoke: vi.fn(),
@@ -12,14 +12,21 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
+const { supabase } = await import('@/lib/supabaseBrowserClient');
+
 describe('useSlTpExecution', () => {
+  let invokeSpy: ReturnType<typeof vi.spyOn>;
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
+    // Properly mock the invoke function using spyOn for each test
+    invokeSpy = vi.spyOn(supabase.functions, 'invoke');
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    invokeSpy?.mockRestore();
   });
 
   /**
@@ -41,10 +48,10 @@ describe('useSlTpExecution', () => {
       slippage: 2,
     };
 
-    vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
+    invokeSpy.mockResolvedValueOnce({
       data: { data: mockResponse },
       error: null,
-    } as { data: Record<string, unknown>; error: unknown });
+    } as unknown as ReturnType<typeof supabase.functions.invoke>);
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -85,10 +92,10 @@ describe('useSlTpExecution', () => {
       slippage: 1,
     };
 
-    vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
+    invokeSpy.mockResolvedValueOnce({
       data: { data: mockResponse },
       error: null,
-    } as { data: Record<string, unknown>; error: unknown });
+    } as unknown as ReturnType<typeof supabase.functions.invoke>);
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -127,15 +134,13 @@ describe('useSlTpExecution', () => {
       slippage: 2,
     };
 
-    const invokeMock = vi.mocked(supabase.functions.invoke);
-
     // First call fails with transient error, second succeeds
-    invokeMock
+    invokeSpy
       .mockRejectedValueOnce(new Error('ECONNREFUSED'))
       .mockResolvedValueOnce({
         data: { data: mockResponse },
         error: null,
-      } as { data: Record<string, unknown>; error: unknown });
+      } as unknown as ReturnType<typeof supabase.functions.invoke>);
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -155,15 +160,14 @@ describe('useSlTpExecution', () => {
     });
 
     expect(executionResult).toEqual(mockResponse);
-    expect(invokeMock).toHaveBeenCalledTimes(2);
+    expect(invokeSpy).toHaveBeenCalledTimes(2);
   });
 
   /**
    * Test 4: Permanent error is not retried
    */
   it('should not retry on validation error', async () => {
-    const invokeMock = vi.mocked(supabase.functions.invoke);
-    invokeMock.mockRejectedValueOnce(new Error('Invalid position ID'));
+    invokeSpy.mockRejectedValueOnce(new Error('Invalid position ID'));
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -186,15 +190,14 @@ describe('useSlTpExecution', () => {
     expect(thrownError).not.toBeNull();
     expect((thrownError as unknown as Error)?.message).toContain('Invalid position ID');
     // Should only be called once (no retry)
-    expect(invokeMock).toHaveBeenCalledTimes(1);
+    expect(invokeSpy).toHaveBeenCalledTimes(1);
   });
 
   /**
    * Test 5: All retries exhausted throws error
    */
   it('should throw error after max retries exhausted', async () => {
-    const invokeMock = vi.mocked(supabase.functions.invoke);
-    invokeMock.mockRejectedValue(new Error('ECONNREFUSED'));
+    invokeSpy.mockRejectedValue(new Error('ECONNREFUSED'));
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -218,7 +221,7 @@ describe('useSlTpExecution', () => {
     });
 
     expect(thrownError).not.toBeNull();
-    expect(invokeMock).toHaveBeenCalledTimes(3);
+    expect(invokeSpy).toHaveBeenCalledTimes(3);
   });
 
   /**
@@ -240,10 +243,10 @@ describe('useSlTpExecution', () => {
       slippage: 2,
     };
 
-    vi.mocked(supabase.functions.invoke).mockResolvedValueOnce({
+    invokeSpy.mockResolvedValueOnce({
       data: { data: mockResponse },
       error: null,
-    } as { data: Record<string, unknown>; error: unknown });
+    } as unknown as ReturnType<typeof supabase.functions.invoke>);
 
     const { result } = renderHook(() => useSlTpExecution());
 
@@ -259,7 +262,7 @@ describe('useSlTpExecution', () => {
       await result.current.executeStopLossOrTakeProfit(options);
     });
 
-    const callArgs = vi.mocked(supabase.functions.invoke).mock.calls[0];
+    const callArgs = invokeSpy.mock.calls[0];
     expect(callArgs[1]?.body?.idempotency_key).toBe(idempotencyKey);
   });
 
