@@ -283,34 +283,50 @@ serve(async (req: unknown) => {
     }
 
     // =========================================
-    // STEP 5: Fetch current market price from Finnhub
+    // STEP 5: Fetch current market price via get-stock-price function
     // =========================================
-    const finnhubApiKey = Deno.env.get('FINNHUB_API_KEY');
     let currentPrice: number;
 
     try {
-      // Map symbol to Finnhub format
-      let finnhubSymbol = orderRequest.symbol;
+      // Map symbol to price API format
+      let priceSymbol = orderRequest.symbol;
       
-      // For forex, use Finnhub forex format (e.g., OANDA:EUR_USD)
-      if (assetSpec.asset_class === 'forex') {
-        const base = orderRequest.symbol.substring(0, 3);
-        const quote = orderRequest.symbol.substring(3, 6);
-        finnhubSymbol = `OANDA:${base}_${quote}`;
+      // For forex/commodities/crypto, use OANDA format (e.g., EURUSD -> OANDA:EUR_USD)
+      if (assetSpec.asset_class === 'forex' || assetSpec.asset_class === 'commodity' || assetSpec.asset_class === 'crypto') {
+        if (orderRequest.symbol.length === 6 && !orderRequest.symbol.includes(':')) {
+          const base = orderRequest.symbol.substring(0, 3);
+          const quote = orderRequest.symbol.substring(3, 6);
+          priceSymbol = `OANDA:${base}_${quote}`;
+        }
       }
       
+      // Call our get-stock-price edge function which handles forex simulation
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+      
       const priceResponse = await fetch(
-        `https://finnhub.io/api/v1/quote?symbol=${finnhubSymbol}&token=${finnhubApiKey}`
+        `${supabaseUrl}/functions/v1/get-stock-price`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'apikey': supabaseAnonKey,
+          },
+          body: JSON.stringify({ symbol: priceSymbol }),
+        }
       );
 
       if (!priceResponse.ok) {
+        const errorBody = await priceResponse.text();
+        console.error(`Price fetch failed: ${priceResponse.status} - ${errorBody}`);
         throw new Error('Failed to fetch market price');
       }
 
-  const priceData: PriceData = await priceResponse.json();
+      const priceData: PriceData = await priceResponse.json();
 
-  // Use current price (c) or fallback to previous close (pc)
-  currentPrice = priceData.c || priceData.pc || 0;
+      // Use current price (c) or fallback to previous close (pc)
+      currentPrice = priceData.c || priceData.pc || 0;
       
       if (!currentPrice || currentPrice === 0) {
         throw new Error('Invalid price data received');
@@ -318,6 +334,7 @@ serve(async (req: unknown) => {
 
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('Market data error:', errorMessage);
       return new Response(
         JSON.stringify({ error: 'Market data unavailable', details: errorMessage }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
