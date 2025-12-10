@@ -1,117 +1,80 @@
-/* Navigation Sidebar Active State Enhancements */
+/* Navigation Sidebar Styles */
 
-/* Enhanced active state styling for sidebar navigation items */
-[data-sidebar="menu-button"][data-active="true"] {
-  /* Left border accent - #3B82F6 (blue-500) */
-  border-left: 4px solid hsl(217 91% 60%);
-  
-  /* Background highlight - rgba(59, 130, 246, 0.1) */
-  background-color: hsl(217 91% 60% / 0.1);
-  
-  /* Icon and text color - #3B82F6 (blue-500) */
-  color: hsl(217 91% 60%);
-  
-  /* Enhanced shadow for active state */
-  box-shadow: 
-    inset 4px 0 0 0 hsl(217 91% 60%),
-    0 4px 12px hsl(217 91% 60% / 0.15);
-  
-  /* Smooth transition for all active state changes */
-  transition: all 0.2s ease-in-out;
+/* Base sidebar styling */
+[data-sidebar="sidebar"] {
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
 }
 
-/* Enhanced hover state for better UX */
+/* Menu item base styles */
+[data-sidebar="menu-button"] {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  min-height: 44px;
+  border-radius: 0.5rem;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease-in-out;
+  color: hsl(var(--sidebar-foreground));
+}
+
+/* Hover state */
 [data-sidebar="menu-button"]:not([data-active="true"]):hover {
-  /* Subtle background highlight on hover */
+  background-color: hsl(var(--sidebar-accent) / 0.5);
+  border-left-color: hsl(var(--primary) / 0.3);
+}
+
+/* Active state - Enhanced visibility */
+[data-sidebar="menu-button"][data-active="true"] {
+  background-color: hsl(var(--primary) / 0.1);
+  border-left-color: hsl(var(--primary));
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+[data-sidebar="menu-button"][data-active="true"] svg {
+  color: hsl(var(--primary));
+}
+
+[data-sidebar="menu-button"][data-active="true"] span {
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+/* Focus state for keyboard navigation */
+[data-sidebar="menu-button"]:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
   background-color: hsl(var(--sidebar-accent) / 0.3);
-  
-  /* Enhanced border on hover */
-  border-left: 2px solid hsl(217 91% 60% / 0.5);
-  
-  /* Smooth transition */
-  transition: all 0.2s ease-in-out;
 }
 
-/* Focus state for keyboard navigation - Enhanced 3px Width */
-[data-sidebar="menu-button"]:focus-visible:not([data-active="true"]) {
-  /* Enhanced focus ring with accent color using CSS variables */
-  outline: 3px solid hsl(var(--focus-color));
-  outline-offset: 2px;
-  
-  /* Background highlight on focus */
-  background-color: hsl(var(--sidebar-accent) / 0.25);
-  
-  /* Enhanced shadow for better visibility using focus ring color */
-  box-shadow: 
-    0 0 0 4px hsl(var(--focus-ring-color) / 0.2),
-    0 4px 8px hsl(var(--focus-ring-color) / 0.1);
-  
-  /* Smooth transition */
-  transition: all 0.2s ease-in-out;
+/* Disabled state */
+[data-sidebar="menu-button"][aria-disabled="true"],
+[data-sidebar="menu-button"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
-/* Active state with focus combination - Enhanced */
-[data-sidebar="menu-button"][data-active="true"]:focus-visible {
-  /* Enhanced focus ring for active state with 3px width */
-  outline: 3px solid hsl(var(--focus-color));
-  outline-offset: 2px;
-  
-  /* Additional shadow for active + focus state */
-  box-shadow: 
-    inset 4px 0 0 0 hsl(var(--focus-color)),
-    0 4px 12px hsl(var(--focus-ring-color) / 0.15),
-    0 0 0 4px hsl(217 91% 60% / 0.2);
-  
-  /* Smooth transition */
-  transition: all 0.2s ease-in-out;
+/* Group labels */
+[data-sidebar="group-label"] {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--muted-foreground));
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.25rem;
 }
 
-/* Enhanced focus indicators for keyboard navigation - Updated 3px Width */
-[data-sidebar="menu-button"][role="menuitem"]:focus-visible {
-  /* Clear visual indicator for keyboard focus - 3px width using CSS variables */
-  outline: 3px solid hsl(var(--focus-color));
-  outline-offset: 2px;
-  
-  /* Enhanced background for better visibility */
-  background-color: hsl(var(--sidebar-accent) / 0.25);
-  
-  /* Enhanced shadow for better separation using focus ring color */
-  box-shadow: 
-    0 0 0 4px hsl(var(--focus-ring-color) / 0.25),
-    0 2px 4px hsl(var(--focus-ring-color) / 0.1);
-  
-  /* Ensure focus is always visible */
-  border-radius: 0.375rem;
-  
-  /* Smooth transition */
-  transition: all 0.2s ease-in-out;
+/* Collapsed state - hide text, center icons */
+[data-state="collapsed"] [data-sidebar="menu-button"] {
+  justify-content: center;
+  padding: 0.625rem;
 }
 
-/* High contrast focus indicators - Enhanced for WCAG AA */
-@media (prefers-contrast: high) {
-  [data-sidebar="menu-button"][role="menuitem"]:focus-visible {
-    /* High contrast focus ring - 4px for maximum visibility */
-    outline: 4px solid hsl(var(--contrast-auto-high));
-    outline-offset: 2px;
-    
-    /* High contrast background */
-    background-color: hsl(var(--contrast-auto-bg-high) / 0.8);
-    
-    /* Enhanced shadow for maximum separation */
-    box-shadow: 
-      0 0 0 6px hsl(var(--contrast-auto-bg-high) / 0.9),
-      0 0 0 8px hsl(var(--contrast-auto-bg-high) / 0.7);
-    
-    /* Ensure visibility in high contrast mode */
-    border: 2px solid hsl(var(--contrast-auto-high));
-    
-    /* Force text color for contrast */
-    color: hsl(var(--contrast-auto-high));
-  }
-}
-
-/* Screen reader only focus indicator for better accessibility */
-.sidebar-focus-indicator {
+[data-state="collapsed"] [data-sidebar="group-label"] {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -123,186 +86,47 @@
   border: 0;
 }
 
-.sidebar-focus-indicator:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  padding: 0.5rem;
-  margin: 0;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
-  background-color: hsl(217 91% 60% / 0.1);
-  border: 1px solid hsl(217 91% 60%);
-  border-radius: 0.375rem;
-  color: hsl(217 91% 60%);
-  font-weight: 500;
-}
-
-/* Icon styling for active state */
-[data-sidebar="menu-button"][data-active="true"] svg {
-  /* Icon color for active state */
-  color: hsl(217 91% 60%);
-  
-  /* Enhanced icon with slight scale */
-  transform: scale(1.05);
-  
-  /* Smooth transition */
+/* Smooth transitions */
+[data-sidebar="content"],
+[data-sidebar="menu-button"],
+[data-sidebar="group-label"] {
   transition: all 0.2s ease-in-out;
-}
-
-/* Icon styling for hover state */
-[data-sidebar="menu-button"]:not([data-active="true"]):hover svg {
-  /* Icon color for hover state */
-  color: hsl(217 91% 60%);
-  
-  /* Slight scale effect on hover */
-  transform: scale(1.02);
-  
-  /* Smooth transition */
-  transition: all 0.2s ease-in-out;
-}
-
-/* Text styling for active state */
-[data-sidebar="menu-button"][data-active="true"] span {
-  /* Text color for active state */
-  color: hsl(217 91% 60%);
-  
-  /* Bold font weight for active state */
-  font-weight: 600;
-  
-  /* Smooth transition */
-  transition: all 0.2s ease-in-out;
-}
-
-/* Enhanced active state for collapsed sidebar */
-[data-sidebar="menu-button"][data-active="true"][data-collapsible="icon"] {
-  /* Left border accent for collapsed state */
-  border-left: 4px solid hsl(217 91% 60%);
-  
-  /* Background highlight for collapsed state */
-  background-color: hsl(217 91% 60% / 0.1);
-  
-  /* Icon and text color for collapsed state */
-  color: hsl(217 91% 60%);
-  
-  /* Remove left padding to align with border */
-  padding-left: 0.5rem;
-  
-  /* Enhanced shadow for collapsed active state */
-  box-shadow: 
-    inset 4px 0 0 0 hsl(217 91% 60%),
-    0 2px 8px hsl(217 91% 60% / 0.2);
 }
 
 /* Dark mode adjustments */
 .dark [data-sidebar="menu-button"][data-active="true"] {
-  /* Left border accent for dark mode */
-  border-left: 4px solid hsl(217 91% 60%);
-  
-  /* Background highlight for dark mode */
-  background-color: hsl(217 91% 60% / 0.15);
-  
-  /* Icon and text color for dark mode */
-  color: hsl(217 91% 60%);
+  background-color: hsl(var(--primary) / 0.15);
 }
 
 .dark [data-sidebar="menu-button"]:not([data-active="true"]):hover {
-  /* Hover background for dark mode */
   background-color: hsl(var(--sidebar-accent) / 0.4);
-  
-  /* Hover border for dark mode */
-  border-left: 2px solid hsl(217 91% 60% / 0.6);
 }
 
-/* High contrast mode support */
+/* High contrast mode */
 @media (prefers-contrast: high) {
   [data-sidebar="menu-button"][data-active="true"] {
-    /* High contrast border */
-    border-left: 4px solid hsl(217 91% 60%);
-    
-    /* High contrast background */
-    background-color: hsl(217 91% 60% / 0.2);
-    
-    /* High contrast text */
-    color: hsl(217 91% 60%);
-    
-    /* Enhanced shadow for high contrast */
-    box-shadow: 
-      inset 4px 0 0 0 hsl(217 91% 60%),
-      0 4px 12px hsl(217 91% 60% / 0.3);
+    border-left-width: 4px;
+    background-color: hsl(var(--primary) / 0.2);
   }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  [data-sidebar="menu-button"][data-active="true"],
-  [data-sidebar="menu-button"]:not([data-active="true"]):hover,
+  
   [data-sidebar="menu-button"]:focus-visible {
-    /* Remove transitions for reduced motion */
-    transition: none !important;
-    
-    /* Remove scale transforms for reduced motion */
-    transform: none !important;
+    outline-width: 3px;
   }
 }
 
-/* Touch target optimization for mobile */
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-sidebar="content"],
+  [data-sidebar="menu-button"],
+  [data-sidebar="group-label"] {
+    transition: none;
+  }
+}
+
+/* Touch optimization for mobile */
 @media (max-width: 768px) {
-  [data-sidebar="menu-button"][data-active="true"] {
-    /* Ensure minimum touch target size */
-    min-height: 44px;
+  [data-sidebar="menu-button"] {
+    min-height: 48px;
     padding: 0.75rem 1rem;
-    
-    /* Larger border for better visibility on mobile */
-    border-left: 4px solid hsl(217 91% 60%);
-  }
-  
-  [data-sidebar="menu-button"]:not([data-active="true"]):hover {
-    /* Larger touch target for hover state */
-    min-height: 44px;
-  }
-}
-
-/* Dark Mode Sidebar Focus Rings */
-@media (prefers-color-scheme: dark) {
-  .dark [data-sidebar="menu-button"]:focus-visible:not([data-active="true"]) {
-    /* Dark mode focus ring - enhanced visibility using CSS variables */
-    outline: 3px solid hsl(var(--focus-color));
-    outline-offset: 2px;
-    
-    /* Dark mode background highlight */
-    background-color: hsl(var(--sidebar-accent) / 0.3);
-    
-    /* Enhanced shadow for dark backgrounds using focus ring color */
-    box-shadow: 
-      0 0 0 4px hsl(var(--focus-ring-color) / 0.3),
-      0 4px 8px hsl(var(--focus-ring-color) / 0.15);
-  }
-  
-  .dark [data-sidebar="menu-button"][data-active="true"]:focus-visible {
-    /* Dark mode active + focus state */
-    outline: 3px solid hsl(var(--focus-color));
-    outline-offset: 2px;
-    
-    /* Dark mode active + focus shadow */
-    box-shadow: 
-      inset 4px 0 0 0 hsl(var(--focus-color)),
-      0 4px 12px hsl(var(--focus-ring-color) / 0.2),
-      0 0 0 6px hsl(var(--focus-ring-color) / 0.25);
-  }
-  
-  .dark [data-sidebar="menu-button"][role="menuitem"]:focus-visible {
-    /* Dark mode keyboard navigation focus */
-    outline: 3px solid hsl(var(--focus-color));
-    outline-offset: 2px;
-    
-    /* Dark mode background */
-    background-color: hsl(var(--sidebar-accent) / 0.3);
-    
-    /* Dark mode shadow using focus ring color */
-    box-shadow: 
-      0 0 0 4px hsl(var(--focus-ring-color) / 0.3),
-      0 2px 4px hsl(var(--focus-ring-color) / 0.15);
   }
 }
