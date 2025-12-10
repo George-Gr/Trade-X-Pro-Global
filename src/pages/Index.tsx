@@ -26,7 +26,7 @@ import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { FAQSection } from "@/components/landing/FAQSection";
-import { RiskDisclaimer, CompactRiskDisclaimer } from "@/components/landing/RiskDisclaimer";
+import { CompactRiskDisclaimer } from "@/components/landing/RiskDisclaimer";
 import { LiveChatIndicator } from "@/components/landing/LiveChatIndicator";
 import { PlatformPreview } from "@/components/landing/PlatformPreview";
 import { ComparisonTable } from "@/components/landing/ComparisonTable";
@@ -38,8 +38,7 @@ export default function Index() {
     <div className="min-h-screen bg-background">
       <PublicHeader />
 
-      {/* Risk Disclaimer Banner */}
-      <RiskDisclaimer />
+      {/* Hero Section - Asymmetric 60/40 Layout with Animated Background */}
 
       {/* Hero Section - Asymmetric 60/40 Layout with Animated Background */}
       <HeroSection />
