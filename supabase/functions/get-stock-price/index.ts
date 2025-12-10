@@ -58,13 +58,29 @@ function checkRateLimit(clientIP: string): { allowed: boolean; remaining: number
   return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - record.count, resetIn };
 }
 
-// Simulated forex data for development (Finnhub free tier doesn't support forex)
+// Simulated forex/commodity/crypto data for development (Finnhub free tier doesn't support these)
 const FOREX_MOCK_DATA: Record<string, { base: number, volatility: number }> = {
+  // Major Forex Pairs
   'OANDA:EUR_USD': { base: 1.0850, volatility: 0.0015 },
   'OANDA:GBP_USD': { base: 1.2650, volatility: 0.0020 },
   'OANDA:USD_JPY': { base: 149.50, volatility: 0.3000 },
   'OANDA:AUD_USD': { base: 0.6550, volatility: 0.0018 },
   'OANDA:USD_CAD': { base: 1.3850, volatility: 0.0012 },
+  'OANDA:USD_CHF': { base: 0.8750, volatility: 0.0012 },
+  'OANDA:NZD_USD': { base: 0.6100, volatility: 0.0015 },
+  // Cross Pairs
+  'OANDA:EUR_GBP': { base: 0.8580, volatility: 0.0012 },
+  'OANDA:EUR_JPY': { base: 162.20, volatility: 0.3500 },
+  'OANDA:GBP_JPY': { base: 189.10, volatility: 0.4000 },
+  // Commodities
+  'OANDA:XAU_USD': { base: 2350.00, volatility: 15.00 },  // Gold
+  'OANDA:XAG_USD': { base: 28.50, volatility: 0.30 },     // Silver
+  'OANDA:BCO_USD': { base: 82.50, volatility: 1.20 },     // Brent Crude Oil
+  'OANDA:WTICO_USD': { base: 78.00, volatility: 1.10 },   // WTI Crude Oil
+  'OANDA:NATGAS_USD': { base: 2.85, volatility: 0.08 },   // Natural Gas
+  // Crypto (simulated as forex pairs)
+  'OANDA:BTC_USD': { base: 67500.00, volatility: 800.00 },  // Bitcoin
+  'OANDA:ETH_USD': { base: 3450.00, volatility: 60.00 },    // Ethereum
 };
 
 function generateForexPrice(symbol: string): Record<string, unknown> | null {
