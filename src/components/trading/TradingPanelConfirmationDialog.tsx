@@ -2,15 +2,14 @@ import { OrderFormData } from "./OrderForm";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react";
+import { Loader2, TrendingUp, TrendingDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TradingPanelConfirmationDialogProps {
   open: boolean;
@@ -31,49 +30,68 @@ export const TradingPanelConfirmationDialog = ({
   onConfirm,
   onCancel,
 }: TradingPanelConfirmationDialogProps) => {
+  const isBuy = pendingOrder?.side === 'buy';
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-w-sm">
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirm Order</AlertDialogTitle>
-          <AlertDialogDescription>
-            {pendingOrder && (
-              <div className="space-y-2 text-sm mt-2">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-muted-foreground">Side</p>
-                    <p className="font-semibold capitalize">{pendingOrder.side}</p>
+          <AlertDialogTitle className="flex items-center gap-2">
+            {isBuy ? (
+              <TrendingUp className="h-5 w-5 text-profit" />
+            ) : (
+              <TrendingDown className="h-5 w-5 text-loss" />
+            )}
+            Confirm Order
+          </AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3 pt-2">
+              {pendingOrder && (
+                <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground text-sm">Side</span>
+                    <span className={cn(
+                      "font-semibold text-sm px-2 py-0.5 rounded",
+                      isBuy ? "bg-profit/10 text-profit" : "bg-loss/10 text-loss"
+                    )}>
+                      {pendingOrder.side.toUpperCase()}
+                    </span>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground">Quantity</p>
-                    <p className="font-semibold">{pendingOrder.quantity} lots</p>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground text-sm">Quantity</span>
+                    <span className="font-mono font-semibold text-sm">{pendingOrder.quantity} lots</span>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground">Type</p>
-                    <p className="font-semibold capitalize">{pendingOrder.type}</p>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground text-sm">Type</span>
+                    <span className="font-semibold text-sm capitalize">{pendingOrder.type.replace('_', '-')}</span>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground">Leverage (Fixed)</p>
-                    <p className="font-semibold">1:{assetLeverage}</p>
+                  <div className="flex justify-between border-t border-border pt-2">
+                    <span className="text-muted-foreground text-sm">Leverage</span>
+                    <span className="font-mono font-semibold text-sm">1:{assetLeverage}</span>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="gap-2 sm:gap-2">
           <Button
             variant="outline"
             onClick={onCancel}
             disabled={isExecuting}
-            className="font-medium"
+            className="flex-1"
           >
             Cancel
           </Button>
           <Button
             onClick={onConfirm}
             disabled={isExecuting}
-            className="bg-profit hover:bg-profit/90 text-foreground font-medium"
+            className={cn(
+              "flex-1 font-semibold",
+              isBuy 
+                ? "bg-profit hover:bg-profit/90 text-white" 
+                : "bg-loss hover:bg-loss/90 text-white"
+            )}
           >
             {isExecuting ? (
               <>
