@@ -29,7 +29,6 @@ import {
   Cookie,
   Scale
 } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -307,7 +306,6 @@ export const PublicHeader = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
-            <ThemeToggle />
             <Link to="/login">
               <Button 
                 variant="ghost" 
