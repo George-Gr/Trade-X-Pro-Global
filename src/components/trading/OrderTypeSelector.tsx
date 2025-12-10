@@ -1,4 +1,5 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 export type OrderType = 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
 
@@ -9,14 +10,13 @@ interface OrderTypeSelectorProps {
 }
 
 /**
- * OrderTypeSelector Component
+ * OrderTypeSelector Component (Enhanced)
  * 
- * Provides UI for selecting order type with tabs interface.
- * Supports: Market, Limit, Stop, Stop-Limit, and Trailing Stop orders.
- * 
- * @param value - Currently selected order type
- * @param onChange - Callback when order type changes
- * @param disabled - Whether the selector is disabled
+ * Improved order type selection with:
+ * - Better visual hierarchy
+ * - Larger touch targets
+ * - Clear active state
+ * - Responsive sizing
  */
 export const OrderTypeSelector = ({
   value,
@@ -51,26 +51,36 @@ export const OrderTypeSelector = ({
     },
   ];
 
+  const selectedType = orderTypes.find((t) => t.value === value);
+
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold">Order Type</label>
-        <p className="text-xs text-muted-foreground">
-          {orderTypes.find((t) => t.value === value)?.description}
+      <div className="flex items-center justify-between gap-2">
+        <label className="text-sm font-medium">Order Type</label>
+        <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+          {selectedType?.description}
         </p>
       </div>
+      
       <Tabs
         value={value}
         onValueChange={(v) => onChange(v as OrderType)}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-5 bg-muted/50 rounded-lg p-1">
+        <TabsList className="grid w-full grid-cols-5 h-10 bg-muted/50 rounded-lg p-1 gap-1">
           {orderTypes.map((type) => (
             <TabsTrigger
               key={type.value}
               value={type.value}
               disabled={disabled}
-              className="text-xs font-medium data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border hover:bg-muted/50 transition-all duration-200"
+              className={cn(
+                "text-xs font-medium rounded-md transition-all duration-200",
+                "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                "data-[state=active]:shadow-sm",
+                "hover:bg-muted/80",
+                "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                "disabled:opacity-50 disabled:cursor-not-allowed"
+              )}
             >
               {type.label}
             </TabsTrigger>
