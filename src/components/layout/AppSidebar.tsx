@@ -9,13 +9,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { useSidebar } from "@/components/ui/sidebarContext";
 import {
   filterNavigationSectionsByRoles,
   isPathActive,
-  NAVIGATION_CONFIG
 } from "@/lib/navigationConfig";
 import { SidebarErrorBoundary } from "@/components/ui/SidebarErrorBoundary";
 import {
@@ -24,7 +24,7 @@ import {
   generateNavigationAriaLabel,
   getAriaCurrentState
 } from "@/lib/utils";
-import { AlertCircle, TrendingUp } from "lucide-react";
+import { AlertCircle, TrendingUp, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -32,21 +32,27 @@ import { Button } from "@/components/ui/button";
  */
 function AppSidebarLoading() {
   return (
-    <Sidebar collapsible="icon" className="border-r border-border/50 backdrop-blur-none">
+    <Sidebar collapsible="icon" className="border-r border-border/50">
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
-        {/* Top spacing to prevent overlap with header */}
-        <div className="h-6" />
+        {/* Branding skeleton */}
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-border/30">
+          <div className="h-8 w-8 bg-sidebar-accent/50 rounded-lg animate-pulse" />
+          <div className="flex flex-col gap-1">
+            <div className="h-4 w-20 bg-sidebar-accent/50 rounded animate-pulse" />
+            <div className="h-3 w-24 bg-sidebar-accent/30 rounded animate-pulse" />
+          </div>
+        </div>
 
         {/* Loading Main Navigation Section */}
-        <SidebarGroup className="pt-1 pb-0">
+        <SidebarGroup className="py-4">
           <SidebarGroupLabel className="opacity-0 h-6">Loading</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1">
-              {[...Array(6)].map((_, index) => (
+            <SidebarMenu className="gap-1 px-2">
+              {[...Array(8)].map((_, index) => (
                 <SidebarMenuItem key={index}>
-                  <div className="flex gap-3 px-4 py-2 animate-pulse">
+                  <div className="flex gap-3 px-3 py-2.5 animate-pulse">
                     <div className="h-5 w-5 bg-sidebar-accent/50 rounded" />
-                    <div className="h-4 w-20 bg-sidebar-accent/50 rounded" />
+                    <div className="h-4 w-24 bg-sidebar-accent/50 rounded" />
                   </div>
                 </SidebarMenuItem>
               ))}
@@ -54,20 +60,22 @@ function AppSidebarLoading() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Spacer to push user actions to bottom */}
+        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Loading User Actions Section */}
-        <SidebarGroup className="pt-0 pb-1">
+        {/* Loading Settings Section */}
+        <SidebarGroup className="py-2 border-t border-border/30">
           <SidebarGroupContent>
-            <div className="flex flex-col gap-1">
-              {[...Array(4)].map((_, index) => (
-                <div key={index} className="flex gap-3 px-4 py-2 animate-pulse">
-                  <div className="h-5 w-5 bg-sidebar-accent/50 rounded" />
-                  <div className="h-4 w-16 bg-sidebar-accent/50 rounded" />
-                </div>
+            <SidebarMenu className="gap-1 px-2">
+              {[...Array(3)].map((_, index) => (
+                <SidebarMenuItem key={index}>
+                  <div className="flex gap-3 px-3 py-2.5 animate-pulse">
+                    <div className="h-5 w-5 bg-sidebar-accent/50 rounded" />
+                    <div className="h-4 w-16 bg-sidebar-accent/50 rounded" />
+                  </div>
+                </SidebarMenuItem>
               ))}
-            </div>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
@@ -80,21 +88,29 @@ function AppSidebarLoading() {
  */
 function AppSidebarError() {
   return (
-    <Sidebar collapsible="icon" className="border-r border-border/50 backdrop-blur-none">
+    <Sidebar collapsible="icon" className="border-r border-border/50">
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
-        {/* Top spacing to prevent overlap with header */}
-        <div className="h-6" />
+        {/* Branding */}
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-border/30">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
+            <TrendingUp className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-bold text-foreground">TradeX Pro</span>
+            <span className="text-xs text-muted-foreground">Trading Platform</span>
+          </div>
+        </div>
 
-        <div className="flex flex-col items-center justify-center h-64 text-center px-4">
+        <div className="flex flex-col items-center justify-center flex-1 text-center px-4">
           <div className="text-muted-foreground mb-3">
             <AlertCircle className="h-10 w-10 mx-auto" />
           </div>
           <p className="text-sm text-muted-foreground mb-3">Unable to load navigation</p>
-          <p className="text-xs text-muted-foreground/70 mb-4">Please check your connection and try again</p>
+          <p className="text-xs text-muted-foreground/70 mb-4">Please check your connection</p>
           <Button
             variant="outline"
             size="sm"
-            className="mt-2 border-border/50 hover:bg-sidebar-accent/50"
+            className="border-border/50 hover:bg-sidebar-accent/50"
             onClick={() => window.location.reload()}
           >
             Retry
@@ -109,38 +125,38 @@ function AppSidebarError() {
  * Main AppSidebar component with error boundary protection
  */
 function AppSidebarContent() {
-  const { state, open } = useSidebar();
+  const { state } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, handleLogout, authLoading } = useAuthenticatedLayout();
   const collapsed = state === "collapsed";
 
-  // Build user roles array for permission-based filtering (must be before hooks)
+  // Build user roles array for permission-based filtering
   const userRoles = user ? ['user', ...(isAdmin ? ['admin'] : [])] : [];
 
   // Get filtered navigation sections based on user roles
   const navigationSections = filterNavigationSectionsByRoles(userRoles);
 
-  // Memoize current pathname to prevent unnecessary recalculations
+  // Memoize current pathname
   const activePath = useMemo(() => location.pathname, [location.pathname]);
 
-  // Memoize navigation sections without modifying items
-  const memoizedNavigationSections = useMemo(() => {
-    return navigationSections;
-  }, [navigationSections]);
+  // Separate main navigation from settings/actions
+  const mainSection = useMemo(() => 
+    navigationSections.find(section => section.id === 'main'),
+    [navigationSections]
+  );
 
-  // Memoize settings section items
-  const settingsItems = useMemo(() => {
-    const settingsSection = navigationSections.find(section => section.id === 'settings');
-    return settingsSection?.items || [];
-  }, [navigationSections]);
+  const settingsSection = useMemo(() => 
+    navigationSections.find(section => section.id === 'settings'),
+    [navigationSections]
+  );
 
-  // Memoize isActive function to prevent recreation on every render
+  // Memoize isActive function
   const isActive = useCallback((path: string) =>
     isPathActive(activePath, path), [activePath]
   );
 
-  // Handle keyboard navigation for main navigation items
+  // Handle keyboard navigation
   const handleNavigationKeyDown = useCallback(
     (event: React.KeyboardEvent, path: string) => {
       handleMenuKeyboardNavigation(event, navigate, path);
@@ -148,50 +164,19 @@ function AppSidebarContent() {
     [navigate]
   );
 
-  // Handle keyboard navigation for settings items
-  const handleSettingsKeyDown = useCallback(
-    (event: React.KeyboardEvent, path?: string) => {
-      if (path) {
-        handleMenuKeyboardNavigation(event, navigate, path);
-      }
-    },
-    [navigate]
-  );
-
-  // Handle keyboard navigation for logout action
-  const handleLogoutKeyDown = useCallback((event: React.KeyboardEvent) => {
-    const { key } = event;
-    const currentTarget = event.currentTarget as HTMLElement;
-
-    switch (key) {
-      case 'Enter':
-      case ' ':
-        event.preventDefault();
-        // Trigger the logout confirmation dialog
-        if (window.confirm('Are you sure you want to sign out? Any unsaved changes will be lost.')) {
-          handleLogout();
-        }
-        break;
-      case 'ArrowDown': {
-        event.preventDefault();
-        // Focus next element (if any)
-        const nextElement = currentTarget.nextElementSibling as HTMLElement;
-        nextElement?.focus();
-        break;
-      }
-      case 'ArrowUp': {
-        event.preventDefault();
-        // Focus previous element (if any)
-        const prevElement = currentTarget.previousElementSibling as HTMLElement;
-        prevElement?.focus();
-        break;
-      }
-      default:
-        // Let other keys be handled by the menu navigation handler
-        handleMenuKeyboardNavigation(event);
-        break;
+  // Handle logout
+  const handleLogoutClick = useCallback(() => {
+    if (window.confirm('Are you sure you want to sign out? Any unsaved changes will be lost.')) {
+      handleLogout();
     }
   }, [handleLogout]);
+
+  const handleLogoutKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleLogoutClick();
+    }
+  }, [handleLogoutClick]);
 
   // Show skeleton loading state
   if (authLoading) {
@@ -206,114 +191,129 @@ function AppSidebarContent() {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-border/50 backdrop-blur-none"
+      className="border-r border-border/50"
       variant="sidebar"
     >
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
         {/* Logo/Branding Section */}
         <div className={cn(
-          "flex items-center gap-3 px-4 py-4 border-b border-border/50",
+          "flex items-center gap-3 px-4 py-4 border-b border-border/30",
           collapsed && "justify-center px-2"
         )}>
           <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
             <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="text-sm font-bold text-foreground">TradeX Pro</span>
-              <span className="text-xs text-muted-foreground">Trading Platform</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-bold text-foreground truncate">TradeX Pro</span>
+              <span className="text-xs text-muted-foreground truncate">Trading Platform</span>
             </div>
           )}
         </div>
 
-        {/* Dynamic Navigation Sections */}
-        {memoizedNavigationSections.map((section) => {
-          // Skip actions section as it will be handled separately
-          if (section.id === 'actions') return null;
+        {/* Main Navigation Section */}
+        {mainSection && (
+          <SidebarGroup className="py-4 flex-1">
+            <SidebarGroupLabel className={cn(
+              "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
+              collapsed && "sr-only"
+            )}>
+              {mainSection.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-0.5 px-2">
+                {mainSection.items.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.path);
 
-          return (
-            <SidebarGroup key={section.id} className="pt-1 pb-0">
-              <SidebarGroupLabel className={cn(
-                "text-sidebar-foreground/80 font-semibold text-xs tracking-wide px-2 h-6",
-                collapsed && "opacity-0 h-0 overflow-hidden"
-              )}>
-                {section.label}
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu className="gap-1">
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
+                  return (
+                    <SidebarMenuItem key={item.id}>
+                      <SidebarMenuButton
+                        onClick={() => navigate(item.path)}
+                        onKeyDown={(e) => handleNavigationKeyDown(e, item.path)}
+                        isActive={active}
+                        tooltip={collapsed ? item.label : undefined}
+                        disabled={item.disabled}
+                        className={cn(
+                          "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
+                          "hover:bg-sidebar-accent/50",
+                          collapsed && "justify-center px-2",
+                          active && "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
+                          item.disabled && "opacity-50 cursor-not-allowed"
+                        )}
+                        aria-label={generateNavigationAriaLabel(item.label, active, item.disabled)}
+                        aria-current={getAriaCurrentState(active)}
+                        role="menuitem"
+                        tabIndex={0}
+                        aria-disabled={item.disabled}
+                      >
+                        <Icon className={cn(
+                          "h-5 w-5 flex-shrink-0 transition-colors",
+                          active ? "text-primary" : "text-muted-foreground"
+                        )} />
+                        <span className={cn(
+                          "flex-1 truncate text-sm",
+                          collapsed && "sr-only",
+                          active ? "text-primary font-medium" : "text-sidebar-foreground"
+                        )}>
+                          {item.label}
+                        </span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-                    return (
-                      <SidebarMenuItem key={item.id}>
-                        <SidebarMenuButton
-                          onClick={() => navigate(item.path)}
-                          onKeyDown={(e) => handleNavigationKeyDown(e, item.path)}
-                          isActive={isActive(item.path)}
-                          tooltip={collapsed ? item.label : undefined}
-                          disabled={item.disabled}
-                          className={cn(
-                            "gap-3 px-4 py-2",
-                            collapsed && "justify-center px-2",
-                            item.disabled && "opacity-50 cursor-not-allowed"
-                          )}
-                          aria-label={generateNavigationAriaLabel(item.label, isActive(item.path), item.disabled)}
-                          aria-current={getAriaCurrentState(isActive(item.path))}
-                          role="menuitem"
-                          tabIndex={0}
-                          aria-disabled={item.disabled}
-                        >
-                          <Icon className="h-5 w-5 flex-shrink-0" />
-                          <span className={cn(
-                            "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
-                            collapsed && "hidden"
-                          )}>
-                            {item.label}
-                          </span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          );
-        })}
+        {/* Divider */}
+        <SidebarSeparator className="mx-4 bg-border/30" />
 
-        {/* Spacer to push user actions to bottom */}
-        <div className="flex-1" />
-
-        {/* User Actions Section */}
-        <SidebarGroup className="pt-0 pb-1">
+        {/* Settings Section - Pinned to bottom */}
+        <SidebarGroup className="py-3">
+          <SidebarGroupLabel className={cn(
+            "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
+            collapsed && "sr-only"
+          )}>
+            Settings
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1">
-              {/* Settings Navigation Items */}
-              {settingsItems.map((item) => {
+            <SidebarMenu className="gap-0.5 px-2">
+              {/* Settings Items */}
+              {settingsSection?.items.map((item) => {
                 const Icon = item.icon;
+                const active = isActive(item.path || '');
 
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
                       onClick={() => item.path && navigate(item.path)}
-                      onKeyDown={(e) => handleSettingsKeyDown(e, item.path)}
-                      isActive={isActive(item.path || '')}
+                      onKeyDown={(e) => item.path && handleNavigationKeyDown(e, item.path)}
+                      isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       disabled={item.disabled}
                       className={cn(
-                        "gap-3 px-4 py-2",
+                        "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
+                        "hover:bg-sidebar-accent/50",
                         collapsed && "justify-center px-2",
+                        active && "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
                         item.disabled && "opacity-50 cursor-not-allowed"
                       )}
-                      aria-label={generateNavigationAriaLabel(item.label, isActive(item.path || ''), item.disabled)}
-                      aria-current={getAriaCurrentState(isActive(item.path || ''))}
+                      aria-label={generateNavigationAriaLabel(item.label, active, item.disabled)}
+                      aria-current={getAriaCurrentState(active)}
                       role="menuitem"
                       tabIndex={0}
                       aria-disabled={item.disabled}
                     >
-                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      <Icon className={cn(
+                        "h-5 w-5 flex-shrink-0 transition-colors",
+                        active ? "text-primary" : "text-muted-foreground"
+                      )} />
                       <span className={cn(
-                        "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
-                        collapsed && "hidden"
+                        "flex-1 truncate text-sm",
+                        collapsed && "sr-only",
+                        active ? "text-primary font-medium" : "text-sidebar-foreground"
                       )}>
                         {item.label}
                       </span>
@@ -322,46 +322,31 @@ function AppSidebarContent() {
                 );
               })}
 
-              {/* Logout Action */}
-              {navigationSections
-                .find(section => section.id === 'actions')
-                ?.items.filter(item => item.id === 'logout')
-                .map((item) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <SidebarMenuItem key={item.id}>
-                      <SidebarMenuButton
-                        onClick={() => {
-                          if (window.confirm('Are you sure you want to sign out? Any unsaved changes will be lost.')) {
-                            handleLogout();
-                          }
-                        }}
-                        onKeyDown={handleLogoutKeyDown}
-                        tooltip={collapsed ? item.label : undefined}
-                        disabled={item.disabled}
-                        className={cn(
-                          "gap-3 px-4 py-2 text-destructive hover:bg-destructive/10",
-                          collapsed && "justify-center px-2",
-                          item.disabled && "opacity-50 cursor-not-allowed"
-                        )}
-                        aria-label={generateNavigationAriaLabel(item.label, false, item.disabled)}
-                        aria-describedby="logout-description"
-                        role="menuitem"
-                        tabIndex={0}
-                        aria-disabled={item.disabled}
-                      >
-                        <Icon className="h-5 w-5 flex-shrink-0" />
-                        <span className={cn(
-                          "flex-1 truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium",
-                          collapsed && "hidden"
-                        )}>
-                          {item.label}
-                        </span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
+              {/* Logout Button */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={handleLogoutClick}
+                  onKeyDown={handleLogoutKeyDown}
+                  tooltip={collapsed ? "Sign Out" : undefined}
+                  className={cn(
+                    "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
+                    "text-destructive hover:bg-destructive/10 hover:text-destructive",
+                    collapsed && "justify-center px-2"
+                  )}
+                  aria-label="Sign out of your account"
+                  aria-describedby="logout-description"
+                  role="menuitem"
+                  tabIndex={0}
+                >
+                  <LogOut className="h-5 w-5 flex-shrink-0" />
+                  <span className={cn(
+                    "flex-1 truncate text-sm",
+                    collapsed && "sr-only"
+                  )}>
+                    Sign Out
+                  </span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -387,9 +372,8 @@ export function AppSidebar() {
   return (
     <SidebarErrorBoundary
       enableLogging={true}
-      onError={(error, errorInfo) => {
+      onError={() => {
         // Error is already logged by SidebarErrorBoundary with enableLogging=true
-        // No additional logging needed here
       }}
     >
       <AppSidebarContent />
