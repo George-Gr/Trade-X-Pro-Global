@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Minus } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { ScrollReveal, AnimatedSectionHeader } from "./ScrollReveal";
 
 const comparisonData = [
   {
@@ -60,77 +62,109 @@ const comparisonData = [
   }
 ];
 
-const renderValue = (value: string | boolean) => {
+const renderValue = (value: string | boolean, isTradeX: boolean = false) => {
   if (value === true) {
-    return <Check className="h-5 w-5 text-accent mx-auto" />;
+    return (
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <Check className={`h-5 w-5 mx-auto ${isTradeX ? 'text-gold' : 'text-accent'}`} />
+      </motion.div>
+    );
   }
   if (value === false) {
-    return <X className="h-5 w-5 text-destructive mx-auto" />;
+    return (
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <X className="h-5 w-5 text-destructive mx-auto" />
+      </motion.div>
+    );
   }
-  return <span className="text-sm">{value}</span>;
+  return <span className={`text-sm ${isTradeX ? 'font-semibold text-gold' : ''}`}>{value}</span>;
 };
 
 export function ComparisonTable() {
   return (
-    <section className="py-20 md:py-24 bg-background">
+    <section className="py-20 md:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20">
-            Platform Comparison
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Why Choose
-            <span className="block mt-2 bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
-              TradeX Pro?
-            </span>
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            See how we compare to other virtual trading platforms
-          </p>
-        </div>
+        <AnimatedSectionHeader
+          badge={
+            <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20">
+              Platform Comparison
+            </Badge>
+          }
+          title="Why Choose"
+          subtitle="TradeX Pro?"
+          description="See how we compare to other virtual trading platforms"
+        />
 
-        <div className="max-w-4xl mx-auto overflow-x-auto">
-          <Card className="border-border">
-            <CardContent className="p-0">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border bg-muted/50">
-                    <th className="text-left p-4 font-semibold">Feature</th>
-                    <th className="text-center p-4">
-                      <div className="flex flex-col items-center">
-                        <Badge className="bg-gold text-gold-foreground mb-1">Recommended</Badge>
-                        <span className="font-bold text-lg">TradeX Pro</span>
-                      </div>
-                    </th>
-                    <th className="text-center p-4 font-semibold text-muted-foreground">Competitor A</th>
-                    <th className="text-center p-4 font-semibold text-muted-foreground">Competitor B</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {comparisonData.map((row, index) => (
-                    <tr 
-                      key={index} 
-                      className={`border-b border-border/50 ${index % 2 === 0 ? 'bg-background' : 'bg-muted/20'}`}
-                    >
-                      <td className="p-4 font-medium">{row.feature}</td>
-                      <td className="p-4 text-center bg-gold/5">
-                        <span className="font-semibold text-gold">
-                          {renderValue(row.tradexPro)}
-                        </span>
-                      </td>
-                      <td className="p-4 text-center text-muted-foreground">
-                        {renderValue(row.competitorA)}
-                      </td>
-                      <td className="p-4 text-center text-muted-foreground">
-                        {renderValue(row.competitorB)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-        </div>
+        <ScrollReveal delay={0.2}>
+          <div className="max-w-4xl mx-auto overflow-x-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="border-border overflow-hidden">
+                <CardContent className="p-0">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/50">
+                        <th className="text-left p-4 font-semibold">Feature</th>
+                        <th className="text-center p-4">
+                          <motion.div 
+                            className="flex flex-col items-center"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.3, type: "spring" }}
+                          >
+                            <Badge className="bg-gold text-gold-foreground mb-1">Recommended</Badge>
+                            <span className="font-bold text-lg">TradeX Pro</span>
+                          </motion.div>
+                        </th>
+                        <th className="text-center p-4 font-semibold text-muted-foreground">Competitor A</th>
+                        <th className="text-center p-4 font-semibold text-muted-foreground">Competitor B</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparisonData.map((row, index) => (
+                        <motion.tr 
+                          key={index} 
+                          className={`border-b border-border/50 ${index % 2 === 0 ? 'bg-background' : 'bg-muted/20'}`}
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, amount: 0.5 }}
+                          transition={{ delay: index * 0.05, duration: 0.4 }}
+                          whileHover={{ backgroundColor: "hsl(var(--muted) / 0.4)" }}
+                        >
+                          <td className="p-4 font-medium">{row.feature}</td>
+                          <td className="p-4 text-center bg-gold/5">
+                            {renderValue(row.tradexPro, true)}
+                          </td>
+                          <td className="p-4 text-center text-muted-foreground">
+                            {renderValue(row.competitorA)}
+                          </td>
+                          <td className="p-4 text-center text-muted-foreground">
+                            {renderValue(row.competitorB)}
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
