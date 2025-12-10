@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   TrendingUp, 
   TrendingDown, 
-  Zap, 
-  Wallet, 
+  Wallet,
   ShieldCheck, 
   AlertTriangle,
-  Info
+  Info,
+  LayoutList,
+  Clock
 } from 'lucide-react';
 import {
   Tooltip,
@@ -23,28 +23,6 @@ import EnhancedPositionsTable from './EnhancedPositionsTable';
 import OrderHistory from './OrderHistory';
 import { cn } from '@/lib/utils';
 
-interface PortfolioMetrics {
-  totalEquity: number;
-  totalBalance: number;
-  totalUsedMargin: number;
-  totalAvailableMargin: number;
-  marginLevel: number;
-  unrealizedPnL: number;
-  realizedPnL: number;
-  totalPnL: number;
-  roi: number;
-  marginLevelPercent: number;
-}
-
-/**
- * EnhancedPortfolioDashboard Component
- *
- * Comprehensive trading dashboard with improved visual hierarchy:
- * - Consolidated account metrics
- * - Clear margin level indicators with thresholds
- * - Responsive design with better color contrast
- * - Tooltips for metric explanations
- */
 const EnhancedPortfolioDashboard: React.FC = () => {
   const { profile, positions = [], loading, error } = usePortfolioData();
   
@@ -70,194 +48,185 @@ const EnhancedPortfolioDashboard: React.FC = () => {
 
   const { positionPnLMap } = usePnLCalculations(mappedPositions, priceMap, undefined, {});
 
-  const metrics = useMemo((): PortfolioMetrics => {
+  const metrics = useMemo(() => {
     if (!profile) {
       return {
-        totalEquity: 0,
-        totalBalance: 0,
-        totalUsedMargin: 0,
-        totalAvailableMargin: 0,
-        marginLevel: 0,
-        unrealizedPnL: 0,
-        realizedPnL: 0,
-        totalPnL: 0,
+        equity: 0,
+        balance: 0,
+        usedMargin: 0,
+        freeMargin: 0,
+        pnl: 0,
         roi: 0,
-        marginLevelPercent: 0,
+        marginLevel: 100,
       };
     }
 
     const balance = profile.balance || 0;
     const usedMargin = profile.margin_used || 0;
-    const availableMargin = balance - usedMargin;
+    const freeMargin = balance - usedMargin;
 
     const unrealizedPnL = (positions || []).reduce((sum, pos) => {
       const pnlData = positionPnLMap.get(pos.id);
       if (pnlData) return sum + (pnlData.unrealizedPnL || 0);
-
       const posValue = (pos.current_price || 0) * pos.quantity * 100000;
       const entryValue = (pos.entry_price || 0) * pos.quantity * 100000;
       const isLong = pos.side === 'buy';
-      const pnl = isLong ? posValue - entryValue : entryValue - posValue;
-      return sum + pnl;
+      return sum + (isLong ? posValue - entryValue : entryValue - posValue);
     }, 0);
 
-    const realizedPnL = (profile as { realized_pnl?: number })?.realized_pnl ?? 0;
-    const totalPnL = unrealizedPnL + realizedPnL;
-    const totalEquity = balance + unrealizedPnL;
-    const initialDeposit = balance - realizedPnL;
-    const roi = initialDeposit > 0 ? (totalPnL / initialDeposit) * 100 : 0;
-    const marginLevelPercent = usedMargin > 0 ? (totalEquity / usedMargin) * 100 : 100;
-    const marginLevel = balance > 0 ? (availableMargin / balance) * 100 : 0;
+    const equity = balance + unrealizedPnL;
+    const marginLevel = usedMargin > 0 ? (equity / usedMargin) * 100 : 100;
+    const roi = balance > 0 ? (unrealizedPnL / balance) * 100 : 0;
 
     return {
-      totalEquity,
-      totalBalance: balance,
-      totalUsedMargin: usedMargin,
-      totalAvailableMargin: availableMargin,
-      marginLevel,
-      unrealizedPnL,
-      realizedPnL,
-      totalPnL,
+      equity,
+      balance,
+      usedMargin,
+      freeMargin,
+      pnl: unrealizedPnL,
       roi,
-      marginLevelPercent,
+      marginLevel,
     };
   }, [profile, positions, positionPnLMap]);
 
-  const getMarginLevelStatus = (level: number) => {
-    if (level >= 100) return { color: 'text-profit', bg: 'bg-profit', label: 'Safe', icon: ShieldCheck };
-    if (level >= 50) return { color: 'text-warning', bg: 'bg-warning', label: 'Warning', icon: AlertTriangle };
-    return { color: 'text-loss', bg: 'bg-loss', label: 'Danger', icon: AlertTriangle };
+  const getMarginStatus = (level: number) => {
+    if (level >= 100) return { color: 'text-profit', bg: 'bg-profit', label: 'Safe' };
+    if (level >= 50) return { color: 'text-warning', bg: 'bg-warning', label: 'Warning' };
+    return { color: 'text-loss', bg: 'bg-loss', label: 'Danger' };
   };
 
-  const marginStatus = getMarginLevelStatus(metrics.marginLevelPercent);
-  const MarginIcon = marginStatus.icon;
+  const marginStatus = getMarginStatus(metrics.marginLevel);
 
   return (
-    <div className="h-full bg-background flex flex-col overflow-hidden">
-      {/* Metrics Bar */}
-      <div className="border-b border-border bg-card/50 px-4 py-3 flex-shrink-0">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
-          {/* Total Equity */}
-          <MetricCard
+    <div className="h-full flex flex-col overflow-hidden bg-background">
+      {/* Account Metrics Bar */}
+      <div className="border-b border-border bg-card/30 px-4 py-3 shrink-0">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          {/* Equity */}
+          <MetricItem
             label="Total Equity"
-            value={`$${metrics.totalEquity.toFixed(2)}`}
-            tooltip="Your total account value including unrealized P&L"
-            icon={<Wallet className="h-4 w-4" />}
+            value={`$${metrics.equity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            icon={<Wallet className="h-3.5 w-3.5" />}
+            tooltip="Account value including unrealized P&L"
           />
 
           {/* Balance */}
-          <MetricCard
+          <MetricItem
             label="Balance"
-            value={`$${metrics.totalBalance.toFixed(2)}`}
-            tooltip="Your current cash balance"
+            value={`$${metrics.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            tooltip="Cash balance"
           />
 
           {/* Used Margin */}
-          <MetricCard
+          <MetricItem
             label="Used Margin"
-            value={`$${metrics.totalUsedMargin.toFixed(2)}`}
-            tooltip="Margin currently locked in open positions"
+            value={`$${metrics.usedMargin.toFixed(2)}`}
+            tooltip="Margin locked in positions"
           />
 
-          {/* Available Margin */}
-          <MetricCard
+          {/* Free Margin */}
+          <MetricItem
             label="Free Margin"
-            value={`$${metrics.totalAvailableMargin.toFixed(2)}`}
-            tooltip="Available funds for new positions"
-            valueClassName={metrics.totalAvailableMargin < 100 ? 'text-warning' : undefined}
+            value={`$${metrics.freeMargin.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            valueClassName={metrics.freeMargin < 100 ? 'text-warning' : undefined}
+            tooltip="Available for new trades"
           />
 
-          {/* Total P&L */}
-          <MetricCard
+          {/* P&L */}
+          <MetricItem
             label="Total P&L"
-            value={`${metrics.totalPnL >= 0 ? '+' : ''}$${metrics.totalPnL.toFixed(2)}`}
-            tooltip="Combined realized and unrealized profit/loss"
-            valueClassName={metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'}
-            icon={metrics.totalPnL >= 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+            value={`${metrics.pnl >= 0 ? '+' : ''}$${metrics.pnl.toFixed(2)}`}
+            valueClassName={metrics.pnl >= 0 ? 'text-profit' : 'text-loss'}
+            icon={metrics.pnl >= 0 ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
+            tooltip="Unrealized profit/loss"
           />
 
           {/* ROI */}
-          <MetricCard
+          <MetricItem
             label="ROI"
             value={`${metrics.roi >= 0 ? '+' : ''}${metrics.roi.toFixed(2)}%`}
-            tooltip="Return on investment percentage"
             valueClassName={metrics.roi >= 0 ? 'text-profit' : 'text-loss'}
+            tooltip="Return on investment"
           />
 
           {/* Margin Level */}
-          <div className="bg-muted/30 rounded-lg p-2.5 col-span-2 sm:col-span-1">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs text-muted-foreground">Margin Level</span>
+          <div className="rounded-lg bg-muted/30 p-2.5 col-span-2 sm:col-span-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Margin Level</span>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="text-muted-foreground hover:text-foreground">
-                      <Info className="h-3 w-3" />
-                    </button>
+                    <Info className="h-3 w-3 text-muted-foreground cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-[220px]">
-                    <div className="text-xs space-y-1">
-                      <p>Margin level indicates account health:</p>
-                      <p className="text-profit">• Above 100%: Safe</p>
-                      <p className="text-warning">• 50-100%: Warning</p>
-                      <p className="text-loss">• Below 50%: Liquidation risk</p>
+                  <TooltipContent side="bottom">
+                    <div className="text-xs space-y-0.5">
+                      <p className="text-profit">≥100%: Safe</p>
+                      <p className="text-warning">50-99%: Warning</p>
+                      <p className="text-loss">&lt;50%: Liquidation risk</p>
                     </div>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
-            
             <div className="flex items-center gap-2">
-              <MarginIcon className={cn("h-4 w-4", marginStatus.color)} />
-              <span className={cn("font-mono text-sm font-semibold", marginStatus.color)}>
-                {metrics.marginLevelPercent.toFixed(0)}%
+              {metrics.marginLevel >= 100 ? (
+                <ShieldCheck className={cn("h-4 w-4", marginStatus.color)} />
+              ) : (
+                <AlertTriangle className={cn("h-4 w-4", marginStatus.color)} />
+              )}
+              <span className={cn("font-mono text-sm font-bold", marginStatus.color)}>
+                {metrics.marginLevel.toFixed(0)}%
               </span>
               <span className={cn(
-                "text-xs px-1.5 py-0.5 rounded",
+                "text-[10px] font-medium px-1.5 py-0.5 rounded",
                 marginStatus.color,
                 marginStatus.bg + '/10'
               )}>
                 {marginStatus.label}
               </span>
             </div>
-            
-            {/* Progress Bar */}
-            <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
+            <div className="mt-1.5 h-1 bg-muted rounded-full overflow-hidden">
               <div
-                className={cn("h-full rounded-full transition-all duration-300", marginStatus.bg)}
-                style={{ width: `${Math.min(metrics.marginLevelPercent, 100)}%` }}
+                className={cn("h-full rounded-full transition-all", marginStatus.bg)}
+                style={{ width: `${Math.min(metrics.marginLevel, 100)}%` }}
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Tabs - Positions and Orders */}
+      {/* Positions / Orders Tabs */}
       <Tabs defaultValue="positions" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="w-full border-b border-border bg-muted/20 rounded-none h-11">
-          <TabsTrigger value="positions" className="flex-1 data-[state=active]:bg-background">
-            <Zap className="h-4 w-4 mr-2" />
+        <TabsList className="w-full border-b border-border bg-transparent rounded-none h-10 px-4 justify-start gap-4">
+          <TabsTrigger 
+            value="positions" 
+            className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-1 pb-2"
+          >
+            <LayoutList className="h-4 w-4 mr-1.5" />
             Positions
             {positions.length > 0 && (
-              <span className="ml-2 text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">
+              <span className="ml-1.5 text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full font-medium">
                 {positions.length}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="orders" className="flex-1 data-[state=active]:bg-background">
-            <TrendingUp className="h-4 w-4 mr-2" />
+          <TabsTrigger 
+            value="orders"
+            className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-1 pb-2"
+          >
+            <Clock className="h-4 w-4 mr-1.5" />
             Orders
           </TabsTrigger>
         </TabsList>
 
         <div className="flex-1 overflow-hidden">
-          <TabsContent value="positions" className="h-full mt-0 overflow-auto">
+          <TabsContent value="positions" className="h-full m-0 overflow-auto">
             <div className="p-4">
               <EnhancedPositionsTable />
             </div>
           </TabsContent>
 
-          <TabsContent value="orders" className="h-full mt-0 overflow-auto">
+          <TabsContent value="orders" className="h-full m-0 overflow-auto">
             <div className="p-4">
               <OrderHistory />
             </div>
@@ -268,8 +237,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
   );
 };
 
-// Metric Card Component
-interface MetricCardProps {
+interface MetricItemProps {
   label: string;
   value: string;
   tooltip?: string;
@@ -277,25 +245,17 @@ interface MetricCardProps {
   valueClassName?: string;
 }
 
-const MetricCard: React.FC<MetricCardProps> = ({
-  label,
-  value,
-  tooltip,
-  icon,
-  valueClassName,
-}) => (
-  <div className="bg-muted/30 rounded-lg p-2.5">
+const MetricItem: React.FC<MetricItemProps> = ({ label, value, tooltip, icon, valueClassName }) => (
+  <div className="rounded-lg bg-muted/30 p-2.5">
     <div className="flex items-center justify-between mb-1">
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-[10px] text-muted-foreground uppercase tracking-wide">{label}</span>
       {tooltip && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="text-muted-foreground hover:text-foreground">
-                <Info className="h-3 w-3" />
-              </button>
+              <Info className="h-3 w-3 text-muted-foreground cursor-help" />
             </TooltipTrigger>
-            <TooltipContent side="bottom" className="max-w-[180px]">
+            <TooltipContent side="bottom">
               <p className="text-xs">{tooltip}</p>
             </TooltipContent>
           </Tooltip>
@@ -304,9 +264,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
     </div>
     <div className="flex items-center gap-1.5">
       {icon && <span className={valueClassName}>{icon}</span>}
-      <span className={cn("font-mono text-sm font-semibold", valueClassName)}>
-        {value}
-      </span>
+      <span className={cn("font-mono text-sm font-semibold", valueClassName)}>{value}</span>
     </div>
   </div>
 );
