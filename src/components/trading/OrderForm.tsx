@@ -12,8 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Loader2, Plus, Minus, Info, AlertTriangle, TrendingUp, TrendingDown } from "lucide-react";
 import { OrderType } from "./OrderTypeSelector";
+import { cn } from "@/lib/utils";
 
 export interface OrderFormData {
   symbol: string;
@@ -36,14 +43,18 @@ interface OrderFormProps {
   isLoading?: boolean;
   error?: string | null;
   currentPrice: number;
-  assetLeverage?: number; // Fixed broker-set leverage for this asset
+  assetLeverage?: number;
 }
 
 /**
- * OrderForm Component
+ * OrderForm Component (Enhanced)
  * 
- * Handles order form input with validation and dynamic field visibility
- * based on order type (Market, Limit, Stop, Stop-Limit, Trailing Stop).
+ * Improved form with:
+ * - Better visual hierarchy and spacing
+ * - Volume increment/decrement buttons
+ * - Risk management warnings
+ * - Sticky Buy/Sell buttons
+ * - Quick TP/SL percentage presets
  */
 export const OrderForm = ({
   symbol,
@@ -53,7 +64,7 @@ export const OrderForm = ({
   isLoading = false,
   error = null,
   currentPrice,
-  assetLeverage = 500, // Default to max if not provided
+  assetLeverage = 500,
 }: OrderFormProps) => {
   const [volume, setVolume] = useState("0.01");
   const [limitPrice, setLimitPrice] = useState("");
@@ -64,22 +75,46 @@ export const OrderForm = ({
   const [timeInForce, setTimeInForce] = useState<'GTC' | 'GTD' | 'FOK' | 'IOC'>('GTC');
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Margin calculation using FIXED asset leverage (not user-customizable)
+  // Calculations
   const marginRequired = useMemo(() => {
     const qty = parseFloat(volume) || 0;
     const contractSize = 100000;
-
     if (qty <= 0 || assetLeverage <= 0) return 0;
     return (qty * contractSize * currentPrice) / assetLeverage;
   }, [volume, assetLeverage, currentPrice]);
 
-  // Pip value calculation
+  const positionValue = useMemo(() => {
+    const qty = parseFloat(volume) || 0;
+    const contractSize = 100000;
+    return qty * contractSize * currentPrice;
+  }, [volume, currentPrice]);
+
   const pipValue = useMemo(() => {
     const qty = parseFloat(volume) || 0;
     const pipSize = 0.0001;
     const contractSize = 100000;
     return qty * contractSize * pipSize;
   }, [volume]);
+
+  // Volume adjustment handlers
+  const adjustVolume = (delta: number) => {
+    const current = parseFloat(volume) || 0;
+    const newValue = Math.max(0.01, Math.min(1000, current + delta));
+    setVolume(newValue.toFixed(2));
+  };
+
+  // Quick TP/SL percentage presets
+  const applyTPPreset = (percent: number, side: 'buy' | 'sell') => {
+    const movement = currentPrice * (percent / 100);
+    const tp = side === 'buy' ? currentPrice + movement : currentPrice - movement;
+    setTakeProfit(tp.toFixed(5));
+  };
+
+  const applySLPreset = (percent: number, side: 'buy' | 'sell') => {
+    const movement = currentPrice * (percent / 100);
+    const sl = side === 'buy' ? currentPrice - movement : currentPrice + movement;
+    setStopLoss(sl.toFixed(5));
+  };
 
   const validateForm = (): boolean => {
     setValidationError(null);
@@ -100,7 +135,6 @@ export const OrderForm = ({
       return false;
     }
 
-    // Validate order type specific fields
     if (orderType === 'limit' || orderType === 'stop_limit') {
       const lp = parseFloat(limitPrice);
       if (isNaN(lp) || lp <= 0) {
@@ -125,7 +159,6 @@ export const OrderForm = ({
       }
     }
 
-    // Optional TP/SL validation
     if (takeProfit) {
       const tp = parseFloat(takeProfit);
       if (isNaN(tp) || tp <= 0) {
@@ -163,7 +196,6 @@ export const OrderForm = ({
 
     try {
       await onSubmit(formData, side);
-      // Reset form on success
       setVolume("0.01");
       setLimitPrice("");
       setStopPrice("");
@@ -171,88 +203,108 @@ export const OrderForm = ({
       setTakeProfit("");
       setStopLoss("");
     } catch (err) {
-      // Error handled by parent component
+      // Error handled by parent
     }
   };
+
+  const hasRiskManagement = !!(takeProfit || stopLoss);
 
   return (
     <div className="space-y-4">
       {/* Error Display */}
       {(error || validationError) && (
-        <>
-          <ErrorState
-            error={error || validationError}
-            context="order_submission"
-            showRetry={false}
-            showSupport={true}
-            className="mt-4"
-          />
-          {/* Raw error message for test coverage and clarity */}
-          {typeof error === 'string' && (
-            <p className="text-sm text-destructive mt-2">{error}</p>
-          )}
-        </>
+        <ErrorState
+          error={error || validationError}
+          context="order_submission"
+          showRetry={false}
+          showSupport={true}
+          className="mb-4"
+        />
       )}
 
-      {/* Volume Input */}
+      {/* Volume Section */}
       <div className="space-y-2">
-        <Label htmlFor="volume" className="text-sm font-semibold">
-          Volume (Lots)
-        </Label>
-        <Input
-          id="volume"
-          type="number"
-          value={volume}
-          onChange={(e) => setVolume(e.target.value)}
-          step="0.01"
-          min="0.01"
-          max="1000"
-          placeholder="0.01"
-          disabled={isLoading}
-          aria-label="Order volume in lots"
-          className="hover:border-primary/50 transition-colors"
-          inputMode="decimal"
-          pattern="[0-9]+([\.][0-9]+)?"
-        />
-        {validationError && (
-          <p className="text-xs text-destructive mt-sm" role="alert">
-            {formatFieldError(validationError, 'volume')}
-          </p>
-        )}
-        <p className="text-xs text-muted-foreground mt-sm">
-          Pip value: ${pipValue.toFixed(2)}
+        <div className="flex items-center justify-between">
+          <Label htmlFor="volume" className="text-sm font-medium">
+            Volume (Lots)
+          </Label>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="text-muted-foreground hover:text-foreground">
+                  <Info className="h-3.5 w-3.5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="max-w-[200px]">
+                <p className="text-xs">
+                  Min: 0.01 lots | Max: 1000 lots<br />
+                  1 lot = 100,000 units
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 shrink-0"
+            onClick={() => adjustVolume(-0.01)}
+            disabled={isLoading || parseFloat(volume) <= 0.01}
+          >
+            <Minus className="h-4 w-4" />
+          </Button>
+          <Input
+            id="volume"
+            type="number"
+            value={volume}
+            onChange={(e) => setVolume(e.target.value)}
+            step="0.01"
+            min="0.01"
+            max="1000"
+            placeholder="0.01"
+            disabled={isLoading}
+            className="text-center font-mono text-base"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 shrink-0"
+            onClick={() => adjustVolume(0.01)}
+            disabled={isLoading || parseFloat(volume) >= 1000}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <p className="text-xs text-muted-foreground">
+          Pip value: <span className="font-mono">${pipValue.toFixed(2)}</span>
         </p>
       </div>
 
-      {/* Fixed Asset Leverage Display (Read-Only) */}
-      <div className="space-y-sm">
-        <Label className="text-sm font-semibold">
-          Leverage (Fixed by Broker)
-        </Label>
-        <div className="gradient-card border border-panel rounded-md p-lg flex items-center justify-between">
-          <div className="flex items-center gap-md">
-            <span className="font-mono font-semibold text-foreground">
-              1:{assetLeverage.toFixed(0)}
-            </span>
-            <span className="text-xs gradient-primary text-foreground px-2 py-1 rounded">
-              MARGIN REQUIRED
-            </span>
-          </div>
-          <span className="text-xs font-medium gradient-primary/20 text-foreground px-md py-sm rounded">
-            ${marginRequired.toFixed(2)}
-          </span>
+      {/* Margin & Position Info Card */}
+      <div className="bg-muted/30 border border-border rounded-lg p-3 space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Leverage</span>
+          <span className="font-mono font-medium">1:{assetLeverage}</span>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Margin required: ${marginRequired.toFixed(2)}
-        </p>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Position Value</span>
+          <span className="font-mono font-medium">${positionValue.toFixed(2)}</span>
+        </div>
+        <div className="flex items-center justify-between text-sm border-t border-border pt-2">
+          <span className="text-muted-foreground font-medium">Margin Required</span>
+          <span className="font-mono font-semibold text-primary">${marginRequired.toFixed(2)}</span>
+        </div>
       </div>
 
       {/* Order Type Specific Fields */}
-
-      {/* Limit Price - for Limit and Stop-Limit */}
       {(orderType === 'limit' || orderType === 'stop_limit') && (
         <div className="space-y-2">
-          <Label htmlFor="limitPrice" className="text-sm font-semibold">
+          <Label htmlFor="limitPrice" className="text-sm font-medium">
             Limit Price
           </Label>
           <Input
@@ -264,16 +316,14 @@ export const OrderForm = ({
             min="0"
             placeholder={currentPrice.toFixed(5)}
             disabled={isLoading}
-            aria-label="Limit price for order"
-            className="hover:border-primary/50 transition-colors"
+            className="font-mono"
           />
         </div>
       )}
 
-      {/* Stop Price - for Stop and Stop-Limit */}
       {(orderType === 'stop' || orderType === 'stop_limit') && (
         <div className="space-y-2">
-          <Label htmlFor="stopPrice" className="text-sm font-semibold">
+          <Label htmlFor="stopPrice" className="text-sm font-medium">
             Stop Price
           </Label>
           <Input
@@ -285,16 +335,14 @@ export const OrderForm = ({
             min="0"
             placeholder={currentPrice.toFixed(5)}
             disabled={isLoading}
-            aria-label="Stop price for order"
-            className="hover:border-primary/50 transition-colors"
+            className="font-mono"
           />
         </div>
       )}
 
-      {/* Trailing Distance - for Trailing Stop */}
       {orderType === 'trailing_stop' && (
         <div className="space-y-2">
-          <Label htmlFor="trailingDistance" className="text-sm font-semibold">
+          <Label htmlFor="trailingDistance" className="text-sm font-medium">
             Trailing Distance (pips)
           </Label>
           <Input
@@ -306,18 +354,44 @@ export const OrderForm = ({
             min="1"
             placeholder="10"
             disabled={isLoading}
-            aria-label="Trailing stop distance in pips"
-            className="hover:border-primary/50 transition-colors"
+            className="font-mono"
           />
         </div>
       )}
 
-      {/* Take Profit & Stop Loss */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="takeProfit" className="text-sm font-semibold">
-            Take Profit (Optional)
-          </Label>
+      {/* Take Profit & Stop Loss Section */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label className="text-sm font-medium">Risk Management</Label>
+          {!hasRiskManagement && (
+            <div className="flex items-center gap-1 text-xs text-warning">
+              <AlertTriangle className="h-3 w-3" />
+              <span>Recommended</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Take Profit */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="takeProfit" className="text-xs text-muted-foreground flex items-center gap-1">
+              <TrendingUp className="h-3 w-3 text-profit" />
+              Take Profit
+            </Label>
+            <div className="flex gap-1">
+              {[1, 2, 5].map((pct) => (
+                <button
+                  key={pct}
+                  type="button"
+                  onClick={() => applyTPPreset(pct, 'buy')}
+                  disabled={isLoading}
+                  className="text-xs px-1.5 py-0.5 rounded bg-profit/10 text-profit hover:bg-profit/20 transition-colors"
+                >
+                  +{pct}%
+                </button>
+              ))}
+            </div>
+          </div>
           <Input
             id="takeProfit"
             type="number"
@@ -327,14 +401,31 @@ export const OrderForm = ({
             min="0"
             placeholder="Optional"
             disabled={isLoading}
-            aria-label="Take profit price"
-            className="hover:border-primary/50 transition-colors"
+            className="font-mono h-9"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="stopLoss" className="text-sm font-semibold">
-            Stop Loss (Optional)
-          </Label>
+
+        {/* Stop Loss */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="stopLoss" className="text-xs text-muted-foreground flex items-center gap-1">
+              <TrendingDown className="h-3 w-3 text-loss" />
+              Stop Loss
+            </Label>
+            <div className="flex gap-1">
+              {[1, 2, 5].map((pct) => (
+                <button
+                  key={pct}
+                  type="button"
+                  onClick={() => applySLPreset(pct, 'buy')}
+                  disabled={isLoading}
+                  className="text-xs px-1.5 py-0.5 rounded bg-loss/10 text-loss hover:bg-loss/20 transition-colors"
+                >
+                  -{pct}%
+                </button>
+              ))}
+            </div>
+          </div>
           <Input
             id="stopLoss"
             type="number"
@@ -344,15 +435,14 @@ export const OrderForm = ({
             min="0"
             placeholder="Optional"
             disabled={isLoading}
-            aria-label="Stop loss price"
-            className="hover:border-primary/50 transition-colors"
+            className="font-mono h-9"
           />
         </div>
       </div>
 
       {/* Time in Force */}
       <div className="space-y-2">
-        <Label htmlFor="timeInForce" className="text-sm font-semibold">
+        <Label htmlFor="timeInForce" className="text-sm font-medium">
           Time in Force
         </Label>
         <Select
@@ -360,7 +450,7 @@ export const OrderForm = ({
           onValueChange={(v) => setTimeInForce(v as 'GTC' | 'GTD' | 'FOK' | 'IOC')}
           disabled={isLoading}
         >
-          <SelectTrigger id="timeInForce" aria-label="Select time in force">
+          <SelectTrigger id="timeInForce" className="h-10">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -371,13 +461,13 @@ export const OrderForm = ({
         </Select>
       </div>
 
-      {/* Buy/Sell Buttons */}
-      <div className="grid grid-cols-2 gap-4">
+      {/* Buy/Sell Buttons - Sticky on mobile */}
+      <div className="grid grid-cols-2 gap-3 pt-2 sticky bottom-0 bg-background pb-2 -mb-2 border-t border-border md:border-0 md:static md:bg-transparent">
         <LoadingButton
           onClick={() => handleSubmit('buy')}
           isLoading={isLoading}
           loadingText="Buying..."
-          className="bg-profit hover:bg-profit/90 text-foreground font-medium"
+          className="h-12 bg-profit hover:bg-profit/90 text-profit-foreground font-semibold text-base shadow-lg shadow-profit/20"
           size="lg"
         >
           {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -387,7 +477,7 @@ export const OrderForm = ({
           onClick={() => handleSubmit('sell')}
           isLoading={isLoading}
           loadingText="Selling..."
-          className="bg-loss hover:bg-loss/90 text-foreground font-medium"
+          className="h-12 bg-loss hover:bg-loss/90 text-loss-foreground font-semibold text-base shadow-lg shadow-loss/20"
           size="lg"
         >
           {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
