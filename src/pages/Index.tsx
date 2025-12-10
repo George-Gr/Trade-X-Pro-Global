@@ -12,16 +12,14 @@ import {
   Award,
   LineChart,
   Globe,
-  CheckCircle2,
   ArrowRight,
   Users,
   Clock,
-  Target,
   Briefcase,
   GraduationCap,
   Star,
-  Sparkles,
-  Play
+  Target,
+  CheckCircle2
 } from "lucide-react";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { PublicFooter } from "@/components/layout/PublicFooter";
@@ -31,7 +29,7 @@ import { RiskDisclaimer, CompactRiskDisclaimer } from "@/components/landing/Risk
 import { LiveChatIndicator } from "@/components/landing/LiveChatIndicator";
 import { PlatformPreview } from "@/components/landing/PlatformPreview";
 import { ComparisonTable } from "@/components/landing/ComparisonTable";
-import heroImage from "@/assets/hero-trading-professional.jpg";
+import { HeroSection } from "@/components/landing/HeroSection";
 
 export default function Index() {
   return (
@@ -41,110 +39,8 @@ export default function Index() {
       {/* Risk Disclaimer Banner */}
       <RiskDisclaimer />
 
-      {/* Hero Section - Compelling & Benefit-Focused */}
-      <section className="relative overflow-hidden bg-primary pt-16 pb-20 md:pt-20 md:pb-24">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={heroImage} 
-            alt="Professional trading desk" 
-            className="h-full w-full object-cover opacity-15"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary-glow/90"></div>
-        </div>
-        
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Badge className="bg-gold text-gold-foreground hover:bg-gold-hover px-4 py-2 text-sm font-semibold">
-                <Sparkles className="mr-2 h-4 w-4" />
-                #1 Virtual Trading Platform
-              </Badge>
-            </div>
-            
-            {/* Compelling Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in leading-[1.1]">
-              Master Global Markets
-              <span className="block mt-2 bg-gradient-to-r from-gold via-gold-hover to-accent bg-clip-text text-transparent">
-                Without Risking a Penny
-              </span>
-            </h1>
-            
-            {/* Specific Value Proposition */}
-            <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 mb-6 max-w-3xl mx-auto leading-relaxed">
-              Trade 500+ instruments across Forex, Stocks, Indices, Commodities & Crypto 
-              with <span className="text-gold font-semibold">$50,000 virtual capital</span> and 
-              real-time market data.
-            </p>
-
-            {/* Urgency/Limited Offer */}
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <div className="h-2 w-2 bg-accent rounded-full animate-pulse"></div>
-              <span className="text-primary-foreground/80 text-sm">
-                <span className="font-semibold text-accent">2,847 traders</span> started practicing this week
-              </span>
-            </div>
-
-            {/* CTA Buttons with Clear Hierarchy */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link to="/register">
-                <Button 
-                  size="lg" 
-                  className="bg-gold text-gold-foreground hover:bg-gold-hover px-10 py-7 text-lg font-bold shadow-2xl hover:shadow-gold/25 transition-all duration-300 hover:scale-105 w-full sm:w-auto group"
-                >
-                  Start Trading Free
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link to="/dashboard">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-2 border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/60 px-8 py-7 text-lg font-semibold w-full sm:w-auto"
-                >
-                  <Play className="mr-2 h-5 w-5" />
-                  Watch Demo
-                </Button>
-              </Link>
-            </div>
-
-            {/* Quick Benefits */}
-            <div className="flex flex-wrap justify-center gap-6 text-primary-foreground/80 text-sm mb-12">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-gold" />
-                <span>No credit card required</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-gold" />
-                <span>Setup in 2 minutes</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-gold" />
-                <span>100% risk-free</span>
-              </div>
-            </div>
-
-            {/* Trust Metrics - Concrete Numbers */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-primary-foreground/90 max-w-4xl mx-auto bg-primary-foreground/5 backdrop-blur-sm rounded-2xl p-6 border border-primary-foreground/10">
-              <div className="flex flex-col items-center">
-                <div className="text-3xl md:text-4xl font-bold text-gold mb-1">50K+</div>
-                <div className="text-sm text-primary-foreground/70">Active Traders</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-3xl md:text-4xl font-bold text-accent mb-1">$2B+</div>
-                <div className="text-sm text-primary-foreground/70">Monthly Volume</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-3xl md:text-4xl font-bold text-gold mb-1">500+</div>
-                <div className="text-sm text-primary-foreground/70">Instruments</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-3xl md:text-4xl font-bold text-accent mb-1">4.8★</div>
-                <div className="text-sm text-primary-foreground/70">User Rating</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section - Asymmetric 60/40 Layout with Animated Background */}
+      <HeroSection />
 
       {/* Trust & Security Stats Section */}
       <section className="py-12 bg-card border-b border-border/50">
