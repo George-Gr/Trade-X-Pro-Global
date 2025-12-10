@@ -33,14 +33,14 @@ export default function Index() {
       <PublicHeader />
 
       {/* Hero Section - Professional & Trust-Building */}
-      <section className="relative overflow-hidden bg-primary py-20 md:py-28">
+      <section className="relative overflow-hidden bg-primary pt-24 pb-20 md:pt-28 md:pb-24">
         <div className="absolute inset-0 z-0">
           <img 
             src={heroImage} 
             alt="Professional trading desk" 
-            className="h-full w-full object-cover opacity-20"
+            className="h-full w-full object-cover opacity-15"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary-glow/90"></div>
         </div>
         
         <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,27 +50,27 @@ export default function Index() {
               Trusted by 50,000+ Traders Worldwide
             </Badge>
             
-            <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in leading-tight typography-h1">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in leading-tight">
               Trade with Confidence
               <span className="block mt-2 bg-gradient-to-r from-gold to-accent bg-clip-text text-transparent">
                 Master CFD Trading Risk-Free
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-primary-foreground/90 mb-10 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 mb-10 max-w-3xl mx-auto leading-relaxed">
               Professional trading platform with $50,000 virtual capital. 
               Practice across 5 asset classes with real-time market data and zero risk.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link to="/register">
-                <Button size="xl" className="bg-gold text-gold-foreground hover:bg-gold-hover px-10 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <Button size="lg" className="bg-gold text-gold-foreground hover:bg-gold-hover px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 w-full sm:w-auto">
                   Start Trading Free
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/dashboard">
-                <Button size="xl" variant="outline" className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 px-10 py-6 text-lg font-semibold">
+                <Button size="lg" variant="outline" className="border-2 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-6 text-lg font-semibold w-full sm:w-auto">
                   View Platform Demo
                 </Button>
               </Link>
@@ -100,7 +100,7 @@ export default function Index() {
       </section>
 
       {/* Trust & Security Stats Section */}
-      <section className="py-16 bg-muted/30 border-b border-border">
+      <section className="py-16 bg-muted/50 border-b border-border/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="flex items-start gap-4">
@@ -143,19 +143,19 @@ export default function Index() {
       </section>
 
       {/* Key Services Showcase */}
-      <section id="services" className="py-20 bg-background">
+      <section id="services" className="py-20 md:py-24 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20">
               Our Services
             </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 typography-h2">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Everything You Need to
               <span className="block mt-2 bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
                 Succeed in Trading
               </span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Professional-grade tools and features designed for serious traders
             </p>
           </div>
@@ -214,19 +214,19 @@ export default function Index() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-muted/30">
+      <section id="how-it-works" className="py-20 md:py-24 bg-muted/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20">
               Getting Started
             </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Start Trading in
               <span className="block mt-2 bg-gradient-to-r from-accent to-gold bg-clip-text text-transparent">
                 3 Simple Steps
               </span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Get started with professional CFD trading in minutes
             </p>
           </div>
@@ -278,19 +278,19 @@ export default function Index() {
       </section>
 
       {/* Asset Classes Section */}
-      <section id="markets" className="py-20 bg-background">
+      <section id="markets" className="py-20 md:py-24 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-gold/10 text-gold hover:bg-gold/20 border border-gold/20">
               Global Markets
             </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Trade Across
               <span className="block mt-2 bg-gradient-to-r from-gold to-accent bg-clip-text text-transparent">
                 5 Major Asset Classes
               </span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Access 500+ instruments across global markets
             </p>
           </div>
@@ -349,18 +349,18 @@ export default function Index() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-20 md:py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Badge className="mb-6 bg-gold text-gold-foreground hover:bg-gold-hover">
                 Why TradeX Pro
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-6">
                 The Smart Choice for
                 <span className="block mt-2 text-gold">Aspiring Traders</span>
               </h2>
-              <p className="text-xl text-primary-foreground/90 mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 leading-relaxed">
                 Join thousands of traders who've chosen TradeX Pro as their trusted platform for risk-free CFD trading education and practice.
               </p>
 
@@ -446,27 +446,27 @@ export default function Index() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-primary via-primary-glow to-accent">
+      <section className="py-20 md:py-24 bg-gradient-to-br from-primary via-primary-glow to-accent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
               Ready to Start Your
               <span className="block mt-2 text-gold">Trading Journey?</span>
             </h2>
-            <p className="text-xl md:text-2xl text-primary-foreground/90 mb-10 leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 mb-10 leading-relaxed">
               Join 50,000+ traders mastering CFD trading with zero risk. 
               Get $50,000 in virtual capital instantly upon KYC verification.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link to="/register">
-                <Button size="xl" className="bg-gold text-gold-foreground hover:bg-gold-hover px-12 py-7 text-xl font-bold shadow-2xl hover:scale-105 transition-all duration-300">
+                <Button size="lg" className="bg-gold text-gold-foreground hover:bg-gold-hover px-10 py-6 text-lg font-bold shadow-2xl hover:scale-105 transition-all duration-300 w-full sm:w-auto">
                   Create Free Account
-                  <ArrowRight className="ml-2 h-6 w-6" />
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/company/contact">
-                <Button size="xl" variant="outline" className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 px-12 py-7 text-xl font-bold">
+                <Button size="lg" variant="outline" className="border-2 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground/10 px-10 py-6 text-lg font-bold w-full sm:w-auto">
                   Contact Sales
                 </Button>
               </Link>
