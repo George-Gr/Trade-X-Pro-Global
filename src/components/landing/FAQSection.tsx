@@ -1,11 +1,13 @@
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ScrollReveal, AnimatedSectionHeader } from "./ScrollReveal";
 
 const faqs = [
   {
@@ -44,41 +46,50 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-20 md:py-24 bg-background">
+    <section id="faq" className="py-20 md:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20">
-            Frequently Asked Questions
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Got Questions?
-            <span className="block mt-2 bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
-              We've Got Answers
-            </span>
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to know about TradeX Pro virtual trading platform
-          </p>
-        </div>
+        <AnimatedSectionHeader
+          badge={
+            <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20">
+              Frequently Asked Questions
+            </Badge>
+          }
+          title="Got Questions?"
+          subtitle="We've Got Answers"
+          description="Everything you need to know about TradeX Pro virtual trading platform"
+        />
 
-        <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
-              <AccordionItem 
-                key={index} 
-                value={`item-${index}`}
-                className="border border-border rounded-lg px-6 bg-card data-[state=open]:shadow-lg transition-shadow duration-300"
-              >
-                <AccordionTrigger className="text-left font-semibold text-lg py-6 hover:no-underline hover:text-primary">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed pb-6">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
+        <ScrollReveal delay={0.2}>
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ 
+                    delay: index * 0.08, 
+                    duration: 0.5,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
+                >
+                  <AccordionItem 
+                    value={`item-${index}`}
+                    className="border border-border rounded-lg px-6 bg-card data-[state=open]:shadow-lg transition-all duration-300 data-[state=open]:border-primary/30"
+                  >
+                    <AccordionTrigger className="text-left font-semibold text-lg py-6 hover:no-underline hover:text-primary transition-colors duration-200">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground leading-relaxed pb-6">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              ))}
+            </Accordion>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
