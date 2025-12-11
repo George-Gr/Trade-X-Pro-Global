@@ -5,8 +5,9 @@ import { useToast } from "@/hooks/use-toast";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, HelpCircle } from "lucide-react";
 import { TradeLoading } from "@/components/trading/TradeLoading";
+import { OnboardingTour, useOnboardingTour } from "@/components/onboarding/OnboardingTour";
 
 // Lazy load heavy components for better bundle splitting
 const EnhancedWatchlist = lazy(() => import("@/components/trading/EnhancedWatchlist"));
@@ -30,8 +31,10 @@ const Trade = () => {
   const [activeTab, setActiveTab] = useState("trade");
   const [showWatchlistDrawer, setShowWatchlistDrawer] = useState(false);
   const [showTradingDrawer, setShowTradingDrawer] = useState(false);
+  const [showTour, setShowTour] = useState(false);
   const tradingPanelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { startTour } = useOnboardingTour();
 
   const handleQuickTrade = (symbol: string, side: "buy" | "sell") => {
     setSelectedSymbol(symbol);
@@ -50,20 +53,33 @@ const Trade = () => {
 
   return (
     <AuthenticatedLayout>
-      <div className="flex-1 flex flex-col overflow-hidden h-full">
-        {/* KYC Status Banner */}
-        <div className="flex-shrink-0 px-4 pt-4">
-          <Suspense fallback={<div className="h-12 bg-muted/50 rounded animate-pulse" />}>
-            <KYCStatusBanner />
-          </Suspense>
+      {/* Onboarding Tour */}
+      <OnboardingTour page="trading" onComplete={() => setShowTour(false)} forceShow={showTour} />
+      
+      <div className="flex-1 flex flex-col overflow-hidden h-full" data-tour="trading-page">
+        {/* KYC Status Banner with Help Button */}
+        <div className="flex-shrink-0 px-4 pt-4 flex items-center justify-between gap-4">
+          <div className="flex-1">
+            <Suspense fallback={<div className="h-12 bg-muted/50 rounded animate-pulse" />}>
+              <KYCStatusBanner />
+            </Suspense>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => { setShowTour(true); startTour('trading'); }}
+            className="shrink-0"
+            aria-label="Start tutorial"
+          >
+            <HelpCircle className="h-4 w-4 mr-1" />
+            <span className="hidden sm:inline">Help</span>
+          </Button>
         </div>
 
         {/* Mobile-first layout: stack vertically on mobile, 2-col on tablet, 3-col on desktop */}
         <div className="flex-1 flex flex-col sm:flex-row md:flex-row lg:flex-row overflow-hidden gap-0">
           {/* Left Sidebar - Enhanced Watchlist */}
-          {/* Hidden on mobile and tablet, shown as drawer trigger on md and below */}
-          {/* Visible only on lg (1024px+) */}
-          <div className="hidden lg:flex w-80 border-r border-border flex-shrink-0 overflow-hidden">
+          <div className="hidden lg:flex w-80 border-r border-border flex-shrink-0 overflow-hidden" data-tour="watchlist">
             <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
               <EnhancedWatchlist 
                 onSelectSymbol={setSelectedSymbol} 
@@ -150,7 +166,7 @@ const Trade = () => {
             </div>
 
             {/* Chart - Responsive height based on screen size */}
-            <div className="flex-1 overflow-hidden min-h-0 md:max-h-[calc(100vh-300px)] lg:max-h-none">
+            <div className="flex-1 overflow-hidden min-h-0 md:max-h-[calc(100vh-300px)] lg:max-h-none" data-tour="chart">
               <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
                 <ChartPanel symbol={selectedSymbol} />
               </Suspense>
@@ -213,7 +229,7 @@ const Trade = () => {
                     <AssetTree onSelectSymbol={setSelectedSymbol} selectedSymbol={selectedSymbol} />
                   </Suspense>
                 </div>
-                <div ref={tradingPanelRef} className="border-t border-border mt-2 pt-2">
+                <div ref={tradingPanelRef} className="border-t border-border mt-2 pt-2" data-tour="trading-panel">
                   <Suspense fallback={<div className="w-full h-full bg-muted/50 animate-pulse rounded" />}>
                     <TradingPanel symbol={selectedSymbol} />
                   </Suspense>
