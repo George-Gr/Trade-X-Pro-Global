@@ -26,6 +26,7 @@ export * from './input';
 export * from './input-otp';
 export { Label } from './label';
 export * from './link';
+export * from './loading-indicator';
 export * from './menubar';
 export * from './navigation-menu';
 export * from './pagination';
