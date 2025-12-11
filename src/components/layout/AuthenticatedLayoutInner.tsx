@@ -48,7 +48,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   user,
   handleLogoutClick
 }) => {
-  const { state, open } = useSidebar();
+  const { state, open, isMobile } = useSidebar();
   const { setSidebarOpen } = useAuthenticatedLayout();
   const [currentTime, setCurrentTime] = useState<string>("");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -80,8 +80,12 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
       {/* Sidebar - fixed position, does not participate in flex layout */}
       <AppSidebar />
 
-      {/* Main Content Area - accounts for fixed sidebar on desktop */}
-      <div className="flex flex-col min-h-screen md:ml-[var(--sidebar-width)] transition-[margin-left] duration-300 ease-in-out">
+      {/* Main Content Area - accounts for fixed sidebar on desktop with dynamic margin based on sidebar state */}
+      <div 
+        className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
+          isMobile ? '' : state === 'expanded' ? 'md:ml-[var(--sidebar-width)]' : 'md:ml-[var(--sidebar-width-icon)]'
+        }`}
+      >
         {/* Demo Mode Banner */}
         <DemoModeIndicator variant="banner" />
         

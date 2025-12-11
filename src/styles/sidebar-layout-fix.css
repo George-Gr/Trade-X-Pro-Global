@@ -44,10 +44,22 @@ header[class*="sticky"] {
   z-index: 40;
 }
 
-/* Support for collapsed sidebar width transitions */
+/* Support for collapsed sidebar width transitions on desktop */
 @media (min-width: 768px) {
+  /* Sidebar peer selector for state-based transitions */
+  .group.peer[data-state="expanded"] ~ * {
+    margin-left: var(--sidebar-width, 16rem);
+    transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   /* When sidebar is collapsed with icon variant, reduce margin */
-  .group\[data-state=collapsed\] ~ * {
-    margin-left: calc(var(--sidebar-width-icon, 4rem)) !important;
+  .group.peer[data-state="collapsed"] ~ * {
+    margin-left: var(--sidebar-width-icon, 4rem);
+    transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Ensure proper spacing for offcanvas collapsible variant */
+  .group.peer[data-state="collapsed"][data-collapsible="offcanvas"] ~ * {
+    margin-left: 0;
   }
 }
