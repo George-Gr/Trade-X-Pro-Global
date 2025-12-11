@@ -139,16 +139,18 @@ export const usePullToRefresh = (config: PullToRefreshConfig): PullToRefreshRetu
     if (!indicator) {
       indicator = document.createElement('div');
       indicator.className = 'pull-to-refresh-indicator';
-      indicator.innerHTML = `
-        <div class="refresh-spinner">
-          <div class="spinner-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-      `;
+      
+      // Build spinner using DOM methods instead of innerHTML for security
+      const spinner = document.createElement('div');
+      spinner.className = 'refresh-spinner';
+      const spinnerRing = document.createElement('div');
+      spinnerRing.className = 'spinner-ring';
+      for (let i = 0; i < 4; i++) {
+        spinnerRing.appendChild(document.createElement('div'));
+      }
+      spinner.appendChild(spinnerRing);
+      indicator.appendChild(spinner);
+      
       container.insertBefore(indicator, container.firstChild);
     }
 

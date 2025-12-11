@@ -12,7 +12,7 @@ const EconomicCalendar = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    container.innerHTML = "";
+    container.textContent = "";
 
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
@@ -31,7 +31,7 @@ const EconomicCalendar = () => {
 
     return () => {
       if (container) {
-        container.innerHTML = "";
+        container.textContent = "";
       }
     };
   }, []);

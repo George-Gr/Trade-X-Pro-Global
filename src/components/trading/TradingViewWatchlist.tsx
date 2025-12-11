@@ -36,7 +36,7 @@ const TradingViewWatchlist = () => {
     initTradingViewCompatibility();
     
     const container = containerRef.current;
-    container.innerHTML = "";
+    container.textContent = "";
 
     // Progressive loading configuration
     const config: TradingViewConfig = {
@@ -117,7 +117,7 @@ const TradingViewWatchlist = () => {
 
     return () => {
       if (container) {
-        container.innerHTML = "";
+        container.textContent = "";
       }
       loader.reset();
     };
@@ -181,7 +181,7 @@ const TradingViewWatchlist = () => {
     const container = containerRef.current;
     return () => {
       if (container) {
-        container.innerHTML = "";
+        container.textContent = "";
       }
     };
   }, []);
