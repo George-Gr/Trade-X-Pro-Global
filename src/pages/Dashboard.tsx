@@ -14,7 +14,6 @@ import useRiskEvents from "@/hooks/useRiskEvents";
 import { useProfitLossData } from "@/hooks/useProfitLossData";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
-import "@/components/dashboard/DashboardGrid.css";
 import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
 
 const Dashboard = () => {
@@ -90,12 +89,12 @@ const Dashboard = () => {
     <AuthenticatedLayout>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="typography-h1 mb-2">Dashboard</h1>
-        <p className="typography-body text-secondary-contrast">Welcome back to your trading account</p>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Dashboard</h1>
+        <p className="text-lg text-muted-foreground">Welcome back to your trading account</p>
       </div>
 
       {/* Stats Grid - Using CSS Grid for responsive layout */}
-      <div className="dashboard-grid mb-8">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 mb-8">
         {stats.map((stat) => {
           const Icon = stat.icon;
           const isEmptyState = 'empty' in stat && stat.empty;
@@ -158,7 +157,7 @@ const Dashboard = () => {
       )}
 
       {/* Risk Management Section - Using CSS Grid for responsive layout */}
-      <div className="dashboard-grid mb-xl section-spacing">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-xl section-spacing">
         {/* Margin Level card - wired to real backend via useRiskMetrics */}
         <div>
           {riskError ? (
