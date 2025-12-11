@@ -13,8 +13,8 @@ export const buttonVariants = cva(
         ghost: "hover:bg-accent/10 active:bg-accent/20 active:scale-[0.98] hover:translate-y-[-1px] hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline active:text-primary/80 active:underline bg-transparent hover:bg-transparent",
         loading: "bg-primary/50 text-primary-foreground cursor-wait hover:bg-primary/50 active:scale-100",
-        success: "bg-green-500 text-white hover:bg-green-600 active:bg-green-700 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
-        warning: "bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        success: "bg-success text-success-foreground hover:bg-success/95 active:bg-success/90 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
+        warning: "bg-warning text-warning-foreground hover:bg-warning/95 active:bg-warning/90 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
       },
       size: {
         xs: "h-8 px-2 text-xs",               // 32px height

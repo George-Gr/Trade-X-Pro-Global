@@ -14,7 +14,6 @@ import useRiskEvents from "@/hooks/useRiskEvents";
 import { useProfitLossData } from "@/hooks/useProfitLossData";
 import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
 import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
-import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -305,9 +304,6 @@ const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Mobile bottom navigation for dashboard */}
-      <MobileBottomNavigation />
       </AuthenticatedLayout>
   );
 };

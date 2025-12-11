@@ -61,7 +61,7 @@ export const OrderRow = memo(({
   const canModify = ['open', 'partially_filled'].includes(order.status);
   const canCancel = ['pending', 'open', 'partially_filled'].includes(order.status);
 
-  const sideColor = order.side === 'buy' ? 'text-blue-600' : 'text-orange-600';
+  const sideColor = order.side === 'buy' ? 'text-buy' : 'text-sell';
   const typeLabel = order.type
     .replace('_', '-')
     .split('-')
@@ -179,7 +179,7 @@ export const OrderRow = memo(({
             <div className="flex-1 min-w-0">
               <span
                   className={`text-sm font-medium ${
-                    order.realized_pnl > 0 ? 'text-buy text-green-600' : 'text-sell text-red-600'
+                    order.realized_pnl > 0 ? 'text-buy' : 'text-sell'
                   }`}
                 >
                 {order.realized_pnl > 0 ? '+' : ''}
