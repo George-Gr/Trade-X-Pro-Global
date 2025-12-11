@@ -21,6 +21,9 @@
 /* Import visual feedback states */
 @import "./styles/states.css";
 
+/* Import onboarding tour styles */
+@import "./styles/onboarding.css";
+
 /* ============================================
    TRADEX PRO DESIGN SYSTEM
    Professional CFD Trading Platform
