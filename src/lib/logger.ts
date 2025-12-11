@@ -138,6 +138,13 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const isProduction = import.meta.env.MODE === 'production';
 
 /**
+ * Production noop - all console methods become silent in production
+ * Only Sentry integration remains active for error tracking
+ */
+const noop = () => {};
+const noopWithReturn = <T>(returnValue: T) => () => returnValue;
+
+/**
  * Track whether Sentry has been initialized
  */
 let sentryInitialized = false;

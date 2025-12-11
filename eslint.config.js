@@ -56,6 +56,11 @@ export default [
 
       // Enforce proper cleanup
       'react-hooks/exhaustive-deps': 'warn',
+
+      // Prevent direct console usage - use logger instead
+      'no-console': ['warn', { 
+        allow: ['warn', 'error'] // Allow warn/error for critical issues during development
+      }],
     },
   },
   {
