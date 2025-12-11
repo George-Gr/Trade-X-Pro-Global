@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { useToast } from "@/hooks/use-toast";
+import { rateLimiter, checkRateLimit } from "@/lib/rateLimiter";
+import { generateIdempotencyKey, executeWithIdempotency } from "@/lib/idempotency";
+import { sanitizeText, sanitizeNumber } from "@/lib/sanitize";
+import { logger } from "@/lib/logger";
 
 export interface ClosePositionRequest {
   position_id: string;
@@ -30,13 +34,24 @@ export const usePositionClose = () => {
   const [isClosing, setIsClosing] = useState(false);
   const { toast } = useToast();
 
-  const closePosition = async (request: ClosePositionRequest): Promise<ClosePositionResult | null> => {
+  const closePosition = useCallback(async (request: ClosePositionRequest): Promise<ClosePositionResult | null> => {
+    // Check rate limit before proceeding
+    const rateCheck = checkRateLimit('order');
+    if (!rateCheck.allowed) {
+      toast({
+        title: "Rate Limit Exceeded",
+        description: `Please wait ${Math.ceil(rateCheck.resetIn / 1000)} seconds before closing another position.`,
+        variant: "destructive",
+      });
+      logger.warn('Close position rate limit exceeded', { 
+        metadata: { remaining: rateCheck.remaining, resetIn: rateCheck.resetIn } 
+      });
+      return null;
+    }
+
     setIsClosing(true);
 
     try {
-      // Generate idempotency key
-      const idempotencyKey = `close_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-
       // Get current session
       const { data: { session } } = await supabase.auth.getSession();
       
@@ -49,58 +64,105 @@ export const usePositionClose = () => {
         return null;
       }
 
-      // Call edge function
-      const { data, error } = await supabase.functions.invoke('close-position', {
-        body: {
-          ...request,
-          idempotency_key: idempotencyKey,
+      // Sanitize inputs
+      const sanitizedRequest = {
+        position_id: sanitizeText(request.position_id),
+        quantity: request.quantity ? sanitizeNumber(request.quantity) : undefined,
+      };
+
+      // Generate idempotency key
+      const idempotencyKey = generateIdempotencyKey(
+        session.user.id,
+        'close_position',
+        {
+          position_id: sanitizedRequest.position_id,
+          quantity: sanitizedRequest.quantity,
+        }
+      );
+
+      // Execute with rate limiting and idempotency protection
+      const result = await rateLimiter.execute(
+        'order',
+        async () => {
+          return executeWithIdempotency(
+            idempotencyKey,
+            'close-position',
+            async () => {
+              const { data, error } = await supabase.functions.invoke('close-position', {
+                body: {
+                  ...sanitizedRequest,
+                  idempotency_key: idempotencyKey,
+                },
+              });
+
+              if (error) {
+                throw error;
+              }
+
+              if (data.error) {
+                throw new Error(data.error);
+              }
+
+              return data;
+            }
+          );
         },
-      });
+        10 // High priority for position close
+      );
 
-      if (error) {
-        toast({
-          title: "Close Failed",
-          description: error.message || "Failed to close position",
-          variant: "destructive",
-        });
-        return null;
-      }
-
-      if (data.error) {
-        toast({
-          title: "Close Failed",
-          description: data.error,
-          variant: "destructive",
-        });
-        return null;
-      }
-
-      const result = data.data as ClosePositionResult;
-      const pnlText = result.realized_pnl >= 0 
-        ? `+$${result.realized_pnl.toFixed(2)}` 
-        : `-$${Math.abs(result.realized_pnl).toFixed(2)}`;
+      const closeResult = result.data as ClosePositionResult;
+      const pnlText = closeResult.realized_pnl >= 0 
+        ? `+$${closeResult.realized_pnl.toFixed(2)}` 
+        : `-$${Math.abs(closeResult.realized_pnl).toFixed(2)}`;
 
       toast({
         title: "Position Closed",
-        description: `Closed ${result.closed_quantity} lots at ${result.close_price}. P&L: ${pnlText}`,
-        variant: result.realized_pnl >= 0 ? "default" : "destructive",
+        description: `Closed ${closeResult.closed_quantity} lots at ${closeResult.close_price}. P&L: ${pnlText}`,
+        variant: closeResult.realized_pnl >= 0 ? "default" : "destructive",
       });
 
-      return result;
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+      logger.info('Position closed successfully', {
+        metadata: {
+          positionId: closeResult.position_id,
+          realizedPnl: closeResult.realized_pnl,
+          status: closeResult.position_status,
+        },
       });
+
+      return closeResult;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      
+      // Check for duplicate request error
+      if (errorMessage.includes('already being processed')) {
+        toast({
+          title: "Duplicate Request",
+          description: "This close request is already being processed. Please wait.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Close Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+      
+      logger.error('Close position failed', error);
       return null;
     } finally {
       setIsClosing(false);
     }
-  };
+  }, [toast]);
+
+  // Get current rate limit status
+  const getRateLimitStatus = useCallback(() => {
+    return checkRateLimit('order');
+  }, []);
 
   return {
     closePosition,
     isClosing,
+    getRateLimitStatus,
   };
 };
