@@ -1,18 +1,16 @@
 /* Sidebar layout fixes
-   Purpose: Small set of overrides to ensure the sidebar stacks correctly,
-   has smooth transitions and uses the design tokens defined in `index.css`.
-   This file is intentionally minimal — it only contains fixes required for
-   z-index, background, and transition behaviors across browsers. */
+   Purpose: Ensures the sidebar is fixed to the left side of the screen,
+   stays in place during scrolling, and properly integrates with the main layout.
+   Handles both expanded and collapsed states with smooth transitions. */
 
 /* Ensure sidebar background and foreground use design tokens */
 .sidebar,
 .app-sidebar,
-[class*="sidebar-"] {
+[data-sidebar="sidebar"] {
   background-color: hsl(var(--sidebar));
   color: hsl(var(--sidebar-foreground));
   border-color: hsl(var(--sidebar-border));
 }
-
 
 /* Smooth, performant transitions for show/hide and theme changes */
 .sidebar,
@@ -38,4 +36,18 @@
 /* Small tweak to avoid flicker on theme inversion in Safari/Chromium */
 @media (prefers-reduced-motion: no-preference) {
   .sidebar { backface-visibility: hidden; }
+  [data-sidebar="sidebar"] { backface-visibility: hidden; }
+}
+
+/* Ensure header stays above sidebar with proper z-index */
+header[class*="sticky"] {
+  z-index: 40;
+}
+
+/* Support for collapsed sidebar width transitions */
+@media (min-width: 768px) {
+  /* When sidebar is collapsed with icon variant, reduce margin */
+  .group\[data-state=collapsed\] ~ * {
+    margin-left: calc(var(--sidebar-width-icon, 4rem)) !important;
+  }
 }
