@@ -26,6 +26,20 @@ const SUPPORTED_CRYPTOS = [
   { value: 'BNB', label: 'Binance Coin (BNB)', icon: 'BNB' },
 ];
 
+// Validate payment URL to prevent open redirect attacks
+const isValidPaymentUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    // Only allow NowPayments domains
+    const allowedDomains = ['nowpayments.io', 'sandbox.nowpayments.io'];
+    return allowedDomains.some(domain => 
+      parsed.hostname === domain || parsed.hostname.endsWith('.' + domain)
+    );
+  } catch {
+    return false;
+  }
+};
+
 export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCryptoDialogProps) {
   const [loading, setLoading] = useState(false);
   const firstFocusableRef = useRef<HTMLSelectElement>(null);
@@ -254,7 +268,17 @@ export function DepositCryptoDialog({ open, onOpenChange, onSuccess }: DepositCr
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => window.open(paymentData.payment_url, '_blank')}
+                onClick={() => {
+                  if (paymentData.payment_url && isValidPaymentUrl(paymentData.payment_url)) {
+                    window.open(paymentData.payment_url, '_blank');
+                  } else {
+                    toast({
+                      title: "Invalid Payment URL",
+                      description: "The payment URL is not from a trusted source. Please contact support.",
+                      variant: "destructive",
+                    });
+                  }
+                }}
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Open Payment Page

@@ -1,10 +1,36 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-nowpayments-sig',
 };
+
+// Zod schema for IPN data validation
+const IPNDataSchema = z.object({
+  payment_id: z.union([z.string().min(1), z.number()]).transform(val => String(val)),
+  payment_status: z.enum([
+    'waiting', 
+    'confirming', 
+    'confirmed', 
+    'sending', 
+    'partially_paid', 
+    'finished', 
+    'failed', 
+    'expired', 
+    'refunded'
+  ]),
+  actually_paid: z.number().nonnegative().optional(),
+  pay_amount: z.number().nonnegative().optional(),
+  pay_currency: z.string().optional(),
+  order_id: z.string().optional(),
+  order_description: z.string().optional(),
+  price_amount: z.number().nonnegative().optional(),
+  price_currency: z.string().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -66,9 +92,29 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Parse verified IPN data
-    const ipnData = JSON.parse(body);
-    console.log('Verified IPN received:', { payment_id: ipnData.payment_id, status: ipnData.payment_status });
+    // Parse and validate IPN data with Zod schema
+    let rawData: unknown;
+    try {
+      rawData = JSON.parse(body);
+    } catch (parseError) {
+      console.error('Invalid JSON in IPN body:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON format' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const validation = IPNDataSchema.safeParse(rawData);
+    if (!validation.success) {
+      console.error('IPN data validation failed:', validation.error.errors);
+      return new Response(
+        JSON.stringify({ error: 'Invalid IPN data structure', details: validation.error.errors }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const ipnData = validation.data;
+    console.log('Validated IPN received:', { payment_id: ipnData.payment_id, status: ipnData.payment_status });
 
     const paymentId = ipnData.payment_id;
     const paymentStatus = ipnData.payment_status;
