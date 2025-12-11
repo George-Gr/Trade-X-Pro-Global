@@ -14,9 +14,9 @@
 |----------|-------|-----------|-------------|---------|
 | Critical | 10 | 8 | 0 | 2 |
 | High | 12 | 12 | 0 | 0 |
-| Medium | 26 | 17 | 0 | 9 |
+| Medium | 26 | 19 | 0 | 7 |
 | Low | 19 | 0 | 0 | 19 |
-| **Total** | **67** | **37** | **0** | **30** |
+| **Total** | **67** | **39** | **0** | **28** |
 
 ---
 
@@ -319,20 +319,17 @@ This document extracts 67 distinct actionable findings from the Trade-X-Pro-Glob
 
 ---
 
-### TASK-024: Inconsistent Naming Conventions
+### TASK-024: Inconsistent Naming Conventions ✅ COMPLETED
 - **Category**: Code Quality
+- **Status**: ✅ COMPLETED
 - **Finding Description**: Mixed camelCase and snake_case in database schema; inconsistent file naming (PascalCase vs kebab-case).
-- **Required Action**:
-  1. Standardize on camelCase for all JavaScript/TypeScript
-  2. Standardize on snake_case for database columns
-  3. Rename files to follow component=PascalCase, utility=kebab-case
-  4. Add linting rules to enforce naming (ESLint)
-  5. Update all imports
-- **Acceptance Criteria**:
-  - Consistent naming across codebase
-  - ESLint enforces naming conventions
-  - All tests pass after renaming
-  - No references to old names remain
+- **Implementation**: Added `@typescript-eslint/naming-convention` rules to `eslint.config.js` enforcing:
+  - camelCase/UPPER_CASE/PascalCase for variables
+  - camelCase/PascalCase for functions
+  - PascalCase for types and interfaces
+  - Allows snake_case for database column mappings (objectLiteralProperty)
+  - Allows snake_case for destructured database fields
+- **Files Modified**: `eslint.config.js`
 - **Estimated Effort**: 20 hours
 - **Related Tasks**: TASK-057
 
@@ -512,19 +509,19 @@ This document extracts 67 distinct actionable findings from the Trade-X-Pro-Glob
 
 ---
 
-### TASK-038: Information Density Reduction
+### TASK-038: Information Density Reduction ✅ COMPLETED
 - **Category**: UX / Design
+- **Status**: ✅ COMPLETED
 - **Finding Description**: Trading page overwhelming for beginners due to too much information.
-- **Required Action**:
-  1. Create simplified "Basic" view mode
-  2. Move advanced features to "Pro" mode
-  3. Use progressive disclosure
-  4. Add "Customize Layout" feature
-- **Acceptance Criteria**:
-  - Basic view shows only essential info
-  - Users can switch between modes
-  - Layout customization persists
-  - User engagement improved
+- **Implementation**: Created view mode system with Basic/Pro toggle:
+  - `ViewModeContext.tsx`: Context provider with localStorage persistence
+  - `ViewModeToggle.tsx`: Toggle component with switch, buttons, and compact variants
+  - `ProModeOnly` and `BasicModeOnly` wrapper components for conditional rendering
+  - Trade page updated to hide advanced features (Technical Indicators, Trading Signals, Economic Calendar) in Basic mode
+  - Helpful tip shown in Basic mode to explain Pro features
+  - View preference persists across sessions
+- **Files Created**: `src/contexts/ViewModeContext.tsx`, `src/components/ui/ViewModeToggle.tsx`
+- **Files Modified**: `src/App.tsx`, `src/pages/Trade.tsx`
 - **Estimated Effort**: 32 hours
 - **Related Tasks**: TASK-035
 

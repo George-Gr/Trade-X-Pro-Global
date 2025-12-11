@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, HelpCircle } from "lucide-react";
 import { TradeLoading } from "@/components/trading/TradeLoading";
 import { OnboardingTour, useOnboardingTour } from "@/components/onboarding/OnboardingTour";
+import { useViewModeSafe } from "@/contexts/ViewModeContext";
+import { ViewModeToggle, ProModeOnly } from "@/components/ui/ViewModeToggle";
 
 // Lazy load heavy components for better bundle splitting
 const EnhancedWatchlist = lazy(() => import("@/components/trading/EnhancedWatchlist"));
@@ -35,6 +37,7 @@ const Trade = () => {
   const tradingPanelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { startTour } = useOnboardingTour();
+  const { isProMode, isBasicMode } = useViewModeSafe();
 
   const handleQuickTrade = (symbol: string, side: "buy" | "sell") => {
     setSelectedSymbol(symbol);
@@ -57,23 +60,26 @@ const Trade = () => {
       <OnboardingTour page="trading" onComplete={() => setShowTour(false)} forceShow={showTour} />
       
       <div className="flex-1 flex flex-col overflow-hidden h-full" data-tour="trading-page">
-        {/* KYC Status Banner with Help Button */}
-        <div className="flex-shrink-0 px-4 pt-4 flex items-center justify-between gap-4">
-          <div className="flex-1">
+        {/* KYC Status Banner with View Mode Toggle and Help Button */}
+        <div className="flex-shrink-0 px-4 pt-4 flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex-1 min-w-0">
             <Suspense fallback={<div className="h-12 bg-muted/50 rounded animate-pulse" />}>
               <KYCStatusBanner />
             </Suspense>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => { setShowTour(true); startTour('trading'); }}
-            className="shrink-0"
-            aria-label="Start tutorial"
-          >
-            <HelpCircle className="h-4 w-4 mr-1" />
-            <span className="hidden sm:inline">Help</span>
-          </Button>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* View Mode Toggle */}
+            <ViewModeToggle variant="compact" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => { setShowTour(true); startTour('trading'); }}
+              aria-label="Start tutorial"
+            >
+              <HelpCircle className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">Help</span>
+            </Button>
+          </div>
         </div>
 
         {/* Mobile-first layout: stack vertically on mobile, 2-col on tablet, 3-col on desktop */}
@@ -243,20 +249,42 @@ const Trade = () => {
                 role="tabpanel"
                 aria-labelledby="tab-trigger-analysis"
               >
-                <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
-                  <TechnicalIndicators symbol={selectedSymbol} />
-                </Suspense>
+                {/* Always show market sentiment - essential for all users */}
                 <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
                   <MarketSentiment symbol={selectedSymbol} />
                 </Suspense>
-                <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
-                  <TradingSignals symbol={selectedSymbol} />
-                </Suspense>
-                <TradingViewErrorBoundary widgetType="Economic Calendar">
-                  <Suspense fallback={<div className="h-64 bg-muted/50 rounded animate-pulse" />}>
-                    <EconomicCalendar />
+                
+                {/* Pro Mode: Show advanced technical indicators */}
+                <ProModeOnly>
+                  <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
+                    <TechnicalIndicators symbol={selectedSymbol} />
                   </Suspense>
-                </TradingViewErrorBoundary>
+                </ProModeOnly>
+                
+                {/* Pro Mode: Show trading signals */}
+                <ProModeOnly>
+                  <Suspense fallback={<div className="h-48 bg-muted/50 rounded animate-pulse" />}>
+                    <TradingSignals symbol={selectedSymbol} />
+                  </Suspense>
+                </ProModeOnly>
+                
+                {/* Pro Mode: Show economic calendar */}
+                <ProModeOnly>
+                  <TradingViewErrorBoundary widgetType="Economic Calendar">
+                    <Suspense fallback={<div className="h-64 bg-muted/50 rounded animate-pulse" />}>
+                      <EconomicCalendar />
+                    </Suspense>
+                  </TradingViewErrorBoundary>
+                </ProModeOnly>
+                
+                {/* Basic Mode: Show helpful tip */}
+                {isBasicMode && (
+                  <div className="p-4 bg-muted/30 rounded-lg border border-border">
+                    <p className="text-sm text-muted-foreground">
+                      💡 Switch to <strong>Pro mode</strong> for advanced technical indicators, trading signals, and economic calendar.
+                    </p>
+                  </div>
+                )}
               </TabsContent>
               
               <TabsContent 
