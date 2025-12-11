@@ -13,7 +13,6 @@ import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
 import { RiskSettingsForm } from "@/components/risk/RiskSettingsForm";
 import { RiskManagementLoading } from "@/components/risk/RiskManagementLoading";
 import { Shield, TrendingDown, Lock, AlertTriangle } from "lucide-react";
-import { MobileBottomNavigation } from "@/components/layout/MobileBottomNavigation";
 
 const getSupabaseClient = async () => {
   const { supabase } = await import("@/lib/supabaseBrowserClient");
@@ -193,9 +192,6 @@ export default function RiskManagement() {
           <RiskSettingsForm />
         </div>
       </div>
-
-      {/* Mobile bottom navigation for risk management */}
-      <MobileBottomNavigation />
       </AuthenticatedLayout>
   );
 }

@@ -137,8 +137,8 @@ export const HeroSection = () => {
             </motion.div>
             
             {/* Compelling Headline */}
-            <motion.h1 
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-[1.1] tracking-tight"
+            <motion.h1
+              className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6 leading-[1.1] tracking-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -155,8 +155,8 @@ export const HeroSection = () => {
             </motion.h1>
             
             {/* Specific Value Proposition */}
-            <motion.p 
-              className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 mb-6 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            <motion.p
+              className="text-lg md:text-xl text-primary-foreground/90 mb-6 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
