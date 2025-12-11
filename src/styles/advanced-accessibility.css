@@ -1,0 +1,650 @@
+/**
+ * Advanced Accessibility CSS System
+ * Enhanced keyboard navigation, screen reader support,
+ * and inclusive design patterns for trading platform
+ */
+
+/* ============================================================================
+   Keyboard Navigation System
+   ========================================================================== */
+
+/* Visible focus indicator for all interactive elements */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Ensure focus is visible even in dark mode */
+.dark :focus-visible {
+  outline-color: hsl(var(--ring));
+}
+
+/* Enhanced focus ring for critical interactive elements */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)),
+              0 0 0 4px hsl(var(--ring));
+}
+
+.focus-ring-inset {
+  outline: none;
+}
+
+.focus-ring-inset:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px hsl(var(--ring));
+}
+
+.focus-ring-sm {
+  outline: none;
+}
+
+.focus-ring-sm:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px hsl(var(--background)),
+              0 0 0 2px hsl(var(--ring));
+}
+
+.focus-ring-critical {
+  outline: none;
+}
+
+.focus-ring-critical:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)),
+              0 0 0 4px hsl(var(--ring));
+}
+
+/* Skip to main content link (visible on focus) */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background-color: hsl(var(--primary));
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 6px 0;
+  font-weight: 500;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* ============================================================================
+   Tab Navigation Indicators
+   ========================================================================== */
+
+/* Visual indicator for tab-navigated elements */
+.tab-nav-indicator {
+  position: relative;
+}
+
+.tab-nav-indicator:focus-visible::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: hsl(var(--ring));
+}
+
+/* Keyboard-only focus styles (not mouse) */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ============================================================================
+   Screen Reader Only Content
+   ========================================================================== */
+
+/* Content visible to screen readers but not visually displayed */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Screen reader only but focusable (for skip links) */
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================================================
+   ARIA Live Region Styles
+   ========================================================================== */
+
+/* Status messages that should be announced */
+[role="status"] {
+  position: relative;
+}
+
+[role="status"]::after {
+  /* Indicator that this is a live region */
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Polite announcements (don't interrupt) */
+[aria-live="polite"] {
+  /* Styled to draw attention without being intrusive */
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: hsl(var(--info) / 0.1);
+  color: hsl(var(--info));
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Assertive announcements (interrupt) */
+[aria-live="assertive"] {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: hsl(var(--warning) / 0.1);
+  color: hsl(var(--warning));
+  font-weight: 500;
+}
+
+/* ============================================================================
+   Form Accessibility Enhancements
+   ========================================================================== */
+
+/* Visual label association */
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+label[required]::after {
+  content: ' *';
+  color: hsl(var(--destructive));
+  aria-label: 'required';
+}
+
+/* Form field error states with accessibility */
+input:invalid,
+textarea:invalid,
+select:invalid {
+  border-color: hsl(var(--destructive));
+  background-color: hsl(var(--destructive) / 0.05);
+}
+
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+/* Error message styles */
+.form-error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.form-error-message::before {
+  content: '⚠';
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+/* Helper text and descriptions */
+.form-helper-text,
+[aria-describedby] ~ small {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: hsl(var(--foreground-muted));
+}
+
+/* ============================================================================
+   Button Accessibility Enhancements
+   ========================================================================== */
+
+/* Ensure buttons are distinguishable */
+button {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button[aria-pressed="true"] {
+  background-color: hsl(var(--accent) / 0.2);
+  border: 1px solid hsl(var(--accent) / 0.3);
+}
+
+button[aria-pressed="false"] {
+  background-color: transparent;
+  border: 1px solid hsl(var(--border));
+}
+
+/* Icon buttons need accessible labels */
+button:has(> svg:only-child) {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================================
+   Heading Hierarchy & Structure
+   ========================================================================== */
+
+h1 {
+  font-size: clamp(1.875rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  margin-bottom: 24px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: 1.2;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  line-height: 1.3;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+/* Ensure proper heading hierarchy */
+/* h1 should be first and only one per page */
+h1 ~ h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* ============================================================================
+   List Accessibility
+   ========================================================================== */
+
+/* Proper list markup with semantics */
+ul, ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+ul > li, ol > li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* Custom list markers maintain semantic structure */
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+/* Nested lists */
+ul ul, ol ol, ul ol, ol ul {
+  margin-top: 8px;
+  padding-left: 32px;
+}
+
+/* ============================================================================
+   Link Accessibility
+   ========================================================================== */
+
+a {
+  color: hsl(var(--accent));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  color: hsl(var(--accent) / 0.8);
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Remove underline for icon-only links */
+a:has(> svg:only-child):not(:has(> span)) {
+  text-decoration: none;
+}
+
+/* ============================================================================
+   Color Contrast Enhancements
+   ========================================================================== */
+
+/* Ensure sufficient contrast in light mode */
+:root {
+  /* Text colors with sufficient contrast */
+  --text-primary: 222 84% 5%;          /* 18:1 contrast on white */
+  --text-secondary: 220 9% 27%;        /* 9.5:1 contrast on white */
+  --text-muted: 220 9% 58%;            /* 4.5:1 contrast on white */
+}
+
+/* Dark mode contrast */
+.dark {
+  --text-primary: 220 13% 95%;         /* 18:1 contrast on dark bg */
+  --text-secondary: 220 9% 79%;        /* 9:1 contrast on dark bg */
+  --text-muted: 220 9% 58%;            /* 4.5:1 contrast on dark bg */
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  :root {
+    --text-primary: 222 84% 1%;        /* Pure black */
+    --text-secondary: 220 9% 20%;      /* Darker */
+  }
+
+  .dark {
+    --text-primary: 220 13% 100%;      /* Pure white */
+  }
+
+  a {
+    text-decoration-thickness: 2px;
+  }
+
+  button:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* ============================================================================
+   Color Blindness Accessibility
+   ========================================================================== */
+
+/* Don't rely on color alone to convey information */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator::before {
+  content: attr(data-label);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.status-success {
+  color: hsl(var(--success));
+}
+
+.status-success::before {
+  content: '✓ ';
+}
+
+.status-warning {
+  color: hsl(var(--warning));
+}
+
+.status-warning::before {
+  content: '⚠ ';
+}
+
+.status-error {
+  color: hsl(var(--destructive));
+}
+
+.status-error::before {
+  content: '✗ ';
+}
+
+/* ============================================================================
+   Focus Management for Complex Components
+   ========================================================================== */
+
+/* Modal/Dialog focus trap */
+[role="dialog"] {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+[role="dialog"]::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Menu focus management */
+[role="menu"] {
+  outline: none;
+}
+
+[role="menuitem"] {
+  cursor: pointer;
+  position: relative;
+}
+
+[role="menuitem"]:focus-visible {
+  background-color: hsl(var(--accent) / 0.1);
+}
+
+[role="menuitem"][aria-current="page"] {
+  background-color: hsl(var(--accent) / 0.2);
+  font-weight: 500;
+}
+
+/* ============================================================================
+   Touch Target Size Accessibility
+   ========================================================================== */
+
+/* Minimum 44x44px touch targets for mobile */
+button, a, input[type="checkbox"], input[type="radio"] {
+  min-height: 44px;
+  min-width: 44px;
+  @apply md:min-h-auto md:min-w-auto;
+}
+
+/* Ensure sufficient spacing between touch targets */
+.touch-target-group {
+  gap: 8px;
+}
+
+/* ============================================================================
+   Loading State Accessibility
+   ========================================================================== */
+
+/* Make loading states apparent to screen readers */
+[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  position: relative;
+}
+
+.loading-spinner::after {
+  content: attr(aria-label);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: inherit;
+  color: hsl(var(--foreground));
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   Reduced Motion Enhancements
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Keep essential focus indicators */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Maintain interactive feedback */
+  button:active,
+  a:active {
+    opacity: 0.8;
+  }
+}
+
+/* ============================================================================
+   Language & Internationalization Support
+   ========================================================================== */
+
+/* Support for right-to-left languages */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] label {
+  text-align: right;
+}
+
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+  text-align: right;
+}
+
+[dir="rtl"] .form-error-message {
+  flex-direction: row-reverse;
+}
+
+/* ============================================================================
+   Semantic HTML Enhancements
+   ========================================================================== */
+
+/* Mark required fields */
+[required],
+[aria-required="true"] {
+  position: relative;
+}
+
+/* Mark invalid fields */
+[invalid],
+[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+/* Disabled state clarity */
+[disabled],
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ============================================================================
+   Testing & Validation Helpers
+   ========================================================================== */
+
+/* Helper class for testing focus management */
+.focus-test {
+  outline: 3px dashed red;
+}
+
+.focus-test:focus-visible {
+  outline: 3px dashed green;
+}
+
+/* ============================================================================
+   Dark Mode Accessibility Adjustments
+   ========================================================================== */
+
+.dark a {
+  color: hsl(var(--accent) / 0.9);
+}
+
+.dark a:hover {
+  color: hsl(var(--accent));
+}
+
+.dark [role="menuitem"]:focus-visible {
+  background-color: hsl(var(--accent) / 0.15);
+}
+
+.dark [aria-live="polite"] {
+  background-color: hsl(var(--info) / 0.15);
+  border: 1px solid hsl(var(--info) / 0.3);
+}
+
+.dark [aria-live="assertive"] {
+  background-color: hsl(var(--warning) / 0.15);
+  border: 1px solid hsl(var(--warning) / 0.3);
+}

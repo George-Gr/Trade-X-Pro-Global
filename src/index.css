@@ -30,6 +30,12 @@
 /* Import loading states system (FE-010) */
 @import "./styles/loading-states.css";
 
+/* Import micro-interactions system (Phase 4) */
+@import "./styles/micro-interactions.css";
+
+/* Import advanced accessibility features (Phase 4) */
+@import "./styles/advanced-accessibility.css";
+
 /* Import onboarding tour styles */
 @import "./styles/onboarding.css";
 

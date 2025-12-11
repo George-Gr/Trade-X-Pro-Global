@@ -1,0 +1,559 @@
+/**
+ * Micro-interactions CSS System
+ * Provides sophisticated, polished animations and transitions
+ * for professional trading platform interactions
+ */
+
+/* ============================================================================
+   Ripple Effects
+   ========================================================================== */
+
+/* Ripple effect container */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple animation */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: ripple var(--duration-slow) ease-out forwards;
+}
+
+/* ============================================================================
+   Button Interactions
+   ========================================================================== */
+
+/* Enhanced button hover effect */
+.button-interactive:hover {
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.button-interactive:active {
+  transition: var(--transition-fast);
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Button pulse effect for CTAs */
+@keyframes button-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.button-pulse {
+  animation: button-pulse 2s infinite;
+}
+
+/* ============================================================================
+   Staggered List Animations
+   ========================================================================== */
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list-item {
+  animation: stagger-in var(--duration-normal) ease-out forwards;
+}
+
+.list-item:nth-child(1) { animation-delay: 0ms; }
+.list-item:nth-child(2) { animation-delay: 50ms; }
+.list-item:nth-child(3) { animation-delay: 100ms; }
+.list-item:nth-child(4) { animation-delay: 150ms; }
+.list-item:nth-child(5) { animation-delay: 200ms; }
+.list-item:nth-child(n+6) { animation-delay: 250ms; }
+
+/* ============================================================================
+   Slide & Fade Transitions
+   ========================================================================== */
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-in-left {
+  animation: slide-in-left var(--duration-normal) var(--ease-out) forwards;
+}
+
+.slide-in-right {
+  animation: slide-in-right var(--duration-normal) var(--ease-out) forwards;
+}
+
+.slide-in-up {
+  animation: slide-in-up var(--duration-normal) var(--ease-out) forwards;
+}
+
+.fade-in {
+  animation: fade-in var(--duration-normal) var(--ease-out) forwards;
+}
+
+/* ============================================================================
+   Scale & Transform Effects
+   ========================================================================== */
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scale-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.scale-in {
+  animation: scale-in var(--duration-normal) var(--ease-out) forwards;
+}
+
+.scale-bounce {
+  animation: scale-bounce var(--duration-normal) ease-in-out infinite;
+}
+
+/* ============================================================================
+   Loading & Progress Animations
+   ========================================================================== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    hsl(var(--background-secondary)),
+    hsl(var(--background-secondary)),
+    hsl(var(--border)),
+    hsl(var(--background-secondary)),
+    hsl(var(--background-secondary))
+  );
+  background-size: 1000px 100%;
+}
+
+/* ============================================================================
+   Input Field Interactions
+   ========================================================================== */
+
+.input-interactive {
+  transition: var(--transition-normal);
+}
+
+.input-interactive:hover:not(:disabled) {
+  border-color: hsl(var(--border) / 0.8);
+  background-color: hsl(var(--background-secondary));
+}
+
+.input-interactive:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)),
+              0 0 0 4px hsl(var(--accent));
+}
+
+/* ============================================================================
+   Card & Component Elevation Changes
+   ========================================================================== */
+
+.card-elevation-transition {
+  transition: box-shadow var(--transition-normal),
+              transform var(--transition-normal);
+}
+
+.card-hoverable:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.card-hoverable:active {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ============================================================================
+   Dropdown & Menu Animations
+   ========================================================================== */
+
+@keyframes dropdown-open {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-close {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.dropdown-open {
+  animation: dropdown-open var(--duration-fast) var(--ease-out) forwards;
+}
+
+.dropdown-close {
+  animation: dropdown-close var(--duration-fast) var(--ease-out) forwards;
+}
+
+/* ============================================================================
+   Modal & Dialog Animations
+   ========================================================================== */
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes backdrop-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-appear {
+  animation: modal-appear var(--duration-normal) var(--ease-out) forwards;
+}
+
+.backdrop-fade {
+  animation: backdrop-fade var(--duration-normal) var(--ease-out) forwards;
+}
+
+/* ============================================================================
+   Notification & Toast Animations
+   ========================================================================== */
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.toast-enter {
+  animation: toast-enter var(--duration-normal) var(--ease-out) forwards;
+}
+
+.toast-exit {
+  animation: toast-exit var(--duration-normal) var(--ease-out) forwards;
+}
+
+/* ============================================================================
+   Icon Animations
+   ========================================================================== */
+
+@keyframes icon-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.icon-rotate {
+  animation: icon-rotate 2s linear infinite;
+}
+
+.icon-bounce {
+  animation: icon-bounce var(--duration-normal) ease-in-out infinite;
+}
+
+/* ============================================================================
+   Checkbox & Toggle Animations
+   ========================================================================== */
+
+.checkbox-toggle {
+  transition: all var(--duration-fast) ease-out;
+}
+
+.checkbox-toggle:checked {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--accent));
+}
+
+/* ============================================================================
+   Gesture-aware Interactions
+   ========================================================================== */
+
+/* Prevent button press effect on devices that don't support touch */
+@media (hover: hover) {
+  .button-hover-effect {
+    cursor: pointer;
+  }
+
+  .button-hover-effect:hover {
+    transition: var(--transition-normal);
+    background-color: hsl(var(--accent) / 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+@media (hover: none) {
+  .button-hover-effect {
+    cursor: pointer;
+  }
+
+  .button-hover-effect:active {
+    background-color: hsl(var(--accent) / 0.15);
+    transform: scale(0.98);
+  }
+}
+
+/* ============================================================================
+   Transition Utilities
+   ========================================================================== */
+
+.transition-none {
+  transition: none;
+}
+
+.transition-instant {
+  transition: var(--transition-instant);
+}
+
+.transition-fast {
+  transition: var(--transition-fast);
+}
+
+.transition-normal {
+  transition: var(--transition-normal);
+}
+
+.transition-slow {
+  transition: var(--transition-slow);
+}
+
+/* ============================================================================
+   Reduced Motion Support (CRITICAL)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Maintain static states without motion */
+  .ripple {
+    display: none;
+  }
+
+  .button-pulse {
+    animation: none;
+  }
+
+  .list-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .scale-bounce,
+  .animate-pulse {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   Accessibility-First Animation Classes
+   ========================================================================== */
+
+/* For interactive elements that should always be interactive */
+.interactive-safe {
+  transition: var(--transition-normal);
+  /* Doesn't use animations, just transitions */
+}
+
+/* For elements that support full animation (with reduced-motion support) */
+.animated-safe {
+  /* Uses animation but respects prefers-reduced-motion */
+}
+
+/* ============================================================================
+   Performance Optimization
+   ========================================================================== */
+
+/* Use will-change for animated elements */
+.will-animate {
+  will-change: transform, opacity;
+}
+
+.will-animate-gpu {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* 3D acceleration for smooth performance */
+.gpu-accelerated {
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+   Dark Mode Animation Adjustments
+   ========================================================================== */
+
+.dark .button-interactive:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dark .card-hoverable:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.dark .input-interactive:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)),
+              0 0 0 4px hsl(var(--accent) / 0.8);
+}
