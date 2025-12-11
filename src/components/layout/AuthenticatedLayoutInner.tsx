@@ -10,6 +10,7 @@ import { useSidebar } from "@/components/ui/sidebarContext";
 import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "./AppSidebar";
 import { MobileBottomNavigation } from "./MobileBottomNavigation";
+import { DemoModeIndicator } from "@/components/ui/DemoModeIndicator";
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -81,6 +82,9 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
 
       {/* Main Content Area with SidebarInset - flows next to sidebar in flex layout */}
       <SidebarInset className="flex flex-col">
+        {/* Demo Mode Banner */}
+        <DemoModeIndicator variant="banner" />
+        
         {/* Top Header - sticky with z-40 to stay above main content */}
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-40 backdrop-blur-sm bg-card/95 shadow-sm">
           <div className="flex items-center gap-4">
