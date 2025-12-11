@@ -9,6 +9,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ErrorContextProvider } from "@/components/ErrorContextProvider";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
+import { ViewModeProvider } from "@/contexts/ViewModeContext";
 import { logger, initializeSentry } from "@/lib/logger";
 import { breadcrumbTracker } from "@/lib/breadcrumbTracker";
 import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
@@ -97,8 +98,9 @@ const App = () => {
       <ErrorContextProvider>
         <TooltipProvider>
           <NotificationProvider>
-            <Toaster />
-            <Sonner />
+            <ViewModeProvider>
+              <Toaster />
+              <Sonner />
             <ErrorBoundary
               componentName="App"
               onError={(error, errorInfo) => {
@@ -332,6 +334,7 @@ const App = () => {
                 </Suspense>
               </BrowserRouter>
             </ErrorBoundary>
+            </ViewModeProvider>
           </NotificationProvider>
         </TooltipProvider>
       </ErrorContextProvider>

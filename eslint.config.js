@@ -41,6 +41,45 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-empty-object-type': 'off',
 
+      // TASK-024: Naming convention enforcement
+      '@typescript-eslint/naming-convention': [
+        'warn',
+        // Enforce camelCase for variables and functions
+        {
+          selector: 'variable',
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+          leadingUnderscore: 'allow',
+        },
+        // Enforce camelCase for functions
+        {
+          selector: 'function',
+          format: ['camelCase', 'PascalCase'],
+        },
+        // Enforce PascalCase for types and interfaces
+        {
+          selector: 'typeLike',
+          format: ['PascalCase'],
+        },
+        // Enforce PascalCase for React components
+        {
+          selector: 'variable',
+          modifiers: ['exported'],
+          types: ['function'],
+          format: ['camelCase', 'PascalCase'],
+        },
+        // Allow snake_case for database column mappings
+        {
+          selector: 'objectLiteralProperty',
+          format: null,
+        },
+        // Allow snake_case for destructured database fields
+        {
+          selector: 'variable',
+          modifiers: ['destructured'],
+          format: null,
+        },
+      ],
+
       // Prevent listener leaks
       'no-restricted-globals': [
         'error',
