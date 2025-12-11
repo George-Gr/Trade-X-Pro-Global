@@ -225,13 +225,12 @@ const Login = () => {
                             id="email"
                             type="email"
                             placeholder="Enter your email"
-                            className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20"
                             {...register("email", validationRules.email)}
                             disabled={isLoading}
                           />
                         </FormControl>
                         <FormDescription className="text-primary-foreground/60">Enter your registered email address</FormDescription>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-destructive" />
                       </FormItem>
                     )}
                   />
@@ -247,13 +246,12 @@ const Login = () => {
                             id="password"
                             type="password"
                             placeholder="Enter your password"
-                            className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20"
                             {...register("password", validationRules.password)}
                             disabled={isLoading}
                           />
                         </FormControl>
                         <FormDescription className="text-primary-foreground/60">Enter your account password</FormDescription>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-destructive" />
                       </FormItem>
                     )}
                   />
