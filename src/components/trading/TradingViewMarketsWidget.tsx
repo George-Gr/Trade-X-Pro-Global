@@ -11,7 +11,7 @@ const TradingViewMarketsWidget = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    container.innerHTML = "";
+    container.textContent = "";
 
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
@@ -104,7 +104,7 @@ const TradingViewMarketsWidget = () => {
 
     return () => {
       if (container) {
-        container.innerHTML = "";
+        container.textContent = "";
       }
     };
   }, []);

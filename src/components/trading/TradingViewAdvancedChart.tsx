@@ -15,7 +15,7 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
     if (!containerRef.current) return;
 
     // Clear previous widget
-    containerRef.current.innerHTML = "";
+    containerRef.current.textContent = "";
 
     const script: HTMLScriptElement = document.createElement("script");
     script.src = "https://s3.tradingview.com/tv.js";
