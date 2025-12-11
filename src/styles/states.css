@@ -24,7 +24,7 @@ select,
 [role="button"],
 [role="link"],
 .interactive {
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   outline: none;
 }
 
@@ -38,7 +38,7 @@ button:not(:disabled):hover,
 .btn:not(.btn-disabled):hover {
   filter: brightness(1.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Links - Brightness +10%, cursor pointer */
@@ -46,14 +46,14 @@ a:hover,
 [role="link"]:hover {
   filter: brightness(1.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Interactive Cards */
 .card-interactive:hover {
   filter: brightness(1.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Navigation Items */
@@ -62,7 +62,7 @@ nav button:hover,
 [data-sidebar="menu-button"]:not([data-active="true"]):hover {
   filter: brightness(1.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Form Inputs - Subtle hover for inputs */
@@ -71,7 +71,7 @@ textarea:not(:disabled):hover,
 select:not(:disabled):hover {
   filter: brightness(1.05);
   cursor: text;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Checkboxes and Radio Buttons */
@@ -79,7 +79,7 @@ input[type="checkbox"]:not(:disabled):hover,
 input[type="radio"]:not(:disabled):hover {
   filter: brightness(1.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* ============================================
@@ -92,7 +92,7 @@ button:not(:disabled):active,
 .btn:not(.btn-disabled):active {
   filter: brightness(0.95);
   transform: scale(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Links - Brightness -5%, scale 0.98 */
@@ -100,14 +100,14 @@ a:active,
 [role="link"]:active {
   filter: brightness(0.95);
   transform: scale(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Interactive Cards */
 .card-interactive:active {
   filter: brightness(0.95);
   transform: scale(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Navigation Items */
@@ -115,7 +115,7 @@ nav a:active,
 nav button:active {
   filter: brightness(0.95);
   transform: scale(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Form Inputs - Subtle active state */
@@ -123,7 +123,7 @@ input:not(:disabled):active,
 textarea:not(:disabled):active,
 select:not(:disabled):active {
   filter: brightness(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* ============================================
@@ -142,7 +142,7 @@ select:focus-visible,
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Navigation Focus States */
@@ -152,7 +152,7 @@ nav button:focus-visible,
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Card Focus States */
@@ -161,7 +161,7 @@ nav button:focus-visible,
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Form Input Focus - Enhanced for better visibility */
@@ -174,7 +174,7 @@ select:focus-visible {
   box-shadow: 
     0 0 0 4px hsl(var(--ring) / 0.2),
     0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Remove default focus outline */
@@ -200,7 +200,7 @@ button[disabled],
   pointer-events: none;
   filter: none;
   transform: none;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Links - disabled state */
@@ -211,7 +211,7 @@ a[aria-disabled="true"],
   pointer-events: none;
   filter: none;
   transform: none;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Form Inputs - disabled state */
@@ -224,7 +224,7 @@ textarea[readonly] {
   cursor: not-allowed;
   background-color: hsl(var(--muted));
   filter: none;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Cards - disabled state */
@@ -235,7 +235,7 @@ textarea[readonly] {
   pointer-events: none;
   filter: none;
   transform: none;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* ============================================
@@ -310,27 +310,27 @@ button[aria-label]:not(:disabled):active,
   filter: brightness(1.1);
   background-color: hsl(var(--accent) / 0.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 [role="menuitem"]:active,
 .dropdown-item:active {
   filter: brightness(0.95);
   transform: scale(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* Tab Components */
 [role="tab"]:hover {
   filter: brightness(1.1);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 [role="tab"]:active {
   filter: brightness(0.95);
   transform: scale(0.98);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 [role="tab"]:focus-visible {
@@ -345,14 +345,14 @@ tr.clickable:hover {
   filter: brightness(1.05);
   cursor: pointer;
   background-color: hsl(var(--accent) / 0.05);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 tr[role="button"]:active,
 tr.clickable:active {
   filter: brightness(0.98);
   transform: scale(0.995);
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 /* ============================================

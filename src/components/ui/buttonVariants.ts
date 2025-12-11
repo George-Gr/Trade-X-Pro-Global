@@ -17,12 +17,12 @@ export const buttonVariants = cva(
         warning: "bg-warning text-warning-foreground hover:bg-warning/95 active:bg-warning/90 active:scale-[0.98] hover:translate-y-[-1px] shadow-sm hover:shadow-md",
       },
       size: {
-        xs: "h-8 px-2 text-xs",               // 32px height
-        sm: "h-10 px-3 text-sm",              // 40px height
-        default: "h-12 px-4 text-base",       // 48px height
-        lg: "h-14 px-6 text-base",            // 56px height
+        xs: "h-8 px-3 text-xs",               // 32px height, 12px horizontal padding
+        sm: "h-10 px-4 text-sm",              // 40px height, 16px horizontal padding
+        default: "h-12 px-5 text-base",       // 48px height, 20px horizontal padding
+        lg: "h-14 px-6 text-base",            // 56px height, 24px horizontal padding
         icon: "h-12 w-12",                    // 48px height (square)
-        xl: "h-16 px-8 text-lg",              // 64px height
+        xl: "h-16 px-8 text-lg",              // 64px height, 32px horizontal padding
       },
       animation: {
         none: "",
