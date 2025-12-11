@@ -1,0 +1,240 @@
+/* 
+ * Icon Size Consistency System (FE-011)
+ * 
+ * Standardized icon sizing for visual consistency across the application
+ * Ensures icons are properly sized for their context
+ * 
+ * Usage Guidelines:
+ * - icon-xs:  Inline with small text (12px)
+ * - icon-sm:  Small buttons, inline elements (16px)
+ * - icon-md:  Default buttons, standard UI (20px)
+ * - icon-lg:  Large buttons, navigation (24px)
+ * - icon-xl:  Primary navigation, headers (32px)
+ * - icon-2xl: Hero sections, feature highlights (40px)
+ */
+
+/* ============================================
+   BASE ICON SIZE SYSTEM
+   ============================================ */
+
+.icon-xs {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  flex-shrink: 0;
+}
+
+.icon-sm {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  flex-shrink: 0;
+}
+
+.icon-md {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  flex-shrink: 0;
+}
+
+.icon-lg {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
+}
+
+.icon-xl {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  flex-shrink: 0;
+}
+
+.icon-2xl {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   CONTEXT-SPECIFIC ICON SIZING
+   ============================================ */
+
+/* Icons within buttons - match button size */
+.button-xs .icon,
+button[class*="h-8"] .icon,
+button.h-8 > svg {
+  width: 12px;
+  height: 12px;
+}
+
+.button-sm .icon,
+button[class*="h-10"] .icon,
+button.h-10 > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.button-default .icon,
+.button-md .icon,
+button[class*="h-12"] .icon,
+button.h-12 > svg {
+  width: 20px;
+  height: 20px;
+}
+
+.button-lg .icon,
+button[class*="h-14"] .icon,
+button.h-14 > svg {
+  width: 24px;
+  height: 24px;
+}
+
+.button-xl .icon,
+button[class*="h-16"] .icon,
+button.h-16 > svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Icon-only buttons should have larger icons */
+button[class*="icon"] .icon,
+button[class*="icon"] > svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   FORM FIELD ICONS
+   ============================================ */
+
+/* Icons inside form inputs */
+.input-icon,
+input + .icon,
+.form-control .icon {
+  width: 16px;
+  height: 16px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Error icons in form fields */
+.error-icon {
+  width: 16px;
+  height: 16px;
+  color: hsl(var(--destructive));
+  flex-shrink: 0;
+}
+
+/* Success icons in form fields */
+.success-icon {
+  width: 16px;
+  height: 16px;
+  color: hsl(var(--success));
+  flex-shrink: 0;
+}
+
+/* Warning icons in form fields */
+.warning-icon {
+  width: 16px;
+  height: 16px;
+  color: hsl(var(--warning));
+  flex-shrink: 0;
+}
+
+/* ============================================
+   NAVIGATION ICONS
+   ============================================ */
+
+/* Sidebar navigation icons */
+.sidebar-icon,
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Mobile bottom navigation icons */
+.mobile-nav-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Header navigation icons */
+.header-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   NOTIFICATION & STATUS ICONS
+   ============================================ */
+
+/* Notification badge icons */
+.notification-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Status indicator icons */
+.status-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Alert icons */
+.alert-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+/* Slightly larger touch targets on mobile */
+@media (max-width: 768px) {
+  .mobile-nav-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Ensure minimum touch target size */
+  button .icon,
+  a .icon {
+    min-width: 20px;
+    min-height: 20px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Ensure icons don't interfere with screen readers */
+.icon[aria-hidden="true"],
+svg[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+/* Reduced motion - disable icon animations */
+@media (prefers-reduced-motion: reduce) {
+  .icon,
+  svg {
+    animation: none !important;
+    transition: none !important;
+  }
+}

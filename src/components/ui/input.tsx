@@ -64,6 +64,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         pattern={keyboardType === 'numeric' ? '[0-9]*' : undefined}
         className={cn(
           inputVariants({ size: mobileOptimized ? 'mobile' : size }), 
+          error && "form-field-error", // FE-012: Apply error state styling
           className,
           mobileOptimized && "mobile-optimized-input"
         )}
