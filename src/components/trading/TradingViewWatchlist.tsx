@@ -99,7 +99,7 @@ const TradingViewWatchlist = () => {
     script.defer = true; // Load after page is ready
     
     // Set script content with optimized config
-    script.innerHTML = JSON.stringify({
+    script.textContent = JSON.stringify({
       ...config,
       // Add performance optimizations
       autosize: true,

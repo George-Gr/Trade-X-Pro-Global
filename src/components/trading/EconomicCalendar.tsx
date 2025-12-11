@@ -17,7 +17,7 @@ const EconomicCalendar = () => {
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
     script.async = true;
-    script.innerHTML = JSON.stringify({
+    script.textContent = JSON.stringify({
       width: "100%",
       height: "100%",
       colorTheme: "dark",

@@ -16,7 +16,7 @@ const TradingViewMarketsWidget = () => {
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
     script.async = true;
-    script.innerHTML = JSON.stringify({
+    script.textContent = JSON.stringify({
       colorTheme: "dark",
       dateRange: "12M",
       showChart: true,
