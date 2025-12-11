@@ -7,34 +7,100 @@ import { generateIdempotencyKey, executeWithIdempotency } from "@/lib/idempotenc
 import { sanitizeSymbol, sanitizeNumber } from "@/lib/sanitize";
 import { logger } from "@/lib/logger";
 
+/**
+ * Request payload for executing a trading order
+ * @interface OrderRequest
+ */
 export interface OrderRequest {
+  /** Trading symbol (e.g., 'EURUSD', 'AAPL') */
   symbol: string;
+  /** Type of order to execute */
   order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
+  /** Direction of the trade */
   side: 'buy' | 'sell';
+  /** Number of lots to trade */
   quantity: number;
+  /** Price for limit/stop orders (optional for market orders) */
   price?: number;
+  /** Stop loss price level */
   stop_loss?: number;
+  /** Take profit price level */
   take_profit?: number;
 }
 
+/**
+ * Result returned after successful order execution
+ * @interface OrderResult
+ */
 export interface OrderResult {
+  /** Unique identifier of the executed order */
   order_id: string;
+  /** Trading symbol */
   symbol: string;
+  /** Trade direction */
   side: 'buy' | 'sell';
+  /** Executed quantity in lots */
   quantity: number;
+  /** Actual execution price */
   execution_price: number;
+  /** Fill price after slippage */
   fill_price: number;
+  /** Commission charged */
   commission: number;
+  /** Margin required for the position */
   margin_required: number;
+  /** Order status */
   status: string;
+  /** Updated account balance */
   new_balance: number;
+  /** Updated margin level percentage */
   new_margin_level: number;
 }
 
+/**
+ * Hook for executing trading orders with built-in rate limiting, idempotency, and error handling.
+ * 
+ * @description
+ * This hook provides a secure and reliable way to execute trading orders with:
+ * - Rate limiting to prevent excessive order submissions
+ * - Idempotency keys to prevent duplicate orders from retries
+ * - Input sanitization for security
+ * - Comprehensive error handling with user-friendly messages
+ * 
+ * @example
+ * ```tsx
+ * const { executeOrder, isExecuting, getRateLimitStatus } = useOrderExecution();
+ * 
+ * const handleBuy = async () => {
+ *   const result = await executeOrder({
+ *     symbol: 'EURUSD',
+ *     order_type: 'market',
+ *     side: 'buy',
+ *     quantity: 0.1,
+ *     stop_loss: 1.0800,
+ *     take_profit: 1.0950
+ *   });
+ *   
+ *   if (result) {
+ *     console.log('Order executed:', result.order_id);
+ *   }
+ * };
+ * ```
+ * 
+ * @returns {Object} Hook return object
+ * @returns {Function} executeOrder - Function to execute an order
+ * @returns {boolean} isExecuting - Whether an order is currently being executed
+ * @returns {Function} getRateLimitStatus - Function to check current rate limit status
+ */
 export const useOrderExecution = () => {
   const [isExecuting, setIsExecuting] = useState(false);
   const { toast } = useToast();
 
+  /**
+   * Execute a trading order
+   * @param orderRequest - The order parameters
+   * @returns Promise resolving to OrderResult on success, null on failure
+   */
   const executeOrder = useCallback(async (orderRequest: OrderRequest): Promise<OrderResult | null> => {
     // Check rate limit before proceeding
     const rateCheck = checkRateLimit('order');
@@ -179,14 +245,20 @@ export const useOrderExecution = () => {
     }
   }, [toast]);
 
-  // Get current rate limit status
+  /**
+   * Get the current rate limit status for order submissions
+   * @returns Rate limit status including remaining requests and reset time
+   */
   const getRateLimitStatus = useCallback(() => {
     return checkRateLimit('order');
   }, []);
 
   return {
+    /** Execute a trading order with full validation and protection */
     executeOrder,
+    /** Whether an order is currently being processed */
     isExecuting,
+    /** Check current rate limit status */
     getRateLimitStatus,
   };
 };
