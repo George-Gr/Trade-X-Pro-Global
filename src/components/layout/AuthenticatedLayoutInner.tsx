@@ -5,7 +5,7 @@ import { User, Clock, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useSidebar } from "@/components/ui/sidebarContext";
 import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "./AppSidebar";
@@ -76,12 +76,12 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      {/* Sidebar - uses relative positioning to participate in flex layout */}
+    <div className="min-h-screen w-full bg-background">
+      {/* Sidebar - fixed position, does not participate in flex layout */}
       <AppSidebar />
 
-      {/* Main Content Area with SidebarInset - flows next to sidebar in flex layout */}
-      <SidebarInset className="flex flex-col">
+      {/* Main Content Area - accounts for fixed sidebar on desktop */}
+      <div className="flex flex-col min-h-screen md:ml-[var(--sidebar-width)] transition-[margin-left] duration-300 ease-in-out">
         {/* Demo Mode Banner */}
         <DemoModeIndicator variant="banner" />
         
@@ -131,7 +131,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
             {children}
           </div>
         </main>
-      </SidebarInset>
+      </div>
 
       {/* Mobile Bottom Navigation */}
       <MobileBottomNavigation />

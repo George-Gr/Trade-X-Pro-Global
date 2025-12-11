@@ -151,9 +151,9 @@ const Sidebar = React.forwardRef<
     >
       <div
         className={cn(
-          "relative h-svh w-[--sidebar-width] bg-sidebar transition-[width] duration-300 ease-in-out md:flex md:items-center md:justify-center",
+          "fixed top-0 h-svh w-[--sidebar-width] bg-sidebar transition-[width] duration-300 ease-in-out md:flex md:items-center md:justify-center",
           "group-data-[collapsible=offcanvas]:w-0",
-          "group-data-[side=right]:rotate-180",
+          "group-data-[side=right]:rotate-180 group-data-[side=right]:right-0 group-data-[side=left]:left-0",
           variant === "floating" || variant === "inset"
             ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))] p-4"
             : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
