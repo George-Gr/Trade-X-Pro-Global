@@ -1,6 +1,67 @@
+# Security Headers (applied to all routes)
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://s3.tradingview.com https://www.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com;
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com;
+
+# Static Asset Caching - Immutable hashed files (1 year)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# JavaScript/CSS bundles with hash (1 year, immutable)
+/*.*.js
+  Cache-Control: public, max-age=31536000, immutable
+/*.*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images (30 days with stale-while-revalidate)
+/images/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/*.png
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/*.jpg
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/*.jpeg
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/*.svg
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/*.webp
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+/*.ico
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+# Fonts (1 year, immutable)
+/*.woff
+  Cache-Control: public, max-age=31536000, immutable
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+/*.ttf
+  Cache-Control: public, max-age=31536000, immutable
+/*.eot
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML (no cache - always serve fresh for SPA routing)
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Service Worker (always fresh for update detection)
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# JSON data files (1 hour with stale-while-revalidate)
+/*.json
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# Web Manifest (1 day)
+/manifest.json
+  Cache-Control: public, max-age=86400
+
+# Icons directory (30 days)
+/icons/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
