@@ -1,12 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import {
   LayoutDashboard,
   TrendingUp,
   Briefcase,
   History,
-  Wallet
+  Wallet,
+  Bell
 } from 'lucide-react';
 
 interface MobileBottomNavigationProps {
@@ -51,11 +53,12 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { impact, isEnabled } = useHapticFeedback();
 
   const handleNavigation = (path: string) => {
-    // Haptic feedback for mobile
-    if (navigator.vibrate) {
-      navigator.vibrate(50);
+    // Use standardized haptic feedback
+    if (isEnabled) {
+      impact();
     }
     navigate(path);
   };
