@@ -1,0 +1,378 @@
+/* 
+ * Form Error State System (FE-012)
+ * 
+ * Comprehensive error state styling for forms
+ * Ensures consistent error feedback across all form elements
+ * 
+ * Features:
+ * - Visual error indicators on form fields
+ * - Error message styling
+ * - Icon support for visual feedback
+ * - Accessibility with aria-describedby support
+ */
+
+/* ============================================
+   FORM FIELD ERROR STATES
+   ============================================ */
+
+/* Base error state for form inputs */
+.form-field-error,
+input.error,
+select.error,
+textarea.error,
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 1px hsl(var(--destructive));
+  background-color: hsl(var(--destructive) / 0.05);
+}
+
+/* Focus state for error fields */
+.form-field-error:focus,
+input.error:focus,
+select.error:focus,
+textarea.error:focus,
+input[aria-invalid="true"]:focus,
+select[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus {
+  outline: none;
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
+  ring-color: hsl(var(--destructive));
+}
+
+/* Hover state for error fields */
+.form-field-error:hover,
+input.error:hover,
+select.error:hover,
+textarea.error:hover {
+  border-color: hsl(var(--destructive) / 0.8);
+}
+
+/* ============================================
+   ERROR MESSAGE COMPONENT
+   ============================================ */
+
+/* Base error message styling */
+.error-message,
+.form-error,
+[role="alert"].error {
+  color: hsl(var(--destructive));
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  animation: slideDown var(--duration-fast) var(--ease-out);
+}
+
+/* Error message icon */
+.error-message .error-icon,
+.form-error .error-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px; /* Align with text baseline */
+}
+
+/* Error message text */
+.error-message-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* ============================================
+   SUCCESS STATE (for comparison)
+   ============================================ */
+
+/* Success state for form inputs */
+.form-field-success,
+input.success,
+select.success,
+textarea.success,
+input[aria-invalid="false"][data-validated="true"],
+select[aria-invalid="false"][data-validated="true"],
+textarea[aria-invalid="false"][data-validated="true"] {
+  border-color: hsl(var(--success));
+  box-shadow: 0 0 0 1px hsl(var(--success) / 0.3);
+  background-color: hsl(var(--success) / 0.05);
+}
+
+/* Success message styling */
+.success-message,
+.form-success {
+  color: hsl(var(--success));
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  animation: slideDown var(--duration-fast) var(--ease-out);
+}
+
+.success-message .success-icon,
+.form-success .success-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ============================================
+   WARNING STATE
+   ============================================ */
+
+/* Warning state for form inputs */
+.form-field-warning,
+input.warning,
+select.warning,
+textarea.warning {
+  border-color: hsl(var(--warning));
+  box-shadow: 0 0 0 1px hsl(var(--warning) / 0.3);
+  background-color: hsl(var(--warning) / 0.05);
+}
+
+/* Warning message styling */
+.warning-message,
+.form-warning {
+  color: hsl(var(--warning));
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  animation: slideDown var(--duration-fast) var(--ease-out);
+}
+
+.warning-message .warning-icon,
+.form-warning .warning-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ============================================
+   FORM FIELD WRAPPER WITH ERROR
+   ============================================ */
+
+/* Container for form field with error/success states */
+.form-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Label styling for error states */
+.form-field-wrapper.has-error label,
+.form-field-wrapper.has-error .form-label {
+  color: hsl(var(--destructive));
+  font-weight: 500;
+}
+
+/* Description text for form fields */
+.form-description {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
+/* ============================================
+   INLINE ERROR INDICATORS
+   ============================================ */
+
+/* Error indicator badge/icon positioned inside input */
+.input-with-error-indicator {
+  position: relative;
+}
+
+.input-error-indicator {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: hsl(var(--destructive));
+  pointer-events: none;
+}
+
+/* Success indicator */
+.input-success-indicator {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: hsl(var(--success));
+  pointer-events: none;
+}
+
+/* ============================================
+   VALIDATION LIST (multiple errors)
+   ============================================ */
+
+/* List of validation errors */
+.validation-errors {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.validation-errors li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: hsl(var(--destructive));
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.validation-errors li::before {
+  content: "•";
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+/* ============================================
+   ERROR SUMMARY PANEL
+   ============================================ */
+
+/* Panel showing all form errors */
+.error-summary {
+  background-color: hsl(var(--destructive) / 0.1);
+  border: 1px solid hsl(var(--destructive));
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  animation: slideDown var(--duration-normal) var(--ease-out);
+}
+
+.error-summary-title {
+  color: hsl(var(--destructive));
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.error-summary-list li {
+  color: hsl(var(--destructive));
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.error-summary-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* Shake animation for error fields */
+.form-field-error.shake,
+input.error.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+
+.dark .form-field-error,
+.dark input.error,
+.dark select.error,
+.dark textarea.error {
+  background-color: hsl(var(--destructive) / 0.1);
+}
+
+.dark .error-summary {
+  background-color: hsl(var(--destructive) / 0.15);
+  border-color: hsl(var(--destructive) / 0.8);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Ensure error messages are announced by screen readers */
+[role="alert"] {
+  /* aria-live is implicit for role="alert" */
+  position: relative;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .form-field-error,
+  input.error,
+  select.error,
+  textarea.error {
+    border-width: 2px;
+    border-color: hsl(var(--destructive));
+  }
+  
+  .error-message,
+  .error-summary {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .error-message,
+  .success-message,
+  .warning-message,
+  .error-summary,
+  .form-field-error.shake {
+    animation: none !important;
+  }
+}

@@ -82,8 +82,8 @@ const FormLabel = React.forwardRef<
     <Label 
       ref={ref} 
       className={cn(
-        "text-sm font-medium text-primary-contrast",
-        error && "text-danger-contrast",
+        "text-sm font-medium",
+        error ? "text-destructive font-semibold" : "text-foreground", // FE-015: Enhanced error state
         "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         className
       )} 
@@ -91,19 +91,26 @@ const FormLabel = React.forwardRef<
       {...props}
     >
       {children}
+      {props.required && (
+        <span className="text-destructive ml-1" aria-label="required">*</span>
+      )}
     </Label>
   );
 });
 FormLabel.displayName = "FormLabel";
 
 const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.ComponentPropsWithoutRef<typeof Slot>>(
-  ({ ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
     return (
       <Slot
         ref={ref}
         id={formItemId}
+        className={cn(
+          error && "form-field-error", // FE-012: Apply error state styling
+          className
+        )}
         aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
         aria-invalid={!!error}
         {...props}
@@ -136,10 +143,8 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
         ref={ref} 
         id={formMessageId} 
         className={cn(
-          "text-sm font-medium text-danger-contrast",
-          "flex items-center gap-1.5",
-          "animate-in fade-in-0 duration-150",
-          "mt-1",
+          "error-message", // FE-012: Use standardized error message styling
+          "text-sm font-medium",
           className
         )}
         role="alert"
@@ -147,13 +152,13 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
         {...props}
       >
         {error && (
-          <span className="h-3 w-3 flex-shrink-0" aria-hidden="true">
+          <span className="error-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-full w-full">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
             </svg>
           </span>
         )}
-        {body}
+        <span className="error-message-text">{body}</span>
       </p>
     );
   },

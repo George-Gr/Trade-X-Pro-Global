@@ -26,10 +26,11 @@ export interface TextareaProps
   mobileOptimized?: boolean;
   autoResize?: boolean;
   maxRows?: number;
+  error?: string;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, size, mobileOptimized, autoResize, maxRows, ...props }, ref) => {
+  ({ className, size, mobileOptimized, autoResize, maxRows, error, ...props }, ref) => {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     
     // Auto-resize functionality for mobile
@@ -53,11 +54,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         ref={autoResize ? textareaRef : ref}
         className={cn(
-          textareaVariants({ size: mobileOptimized ? 'mobile' : size }), 
+          textareaVariants({ size: mobileOptimized ? 'mobile' : size }),
+          error && "form-field-error", // FE-012: Apply error state styling
           className,
           mobileOptimized && "mobile-optimized-textarea",
           autoResize && "auto-resize-textarea"
         )}
+        aria-invalid={!!error}
+        aria-errormessage={error ? `${props.id}-error` : undefined}
         {...props}
       />
     );

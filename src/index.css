@@ -18,6 +18,12 @@
 /* Import card elevation system */
 @import "./styles/cards.css";
 
+/* Import icon size system (FE-011) */
+@import "./styles/icons.css";
+
+/* Import form error states (FE-012) */
+@import "./styles/form-errors.css";
+
 /* Import visual feedback states */
 @import "./styles/states.css";
 

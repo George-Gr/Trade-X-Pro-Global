@@ -16,36 +16,49 @@ interface MobileBottomNavigationProps {
   className?: string;
 }
 
-const navigationItems = [
+interface NavigationItem {
+  path: string;
+  icon: React.ElementType;
+  label: string;
+  testId: string;
+  ariaLabel: string;
+}
+
+const navigationItems: NavigationItem[] = [
   {
     path: '/dashboard',
     icon: LayoutDashboard,
     label: 'Dashboard',
-    testId: 'nav-dashboard'
+    testId: 'nav-dashboard',
+    ariaLabel: 'Navigate to Dashboard'
   },
   {
     path: '/trade',
     icon: TrendingUp,
     label: 'Trade',
-    testId: 'nav-trade'
+    testId: 'nav-trade',
+    ariaLabel: 'Navigate to Trading Page'
   },
   {
     path: '/portfolio',
     icon: Briefcase,
     label: 'Portfolio',
-    testId: 'nav-portfolio'
+    testId: 'nav-portfolio',
+    ariaLabel: 'Navigate to Portfolio'
   },
   {
     path: '/history',
     icon: History,
     label: 'History',
-    testId: 'nav-history'
+    testId: 'nav-history',
+    ariaLabel: 'Navigate to Trade History'
   },
   {
     path: '/wallet',
     icon: Wallet,
     label: 'Wallet',
-    testId: 'nav-wallet'
+    testId: 'nav-wallet',
+    ariaLabel: 'Navigate to Wallet'
   }
 ];
 
@@ -91,7 +104,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       aria-label="Mobile navigation"
     >
       <div className="grid grid-cols-6 gap-0">
-        {navigationItems.map(({ path, icon: Icon, label, testId }) => {
+        {navigationItems.map(({ path, icon: Icon, label, testId, ariaLabel }) => {
           const isActive = location.pathname === path;
           
           return (
@@ -100,28 +113,32 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
               onClick={() => handleNavigation(path)}
               className={cn(
                 'flex flex-col items-center justify-center py-2 px-1',
-                'min-h-[60px] min-w-[44px]', // Ensure minimum touch target
+                'min-h-[60px] min-w-[44px]', // FE-014: Ensure minimum 44px touch target
                 'transition-all duration-200 ease-in-out',
-                'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+                'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary focus-visible:ring-offset-2',
                 'hover:bg-muted/50',
                 'rounded-t-none rounded-b-none',
                 isActive 
-                  ? 'text-primary bg-muted/30' 
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'text-primary bg-primary/10 border-t-2 border-primary' 
+                  : 'text-muted-foreground hover:text-foreground border-t-2 border-transparent'
               )}
               role="tab"
               aria-selected={isActive}
-              aria-label={label}
+              aria-label={ariaLabel}
+              aria-current={isActive ? 'page' : undefined}
               data-testid={testId}
             >
               <Icon 
                 className={cn(
-                  'h-6 w-6 mb-1',
+                  'mobile-nav-icon mb-1', // FE-011: Use standardized icon sizing
                   isActive ? 'text-primary' : 'text-muted-foreground'
                 )}
                 aria-hidden="true"
               />
-              <span className="text-xs font-medium leading-tight">
+              <span className={cn(
+                'text-xs font-medium leading-tight',
+                isActive && 'font-semibold'
+              )}>
                 {label}
               </span>
             </button>
@@ -133,35 +150,42 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
           onClick={() => handleNavigation('/notifications')}
           className={cn(
             'flex flex-col items-center justify-center py-2 px-1 relative',
-            'min-h-[60px] min-w-[44px]',
+            'min-h-[60px] min-w-[44px]', // FE-014: Minimum touch target
             'transition-all duration-200 ease-in-out',
-            'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-primary focus-visible:ring-offset-2',
             'hover:bg-muted/50',
             'rounded-t-none rounded-b-none',
             location.pathname === '/notifications'
-              ? 'text-primary bg-muted/30' 
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'text-primary bg-primary/10 border-t-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground border-t-2 border-transparent'
           )}
           role="tab"
           aria-selected={location.pathname === '/notifications'}
-          aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
+          aria-label={`Navigate to Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
+          aria-current={location.pathname === '/notifications' ? 'page' : undefined}
           data-testid="nav-notifications"
         >
           <div className="relative">
             <Bell 
               className={cn(
-                'h-6 w-6 mb-1',
+                'mobile-nav-icon mb-1', // FE-011: Standardized icon sizing
                 location.pathname === '/notifications' ? 'text-primary' : 'text-muted-foreground'
               )}
               aria-hidden="true"
             />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
+              <span 
+                className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center"
+                aria-hidden="true"
+              >
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </div>
-          <span className="text-xs font-medium leading-tight">
+          <span className={cn(
+            'text-xs font-medium leading-tight',
+            location.pathname === '/notifications' && 'font-semibold'
+          )}>
             Alerts
           </span>
         </button>
