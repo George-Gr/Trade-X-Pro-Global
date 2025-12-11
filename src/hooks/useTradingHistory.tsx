@@ -1,60 +1,158 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { useAuth } from "./useAuth";
-import type { Position } from "@/integrations/supabase/types/tables";
 
+/**
+ * Represents a closed trade with P&L information
+ * @interface TradeHistoryItem
+ */
 export interface TradeHistoryItem {
+  /** Unique position ID */
   id: string;
+  /** Trading symbol (e.g., 'EURUSD') */
   symbol: string;
+  /** Trade direction */
   side: "buy" | "sell";
+  /** Position size in lots */
   quantity: number;
+  /** Entry price when position was opened */
   entry_price: number;
+  /** Exit price when position was closed */
   exit_price: number;
+  /** Profit/loss realized from the trade */
   realized_pnl: number;
+  /** Commission paid for the trade */
   commission: number;
+  /** Timestamp when position was opened */
   opened_at: string;
+  /** Timestamp when position was closed */
   closed_at: string;
+  /** Margin used for the position */
   margin_used: number;
 }
 
+/**
+ * Represents an account ledger entry
+ * @interface LedgerEntry
+ */
 export interface LedgerEntry {
+  /** Unique entry ID */
   id: string;
+  /** Type of transaction (deposit, withdrawal, commission, profit, loss, etc.) */
   transaction_type: string;
+  /** Transaction amount (positive or negative) */
   amount: number;
+  /** Account balance before transaction */
   balance_before: number;
+  /** Account balance after transaction */
   balance_after: number;
+  /** Human-readable description */
   description: string;
+  /** Transaction timestamp */
   created_at: string;
+  /** Reference to related order/position (optional) */
   reference_id?: string;
 }
 
+/**
+ * Represents an order in history
+ * @interface OrderHistoryItem
+ */
 export interface OrderHistoryItem {
+  /** Unique order ID */
   id: string;
+  /** Trading symbol */
   symbol: string;
+  /** Order type (market, limit, stop, stop_limit) */
   order_type: string;
+  /** Order direction */
   side: "buy" | "sell";
+  /** Order quantity in lots */
   quantity: number;
+  /** Requested price (for limit/stop orders) */
   price?: number;
+  /** Actual fill price */
   fill_price?: number;
+  /** Current order status */
   status: string;
+  /** Commission charged */
   commission: number;
+  /** Order creation timestamp */
   created_at: string;
+  /** Fill timestamp (if filled) */
   filled_at?: string;
 }
 
+/**
+ * Aggregated trading statistics
+ * @interface TradeStatistics
+ */
 export interface TradeStatistics {
+  /** Total number of closed trades */
   totalTrades: number;
+  /** Number of profitable trades */
   winningTrades: number;
+  /** Number of losing trades */
   losingTrades: number;
+  /** Win rate percentage (0-100) */
   winRate: number;
+  /** Total P&L across all trades */
   totalPnL: number;
+  /** Total commission paid */
   totalCommission: number;
+  /** Average P&L per trade */
   averagePnL: number;
+  /** Largest winning trade amount */
   largestWin: number;
+  /** Largest losing trade amount (negative) */
   largestLoss: number;
+  /** Total volume traded (in lots) */
   totalVolume: number;
 }
 
+/**
+ * Hook for fetching and managing trading history data.
+ * 
+ * @description
+ * This hook provides comprehensive access to:
+ * - Closed positions with P&L details
+ * - Complete order history
+ * - Account ledger entries
+ * - Aggregated trading statistics
+ * 
+ * Data is automatically refreshed via real-time subscriptions when
+ * positions or orders are updated.
+ * 
+ * @example
+ * ```tsx
+ * const { 
+ *   closedPositions, 
+ *   orders, 
+ *   ledger, 
+ *   statistics, 
+ *   loading, 
+ *   refresh 
+ * } = useTradingHistory();
+ * 
+ * // Display win rate
+ * if (statistics) {
+ *   console.log(`Win rate: ${statistics.winRate.toFixed(1)}%`);
+ *   console.log(`Total P&L: $${statistics.totalPnL.toFixed(2)}`);
+ * }
+ * 
+ * // Force refresh data
+ * const handleRefresh = () => refresh();
+ * ```
+ * 
+ * @returns {Object} Hook return object
+ * @returns {TradeHistoryItem[]} closedPositions - Array of closed trades
+ * @returns {OrderHistoryItem[]} orders - Array of all orders
+ * @returns {LedgerEntry[]} ledger - Array of ledger entries
+ * @returns {TradeStatistics | null} statistics - Aggregated trading stats
+ * @returns {boolean} loading - Whether data is being fetched
+ * @returns {string | null} error - Error message if fetch failed
+ * @returns {Function} refresh - Function to manually refresh data
+ */
 export const useTradingHistory = () => {
   const { user } = useAuth();
   const [closedPositions, setClosedPositions] = useState<TradeHistoryItem[]>([]);
@@ -64,6 +162,9 @@ export const useTradingHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Fetch all trading history data from the database
+   */
   const fetchTradingHistory = useCallback(async () => {
     if (!user) {
       setLoading(false);
@@ -108,7 +209,7 @@ export const useTradingHistory = () => {
         entry_price: pos.entry_price,
         exit_price: (pos.current_price ?? pos.entry_price) as number,
         realized_pnl: pos.realized_pnl ?? 0,
-        commission: 0, // Will be calculated from orders if needed
+        commission: 0,
         opened_at: pos.opened_at ?? new Date().toISOString(),
         closed_at: (pos.closed_at ?? pos.opened_at ?? new Date().toISOString()) as string,
         margin_used: pos.margin_used,
@@ -118,7 +219,6 @@ export const useTradingHistory = () => {
       const stats = calculateStatistics(trades);
 
       setClosedPositions(trades);
-      // Filter orders to ensure proper types
       const typedOrders = (ordersData || []).map(o => ({
         ...o,
         price: o.fill_price ?? o.price,
@@ -134,13 +234,17 @@ export const useTradingHistory = () => {
       setStatistics(stats);
       setError(null);
     } catch (err) {
-      // Error fetching trading history
       setError(err instanceof Error ? err.message : "Failed to fetch trading history");
     } finally {
       setLoading(false);
     }
   }, [user]);
 
+  /**
+   * Calculate aggregated statistics from trade history
+   * @param trades - Array of closed trades
+   * @returns Calculated statistics object
+   */
   const calculateStatistics = (trades: TradeHistoryItem[]): TradeStatistics => {
     if (trades.length === 0) {
       return {
@@ -218,7 +322,6 @@ export const useTradingHistory = () => {
       .subscribe();
 
     return () => {
-      // Properly unsubscribe from channels before removing to prevent memory leaks
       positionsChannel.unsubscribe();
       ordersChannel.unsubscribe();
       supabase.removeChannel(positionsChannel);
@@ -227,12 +330,19 @@ export const useTradingHistory = () => {
   }, [user, fetchTradingHistory]);
 
   return {
+    /** Array of closed positions with P&L details */
     closedPositions,
+    /** Array of all orders (pending, filled, cancelled) */
     orders,
+    /** Array of account ledger entries */
     ledger,
+    /** Aggregated trading statistics (null while loading) */
     statistics,
+    /** Whether data is currently being fetched */
     loading,
+    /** Error message if fetch failed */
     error,
+    /** Function to manually refresh all data */
     refresh: fetchTradingHistory,
   };
 };
