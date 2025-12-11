@@ -27,6 +27,9 @@
 /* Import visual feedback states */
 @import "./styles/states.css";
 
+/* Import loading states system (FE-010) */
+@import "./styles/loading-states.css";
+
 /* Import onboarding tour styles */
 @import "./styles/onboarding.css";
 

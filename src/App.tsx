@@ -10,10 +10,12 @@ import { ErrorContextProvider } from "@/components/ErrorContextProvider";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
 import { ViewModeProvider } from "@/contexts/ViewModeContext";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import { logger, initializeSentry } from "@/lib/logger";
 import { breadcrumbTracker } from "@/lib/breadcrumbTracker";
 import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GlobalLoadingIndicator } from "@/components/common/GlobalLoadingIndicator";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
@@ -99,9 +101,11 @@ const App = () => {
         <TooltipProvider>
           <NotificationProvider>
             <ViewModeProvider>
-              <Toaster />
-              <Sonner />
-            <ErrorBoundary
+              <LoadingProvider>
+                <Toaster />
+                <Sonner />
+                <GlobalLoadingIndicator />
+              <ErrorBoundary
               componentName="App"
               onError={(error, errorInfo) => {
                 // Log to logger with context
@@ -334,11 +338,12 @@ const App = () => {
                 </Suspense>
               </BrowserRouter>
             </ErrorBoundary>
+             </LoadingProvider>
             </ViewModeProvider>
-          </NotificationProvider>
-        </TooltipProvider>
-      </ErrorContextProvider>
-    </QueryClientProvider>
+            </NotificationProvider>
+            </TooltipProvider>
+            </ErrorContextProvider>
+            </QueryClientProvider>
   );
 };
 
