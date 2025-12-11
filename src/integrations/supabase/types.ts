@@ -227,6 +227,39 @@ export type Database = {
           },
         ]
       }
+      fills_archive: {
+        Row: {
+          commission: number
+          executed_at: string | null
+          id: string
+          order_id: string
+          price: number
+          quantity: number
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          commission: number
+          executed_at?: string | null
+          id?: string
+          order_id: string
+          price: number
+          quantity: number
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          commission?: number
+          executed_at?: string | null
+          id?: string
+          order_id?: string
+          price?: number
+          quantity?: number
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       kyc_documents: {
         Row: {
           created_at: string | null
@@ -317,6 +350,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ledger_archive: {
+        Row: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at: string | null
+          description: string | null
+          id: string
+          reference_id: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          balance_before?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
+          user_id?: string
+        }
+        Relationships: []
       }
       liquidation_events: {
         Row: {
@@ -673,6 +742,60 @@ export type Database = {
           },
         ]
       }
+      orders_archive: {
+        Row: {
+          commission: number | null
+          created_at: string | null
+          fill_price: number | null
+          filled_at: string | null
+          id: string
+          idempotency_key: string
+          order_type: Database["public"]["Enums"]["order_type"]
+          price: number | null
+          quantity: number
+          side: Database["public"]["Enums"]["order_side"]
+          status: Database["public"]["Enums"]["order_status"] | null
+          stop_loss: number | null
+          symbol: string
+          take_profit: number | null
+          user_id: string
+        }
+        Insert: {
+          commission?: number | null
+          created_at?: string | null
+          fill_price?: number | null
+          filled_at?: string | null
+          id?: string
+          idempotency_key: string
+          order_type: Database["public"]["Enums"]["order_type"]
+          price?: number | null
+          quantity: number
+          side: Database["public"]["Enums"]["order_side"]
+          status?: Database["public"]["Enums"]["order_status"] | null
+          stop_loss?: number | null
+          symbol: string
+          take_profit?: number | null
+          user_id: string
+        }
+        Update: {
+          commission?: number | null
+          created_at?: string | null
+          fill_price?: number | null
+          filled_at?: string | null
+          id?: string
+          idempotency_key?: string
+          order_type?: Database["public"]["Enums"]["order_type"]
+          price?: number | null
+          quantity?: number
+          side?: Database["public"]["Enums"]["order_side"]
+          status?: Database["public"]["Enums"]["order_status"] | null
+          stop_loss?: number | null
+          symbol?: string
+          take_profit?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       position_lots: {
         Row: {
           commission: number
@@ -788,6 +911,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      positions_archive: {
+        Row: {
+          closed_at: string | null
+          current_price: number | null
+          entry_price: number
+          highest_price: number | null
+          id: string
+          lowest_price: number | null
+          margin_used: number
+          opened_at: string | null
+          quantity: number
+          realized_pnl: number | null
+          side: Database["public"]["Enums"]["order_side"]
+          status: Database["public"]["Enums"]["position_status"] | null
+          symbol: string
+          trailing_stop_distance: number | null
+          trailing_stop_enabled: boolean
+          trailing_stop_price: number | null
+          unrealized_pnl: number | null
+          user_id: string
+        }
+        Insert: {
+          closed_at?: string | null
+          current_price?: number | null
+          entry_price: number
+          highest_price?: number | null
+          id?: string
+          lowest_price?: number | null
+          margin_used: number
+          opened_at?: string | null
+          quantity: number
+          realized_pnl?: number | null
+          side: Database["public"]["Enums"]["order_side"]
+          status?: Database["public"]["Enums"]["position_status"] | null
+          symbol: string
+          trailing_stop_distance?: number | null
+          trailing_stop_enabled?: boolean
+          trailing_stop_price?: number | null
+          unrealized_pnl?: number | null
+          user_id: string
+        }
+        Update: {
+          closed_at?: string | null
+          current_price?: number | null
+          entry_price?: number
+          highest_price?: number | null
+          id?: string
+          lowest_price?: number | null
+          margin_used?: number
+          opened_at?: string | null
+          quantity?: number
+          realized_pnl?: number | null
+          side?: Database["public"]["Enums"]["order_side"]
+          status?: Database["public"]["Enums"]["position_status"] | null
+          symbol?: string
+          trailing_stop_distance?: number | null
+          trailing_stop_enabled?: boolean
+          trailing_stop_price?: number | null
+          unrealized_pnl?: number | null
+          user_id?: string
+        }
+        Relationships: []
       }
       price_alerts: {
         Row: {
@@ -1066,6 +1252,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      archive_old_data: { Args: never; Returns: undefined }
       check_rate_limit: {
         Args: {
           p_endpoint: string
