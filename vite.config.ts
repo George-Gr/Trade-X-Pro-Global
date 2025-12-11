@@ -173,10 +173,13 @@ export default defineConfig(({ mode }) => ({
     react(),
     corsMiddleware(),
     componentTaggerPlugin,
+    // Bundle analyzer - run with ANALYZE=true npm run build
     process.env.ANALYZE && visualizer({
       filename: 'dist/bundle-analysis.html',
-      open: false,
-      gzipSize: true
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+      template: 'treemap', // treemap, sunburst, or network
     }),
     // Sentry source map upload plugin (production only)
     process.env.NODE_ENV === 'production' ? sentryVitePlugin({
