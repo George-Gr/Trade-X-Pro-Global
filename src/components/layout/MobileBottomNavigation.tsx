@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useNotifications } from '@/contexts/notificationContextHelpers';
 import {
   LayoutDashboard,
   TrendingUp,
@@ -54,6 +55,15 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const { impact, isEnabled } = useHapticFeedback();
+  
+  // Get notification count - wrapped in try/catch in case context not available
+  let unreadCount = 0;
+  try {
+    const notifications = useNotifications();
+    unreadCount = notifications.unreadCount;
+  } catch {
+    // NotificationProvider not available, skip badge
+  }
 
   const handleNavigation = (path: string) => {
     // Use standardized haptic feedback
@@ -80,7 +90,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       role="navigation"
       aria-label="Mobile navigation"
     >
-      <div className="grid grid-cols-5 gap-0">
+      <div className="grid grid-cols-6 gap-0">
         {navigationItems.map(({ path, icon: Icon, label, testId }) => {
           const isActive = location.pathname === path;
           
@@ -90,7 +100,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
               onClick={() => handleNavigation(path)}
               className={cn(
                 'flex flex-col items-center justify-center py-2 px-1',
-                'min-h-[60px] min-w-[60px]', // Ensure 44x44px minimum touch target
+                'min-h-[60px] min-w-[44px]', // Ensure minimum touch target
                 'transition-all duration-200 ease-in-out',
                 'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
                 'hover:bg-muted/50',
@@ -117,6 +127,44 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
             </button>
           );
         })}
+        
+        {/* Notifications Button with Badge */}
+        <button
+          onClick={() => handleNavigation('/notifications')}
+          className={cn(
+            'flex flex-col items-center justify-center py-2 px-1 relative',
+            'min-h-[60px] min-w-[44px]',
+            'transition-all duration-200 ease-in-out',
+            'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            'hover:bg-muted/50',
+            'rounded-t-none rounded-b-none',
+            location.pathname === '/notifications'
+              ? 'text-primary bg-muted/30' 
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+          role="tab"
+          aria-selected={location.pathname === '/notifications'}
+          aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
+          data-testid="nav-notifications"
+        >
+          <div className="relative">
+            <Bell 
+              className={cn(
+                'h-6 w-6 mb-1',
+                location.pathname === '/notifications' ? 'text-primary' : 'text-muted-foreground'
+              )}
+              aria-hidden="true"
+            />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </div>
+          <span className="text-xs font-medium leading-tight">
+            Alerts
+          </span>
+        </button>
       </div>
     </nav>
   );
