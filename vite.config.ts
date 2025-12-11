@@ -198,18 +198,9 @@ export default defineConfig(({ mode }) => ({
     }) : null,
   ].filter(Boolean) as Plugin[],
 
-  // Fix environment variables for browser bundling
+  // Browser globals only - env variables handled via import.meta.env
   define: {
-    // Provide browser globals - these are handled by setup-node-env.js at build time
     global: 'globalThis',
-
-    // Define process.env variables that should be inlined into the bundle
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-    'process.env.VITE_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL || ''),
-    'process.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(process.env.VITE_SUPABASE_PUBLISHABLE_KEY || ''),
-    'process.env.VITE_SENTRY_DSN': JSON.stringify(process.env.VITE_SENTRY_DSN || ''),
-    'process.env.VITE_APP_VERSION': JSON.stringify(process.env.VITE_APP_VERSION || '0.0.0'),
-    'process.env.VITE_FINNHUB_API_KEY': JSON.stringify(process.env.VITE_FINNHUB_API_KEY || ''),
   },
   resolve: {
     alias: {
