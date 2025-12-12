@@ -1,0 +1,4774 @@
+{
+  "timestamp": "2025-12-12T05:53:34.509Z",
+  "summary": {
+    "violations": 141,
+    "warnings": 363,
+    "autoFixable": 128,
+    "complianceRate": 49.6
+  },
+  "violations": [
+    {
+      "file": "src/main.tsx",
+      "line": 69,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/main.tsx",
+      "line": 75,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/workers/chartWorker.ts",
+      "line": 22,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/workers/chartWorker.ts",
+      "line": 22,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/workers/chartWorker.ts",
+      "line": 30,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/workers/chartWorker.ts",
+      "line": 34,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/workers/chartWorker.ts",
+      "line": 37,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 367,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 368,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 369,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 370,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 371,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 372,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 373,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 374,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/accessibility.tsx",
+      "line": 375,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/pages/Wallet.tsx",
+      "line": 101,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Wallet.tsx",
+      "line": 108,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Wallet.tsx",
+      "line": 198,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Wallet.tsx",
+      "line": 233,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Trade.tsx",
+      "line": 73,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Trade.tsx",
+      "line": 103,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Trade.tsx",
+      "line": 140,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/ThemeTesting.tsx",
+      "line": 180,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/ThemeTesting.tsx",
+      "line": 183,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/ThemeTesting.tsx",
+      "line": 186,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/ThemeTesting.tsx",
+      "line": 189,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Settings.tsx",
+      "line": 135,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Settings.tsx",
+      "line": 198,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Settings.tsx",
+      "line": 222,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Portfolio.tsx",
+      "line": 246,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 107,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 169,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 176,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 239,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 248,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 323,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/PendingOrders.tsx",
+      "line": 326,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/NotFound.tsx",
+      "line": 23,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Login.tsx",
+      "line": 168,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Login.tsx",
+      "line": 177,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Login.tsx",
+      "line": 259,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Login.tsx",
+      "line": 276,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Index.tsx",
+      "line": 257,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Index.tsx",
+      "line": 484,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Index.tsx",
+      "line": 556,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/History.tsx",
+      "line": 139,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/History.tsx",
+      "line": 208,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/DevSentryTest.tsx",
+      "line": 33,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/DevSentryTest.tsx",
+      "line": 34,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/DevSentryTest.tsx",
+      "line": 35,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Dashboard.tsx",
+      "line": 230,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Dashboard.tsx",
+      "line": 237,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Dashboard.tsx",
+      "line": 278,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/AdminRiskDashboard.tsx",
+      "line": 49,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Admin.tsx",
+      "line": 89,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/Admin.tsx",
+      "line": 98,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/usePullToRefresh.ts",
+      "line": 265,
+      "message": "Non-grid margin value - 2",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/hooks/usePositionUpdate.tsx",
+      "line": 359,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/usePositionUpdate.tsx",
+      "line": 360,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/TradingViewErrorBoundary.tsx",
+      "line": 108,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/TradingViewErrorBoundary.tsx",
+      "line": 117,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/TradingErrorBoundary.tsx",
+      "line": 210,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/TradingErrorBoundary.tsx",
+      "line": 219,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/TradingErrorBoundary.tsx",
+      "line": 232,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/TradingErrorBoundary.tsx",
+      "line": 242,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ThemeToggle.tsx",
+      "line": 25,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ErrorBoundary.tsx",
+      "line": 148,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ErrorBoundary.tsx",
+      "line": 156,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/APIErrorBoundary.tsx",
+      "line": 264,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/APIErrorBoundary.tsx",
+      "line": 276,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/APIErrorBoundary.tsx",
+      "line": 296,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/APIErrorBoundary.tsx",
+      "line": 311,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/lib/trading/riskThresholdMonitoring.ts",
+      "line": 560,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/riskThresholdMonitoring.ts",
+      "line": 561,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/riskThresholdMonitoring.ts",
+      "line": 562,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/riskThresholdMonitoring.ts",
+      "line": 563,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/riskThresholdMonitoring.ts",
+      "line": 565,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 320,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 335,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 348,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 366,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 372,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 374,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 375,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 376,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 377,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 391,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 398,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 503,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 507,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 360,
+      "message": "Non-grid padding value - 15",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 384,
+      "message": "Non-grid padding value - 10",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 355,
+      "message": "Non-grid gap value - 15",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 459,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 459,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 576,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/risk/exportUtils.ts",
+      "line": 576,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 86,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 87,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 90,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 93,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 94,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 95,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 96,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 97,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 92,
+      "message": "Non-grid padding value - 10",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 88,
+      "message": "Non-grid margin value - 10",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/lib/export/portfolioExport.ts",
+      "line": 91,
+      "message": "Non-grid gap value - 10",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/pages/education/Webinar.tsx",
+      "line": 117,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Webinar.tsx",
+      "line": 122,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Tutorials.tsx",
+      "line": 99,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Tutorials.tsx",
+      "line": 142,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Tutorials.tsx",
+      "line": 161,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Tutorials.tsx",
+      "line": 166,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Mentorship.tsx",
+      "line": 115,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Mentorship.tsx",
+      "line": 156,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Mentorship.tsx",
+      "line": 161,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Glossary.tsx",
+      "line": 154,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Glossary.tsx",
+      "line": 225,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Glossary.tsx",
+      "line": 230,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Certifications.tsx",
+      "line": 81,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Certifications.tsx",
+      "line": 143,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/education/Certifications.tsx",
+      "line": 148,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingTools.tsx",
+      "line": 294,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingTools.tsx",
+      "line": 299,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingPlatforms.tsx",
+      "line": 91,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingPlatforms.tsx",
+      "line": 165,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingPlatforms.tsx",
+      "line": 170,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingInstruments.tsx",
+      "line": 36,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingInstruments.tsx",
+      "line": 41,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingInstruments.tsx",
+      "line": 503,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingInstruments.tsx",
+      "line": 508,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingConditions.tsx",
+      "line": 256,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/TradingConditions.tsx",
+      "line": 261,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/AccountTypes.tsx",
+      "line": 148,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/AccountTypes.tsx",
+      "line": 237,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/trading/AccountTypes.tsx",
+      "line": 242,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/Security.tsx",
+      "line": 180,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/Security.tsx",
+      "line": 185,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/Regulation.tsx",
+      "line": 138,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/Regulation.tsx",
+      "line": 143,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/Partners.tsx",
+      "line": 129,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/Partners.tsx",
+      "line": 134,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/ContactUs.tsx",
+      "line": 206,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/ContactUs.tsx",
+      "line": 265,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/AboutUs.tsx",
+      "line": 152,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/company/AboutUs.tsx",
+      "line": 157,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Stocks.tsx",
+      "line": 123,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Stocks.tsx",
+      "line": 128,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Indices.tsx",
+      "line": 123,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Indices.tsx",
+      "line": 128,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Forex.tsx",
+      "line": 173,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Forex.tsx",
+      "line": 178,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Cryptocurrencies.tsx",
+      "line": 129,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Cryptocurrencies.tsx",
+      "line": 134,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Commodities.tsx",
+      "line": 123,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/pages/markets/Commodities.tsx",
+      "line": 128,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/__tests__/useErrorContext.test.tsx",
+      "line": 19,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/__tests__/useErrorContext.test.tsx",
+      "line": 26,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/__tests__/useErrorContext.test.tsx",
+      "line": 34,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/__tests__/useErrorContext.test.tsx",
+      "line": 39,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/hooks/__tests__/useErrorContext.test.tsx",
+      "line": 44,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/wallet/WithdrawalForm.tsx",
+      "line": 346,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/wallet/DepositCryptoDialog.tsx",
+      "line": 201,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/wallet/DepositCryptoDialog.tsx",
+      "line": 217,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/wallet/DepositCryptoDialog.tsx",
+      "line": 243,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/wallet/DepositCryptoDialog.tsx",
+      "line": 268,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/wallet/DepositCryptoDialog.tsx",
+      "line": 294,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/sidebar.tsx",
+      "line": 181,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/sidebar.tsx",
+      "line": 206,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/scroll-area.tsx",
+      "line": 27,
+      "message": "Non-grid Tailwind arbitrary spacing value - 1",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use standard spacing: p-1, p-2, p-3, p-4, p-6, p-8, etc.",
+      "category": "spacing"
+    },
+    {
+      "file": "src/components/ui/scroll-area.tsx",
+      "line": 28,
+      "message": "Non-grid Tailwind arbitrary spacing value - 1",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use standard spacing: p-1, p-2, p-3, p-4, p-6, p-8, etc.",
+      "category": "spacing"
+    },
+    {
+      "file": "src/components/ui/pagination.tsx",
+      "line": 31,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/navigation-menu.tsx",
+      "line": 52,
+      "message": "Non-grid Tailwind arbitrary spacing value - 1",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use standard spacing: p-1, p-2, p-3, p-4, p-6, p-8, etc.",
+      "category": "spacing"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 348,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 65,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 67,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 69,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 72,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 73,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/ui/carousel.tsx",
+      "line": 173,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/carousel.tsx",
+      "line": 201,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ViewModeToggle.tsx",
+      "line": 40,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ViewModeToggle.tsx",
+      "line": 71,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ViewModeToggle.tsx",
+      "line": 80,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ThemeToggle.tsx",
+      "line": 37,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ThemeToggle.tsx",
+      "line": 51,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ThemePreview.tsx",
+      "line": 121,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/ui/ThemePreview.tsx",
+      "line": 96,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ThemePreview.tsx",
+      "line": 145,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ThemePreview.tsx",
+      "line": 180,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/SidebarErrorBoundary.tsx",
+      "line": 163,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/SidebarErrorBoundary.tsx",
+      "line": 172,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/SidebarErrorBoundary.tsx",
+      "line": 220,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/OptimizedImage.tsx",
+      "line": 12,
+      "message": "Image without alt text - affects accessibility",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Add alt text or aria-label for accessibility",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/OptimizedImage.tsx",
+      "line": 19,
+      "message": "Image without alt text - affects accessibility",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Add alt text or aria-label for accessibility",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 56,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 57,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 60,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 63,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 66,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 71,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 74,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 77,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 160,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 177,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 180,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 183,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/MicroInteractionsDemo.tsx",
+      "line": 186,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/LoadingButton.tsx",
+      "line": 78,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorUI.tsx",
+      "line": 57,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorUI.tsx",
+      "line": 67,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorUI.tsx",
+      "line": 96,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorUI.tsx",
+      "line": 124,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorUI.tsx",
+      "line": 161,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorState.tsx",
+      "line": 82,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorState.tsx",
+      "line": 88,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorState.tsx",
+      "line": 123,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/ErrorState.tsx",
+      "line": 129,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/EmptyState.tsx",
+      "line": 68,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DemoModeIndicator.tsx",
+      "line": 148,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 205,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 301,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 320,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 321,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 322,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 323,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 324,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 327,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 328,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 433,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/ui/DarkModeTest.tsx",
+      "line": 437,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/registration/StepTwo.tsx",
+      "line": 161,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/registration/StepTwo.tsx",
+      "line": 171,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/registration/StepOne.tsx",
+      "line": 196,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/registration/RegistrationSuccess.tsx",
+      "line": 117,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/UserRiskDashboard.tsx",
+      "line": 120,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/UserRiskDashboard.tsx",
+      "line": 128,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/UserRiskDashboard.tsx",
+      "line": 136,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/RiskSettingsForm.tsx",
+      "line": 370,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 106,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 106,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 106,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 106,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 106,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 106,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 196,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 220,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/RiskChartsPanel.tsx",
+      "line": 253,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/risk/MarginLevelAlert.tsx",
+      "line": 154,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/MarginLevelAlert.tsx",
+      "line": 311,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/risk/MarginLevelAlert.tsx",
+      "line": 320,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistTabs.tsx",
+      "line": 45,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistRow.tsx",
+      "line": 87,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistRow.tsx",
+      "line": 95,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistRow.tsx",
+      "line": 109,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistItems.tsx",
+      "line": 38,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistHeader.tsx",
+      "line": 40,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistHeader.tsx",
+      "line": 58,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/WatchlistHeader.tsx",
+      "line": 64,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/Watchlist.tsx",
+      "line": 145,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/Watchlist.tsx",
+      "line": 220,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/Watchlist.tsx",
+      "line": 242,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/TrailingStopDialog.tsx",
+      "line": 98,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/TrailingStopDialog.tsx",
+      "line": 155,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 54,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 78,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 79,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 80,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 81,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 82,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 83,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 58,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "color: \"rgba(255, 255, 255",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 59,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "color: \"rgba(255, 255, 255",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 66,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "borderColor: \"rgba(255, 255, 255",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 69,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "borderColor: \"rgba(255, 255, 255",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 54,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 78,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 79,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 80,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 81,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 82,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 83,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 58,
+      "message": "Hardcoded RGB/RGBA color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace RGB/RGBA with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 59,
+      "message": "Hardcoded RGB/RGBA color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace RGB/RGBA with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 66,
+      "message": "Hardcoded RGB/RGBA color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace RGB/RGBA with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingViewChart.tsx",
+      "line": 69,
+      "message": "Hardcoded RGB/RGBA color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace RGB/RGBA with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/TradingPanelConfirmationDialog.tsx",
+      "line": 78,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/TradingPanelConfirmationDialog.tsx",
+      "line": 86,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/TradingPanel.tsx",
+      "line": 196,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/TradingPanel.tsx",
+      "line": 207,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PriceAlertsManager.tsx",
+      "line": 154,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PriceAlertDialog.tsx",
+      "line": 75,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PriceAlertDialog.tsx",
+      "line": 110,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionsTableVirtualized.tsx",
+      "line": 74,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionsTable.tsx",
+      "line": 65,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionsHeader.tsx",
+      "line": 28,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionsHeader.tsx",
+      "line": 62,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionRow.tsx",
+      "line": 32,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionRow.tsx",
+      "line": 33,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionDetailDialog.tsx",
+      "line": 64,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionDetailDialog.tsx",
+      "line": 65,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionCloseDialog.tsx",
+      "line": 30,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/PositionCloseDialog.tsx",
+      "line": 31,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrdersTableMobile.tsx",
+      "line": 56,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrdersTableMobile.tsx",
+      "line": 135,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrdersTableMobile.tsx",
+      "line": 147,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrdersTableMobile.tsx",
+      "line": 158,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrdersTableHeader.tsx",
+      "line": 40,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTypeSelector.tsx",
+      "line": 31,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTemplatesDialog.tsx",
+      "line": 69,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTemplatesDialog.tsx",
+      "line": 85,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTemplatesDialog.tsx",
+      "line": 105,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTemplatesDialog.tsx",
+      "line": 108,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTemplatesDialog.tsx",
+      "line": 149,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderTemplatesDialog.tsx",
+      "line": 156,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderRow.tsx",
+      "line": 91,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderRow.tsx",
+      "line": 194,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderRow.tsx",
+      "line": 206,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderHistory.tsx",
+      "line": 114,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderHistory.tsx",
+      "line": 116,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderHistory.tsx",
+      "line": 118,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderHistory.tsx",
+      "line": 120,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderHistory.tsx",
+      "line": 122,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderHistory.tsx",
+      "line": 144,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 138,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 158,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 256,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 285,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 310,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 344,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderForm.tsx",
+      "line": 351,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderFilter.tsx",
+      "line": 30,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderDetailExpander.tsx",
+      "line": 53,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderDetailExpander.tsx",
+      "line": 53,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/OrderDetailDialog.tsx",
+      "line": 109,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderDetailDialog.tsx",
+      "line": 126,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderDetailDialog.tsx",
+      "line": 290,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderDetailDialog.tsx",
+      "line": 295,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/OrderDetailDialog.tsx",
+      "line": 299,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ModifyOrderDialog.tsx",
+      "line": 163,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ModifyOrderDialog.tsx",
+      "line": 267,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ModifyOrderDialog.tsx",
+      "line": 270,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 90,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 35,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 37,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 39,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 41,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 43,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/MobileOrderCards.tsx",
+      "line": 145,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/MarketWatch.tsx",
+      "line": 75,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/MarginCallWarningModal.tsx",
+      "line": 191,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/MarginCallWarningModal.tsx",
+      "line": 200,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/LiquidationAlert.tsx",
+      "line": 87,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/LiquidationAlert.tsx",
+      "line": 158,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/LiquidationAlert.tsx",
+      "line": 169,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/LiquidationAlert.tsx",
+      "line": 177,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/LiquidationAlert.tsx",
+      "line": 185,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/KYCStatusBanner.tsx",
+      "line": 105,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedWatchlist.tsx",
+      "line": 131,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedWatchlist.tsx",
+      "line": 180,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedPositionsTable.tsx",
+      "line": 289,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedPositionsTable.tsx",
+      "line": 302,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedPositionsTable.tsx",
+      "line": 406,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedPositionsTable.tsx",
+      "line": 418,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedPositionsTable.tsx",
+      "line": 525,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/EnhancedPositionsTable.tsx",
+      "line": 528,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 156,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 41,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 43,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 45,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 47,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 49,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 80,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/DesktopOrderTable.tsx",
+      "line": 168,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/DeleteWatchlistDialog.tsx",
+      "line": 29,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/CreateWatchlistDialog.tsx",
+      "line": 39,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/CreateWatchlistDialog.tsx",
+      "line": 59,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/CompareSymbolsDialog.tsx",
+      "line": 28,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 17,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 20,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 23,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 26,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 29,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 32,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 35,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/ChartPanel.tsx",
+      "line": 40,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/AssetTree.tsx",
+      "line": 89,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/AssetTree.tsx",
+      "line": 106,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/AddSymbolDialog.tsx",
+      "line": 53,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/AddSymbolDialog.tsx",
+      "line": 81,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/AddSymbolDialog.tsx",
+      "line": 96,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/PublicLayoutInner.tsx",
+      "line": 35,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/PublicLayoutInner.tsx",
+      "line": 43,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/PublicHeader.tsx",
+      "line": 310,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/PublicHeader.tsx",
+      "line": 319,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/MobileBottomNavigation.tsx",
+      "line": 111,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/MobileBottomNavigation.tsx",
+      "line": 149,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/AuthenticatedLayoutInner.tsx",
+      "line": 107,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/layout/AppSidebar.tsx",
+      "line": 218,
+      "message": "Off-scale Tailwind arbitrary font size - 11",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use standard text classes: text-xs, text-sm, text-base, text-lg, text-xl, text-2xl",
+      "category": "typography"
+    },
+    {
+      "file": "src/components/layout/AppSidebar.tsx",
+      "line": 276,
+      "message": "Off-scale Tailwind arbitrary font size - 11",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use standard text classes: text-xs, text-sm, text-base, text-lg, text-xl, text-2xl",
+      "category": "typography"
+    },
+    {
+      "file": "src/components/layout/AppSidebar.tsx",
+      "line": 110,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/notifications/NotificationCenter.tsx",
+      "line": 108,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/notifications/NotificationCenter.tsx",
+      "line": 124,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/notifications/NotificationCenter.tsx",
+      "line": 160,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/PlatformPreview.tsx",
+      "line": 159,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/PlatformPreview.tsx",
+      "line": 165,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/PlatformPreview.tsx",
+      "line": 210,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/PlatformPreview.tsx",
+      "line": 218,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/LiveChatIndicator.tsx",
+      "line": 10,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/LiveChatIndicator.tsx",
+      "line": 42,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/LiveChatIndicator.tsx",
+      "line": 50,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/HeroSection.tsx",
+      "line": 190,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/landing/HeroSection.tsx",
+      "line": 199,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycUploader.tsx",
+      "line": 433,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycUploader.tsx",
+      "line": 505,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycUploader.tsx",
+      "line": 392,
+      "message": "Image without alt text - affects accessibility",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Add alt text or aria-label for accessibility",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycRequired.tsx",
+      "line": 164,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycRequired.tsx",
+      "line": 175,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 323,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 383,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 418,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 476,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 486,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 501,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KycAdminDashboard.tsx",
+      "line": 545,
+      "message": "Image without alt text - affects accessibility",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Add alt text or aria-label for accessibility",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KYCSubmission.tsx",
+      "line": 148,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/KYCSubmission.tsx",
+      "line": 221,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/DocumentViewer.tsx",
+      "line": 90,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/DocumentViewer.tsx",
+      "line": 128,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/kyc/DocumentViewer.tsx",
+      "line": 112,
+      "message": "Image without alt text - affects accessibility",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Add alt text or aria-label for accessibility",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 72,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 75,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 118,
+      "message": "Non-grid padding value - 10",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 118,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 136,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 140,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 144,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/history/ExportButtons.tsx",
+      "line": 148,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 108,
+      "message": "Hardcoded color in backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--primary))",
+      "autoFix": "backgroundColor: 'hsl(var(--primary))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 128,
+      "message": "Hardcoded color in backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--primary))",
+      "autoFix": "backgroundColor: 'hsl(var(--primary))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 108,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 128,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 103,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 126,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 108,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/common/OptimizedBackgroundImage.tsx",
+      "line": 128,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/RecentPnLChart.tsx",
+      "line": 108,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/dashboard/RecentPnLChart.tsx",
+      "line": 112,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/RecentPnLChart.tsx",
+      "line": 112,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/ExportToolbar.tsx",
+      "line": 82,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/dashboard/ExportToolbar.tsx",
+      "line": 86,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 188,
+      "message": "Hardcoded color in inline style backgroundColor - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Move to CSS class or CSS variable",
+      "category": "color"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 192,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 194,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 199,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "\"hsl(var(--primary))\"",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 154,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 231,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 240,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/dashboard/EquityChart.tsx",
+      "line": 244,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/dashboard/AssetAllocation.tsx",
+      "line": 27,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/AssetAllocation.tsx",
+      "line": 27,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/AssetAllocation.tsx",
+      "line": 27,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/AssetAllocation.tsx",
+      "line": 27,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/AssetAllocation.tsx",
+      "line": 27,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/AssetAllocation.tsx",
+      "line": 27,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/dashboard/AccountSummary.tsx",
+      "line": 25,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/UsersPanel.tsx",
+      "line": 145,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/UsersPanel.tsx",
+      "line": 442,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/UsersPanel.tsx",
+      "line": 452,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 355,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 399,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 469,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 538,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 548,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 686,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/RiskPanel.tsx",
+      "line": 692,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/LeadsPanel.tsx",
+      "line": 454,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/LeadsPanel.tsx",
+      "line": 463,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/LeadsPanel.tsx",
+      "line": 573,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/LeadsPanel.tsx",
+      "line": 630,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/LeadsPanel.tsx",
+      "line": 638,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/LeadsPanel.tsx",
+      "line": 689,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/KYCPanel.tsx",
+      "line": 112,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/KYCPanel.tsx",
+      "line": 446,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/admin/KYCPanel.tsx",
+      "line": 553,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/__tests__/lib/utils.test.tsx",
+      "line": 22,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/lib/trading/__tests__/riskThresholdMonitoring.test.ts",
+      "line": 501,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/__tests__/riskThresholdMonitoring.test.ts",
+      "line": 502,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/__tests__/riskThresholdMonitoring.test.ts",
+      "line": 503,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/lib/trading/__tests__/riskThresholdMonitoring.test.ts",
+      "line": 504,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/ui/__tests__/SidebarErrorBoundary.test.tsx",
+      "line": 104,
+      "message": "Button without type attribute - affects accessibility",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Add type=\"button\" to prevent form submission",
+      "category": "accessibility"
+    },
+    {
+      "file": "src/components/trading/__tests__/EnhancedTradingComponents.test.tsx",
+      "line": 49,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/components/trading/__tests__/EnhancedTradingComponents.test.tsx",
+      "line": 49,
+      "message": "Hardcoded hex color detected - use CSS variables",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Replace hex colors with CSS variables",
+      "autoFix": "'hsl(var(--primary))'",
+      "category": "css-variables"
+    },
+    {
+      "file": "src/styles/mobile-touch-targets.css",
+      "line": 109,
+      "message": "Non-grid margin value - 2",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/styles/mobile-landscape.css",
+      "line": 207,
+      "message": "Non-grid padding value - 10",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88, 96, 128px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/styles/mobile-browser-optimizations.css",
+      "line": 298,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "color: rgba(0, 0, 0",
+      "category": "color"
+    },
+    {
+      "file": "src/styles/advanced-accessibility.css",
+      "line": 472,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "color: rgba(0, 0, 0",
+      "category": "color"
+    },
+    {
+      "file": "src/styles/advanced-accessibility.css",
+      "line": 534,
+      "message": "Hardcoded color in RGB/RGBA color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Convert RGB to HSL CSS variable",
+      "autoFix": "color: rgba(255, 255, 255",
+      "category": "color"
+    },
+    {
+      "file": "src/styles/advanced-accessibility.css",
+      "line": 426,
+      "message": "Non-grid gap value - 6",
+      "type": "warning",
+      "severity": "⚠️ ",
+      "suggestion": "Use 4px grid: 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64px",
+      "category": "spacing"
+    },
+    {
+      "file": "src/styles/accessibility.css",
+      "line": 585,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/styles/accessibility.css",
+      "line": 586,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    },
+    {
+      "file": "src/styles/accessibility.css",
+      "line": 587,
+      "message": "Hardcoded color in color - use CSS variables instead",
+      "type": "error",
+      "severity": "🚨",
+      "suggestion": "Use CSS variable: hsl(var(--foreground))",
+      "autoFix": "color: 'hsl(var(--foreground))'",
+      "category": "color"
+    }
+  ],
+  "suggestions": [
+    {
+      "category": "CSS Variables",
+      "suggestion": "CSS variable --transition-fast is used but not defined. Consider defining it in your CSS custom properties.",
+      "impact": "medium",
+      "priority": "medium"
+    },
+    {
+      "category": "CSS Variables",
+      "suggestion": "CSS variable --tertiary-contrast-dark is used but not defined. Consider defining it in your CSS custom properties.",
+      "impact": "medium",
+      "priority": "medium"
+    },
+    {
+      "category": "accessibility Issues",
+      "suggestion": "High number of accessibility violations (352). Consider team training or automated fixes.",
+      "impact": "high",
+      "priority": "high"
+    },
+    {
+      "category": "color Issues",
+      "suggestion": "High number of color violations (53). Consider team training or automated fixes.",
+      "impact": "high",
+      "priority": "high"
+    },
+    {
+      "category": "css-variables Issues",
+      "suggestion": "High number of css-variables violations (83). Consider team training or automated fixes.",
+      "impact": "high",
+      "priority": "high"
+    },
+    {
+      "category": "spacing Issues",
+      "suggestion": "High number of spacing violations (14). Consider team training or automated fixes.",
+      "impact": "high",
+      "priority": "high"
+    }
+  ],
+  "recommendations": {
+    "immediate": [
+      {
+        "file": "src/workers/chartWorker.ts",
+        "line": 22,
+        "message": "Hardcoded color in color - use CSS variables instead",
+        "type": "error",
+        "severity": "🚨",
+        "suggestion": "Use CSS variable: hsl(var(--foreground))",
+        "autoFix": "color: 'hsl(var(--foreground))'",
+        "category": "color"
+      },
+      {
+        "file": "src/workers/chartWorker.ts",
+        "line": 22,
+        "message": "Hardcoded hex color detected - use CSS variables",
+        "type": "error",
+        "severity": "🚨",
+        "suggestion": "Replace hex colors with CSS variables",
+        "autoFix": "'hsl(var(--primary))'",
+        "category": "css-variables"
+      },
+      {
+        "file": "src/workers/chartWorker.ts",
+        "line": 30,
+        "message": "Hardcoded hex color detected - use CSS variables",
+        "type": "error",
+        "severity": "🚨",
+        "suggestion": "Replace hex colors with CSS variables",
+        "autoFix": "'hsl(var(--primary))'",
+        "category": "css-variables"
+      },
+      {
+        "file": "src/workers/chartWorker.ts",
+        "line": 34,
+        "message": "Hardcoded hex color detected - use CSS variables",
+        "type": "error",
+        "severity": "🚨",
+        "suggestion": "Replace hex colors with CSS variables",
+        "autoFix": "'hsl(var(--primary))'",
+        "category": "css-variables"
+      },
+      {
+        "file": "src/workers/chartWorker.ts",
+        "line": 37,
+        "message": "Hardcoded hex color detected - use CSS variables",
+        "type": "error",
+        "severity": "🚨",
+        "suggestion": "Replace hex colors with CSS variables",
+        "autoFix": "'hsl(var(--primary))'",
+        "category": "css-variables"
+      }
+    ],
+    "longTerm": [
+      "Implement automated CSS variable usage enforcement",
+      "Add design system lint rules to ESLint configuration",
+      "Create pre-commit hooks for design system validation",
+      "Set up visual regression testing for design consistency",
+      "Establish design system documentation automation"
+    ]
+  }
+}
