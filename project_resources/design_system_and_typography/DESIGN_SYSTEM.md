@@ -522,6 +522,94 @@ Desktop: 1024px+
 }
 ```
 
+### Breakpoints
+
+| Device Category | Range | Tailwind | Class Prefix | Usage |
+|-----------------|-------|----------|--------------|-------|
+| Mobile (default) | 320px - 639px | — | — | Small phones, no prefix |
+| Mobile Large | 640px - 767px | `sm` | `sm:` | Large phones, tablets start |
+| Tablet | 768px - 1023px | `md` | `md:` | Tablets, iPads |
+| Desktop | 1024px - 1279px | `lg` | `lg:` | Small desktops, laptops |
+| Desktop Large | 1280px - 1399px | `xl` | `xl:` | Standard desktops |
+| Desktop XL | 1400px+ | `2xl` | `2xl:` | Ultra-wide displays |
+
+### Mobile-First Example
+
+```css
+/* Mobile (default) - applies to all screens */
+.card { 
+  padding: 16px; 
+  gap: 8px; 
+  grid-columns: 1;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .card { 
+    padding: 20px; 
+    gap: 12px;
+    grid-columns: 2;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .card { 
+    padding: 24px; 
+    gap: 16px;
+    grid-columns: 3;
+  }
+}
+```
+
+### Tailwind Responsive Prefix Examples
+
+```tsx
+// Padding responsive
+<div className="p-4 sm:p-6 md:p-8 lg:p-10">
+  Content
+</div>
+
+// Grid columns responsive
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  {/* Cards */}
+</div>
+
+// Display responsive
+<div className="hidden md:block">
+  Only visible on tablet and above
+</div>
+
+// Gap responsive
+<div className="flex gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+  Items with responsive spacing
+</div>
+```
+
+### Touch Target Scaling
+
+Ensure interactive elements are at least 44×44px:
+
+```tsx
+// Mobile
+<button className="h-12 px-6">            {/* 48px height */}
+  Action
+</button>
+
+// With margin
+<button className="h-10 px-4 m-2">        {/* 44px + 4px margin = 52px */}
+  Action
+</button>
+```
+
+### Performance Considerations
+
+- Mobile layouts use base (no prefix) styles
+- Desktop enhancements use `lg:` and above
+- Reduces CSS bloat by leveraging mobile defaults
+- Typical pattern: `base md: lg: xl: 2xl:` in that order
+```
+
 ---
 
 ## ✅ Quality Standards

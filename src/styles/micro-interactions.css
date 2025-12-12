@@ -30,7 +30,7 @@
   position: absolute;
   border-radius: 50%;
   background-color: currentColor;
-  animation: ripple var(--duration-slow) ease-out forwards;
+  animation: ripple var(--duration-slow) var(--ease-out) forwards;
 }
 
 /* ============================================================================
@@ -83,7 +83,7 @@
 }
 
 .list-item {
-  animation: stagger-in var(--duration-normal) ease-out forwards;
+  animation: stagger-in var(--duration-normal) var(--ease-out) forwards;
 }
 
 .list-item:nth-child(1) { animation-delay: 0ms; }
@@ -184,7 +184,7 @@
 }
 
 .scale-bounce {
-  animation: scale-bounce var(--duration-normal) ease-in-out infinite;
+  animation: scale-bounce var(--duration-normal) var(--ease-in-out) infinite;
 }
 
 /* ============================================================================
@@ -403,7 +403,7 @@
 }
 
 .icon-bounce {
-  animation: icon-bounce var(--duration-normal) ease-in-out infinite;
+  animation: icon-bounce var(--duration-normal) var(--ease-in-out) infinite;
 }
 
 /* ============================================================================
@@ -411,7 +411,7 @@
    ========================================================================== */
 
 .checkbox-toggle {
-  transition: all var(--duration-fast) ease-out;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .checkbox-toggle:checked {

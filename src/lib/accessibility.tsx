@@ -359,20 +359,57 @@ export const useHighContrast = () => {
  * Accessible Color Generator
  */
 
+/**
+ * Get design system color values from CSS variables
+ * Ensures consistency between design system and accessibility module
+ */
+const getDesignSystemColor = (variableName: string): string => {
+  if (typeof window === 'undefined') return '#000000';
+  
+  const root = document.documentElement;
+  const cssVariable = getComputedStyle(root).getPropertyValue(`--${variableName}`).trim();
+  
+  // Convert HSL to Hex if needed
+  if (cssVariable) {
+    const hslMatch = cssVariable.match(/(\d+)\s+(\d+)%\s+(\d+)%/);
+    if (hslMatch) {
+      const [, h, s, l] = hslMatch.map(Number);
+      return hslToHex(h, s, l);
+    }
+  }
+  
+  return '#000000';
+};
+
+/**
+ * Convert HSL to Hex color
+ */
+const hslToHex = (h: number, s: number, l: number): string => {
+  const a = (s * Math.min(l, 100 - l)) / 100;
+  
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  
+  return `#${f(0)}${f(8)}${f(4)}`;
+};
+
 export const generateAccessibleColors = (baseColor: string, targetContrast: number = 4.5) => {
   // This is a simplified version - in a real implementation,
   // you'd want more sophisticated color generation logic
   const colors = {
     primary: baseColor,
-    primaryContrast: '#FFFFFF',
-    secondary: '#6B7280',
-    secondaryContrast: '#374151',
-    success: '#16A34A',
-    successContrast: '#FFFFFF',
-    warning: '#D97706',
-    warningContrast: '#FFFFFF',
-    danger: '#DC2626',
-    dangerContrast: '#FFFFFF'
+    primaryContrast: getDesignSystemColor('primary-contrast'),
+    secondary: getDesignSystemColor('foreground-secondary'),
+    secondaryContrast: getDesignSystemColor('secondary-contrast'),
+    success: getDesignSystemColor('success'),
+    successContrast: getDesignSystemColor('success-contrast'),
+    warning: getDesignSystemColor('warning'),
+    warningContrast: getDesignSystemColor('warning-contrast'),
+    danger: getDesignSystemColor('destructive'),
+    dangerContrast: getDesignSystemColor('danger-contrast')
   };
   
   return colors;

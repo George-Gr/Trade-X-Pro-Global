@@ -217,6 +217,23 @@
     --contrast-auto-high: 222 47% 8%;
     --contrast-auto-bg-high: 0 0% 100%;
 
+    /* WCAG AA Compliant Accessibility Color Combinations */
+    /* Background-Foreground pairs for contrast utility classes */
+    --primary-contrast-bg: 0 0% 100%;           /* White background */
+    --primary-contrast-fg: 222 47% 11%;         /* Dark text */
+    
+    --secondary-contrast-bg: 220 14% 96%;       /* Light gray background */
+    --secondary-contrast-fg: 220 9% 35%;        /* Medium gray text */
+    
+    --success-contrast-bg: 160 84% 39%;         /* Green background */
+    --success-contrast-fg: 0 0% 100%;           /* White text */
+    
+    --warning-contrast-bg: 38 92% 50%;          /* Amber background */
+    --warning-contrast-fg: 0 0% 100%;           /* White text */
+    
+    --danger-contrast-bg: 0 84% 60%;            /* Red background */
+    --danger-contrast-fg: 0 0% 100%;            /* White text */
+
     /* Standardized Animation Timing System */
     --duration-instant: 0ms;
     --duration-fast: 150ms;

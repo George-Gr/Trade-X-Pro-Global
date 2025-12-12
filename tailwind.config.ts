@@ -45,14 +45,7 @@ const config: Config = {
         '5xl': '80px',  // 80px
         '6xl': '96px',  // 96px
         
-        // Legacy values - to be refactored
-        '4.5': '1.125rem',  // 18px
-        '13': '3.25rem',    // 52px
-        '15': '3.75rem',    // 60px
-        '18': '4.5rem',     // 72px
-        '22': '5.5rem',     // 88px
-        '26': '6.5rem',     // 104px
-        '30': '7.5rem',     // 120px
+        
       },
       
       colors: {
@@ -482,9 +475,11 @@ const config: Config = {
           'font-variant-numeric': 'tabular-nums',
         },
         
-        // Focus ring
+        // Accessible focus ring utility
         '.focus-ring': {
-          'outline': 'none',
+          'outline': '3px solid hsl(var(--focus-color))',
+          'outline-offset': '2px',
+          'box-shadow': '0 0 0 6px hsl(var(--focus-ring-color) / 0.3), 0 0 0 8px hsl(var(--focus-ring-color) / 0.2)',
         },
       };
       

@@ -20,6 +20,7 @@
     "preview": "vite preview",
     "test:e2e": "playwright test",
     "type:strict": "tsc -p tsconfig.strict.json --noEmit",
+    "validate:design-system": "node scripts/validate-design-system.js",
     "convert:webp": "node scripts/convert-to-webp.js",
     "supabase:link": "supabase link",
     "supabase:status": "supabase status",
