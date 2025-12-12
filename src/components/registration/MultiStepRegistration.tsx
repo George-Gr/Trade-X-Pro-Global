@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { TrendingUp, ArrowRight, ArrowLeft, Check, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseBrowserClient";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import RegistrationSuccess from "./RegistrationSuccess";

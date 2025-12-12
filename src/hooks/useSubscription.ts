@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useRef, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import { getSubscriptionManager } from '@/lib/subscriptionManager';
 
 interface UseSubscriptionOptions {

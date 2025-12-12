@@ -5,7 +5,7 @@
  * health checks, and automatic reconnection for Supabase realtime
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import { logger } from './logger';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 

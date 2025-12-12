@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Card } from "@/components/ui/card";
@@ -176,7 +176,7 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
         .order(sortBy, { ascending: sortOrder === "asc" });
 
       if (data && !error) {
-        setKycDocuments(data as KYCDocument[]);
+        setKycDocuments(data as unknown as KYCDocument[]);
       } else if (error) {
         toast({
           title: "Error",
@@ -209,18 +209,18 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
       const { error: docError } = await supabase
         .from("kyc_documents")
         .update({
-          status: "approved",
+          status: "approved" as const,
           reviewed_at: new Date().toISOString(),
           reviewed_by: user.id,
-        })
-        .eq("id", docId);
+        } as { status: "pending" | "approved" | "rejected" | "resubmitted"; reviewed_at: string; reviewed_by: string })
+        .eq("id" as const, docId as string);
 
       if (docError) throw docError;
 
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ kyc_status: "approved" })
-        .eq("id", userId);
+        .update({ kyc_status: "approved" as const } as { kyc_status: "pending" | "approved" | "rejected" | "resubmitted" })
+        .eq("id" as const, userId as string);
 
       if (profileError) throw profileError;
 
@@ -254,19 +254,19 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
       const { error: docError } = await supabase
         .from("kyc_documents")
         .update({
-          status: "rejected",
+          status: "rejected" as const,
           reviewed_at: new Date().toISOString(),
           reviewed_by: user?.id,
           rejection_reason: reason,
-        })
-        .eq("id", rejectionDialog.docId);
+        } as { status: "pending" | "approved" | "rejected" | "resubmitted"; reviewed_at: string; reviewed_by: string | undefined; rejection_reason: string })
+        .eq("id" as const, rejectionDialog.docId as string);
 
       if (docError) throw docError;
 
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ kyc_status: "rejected" })
-        .eq("id", doc.user_id);
+        .update({ kyc_status: "rejected" as const } as { kyc_status: "pending" | "approved" | "rejected" | "resubmitted" })
+        .eq("id" as const, doc.user_id as string);
 
       if (profileError) throw profileError;
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Card } from "@/components/ui/card";
@@ -105,7 +105,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
         .order("created_at", { ascending: false });
 
       if (data && !error) {
-        setLeads(data);
+        setLeads(data as unknown as Lead[]);
       } else if (error) {
         toast({
           title: "Error",
@@ -159,7 +159,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       .single();
 
     if (profileData) {
-      setSelectedProfile(profileData);
+      setSelectedProfile(profileData as unknown as Profile);
     }
 
     // Fetch KYC documents
@@ -170,7 +170,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       .order("created_at", { ascending: false });
 
     if (kycData) {
-      setSelectedKYCDocs(kycData);
+      setSelectedKYCDocs(kycData as unknown as KYCDocument[]);
     }
   };
 
@@ -229,7 +229,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
           .single();
 
         if (profileData) {
-          setSelectedProfile(profileData);
+          setSelectedProfile(profileData as unknown as Profile);
         }
       }
     } catch (err: unknown) {
@@ -249,11 +249,11 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       const { error } = await supabase
         .from("kyc_documents")
         .update({
-          status: action,
+          status: action as "pending" | "approved" | "rejected" | "resubmitted",
           rejection_reason: action === 'rejected' ? reason : null,
           reviewed_at: new Date().toISOString(),
         })
-        .eq("id", docId);
+        .eq("id" as const, docId as string);
 
       if (error) throw error;
 
@@ -271,7 +271,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
           .order("created_at", { ascending: false });
 
         if (kycData) {
-          setSelectedKYCDocs(kycData);
+          setSelectedKYCDocs(kycData as unknown as KYCDocument[]);
         }
       }
     } catch (err: unknown) {

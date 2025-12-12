@@ -26,6 +26,10 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
+    // Use 'implicit' flow to avoid lock contention issues
+    flowType: 'implicit',
+    // Disable debug mode in production
+    debug: false,
   },
   global: {
     headers: {
