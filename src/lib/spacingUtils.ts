@@ -1,25 +1,39 @@
 /* Spacing Utilities - TradeX Pro Dashboard
- * TypeScript utility functions for working with the 8px grid spacing system
+ * TypeScript utility functions for working with the 4px/8px grid spacing system
  * Provides validation, diagnostics, and helper functions for consistent spacing
  */
 
 /**
- * Spacing scale values in pixels (8px base grid system)
+ * Spacing scale values in pixels (4px/8px grid system)
  */
 export const SPACING_SCALE = {
   0: 0,
   xs: 4,      // 0.25rem
-  1: 8,       // 0.5rem
-  2: 16,      // 1rem
-  3: 24,      // 1.5rem
-  4: 32,      // 2rem
-  6: 48,      // 3rem
-  8: 64,      // 4rem
-  10: 80,     // 5rem
-  12: 96,     // 6rem
-  16: 128,    // 8rem
-  20: 160,    // 10rem
-  24: 192,    // 12rem
+  sm: 8,      // 0.5rem
+  md: 12,     // 0.75rem
+  base: 16,   // 1rem
+  lg: 24,     // 1.5rem
+  xl: 32,     // 2rem
+  "2xl": 48,  // 3rem
+  "3xl": 56,  // 3.5rem
+  "4xl": 64,  // 4rem
+  "5xl": 80,  // 5rem
+  "6xl": 96,  // 6rem
+  // Numeric aliases for backward compatibility or direct grid unit access (multiples of 4px)
+  1: 4,
+  2: 8,
+  3: 12,
+  4: 16,
+  5: 20,
+  6: 24,
+  8: 32,
+  10: 40,
+  11: 44,     // Touch target size
+  12: 48,
+  14: 56,
+  16: 64,
+  20: 80,
+  24: 96,
 } as const;
 
 /**
@@ -28,11 +42,12 @@ export const SPACING_SCALE = {
 export const PADDING_VALUES = {
   xs: 4,      // var(--padding-xs)
   sm: 8,      // var(--padding-sm)
-  md: 16,     // var(--padding-md)
+  md: 12,     // var(--padding-md)
+  base: 16,   // var(--padding-base)
   lg: 24,     // var(--padding-lg)
   xl: 32,     // var(--padding-xl)
-  "2xl": 48,    // var(--padding-2xl)
-  "3xl": 64,    // var(--padding-3xl)
+  "2xl": 48,  // var(--padding-2xl)
+  "3xl": 64,  // var(--padding-3xl)
 } as const;
 
 /**
@@ -41,11 +56,12 @@ export const PADDING_VALUES = {
 export const MARGIN_VALUES = {
   xs: 4,      // var(--margin-xs)
   sm: 8,      // var(--margin-sm)
-  md: 16,     // var(--margin-md)
+  md: 12,     // var(--margin-md)
+  base: 16,   // var(--margin-base)
   lg: 24,     // var(--margin-lg)
   xl: 32,     // var(--margin-xl)
-  "2xl": 48,    // var(--margin-2xl)
-  "3xl": 64,    // var(--margin-3xl)
+  "2xl": 48,  // var(--margin-2xl)
+  "3xl": 64,  // var(--margin-3xl)
 } as const;
 
 /**
@@ -54,10 +70,11 @@ export const MARGIN_VALUES = {
 export const GAP_VALUES = {
   xs: 4,      // var(--gap-xs)
   sm: 8,      // var(--gap-sm)
-  md: 16,     // var(--gap-md)
+  md: 12,     // var(--gap-md)
+  base: 16,   // var(--gap-base)
   lg: 24,     // var(--gap-lg)
   xl: 32,     // var(--gap-xl)
-  "2xl": 48,    // var(--gap-2xl)
+  "2xl": 48,  // var(--gap-2xl)
 } as const;
 
 /**
@@ -131,7 +148,7 @@ export function validateSpacing(value: number | string): boolean {
 /**
  * Converts a spacing value to CSS custom property
  * @param type - Type of spacing (margin, padding, gap)
- * @param size - Size of spacing (xs, sm, md, lg, xl, 2xl)
+ * @param size - Size of spacing (xs, sm, md, base, lg, xl, 2xl)
  * @returns CSS custom property string
  */
 export function getSpacingCSS(type: 'margin' | 'padding' | 'gap', size: keyof typeof SPACING_SCALE): string {
@@ -166,7 +183,7 @@ export function getSpacingRem(size: keyof typeof SPACING_SCALE): string {
 /**
  * Calculates spacing for responsive design
  * @param baseSize - Base spacing size
- * @param mobileReduction - How much to reduce on mobile (in grid units)
+ * @param mobileReduction - How much to reduce on mobile (in grid units of 4px)
  * @returns Object with base and mobile spacing values
  */
 export function getResponsiveSpacing(
@@ -174,7 +191,7 @@ export function getResponsiveSpacing(
   mobileReduction: number = 1
 ): { base: string; mobile: string } {
   const basePixels = SPACING_SCALE[baseSize];
-  const mobilePixels = Math.max(0, basePixels - (mobileReduction * 8));
+  const mobilePixels = Math.max(0, basePixels - (mobileReduction * 4));
   
   return {
     base: getSpacingCSS('padding', baseSize),
@@ -192,7 +209,7 @@ export function validateComponentSpacing(componentSpacing: Record<string, number
   
   Object.entries(componentSpacing).forEach(([key, value]) => {
     if (!validateSpacing(value)) {
-      errors.push(`Spacing value "${value}" for "${key}" is not on the 8px grid`);
+      errors.push(`Spacing value "${value}" for "${key}" is not on the grid`);
     }
   });
   
@@ -254,7 +271,7 @@ export function checkSpacingConsistency(components: Record<string, Record<string
 export function logSpacingDiagnostics(): void {
   console.group('🔧 TradeX Pro Spacing System Diagnostics');
   
-  console.log('📏 Spacing Scale (8px Grid):');
+  console.log('📏 Spacing Scale (4px/8px Grid):');
   Object.entries(SPACING_SCALE).forEach(([key, value]) => {
     console.log(`  ${key}: ${value}px (${value / 16}rem)`);
   });
@@ -318,7 +335,7 @@ export function getSpacingForContext(context: string, variant: string): string {
     },
   };
   
-  return contextMap[context]?.[variant] || 'var(--space-2)'; // Default to 16px
+  return contextMap[context]?.[variant] || 'var(--space-base)'; // Default to 16px
 }
 
 /**
