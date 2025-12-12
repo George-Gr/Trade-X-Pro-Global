@@ -11,10 +11,17 @@
 - [Color System](#color-system)
 - [Typography](#typography)
 - [Spacing & Layout](#spacing--layout)
-- [Components](#components)
-- [Interactions](#interactions--animations)
-- [Accessibility](#accessibility)
-- [Quality Standards](#quality-standards)
+- [Component Library](#component-library)
+  - [Button Component](#button-component)
+  - [Input Component](#input-component)
+  - [Card Component](#card-component)
+  - [Form Component](#form-component)
+- [Component Do's and Don'ts](#-component-dos-and-donts)
+- [shadcn-ui Customizations](#️-shadcn-ui-customizations)
+- [Interactions & Animations](#-interactions--animations)
+- [Accessibility](#-accessibility)
+- [Responsive Design](#-responsive-design)
+- [Quality Standards](#-quality-standards)
 
 ---
 
@@ -145,6 +152,78 @@ All form components must:
 - Support `aria-describedby` for help text
 - Support `aria-invalid` for errors
 - Have 44px minimum touch targets on mobile
+
+---
+
+## ✅ Component Do's and Don'ts
+
+### Button Do's ✅
+- ✅ Use `size="default"` for standard buttons (48px)
+- ✅ Use `variant="default"` for primary CTAs
+- ✅ Use `variant="destructive"` for delete/dangerous actions
+- ✅ Use `aria-label` for icon-only buttons
+- ✅ Provide visual feedback on hover/active states
+- ✅ Use loading state while processing
+
+### Button Don'ts ❌
+- ❌ Don't use multiple primary buttons in one section
+- ❌ Don't use colors other than defined variants
+- ❌ Don't remove focus rings for styling
+- ❌ Don't use `<button>` with `onClick` for navigation (use links)
+- ❌ Don't make buttons smaller than 32px height (xs)
+- ❌ Don't use inline styles instead of CSS classes
+
+### Input Do's ✅
+- ✅ Always provide a visible label
+- ✅ Use `mobileOptimized` for mobile forms
+- ✅ Show error state with `error` prop
+- ✅ Provide `aria-label` and `aria-describedby`
+- ✅ Use `keyboardType` to optimize mobile keyboards
+- ✅ Show help text with `description` prop
+- ✅ Use size="lg" for better touch targets
+
+### Input Don'ts ❌
+- ❌ Don't hide labels (use aria-label if needed)
+- ❌ Don't use placeholder as label
+- ❌ Don't use hardcoded colors for invalid state
+- ❌ Don't forget `type` attribute
+- ❌ Don't display errors without visual indicator
+- ❌ Don't make inputs smaller than 40px height
+
+### Card Do's ✅
+- ✅ Use elevation-1 for base content
+- ✅ Use elevation-2 for featured content
+- ✅ Use elevation-3 for modals only
+- ✅ Use variant-primary for main content
+- ✅ Combine elevation + variant appropriately
+- ✅ Use `interactive` for clickable cards
+- ✅ Keep card padding consistent (16-24px)
+
+### Card Don'ts ❌
+- ❌ Don't mix elevation levels in same context
+- ❌ Don't use elevation-3 for regular content
+- ❌ Don't remove border and shadow for "flat" effect
+- ❌ Don't use cards for layout structure
+- ❌ Don't make cards smaller than 200px width
+- ❌ Don't ignore dark mode colors
+
+### Form Do's ✅
+- ✅ Use FormField for each input
+- ✅ Always include FormLabel with `required` prop
+- ✅ Use FormDescription for helper text
+- ✅ Display FormMessage for errors
+- ✅ Use Zod/TypeScript for schema validation
+- ✅ Validate on blur/change, not just submit
+- ✅ Show loading state during submission
+
+### Form Don'ts ❌
+- ❌ Don't skip FormLabel (always include)
+- ❌ Don't use placeholder as label alternative
+- ❌ Don't hide error messages
+- ❌ Don't disable submit button without clear reason
+- ❌ Don't validate without showing errors
+- ❌ Don't use inline error styles (use FormMessage)
+- ❌ Don't forget `aria-invalid` on errors
 
 ---
 
@@ -297,6 +376,261 @@ className="text-base"                 // Text classes
 padding: 16px                         // 4/8px grid
 borderRadius: 8px                     // Standard values
 ```
+
+---
+
+## 🎨 Additional Components
+
+### Dialog Component
+- **Use for**: Confirmation dialogs, important alerts
+- **Elevation**: Card elevation-3
+- **Animation**: Fade + scale on open
+- **Accessibility**: Focus trap, escape to close
+- **Mobile**: Full width with padding
+
+### Alert Component
+- **Variants**: default, destructive, success, warning
+- **Use for**: Notifications, status messages
+- **Icon**: Auto-included per variant
+- **Dismissible**: Optional close button
+- **Role**: `alert` for screen readers
+
+### Badge Component
+- **Use for**: Status indicators, labels, tags
+- **Variants**: default, secondary, outline, destructive
+- **Sizes**: sm, default
+- **Interactive**: Optional onClick handler
+
+### Checkbox Component
+- **Size**: 20×20px (base)
+- **States**: checked, unchecked, indeterminate
+- **Accessibility**: Proper `aria-checked` attribute
+- **Dark mode**: Automatic adaptation
+
+### Dropdown Menu
+- **Elevation**: Card elevation-3
+- **Animation**: Fade + slide
+- **Keyboard**: Arrow keys, Enter to select, Escape to close
+- **Accessibility**: Role="menuitem", proper ARIA attributes
+
+### Tooltip
+- **Delay**: 200ms before show
+- **Duration**: 150ms animate
+- **Position**: Auto-adjust to viewport
+- **Mobile**: Tap to show, avoid on small screens
+- **Accessibility**: Optional `aria-label`, no tooltip for essential info
+
+### Loading States
+- **Spinner**: Animated circular icon
+- **Skeleton**: Placeholder content loader
+- **Progress**: For long operations
+- **Loading button**: Disabled with spinner icon
+
+---
+
+## 🔧 Common Usage Patterns
+
+### Form with Validation
+```tsx
+const schema = z.object({
+  email: z.string().email('Invalid email'),
+  message: z.string().min(10, 'Message too short'),
+})
+
+const form = useForm({ resolver: zodResolver(schema) })
+
+return (
+  <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <FormField
+        control={form.control}
+        name="email"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel required>Email</FormLabel>
+            <FormControl>
+              <Input type="email" placeholder="you@example.com" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <Button type="submit">Send</Button>
+    </form>
+  </Form>
+)
+```
+
+### Modal Dialog
+```tsx
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+
+<Dialog open={isOpen} onOpenChange={setIsOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirm Action</DialogTitle>
+    </DialogHeader>
+    <p>Are you sure you want to proceed?</p>
+    <DialogFooter>
+      <Button variant="ghost" onClick={() => setIsOpen(false)}>
+        Cancel
+      </Button>
+      <Button variant="destructive" onClick={handleConfirm}>
+        Delete
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Error Boundary with Card
+```tsx
+<Card elevation="1" variant="primary">
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <AlertCircle className="w-5 h-5 text-destructive" />
+      Error Occurred
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    <p className="text-sm text-muted-foreground">
+      Something went wrong. Please try again.
+    </p>
+  </CardContent>
+  <CardFooter>
+    <Button onClick={handleRetry}>Retry</Button>
+  </CardFooter>
+</Card>
+```
+
+### Empty State
+```tsx
+<Card elevation="1" className="text-center py-12">
+  <CardContent>
+    <InboxIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+    <CardTitle className="mb-2">No items yet</CardTitle>
+    <p className="text-sm text-muted-foreground mb-4">
+      You haven't created any items yet. Get started by creating your first one.
+    </p>
+    <Button onClick={handleCreate}>Create Item</Button>
+  </CardContent>
+</Card>
+```
+
+### List with Actions
+```tsx
+<div className="space-y-2">
+  {items.map(item => (
+    <Card key={item.id} elevation="1" interactive onClick={() => selectItem(item)}>
+      <div className="flex items-center justify-between p-4">
+        <div>
+          <h3 className="font-semibold">{item.name}</h3>
+          <p className="text-sm text-muted-foreground">{item.description}</p>
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="ghost" onClick={() => editItem(item)}>
+            Edit
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => deleteItem(item.id)}>
+            Delete
+          </Button>
+        </div>
+      </div>
+    </Card>
+  ))}
+</div>
+```
+
+### Mobile Optimized Form
+```tsx
+<div className="space-y-6">
+  <FormField
+    control={form.control}
+    name="phone"
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel required>Phone Number</FormLabel>
+        <FormControl>
+          <Input
+            type="tel"
+            keyboardType="tel"
+            mobileOptimized
+            placeholder="+1 (555) 000-0000"
+            {...field}
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+  <Button size="lg" className="w-full">
+    Continue
+  </Button>
+</div>
+```
+
+---
+
+## 📊 Color System in Components
+
+### Light Mode (Default)
+- **Primary**: `hsl(262 83% 58%)` - Purple, used for primary buttons, focus rings
+- **Secondary**: `hsl(217 91% 60%)` - Blue, used for secondary buttons
+- **Destructive**: `hsl(0 84% 60%)` - Red, used for delete buttons
+- **Success**: `hsl(160 84% 39%)` - Green, used for success states
+- **Warning**: `hsl(38 92% 50%)` - Amber, used for warning states
+- **Background**: `hsl(0 0% 100%)` - White, main background
+- **Foreground**: `hsl(222 47% 11%)` - Dark gray, main text
+
+### Dark Mode
+- All colors automatically adjust for dark backgrounds
+- Text contrast maintained at 4.5:1 (WCAG AA)
+- Backgrounds darken significantly
+- Borders and dividers increase in opacity
+- Shadows become more pronounced
+
+**Accessing colors in components:**
+```tsx
+// Use CSS variables, not hardcoded colors
+className="bg-primary"           // ✅ Correct
+className="text-destructive"     // ✅ Correct
+className="border-input"         // ✅ Correct
+className="bg-[#FF0000]"        // ❌ Wrong
+
+// In styles, use CSS variables
+background: hsl(var(--primary))        // ✅ Correct
+color: #FF0000                         // ❌ Wrong
+```
+
+---
+
+## 📱 Responsive Behavior
+
+### Breakpoints
+- **Mobile**: 320px - 639px
+- **Tablet**: 640px - 1023px
+- **Desktop**: 1024px+
+
+### Component Adjustments
+**Cards**
+- Mobile: `elevation-2` → `elevation-1`, no hover lift
+- Tablet: Normal elevation
+- Desktop: Normal elevation
+
+**Button**
+- Mobile: Minimum 44×44px, gap between buttons 8px
+- Tablet: Normal sizing
+- Desktop: Normal sizing
+
+**Input**
+- Mobile: Use `mobileOptimized` prop for 44px height
+- Tablet: Standard sizing
+- Desktop: Standard sizing
+
+**Forms**
+- Mobile: Stack fields vertically, full width
+- Tablet: Can use 2-column layout
+- Desktop: Can use 2-3 column layout
 
 ---
 
