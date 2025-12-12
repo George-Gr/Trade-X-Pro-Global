@@ -1,95 +1,151 @@
 /* Typography System - TradeX Pro Dashboard
  * Defines a comprehensive typography hierarchy with CSS custom properties
  * Ensures consistent font sizes, weights, and line heights across the application
+ * 
+ * Documentation: /docs/DESIGN_SYSTEM.md (Typography section)
+ * These values are the SINGLE SOURCE OF TRUTH for all typography in the application
+ * 
+ * Design Principles:
+ * - 8px/4px grid alignment for all sizes
+ * - Optical line heights optimized for readability
+ * - Negative letter spacing on large headings for better visual balance
+ * - WCAG AA compliant contrast ratios (4.5:1 minimum)
  */
 
 @layer base {
   :root {
-    /* Typography Scale - Font Sizes */
-    --text-xs: 0.75rem;      /* 12px */
-    --text-sm: 0.875rem;     /* 14px */
-    --text-base: 1rem;       /* 16px */
-    --text-lg: 1.125rem;     /* 18px */
-    --text-xl: 1.25rem;      /* 20px */
-    --text-2xl: 1.5rem;      /* 24px */
-    --text-3xl: 1.875rem;    /* 30px */
-    --text-4xl: 2.25rem;     /* 36px */
-    --text-5xl: 3rem;        /* 48px */
-    --text-6xl: 3.75rem;     /* 60px */
+    /* Typography Scale - Font Sizes
+     * Matches Tailwind's default scale for consistency
+     * Used across all typography components
+     */
+    --text-xs: 0.75rem;      /* 12px - Captions, helper text */
+    --text-sm: 0.875rem;     /* 14px - Body text (default) */
+    --text-base: 1rem;       /* 16px - Emphasized body */
+    --text-lg: 1.125rem;     /* 18px - H3, card titles */
+    --text-xl: 1.25rem;      /* 20px - Subheadings */
+    --text-2xl: 1.5rem;      /* 24px - H2, section headers */
+    --text-3xl: 1.875rem;    /* 30px - Display text */
+    --text-4xl: 2.25rem;     /* 36px - Large display */
+    --text-5xl: 3rem;        /* 48px - Hero text */
+    --text-6xl: 3.75rem;     /* 60px - Extra large display */
 
-    /* Font Weights */
-    --font-light: 300;
-    --font-normal: 400;
-    --font-medium: 500;
-    --font-semibold: 600;
-    --font-bold: 700;
-    --font-extrabold: 800;
+    /* Font Weights
+     * Inter font family supports 300-800 weights
+     * Use semantic names for consistency
+     */
+    --font-light: 300;       /* Rarely used, decorative only */
+    --font-normal: 400;      /* Default body text */
+    --font-medium: 500;      /* Labels, emphasized text */
+    --font-semibold: 600;    /* Headings H2-H4 */
+    --font-bold: 700;        /* H1, strong emphasis */
+    --font-extrabold: 800;   /* Display, hero text */
 
-    /* Line Heights */
-    --leading-tight: 1.2;
-    --leading-snug: 1.375;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.625;
-    --leading-loose: 1.875;
+    /* Line Heights
+     * Optimized for readability and vertical rhythm
+     * Tighter for headings, relaxed for body text
+     */
+    --leading-tight: 1.2;    /* 20% larger than font-size, for large headings */
+    --leading-snug: 1.375;   /* 37.5% larger, for medium headings */
+    --leading-normal: 1.5;   /* 50% larger, standard body text */
+    --leading-relaxed: 1.625; /* 62.5% larger, comfortable reading */
+    --leading-loose: 1.875;  /* 87.5% larger, spacious layouts */
 
-    /* Letter Spacing */
-    --tracking-tight: -0.02em;
-    --tracking-normal: 0;
-    --tracking-wide: 0.05em;
+    /* Letter Spacing
+     * Negative tracking on large headings improves visual density
+     * Positive tracking on small text improves legibility
+     */
+    --tracking-tight: -0.02em;  /* -2% for H1 */
+    --tracking-normal: 0;       /* Default, no adjustment */
+    --tracking-wide: 0.05em;    /* +5% for small caps, labels */
 
-    /* H1 - Page Titles (32px, weight 700) */
+    /* H1 - Page Titles
+     * Tailwind: text-2xl font-bold tracking-tighter
+     * Used for main page headings and primary focus
+     * Rationale: 32px is large enough for prominence without overwhelming UI
+     */
     --h1-size: 2rem;          /* 32px */
     --h1-weight: 700;         /* bold */
-    --h1-line-height: 1.2;    /* 38.4px */
-    --h1-letter-spacing: -0.02em;
+    --h1-line-height: 1.2;    /* 38.4px - tight for visual impact */
+    --h1-letter-spacing: -0.02em; /* Negative tracking for optical balance */
 
-    /* H2 - Section Headers (24px, weight 600) */
+    /* H2 - Section Headers
+     * Tailwind: text-2xl font-semibold tracking-tight
+     * Used for major section divisions
+     * Rationale: 24px creates clear hierarchy below H1
+     */
     --h2-size: 1.5rem;        /* 24px */
-    --h2-weight: 600;         /* semibold */
-    --h2-line-height: 1.33;   /* 32px */
-    --h2-letter-spacing: -0.01em;
+    --h2-weight: 600;         /* semibold - lighter than H1 */
+    --h2-line-height: 1.33;   /* 32px - aligns with 8px grid */
+    --h2-letter-spacing: -0.01em; /* Subtle negative tracking */
 
-    /* H3 - Card Titles (18px, weight 600) */
+    /* H3 - Card Titles
+     * Tailwind: text-lg font-semibold
+     * Used for card headers, subsection titles
+     * Rationale: 18px is perfect for dense UIs like dashboards
+     */
     --h3-size: 1.125rem;      /* 18px */
     --h3-weight: 600;         /* semibold */
-    --h3-line-height: 1.33;   /* 24px */
-    --h3-letter-spacing: 0;
+    --h3-line-height: 1.33;   /* 24px - aligns with 8px grid */
+    --h3-letter-spacing: 0;   /* No tracking adjustment needed */
 
-    /* H4 - Subsection Headers (16px, weight 600) */
+    /* H4 - Subsection Headers
+     * Tailwind: text-base font-semibold
+     * Used for minor section divisions
+     * Rationale: Same size as emphasized body, distinguished by weight
+     */
     --h4-size: 1rem;          /* 16px */
     --h4-weight: 600;         /* semibold */
-    --h4-line-height: 1.375;  /* 22px */
+    --h4-line-height: 1.375;  /* 22px - slightly relaxed */
     --h4-letter-spacing: 0;
 
-    /* Body - Regular Text (14px, weight 400) */
+    /* Body - Regular Text
+     * Tailwind: text-sm
+     * DEFAULT body text size for the application
+     * Rationale: 14px is optimal for data-dense dashboards, reduces scrolling
+     */
     --body-size: 0.875rem;    /* 14px */
     --body-weight: 400;       /* normal */
-    --body-line-height: 1.625; /* 22.75px */
+    --body-line-height: 1.625; /* 22.75px - comfortable reading */
     --body-letter-spacing: 0;
 
-    /* Small Text - Helper Text (12px, weight 400) */
+    /* Small Text - Helper Text
+     * Tailwind: text-xs
+     * Used for secondary information, help text
+     * Rationale: 12px minimum for accessibility (WCAG AA readable at 4.5:1 contrast)
+     */
     --small-size: 0.75rem;    /* 12px */
     --small-weight: 400;      /* normal */
-    --small-line-height: 1.5; /* 18px */
+    --small-line-height: 1.5; /* 18px - minimum readable line height */
     --small-letter-spacing: 0;
 
-    /* Label - Form Labels (14px, weight 500) */
+    /* Label - Form Labels
+     * Tailwind: text-sm font-medium
+     * Used for form fields, input labels
+     * Rationale: Medium weight distinguishes from body text
+     */
     --label-size: 0.875rem;   /* 14px */
     --label-weight: 500;      /* medium */
-    --label-line-height: 1.43; /* 20px */
+    --label-line-height: 1.43; /* 20px - compact for form layouts */
     --label-letter-spacing: 0;
 
-    /* Caption - Metadata/Timestamps (12px, weight 500) */
+    /* Caption - Metadata/Timestamps
+     * Tailwind: text-xs font-medium
+     * Used for timestamps, metadata, auxiliary info
+     * Rationale: Medium weight provides better legibility at small size
+     */
     --caption-size: 0.75rem;  /* 12px */
     --caption-weight: 500;    /* medium */
     --caption-line-height: 1.5; /* 18px */
     --caption-letter-spacing: 0;
 
-    /* Default Font Family */
-    --font-family-base: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    /* Display/Heading Font Family */
-    --font-family-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
-    --font-family-mono: 'Menlo', 'Courier New', monospace;
+    /* Font Families
+     * Primary: Inter - Excellent UI font with wide weight range
+     * Mono: JetBrains Mono - Optimized for numbers and code
+     * Note: Tailwind config defines these, these variables for CSS usage
+     */
+    --font-family-base: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-display: 'Inter', 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-family-mono: 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
 
     /* Transitions */
     --transition-typography: font-size 300ms ease-in-out;

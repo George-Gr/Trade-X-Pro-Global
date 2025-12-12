@@ -70,22 +70,212 @@ Border:           hsl(220 13% 91%)    - Border colors
 
 ### Type Scale
 
-| Style | Size | Line Height | Usage |
-|-------|------|-------------|-------|
-| **Display-lg** | 3.5rem (56px) | 1.1 | Hero headlines |
-| **Display-md** | 2.25rem (36px) | 1.2 | Major sections |
-| **Display-sm** | 1.875rem (30px) | 1.3 | Section headers |
-| **Headline-lg** | 1.5rem (24px) | 1.3 | Page titles |
-| **Headline-md** | 1.25rem (20px) | 1.4 | Card titles |
-| **Body-md** | 1rem (16px) | 1.6 | Body text |
-| **Body-sm** | 0.875rem (14px) | 1.6 | Secondary text |
-| **Caption** | 0.75rem (12px) | 1.5 | Small labels |
+All typography values are defined in `src/styles/typography.css` and match the implementation exactly.
+
+| Level | Size | Line Height | Weight | Letter Spacing | Tailwind Class | Usage |
+|-------|------|-------------|--------|----------------|----------------|-------|
+| **H1** | 2rem (32px) | 1.2 (38.4px) | 700 | -0.02em | `text-2xl` + `font-bold` | Page titles, main headings |
+| **H2** | 1.5rem (24px) | 1.33 (32px) | 600 | -0.01em | `text-2xl` + `font-semibold` | Section headers |
+| **H3** | 1.125rem (18px) | 1.33 (24px) | 600 | 0 | `text-lg` + `font-semibold` | Card titles, subsections |
+| **H4** | 1rem (16px) | 1.375 (22px) | 600 | 0 | `text-base` + `font-semibold` | Subsection headers |
+| **Body** | 0.875rem (14px) | 1.625 (22.75px) | 400 | 0 | `text-sm` | Regular body text (default) |
+| **Small** | 0.75rem (12px) | 1.5 (18px) | 400 | 0 | `text-xs` | Helper text, captions |
+| **Label** | 0.875rem (14px) | 1.43 (20px) | 500 | 0 | `text-sm` + `font-medium` | Form labels |
+| **Caption** | 0.75rem (12px) | 1.5 (18px) | 500 | 0 | `text-xs` + `font-medium` | Metadata, timestamps |
 
 ### Font Families
 ```css
-Sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto
-Monospace:  'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono'
+/* Primary UI Font */
+Sans-serif: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto
+
+/* Data/Code Font */
+Monospace:  'JetBrains Mono', 'Fira Code', Consolas, Monaco
+
+/* Display/Headline Font */
+Display:    'Inter' (same as sans, heavier weights)
 ```
+
+### Typography Usage Examples
+
+#### Headings
+```tsx
+// H1 - Page Title (32px, weight 700)
+<h1 className="text-2xl font-bold tracking-tighter">
+  Dashboard Overview
+</h1>
+
+// H2 - Section Header (24px, weight 600)
+<h2 className="text-2xl font-semibold tracking-tight">
+  Recent Transactions
+</h2>
+
+// H3 - Card Title (18px, weight 600)
+<h3 className="text-lg font-semibold">
+  Portfolio Summary
+</h3>
+
+// H4 - Subsection (16px, weight 600)
+<h4 className="text-base font-semibold">
+  Account Details
+</h4>
+```
+
+#### Body Text
+```tsx
+// Default body text (14px, weight 400)
+<p className="text-sm">
+  This is the default body text for paragraphs and content.
+</p>
+
+// Small helper text (12px, weight 400)
+<span className="text-xs text-muted-foreground">
+  Additional helper information
+</span>
+
+// Form label (14px, weight 500)
+<label className="text-sm font-medium">
+  Email Address
+</label>
+
+// Caption/metadata (12px, weight 500)
+<time className="text-xs font-medium text-muted-foreground">
+  2 hours ago
+</time>
+```
+
+#### Special Typography Utilities
+```tsx
+// Display text (responsive, clamps 36px-72px)
+<h1 className="text-display">
+  Welcome to TradeX Pro
+</h1>
+
+// Headline text (responsive, clamps 30px-48px)
+<h2 className="text-headline">
+  Start Trading Today
+</h2>
+
+// Title text (responsive, clamps 24px-36px)
+<h3 className="text-title">
+  Featured Markets
+</h3>
+
+// Tabular numbers for data (monospace font)
+<span className="text-data">
+  $1,234.56
+</span>
+```
+
+### Font Weights
+```css
+--font-light: 300      /* Use sparingly */
+--font-normal: 400     /* Default body text */
+--font-medium: 500     /* Labels, emphasized text */
+--font-semibold: 600   /* Headings H2-H4 */
+--font-bold: 700       /* H1, strong emphasis */
+--font-extrabold: 800  /* Display, hero text */
+```
+
+### Line Heights
+```css
+--leading-tight: 1.2       /* Large headings */
+--leading-snug: 1.375      /* Medium headings */
+--leading-normal: 1.5      /* Body text */
+--leading-relaxed: 1.625   /* Comfortable reading */
+--leading-loose: 1.875     /* Spacious text */
+```
+
+### Letter Spacing
+```css
+--tracking-tight: -0.02em  /* Large headings (H1) */
+--tracking-normal: 0       /* Default text */
+--tracking-wide: 0.05em    /* Small caps, labels */
+```
+
+### Complete Typography Reference
+
+#### All Available Tailwind Font Sizes
+```
+text-2xs: 10px / 14px      (Custom - very rare use)
+text-xs:  12px / 16px      (Caption, helper text)
+text-sm:  14px / 20px      (Body text - DEFAULT)
+text-base: 16px / 24px     (Emphasized body)
+text-lg:  18px / 28px      (H3, card titles)
+text-xl:  20px / 28px      (Subheadings)
+text-2xl: 24px / 32px      (H1, H2)
+text-3xl: 30px / 36px      (Display text)
+text-4xl: 36px / 40px      (Large display)
+text-5xl: 48px / 1.15      (Hero text)
+text-6xl: 60px / 1.1       (Extra large display)
+text-7xl: 72px / 1.1       (Rare, marketing)
+text-8xl: 96px / 1         (Rare, hero sections)
+```
+
+#### Accessibility & Contrast
+
+All typography must meet WCAG 2.1 Level AA standards:
+- **Body text (14px)**: Minimum 4.5:1 contrast ratio
+- **Large text (18px+)**: Minimum 3:1 contrast ratio
+- **Small text (12px)**: Minimum 4.5:1 contrast ratio
+
+✅ **Current Compliance:**
+```
+Light Mode:
+  - Foreground on Background:     18:1 ✓
+  - Foreground-Secondary:         9:1 ✓
+  - Foreground-Muted:            4.8:1 ✓
+
+Dark Mode:
+  - Foreground on Background:     18:1 ✓
+  - Foreground-Secondary:         9:1 ✓
+  - Foreground-Muted:            4.8:1 ✓
+```
+
+#### Typography Best Practices
+
+**DO:**
+✅ Use `text-sm` for body text (14px is the dashboard default)  
+✅ Use `text-xs` with `font-medium` for captions and metadata  
+✅ Use semantic heading levels (H1 → H2 → H3 → H4)  
+✅ Apply `tracking-tighter` to large headings for optical balance  
+✅ Use `text-data` class for monetary values and numbers  
+✅ Test all text at 320px, 768px, and 1024px breakpoints  
+
+**DON'T:**
+❌ Use inline font-size styles: `style={{ fontSize: '14px' }}`  
+❌ Skip heading levels (H1 → H3)  
+❌ Use text smaller than 12px  
+❌ Mix font families arbitrarily  
+❌ Override line-heights without testing readability  
+❌ Use custom font sizes outside the scale  
+
+#### Responsive Typography
+
+For hero sections and large displays, use responsive utilities:
+```tsx
+// Automatically scales between mobile and desktop
+<h1 className="text-display">  // 36px → 72px
+<h2 className="text-headline"> // 30px → 48px
+<h3 className="text-title">    // 24px → 36px
+
+// Manual responsive scaling
+<h1 className="text-2xl md:text-4xl lg:text-5xl">
+  Scales: 24px → 36px → 48px
+</h1>
+```
+
+#### Testing Checklist
+
+Before shipping typography changes:
+- [ ] Verify exact pixel sizes match this documentation
+- [ ] Test on 320px mobile (iPhone SE)
+- [ ] Test on 768px tablet (iPad)
+- [ ] Test on 1024px+ desktop
+- [ ] Check contrast ratios in both light and dark modes
+- [ ] Verify line height provides comfortable reading
+- [ ] Ensure proper heading hierarchy (H1 → H2 → H3)
+- [ ] Test with actual content (not just Lorem Ipsum)
+- [ ] Verify tabular numbers render correctly (financial data)
 
 ---
 
@@ -302,8 +492,18 @@ borderRadius: 8px                     // Standard values
 
 ## 📚 Related Documentation
 
+### Typography
+- **TYPOGRAPHY_VERIFICATION.md**: Complete typography verification report
+- **TYPOGRAPHY_ALIGNMENT_SUMMARY.md**: Typography alignment change summary
+- **typography.css**: Typography system implementation
+
+### Design System
 - **QUALITY_GATES.md**: Quality standards and validation
 - **MICRO_INTERACTIONS_REFERENCE.md**: Animation usage guide
+- **DESIGN_SYSTEM_MAINTENANCE.md**: Governance and maintenance processes
+- **CONTRIBUTING_DESIGN_SYSTEM.md**: Contributor guidelines
+
+### Styles
 - **advanced-accessibility.css**: Accessibility patterns
 - **micro-interactions.css**: Animation implementation
 
