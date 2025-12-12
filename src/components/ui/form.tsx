@@ -72,10 +72,14 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 );
 FormItem.displayName = "FormItem";
 
+interface FormLabelProps extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+  required?: boolean;
+}
+
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, children, ...props }, ref) => {
+  FormLabelProps
+>(({ className, children, required, ...props }, ref) => {
   const { error, formItemId } = useFormField();
 
   return (
@@ -83,7 +87,7 @@ const FormLabel = React.forwardRef<
       ref={ref} 
       className={cn(
         "text-sm font-medium",
-        error ? "text-destructive font-semibold" : "text-foreground", // FE-015: Enhanced error state
+        error ? "text-destructive font-semibold" : "text-foreground",
         "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         className
       )} 
@@ -91,7 +95,7 @@ const FormLabel = React.forwardRef<
       {...props}
     >
       {children}
-      {props.required && (
+      {required && (
         <span className="text-destructive ml-1" aria-label="required">*</span>
       )}
     </Label>

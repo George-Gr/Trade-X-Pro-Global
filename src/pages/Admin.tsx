@@ -3,11 +3,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TrendingUp, Users, FileCheck, Shield, LogOut, RefreshCw } from "lucide-react";
+import { TrendingUp, Users, FileCheck, Shield, LogOut, RefreshCw, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import UsersPanel from "@/components/admin/UsersPanel";
 import KYCPanel from "@/components/admin/KYCPanel";
 import RiskPanel from "@/components/admin/RiskPanel";
+import LeadsPanel from "@/components/admin/LeadsPanel";
 
 interface KYCDocument {
   id: string;
@@ -39,7 +40,7 @@ const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, isAdmin, signOut } = useAuth();
-  const [activePanel, setActivePanel] = useState("users");
+  const [activePanel, setActivePanel] = useState("leads");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -65,10 +66,11 @@ const Admin = () => {
 
   const getPanelIcon = (panel: string) => {
     switch (panel) {
+      case "leads": return <UserPlus className="h-4 w-4" />;
       case "users": return <Users className="h-4 w-4" />;
       case "kyc": return <FileCheck className="h-4 w-4" />;
       case "risk": return <Shield className="h-4 w-4" />;
-      default: return <Users className="h-4 w-4" />;
+      default: return <UserPlus className="h-4 w-4" />;
     }
   };
 
@@ -108,54 +110,71 @@ const Admin = () => {
         </div>
 
         {/* Navigation Panels */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card 
-            className={`p-6 cursor-pointer transition-all hover:shadow-lg ${
+            className={`p-4 cursor-pointer transition-all hover:shadow-lg ${
+              activePanel === "leads" ? "ring-2 ring-primary" : "hover:shadow-md"
+            }`}
+            onClick={() => setActivePanel("leads")}
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
+                <UserPlus className="h-5 w-5 text-purple-500" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Leads</h3>
+                <p className="text-xs text-muted-foreground">New registrations</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card 
+            className={`p-4 cursor-pointer transition-all hover:shadow-lg ${
               activePanel === "users" ? "ring-2 ring-primary" : "hover:shadow-md"
             }`}
             onClick={() => setActivePanel("users")}
           >
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
                 <Users className="h-5 w-5 text-blue-500" />
               </div>
               <div>
-                <h3 className="font-semibold">User Management</h3>
-                <p className="text-sm text-muted-foreground">Manage user accounts</p>
+                <h3 className="font-semibold text-sm">Users</h3>
+                <p className="text-xs text-muted-foreground">Manage accounts</p>
               </div>
             </div>
           </Card>
 
           <Card 
-            className={`p-6 cursor-pointer transition-all hover:shadow-lg ${
+            className={`p-4 cursor-pointer transition-all hover:shadow-lg ${
               activePanel === "kyc" ? "ring-2 ring-primary" : "hover:shadow-md"
             }`}
             onClick={() => setActivePanel("kyc")}
           >
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 bg-green-500/10 rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-green-500/10 rounded-lg flex items-center justify-center">
                 <FileCheck className="h-5 w-5 text-green-500" />
               </div>
               <div>
-                <h3 className="font-semibold">KYC Verification</h3>
-                <p className="text-sm text-muted-foreground">Review document submissions</p>
+                <h3 className="font-semibold text-sm">KYC</h3>
+                <p className="text-xs text-muted-foreground">Verify documents</p>
               </div>
             </div>
           </Card>
 
           <Card 
-            className={`p-6 cursor-pointer transition-all hover:shadow-lg ${
+            className={`p-4 cursor-pointer transition-all hover:shadow-lg ${
               activePanel === "risk" ? "ring-2 ring-primary" : "hover:shadow-md"
             }`}
             onClick={() => setActivePanel("risk")}
           >
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 bg-orange-500/10 rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-orange-500/10 rounded-lg flex items-center justify-center">
                 <Shield className="h-5 w-5 text-orange-500" />
               </div>
               <div>
-                <h3 className="font-semibold">Risk Monitoring</h3>
-                <p className="text-sm text-muted-foreground">Monitor system risks</p>
+                <h3 className="font-semibold text-sm">Risk</h3>
+                <p className="text-xs text-muted-foreground">Monitor risks</p>
               </div>
             </div>
           </Card>
@@ -171,6 +190,7 @@ const Admin = () => {
               <div>
                 <h2 className="text-2xl font-bold capitalize">{activePanel} Management</h2>
                 <p className="text-muted-foreground">
+                  {activePanel === "leads" && "Manage new registrations, fund accounts, and review KYC"}
                   {activePanel === "users" && "Manage user accounts and virtual funding"}
                   {activePanel === "kyc" && "Review and approve KYC document submissions"}
                   {activePanel === "risk" && "Monitor and resolve system risk events"}
@@ -179,6 +199,10 @@ const Admin = () => {
             </div>
 
             {/* Panel Content */}
+            {activePanel === "leads" && (
+              <LeadsPanel refreshTrigger={refreshTrigger} />
+            )}
+
             {activePanel === "users" && (
               <UsersPanel refreshTrigger={refreshTrigger} />
             )}
