@@ -5,7 +5,7 @@ import { WithdrawalForm } from '../../wallet/WithdrawalForm';
 import * as ReactDOM from 'react-dom';
 
 // Mock Supabase
-vi.mock('@/integrations/supabase/client', () => ({
+vi.mock('@/lib/supabaseBrowserClient', () => ({
   supabase: {
     from: vi.fn(),
     functions: {
