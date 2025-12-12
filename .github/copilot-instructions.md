@@ -1,81 +1,192 @@
 # AI Coding Agent Instructions for TradePro v10
 
-**Version:** 2.0 (Updated Nov 2025)  
+**Version:** 3.0 (Updated Dec 2025)  
 **Purpose:** Guide AI agents to be immediately productive on this CFD trading simulation platform
 
 ---
 
-## Project Overview & Context
+## Project at a Glance
 
-**TradePro v10** is a **broker-independent CFD trading simulation platform** combining:
-- Multi-asset trading (forex, stocks, commodities, crypto, indices, ETFs, bonds)
-- Paper trading with unlimited virtual capital
-- Social copy trading with verified trader network
-- KYC/AML verification with admin oversight
-- Risk management (margin calls, liquidation, position monitoring)
-- Enterprise compliance (GDPR, CCPA, AML)
+**TradePro v10** is a broker-independent CFD trading simulation platform with multi-asset trading (forex, stocks, crypto, indices), paper trading, social copy trading, KYC/AML verification, and risk management—all unified in one transparent platform.
 
-**Core Value:** Transparent, unlimited practice trading + community learning (no demo expiry, no forced resets)
-
-### Tech Stack
-- **Frontend**: React 18 + TypeScript + Vite (intentionally loose types: `noImplicitAny: false`, `strictNullChecks: false`)
-- **UI**: shadcn-ui (Radix UI + Tailwind CSS v4 with CSS variables)
-- **Backend/Database**: Supabase (PostgreSQL, Auth, Realtime, Edge Functions)
-- **State Management**: React Context (auth, notifications) + React Query (server state) + React Router v6
-- **Charts**: TradingView Lightweight Charts + Recharts
-- **Forms**: React Hook Form + Zod validation
-- **Build**: Vite with SWC + bundle analysis (`ANALYZE=true npm run build`)
+**Tech:** React 18 + TypeScript (loose types) + Vite | shadcn-ui + Tailwind CSS v4 | Supabase (Postgres, Auth, Realtime) | React Router v6 + React Query | React Hook Form + Zod
 
 ---
 
-## Critical Setup Before Coding
+## Before Any Task: Essential Context
 
-# Copilot / AI agent quick guide — TradePro v10
+1. **Read PRD.md** for feature requirements and scope
+2. **Check `project_resources/rules_and_guidelines/AGENT.md`** for comprehensive deep-dive rules (source of truth)
+3. **Environment:** Create `.env.local` with `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`
+4. **Critical scripts:** 
+   - `npm run dev` (dev server), `npm run lint`, `npm run test`
+   - `npm run supabase:pull` (regenerate types after schema changes)
+   - `npm run supabase:push` (deploy migrations)
 
-Purpose: short, actionable rules to get an AI coding agent productive in this repo.
+---
 
-## Quick start
-- Required env: create `.env.local` with `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
-- Dev & checks: `npm run dev`, `npm run lint`, `npm run test`, `npm run test:e2e`.
-- Supabase workflows: `npm run supabase:pull` (regenerate types), `npm run supabase:push` (migrations).
+## Architecture Essentials
 
-## Architecture (high level)
-- Frontend: React 18 + TypeScript + Vite; UI via shadcn-ui + Tailwind.
-- Backend: Supabase (Postgres, Auth, Realtime, Edge Functions). Auto-generated types live in `src/integrations/supabase/`.
-- Organization: feature-based (`src/components/`, `src/lib/`, `src/hooks/`, `src/pages/`). Business logic lives in `src/lib/` (pure functions).
+### Directory Structure (Feature-Based)
+```
+src/
+├── components/{auth,trading,kyc,dashboard}/  # UI only
+├── hooks/                                     # Custom hooks + Realtime subscriptions
+├── lib/{trading,kyc,risk}/                   # Business logic (pure functions, tests)
+├── contexts/                                  # Global state (auth, notifications, theme)
+├── pages/                                     # Route pages
+├── types/                                     # Type definitions
+└── integrations/supabase/                    # Auto-generated DB client & types
+```
 
-## Critical patterns you must follow
-- Realtime: always unsubscribe channels in `useEffect` cleanup. See `src/hooks/useRealtimePositions.tsx` for the canonical pattern.
-- Supabase: import client from `@/integrations/supabase/client` and never edit `src/integrations/supabase/types.ts` manually — run `npm run supabase:pull` when schema changes.
-- Forms: schema-first with Zod + `react-hook-form` and `zodResolver`.
+### Data Flow
+**User Input → Component (Form validation with Zod) → Business Logic (lib/) → Supabase API → Realtime updates → State → UI**
 
-## Conventions to follow
-- Use `@/` path aliases for imports.
-- Prefer `import type` for types.
-- Keep component files < 300 lines; extract hooks for shared side effects.
-- Keep UI code in components, business logic in `src/lib/` (pure functions with unit tests in `__tests__`).
+### State Management Layers (Use the Right One)
+- **Local component state** (`useState`): UI toggles, temporary form data
+- **Custom hooks** (`useAuth`, `usePriceStream`): Cross-component state with side effects
+- **Context** (`AuthContext`, `NotificationContext`): App-wide state (rarely changes)
+- **React Query**: Server state (caching, refetch on focus)
+- **Supabase Realtime**: Live data (positions, prices)
 
-## Key files to check before coding
-- `PRD.md` — feature requirements.
-- `project_resources/rules_and_guidelines/AGENT.md` — long-form agent guidance (source of truth for deep rules).
-- `src/integrations/supabase/client.ts` and `src/integrations/supabase/types.ts` — DB client & types.
-- `src/hooks/` — canonical realtime and subscription hooks (avoid creating new raw subscriptions).
-- `src/lib/trading/` — trading engine utilities and tests.
+---
 
-## Safety & blockers
-- Do not hardcode secrets or API URLs.
-- Add RLS policies for new tables; without them queries may fail silently (`supabase/migrations/`).
-- Run `npm run lint` before creating PRs; tests required for business logic changes.
+## Critical Patterns (MUST Follow)
 
-## Examples (copyable snippets)
-- Unsubscribe pattern (use this exactly):
-  - See `src/hooks/useRealtimePositions.tsx` for implementation and cleanup via `supabase.removeChannel(...)`.
-- Regenerate supabase types:
-  ```bash
-  npm run supabase:pull
-  ```
+### 1. Realtime Subscriptions — Prevent Memory Leaks
+```typescript
+// ✅ CORRECT: Always unsubscribe in cleanup
+useEffect(() => {
+  const subscription = supabase
+    .channel(`positions:${userId}`)
+    .on('postgres_changes', { ... }, handleUpdate)
+    .subscribe();
+  
+  return () => subscription.unsubscribe();  // CRITICAL
+}, [userId]);
+```
+**See:** `src/hooks/useRealtimePositions.tsx` for canonical pattern.
 
-## When to ask for help
-- If the feature is not described in `PRD.md`, touches DB schema, or affects multiple domains (trading, KYC, risk), ask a human reviewer early.
+### 2. Supabase Client Import
+```typescript
+// ✅ CORRECT
+import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 
-If anything here is unclear or you want me to expand examples (tests, component stub, migration template), tell me which area to expand.
+// ❌ NEVER edit types.ts manually — run `npm run supabase:pull`
+```
+
+### 3. Forms — Schema-First Validation
+```typescript
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const schema = z.object({ 
+  amount: z.number().positive('Must be positive') 
+});
+
+const { register, formState: { errors } } = useForm({
+  resolver: zodResolver(schema),
+});
+```
+
+### 4. Business Logic — Separation of Concerns
+- **Components:** UI rendering + user interaction only
+- **Hooks:** State management + side effects
+- **`src/lib/`:** Pure business functions with unit tests in `__tests__/`
+- **Never mix layers** — keep components < 300 lines
+
+---
+
+## Code Quality Standards
+
+**TypeScript**
+- Use `@/` path aliases for all imports
+- Prefer `import type` for type-only imports
+- Avoid `any` type; use `unknown` and narrow
+- No `@ts-ignore` comments
+
+**React**
+- Functional components only
+- Destructure props with type annotations
+- Include JSDoc for exported functions
+- Memoize only after profiling (not reflexively)
+
+**Database**
+- **RLS policies required** for all new tables (silent failures without them)
+- Auto-generated types live in `src/integrations/supabase/types.ts`
+- Never manually edit auto-generated files
+
+**Error Handling**
+- All async operations in try-catch
+- Validate user input with Zod
+- Sanitize user-generated content with DOMPurify
+- No hardcoded secrets or URLs
+- Log security events to audit trails
+
+---
+
+## Common Implementation Tasks
+
+### Adding a Database Table
+1. Create migration in `supabase/migrations/`
+2. Define schema with proper column types
+3. **Add RLS policies** (CRITICAL!)
+4. Run `npm run supabase:pull` to regenerate types
+5. Create hooks in `src/hooks/` for queries
+6. Write tests
+
+### Implementing a Feature
+1. Check `PRD.md` for requirements
+2. Search codebase for similar features
+3. Design types first
+4. Implement business logic with tests
+5. Build UI components with validation
+6. Add Realtime subscriptions if needed
+
+### Fixing a Bug
+1. Reproduce with minimal example
+2. Check error logs + type definitions
+3. Write test that fails (TDD)
+4. Fix implementation
+5. Verify test passes
+6. Search for similar bugs
+
+---
+
+## Key Files & Examples
+
+| Task | File | Purpose |
+|------|------|---------|
+| Auth | `src/hooks/useAuth.tsx` | User state, login/logout |
+| Trading | `src/lib/trading/` | Order matching, margin, P&L calculations |
+| Realtime | `src/hooks/useRealtimePositions.tsx` | Live position updates (canonical pattern) |
+| Risk | `src/lib/risk/` | Risk metrics, margin call detection |
+| Components | `src/components/ui/` | shadcn-ui primitives |
+| Types | `src/types/` | Custom type definitions |
+
+---
+
+## Common Blockers & Solutions
+
+| Problem | Solution |
+|---------|----------|
+| Supabase queries fail silently | Check RLS policies in migration files |
+| Memory leaks in Realtime | Always call `subscription.unsubscribe()` in `useEffect` cleanup |
+| Type errors after DB schema change | Run `npm run supabase:pull` |
+| Build bloat | Use `ANALYZE=true npm run build` to inspect bundle |
+| Stale auth state | Use `useAuth()` hook, don't cache manually |
+| Form validation fails | Verify Zod schema matches database column types |
+
+---
+
+## When to Ask for Help
+
+- Feature not described in `PRD.md`
+- Touches database schema or migrations
+- Affects multiple domains (trading, KYC, risk)
+- Requires architectural changes
+- Unclear RLS policy requirements
+
+**Source of truth for deep rules:** `project_resources/rules_and_guidelines/AGENT.md`
