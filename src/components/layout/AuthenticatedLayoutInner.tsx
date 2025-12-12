@@ -82,10 +82,15 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
 
       {/* Main Content Area - accounts for fixed sidebar on desktop with dynamic margin based on sidebar state */}
        <div
-        className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
-          isMobile ? '' : state === 'expanded' ? 'md:ml-64' : 'md:ml-16'
-        }`}
-      >
+         className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
+           isMobile ? '' : state === 'expanded' ? 'md:ml-64' : 'md:ml-16'
+         }`}
+         style={{
+           marginLeft: !isMobile && state === 'expanded' ? 'var(--sidebar-width, 16rem)' :
+                       !isMobile && state === 'collapsed' ? 'var(--sidebar-width-icon, 4rem)' :
+                       undefined
+         }}
+       >
         {/* Demo Mode Banner */}
         <DemoModeIndicator variant="banner" />
         
