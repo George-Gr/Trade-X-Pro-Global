@@ -74,3 +74,6 @@ verify_jwt = true
 
 [functions.send-critical-email]
 verify_jwt = false
+
+[functions.create-user-with-lead]
+verify_jwt = false
