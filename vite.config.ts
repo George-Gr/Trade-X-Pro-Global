@@ -258,6 +258,9 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('@tanstack')) return 'vendor-query';
             if (id.includes('@sentry')) return 'vendor-monitoring';
             if (id.includes('date-fns')) return 'vendor-date';
+            if (id.includes('lucide-react')) return 'vendor-icons';
+            if (id.includes('react')) return 'vendor-react';
+            if (id.includes('react-dom')) return 'vendor-react-dom';
           }
         },
         // Ensure chunks are optimized for caching
@@ -275,5 +278,14 @@ export default defineConfig(({ mode }) => ({
 
     // Source map configuration for Sentry
     sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : true,
+
+    // Clear dist directory before build to ensure fresh builds
+    emptyOutDir: true,
+
+    // Prevent chunk file cache issues by using content-based hashing
+    preserveEntrySignatures: 'exports-only',
+
+    // Ensure consistent asset processing
+    assetsInlineLimit: 0, // Inline assets as separate files
   },
 }));
