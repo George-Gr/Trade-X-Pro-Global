@@ -307,6 +307,63 @@ export type Database = {
           },
         ]
       }
+      leads: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string
+          financial_capability: string
+          first_name: string
+          id: string
+          last_name: string
+          lead_number: string
+          occupation: string
+          phone: string | null
+          reason_for_joining: string
+          status: string
+          trading_experience: string
+          trading_goals: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email: string
+          financial_capability: string
+          first_name: string
+          id?: string
+          last_name: string
+          lead_number: string
+          occupation: string
+          phone?: string | null
+          reason_for_joining: string
+          status?: string
+          trading_experience: string
+          trading_goals: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string
+          financial_capability?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          lead_number?: string
+          occupation?: string
+          phone?: string | null
+          reason_for_joining?: string
+          status?: string
+          trading_experience?: string
+          trading_goals?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ledger: {
         Row: {
           amount: number
@@ -1290,6 +1347,7 @@ export type Database = {
         }
         Returns: Json
       }
+      generate_lead_number: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
