@@ -184,7 +184,7 @@
 /* Feature Cards - Level 2 elevation with primary background */
 .card-feature {
   /* Apply to feature highlight cards */
-  padding: 1.5rem;
+  padding: var(--space-lg);
   border-left: 4px solid hsl(var(--primary));
   background: hsl(var(--card));
 }
@@ -192,7 +192,7 @@
 /* Modal Cards - Level 3 elevation with primary background */
 .card-modal {
   /* Apply to floating modals and dialogs */
-  padding: 2rem;
+  padding: var(--space-xl);
   border-radius: var(--radius);
   background: hsl(var(--card));
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);

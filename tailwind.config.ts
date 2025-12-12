@@ -33,15 +33,19 @@ const config: Config = {
       
       /* === 8-POINT GRID SPACING SYSTEM === */
       spacing: {
-        'xs': '4px',    // 0.5 units - Icon to text
-        'sm': '8px',    // 1 unit - Tight groupings
-        'md': '16px',   // 2 units - Related elements
-        'lg': '24px',   // 3 units - Section internal spacing
-        'xl': '32px',   // 4 units - Between sections (mobile)
-        '2xl': '48px',  // 6 units - Between sections (tablet)
-        '3xl': '64px',  // 8 units - Between sections (desktop)
-        '4xl': '96px',  // 12 units - Major section breaks
-        '5xl': '128px', // 16 units - Hero to content transition
+        'xs': '4px',    // 4px
+        'sm': '8px',    // 8px
+        'md': '12px',   // 12px
+        'base': '16px', // 16px
+        'lg': '24px',   // 24px
+        'xl': '32px',   // 32px
+        '2xl': '48px',  // 48px
+        '3xl': '56px',  // 56px
+        '4xl': '64px',  // 64px
+        '5xl': '80px',  // 80px
+        '6xl': '96px',  // 96px
+        
+        // Legacy values - to be refactored
         '4.5': '1.125rem',  // 18px
         '13': '3.25rem',    // 52px
         '15': '3.75rem',    // 60px
