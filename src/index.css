@@ -245,6 +245,11 @@
     --animation-loading-slow: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     --animation-loading-fast: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     --animation-shimmer: shimmer 2s infinite;
+
+    /* === SIDEBAR WIDTH TOKENS === */
+    /* Consistent sidebar width management for design system */
+    --sidebar-width: 16rem;
+    --sidebar-width-icon: 4rem;
   }
 
   .dark {
@@ -401,6 +406,11 @@
     --contrast-auto-high: 210 40% 95%;
     --contrast-auto-bg-high: 240 6% 10%;
     --transition-duration: 200ms;
+
+    /* === SIDEBAR WIDTH TOKENS === */
+    /* Consistent sidebar width management for design system - Dark mode */
+    --sidebar-width: 16rem;
+    --sidebar-width-icon: 4rem;
   }
 }
 
