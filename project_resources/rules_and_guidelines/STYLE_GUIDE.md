@@ -1,6 +1,6 @@
 # Style Guide - TradePro v10
 
-A comprehensive guide to code standards, conventions, and best practices for the TradePro v10 codebase.
+A comprehensive guide to code standards, conventions, and best practices for the TradeX Pro codebase.
 
 ## Table of Contents
 
@@ -1092,6 +1092,179 @@ export const TradeForm: React.FC = () => {
 
 ---
 
+## Security & Data Protection
+
+**IMPORTANT:** Read [SECURITY.md](SECURITY.md) before implementing any feature.
+
+### Secrets Management
+
+```typescript
+// ✅ Good: Use environment variables only
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+// ❌ Bad: Hardcoded secrets (NEVER do this!)
+const apiKey = 'sk_live_abc123...';  // EXPOSED IN CODE!
+const secret = 'super_secret_key';   // EXPOSED IN GITHUB!
+
+// ❌ Bad: Secrets in localStorage
+localStorage.setItem('apiKey', 'sk_...');  // Accessible to XSS
+
+// ❌ Bad: Secrets in comments
+// Bearer token: eyJhbGc...  // EXPOSED IN HISTORY!
+```
+
+### Input Validation
+
+```typescript
+import { z } from 'zod';
+
+// ✅ Good: Validate all user input
+const createOrderSchema = z.object({
+  symbol: z.string().min(1).max(10),
+  quantity: z.number().positive('Must be positive'),
+  price: z.number().positive('Must be positive'),
+  leverage: z.number().min(1).max(50),
+});
+
+const handleSubmit = (data: unknown) => {
+  const result = createOrderSchema.safeParse(data);
+  if (!result.success) {
+    toast({
+      title: 'Validation Error',
+      description: result.error.errors[0].message,
+      variant: 'destructive',
+    });
+    return;
+  }
+  // Safe to use: result.data
+};
+
+// ❌ Bad: No validation
+const handleSubmit = (data: any) => {
+  createOrder(data.symbol, data.quantity, data.price);  // Untrusted!
+};
+```
+
+### Sensitive Data Logging
+
+```typescript
+// ✅ Good: Never log sensitive data
+try {
+  await processPayment(order);
+} catch (error) {
+  logger.error('Payment processing failed');
+  // Generic message, no sensitive details
+}
+
+// ✅ Good: Log security events separately
+if (loginAttempts > 5) {
+  auditLog.warn(`Suspicious activity: ${userId} from ${ip}`);
+}
+
+// ❌ Bad: Logging sensitive data
+logger.error('Payment failed:', { cardNumber, cvv, expiryDate, error });
+logger.debug('User login:', { email, password, token });  // Exposed!
+
+// ❌ Bad: PII in console
+console.log('User data:', { name, email, phoneNumber, ssn });
+```
+
+### XSS Prevention
+
+```typescript
+import DOMPurify from 'dompurify';
+
+// ✅ Good: React escapes by default
+<div>{userInput}</div>  // Safe - automatically escaped
+
+// ✅ Good: Sanitize HTML content
+const sanitized = DOMPurify.sanitize(userHTML);
+<div dangerouslySetInnerHTML={{ __html: sanitized }} />
+
+// ❌ Bad: Unsafe HTML rendering
+<div dangerouslySetInnerHTML={{ __html: userInput }} />  // XSS!
+```
+
+### Row-Level Security (RLS)
+
+```typescript
+// ✅ Good: RLS protects data at database level
+// Database enforces:
+// - Users see only their own data
+// - Admins can see everything
+// - No client-side workarounds
+
+const { data, error } = await supabase
+  .from('positions')
+  .select('*');  // RLS filters automatically
+
+// ❌ Bad: Relying on client-side filtering only
+const allData = await supabase.from('positions').select('*');
+const userFilter = allData.filter(p => p.user_id === userId);  // Bypassed!
+```
+
+### Webhook Verification
+
+```typescript
+// ✅ Good: Always verify webhook signature
+import { createHmac } from 'crypto';
+
+export const verifyWebhookSignature = (
+  payload: string,
+  signature: string,
+  secret: string
+): boolean => {
+  const computed = createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+  return computed === signature;
+};
+
+const handleWebhook = async (req: Request) => {
+  const signature = req.headers.get('x-signature');
+  const body = await req.text();
+  
+  if (!verifyWebhookSignature(body, signature, process.env.WEBHOOK_SECRET)) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+  // Safe to process
+};
+
+// ❌ Bad: No verification
+const handleWebhook = (req: Request) => {
+  const data = await req.json();
+  processPayment(data);  // Unverified data!
+};
+```
+
+### Authentication Best Practices
+
+```typescript
+// ✅ Good: Use React context for auth state
+const { user, isLoading } = useAuth();
+
+// ✅ Good: Protect routes
+if (!user) {
+  return <Redirect to="/login" />;
+}
+
+// ✅ Good: Clear session on logout
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+  navigate('/login');
+  // Session cleared
+};
+
+// ❌ Bad: Caching auth in localStorage
+localStorage.setItem('userId', user.id);  // Can be manipulated!
+
+// ❌ Bad: No session expiry
+// Sessions expire after 24 hours automatically via Supabase
+```
+
+---
+
 ## Supabase Integration
 
 ### Client Import
@@ -1948,31 +2121,43 @@ export const useRealtimePositions = (userId: string | undefined) => {
 
 ---
 
-## Summary Checklist
+## References & Related Documentation
 
-Before submitting code:
+**TradePro Documentation (READ IN ORDER):**
+1. [SECURITY.md](SECURITY.md) - **START HERE** - Security standards & compliance
+2. [ARCHITECTURE_DECISIONS.md](ARCHITECTURE_DECISIONS.md) - Technical design decisions (9 ADRs)
+3. [AGENT.md](AGENT.md) - AI agent guidelines and best practices
+4. [ACCESSIBILITY_STANDARDS.md](ACCESSIBILITY_STANDARDS.md) - WCAG 2.1 AA compliance
+5. [DESIGN_SYSTEM.md](../design_system_and_typography/DESIGN_SYSTEM.md) - Design tokens and system
+6. [COMPONENT_API.md](../components/COMPONENT_API.md) - Component specifications
+7. [CONTRIBUTING_DESIGN_SYSTEM.md](../design_system_and_typography/CONTRIBUTING_DESIGN_SYSTEM.md) - Contribution guidelines
 
-- [ ] **TypeScript**: Used proper types, avoid `any` when possible
-- [ ] **Components**: Functional, <300 lines, single responsibility
-- [ ] **Props**: Destructured with types in signature
-- [ ] **Naming**: PascalCase components, camelCase functions, UPPER_SNAKE_CASE constants
-- [ ] **Styling**: Used Tailwind utilities, CSS variables for colors
-- [ ] **Forms**: Zod schema first, React Hook Form integration
-- [ ] **Supabase**: Used correct import paths, types from auto-generated file
-- [ ] **Realtime**: Always unsubscribe in cleanup
-- [ ] **Error Handling**: Try-catch wraps async operations, toast notifications for UI
-- [ ] **Testing**: Tests co-located in `__tests__/`, proper mocking
-- [ ] **Performance**: No unnecessary memoization, proper code splitting
-- [ ] **Accessibility**: Semantic HTML, ARIA labels where needed
-- [ ] **Documentation**: JSDoc for components, clear variable names
+**Project Overview:**
+- [README.md](/README.md) - Project overview and quick links
+- [PRD.md](/PRD.md) - Product requirements and features
+- [QUICK_START.md](../../docs/PRIMARY/QUICK_START.md) - 30-minute onboarding
+- [DOCUMENTATION_MAP.md](../../docs/PRIMARY/DOCUMENTATION_MAP.md) - Find docs by topic
+
+**External Resources:**
+- [Tailwind CSS v4](https://tailwindcss.com/docs)
+- [React 18 Docs](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Supabase Documentation](https://supabase.com/docs)
+- [Zod Validation](https://zod.dev/)
+- [React Hook Form](https://react-hook-form.com/)
+- [shadcn-ui Components](https://ui.shadcn.com/)
+- [OWASP Security](https://owasp.org/)
+
+**Configuration Files:**
+- `tsconfig.json` - TypeScript (intentionally loose)
+- `tailwind.config.ts` - Design system tokens
+- `vite.config.ts` - Build configuration
+- `eslint.config.js` - Code quality rules
+- `vitest.config.ts` - Testing setup
 
 ---
 
-## References
-
-- **Main Codebase Docs**: `/workspaces/Trade-X-Pro-Global/.github/copilot-instructions.md`
-- **Tailwind Config**: `/workspaces/Trade-X-Pro-Global/tailwind.config.ts`
-- **Vite Config**: `/workspaces/Trade-X-Pro-Global/vite.config.ts`
-- **TypeScript Config**: `/workspaces/Trade-X-Pro-Global/tsconfig.json`
-- **ESLint Config**: `/workspaces/Trade-X-Pro-Global/eslint.config.js`
-- **Testing Setup**: `/workspaces/Trade-X-Pro-Global/vitest.config.ts`
+**Document Version:** 2.0  
+**Last Updated:** December 12, 2025  
+**Maintained By:** Development Team  
+**Status:** Complete & Consistent ✅

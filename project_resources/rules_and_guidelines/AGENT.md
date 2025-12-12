@@ -53,35 +53,28 @@ Comprehensive guidelines for AI coding agents (Copilot, Claude, etc.) working on
 - **State**: React Context + React Query + React Router v6
 - **Forms**: React Hook Form + Zod validation
 - **Charts**: TradingView Lightweight Charts + Recharts
+- **CSS**: Tailwind CSS v4 with CSS variables for theming
 
-### Backend/Database
+### Backend & Database
 - **Platform**: Supabase (managed PostgreSQL)
-- **Auth**: Supabase Auth (JWT, magic links, OAuth)
+- **Auth**: Supabase Auth (JWT, magic links, OAuth, MFA)
 - **Realtime**: Supabase Realtime (PostgreSQL subscriptions)
 - **Edge Functions**: TypeScript functions on Supabase edge
+- **Database**: PostgreSQL with Row-Level Security (RLS)
 
-### Key Dependencies
-```json
-{
-  "react": "18.x",
-  "typescript": "5.x",
-  "vite": "5.x",
-  "@supabase/supabase-js": "2.x",
-  "react-hook-form": "7.x",
-  "zod": "3.x",
-  "@tanstack/react-query": "5.x",
-  "tailwindcss": "4.x",
-  "lightweight-charts": "4.x",
-  "recharts": "2.x"
-}
-```
+### Testing & Quality
+- **Unit Tests**: Vitest + @testing-library/react
+- **E2E Tests**: Playwright
+- **Type Checking**: TypeScript (intentionally loose config)
+- **Linting**: ESLint + TypeScript ESLint
+- **Code Quality**: Prettier for formatting
 
 ### Environment Setup
-- **Dev Server**: Vite on `localhost:8080`
-- **Database**: Supabase cloud (managed)
-- **Testing**: Vitest + @testing-library/react
-- **Type Generation**: Supabase auto-generates `types.ts`
-- **Linting**: ESLint + TypeScript ESLint
+- **Dev Server**: Vite on `localhost:5173`
+- **Database**: Supabase cloud (managed PostgreSQL)
+- **Type Generation**: Supabase auto-generates types via `npm run supabase:pull`
+- **Package Manager**: npm 9.0+
+- **Node Version**: 18.0.0+
 
 ---
 
@@ -565,6 +558,16 @@ export class ErrorBoundary extends React.Component<Props, State> {
 - ✅ Use React Query for server state
 - ✅ Extract shared logic to custom hooks
 - ✅ Follow Tailwind utility-first approach
+- ✅ Validate all user input with Zod
+- ✅ Enable Row-Level Security on all tables
+- ✅ Store secrets in environment variables only
+- ✅ Sanitize user-generated content (DOMPurify)
+- ✅ Log security-relevant events to audit logs
+- ✅ Verify webhook signatures before processing
+- ✅ Use HTTPS/TLS for all connections
+- ✅ Hash passwords with bcrypt (Supabase handles this)
+- ✅ Implement rate limiting for critical operations
+- ✅ Use meaningful error messages without exposing internals
 
 ### DON'T
 - ❌ Use hardcoded URLs or API keys
@@ -577,6 +580,16 @@ export class ErrorBoundary extends React.Component<Props, State> {
 - ❌ Drill props through 3+ component levels
 - ❌ Use inline styles (use Tailwind + CSS variables)
 - ❌ Leave `console.log()` in production code
+- ❌ Store secrets in code, config files, or localStorage
+- ❌ Log sensitive data (passwords, tokens, PII)
+- ❌ Trust user input without validation
+- ❌ Render user HTML without sanitization
+- ❌ Modify Supabase types manually (auto-generated)
+- ❌ Skip error handling on async operations
+- ❌ Create new tables without RLS policies
+- ❌ Expose internal error details to clients
+- ❌ Use default credentials in production
+- ❌ Disable HTTPS or TLS verification
 
 ### CRITICAL - Memory Leaks
 
@@ -1076,12 +1089,16 @@ ANALYZE=true npm run build  # Analyze bundle
 
 ### Important Files
 - `PRD.md` — Feature specifications
-- `STYLE_GUIDE.md` — Code standards
-- `tsconfig.json` — TypeScript config
+- `ARCHITECTURE_DECISIONS.md` — 9 key architectural decisions
+- `STYLE_GUIDE.md` — Code standards and conventions
+- `SECURITY.md` — Security standards and compliance (READ BEFORE CODING)
+- `ACCESSIBILITY_STANDARDS.md` — WCAG 2.1 AA requirements
+- `tsconfig.json` — TypeScript config (intentionally loose)
 - `vite.config.ts` — Build config
-- `tailwind.config.ts` — Design system
-- `supabase/migrations/` — Database schema
-- `docs/tasks_and_implementations/` — Task tracking
+- `tailwind.config.ts` — Design system tokens
+- `supabase/migrations/` — Database schema and RLS policies
+- `docs/PRIMARY/QUICK_START.md` — 30-minute onboarding guide
+- `src/integrations/supabase/types.ts` — Auto-generated Supabase types
 
 ---
 
