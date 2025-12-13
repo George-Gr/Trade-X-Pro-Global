@@ -138,13 +138,13 @@
     --caption-line-height: 1.5; /* 18px */
     --caption-letter-spacing: 0;
 
-    /* Font Families
-     * Primary: Inter - Excellent UI font with wide weight range
+    /* Font Families - Neo-Digital Premium
+     * Display: Sora - Geometric, modern, bold for headlines
+     * Body: Space Grotesk - Humanist grotesque, excellent readability
      * Mono: JetBrains Mono - Optimized for numbers and code
-     * Note: Tailwind config defines these, these variables for CSS usage
      */
-    --font-family-base: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --font-family-display: 'Inter', 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-family-base: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-family-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-family-mono: 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
 
     /* Transitions */

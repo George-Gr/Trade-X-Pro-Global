@@ -23,12 +23,13 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        // Primary: Inter - versatile, professional, excellent for UI
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        // Secondary: JetBrains Mono - for numbers, codes, data
+        // Neo-Digital Premium Typography System
+        // Display: Sora - geometric, modern, bold for headlines
+        display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Body: Space Grotesk - humanist grotesque, excellent readability
+        sans: ['Space Grotesk', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        // Data/Mono: JetBrains Mono - for prices, numbers, code
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'monospace'],
-        // Display: Inter with heavier weight for headlines
-        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       
       /* === 8-POINT GRID SPACING SYSTEM === */

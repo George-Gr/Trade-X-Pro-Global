@@ -499,7 +499,14 @@ a:has(> svg:only-child):not(:has(> span)) {
 button, a, input[type="checkbox"], input[type="radio"] {
   min-height: 44px;
   min-width: 44px;
-  @apply md:min-h-auto md:min-w-auto;
+}
+
+/* Reset for desktop */
+@media (min-width: 768px) {
+  button, a, input[type="checkbox"], input[type="radio"] {
+    min-height: auto;
+    min-width: auto;
+  }
 }
 
 /* Ensure sufficient spacing between touch targets */

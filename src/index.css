@@ -51,188 +51,191 @@
 
 @layer base {
   :root {
-    /* === TYPOGRAPHY === */
-    --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* === NEO-DIGITAL PREMIUM TYPOGRAPHY === */
+    --font-family-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family-base: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
-    --font-family-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     
     /* Smooth theme transitions */
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     
-    /* === LIGHT MODE - Premium Brokerage Theme === */
-    --background: 0 0% 100%;
-    --background-surface: 220 14% 96%;
-    --background-elevated: 220 14% 92%;
-    --foreground: 222 47% 11%;
-    --foreground-secondary: 220 9% 46%;
-    --foreground-tertiary: 220 9% 56%;
-    --foreground-muted: 220 9% 66%;
+    /* === LIGHT MODE - Neo-Digital Premium === */
+    --background: 220 20% 97%;
+    --background-surface: 220 16% 93%;
+    --background-elevated: 220 14% 89%;
+    --foreground: 225 30% 8%;
+    --foreground-secondary: 225 15% 35%;
+    --foreground-tertiary: 225 12% 48%;
+    --foreground-muted: 225 10% 60%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 225 30% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 225 30% 8%;
 
-    /* Primary - Deep Purple (Innovation, Premium) */
-    --primary: 262 83% 58%;
+    /* Primary - Electric Violet (Innovation, Premium, Tech) */
+    --primary: 258 90% 62%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 262 83% 68%;
+    --primary-glow: 258 90% 72%;
 
-    /* Secondary - Electric Blue (Trust, Stability) */
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary - Cyan Blue (Trust, Stability, Digital) */
+    --secondary: 195 100% 50%;
+    --secondary-foreground: 225 30% 8%;
 
-    /* Gold Accents - Premium */
-    --gold: 43 74% 49%;
-    --gold-hover: 43 74% 42%;
-    --gold-foreground: 222 47% 11%;
+    /* Gold/Accent - Warm Amber (Premium, Success) */
+    --gold: 38 95% 54%;
+    --gold-hover: 38 95% 48%;
+    --gold-foreground: 225 30% 8%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --placeholder-foreground: 220 9% 56%;
+    --muted: 220 16% 93%;
+    --muted-foreground: 225 12% 48%;
+    --placeholder-foreground: 225 10% 55%;
 
-    /* Success - Emerald Green (Growth) */
-    --success: 160 84% 39%;
+    /* Success - Emerald (Growth, Profit) */
+    --success: 158 72% 42%;
     --success-foreground: 0 0% 100%;
-    --accent: 160 84% 39%;
+    --accent: 158 72% 42%;
     --accent-foreground: 0 0% 100%;
 
     /* Warning - Amber */
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning-foreground: 225 30% 8%;
 
-    /* Danger - Crimson Red */
-    --destructive: 0 84% 60%;
+    /* Danger - Rose Red */
+    --destructive: 350 85% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders */
-    --border: 220 13% 91%;
-    --border-subtle: 220 13% 95%;
-    --border-glow: 262 83% 58%;
-    --input: 220 13% 91%;
-    --ring: 262 83% 58%;
+    /* Borders - Subtle with hint of primary */
+    --border: 225 20% 88%;
+    --border-subtle: 225 15% 92%;
+    --border-glow: 258 90% 62%;
+    --input: 225 20% 88%;
+    --ring: 258 90% 62%;
 
     /* Focus ring colors - WCAG AA compliant */
-    --focus-color: 262 83% 58%;
-    --focus-ring-color: 262 83% 58%;
+    --focus-color: 258 90% 62%;
+    --focus-ring-color: 258 90% 62%;
 
     /* Sidebar colors */
     --sidebar: 0 0% 100%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 262 83% 58%;
+    --sidebar-foreground: 225 30% 8%;
+    --sidebar-primary: 258 90% 62%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-accent: 220 16% 93%;
+    --sidebar-accent-foreground: 225 30% 8%;
+    --sidebar-border: 225 20% 88%;
+    --sidebar-ring: 258 90% 62%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
     /* Trading specific colors */
-    --buy: 160 84% 39%;
-    --buy-hover: 160 84% 45%;
+    --buy: 158 72% 42%;
+    --buy-hover: 158 72% 48%;
     --buy-foreground: 0 0% 100%;
 
-    --sell: 0 84% 60%;
-    --sell-hover: 0 84% 66%;
+    --sell: 350 85% 58%;
+    --sell-hover: 350 85% 64%;
     --sell-foreground: 0 0% 100%;
 
-    --profit: 160 84% 39%;
-    --loss: 0 84% 60%;
+    --profit: 158 72% 42%;
+    --loss: 350 85% 58%;
 
     --panel-bg: 0 0% 100%;
-    --panel-border: 220 13% 91%;
+    --panel-border: 225 20% 88%;
 
     /* Status indicator colors */
-    --status-safe: 160 84% 96%;
-    --status-safe-foreground: 160 84% 40%;
-    --status-safe-border: 160 84% 80%;
+    --status-safe: 158 72% 95%;
+    --status-safe-foreground: 158 72% 35%;
+    --status-safe-border: 158 72% 75%;
 
-    --status-warning: 38 92% 96%;
-    --status-warning-foreground: 38 92% 45%;
-    --status-warning-border: 38 92% 80%;
+    --status-warning: 38 92% 95%;
+    --status-warning-foreground: 38 92% 40%;
+    --status-warning-border: 38 92% 75%;
 
-    --status-critical: 16 92% 95%;
-    --status-critical-foreground: 16 92% 50%;
-    --status-critical-border: 16 92% 80%;
+    --status-critical: 16 92% 94%;
+    --status-critical-foreground: 16 92% 45%;
+    --status-critical-border: 16 92% 75%;
 
-    --status-error: 0 84% 96%;
-    --status-error-foreground: 0 84% 45%;
-    --status-error-border: 0 84% 80%;
+    --status-error: 350 85% 95%;
+    --status-error-foreground: 350 85% 40%;
+    --status-error-border: 350 85% 75%;
 
-    --status-info: 217 91% 96%;
-    --status-info-foreground: 217 91% 40%;
-    --status-info-border: 217 91% 80%;
+    --status-info: 195 100% 95%;
+    --status-info-foreground: 195 100% 35%;
+    --status-info-border: 195 100% 75%;
 
-    --status-neutral: 222 12% 96%;
-    --status-neutral-foreground: 222 12% 45%;
-    --status-neutral-border: 222 12% 80%;
+    --status-neutral: 225 12% 95%;
+    --status-neutral-foreground: 225 12% 40%;
+    --status-neutral-border: 225 12% 75%;
 
     /* Price change indicators */
-    --price-up: 160 84% 39%;
-    --price-down: 0 84% 60%;
-    --price-neutral: 220 9% 46%;
+    --price-up: 158 72% 42%;
+    --price-down: 350 85% 58%;
+    --price-neutral: 225 12% 48%;
 
     /* Chart colors */
-    --chart-grid: 220 13% 91%;
-    --chart-line: 262 83% 58%;
+    --chart-grid: 225 20% 88%;
+    --chart-line: 258 90% 62%;
 
-    /* Premium Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(217 91% 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(262 83% 58% / 0.97) 0%, hsl(217 91% 60% / 0.95) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%) 0%, hsl(43 74% 42%) 100%);
-    --gradient-emerald: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(160 84% 45%) 100%);
-    --gradient-buy: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(160 84% 45%) 100%);
-    --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 66%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(262 83% 58% / 0.1) 0%, transparent 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(43 74% 49%) 100%);
-    --gradient-mesh: radial-gradient(ellipse at top left, hsl(262 83% 58% / 0.15), transparent 50%), radial-gradient(ellipse at bottom right, hsl(217 91% 60% / 0.15), transparent 50%);
+    /* === NEO-DIGITAL PREMIUM GRADIENTS === */
+    /* Cinematic depth with layered color transitions */
+    --gradient-primary: linear-gradient(135deg, hsl(258 90% 62%) 0%, hsl(195 100% 50%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(258 90% 62% / 0.95) 0%, hsl(225 50% 15% / 0.98) 50%, hsl(195 100% 50% / 0.9) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(38 95% 54%) 0%, hsl(38 95% 48%) 100%);
+    --gradient-emerald: linear-gradient(135deg, hsl(158 72% 42%) 0%, hsl(158 72% 48%) 100%);
+    --gradient-buy: linear-gradient(135deg, hsl(158 72% 42%) 0%, hsl(158 72% 48%) 100%);
+    --gradient-sell: linear-gradient(135deg, hsl(350 85% 58%) 0%, hsl(350 85% 64%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(258 90% 62% / 0.08) 0%, transparent 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(258 90% 62%) 0%, hsl(38 95% 54%) 100%);
+    --gradient-mesh: radial-gradient(ellipse at top left, hsl(258 90% 62% / 0.12), transparent 50%), radial-gradient(ellipse at bottom right, hsl(195 100% 50% / 0.12), transparent 50%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.9) 0%, hsl(0 0% 100% / 0.7) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(220 16% 93%) 100%);
 
-    /* === ELEVATION SYSTEM (Shadows) === */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 20px hsl(262 83% 58% / 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
-    --shadow-glow-sm: 0 0 10px hsl(262 83% 58% / 0.3);
-    --shadow-glow-lg: 0 0 40px hsl(262 83% 58% / 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+    /* === ELEVATION SYSTEM (Premium Shadows) === */
+    --shadow-xs: 0 1px 2px hsl(225 30% 8% / 0.04);
+    --shadow-sm: 0 2px 4px hsl(225 30% 8% / 0.06), 0 1px 2px hsl(225 30% 8% / 0.04);
+    --shadow-md: 0 4px 8px hsl(225 30% 8% / 0.08), 0 2px 4px hsl(225 30% 8% / 0.04);
+    --shadow-lg: 0 12px 24px hsl(225 30% 8% / 0.1), 0 4px 8px hsl(225 30% 8% / 0.06);
+    --shadow-xl: 0 24px 48px hsl(225 30% 8% / 0.12), 0 8px 16px hsl(225 30% 8% / 0.06);
+    --shadow-2xl: 0 32px 64px hsl(225 30% 8% / 0.16);
+    --shadow-glow: 0 0 24px hsl(258 90% 62% / 0.35), 0 4px 16px hsl(225 30% 8% / 0.15);
+    --shadow-glow-sm: 0 0 12px hsl(258 90% 62% / 0.25);
+    --shadow-glow-lg: 0 0 48px hsl(258 90% 62% / 0.45), 0 8px 32px hsl(225 30% 8% / 0.2);
+    --shadow-glow-cyan: 0 0 24px hsl(195 100% 50% / 0.35);
     --quick-actions: 0 0% 100%;
 
     /* WCAG AA Compliant Accessibility Colors - Light Mode */
-    --primary-contrast: 222 47% 11%;
-    --primary-contrast-light: 210 40% 98%;
-    --secondary-contrast: 220 9% 35%;
-    --secondary-contrast-light: 220 20% 65%;
-    --tertiary-contrast: 220 9% 47%;
-    --tertiary-contrast-light: 220 20% 55%;
-    --muted-contrast: 220 9% 50%;
-    --muted-contrast-light: 220 20% 45%;
-    --success-contrast: 160 84% 28%;
-    --warning-contrast: 38 92% 42%;
-    --danger-contrast: 0 84% 45%;
-    --contrast-auto-high: 222 47% 8%;
+    --primary-contrast: 225 30% 8%;
+    --primary-contrast-light: 220 20% 97%;
+    --secondary-contrast: 225 15% 30%;
+    --secondary-contrast-light: 225 20% 60%;
+    --tertiary-contrast: 225 12% 42%;
+    --tertiary-contrast-light: 225 15% 52%;
+    --muted-contrast: 225 10% 45%;
+    --muted-contrast-light: 225 12% 40%;
+    --success-contrast: 158 72% 32%;
+    --warning-contrast: 38 92% 38%;
+    --danger-contrast: 350 85% 42%;
+    --contrast-auto-high: 225 30% 6%;
     --contrast-auto-bg-high: 0 0% 100%;
 
     /* WCAG AA Compliant Accessibility Color Combinations */
-    /* Background-Foreground pairs for contrast utility classes */
-    --primary-contrast-bg: 0 0% 100%;           /* White background */
-    --primary-contrast-fg: 222 47% 11%;         /* Dark text */
+    --primary-contrast-bg: 0 0% 100%;
+    --primary-contrast-fg: 225 30% 8%;
     
-    --secondary-contrast-bg: 220 14% 96%;       /* Light gray background */
-    --secondary-contrast-fg: 220 9% 35%;        /* Medium gray text */
+    --secondary-contrast-bg: 220 16% 93%;
+    --secondary-contrast-fg: 225 15% 30%;
     
-    --success-contrast-bg: 160 84% 39%;         /* Green background */
-    --success-contrast-fg: 0 0% 100%;           /* White text */
+    --success-contrast-bg: 158 72% 42%;
+    --success-contrast-fg: 0 0% 100%;
     
-    --warning-contrast-bg: 38 92% 50%;          /* Amber background */
-    --warning-contrast-fg: 0 0% 100%;           /* White text */
+    --warning-contrast-bg: 38 92% 50%;
+    --warning-contrast-fg: 225 30% 8%;
     
-    --danger-contrast-bg: 0 84% 60%;            /* Red background */
-    --danger-contrast-fg: 0 0% 100%;            /* White text */
+    --danger-contrast-bg: 350 85% 58%;
+    --danger-contrast-fg: 0 0% 100%;
 
     /* Standardized Animation Timing System */
     --duration-instant: 0ms;
@@ -241,20 +244,21 @@
     --duration-slow: 300ms;
     --duration-slower: 500ms;
 
-    /* Easing Functions */
+    /* Easing Functions - Premium feel */
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 
     /* Standard Transitions */
     --transition-instant: all var(--duration-instant) var(--ease-out);
     --transition-fast: all var(--duration-fast) var(--ease-out);
     --transition-normal: all var(--duration-normal) var(--ease-out);
-    --transition-slow: all var(--duration-slow) var(--ease-in-out);
+    --transition-slow: all var(--duration-slow) var(--ease-premium);
 
     /* Legacy compatibility aliases */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-duration: 200ms;
 
@@ -264,170 +268,171 @@
     --animation-shimmer: shimmer 2s infinite;
 
     /* === SIDEBAR WIDTH TOKENS === */
-    /* Consistent sidebar width management for design system */
-    --sidebar-width: 16rem;
-    --sidebar-width-icon: 4rem;
+    --sidebar-width: 17rem;
+    --sidebar-width-icon: 4.5rem;
   }
 
   .dark {
-    /* === DARK MODE - Premium Trading Terminal === */
-    /* Background Layers (Depth hierarchy) */
-    --background: 240 10% 4%;
-    --background-surface: 240 6% 8%;
-    --background-elevated: 240 5% 12%;
+    /* === DARK MODE - Neo-Digital Premium Terminal === */
+    /* Deep layered backgrounds for cinematic depth */
+    --background: 225 35% 5%;
+    --background-surface: 225 28% 8%;
+    --background-elevated: 225 24% 12%;
     --foreground: 210 40% 98%;
-    /* FE-007: Fix dark mode contrast violations - increased brightness for WCAG AA */
-    --foreground-secondary: 220 9% 87%; /* Was 83% - increased brightness for 4.5:1 contrast */
-    --foreground-tertiary: 220 9% 75%;  /* Was 63% - increased brightness for better readability */
-    --foreground-muted: 220 9% 58%;     /* Was 46% - increased brightness for muted text */
+    --foreground-secondary: 220 15% 78%;
+    --foreground-tertiary: 220 12% 65%;
+    --foreground-muted: 220 10% 52%;
 
-    --card: 240 6% 10%;
+    --card: 225 28% 9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 240 5% 12%;
+    --popover: 225 24% 11%;
     --popover-foreground: 210 40% 98%;
 
-    /* Primary - Deep Purple (lighter for dark mode) */
-    --primary: 262 83% 58%;
+    /* Primary - Electric Violet (brighter for dark mode) */
+    --primary: 258 90% 68%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 262 83% 68%;
+    --primary-glow: 258 90% 75%;
 
-    /* Secondary - Electric Blue */
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary - Cyan Blue */
+    --secondary: 195 100% 55%;
+    --secondary-foreground: 225 35% 5%;
 
     /* Gold Accents */
-    --gold: 43 74% 55%;
-    --gold-hover: 43 74% 49%;
-    --gold-foreground: 240 10% 4%;
+    --gold: 38 95% 58%;
+    --gold-hover: 38 95% 52%;
+    --gold-foreground: 225 35% 5%;
 
-    --muted: 240 4% 16%;
-    --muted-foreground: 220 9% 63%;
-    --placeholder-foreground: 220 9% 46%;
+    --muted: 225 20% 15%;
+    --muted-foreground: 220 12% 58%;
+    --placeholder-foreground: 220 10% 45%;
 
-    /* Success - Emerald Green */
-    --success: 160 84% 45%;
+    /* Success - Emerald */
+    --success: 158 72% 50%;
     --success-foreground: 0 0% 100%;
-    --accent: 160 84% 45%;
+    --accent: 158 72% 50%;
     --accent-foreground: 0 0% 100%;
 
     /* Warning - Amber */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 225 35% 5%;
 
-    /* Danger - Crimson Red */
-    --destructive: 0 84% 60%;
+    /* Danger - Rose Red */
+    --destructive: 350 85% 62%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders */
-    --border: 240 4% 16%;
-    --border-subtle: 240 4% 12%;
-    --border-glow: 262 83% 58%;
-    --input: 240 4% 16%;
-    --ring: 262 83% 58%;
+    /* Borders - Subtle glow effect */
+    --border: 225 20% 18%;
+    --border-subtle: 225 15% 14%;
+    --border-glow: 258 90% 68%;
+    --input: 225 20% 18%;
+    --ring: 258 90% 68%;
 
     /* Sidebar colors - Dark mode */
-    --sidebar: 240 6% 8%;
+    --sidebar: 225 28% 7%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 262 83% 58%;
+    --sidebar-primary: 258 90% 68%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent: 225 20% 15%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 240 4% 16%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-border: 225 20% 18%;
+    --sidebar-ring: 258 90% 68%;
 
     /* Trading specific colors */
-    --buy: 160 84% 45%;
-    --buy-hover: 160 84% 52%;
+    --buy: 158 72% 50%;
+    --buy-hover: 158 72% 56%;
     --buy-foreground: 0 0% 100%;
 
-    --sell: 0 84% 60%;
-    --sell-hover: 0 84% 66%;
+    --sell: 350 85% 62%;
+    --sell-hover: 350 85% 68%;
     --sell-foreground: 0 0% 100%;
 
-    --profit: 160 84% 45%;
-    --loss: 0 84% 60%;
+    --profit: 158 72% 50%;
+    --loss: 350 85% 62%;
 
-    --panel-bg: 240 6% 10%;
-    --panel-border: 240 4% 16%;
+    --panel-bg: 225 28% 9%;
+    --panel-border: 225 20% 18%;
 
-    /* Status indicator colors - Dark mode (FE-007: Improved for WCAG AA contrast) */
-    --status-safe: 160 84% 20%;
-    --status-safe-foreground: 160 84% 75%;
-    --status-safe-border: 160 84% 35%;
+    /* Status indicator colors - Dark mode */
+    --status-safe: 158 72% 18%;
+    --status-safe-foreground: 158 72% 70%;
+    --status-safe-border: 158 72% 32%;
 
-    --status-warning: 38 92% 20%;
-    --status-warning-foreground: 38 92% 75%;
-    --status-warning-border: 38 92% 35%;
+    --status-warning: 38 92% 18%;
+    --status-warning-foreground: 38 92% 72%;
+    --status-warning-border: 38 92% 32%;
 
-    --status-critical: 16 92% 20%;
-    --status-critical-foreground: 16 92% 75%;
-    --status-critical-border: 16 92% 35%;
+    --status-critical: 16 92% 18%;
+    --status-critical-foreground: 16 92% 72%;
+    --status-critical-border: 16 92% 32%;
 
-    --status-error: 0 84% 20%;
-    --status-error-foreground: 0 84% 75%;
-    --status-error-border: 0 84% 35%;
+    --status-error: 350 85% 18%;
+    --status-error-foreground: 350 85% 72%;
+    --status-error-border: 350 85% 32%;
 
-    --status-info: 217 91% 15%;
-    --status-info-foreground: 217 91% 70%;
-    --status-info-border: 217 91% 25%;
+    --status-info: 195 100% 14%;
+    --status-info-foreground: 195 100% 68%;
+    --status-info-border: 195 100% 28%;
 
-    --status-neutral: 240 4% 15%;
-    --status-neutral-foreground: 240 4% 70%;
-    --status-neutral-border: 240 4% 25%;
+    --status-neutral: 225 15% 14%;
+    --status-neutral-foreground: 225 12% 68%;
+    --status-neutral-border: 225 15% 25%;
 
     /* Price change indicators */
-    --price-up: 160 84% 45%;
-    --price-down: 0 84% 60%;
-    --price-neutral: 220 9% 63%;
+    --price-up: 158 72% 50%;
+    --price-down: 350 85% 62%;
+    --price-neutral: 220 12% 58%;
 
     /* Chart colors */
-    --chart-grid: 240 4% 16%;
-    --chart-line: 262 83% 58%;
+    --chart-grid: 225 20% 18%;
+    --chart-line: 258 90% 68%;
 
-    /* Premium Gradients (Dark Mode) */
-    --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(217 91% 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(262 83% 58% / 0.97) 0%, hsl(217 91% 60% / 0.95) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(43 74% 55%) 0%, hsl(43 74% 49%) 100%);
-    --gradient-emerald: linear-gradient(135deg, hsl(160 84% 45%) 0%, hsl(160 84% 52%) 100%);
-    --gradient-buy: linear-gradient(135deg, hsl(160 84% 45%) 0%, hsl(160 84% 52%) 100%);
-    --gradient-sell: linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 66%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(262 83% 58% / 0.1) 0%, transparent 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(43 74% 55%) 100%);
-    --gradient-mesh: radial-gradient(ellipse at top left, hsl(262 83% 58% / 0.15), transparent 50%), radial-gradient(ellipse at bottom right, hsl(217 91% 60% / 0.15), transparent 50%);
+    /* === NEO-DIGITAL PREMIUM GRADIENTS (Dark Mode) === */
+    --gradient-primary: linear-gradient(135deg, hsl(258 90% 68%) 0%, hsl(195 100% 55%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(258 90% 68% / 0.9) 0%, hsl(225 35% 5% / 0.95) 50%, hsl(195 100% 55% / 0.85) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(38 95% 58%) 0%, hsl(38 95% 52%) 100%);
+    --gradient-emerald: linear-gradient(135deg, hsl(158 72% 50%) 0%, hsl(158 72% 56%) 100%);
+    --gradient-buy: linear-gradient(135deg, hsl(158 72% 50%) 0%, hsl(158 72% 56%) 100%);
+    --gradient-sell: linear-gradient(135deg, hsl(350 85% 62%) 0%, hsl(350 85% 68%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(258 90% 68% / 0.08) 0%, transparent 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(258 90% 68%) 0%, hsl(38 95% 58%) 100%);
+    --gradient-mesh: radial-gradient(ellipse at top left, hsl(258 90% 68% / 0.15), transparent 50%), radial-gradient(ellipse at bottom right, hsl(195 100% 55% / 0.15), transparent 50%);
+    --gradient-glass: linear-gradient(135deg, hsl(225 28% 12% / 0.85) 0%, hsl(225 28% 8% / 0.7) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(225 28% 10%) 0%, hsl(225 35% 6%) 100%);
+    --gradient-glow-orb: radial-gradient(circle, hsl(258 90% 68% / 0.4) 0%, transparent 70%);
 
-    /* Shadows (Dark Mode - more pronounced) */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-    --shadow-glow: 0 0 20px hsl(262 83% 58% / 0.5), 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-glow-sm: 0 0 10px hsl(262 83% 58% / 0.4);
-    --shadow-glow-lg: 0 0 40px hsl(262 83% 58% / 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
-    --quick-actions: 240 6% 10%;
+    /* Premium Shadows (Dark Mode - more dramatic) */
+    --shadow-xs: 0 1px 2px hsl(0 0% 0% / 0.25);
+    --shadow-sm: 0 2px 4px hsl(0 0% 0% / 0.35), 0 1px 2px hsl(0 0% 0% / 0.2);
+    --shadow-md: 0 4px 8px hsl(0 0% 0% / 0.4), 0 2px 4px hsl(0 0% 0% / 0.25);
+    --shadow-lg: 0 12px 24px hsl(0 0% 0% / 0.45), 0 4px 8px hsl(0 0% 0% / 0.3);
+    --shadow-xl: 0 24px 48px hsl(0 0% 0% / 0.5), 0 8px 16px hsl(0 0% 0% / 0.3);
+    --shadow-2xl: 0 32px 64px hsl(0 0% 0% / 0.55);
+    --shadow-glow: 0 0 28px hsl(258 90% 68% / 0.45), 0 4px 20px hsl(0 0% 0% / 0.35);
+    --shadow-glow-sm: 0 0 14px hsl(258 90% 68% / 0.35);
+    --shadow-glow-lg: 0 0 56px hsl(258 90% 68% / 0.55), 0 8px 40px hsl(0 0% 0% / 0.4);
+    --shadow-glow-cyan: 0 0 28px hsl(195 100% 55% / 0.45);
+    --quick-actions: 225 28% 9%;
 
     /* WCAG AA Compliant Accessibility Colors - Dark Mode */
     --primary-contrast: 210 40% 98%;
-    --primary-contrast-light: 240 10% 4%;
-    --secondary-contrast: 220 9% 70%;
-    --secondary-contrast-light: 220 9% 35%;
-    --tertiary-contrast: 220 9% 60%;
-    --tertiary-contrast-light: 220 9% 47%;
-    --muted-contrast: 220 9% 50%;
-    --muted-contrast-light: 220 9% 55%;
-    --success-contrast: 160 84% 55%;
-    --warning-contrast: 38 92% 60%;
-    --danger-contrast: 0 84% 65%;
-    --contrast-auto-high: 210 40% 95%;
-    --contrast-auto-bg-high: 240 6% 10%;
+    --primary-contrast-light: 225 35% 5%;
+    --secondary-contrast: 220 15% 72%;
+    --secondary-contrast-light: 220 15% 30%;
+    --tertiary-contrast: 220 12% 62%;
+    --tertiary-contrast-light: 220 12% 42%;
+    --muted-contrast: 220 10% 52%;
+    --muted-contrast-light: 220 10% 48%;
+    --success-contrast: 158 72% 58%;
+    --warning-contrast: 38 92% 62%;
+    --danger-contrast: 350 85% 68%;
+    --contrast-auto-high: 210 40% 96%;
+    --contrast-auto-bg-high: 225 28% 9%;
     --transition-duration: 200ms;
 
     /* === SIDEBAR WIDTH TOKENS === */
-    /* Consistent sidebar width management for design system - Dark mode */
-    --sidebar-width: 16rem;
-    --sidebar-width-icon: 4rem;
+    --sidebar-width: 17rem;
+    --sidebar-width-icon: 4.5rem;
   }
 }
 
