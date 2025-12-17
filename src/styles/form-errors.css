@@ -324,21 +324,7 @@ input.error.shake {
   animation: shake 0.4s ease-in-out;
 }
 
-/* ============================================
-   DARK MODE ADJUSTMENTS
-   ============================================ */
 
-.dark .form-field-error,
-.dark input.error,
-.dark select.error,
-.dark textarea.error {
-  background-color: hsl(var(--destructive) / 0.1);
-}
-
-.dark .error-summary {
-  background-color: hsl(var(--destructive) / 0.15);
-  border-color: hsl(var(--destructive) / 0.8);
-}
 
 /* ============================================
    ACCESSIBILITY

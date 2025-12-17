@@ -129,31 +129,31 @@ if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
   // Fix console for Node.js (ensure all methods exist)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof (globalThis as any).console === 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-console
+    const noop = () => {};
     (globalThis as any).console = {
-      log: console.log,
-      warn: console.warn,
-      error: console.error,
-      info: console.info,
-      debug: console.debug,
-      trace: console.trace,
-      time: console.time,
-      timeEnd: console.timeEnd,
-      timeLog: console.timeLog,
-      count: console.count,
-      countReset: console.countReset,
-      group: console.group,
-      groupEnd: console.groupEnd,
-      groupCollapsed: console.groupCollapsed,
-      clear: console.clear,
-      assert: console.assert,
-      dir: console.dir,
-      dirxml: console.dirxml,
-      table: console.table,
-      timeStamp: console.timeStamp,
+      log: noop,
+      warn: noop,
+      error: noop,
+      info: noop,
+      debug: noop,
+      trace: noop,
+      time: noop,
+      timeEnd: noop,
+      timeLog: noop,
+      count: noop,
+      countReset: noop,
+      group: noop,
+      groupEnd: noop,
+      groupCollapsed: noop,
+      clear: noop,
+      assert: noop,
+      dir: noop,
+      dirxml: noop,
+      table: noop,
+      timeStamp: noop,
     };
-  }
-}
+  }}
 
 // Export to ensure this file is treated as a module
 export {};

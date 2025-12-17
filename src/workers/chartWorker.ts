@@ -19,7 +19,7 @@ interface ChartCalculationResponse {
 // Chart calculation functions that can run in worker
 const calculateTrend = (values: number[]): { changePercentage: number; direction: string; color: string } => {
   if (!values || values.length < 2) {
-    return { changePercentage: 0, direction: 'neutral', color: '#6B7280' };
+    return { changePercentage: 0, direction: 'neutral', color: 'hsl(var(--foreground-tertiary))' };
   }
 
   const firstValue = values[0];
@@ -27,14 +27,14 @@ const calculateTrend = (values: number[]): { changePercentage: number; direction
   const change = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
 
   let direction = 'neutral';
-  let color = '#6B7280';
+  let color = 'hsl(var(--foreground-tertiary))';
 
   if (change > 0.1) {
     direction = 'up';
-    color = '#10B981'; // Green
+    color = 'hsl(var(--buy))'; // Green
   } else if (change < -0.1) {
     direction = 'down';
-    color = '#EF4444'; // Red
+    color = 'hsl(var(--destructive))'; // Red
   }
 
   return { changePercentage: change, direction, color };

@@ -65,7 +65,7 @@ describe('PositionsTableVirtualized - Performance Tests', () => {
 
     expect(renderTime).toBeLessThan(1000);
     expect(container).toBeInTheDocument();
-    console.log(`Virtualized render time for 1000 positions: ${renderTime.toFixed(2)}ms`);
+    console.warn(`Virtualized render time for 1000 positions: ${renderTime.toFixed(2)}ms`);
   });
 
   it('renders header row correctly', () => {

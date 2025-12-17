@@ -555,12 +555,14 @@ export function formatRiskStatus(status: RiskStatus): string {
  * @param status - Risk status enum
  * @returns Hex color code
  */
+import { RISK_COLORS } from '@/lib/colors';
+
 export function getRiskStatusColor(status: RiskStatus): string {
   const colors: Record<RiskStatus, string> = {
-    [RiskStatus.SAFE]: '#10b981',      // Green
-    [RiskStatus.WARNING]: '#f59e0b',   // Amber
-    [RiskStatus.CRITICAL]: '#ef4444',  // Red
-    [RiskStatus.MONITOR]: '#3b82f6'    // Blue
+    [RiskStatus.SAFE]: RISK_COLORS.SAFE,
+    [RiskStatus.WARNING]: RISK_COLORS.WARNING,
+    [RiskStatus.CRITICAL]: RISK_COLORS.CRITICAL,
+    [RiskStatus.MONITOR]: RISK_COLORS.MONITOR
   };
-  return colors[status] || '#6b7280';
+  return colors[status] || RISK_COLORS.DEFAULT;
 }

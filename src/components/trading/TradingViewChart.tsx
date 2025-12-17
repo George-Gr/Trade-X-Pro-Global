@@ -51,22 +51,22 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
       chart = (lc.createChart(chartContainerRef.current!, {
         layout: {
           background: { type: lc.ColorType.Solid, color: "transparent" },
-          textColor: "#9ca3af",
+          textColor: "hsl(var(--foreground) / 0.85)",
 
         },
         grid: {
-          vertLines: { color: "rgba(255, 255, 255, 0.05)" },
-          horzLines: { color: "rgba(255, 255, 255, 0.05)" },
+          vertLines: { color: "hsl(var(--foreground) / 0.05)" },
+          horzLines: { color: "hsl(var(--foreground) / 0.05)" },
         },
         width: chartContainerRef.current!.clientWidth,
         height: chartContainerRef.current!.clientHeight,
         timeScale: {
           timeVisible: true,
           secondsVisible: false,
-          borderColor: "rgba(255, 255, 255, 0.1)",
+          borderColor: "hsl(var(--foreground) / 0.1)",
         },
         rightPriceScale: {
-          borderColor: "rgba(255, 255, 255, 0.1)",
+          borderColor: "hsl(var(--foreground) / 0.1)",
         },
         crosshair: {
           mode: 0,
@@ -75,12 +75,12 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
 
       // Add candlestick series using the provided helper
       candlestickSeries = chart.addCandlestickSeries({
-        upColor: "#10b981",
-        downColor: "#ef4444",
-        borderUpColor: "#10b981",
-        borderDownColor: "#ef4444",
-        wickUpColor: "#10b981",
-        wickDownColor: "#ef4444",
+        upColor: 'hsl(var(--buy))',
+        downColor: 'hsl(var(--destructive))',
+        borderUpColor: 'hsl(var(--buy))',
+        borderDownColor: 'hsl(var(--destructive))',
+        wickUpColor: 'hsl(var(--buy))',
+        wickDownColor: 'hsl(var(--destructive))',
       });
 
       // Generate realistic candlestick data

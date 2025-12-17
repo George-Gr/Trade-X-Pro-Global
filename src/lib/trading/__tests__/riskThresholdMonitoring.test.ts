@@ -489,6 +489,8 @@ describe('Risk Alert Generation', () => {
 // FORMATTING & UTILITY TESTS
 // ============================================================================
 
+import { RISK_COLORS } from '@/lib/colors';
+
 describe('Formatting and Utilities', () => {
   it('should format risk status correctly', () => {
     expect(formatRiskStatus(RiskStatus.SAFE)).toBe('Safe');
@@ -498,10 +500,11 @@ describe('Formatting and Utilities', () => {
   });
 
   it('should return correct colors for risk status', () => {
-    expect(getRiskStatusColor(RiskStatus.SAFE)).toBe('#10b981');      // Green
-    expect(getRiskStatusColor(RiskStatus.WARNING)).toBe('#f59e0b');   // Amber
-    expect(getRiskStatusColor(RiskStatus.CRITICAL)).toBe('#ef4444');  // Red
-    expect(getRiskStatusColor(RiskStatus.MONITOR)).toBe('#3b82f6');   // Blue
+    // Use centralized tokens to avoid duplication
+    expect(getRiskStatusColor(RiskStatus.SAFE)).toBe(RISK_COLORS.SAFE);
+    expect(getRiskStatusColor(RiskStatus.WARNING)).toBe(RISK_COLORS.WARNING);
+    expect(getRiskStatusColor(RiskStatus.CRITICAL)).toBe(RISK_COLORS.CRITICAL);
+    expect(getRiskStatusColor(RiskStatus.MONITOR)).toBe(RISK_COLORS.MONITOR);
   });
 });
 

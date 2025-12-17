@@ -37,7 +37,7 @@ export interface PositionPnLDetails {
   positionValue: number;
   marginRequired: number;
   marginLevel: number;
-  liquidationPrice: number;
+  liquidationPrice?: number | null;
   roi: number;
   status: 'profit' | 'loss' | 'breakeven';
 }

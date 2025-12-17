@@ -96,7 +96,7 @@ export function useTradingData(): TradingDataReturn {
   const { user } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [positions, setPositions] = useState<PositionWithPnL[]>([]);
-  const [closedTrades, setClosedTrades] = useState<{ realized_pnl: number }[]>([]);
+  const [closedTrades, setClosedTrades] = useState<{ realized_pnl: number | null }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const isMountedRef = useRef(true);

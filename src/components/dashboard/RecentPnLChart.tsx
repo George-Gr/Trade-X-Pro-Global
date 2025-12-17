@@ -1,5 +1,6 @@
 import React, { useMemo, Suspense } from 'react';
 import { Card } from '@/components/ui/card';
+import { formatTooltipValue } from '@/lib/chartUtils';
 
 // Dynamic import wrapper for recharts components
 const DynamicBarChart = React.lazy(() => import('recharts').then(m => ({
@@ -104,7 +105,7 @@ export const RecentPnLChart: React.FC = () => {
                 <DynamicXAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <DynamicYAxis tick={{ fontSize: 11 }} />
                 <DynamicTooltip
-                  formatter={(value: number | string) => `$${Number(value).toLocaleString()}`}
+                  formatter={formatTooltipValue as any}
                   contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
                 />
                 <DynamicBar dataKey="pnl" isAnimationActive={false}>

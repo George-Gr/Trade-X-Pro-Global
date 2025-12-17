@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseBrowserClient";
+import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Card } from "@/components/ui/card";
@@ -136,7 +137,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'leads' },
         (payload) => {
-          console.log('Lead change:', payload);
+          logger.debug('Lead change', { metadata: payload });
           fetchLeads();
         }
       )

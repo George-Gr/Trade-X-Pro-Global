@@ -103,7 +103,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
   }, [stressTests]);
 
   const assetClassChartData = useMemo(() => {
-    const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+    const COLORS = ['hsl(var(--secondary))', 'hsl(var(--destructive))', 'hsl(var(--buy))', 'hsl(var(--warning))', 'hsl(var(--sidebar-primary))', 'hsl(var(--accent))'];
     return Object.entries(assetClassMetrics).map(([assetClass, metrics], index) => ({
       name: assetClass,
       value: metrics.percentageOfPortfolio,
@@ -193,7 +193,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                   <Line
                     type="monotone"
                     dataKey="equity"
-                    stroke="#3b82f6"
+                    stroke="hsl(var(--secondary))"
                     name="Equity"
                   />
                 </LineChart>
@@ -217,7 +217,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                     labelLine={false}
                     label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
                     outerRadius={80}
-                    fill="#8884d8"
+                    fill="hsl(var(--sidebar-primary))"
                     dataKey="value"
                   >
                     {assetClassChartData.map((entry, index) => (
@@ -250,7 +250,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="loss" fill="#ef4444" name="Est. Loss" />
+                  <Bar dataKey="loss" fill="hsl(var(--destructive))" name="Est. Loss" />
                 </BarChart>
               </ResponsiveContainer>
               {stressTests && (

@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { RegistrationFormData } from "./MultiStepRegistration";
+import type { RegistrationFormData } from "./MultiStepRegistration";
+type StepOneFormValues = Pick<RegistrationFormData, 'firstName' | 'lastName' | 'email' | 'phone' | 'address' | 'password' | 'confirmPassword'>;
 
 interface StepOneProps {
   formData: RegistrationFormData;
@@ -13,7 +14,7 @@ interface StepOneProps {
 }
 
 const StepOne: React.FC<StepOneProps> = ({ formData, updateFormData, onNext }) => {
-  const form = useForm({
+  const form = useForm<StepOneFormValues>({
     defaultValues: {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -28,7 +29,7 @@ const StepOne: React.FC<StepOneProps> = ({ formData, updateFormData, onNext }) =
   const { handleSubmit, watch, formState: { errors } } = form;
   const password = watch("password");
 
-  const onSubmit = (data: typeof formData) => {
+  const onSubmit = (data: StepOneFormValues) => {
     updateFormData(data);
     onNext();
   };

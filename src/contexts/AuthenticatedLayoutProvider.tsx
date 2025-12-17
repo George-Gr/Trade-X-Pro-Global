@@ -6,7 +6,7 @@ import { AuthenticatedLayoutContext, type AuthenticatedLayoutContextType } from 
 import { formatToastError } from "@/lib/errorMessageService";
 
 // Provider component
-export function AuthenticatedLayoutProvider({ children }: { children: React.ReactNode }) {
+export function AuthenticatedLayoutProvider({ children }: { children?: React.ReactNode } = {}) {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const { unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const { toast } = useToast();

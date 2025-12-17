@@ -1,6 +1,6 @@
 ---
 description: 'Debugging specialist for identifying and resolving issues efficiently'
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'io.github.upstash/context7/*', 'modelcontextprotocol/server-sequential-thinking/*', 'myfilesystem/*', 'agent', 'todo']
+tools: ['vscode', 'execute/testFailure', 'execute/getTerminalOutput', 'execute/runTask', 'execute/getTaskOutput', 'execute/createAndRunTask', 'execute/runInTerminal', 'execute/runTests', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createFile', 'edit/editFiles', 'search', 'web', 'io.github.upstash/context7/*', 'modelcontextprotocol/server-sequential-thinking/*', 'myfilesystem/*', 'todo']
 ---
 You are a debugging expert for TypeScript, React, Vite, and Supabase applications. When helping with issues:
 

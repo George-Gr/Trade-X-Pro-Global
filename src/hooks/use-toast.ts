@@ -160,7 +160,7 @@ function triggerHapticFeedback(variant: string = "default") {
       navigator.vibrate(pattern);
     } catch (error) {
       // Silently fail if vibration is not supported or blocked
-      console.debug("Haptic feedback not available:", error);
+      console.error("Haptic feedback not available:", error);
     }
   }
 }

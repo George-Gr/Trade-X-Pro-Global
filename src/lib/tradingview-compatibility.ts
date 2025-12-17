@@ -71,7 +71,7 @@ function fixDataViewSymbolToStringTag(): void {
         set(value: unknown) {
           // Silently ignore assignments in modern environments
           if (typeof value === 'string') {
-            console.debug('TradingView: Ignoring DataView Symbol.toStringTag assignment:', value);
+            console.warn('TradingView: Ignoring DataView Symbol.toStringTag assignment:', value);
           }
         },
         get(this: unknown): string {

@@ -25,14 +25,13 @@ vi.mock('@/hooks/use-toast', () => ({
 
 vi.mock('@/lib/rateLimiter', () => ({
   checkRateLimit: vi.fn(() => ({ allowed: true, remaining: 10, resetIn: 0 })),
-  rateLimiter: {
-    execute: vi.fn((_, fn) => fn()),
-  },
 }));
 
 vi.mock('@/lib/idempotency', () => ({
   generateIdempotencyKey: vi.fn(() => 'test-idempotency-key'),
-  executeWithIdempotency: vi.fn((_, __, fn) => fn()),
+  executeWithIdempotency: vi.fn((_: unknown, __: unknown, fn: unknown) => {
+    if (typeof fn === 'function') return fn();
+  }),
 }));
 
 vi.mock('@/lib/logger', () => ({
@@ -93,7 +92,7 @@ describe('useOrderExecution', () => {
   });
 
   it('should return null when rate limit is exceeded', async () => {
-    vi.mocked(checkRateLimit).mockReturnValue({
+    vi.mocked(checkRateLimit).mockResolvedValue({
       allowed: false,
       remaining: 0,
       resetIn: 5000,

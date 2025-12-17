@@ -541,19 +541,4 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ============================================================================
-   Dark Mode Animation Adjustments
-   ========================================================================== */
 
-.dark .button-interactive:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.dark .card-hoverable:hover {
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-}
-
-.dark .input-interactive:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)),
-              0 0 0 4px hsl(var(--accent) / 0.8);
-}

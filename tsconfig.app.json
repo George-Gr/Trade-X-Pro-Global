@@ -32,5 +32,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false
   },
-  "include": ["src", "vitest.setup.ts"]
+  "include": ["src/**/*.{ts,tsx}", "vitest.setup.ts"]
 }

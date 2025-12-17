@@ -110,7 +110,7 @@ export const usePnLCalculations = (
         positionValue,
         marginRequired,
         marginLevel,
-        liquidationPrice: Math.round(liquidationPrice * 10000) / 10000,
+        liquidationPrice: liquidationPrice != null ? Math.round(liquidationPrice * 10000) / 10000 : null,
         roi,
         status: pnlResult.isProfit ? "profit" : pnlResult.isBreakeven ? "breakeven" : "loss",
       });

@@ -24,11 +24,12 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
       // Add extra safety checks and delay to ensure TradingView is fully loaded
       setTimeout(() => {
         try {
-          if (typeof window !== 'undefined' && 
-              typeof (window as unknown as Record<string, unknown>).TradingView !== "undefined" && 
-              ((window as unknown as Record<string, unknown>).TradingView as Record<string, unknown>).widget && 
-              containerRef.current) {
-            new window.TradingView.widget({
+          const TradingViewGlobal = (window as unknown as Record<string, unknown>).TradingView as any | undefined;
+          const WidgetCtor = TradingViewGlobal?.widget;
+          if (WidgetCtor && containerRef.current) {
+            // Use a local reference to the constructor to satisfy TS and runtime checks
+             
+            new (WidgetCtor as any)({
               autosize: true,
               symbol: symbol,
               interval: "15",
@@ -54,6 +55,8 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
             });
           }
         } catch (error) {
+          // keep as console.error here for diagnostics
+           
           console.error('TradingView widget initialization error:', error);
         }
       }, 100);
@@ -82,7 +85,7 @@ export default memo(TradingViewAdvancedChart);
 declare global {
   interface Window {
     TradingView?: {
-      widget: (opts: Record<string, unknown>) => void;
+      widget?: new (opts: Record<string, unknown>) => void;
     };
   }
 }

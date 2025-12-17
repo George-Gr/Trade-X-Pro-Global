@@ -265,28 +265,7 @@ export function checkSpacingConsistency(components: Record<string, Record<string
   return issues;
 }
 
-/**
- * Logs spacing diagnostics to console for development
- */
-export function logSpacingDiagnostics(): void {
-  console.group('🔧 TradeX Pro Spacing System Diagnostics');
-  
-  console.log('📏 Spacing Scale (4px/8px Grid):');
-  Object.entries(SPACING_SCALE).forEach(([key, value]) => {
-    console.log(`  ${key}: ${value}px (${value / 16}rem)`);
-  });
-  
-  console.log('\n📐 Component Spacing:');
-  Object.entries(COMPONENT_SPACING).forEach(([component, values]) => {
-    console.log(`  ${component}:`);
-    Object.entries(values).forEach(([key, value]) => {
-      console.log(`    ${key}: ${value}px`);
-    });
-  });
-  
-  console.log('\n✅ Spacing system loaded successfully');
-  console.groupEnd();
-}
+
 
 /**
  * Gets spacing value for specific use cases

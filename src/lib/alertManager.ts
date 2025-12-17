@@ -361,7 +361,7 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
    */
   private async sendEmailAlert(rule: AlertRule, message: string): Promise<void> {
     // In a real implementation, this would send to configured email addresses
-    console.log('[ALERT] Email notification sent:', rule.name);
+    console.warn('[ALERT] Email notification sent:', rule.name);
   }
 
   /**
@@ -369,7 +369,7 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
    */
   private async sendSlackAlert(rule: AlertRule, message: string): Promise<void> {
     // In a real implementation, this would send to configured Slack channels
-    console.log('[ALERT] Slack notification sent:', rule.name);
+    console.warn('[ALERT] Slack notification sent:', rule.name);
   }
 
   /**
@@ -377,7 +377,7 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
    */
   private async sendPagerDutyAlert(rule: AlertRule, message: string): Promise<void> {
     // In a real implementation, this would send to PagerDuty
-    console.log('[ALERT] PagerDuty notification sent:', rule.name);
+    console.warn('[ALERT] PagerDuty notification sent:', rule.name);
   }
 
   /**
@@ -385,7 +385,7 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
    */
   private async sendWebhookAlert(rule: AlertRule, message: string): Promise<void> {
     // In a real implementation, this would send to configured webhooks
-    console.log('[ALERT] Webhook notification sent:', rule.name);
+    console.warn('[ALERT] Webhook notification sent:', rule.name);
   }
 
   /**
@@ -409,7 +409,7 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
     const rule = CRITICAL_ALERT_RULES.find(r => r.id === ruleId);
     if (rule) {
       Object.assign(rule, updates);
-      console.log(`[ALERT] Updated rule: ${ruleId}`, updates);
+      console.warn(`[ALERT] Updated rule: ${ruleId}`, updates);
     }
   }
 

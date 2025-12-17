@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from "react-router-dom";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import App from "./App.tsx";
 import "./index.css";
 import { initializeSentry } from "./lib/logger";
@@ -95,7 +94,5 @@ const SentryApp = Sentry.withErrorBoundary(App, {
 const root = createRoot(document.getElementById("root")!);
 
 root.render(
-  <ThemeProvider>
-    <SentryApp />
-  </ThemeProvider>
+  <SentryApp />
 );

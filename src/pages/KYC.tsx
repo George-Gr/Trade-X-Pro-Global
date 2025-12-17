@@ -46,14 +46,17 @@ const KYC = () => {
         .order("created_at", { ascending: false });
 
       if (!error && data) {
-        setDocuments(data);
+        setDocuments(data as KYCDocument[]);
+      } else if (error) {
+        console.error('Failed to fetch KYC documents:', error);
+        // Consider showing a toast notification to the user
       }
     } catch (err) {
-      console.error("Error fetching documents:", err);
+      console.error('Unexpected error fetching KYC documents:', err);
+      // Consider showing a toast notification to the user
     } finally {
       setIsLoading(false);
-    }
-  }, [user]);
+    }  }, [user]);
 
   useEffect(() => {
     if (user) {

@@ -1,0 +1,43 @@
+{
+  "terminal.integrated.rendererType": "dom",
+  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.scrollback": 5000,
+  "terminal.integrated.enablePersistentSessions": false
+}
+{
+  // Help mitigate terminal slowness and PTY reconnection issues for contributors
+  // - Use DOM renderer (more reliable on machines with GPU/driver issues)
+  // - Increase scrollback to make debugging easier
+  // - Disable GPU acceleration for terminal rendering when problems appear
+  "terminal.integrated.rendererType": "dom",
+  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.scrollback": 5000
+}
+{
+    "terminal.integrated.customGlyphs": true,
+    "terminal.integrated.gpuAcceleration": "auto",
+    // Use PowerShell as a faster default for Windows terminals
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "args": []
+        },
+        "Git Bash": {
+            "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+            "args": ["--login", "-i"]
+        },
+        "Fast Git Bash": {
+            "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+            "args": ["--noprofile", "--norc"]
+        }
+    },
+    "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
+
+    // Disable environment reporting and shell integration to avoid extra init overhead
+    "terminal.integrated.shellIntegration.environmentReporting": false,
+    "terminal.integrated.shellIntegration.enabled": false,
+
+    // Larger scrollback to avoid terminal stalls when printing large outputs
+    "terminal.integrated.scrollback": 10000
+}

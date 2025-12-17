@@ -87,56 +87,7 @@
   /* Light mode: Very light gray */
 }
 
-/* ============================================
-   DARK MODE ADAPTATIONS
-   ============================================ */
 
-.dark .card-primary,
-.dark .card[data-variant="primary"] {
-  /* Dark mode primary: #1A202C */
-  background: hsl(218 30% 13%);
-}
-
-.dark .card-secondary,
-.dark .card[data-variant="secondary"] {
-  /* Dark mode secondary: #2D3748 */
-  background: hsl(217 24% 22%);
-}
-
-.dark .card-tertiary,
-.dark .card[data-variant="tertiary"] {
-  /* Dark mode tertiary: Slightly lighter */
-  background: hsl(217 20% 28%);
-}
-
-/* Enhanced shadows for dark mode - use CSS variables (FE-013) */
-.dark .card-elevation-1,
-.dark .card[data-elevation="1"] {
-  box-shadow: var(--shadow-sm);
-}
-
-.dark .card-elevation-2,
-.dark .card[data-elevation="2"] {
-  box-shadow: var(--shadow-md);
-}
-
-.dark .card-elevation-3,
-.dark .card[data-elevation="3"] {
-  box-shadow: var(--shadow-lg);
-}
-
-/* Dark mode hover enhancements */
-.dark .card-elevation-1:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.dark .card-elevation-2:hover {
-  box-shadow: var(--shadow-lg);
-}
-
-.dark .card-elevation-3:hover {
-  box-shadow: var(--shadow-xl);
-}
 
 /* ============================================
    UTILITY CLASSES

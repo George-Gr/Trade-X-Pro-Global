@@ -11,6 +11,7 @@ import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "./AppSidebar";
 import { MobileBottomNavigation } from "./MobileBottomNavigation";
 import { DemoModeIndicator } from "@/components/ui/DemoModeIndicator";
+import { AccessibilityNavigation } from "@/components/accessibility/AccessibilityNavigation";
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -93,6 +94,9 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
        >
         {/* Demo Mode Banner */}
         <DemoModeIndicator variant="banner" />
+        
+        {/* Accessibility Navigation */}
+        <AccessibilityNavigation />
         
         {/* Top Header - sticky with z-40 to stay above main content */}
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-40 backdrop-blur-sm bg-card/95 shadow-sm">

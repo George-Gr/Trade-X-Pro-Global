@@ -132,10 +132,10 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
 /**
  * Wrapper component that conditionally renders children based on view mode
  */
-export const ProModeOnly: React.FC<{ children: React.ReactNode; fallback?: React.ReactNode }> = ({
+export const ProModeOnly: React.FC<{ children?: React.ReactNode; fallback?: React.ReactNode }> = ({
   children,
   fallback = null,
-}) => {
+} = {}) => {
   const { isProMode } = useViewModeSafe();
   return <>{isProMode ? children : fallback}</>;
 };
@@ -143,7 +143,7 @@ export const ProModeOnly: React.FC<{ children: React.ReactNode; fallback?: React
 /**
  * Wrapper component that only renders in basic mode
  */
-export const BasicModeOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const BasicModeOnly: React.FC<{ children?: React.ReactNode }> = ({ children } = {}) => {
   const { isBasicMode } = useViewModeSafe();
   return <>{isBasicMode ? children : null}</>;
 };

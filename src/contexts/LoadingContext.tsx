@@ -35,7 +35,7 @@ const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 /**
  * Provider component for loading state management
  */
-export function LoadingProvider({ children }: { children: React.ReactNode }) {
+export function LoadingProvider({ children }: { children?: React.ReactNode } = {}) {
   const [operations, setOperations] = useState<Map<string, LoadingOperation>>(new Map());
 
   const startOperation = useCallback((id: string, message?: string) => {

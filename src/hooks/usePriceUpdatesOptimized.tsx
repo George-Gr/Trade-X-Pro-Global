@@ -128,23 +128,33 @@ export const usePriceUpdatesOptimized = ({
   );
 
   // Throttled state update to prevent excessive re-renders
-  const updatePricesThrottled = useMemo(
-    () => throttle((newPrices: Map<string, PriceData>) => {
+  const updatePricesThrottled = useMemo(() => {
+    const updater = (newPrices: Map<string, PriceData>) => {
       if (isMountedRef.current) {
         setPrices(newPrices);
       }
-    }, throttleMs),
-    [throttleMs]
-  );
+    };
+
+    // The throttle utility expects a general function signature; cast to satisfy its typing,
+    // then cast the returned throttled function back to the specific signature we expect.
+    const throttled = throttle(updater as unknown as (...args: unknown[]) => void, throttleMs) as unknown;
+    return throttled as (p: Map<string, PriceData>) => void;
+  }, [throttleMs]);
 
   const updatePrices = useCallback(async () => {
-    if (!enabled || symbols.length === 0) {
+    if (!enabled || symbolList === '') {
       setIsLoading(false);
       return;
     }
 
     try {
-      const newPrices = await fetchPricesBatched(symbols, maxConcurrent);
+      const symbolArray = symbolList.split(',').filter(Boolean);
+      if (symbolArray.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      const newPrices = await fetchPricesBatched(symbolArray, maxConcurrent);
       updatePricesThrottled(newPrices);
       setError(null);
       setIsLoading(false);
@@ -157,7 +167,7 @@ export const usePriceUpdatesOptimized = ({
   useEffect(() => {
     isMountedRef.current = true;
 
-    if (!enabled || symbols.length === 0) {
+    if (!enabled || symbolList === '') {
       setIsLoading(false);
       return;
     }
@@ -175,7 +185,6 @@ export const usePriceUpdatesOptimized = ({
       }
     };
   }, [symbolList, intervalMs, enabled, updatePrices]);
-
   const getPrice = useCallback((symbol: string): PriceData | null => {
     const priceData = prices.get(symbol);
     if (priceData) {

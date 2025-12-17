@@ -94,23 +94,28 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
   const refresh = useCallback(() => fetchInitial(), [fetchInitial]);
   const reset = useCallback(() => { cursorRef.current = null; setState({ data: [], loading: true, loadingMore: false, error: null, hasMore: true, totalCount: null, currentPage: 0 }); }, []);
 
-  useEffect(() => { isMountedRef.current = true; fetchInitial(); return () => { isMountedRef.current = false; }; }, [fetchInitial]);
+  useEffect(() => { isMountedRef.current = true; fetchInitial(); return () => { isMountedRef.current = false; }; }, [fetchInitial, enabled]);
 
   return { ...state, loadMore, loadPage: async () => {}, refresh, reset };
 }
 
-export function useInfiniteScroll<T = unknown>(options: PaginationOptions & { threshold?: number }) {
-  const { threshold = 0.1, ...rest } = options;
+/**
+ * Hook: useInfiniteScroll
+ * 
+ * Extends usePagination with IntersectionObserver for infinite scroll functionality
+ */
+export function useInfiniteScroll<T = unknown>(options: PaginationOptions & { threshold?: number }) {  const { threshold = 0.1, ...rest } = options;
   const pagination = usePagination<T>(rest);
+  const { hasMore, loadingMore, loadMore } = pagination;
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = loadMoreRef.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting && pagination.hasMore && !pagination.loadingMore) pagination.loadMore(); }, { threshold });
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting && hasMore && !loadingMore) loadMore(); }, { threshold });
     obs.observe(el);
     return () => obs.disconnect();
-  }, [pagination.hasMore, pagination.loadingMore, pagination.loadMore, threshold]);
+  }, [hasMore, loadingMore, loadMore, threshold]);
 
   return { ...pagination, loadMoreRef };
 }

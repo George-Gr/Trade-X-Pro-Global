@@ -11,11 +11,13 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
 import { ViewModeProvider } from "@/contexts/ViewModeContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { logger, initializeSentry } from "@/lib/logger";
 import { breadcrumbTracker } from "@/lib/breadcrumbTracker";
 import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalLoadingIndicator } from "@/components/common/GlobalLoadingIndicator";
+import { accessibilityStyles } from "@/styles/accessibilityStyles";
 const Index = lazy(() => import("./pages/Index"));
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
@@ -41,6 +43,10 @@ import Terms from "./pages/legal/Terms";
 import RiskDisclosure from "./pages/legal/RiskDisclosure";
 import CookiePolicy from "./pages/legal/CookiePolicy";
 import AMLPolicy from "./pages/legal/AMLPolicy";
+
+// Accessibility Components
+import { AccessibilityTestingSuite } from "./components/accessibility/AccessibilityTestingSuite";
+import { AdvancedAccessibilityDashboard } from "./components/accessibility/AdvancedAccessibilityDashboard";
 
 // Trading Pages
 import TradingInstruments from "./pages/trading/TradingInstruments";
@@ -70,9 +76,6 @@ import Regulation from "./pages/company/Regulation";
 import Security from "./pages/company/Security";
 import Partners from "./pages/company/Partners";
 import ContactUs from "./pages/company/ContactUs";
-
-// Theme Testing (Development Only)
-const ThemeTesting = lazy(() => import("./pages/ThemeTesting"));
 
 const queryClient = new QueryClient();
 
@@ -119,7 +122,9 @@ const App = () => {
                 // Sentry integration would be handled by logger in production
               }}
             >
-              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <AccessibilityProvider>
+                <style>{accessibilityStyles}</style>
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <Suspense
                   fallback={
                     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -329,14 +334,38 @@ const App = () => {
                           </ErrorBoundary>
                         }
                       />
+                      <Route
+                        path="/accessibility"
+                        element={
+                          <ErrorBoundary>
+                            <ProtectedRoute>
+                              <AuthenticatedLayoutProvider>
+                                <AccessibilityTestingSuite />
+                              </AuthenticatedLayoutProvider>
+                            </ProtectedRoute>
+                          </ErrorBoundary>
+                        }
+                      />
+                      <Route
+                        path="/accessibility/dashboard"
+                        element={
+                          <ErrorBoundary>
+                            <ProtectedRoute>
+                              <AuthenticatedLayoutProvider>
+                                <AdvancedAccessibilityDashboard />
+                              </AuthenticatedLayoutProvider>
+                            </ProtectedRoute>
+                          </ErrorBoundary>
+                        }
+                      />
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      {import.meta.env.DEV && <Route path="/dev/theme-testing" element={<ThemeTesting />} />}
                       {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
                 </Suspense>
-              </BrowserRouter>
+                </BrowserRouter>
+              </AccessibilityProvider>
             </ErrorBoundary>
              </LoadingProvider>
             </ViewModeProvider>

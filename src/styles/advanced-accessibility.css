@@ -14,10 +14,7 @@
   outline-offset: 2px;
 }
 
-/* Ensure focus is visible even in dark mode */
-.dark :focus-visible {
-  outline-color: hsl(var(--ring));
-}
+
 
 /* Enhanced focus ring for critical interactive elements */
 .focus-ring {
@@ -388,12 +385,7 @@ a:has(> svg:only-child):not(:has(> span)) {
   --text-muted: 220 9% 58%;            /* 4.5:1 contrast on white */
 }
 
-/* Dark mode contrast */
-.dark {
-  --text-primary: 220 13% 95%;         /* 18:1 contrast on dark bg */
-  --text-secondary: 220 9% 79%;        /* 9:1 contrast on dark bg */
-  --text-muted: 220 9% 58%;            /* 4.5:1 contrast on dark bg */
-}
+
 
 /* High contrast mode support */
 @media (prefers-contrast: more) {
@@ -630,28 +622,4 @@ button, a, input[type="checkbox"], input[type="radio"] {
   outline: 3px dashed green;
 }
 
-/* ============================================================================
-   Dark Mode Accessibility Adjustments
-   ========================================================================== */
 
-.dark a {
-  color: hsl(var(--accent) / 0.9);
-}
-
-.dark a:hover {
-  color: hsl(var(--accent));
-}
-
-.dark [role="menuitem"]:focus-visible {
-  background-color: hsl(var(--accent) / 0.15);
-}
-
-.dark [aria-live="polite"] {
-  background-color: hsl(var(--info) / 0.15);
-  border: 1px solid hsl(var(--info) / 0.3);
-}
-
-.dark [aria-live="assertive"] {
-  background-color: hsl(var(--warning) / 0.15);
-  border: 1px solid hsl(var(--warning) / 0.3);
-}

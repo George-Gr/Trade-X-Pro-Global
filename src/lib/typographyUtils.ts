@@ -247,12 +247,12 @@ export const logTypographyDiagnostics = (): void => {
   console.group('Typography System Diagnostics');
   
   const validation = validateTypography();
-  console.log('Validation:', validation);
+  console.warn('Validation:', validation);
   
   if (validation.isValid) {
     const variables = getTypographyVariables();
     console.table(variables);
-    console.log('✓ Typography system is properly configured');
+    console.warn('✓ Typography system is properly configured');
   } else {
     console.error('✗ Typography system has errors:', validation.errors);
   }

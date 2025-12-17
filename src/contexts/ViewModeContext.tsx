@@ -28,7 +28,7 @@ const VIEW_MODE_STORAGE_KEY = "tradex-view-mode";
  * Provider for managing view mode state across the trading interface
  * Persists preference to localStorage
  */
-export const ViewModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ViewModeProvider: React.FC<{ children?: React.ReactNode }> = ({ children } = {}) => {
   const [viewMode, setViewModeState] = React.useState<ViewMode>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(VIEW_MODE_STORAGE_KEY);

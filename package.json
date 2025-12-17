@@ -10,6 +10,7 @@
     "dev:rebuild": "npm run lint -- --fix && npm run dev:clean",
     "dev:validate": "node scripts/validate-fixes.js",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "build:analyze": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 ANALYZE=true vite build",
     "build:dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build --mode development",
     "build:sentry": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build && sentry-cli sourcemaps upload-sourcemaps dist --url-prefix '~/' --strip-prefix './dist'",
     "build:production": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 VITE_SENTRY_DSN=$SENTRY_DSN vite build",
@@ -28,6 +29,9 @@
     "supabase:pull": "supabase pull",
     "supabase:migrations": "supabase migrations list",
     "supabase:functions:deploy": "supabase functions deploy"
+    ,
+    "diagnose:terminal": "node ./scripts/find-vscode-pty-errors.cjs",
+    "collect:pty-logs": "powershell -ExecutionPolicy Bypass -File ./scripts/collect-vscode-pty-logs.ps1"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

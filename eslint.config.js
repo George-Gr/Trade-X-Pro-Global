@@ -25,7 +25,8 @@ export default [
       sourceType: 'module',
       parserOptions: {
         // Use workspace tsconfig(s) that include different parts of the repo
-        project: ['./tsconfig.app.json'],
+        // Provide a fallback to the root tsconfig to ensure ESLint sees all files
+        project: ['./tsconfig.app.json', './tsconfig.json', './tsconfig.eslint.json'],
         tsconfigRootDir: __dirname,
       },
       globals: {

@@ -197,15 +197,15 @@ export function initializeSentry(): void {
       }
 
       if (isDevelopment) {
-        console.log('[Logger] Sentry is configured and logger is active');
+        console.warn('[Logger] Sentry is configured and logger is active');
       }
     } else if (isDevelopment) {
-      console.log('[Logger] Sentry not configured (no DSN) — running in dev mode');
+      console.warn('[Logger] Sentry not configured (no DSN) — running in dev mode');
     }
   } catch (err) {
     // Defensive: do not let logger initialization throw application errors
     if (isDevelopment) {
-      console.warn('[Logger] Failed to initialize Sentry integration', err);
+      console.error('[Logger] Failed to initialize Sentry integration', err);
     }
     sentryInitialized = false;
   }
@@ -295,7 +295,7 @@ export const logger = {
     }
 
     if (isDevelopment) {
-      console.log(`[BREADCRUMB] ${category}: ${message}`);
+      console.warn(`[BREADCRUMB] ${category}: ${message}`);
     }
 
     if (isSentryActive()) {
@@ -330,7 +330,7 @@ export const logger = {
 
     if (isDevelopment) {
       const formatted = formatLogMessage('INFO', message, fullContext);
-      console.log(formatted, fullContext.metadata || {});
+      console.warn(formatted, fullContext.metadata || {});
     }
 
     if (isSentryActive()) {
@@ -424,7 +424,7 @@ export const logger = {
     if (isDevelopment) {
       const fullContext = mergeContext(context);
       const formatted = formatLogMessage('DEBUG', message, fullContext);
-      console.debug(formatted, fullContext.metadata || {});
+      console.error(formatted, fullContext.metadata || {});
     }
   },
 
@@ -444,7 +444,7 @@ export const logger = {
     activeTransactions.set(transactionId, transaction);
 
     if (isDevelopment) {
-      console.log(`[PERF] Started transaction: ${name} (${transactionId})`, {
+      console.warn(`[PERF] Started transaction: ${name} (${transactionId})`, {
         operation,
         startTime,
         context: context?.metadata || {}
@@ -488,7 +488,7 @@ export const logger = {
     activeTransactions.delete(transactionId);
 
     if (isDevelopment) {
-      console.log(`[PERF] Finished transaction: ${transaction.name} (${transactionId})`, {
+      console.warn(`[PERF] Finished transaction: ${transaction.name} (${transactionId})`, {
         duration: `${duration.toFixed(2)}ms`,
         operation: transaction.operation,
         context: fullContext.metadata || {}
@@ -568,7 +568,7 @@ export const logger = {
     }
 
     if (isDevelopment) {
-      const logLevel = apiCall.success ? 'log' : 'warn';
+      const logLevel = apiCall.success ? 'warn' : 'error';
       console[logLevel](`[API] ${message}`, {
         method,
         url,
@@ -641,7 +641,7 @@ export const logger = {
     );
 
     if (isDevelopment) {
-      const logLevel = success ? 'log' : 'warn';
+      const logLevel = success ? 'warn' : 'error';
       console[logLevel](`[SUPABASE] ${message}`, {
         table,
         operation,
@@ -717,7 +717,7 @@ export const logger = {
     }
 
     if (isDevelopment) {
-      console.log(`[METRIC] ${name}: ${value}${unit}`, context || {});
+      console.warn(`[METRIC] ${name}: ${value}${unit}`, context || {});
     }
 
     if (isSentryActive()) {
@@ -791,7 +791,7 @@ export const logger = {
     }
 
     if (isDevelopment) {
-      console.log(`[USER ACTION] ${message}`, fullContext.metadata || {});
+      console.warn(`[USER ACTION] ${message}`, fullContext.metadata || {});
     }
   },
 
@@ -803,7 +803,7 @@ export const logger = {
     const actionId = `${action}-${startTime}`;
 
     if (isDevelopment) {
-      console.log(`[USER ACTION START] ${action} (${actionId})`, context?.metadata || {});
+      console.warn(`[USER ACTION START] ${action} (${actionId})`, context?.metadata || {});
     }
 
     return actionId;
@@ -820,7 +820,7 @@ export const logger = {
     this.recordUserAction(action, duration, context);
 
     if (isDevelopment) {
-      console.log(`[USER ACTION END] ${action} (${actionId}) - ${duration.toFixed(2)}ms`);
+      console.error(`[USER ACTION END] ${action} (${actionId}) - ${duration.toFixed(2)}ms`);
     }
   },
 
@@ -839,7 +839,7 @@ export const logger = {
       const duration = performance.now() - start;
       const fullContext = mergeContext(context);
       if (isDevelopment) {
-        console.log(
+        console.warn(
           `[PERF] ${label}: ${duration.toFixed(2)}ms`,
           fullContext.metadata || {}
         );
@@ -863,7 +863,7 @@ export const logger = {
       const duration = performance.now() - start;
       const fullContext = mergeContext(context);
       if (isDevelopment) {
-        console.log(
+        console.warn(
           `[PERF] ${label}: ${duration.toFixed(2)}ms`,
           fullContext.metadata || {}
         );

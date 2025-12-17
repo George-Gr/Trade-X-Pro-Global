@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 
 /**
  * Performance monitoring hook to prevent extension host unresponsiveness
@@ -17,14 +18,10 @@ export const usePerformanceMonitoring = () => {
     const totalListeners = Array.from(listenersRef.current.values()).reduce((sum, count) => sum + count, 0);
     
     if (totalListeners > 100) {
-      console.warn(`High listener count detected: ${totalListeners}. This may cause performance issues.`);
+      logger.warn(`High listener count detected: ${totalListeners}. This may cause performance issues.`);
       
       // Log listener breakdown
-      console.group('Listener breakdown:');
-      listenersRef.current.forEach((count, type) => {
-        if (count > 0) console.log(`${type}: ${count}`);
-      });
-      console.groupEnd();
+      logger.debug('Listener breakdown', { metadata: Object.fromEntries(listenersRef.current) });
     }
   }, []);
 
@@ -36,7 +33,7 @@ export const usePerformanceMonitoring = () => {
     const totalTimers = Array.from(timersRef.current.values()).reduce((sum, count) => sum + count, 0);
     
     if (totalTimers > 50) {
-      console.warn(`High timer count detected: ${totalTimers}. This may cause performance issues.`);
+      logger.warn(`High timer count detected: ${totalTimers}. This may cause performance issues.`);
     }
   }, []);
 
@@ -50,7 +47,7 @@ export const usePerformanceMonitoring = () => {
       const percentage = (usedMB / totalMB) * 100;
       
       if (percentage > 80) {
-        console.warn(`High memory usage detected: ${percentage.toFixed(1)}% (${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB)`);
+        logger.warn(`High memory usage detected: ${percentage.toFixed(1)}% (${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB)`);
       }
     }
   }, []);

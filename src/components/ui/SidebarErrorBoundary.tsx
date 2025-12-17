@@ -49,7 +49,6 @@ export class SidebarErrorBoundary extends React.Component<
     this.setState({ errorInfo });
 
     // Log error to console for debugging
-    console.error('Sidebar Error Boundary caught an error:', error, errorInfo);
 
     // Log to external error tracking service if enabled
     if (this.props.enableLogging) {
@@ -91,12 +90,7 @@ export class SidebarErrorBoundary extends React.Component<
     // Example: Send to console (replace with actual error tracking service)
     if (typeof window !== 'undefined') {
       // In production, replace this with your error tracking service
-      console.group('🚨 Sidebar Error Report');
-      console.error('Error:', errorData.message);
-      console.error('Stack:', errorData.stack);
-      console.error('Component Stack:', errorData.componentStack);
-      console.error('Additional Info:', errorData);
-      console.groupEnd();
+      console.error('🚨 Sidebar Error Report:', errorData);
     }
   };
 

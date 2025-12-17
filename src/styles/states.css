@@ -355,27 +355,7 @@ tr.clickable:active {
   transition: var(--transition-normal);
 }
 
-/* ============================================
-   DARK MODE ADJUSTMENTS
-   ============================================ */
 
-.dark button:not(:disabled):hover,
-.dark [role="button"]:not([aria-disabled="true"]):hover,
-.dark a:hover {
-  filter: brightness(1.15);
-}
-
-.dark button:not(:disabled):active,
-.dark [role="button"]:not([aria-disabled="true"]):active,
-.dark a:active {
-  filter: brightness(0.9);
-}
-
-.dark input:not(:disabled):hover,
-.dark textarea:not(:disabled):hover,
-.dark select:not(:disabled):hover {
-  filter: brightness(1.1);
-}
 
 /* ============================================
    ACCESSIBILITY ENHANCEMENTS

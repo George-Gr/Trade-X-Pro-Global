@@ -119,7 +119,6 @@
                 0 0 0 10px hsl(var(--contrast-auto-bg-high) / 0.6);
   }
 
-  /* Dark mode focus ring */
   .dark .focus-visible {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
@@ -160,18 +159,7 @@
     }
   }
 
-  /* Dark Mode Enhanced Contrast */
-  .dark .text-primary-contrast {
-    color: hsl(var(--primary-contrast-dark));
-  }
-  
-  .dark .text-secondary-contrast {
-    color: hsl(var(--secondary-contrast-dark));
-  }
-  
-  .dark .text-tertiary-contrast {
-    color: hsl(var(--tertiary-contrast-dark));
-  }
+
 }
 
 /* 
@@ -223,49 +211,7 @@
   --contrast-auto-bg-high: 0 0% 100%;
 }
 
-/* Dark Mode Contrast Colors */
-.dark {
-  --primary-contrast: 210 40% 98%;           /* White text on dark */
-  --primary-contrast-light: 222 47% 11%;     /* Dark text on light */
-  
-  --secondary-contrast: 215 20% 65%;         /* Enhanced gray for dark mode */
-  --secondary-contrast-light: 215 16% 35%;   /* Gray for light mode */
-  
-  --tertiary-contrast: 215 20% 55%;          /* Medium gray for dark mode */
-  --tertiary-contrast-light: 215 16% 47%;    /* Medium gray for light mode */
-  
-  --muted-contrast: 215 20% 45%;             /* Improved muted for dark mode */
-  --muted-contrast-light: 215 16% 50%;       /* Muted for light mode */
-  
-  /* Status Colors for Dark Mode */
-  --success-contrast: 142 76% 48%;
-  --warning-contrast: 38 92% 58%;
-  --danger-contrast: 0 84% 62%;
-  
-  /* Background/Forground pairs for dark mode */
-  --primary-contrast-bg: 220 60% 45%;
-  --primary-contrast-fg: 0 0% 100%;
-  
-  --secondary-contrast-bg: 217 33% 17%;
-  --secondary-contrast-fg: 210 40% 98%;
-  
-  --success-contrast-bg: 142 76% 15%;
-  --success-contrast-fg: 142 76% 48%;
-  
-  --warning-contrast-bg: 38 92% 15%;
-  --warning-contrast-fg: 38 92% 58%;
-  
-  --danger-contrast-bg: 0 84% 15%;
-  --danger-contrast-fg: 0 84% 62%;
-  
-  /* Focus and Interaction for Dark Mode */
-  --focus-color: 217 91% 60%;
-  --focus-ring-color: 217 91% 60%;
-  
-  /* High Contrast Mode for Dark */
-  --contrast-auto-high: 210 40% 95%;
-  --contrast-auto-bg-high: 217 33% 17%;
-}
+
 
 /* 
  * Enhanced Focus States for Accessibility

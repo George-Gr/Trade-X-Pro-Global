@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
 import { ZoomIn, ZoomOut } from 'lucide-react';
+import { formatTooltipValue } from '@/lib/chartUtils';
 
 // Dynamic import wrapper for recharts components
 const DynamicLineChart = React.lazy(() => import('recharts').then(m => ({
@@ -184,9 +185,10 @@ export const EquityChart: React.FC = () => {
                   label={{ value: 'Equity ($)', angle: -90, position: 'insideLeft' }}
                 />
                 <DynamicTooltip
-                  formatter={(value: number | string) => `$${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
+                  formatter={formatTooltipValue as any}
                   contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
                 />
+                
                 <DynamicReferenceLine
                   y={stats.avgEquity}
                   stroke="#94a3b8"

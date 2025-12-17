@@ -18,10 +18,10 @@ import { KycRequired } from './KycRequired';
 import { Loader2 } from 'lucide-react';
 
 interface TradingPageGateProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export const TradingPageGate: React.FC<TradingPageGateProps> = ({ children }) => {
+export const TradingPageGate: React.FC<TradingPageGateProps> = ({ children } = {}) => {
   const kycState = useKycTrading();
 
   // Set up notification listener

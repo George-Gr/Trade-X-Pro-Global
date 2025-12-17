@@ -26,14 +26,12 @@ vi.mock('@/hooks/use-toast', () => ({
 vi.mock('@/lib/rateLimiter', () => ({
   checkRateLimit: vi.fn(() => ({ allowed: true, remaining: 10, resetIn: 0 })),
   rateLimiter: {
-    execute: vi.fn((_, fn) => fn()),
+    execute: vi.fn((_key: string, fn: () => unknown) => fn()),
   },
 }));
-
 vi.mock('@/lib/idempotency', () => ({
   generateIdempotencyKey: vi.fn(() => 'test-idempotency-key'),
-  executeWithIdempotency: vi.fn((_, __, fn) => fn()),
-}));
+  executeWithIdempotency: vi.fn((_key: string, _operation: string, fn: () => unknown) => fn()),}));
 
 vi.mock('@/lib/logger', () => ({
   logger: {

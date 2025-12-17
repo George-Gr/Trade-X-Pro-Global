@@ -5,7 +5,8 @@ import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RegistrationFormData } from "./MultiStepRegistration";
+import type { RegistrationFormData } from "./MultiStepRegistration";
+type StepTwoFormValues = Pick<RegistrationFormData, 'tradingExperience' | 'occupation' | 'financialCapability' | 'reasonForJoining' | 'tradingGoals'>;
 
 interface StepTwoProps {
   formData: RegistrationFormData;
@@ -16,7 +17,7 @@ interface StepTwoProps {
 }
 
 const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onSubmit, isLoading }) => {
-  const form = useForm({
+  const form = useForm<StepTwoFormValues>({
     defaultValues: {
       tradingExperience: formData.tradingExperience,
       occupation: formData.occupation,
@@ -28,7 +29,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
 
   const { handleSubmit } = form;
 
-  const handleFormSubmit = (data: typeof formData) => {
+  const handleFormSubmit = (data: StepTwoFormValues) => {
     updateFormData(data);
     onSubmit();
   };

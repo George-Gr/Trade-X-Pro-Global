@@ -13,11 +13,7 @@ import { ErrorContext, ErrorContextType } from '@/contexts/ErrorContext';
  * </ErrorContextProvider>
  * ```
  */
-export function ErrorContextProvider({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
+export function ErrorContextProvider({ children }: { children?: ReactNode } = {}): JSX.Element {
   const setContext = useCallback((context: Partial<LogContext>) => {
     logger.setGlobalContext(context);
   }, []);
