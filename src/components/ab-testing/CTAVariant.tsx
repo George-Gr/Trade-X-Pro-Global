@@ -136,6 +136,7 @@ export function CTAVariant({
       BASE_CLASSES,
       SIZE_CLASSES[config.size],
       STYLE_CLASSES[config.style]?.[config.color] ||
+        STYLE_CLASSES.filled?.[config.color] ||
         STYLE_CLASSES.filled.primary,
       POSITION_CLASSES[config.position || "center"],
       className,

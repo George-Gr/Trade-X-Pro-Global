@@ -1,8 +1,8 @@
-import { NavLink } from "./NavLink";
-import { DollarSign, LineChart, Building2, Gem, Bitcoin } from "lucide-react";
+import { Bitcoin, Building2, DollarSign, Gem, LineChart } from 'lucide-react';
+import { NavLink, SmallMenu } from './NavLink';
 
 export const MarketsMenu = () => (
-  <NavLink.SmallMenu title="Markets">
+  <SmallMenu title="Markets">
     <NavLink
       to="/markets/forex"
       icon={<DollarSign className="h-4 w-4" />}
@@ -33,5 +33,5 @@ export const MarketsMenu = () => (
       title="Cryptocurrencies"
       description="BTC, ETH & more"
     />
-  </NavLink.SmallMenu>
+  </SmallMenu>
 );

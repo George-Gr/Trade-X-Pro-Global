@@ -1,14 +1,14 @@
-import { NavLink } from "./NavLink";
 import {
-  FileText,
-  ScrollText,
   AlertTriangle,
   Cookie,
+  FileText,
   Scale,
-} from "lucide-react";
+  ScrollText,
+} from 'lucide-react';
+import { NavLink, SmallMenu } from './NavLink';
 
 export const LegalMenu = () => (
-  <NavLink.SmallMenu title="Legal">
+  <SmallMenu title="Legal">
     <NavLink
       to="/legal/privacy"
       icon={<FileText className="h-4 w-4" />}
@@ -39,5 +39,5 @@ export const LegalMenu = () => (
       title="AML Policy"
       description="Anti-money laundering"
     />
-  </NavLink.SmallMenu>
+  </SmallMenu>
 );

@@ -1,12 +1,12 @@
 import React, {
   createContext,
+  ReactNode,
+  useCallback,
   useContext,
   useEffect,
-  useState,
-  ReactNode,
   useMemo,
-  useCallback,
-} from "react";
+  useState,
+} from 'react';
 // Lightweight/local implementations of the accessibility hooks to avoid a missing module error.
 // These are intentionally minimal: they provide the shapes and simple behavior used by the context.
 // If a centralized lib implementation is added later, replace these with imports.
@@ -32,18 +32,18 @@ export const useVisualAccessibilityPreferences = () => {
 };
 
 type ColorBlindType =
-  | "none"
-  | "protanopia"
-  | "deuteranopia"
-  | "tritanopia"
-  | "achromatopsia";
+  | 'none'
+  | 'protanopia'
+  | 'deuteranopia'
+  | 'tritanopia'
+  | 'achromatopsia';
 
 export const useColorBlindMode = () => {
   const [colorBlindMode, setColorBlindMode] = useState<{
     type: ColorBlindType;
     intensity: number;
   }>(() => ({
-    type: "none",
+    type: 'none',
     intensity: 0,
   }));
 
@@ -54,13 +54,22 @@ export const useColorBlindMode = () => {
     setColorBlindMode(cfg);
     // Lightweight side-effect: add data attribute for styling if needed
     try {
-      document.documentElement.setAttribute("data-color-blind", cfg.type);
+      document.documentElement.setAttribute('data-color-blind', cfg.type);
     } catch (err) {
       // Intentionally suppressed: document API unavailable in SSR or DOM-less environments; failures are expected
     }
   };
 
-  return { colorBlindMode, applyColorBlindSimulation } as const;
+  // Add availableModes property that AccessibilityNavigation expects
+  const availableModes = [
+    { type: 'none', name: 'None' },
+    { type: 'protanopia', name: 'Protanopia (Red-Blind)' },
+    { type: 'deuteranopia', name: 'Deuteranopia (Green-Blind)' },
+    { type: 'tritanopia', name: 'Tritanopia (Blue-Blind)' },
+    { type: 'achromatopsia', name: 'Achromatopsia (Complete Color Blindness)' },
+  ];
+
+  return { colorBlindMode, applyColorBlindSimulation, availableModes } as const;
 };
 
 export const useColorContrastVerification = () => {
@@ -68,7 +77,7 @@ export const useColorContrastVerification = () => {
   const [complianceReport] = useState<{ aaCompliance: number } | undefined>(
     () => ({
       aaCompliance: 90,
-    }),
+    })
   );
 
   return { complianceReport } as const;
@@ -77,11 +86,31 @@ export const useColorContrastVerification = () => {
 // Local implementation of trading keyboard shortcuts hook
 export const useTradingKeyboardShortcuts = () => {
   const [shortcuts] = useState([
-    { key: "F1", description: "Help" },
-    { key: "F2", description: "New Order" },
-    { key: "F3", description: "Close Position" },
-    { key: "F4", description: "Quick Buy" },
-    { key: "F5", description: "Quick Sell" },
+    { key: 'F1', description: 'Help', category: 'General' },
+    { key: 'F2', description: 'New Order', category: 'Trading' },
+    { key: 'F3', description: 'Close Position', category: 'Trading' },
+    { key: 'F4', description: 'Quick Buy', category: 'Trading' },
+    { key: 'F5', description: 'Quick Sell', category: 'Trading' },
+    {
+      key: 'Ctrl+Shift+H',
+      description: 'Toggle High Contrast',
+      category: 'Accessibility',
+    },
+    {
+      key: 'Ctrl+Shift+M',
+      description: 'Toggle Reduce Motion',
+      category: 'Accessibility',
+    },
+    {
+      key: 'Ctrl+Shift+R',
+      description: 'Toggle Screen Reader',
+      category: 'Accessibility',
+    },
+    {
+      key: 'Ctrl+Shift+A',
+      description: 'Toggle Accessibility Menu',
+      category: 'Accessibility',
+    },
   ]);
 
   return { shortcuts } as const;
@@ -113,25 +142,25 @@ export interface KeyBindingsMap {
  */
 export const defaultKeyBindings: KeyBindingsMap = {
   toggleHighContrast: {
-    key: "h",
+    key: 'h',
     ctrlKey: false,
     altKey: true,
     shiftKey: true,
   },
   toggleReduceMotion: {
-    key: "m",
+    key: 'm',
     ctrlKey: false,
     altKey: true,
     shiftKey: true,
   },
   toggleScreenReader: {
-    key: "r",
+    key: 'r',
     ctrlKey: false,
     altKey: true,
     shiftKey: true,
   },
   toggleAccessibilityDashboard: {
-    key: "a",
+    key: 'a',
     ctrlKey: false,
     altKey: true,
     shiftKey: true,
@@ -143,8 +172,13 @@ export const defaultKeyBindings: KeyBindingsMap = {
  */
 const eventMatchesBinding = (
   event: KeyboardEvent,
-  binding: KeyBinding,
+  binding: KeyBinding
 ): boolean => {
+  // Guard against undefined event.key
+  if (!event.key) {
+    return false;
+  }
+
   return (
     event.key.toLowerCase() === binding.key.toLowerCase() &&
     event.ctrlKey === binding.ctrlKey &&
@@ -157,10 +191,14 @@ const eventMatchesBinding = (
 interface AccessibilityContextType {
   // Visual Preferences
   visualPreferences: ReturnType<typeof useVisualAccessibilityPreferences>;
-  colorBlindMode: ReturnType<typeof useColorBlindMode>;
+  colorBlindMode: ReturnType<typeof useColorBlindMode> & {
+    availableModes: Array<{ type: ColorBlindType; name: string }>;
+  };
 
   // Keyboard Navigation
-  keyboardShortcuts: ReturnType<typeof useTradingKeyboardShortcuts>;
+  keyboardShortcuts: ReturnType<typeof useTradingKeyboardShortcuts> & {
+    shortcuts: Array<{ key: string; description: string; category: string }>;
+  };
 
   // Color Contrast
   colorContrast: ReturnType<typeof useColorContrastVerification>;
@@ -199,7 +237,7 @@ export const useAccessibility = () => {
   const context = useContext(AccessibilityContext);
   if (!context) {
     throw new Error(
-      "useAccessibility must be used within an AccessibilityProvider",
+      'useAccessibility must be used within an AccessibilityProvider'
     );
   }
   return context;
@@ -224,7 +262,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       ...defaultKeyBindings,
       ...customKeyBindings,
     }),
-    [customKeyBindings],
+    [customKeyBindings]
   );
 
   // Initialize hooks - memoize to prevent unnecessary re-renders
@@ -244,8 +282,8 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   // Include visualPreferences in dependencies to ensure we read the latest preference value
   const toggleHighContrast = useCallback(() => {
     visualPreferences.updatePreference(
-      "highContrast",
-      !visualPreferences.preferences.highContrast,
+      'highContrast',
+      !visualPreferences.preferences.highContrast
     );
   }, [visualPreferences]);
 
@@ -253,8 +291,8 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   // Don't depend on visualPreferences object
   const toggleReduceMotion = useCallback(() => {
     visualPreferences.updatePreference(
-      "reduceMotion",
-      !visualPreferences.preferences.reduceMotion,
+      'reduceMotion',
+      !visualPreferences.preferences.reduceMotion
     );
   }, [visualPreferences]);
 
@@ -263,11 +301,11 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   const toggleColorBlindMode = useCallback(
     (mode: string) => {
       const validModes = [
-        "none",
-        "protanopia",
-        "deuteranopia",
-        "tritanopia",
-        "achromatopsia",
+        'none',
+        'protanopia',
+        'deuteranopia',
+        'tritanopia',
+        'achromatopsia',
       ] as const;
       const isValidMode = (m: string): m is (typeof validModes)[number] =>
         validModes.includes(m as (typeof validModes)[number]);
@@ -279,14 +317,14 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
       if (colorBlindMode.colorBlindMode.type === mode) {
         colorBlindMode.applyColorBlindSimulation({
-          type: "none",
+          type: 'none',
           intensity: 0,
         });
       } else {
         colorBlindMode.applyColorBlindSimulation({ type: mode, intensity: 1 });
       }
     },
-    [colorBlindMode],
+    [colorBlindMode]
   );
 
   // Compute category scores from available data
@@ -324,23 +362,23 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
     // High contrast
     if (visualPreferences.preferences.highContrast) {
-      root.style.filter = "contrast(1.5) brightness(1.1)";
+      root.style.filter = 'contrast(1.5) brightness(1.1)';
     } else {
-      root.style.filter = "";
+      root.style.filter = '';
     }
 
     // Reduce motion
     if (visualPreferences.preferences.reduceMotion) {
-      root.style.setProperty("--animation-duration", "0s");
+      root.style.setProperty('--animation-duration', '0s');
     } else {
-      root.style.removeProperty("--animation-duration");
+      root.style.removeProperty('--animation-duration');
     }
 
     // Larger text
     if (visualPreferences.preferences.largerText) {
-      root.style.fontSize = "18px";
+      root.style.fontSize = '18px';
     } else {
-      root.style.fontSize = "16px";
+      root.style.fontSize = '16px';
     }
   }, [
     visualPreferences.preferences.highContrast,
@@ -350,7 +388,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
   useEffect(() => {
     // Only run on mount and when colorBlindMode.type changes
-    if (colorBlindMode.colorBlindMode.type !== "none") {
+    if (colorBlindMode.colorBlindMode.type !== 'none') {
       colorBlindMode.applyColorBlindSimulation(colorBlindMode.colorBlindMode);
     }
     // No setState or unstable object/array in dependencies
@@ -390,8 +428,8 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     toggleHighContrast,
     toggleReduceMotion,
@@ -409,8 +447,14 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   const value: AccessibilityContextType = useMemo(
     () => ({
       visualPreferences,
-      colorBlindMode,
-      keyboardShortcuts,
+      colorBlindMode: {
+        ...colorBlindMode,
+        availableModes: colorBlindMode.availableModes,
+      },
+      keyboardShortcuts: {
+        ...keyboardShortcuts,
+        shortcuts: keyboardShortcuts.shortcuts,
+      },
       colorContrast,
       screenReaderEnabled,
       setScreenReaderEnabled,
@@ -436,7 +480,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       colorContrast,
       keyboardShortcuts,
       visualPreferences,
-    ],
+    ]
   );
 
   return (

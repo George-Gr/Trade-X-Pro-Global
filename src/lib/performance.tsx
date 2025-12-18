@@ -18,12 +18,15 @@ declare global {
 /**
  * Lazy Load Component with Error Boundary and Fallback
  */
-export function createLazyComponent<
-  T extends ComponentType<Record<string, unknown>>
->(importFn: () => Promise<{ default: T }>, fallback?: React.ComponentType) {
+export function createLazyComponent<T extends ComponentType<any>>(
+  importFn: () => Promise<{ default: T }>,
+  fallback?: React.ComponentType
+) {
   const LazyComponent = lazy(importFn);
 
-  return function LazyWrapper(props: ComponentProps<T>) {
+  return function LazyWrapper(
+    props: ComponentProps<T> & { children?: React.ReactNode }
+  ) {
     const [hasError, setHasError] = React.useState(false);
 
     if (hasError) {
@@ -59,7 +62,7 @@ export function createLazyComponent<
             )
           }
         >
-          <LazyComponent {...props} />
+          <LazyComponent {...(props as ComponentProps<T>)} />
         </Suspense>
       </ErrorBoundary>
     );
@@ -84,10 +87,10 @@ class ErrorBoundary extends React.Component<
   static getDerivedStateFromError() {
     return { hasError: true };
   }
-  componentDidCatch() {
+  override componentDidCatch() {
     this.props.onError();
   }
-  render() {
+  override render() {
     if (this.state.hasError) {
       return this.props.fallback;
     }

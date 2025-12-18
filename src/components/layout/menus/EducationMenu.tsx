@@ -1,8 +1,8 @@
-import { NavLink } from "./NavLink";
-import { Video, Award, BookOpen, UserCheck, BookMarked } from "lucide-react";
+import { Award, BookMarked, BookOpen, UserCheck, Video } from 'lucide-react';
+import { NavLink, SmallMenu } from './NavLink';
 
 export const EducationMenu = () => (
-  <NavLink.SmallMenu title="Education">
+  <SmallMenu title="Education">
     <NavLink
       to="/education/webinar"
       icon={<Video className="h-4 w-4" />}
@@ -33,5 +33,5 @@ export const EducationMenu = () => (
       title="Glossary"
       description="Trading terminology"
     />
-  </NavLink.SmallMenu>
+  </SmallMenu>
 );

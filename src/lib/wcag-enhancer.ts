@@ -1,14 +1,7 @@
-import { type MediaQueryListEvent } from 'typescript';
-
 // Fix MediaQueryListEvent type
 interface MediaQueryListEvent extends Event {
   matches: boolean;
   media: string;
-}
-  ): void;
-  removeListener(
-    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => any
-  ): void;
 }
 
 /**
@@ -90,7 +83,7 @@ interface ColorBlindPalette {
  */
 export class WCAGAAAEnhancer {
   /** Singleton instance */
-  private static instance: WCAGAAAEnhancer;
+  private static instance: WCAGAAAEnhancer | undefined;
 
   /** Current accessibility preferences */
   private preferences: AccessibilityPreferences = {
@@ -654,7 +647,7 @@ export class WCAGAAAEnhancer {
         element.contentEditable === 'true';
 
       if (!existingAriaLabel) {
-        element.setAttribute('aria-label', commands[0]);
+        element.setAttribute('aria-label', commands[0] || '');
       } else {
         element.setAttribute(
           'aria-label',
@@ -738,7 +731,7 @@ export class WCAGAAAEnhancer {
     // Check heading structure
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
     let previousLevel = 0;
-    headings.forEach((heading, index) => {
+    headings.forEach((heading) => {
       const level = parseInt(heading.tagName.charAt(1));
       if (level > previousLevel + 1) {
         issues.push({
@@ -828,6 +821,6 @@ export class WCAGAAAEnhancer {
     this.boundEventHandlers.keyboard = undefined;
 
     // Reset singleton instance
-    WCAGAAAEnhancer.instance = null;
+    WCAGAAAEnhancer.instance = undefined;
   }
 }

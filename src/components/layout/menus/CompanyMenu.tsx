@@ -1,8 +1,8 @@
-import { NavLink } from "./NavLink";
-import { Info, Shield, Lock, Handshake, Phone } from "lucide-react";
+import { Handshake, Info, Lock, Phone, Shield } from 'lucide-react';
+import { NavLink, SmallMenu } from './NavLink';
 
 export const CompanyMenu = () => (
-  <NavLink.SmallMenu title="Company">
+  <SmallMenu title="Company">
     <NavLink
       to="/company/about"
       icon={<Info className="h-4 w-4" />}
@@ -33,5 +33,5 @@ export const CompanyMenu = () => (
       title="Contact Us"
       description="Get in touch"
     />
-  </NavLink.SmallMenu>
+  </SmallMenu>
 );

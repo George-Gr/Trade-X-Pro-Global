@@ -1,8 +1,8 @@
-import { NavLink } from "./NavLink";
-import { BarChart3, Laptop, Users, Settings2, Wrench } from "lucide-react";
+import { BarChart3, Laptop, Settings2, Users, Wrench } from 'lucide-react';
+import { Menu, NavLink } from './NavLink';
 
 export const TradingMenu = () => (
-  <NavLink.Menu title="Trading">
+  <Menu title="Trading">
     <NavLink
       to="/trading/instruments"
       icon={<BarChart3 className="h-4 w-4" />}
@@ -33,5 +33,5 @@ export const TradingMenu = () => (
       title="Trading Tools"
       description="Analysis, Signals, Calculators"
     />
-  </NavLink.Menu>
+  </Menu>
 );
