@@ -27,6 +27,7 @@ TASK 2.2 implements a complete KYC (Know Your Customer) workflow and document ve
 ### Database Schema
 
 **kyc_requests** table:
+
 ```sql
 - id: UUID (PK)
 - user_id: UUID (FK -> profiles)
@@ -40,6 +41,7 @@ TASK 2.2 implements a complete KYC (Know Your Customer) workflow and document ve
 ```
 
 **kyc_documents** table:
+
 ```sql
 - id: UUID (PK)
 - kyc_request_id: UUID (FK -> kyc_requests, cascading delete)
@@ -52,6 +54,7 @@ TASK 2.2 implements a complete KYC (Know Your Customer) workflow and document ve
 ```
 
 **kyc_verifications** table:
+
 ```sql
 - id: UUID (PK)
 - kyc_request_id: UUID (FK)
@@ -64,6 +67,7 @@ TASK 2.2 implements a complete KYC (Know Your Customer) workflow and document ve
 ```
 
 **kyc_audit** table (Compliance):
+
 ```sql
 - id: UUID (PK)
 - kyc_request_id: UUID (FK)
@@ -77,9 +81,11 @@ TASK 2.2 implements a complete KYC (Know Your Customer) workflow and document ve
 ### Components Implemented
 
 #### 1. **KycUploader.tsx** (499 lines)
+
 Advanced user-facing document upload component.
 
 **Features:**
+
 - Multi-document upload with tabbed interface
 - Drag-and-drop support for all document types
 - File validation (type, size: max 10MB)
@@ -90,12 +96,14 @@ Advanced user-facing document upload component.
 - Success/error alerts with actionable messaging
 
 **Required Documents:**
+
 - ID Front (required) ✅
 - ID Back (required) ✅
 - Proof of Address (required) ✅
 - Selfie (optional) ✅
 
 **Key Methods:**
+
 ```typescript
 - validateFile(file: File): { valid, error? }
 - handleFileSelect(file, documentType)
@@ -104,9 +112,11 @@ Advanced user-facing document upload component.
 ```
 
 #### 2. **KycAdminDashboard.tsx** (552 lines)
+
 Comprehensive admin review interface.
 
 **Features:**
+
 - Statistics dashboard (pending, approved, rejected, manual review counts)
 - Filterable KYC queue (by status and search)
 - Document preview with modal viewer
@@ -120,11 +130,13 @@ Comprehensive admin review interface.
 - Bulk action support (future)
 
 **Filters:**
+
 - By Status: All, Pending, Approved, Rejected, Manual Review
 - Search: By email, name, or request ID
 - Sortable columns
 
 **Key Methods:**
+
 ```typescript
 - fetchRequests(): Fetch all KYC requests with related data
 - performAdminAction(id, action, notes): Process decision
@@ -132,9 +144,11 @@ Comprehensive admin review interface.
 ```
 
 #### 3. **Updated KYC.tsx** (200+ lines)
+
 Main user KYC page with integrated components.
 
 **Features:**
+
 - KYC status display (pending, approved, rejected)
 - Status-specific alerts with contextual messaging
 - Document history table
@@ -144,11 +158,13 @@ Main user KYC page with integrated components.
 - Information card about required documents
 
 #### 4. **submit-kyc Edge Function** (75+ lines)
+
 Handles document upload initialization and signed URL generation.
 
 **Endpoint:** `POST /supabase/functions/submit-kyc`
 
 **Request:**
+
 ```json
 {
   "type": "id_front" | "id_back" | "proof_of_address" | "selfie"
@@ -156,6 +172,7 @@ Handles document upload initialization and signed URL generation.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -170,6 +187,7 @@ Handles document upload initialization and signed URL generation.
 ```
 
 **Logic:**
+
 1. Authenticate user
 2. Validate document type
 3. Get/create KYC request
@@ -179,11 +197,13 @@ Handles document upload initialization and signed URL generation.
 7. Return upload info to client
 
 #### 5. **validate-kyc-upload Edge Function** (120+ lines)
+
 Validates uploaded files after client-side upload.
 
 **Endpoint:** `POST /supabase/functions/validate-kyc-upload`
 
 **Request:**
+
 ```json
 {
   "filePath": "user-id/timestamp_random_type.bin"
@@ -191,6 +211,7 @@ Validates uploaded files after client-side upload.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -200,6 +221,7 @@ Validates uploaded files after client-side upload.
 ```
 
 **Logic:**
+
 1. Authenticate user
 2. Download file from storage
 3. Validate file type (magic numbers):
@@ -211,11 +233,13 @@ Validates uploaded files after client-side upload.
 6. Return success
 
 #### 6. **admin/kyc-review Edge Function** (140+ lines)
+
 Handles admin approval/rejection decisions.
 
 **Endpoint:** `POST /supabase/functions/admin/kyc-review`
 
 **Request:**
+
 ```json
 {
   "kycRequestId": "uuid",
@@ -226,6 +250,7 @@ Handles admin approval/rejection decisions.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -238,6 +263,7 @@ Handles admin approval/rejection decisions.
 ```
 
 **Logic:**
+
 1. Authenticate admin (verify user_roles.role = 'admin')
 2. Validate action and status
 3. Get KYC request and user profile
@@ -332,6 +358,7 @@ Updates:
 ## 🔐 Security & Compliance
 
 ### File Validation (Multi-Layer)
+
 1. **Client-Side:**
    - File type check via MIME type
    - File size check (max 10MB)
@@ -343,18 +370,21 @@ Updates:
    - MIME type re-verification
 
 ### Access Control (RLS Policies)
+
 - Users can only view their own KYC requests
 - Users can only view their own documents
 - Admin-only access to review functions
 - Service role (backend) can access all
 
 ### Data Protection
+
 - Documents stored in secure Supabase Storage bucket
 - Signed URLs with 1-hour expiry for uploads
 - Document paths include user_id and timestamp
 - PII masking in admin views (optional)
 
 ### Audit Trail & Compliance
+
 - **kyc_audit table:** Every decision logged
   - Actor ID (which admin)
   - Action (approve/reject/request_more_info)
@@ -369,6 +399,7 @@ Updates:
   - Deletion scheduled via cron (future enhancement)
 
 ### Regulatory Compliance
+
 - ✅ KYC requirements met
 - ✅ Document retention (7 years)
 - ✅ Audit trail (all actions logged)
@@ -383,6 +414,7 @@ Updates:
 ### Test Suite (32 total tests)
 
 **Unit Tests (12):**
+
 - File size validation (>10MB rejection)
 - File type validation (JPEG, PNG, PDF only)
 - Document type validation
@@ -393,6 +425,7 @@ Updates:
 - Document metadata tracking
 
 **Integration Tests (8):**
+
 - Full upload workflow (5 steps)
 - Upload error handling (retry logic)
 - File validation workflow
@@ -403,6 +436,7 @@ Updates:
 - Audit log creation
 
 **E2E Tests (5):**
+
 - Complete user KYC submission
 - Approval notification and trading unlock
 - Resubmission after rejection
@@ -410,6 +444,7 @@ Updates:
 - Audit trail maintenance
 
 **Compliance Tests (5):**
+
 - 7-year retention policy enforcement
 - PII masking in admin views
 - Compliance logging
@@ -417,6 +452,7 @@ Updates:
 - Document access control
 
 **Test Execution:**
+
 ```bash
 npm test -- src/components/kyc/__tests__/kyc-workflow.test.ts
 # Result: 32 passed ✅
@@ -427,29 +463,32 @@ npm test -- src/components/kyc/__tests__/kyc-workflow.test.ts
 ## 📊 Status Dashboard
 
 ### Component Status
-| Component | Status | Type | LOC |
-|-----------|--------|------|-----|
-| KycUploader.tsx | ✅ Complete | Component | 499 |
-| KycAdminDashboard.tsx | ✅ Complete | Component | 552 |
-| KYC.tsx (page) | ✅ Complete | Page | 200+ |
-| submit-kyc | ✅ Complete | Edge Function | 75+ |
-| validate-kyc-upload | ✅ Complete | Edge Function | 120+ |
-| admin/kyc-review | ✅ Complete | Edge Function | 140+ |
+
+| Component             | Status      | Type          | LOC  |
+| --------------------- | ----------- | ------------- | ---- |
+| KycUploader.tsx       | ✅ Complete | Component     | 499  |
+| KycAdminDashboard.tsx | ✅ Complete | Component     | 552  |
+| KYC.tsx (page)        | ✅ Complete | Page          | 200+ |
+| submit-kyc            | ✅ Complete | Edge Function | 75+  |
+| validate-kyc-upload   | ✅ Complete | Edge Function | 120+ |
+| admin/kyc-review      | ✅ Complete | Edge Function | 140+ |
 
 ### Feature Completion
-| Feature | Status | Notes |
-|---------|--------|-------|
-| User Document Upload | ✅ 100% | All doc types, validation, progress |
-| Admin Dashboard | ✅ 100% | Queue, filters, preview, decisions |
-| Approval Workflow | ✅ 100% | Status update, balance unlock, notifications |
-| Rejection Workflow | ✅ 100% | Reason tracking, 7-day waiting period |
-| Document Verification | ✅ 100% | Magic numbers, size/type validation |
-| Notifications | ✅ 100% | In-app + email (email placeholder) |
-| Audit Trail | ✅ 100% | Complete logging, actor tracking |
-| Compliance | ✅ 100% | 7-year retention, access control |
-| Tests | ✅ 100% | 32 tests passing |
+
+| Feature               | Status  | Notes                                        |
+| --------------------- | ------- | -------------------------------------------- |
+| User Document Upload  | ✅ 100% | All doc types, validation, progress          |
+| Admin Dashboard       | ✅ 100% | Queue, filters, preview, decisions           |
+| Approval Workflow     | ✅ 100% | Status update, balance unlock, notifications |
+| Rejection Workflow    | ✅ 100% | Reason tracking, 7-day waiting period        |
+| Document Verification | ✅ 100% | Magic numbers, size/type validation          |
+| Notifications         | ✅ 100% | In-app + email (email placeholder)           |
+| Audit Trail           | ✅ 100% | Complete logging, actor tracking             |
+| Compliance            | ✅ 100% | 7-year retention, access control             |
+| Tests                 | ✅ 100% | 32 tests passing                             |
 
 ### Build Status
+
 ```
 TypeScript: ✅ 0 errors
 ESLint: ✅ Passing
@@ -462,6 +501,7 @@ Build: ✅ Ready for production
 ## 🚀 Deployment
 
 ### Pre-Deployment Checklist
+
 - [x] All components implemented
 - [x] All edge functions deployed
 - [x] Database schema applied
@@ -472,6 +512,7 @@ Build: ✅ Ready for production
 - [x] Security reviewed
 
 ### Deployment Steps
+
 1. Run database migration: `20251115_kyc_tables.sql`
 2. Deploy edge functions:
    - `/supabase/functions/submit-kyc`
@@ -482,6 +523,7 @@ Build: ✅ Ready for production
 5. Test end-to-end workflow
 
 ### Environment Variables
+
 ```
 SUPABASE_URL=<your-supabase-url>
 SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
@@ -503,6 +545,7 @@ Pending → Submitted → Approved ✓ (trading enabled, $10K balance)
 ### Document Upload Process
 
 **Step 1: Request Signed URL**
+
 ```bash
 POST /supabase/functions/submit-kyc
 Authorization: Bearer <token>
@@ -523,6 +566,7 @@ Response 200:
 ```
 
 **Step 2: Upload File**
+
 ```bash
 PUT <signedUrl>
 Content-Type: image/jpeg
@@ -533,6 +577,7 @@ Response 200/201
 ```
 
 **Step 3: Validate Upload**
+
 ```bash
 POST /supabase/functions/validate-kyc-upload
 Authorization: Bearer <token>
@@ -554,6 +599,7 @@ Response 200:
 ## 🔄 Future Enhancements
 
 ### Phase 2.2.1 (Optional)
+
 - [ ] OCR integration for automated document reading
 - [ ] Liveness detection for selfie verification
 - [ ] Third-party KYC provider integration (Onfido, IDology)
@@ -566,6 +612,7 @@ Response 200:
 - [ ] KYC level tiers with different limits
 
 ### Nice-to-Have
+
 - [ ] Document retry upload (with same filename)
 - [ ] Partial KYC uploads (resume)
 - [ ] Admin workflow automation (rules engine)

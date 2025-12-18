@@ -41,23 +41,39 @@ const skeletonVariants = cva(
       variant: "default",
       shimmer: false,
     },
-  }
+  },
 );
 
 export interface SkeletonProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof skeletonVariants> {}
 
 function Skeleton({ className, variant, shimmer, ...props }: SkeletonProps) {
-  return <div className={cn(skeletonVariants({ variant, shimmer }), className)} {...props} />;
+  return (
+    <div
+      className={cn(skeletonVariants({ variant, shimmer }), className)}
+      {...props}
+    />
+  );
 }
 
 // Convenience components for common skeleton patterns
-function SkeletonText({ lines = 3, className }: { lines?: number; className?: string }) {
+function SkeletonText({
+  lines = 3,
+  className,
+}: {
+  lines?: number;
+  className?: string;
+}) {
   return (
     <div className={cn("space-y-2", className)}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton key={i} variant="text" className={i === lines - 1 ? "w-2/3" : ""} />
+        <Skeleton
+          key={i}
+          variant="text"
+          className={i === lines - 1 ? "w-2/3" : ""}
+        />
       ))}
     </div>
   );
@@ -73,7 +89,13 @@ function SkeletonCard({ className }: { className?: string }) {
   );
 }
 
-function SkeletonTable({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
+function SkeletonTable({
+  rows = 5,
+  columns = 4,
+}: {
+  rows?: number;
+  columns?: number;
+}) {
   return (
     <div className="space-y-2">
       <Skeleton variant="table" className="bg-muted/50" />

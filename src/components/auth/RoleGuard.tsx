@@ -3,12 +3,12 @@
  * Wraps routes that require specific user roles
  */
 
-import * as React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useRoleGuard } from '@/hooks/useRoleGuard';
-import { Loader2 } from 'lucide-react';
+import * as React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useRoleGuard } from "@/hooks/useRoleGuard";
+import { Loader2 } from "lucide-react";
 
-type AppRole = 'admin' | 'user';
+type AppRole = "admin" | "user";
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ interface RoleGuardProps {
 export function RoleGuard({
   children,
   requiredRole,
-  redirectTo = '/dashboard',
+  redirectTo = "/dashboard",
   fallback,
 }: RoleGuardProps) {
   const location = useLocation();
@@ -35,23 +35,25 @@ export function RoleGuard({
 
   // Show loading state
   if (isLoading) {
-    return fallback || (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Verifying access...</p>
+    return (
+      fallback || (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Verifying access...</p>
+          </div>
         </div>
-      </div>
+      )
     );
   }
 
   // Handle error state
   if (error) {
     return (
-      <Navigate 
-        to="/login" 
-        state={{ from: location, error: 'Authentication required' }} 
-        replace 
+      <Navigate
+        to="/login"
+        state={{ from: location, error: "Authentication required" }}
+        replace
       />
     );
   }
@@ -59,10 +61,10 @@ export function RoleGuard({
   // Redirect if user doesn't have required role
   if (!hasRole) {
     return (
-      <Navigate 
-        to={redirectTo} 
-        state={{ from: location, error: 'Insufficient permissions' }} 
-        replace 
+      <Navigate
+        to={redirectTo}
+        state={{ from: location, error: "Insufficient permissions" }}
+        replace
       />
     );
   }
@@ -73,17 +75,13 @@ export function RoleGuard({
 /**
  * Admin-only route guard
  */
-export function AdminGuard({ 
-  children, 
-  redirectTo = '/dashboard',
+export function AdminGuard({
+  children,
+  redirectTo = "/dashboard",
   fallback,
-}: Omit<RoleGuardProps, 'requiredRole'>) {
+}: Omit<RoleGuardProps, "requiredRole">) {
   return (
-    <RoleGuard 
-      requiredRole="admin" 
-      redirectTo={redirectTo}
-      fallback={fallback}
-    >
+    <RoleGuard requiredRole="admin" redirectTo={redirectTo} fallback={fallback}>
       {children}
     </RoleGuard>
   );
@@ -92,17 +90,13 @@ export function AdminGuard({
 /**
  * User route guard (any authenticated user with 'user' role)
  */
-export function UserGuard({ 
-  children, 
-  redirectTo = '/login',
+export function UserGuard({
+  children,
+  redirectTo = "/login",
   fallback,
-}: Omit<RoleGuardProps, 'requiredRole'>) {
+}: Omit<RoleGuardProps, "requiredRole">) {
   return (
-    <RoleGuard 
-      requiredRole="user" 
-      redirectTo={redirectTo}
-      fallback={fallback}
-    >
+    <RoleGuard requiredRole="user" redirectTo={redirectTo} fallback={fallback}>
       {children}
     </RoleGuard>
   );

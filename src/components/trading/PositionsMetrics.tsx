@@ -1,15 +1,23 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import type { Position } from '@/types/position';
-import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import type { Position } from "@/types/position";
+import type { PositionPnLDetails } from "@/lib/trading/pnlCalculation";
 
 interface PositionsMetricsProps {
   positions: Position[];
-  positionPnLMap: Map<string, PositionPnLDetails | { unrealizedPnL: number; unrealizedPnLPercentage: number }>;
+  positionPnLMap: Map<
+    string,
+    | PositionPnLDetails
+    | { unrealizedPnL: number; unrealizedPnLPercentage: number }
+  >;
   getPnLColor: (pnl: number) => string;
 }
 
-export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({ positions, positionPnLMap, getPnLColor }) => {
+export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({
+  positions,
+  positionPnLMap,
+  getPnLColor,
+}) => {
   // Calculate total P&L
   const totalPnL = React.useMemo(() => {
     let total = 0;
@@ -28,14 +36,16 @@ export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({ positions, p
   }, [positions]);
 
   // Count long/short positions
-  const longCount = positions.filter((p) => p.side === 'long').length;
-  const shortCount = positions.filter((p) => p.side === 'short').length;
+  const longCount = positions.filter((p) => p.side === "long").length;
+  const shortCount = positions.filter((p) => p.side === "short").length;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
       {/* Total P&L */}
       <Card className="p-4 bg-muted/30 border-border/50">
-        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Total P&L</div>
+        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          Total P&L
+        </div>
         <div
           className="text-lg font-bold font-mono mt-2"
           style={{ color: getPnLColor(totalPnL) }}
@@ -46,7 +56,9 @@ export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({ positions, p
 
       {/* Total Margin */}
       <Card className="p-4 bg-muted/30 border-border/50">
-        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Margin Used</div>
+        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          Margin Used
+        </div>
         <div className="text-lg font-bold font-mono mt-2 text-primary">
           ${totalMarginUsed.toFixed(2)}
         </div>
@@ -54,13 +66,17 @@ export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({ positions, p
 
       {/* Long Positions */}
       <Card className="p-4 bg-muted/30 border-border/50">
-        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Buy Positions</div>
+        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          Buy Positions
+        </div>
         <div className="text-lg font-bold mt-2 text-buy">{longCount}</div>
       </Card>
 
       {/* Short Positions */}
       <Card className="p-4 bg-muted/30 border-border/50">
-        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Sell Positions</div>
+        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          Sell Positions
+        </div>
         <div className="text-lg font-bold mt-2 text-sell">{shortCount}</div>
       </Card>
     </div>

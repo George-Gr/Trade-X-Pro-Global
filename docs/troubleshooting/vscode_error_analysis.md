@@ -1,6 +1,7 @@
 # VSCode Window Log - Complete Error Analysis & Solutions
 
 ## Executive Summary
+
 Your VSCode instance is experiencing **7 major categories of errors** affecting multiple extensions and core functionality. The issues range from configuration problems to extension conflicts and resource limitations.
 
 ---
@@ -8,12 +9,15 @@ Your VSCode instance is experiencing **7 major categories of errors** affecting 
 ## 1. Extension Configuration Errors
 
 ### Error Pattern
+
 ```
 Failed to retrieve configuration properties TypeError: Cannot read properties of undefined (reading 'enabled')
 ```
+
 **Frequency:** 50+ occurrences throughout the log
 
 ### Root Cause
+
 - Extensions attempting to access configuration properties that don't exist or are malformed
 - Corrupted VSCode settings or workspace configuration
 - Extension dependencies missing or improperly initialized
@@ -21,6 +25,7 @@ Failed to retrieve configuration properties TypeError: Cannot read properties of
 ### Solution Steps
 
 **A. Reset Extension Settings**
+
 ```bash
 # Backup your settings first
 cp ~/Library/Application\ Support/Code/User/settings.json ~/settings.json.backup
@@ -31,6 +36,7 @@ rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*
 ```
 
 **B. Validate Settings JSON**
+
 1. Open VSCode Settings (`Cmd + ,`)
 2. Click "Open Settings (JSON)" in top-right
 3. Validate JSON syntax using an online validator
@@ -38,6 +44,7 @@ rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*
 5. Remove any suspicious entries
 
 **C. Reinstall Problematic Extensions**
+
 ```
 1. Cmd + Shift + X (Extensions)
 2. Disable all extensions
@@ -50,6 +57,7 @@ rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*
 ## 2. GitHub Copilot Chat Issues
 
 ### Error 1: Chat Quota Exceeded
+
 ```
 ChatQuotaExceeded: You've reached your monthly chat messages quota
 ```
@@ -57,26 +65,32 @@ ChatQuotaExceeded: You've reached your monthly chat messages quota
 **Root Cause:** Free tier monthly limit reached
 
 **Solutions:**
+
 - Wait for monthly quota reset
 - Upgrade to Copilot Pro (30-day free trial available)
 - Use alternative AI chat extensions temporarily
 
 ### Error 2: Invalid Function Call ID
+
 ```
 Tool call id was call_990c393e2c1c44f8b22a09c1 but must be a-z, A-Z, 0-9, with a length of 9
 ```
 
-**Root Cause:** 
+**Root Cause:**
+
 - Mistral provider API incompatibility with Copilot's tool call format
 - Extension version mismatch with API expectations
 
 **Solutions:**
+
 1. **Update GitHub Copilot Chat Extension:**
+
    ```
    Cmd + Shift + X → Search "GitHub Copilot Chat" → Update
    ```
 
 2. **Clear Copilot Cache:**
+
    ```bash
    rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*/github.copilot-chat
    ```
@@ -86,6 +100,7 @@ Tool call id was call_990c393e2c1c44f8b22a09c1 but must be a-z, A-Z, 0-9, with a
    - Try different model providers (avoid Mistral for now)
 
 ### Error 3: Rate Limit (Venice/Qwen Provider)
+
 ```
 qwen/qwen3-coder:free is temporarily rate-limited upstream
 ```
@@ -93,6 +108,7 @@ qwen/qwen3-coder:free is temporarily rate-limited upstream
 **Root Cause:** Free tier API rate limiting
 
 **Solutions:**
+
 - Add your own API key at https://openrouter.ai/settings/integrations
 - Wait and retry (temporary upstream issue)
 - Switch to different model provider
@@ -102,12 +118,14 @@ qwen/qwen3-coder:free is temporarily rate-limited upstream
 ## 3. Extension Host Unresponsiveness
 
 ### Error Pattern
+
 ```
 Extension host (LocalProcess pid: 67561) is unresponsive
 UNRESPONSIVE extension host: 'vscode.markdown-language-features' took 80-83% CPU
 ```
 
 **Root Cause:**
+
 - Markdown extension consuming excessive CPU (80-83%)
 - Large markdown files or workspace
 - Extension memory leak or infinite loop
@@ -115,7 +133,9 @@ UNRESPONSIVE extension host: 'vscode.markdown-language-features' took 80-83% CPU
 ### Solutions
 
 **A. Disable/Replace Markdown Extension**
+
 1. Disable built-in Markdown extension:
+
    ```
    Cmd + Shift + P → "Extensions: Show Built-in Extensions"
    → Find "Markdown Language Features" → Disable
@@ -125,6 +145,7 @@ UNRESPONSIVE extension host: 'vscode.markdown-language-features' took 80-83% CPU
 
 **B. Optimize Markdown Settings**
 Add to `settings.json`:
+
 ```json
 {
   "markdown.preview.scrollEditorWithPreview": false,
@@ -138,6 +159,7 @@ Add to `settings.json`:
 ```
 
 **C. Increase Extension Host Timeout**
+
 ```json
 {
   "extensions.experimental.affinity": {
@@ -151,29 +173,35 @@ Add to `settings.json`:
 ## 4. Chat Session Errors
 
 ### Error Pattern
+
 ```
 Error providing chat sessions: Cannot read properties of undefined (reading 'created_at')
 ```
+
 **Frequency:** 7+ occurrences
 
 ### Root Cause
+
 - Corrupted chat session database
 - Malformed session metadata in SQLite storage
 
 ### Solutions
 
 **A. Clear Chat History**
+
 ```bash
 # Find and remove chat session storage
 find ~/Library/Application\ Support/Code -name "*.sqlite*" -delete
 ```
 
 **B. Reset Extension Storage**
+
 ```bash
 rm -rf ~/Library/Application\ Support/Code/User/globalStorage/github.copilot-chat
 ```
 
 **C. Manual Database Fix (Advanced)**
+
 ```bash
 # If you want to preserve some data
 sqlite3 ~/.vscode/chat_sessions.db
@@ -187,31 +215,38 @@ sqlite3 ~/.vscode/chat_sessions.db
 ## 5. MCP Registry & Claude-Code Issues
 
 ### Error 1: MCP Registry 404
+
 ```
 Failed to fetch MCP registry providers Server returned 404
 ```
 
-**Root Cause:** 
+**Root Cause:**
+
 - MCP API endpoint changed or temporarily unavailable
 - Network/firewall blocking registry access
 
 **Solutions:**
+
 1. Check internet connectivity
 2. Verify firewall isn't blocking `api.mcp.github.com`
 3. Update VSCode to latest version (MCP integration is new)
 4. Wait for registry to be restored
 
 ### Error 2: Chat Participant Declaration
+
 ```
 chatParticipant must be declared in package.json: claude-code
 ```
 
-**Root Cause:** 
+**Root Cause:**
+
 - Claude Code extension improperly installed
 - Extension API version mismatch
 
 **Solutions:**
+
 1. **Reinstall Claude Code Extension:**
+
    ```
    Cmd + Shift + X → Uninstall "Claude Code"
    → Restart VSCode → Reinstall
@@ -226,12 +261,14 @@ chatParticipant must be declared in package.json: claude-code
 ## 6. Document Lifecycle Errors
 
 ### Error Pattern
+
 ```
 Error: Aborted onWillSaveTextDocument-event after 1750ms
 Request textDocument/definition failed with message: Document has been closed
 ```
 
 ### Root Cause
+
 - Extensions taking too long to process save events
 - Race condition between document close and pending operations
 
@@ -239,6 +276,7 @@ Request textDocument/definition failed with message: Document has been closed
 
 **A. Increase Save Timeout**
 Add to `settings.json`:
+
 ```json
 {
   "files.saveConflictResolution": "overwriteFileOnDisk",
@@ -247,6 +285,7 @@ Add to `settings.json`:
 ```
 
 **B. Disable Format on Save Temporarily**
+
 ```json
 {
   "editor.formatOnSave": false
@@ -254,6 +293,7 @@ Add to `settings.json`:
 ```
 
 **C. Identify Slow Extensions**
+
 ```
 Cmd + Shift + P → "Developer: Show Running Extensions"
 → Look for extensions with high activation time
@@ -264,17 +304,21 @@ Cmd + Shift + P → "Developer: Show Running Extensions"
 ## 7. Deprecated Module Warnings
 
 ### Warning
+
 ```
 [DEP0040] DeprecationWarning: The `punycode` module is deprecated
 ExperimentalWarning: SQLite is an experimental feature
 ```
 
 ### Root Cause
+
 - Node.js deprecation warnings (not critical)
 - VSCode using experimental SQLite features
 
 ### Solutions
+
 These are **warnings, not errors**. No immediate action required, but:
+
 - Update extensions (developers will fix deprecated dependencies)
 - These warnings will disappear in future VSCode/extension updates
 
@@ -283,6 +327,7 @@ These are **warnings, not errors**. No immediate action required, but:
 ## Comprehensive Fix Strategy
 
 ### Priority 1: Immediate Actions (Do First)
+
 ```bash
 # 1. Close VSCode completely
 killall "Code"
@@ -301,13 +346,15 @@ find ~/Library/Application\ Support/Code -name "*chat*.sqlite*" -delete
 ```
 
 ### Priority 2: Configuration Updates
+
 Add these to your `settings.json`:
+
 ```json
 {
   // Reduce extension host load
   "extensions.autoUpdate": false,
   "extensions.autoCheckUpdates": false,
-  
+
   // Optimize performance
   "files.watcherExclude": {
     "**/.git/objects/**": true,
@@ -315,14 +362,14 @@ Add these to your `settings.json`:
     "**/node_modules/**": true,
     "**/.hg/store/**": true
   },
-  
+
   // Markdown optimization
   "markdown.preview.scrollEditorWithPreview": false,
   "markdown.preview.scrollPreviewWithEditor": false,
-  
+
   // Save timeout
   "editor.formatOnSaveTimeout": 5000,
-  
+
   // Disable problematic features temporarily
   "github.copilot.enable": {
     "*": true,
@@ -332,12 +379,14 @@ Add these to your `settings.json`:
 ```
 
 ### Priority 3: Extension Management
+
 1. Disable these extensions temporarily:
    - GitHub Copilot Chat (until quota resets or upgraded)
    - Markdown Language Features (built-in)
    - Claude Code (until reinstalled properly)
 
 2. Update all other extensions:
+
    ```
    Cmd + Shift + X → "..." menu → "Update All Extensions"
    ```
@@ -345,6 +394,7 @@ Add these to your `settings.json`:
 3. Re-enable extensions one-by-one after testing
 
 ### Priority 4: Monitor & Validate
+
 ```bash
 # Watch logs in real-time
 tail -f ~/Library/Application\ Support/Code/logs/*/window*/window.log
@@ -361,6 +411,7 @@ Cmd + Shift + P → "Developer: Startup Performance"
 ## Prevention Best Practices
 
 ### 1. Regular Maintenance
+
 ```bash
 # Weekly: Clear old logs
 find ~/Library/Application\ Support/Code/logs -mtime +7 -delete
@@ -370,12 +421,14 @@ rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*
 ```
 
 ### 2. Extension Hygiene
+
 - Only install necessary extensions
 - Review extension permissions before installing
 - Regularly audit installed extensions
 - Keep extensions updated
 
 ### 3. Workspace Optimization
+
 ```json
 {
   "files.exclude": {
@@ -392,6 +445,7 @@ rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*
 ```
 
 ### 4. Resource Monitoring
+
 - Use Activity Monitor to watch VSCode CPU/memory usage
 - Close unused workspaces
 - Limit number of open files/editors
@@ -402,6 +456,7 @@ rm -rf ~/Library/Application\ Support/Code/User/workspaceStorage/*
 ## Expected Outcomes
 
 After implementing these fixes:
+
 - ✅ No more configuration retrieval errors
 - ✅ Extension host responsive (no freezing)
 - ✅ Chat sessions load properly
@@ -413,6 +468,7 @@ After implementing these fixes:
 ## If Issues Persist
 
 ### Nuclear Option: Complete Reset
+
 ```bash
 # 1. Export extensions list
 code --list-extensions > ~/vscode-extensions.txt
@@ -429,6 +485,7 @@ cat ~/vscode-extensions.txt | xargs -L 1 code --install-extension
 ```
 
 ### Get Help
+
 - VSCode GitHub Issues: https://github.com/microsoft/vscode/issues
 - Copilot Support: https://github.com/github/copilot-docs/issues
 - Check VSCode version compatibility matrix for extensions
@@ -451,4 +508,4 @@ cat ~/vscode-extensions.txt | xargs -L 1 code --install-extension
 
 ---
 
-*Note: These solutions are based on VSCode 1.85+ running on macOS. Paths and some commands may differ slightly on other operating systems.*
+_Note: These solutions are based on VSCode 1.85+ running on macOS. Paths and some commands may differ slightly on other operating systems._

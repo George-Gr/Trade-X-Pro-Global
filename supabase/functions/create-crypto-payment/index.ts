@@ -3,8 +3,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 const CreatePaymentSchema = z.object({
@@ -13,34 +14,40 @@ const CreatePaymentSchema = z.object({
 });
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const nowpaymentsApiKey = Deno.env.get('NOWPAYMENTS_API_KEY')!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const nowpaymentsApiKey = Deno.env.get("NOWPAYMENTS_API_KEY")!;
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Verify JWT and get user
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: 'No authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: "No authorization header" }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const token = authHeader.replace("Bearer ", "");
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Validate request body
@@ -49,36 +56,51 @@ serve(async (req) => {
 
     if (!validation.success) {
       return new Response(
-        JSON.stringify({ error: 'Invalid input', details: validation.error.issues }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({
+          error: "Invalid input",
+          details: validation.error.issues,
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
     const { amount, currency } = validation.data;
 
     // Create payment with NowPayments
-    const nowpaymentsResponse = await fetch('https://api.nowpayments.io/v1/payment', {
-      method: 'POST',
-      headers: {
-        'x-api-key': nowpaymentsApiKey,
-        'Content-Type': 'application/json',
+    const nowpaymentsResponse = await fetch(
+      "https://api.nowpayments.io/v1/payment",
+      {
+        method: "POST",
+        headers: {
+          "x-api-key": nowpaymentsApiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          price_amount: amount,
+          price_currency: "usd",
+          pay_currency: currency.toLowerCase(),
+          order_id: `${user.id}-${Date.now()}`,
+          order_description: "Trading Account Deposit",
+          ipn_callback_url: `${supabaseUrl}/functions/v1/handle-payment-callback`,
+        }),
       },
-      body: JSON.stringify({
-        price_amount: amount,
-        price_currency: 'usd',
-        pay_currency: currency.toLowerCase(),
-        order_id: `${user.id}-${Date.now()}`,
-        order_description: 'Trading Account Deposit',
-        ipn_callback_url: `${supabaseUrl}/functions/v1/handle-payment-callback`,
-      }),
-    });
+    );
 
     if (!nowpaymentsResponse.ok) {
       const errorText = await nowpaymentsResponse.text();
-      console.error('NowPayments API error:', errorText);
+      console.error("NowPayments API error:", errorText);
       return new Response(
-        JSON.stringify({ error: 'Payment creation failed', details: errorText }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({
+          error: "Payment creation failed",
+          details: errorText,
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -86,15 +108,15 @@ serve(async (req) => {
 
     // Store transaction in database
     const { data: transaction, error: dbError } = await supabase
-      .from('crypto_transactions')
+      .from("crypto_transactions")
       .insert({
         user_id: user.id,
-        transaction_type: 'deposit',
+        transaction_type: "deposit",
         payment_id: paymentData.payment_id,
         currency: currency.toUpperCase(),
         amount: paymentData.pay_amount,
         usd_amount: amount,
-        status: 'pending',
+        status: "pending",
         payment_address: paymentData.pay_address,
         payment_url: paymentData.invoice_url || paymentData.payment_url,
         metadata: paymentData,
@@ -103,10 +125,13 @@ serve(async (req) => {
       .single();
 
     if (dbError) {
-      console.error('Database error:', dbError);
+      console.error("Database error:", dbError);
       return new Response(
-        JSON.stringify({ error: 'Failed to create transaction record' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: "Failed to create transaction record" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -120,14 +145,16 @@ serve(async (req) => {
         amount: paymentData.pay_amount,
         currency: currency.toUpperCase(),
       }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
     );
-
   } catch (error) {
-    console.error('Error in create-crypto-payment:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    console.error("Error in create-crypto-payment:", error);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

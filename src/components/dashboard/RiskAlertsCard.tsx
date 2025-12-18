@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
@@ -22,10 +29,19 @@ const LevelBadge: React.FC<{ level: AlertItem["level"] }> = ({ level }) => {
     warning: "bg-yellow-100 text-yellow-800",
     critical: "bg-red-100 text-red-800",
   } as const;
-  return <span className={cn("px-2 py-1 rounded-full text-xs font-medium", map[level])}>{level}</span>;
+  return (
+    <span
+      className={cn("px-2 py-1 rounded-full text-xs font-medium", map[level])}
+    >
+      {level}
+    </span>
+  );
 };
 
-export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({ loading = false, alerts = [] }) => {
+export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({
+  loading = false,
+  alerts = [],
+}) => {
   if (loading) {
     return (
       <Card elevation="1" className="min-h-[160px]">
@@ -49,7 +65,9 @@ export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({ loading = false,
       <Card elevation="1" className="min-h-[160px]">
         <CardHeader>
           <CardTitle>Risk Alerts</CardTitle>
-          <CardDescription>Important margin and risk notifications will appear here.</CardDescription>
+          <CardDescription>
+            Important margin and risk notifications will appear here.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <EmptyState
@@ -77,15 +95,23 @@ export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({ loading = false,
                   <LevelBadge level={a.level} />
                   <div className="font-medium">{a.title}</div>
                 </div>
-                {a.details && <div className="mt-1 text-sm text-muted-foreground">{a.details}</div>}
+                {a.details && (
+                  <div className="mt-1 text-sm text-muted-foreground">
+                    {a.details}
+                  </div>
+                )}
               </div>
-              <div className="text-sm text-muted-foreground">{a.level === "critical" ? "Immediate" : "Monitor"}</div>
+              <div className="text-sm text-muted-foreground">
+                {a.level === "critical" ? "Immediate" : "Monitor"}
+              </div>
             </div>
           ))}
         </div>
       </CardContent>
       <CardFooter>
-        <div className="text-xs text-muted-foreground">Only the most recent alerts are shown. View history for past alerts.</div>
+        <div className="text-xs text-muted-foreground">
+          Only the most recent alerts are shown. View history for past alerts.
+        </div>
       </CardFooter>
     </Card>
   );

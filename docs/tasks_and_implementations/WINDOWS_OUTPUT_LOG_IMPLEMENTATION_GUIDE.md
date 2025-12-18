@@ -9,16 +9,19 @@ This guide documents all fixes implemented to resolve errors from the Windows Ou
 ## Quick Start
 
 ### Validate Fixes
+
 ```bash
 npm run dev:validate
 ```
 
 ### Start Development
+
 ```bash
 npm run dev:clean && npm run dev
 ```
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
@@ -30,14 +33,16 @@ npm run build
 ### Issue #1: Navigator Global Error (6 occurrences)
 
 **Problem**:
+
 ```
 navigator is now a global in nodejs
 ```
 
 **Affected Components**:
+
 - axios/lib/platform/common/utils.js
 - universal-user-agent (GitHub Copilot Chat)
-- @octokit/* (GitHub Copilot)
+- @octokit/\* (GitHub Copilot)
 - dev-tunnels-management
 
 **Root Cause**:
@@ -52,6 +57,7 @@ Web libraries expect browser globals that don't exist in Node.js environment
    - Provides `TextEncoder/TextDecoder`, `performance`
 
 2. **vite.config.ts** - Vite build configuration
+
    ```typescript
    define: {
      navigator: 'undefined',
@@ -64,8 +70,9 @@ Web libraries expect browser globals that don't exist in Node.js environment
    - Sets up global polyfills for Node.js process
 
 4. **src/main.tsx** - Application entry point
+
    ```typescript
-   import './polyfills';
+   import "./polyfills";
    ```
 
 5. **tsconfig.app.json** - TypeScript configuration
@@ -76,6 +83,7 @@ Web libraries expect browser globals that don't exist in Node.js environment
 ### Issue #2: Deprecated Punycode Module
 
 **Problem**:
+
 ```
 [DEP0040] DeprecationWarning: The 'punycode' module is deprecated
 ```
@@ -86,6 +94,7 @@ Node.js deprecating built-in punycode module
 **Fixes Applied**:
 
 1. **vite.config.ts**
+
    ```typescript
    define: {
      'process.env.NODE_DISABLE_DEPRECATION_WARNINGS': JSON.stringify('1'),
@@ -94,16 +103,19 @@ Node.js deprecating built-in punycode module
    ```
 
 2. **scripts/setup-node-env.js**
+
    ```javascript
-   process.env.NODE_DISABLE_DEPRECATION_WARNINGS = '1';
-   process.env.NODE_SUPPRESS_DEPRECATION = '1';
-   
+   process.env.NODE_DISABLE_DEPRECATION_WARNINGS = "1";
+   process.env.NODE_SUPPRESS_DEPRECATION = "1";
+
    // Provide polyfill
    if (!global.punycode) {
      global.punycode = {
        toASCII: (domain) => domain,
        toUnicode: (domain) => domain,
-       ucs2: { /* ... */ }
+       ucs2: {
+         /* ... */
+       },
      };
    }
    ```
@@ -113,6 +125,7 @@ Node.js deprecating built-in punycode module
 ### Issue #3: Experimental SQLite Warning
 
 **Problem**:
+
 ```
 ExperimentalWarning: SQLite is an experimental feature
 ```
@@ -123,12 +136,13 @@ Using experimental SQLite feature in Node.js
 **Fixes Applied**:
 
 **scripts/setup-node-env.js**
+
 ```javascript
-if (typeof global.SQLite === 'undefined') {
+if (typeof global.SQLite === "undefined") {
   global.SQLite = {
     Database: class Database {
       // Minimal stub implementation
-    }
+    },
   };
 }
 ```
@@ -138,6 +152,7 @@ if (typeof global.SQLite === 'undefined') {
 ### Issue #4: Chat Participant Declaration
 
 **Problem**:
+
 ```
 chatParticipant must be declared in package.json: claude-code
 ```
@@ -148,6 +163,7 @@ Missing extension configuration
 **Fixes Applied**:
 
 **package.json**
+
 ```json
 {
   "chatParticipants": ["claude-code"]
@@ -159,6 +175,7 @@ Missing extension configuration
 ### Issue #5: Unknown Agent Error
 
 **Problem**:
+
 ```
 Unknown agent: "copilot-swe-agent"
 ```
@@ -175,12 +192,14 @@ Extension using unrecognized agent type
 ### Issue #6 & 7: Extension Host Unresponsive / Listener Leaks
 
 **Problem**:
+
 ```
 Extension host (Remote) is unresponsive
 potential listener LEAK detected, having 175+ listeners
 ```
 
 **Root Cause**:
+
 - Performance degradation from memory leaks
 - Event listeners not cleaned up properly
 - Excessive memory usage
@@ -214,21 +233,21 @@ potential listener LEAK detected, having 175+ listeners
 
 ### Modified Files (8 total)
 
-| File | Changes |
-|------|---------|
-| `vite.config.ts` | Added navigator fixes, deprecation suppression |
-| `package.json` | Added chatParticipants, agent config |
-| `eslint.config.js` | Added listener leak prevention rules |
-| `src/main.tsx` | Added polyfills import |
-| `tsconfig.json` | Added DOM library support |
-| `tsconfig.app.json` | Verified DOM library support |
-| `src/polyfills.ts` | Created comprehensive polyfills |
-| `scripts/setup-node-env.js` | Enhanced with polyfills |
+| File                        | Changes                                        |
+| --------------------------- | ---------------------------------------------- |
+| `vite.config.ts`            | Added navigator fixes, deprecation suppression |
+| `package.json`              | Added chatParticipants, agent config           |
+| `eslint.config.js`          | Added listener leak prevention rules           |
+| `src/main.tsx`              | Added polyfills import                         |
+| `tsconfig.json`             | Added DOM library support                      |
+| `tsconfig.app.json`         | Verified DOM library support                   |
+| `src/polyfills.ts`          | Created comprehensive polyfills                |
+| `scripts/setup-node-env.js` | Enhanced with polyfills                        |
 
 ### New Files (1 total)
 
-| File | Purpose |
-|------|---------|
+| File                        | Purpose                         |
+| --------------------------- | ------------------------------- |
 | `scripts/validate-fixes.js` | Validation script for all fixes |
 
 ---
@@ -291,21 +310,24 @@ Run `npm run dev:validate` to verify:
 ✅ ESLint rules configured  
 ✅ TypeScript has DOM support  
 ✅ Main imports polyfills  
-✅ Validation script available  
+✅ Validation script available
 
 ---
 
 ## Performance Impact
 
 ### Memory Usage
+
 - **Before**: Unbounded growth, 175+ listeners
 - **After**: Monitored with automatic cleanup, warnings at thresholds
 
 ### Extension Host
+
 - **Before**: Unresponsive due to resource exhaustion
 - **After**: Stable with real-time performance tracking
 
 ### Build Time
+
 - **Negligible impact**: Polyfills loaded once during setup
 
 ---
@@ -313,6 +335,7 @@ Run `npm run dev:validate` to verify:
 ## Troubleshooting
 
 ### Validation Fails
+
 ```bash
 # Clear cache and validate again
 npm run dev:clean
@@ -320,6 +343,7 @@ node scripts/validate-fixes.js
 ```
 
 ### Warnings Still Appearing
+
 ```bash
 # Check browser console
 # Look for performance monitoring warnings
@@ -327,6 +351,7 @@ node scripts/validate-fixes.js
 ```
 
 ### TypeScript Errors
+
 ```bash
 # Regenerate types
 npm run type:strict
@@ -337,11 +362,13 @@ npm run type:strict
 ## Maintenance
 
 ### Regular Checks
+
 - Run `npm run dev:validate` after updates
 - Monitor performance warnings in console
 - Check memory usage in DevTools
 
 ### Updates
+
 - Polyfills automatically updated when Node.js versions change
 - ESLint rules enforce best practices in new code
 
@@ -356,19 +383,19 @@ npm run type:strict
 ✅ **Type Safety**: TypeScript with proper DOM types  
 ✅ **Documentation**: Inline comments and JSDoc  
 ✅ **Validation**: Automated verification script  
-✅ **Compatibility**: Handles both Node.js and browser environments  
+✅ **Compatibility**: Handles both Node.js and browser environments
 
 ---
 
 ## Success Metrics
 
-| Metric | Before | After |
-|--------|--------|-------|
-| Validation Checks | 0/9 | 9/9 ✅ |
-| Errors in Log | 9 | 0 |
+| Metric                | Before       | After         |
+| --------------------- | ------------ | ------------- |
+| Validation Checks     | 0/9          | 9/9 ✅        |
+| Errors in Log         | 9            | 0             |
 | Extension Host Status | Unresponsive | Responsive ✅ |
-| Listener Leaks | 175+ | Monitored ✅ |
-| Build Warnings | Multiple | Fixed ✅ |
+| Listener Leaks        | 175+         | Monitored ✅  |
+| Build Warnings        | Multiple     | Fixed ✅      |
 
 ---
 

@@ -28,18 +28,23 @@
 ## 🎯 Design Principles
 
 ### 1. Clarity First
+
 Every interface element communicates its purpose clearly.
 
 ### 2. Consistency Over Customization
+
 Maintain design consistency across all features.
 
 ### 3. Accessibility is Mandatory
+
 Every component must be accessible by default. Accessibility is not optional.
 
 ### 4. Mobile First
+
 Design for small screens first, then enhance for larger displays.
 
 ### 5. Performance Matters
+
 Smooth, responsive interactions at 60fps. Respect user motion preferences.
 
 ---
@@ -47,13 +52,15 @@ Smooth, responsive interactions at 60fps. Respect user motion preferences.
 ## 🎨 Color System
 
 ### Primary Colors
-| Color | HSL Value | Use Case |
-|-------|-----------|----------|
-| **Primary** | `hsl(210, 100%, 50%)` | Primary actions, CTAs |
-| **Secondary** | `hsl(220, 90%, 56%)` | Secondary actions |
-| **Accent** | `hsl(200, 100%, 50%)` | Highlights, accents |
+
+| Color         | HSL Value             | Use Case              |
+| ------------- | --------------------- | --------------------- |
+| **Primary**   | `hsl(210, 100%, 50%)` | Primary actions, CTAs |
+| **Secondary** | `hsl(220, 90%, 56%)`  | Secondary actions     |
+| **Accent**    | `hsl(200, 100%, 50%)` | Highlights, accents   |
 
 ### Semantic Colors
+
 ```
 Success:     hsl(160 84% 39%)   - Positive feedback
 Warning:     hsl(38 92% 50%)    - Warning messages
@@ -62,6 +69,7 @@ Info:        hsl(210 100% 50%)  - Information
 ```
 
 ### Functional Colors
+
 ```
 Foreground:       hsl(222 84% 5%)     - Primary text
 Foreground-Secondary: hsl(220 9% 27%) - Secondary text
@@ -79,18 +87,19 @@ Border:           hsl(220 13% 91%)    - Border colors
 
 All typography values are defined in `src/styles/typography.css` and match the implementation exactly.
 
-| Level | Size | Line Height | Weight | Letter Spacing | Tailwind Class | Usage |
-|-------|------|-------------|--------|----------------|----------------|-------|
-| **H1** | 2rem (32px) | 1.2 (38.4px) | 700 | -0.02em | `text-2xl` + `font-bold` | Page titles, main headings |
-| **H2** | 1.5rem (24px) | 1.33 (32px) | 600 | -0.01em | `text-2xl` + `font-semibold` | Section headers |
-| **H3** | 1.125rem (18px) | 1.33 (24px) | 600 | 0 | `text-lg` + `font-semibold` | Card titles, subsections |
-| **H4** | 1rem (16px) | 1.375 (22px) | 600 | 0 | `text-base` + `font-semibold` | Subsection headers |
-| **Body** | 0.875rem (14px) | 1.625 (22.75px) | 400 | 0 | `text-sm` | Regular body text (default) |
-| **Small** | 0.75rem (12px) | 1.5 (18px) | 400 | 0 | `text-xs` | Helper text, captions |
-| **Label** | 0.875rem (14px) | 1.43 (20px) | 500 | 0 | `text-sm` + `font-medium` | Form labels |
-| **Caption** | 0.75rem (12px) | 1.5 (18px) | 500 | 0 | `text-xs` + `font-medium` | Metadata, timestamps |
+| Level       | Size            | Line Height     | Weight | Letter Spacing | Tailwind Class                | Usage                       |
+| ----------- | --------------- | --------------- | ------ | -------------- | ----------------------------- | --------------------------- |
+| **H1**      | 2rem (32px)     | 1.2 (38.4px)    | 700    | -0.02em        | `text-2xl` + `font-bold`      | Page titles, main headings  |
+| **H2**      | 1.5rem (24px)   | 1.33 (32px)     | 600    | -0.01em        | `text-2xl` + `font-semibold`  | Section headers             |
+| **H3**      | 1.125rem (18px) | 1.33 (24px)     | 600    | 0              | `text-lg` + `font-semibold`   | Card titles, subsections    |
+| **H4**      | 1rem (16px)     | 1.375 (22px)    | 600    | 0              | `text-base` + `font-semibold` | Subsection headers          |
+| **Body**    | 0.875rem (14px) | 1.625 (22.75px) | 400    | 0              | `text-sm`                     | Regular body text (default) |
+| **Small**   | 0.75rem (12px)  | 1.5 (18px)      | 400    | 0              | `text-xs`                     | Helper text, captions       |
+| **Label**   | 0.875rem (14px) | 1.43 (20px)     | 500    | 0              | `text-sm` + `font-medium`     | Form labels                 |
+| **Caption** | 0.75rem (12px)  | 1.5 (18px)      | 500    | 0              | `text-xs` + `font-medium`     | Metadata, timestamps        |
 
 ### Font Families
+
 ```css
 /* Primary UI Font */
 Sans-serif: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto
@@ -105,6 +114,7 @@ Display:    'Inter' (same as sans, heavier weights)
 ### Typography Usage Examples
 
 #### Headings
+
 ```tsx
 // H1 - Page Title (32px, weight 700)
 <h1 className="text-2xl font-bold tracking-tighter">
@@ -128,6 +138,7 @@ Display:    'Inter' (same as sans, heavier weights)
 ```
 
 #### Body Text
+
 ```tsx
 // Default body text (14px, weight 400)
 <p className="text-sm">
@@ -151,6 +162,7 @@ Display:    'Inter' (same as sans, heavier weights)
 ```
 
 #### Special Typography Utilities
+
 ```tsx
 // Display text (responsive, clamps 36px-72px)
 <h1 className="text-display">
@@ -174,34 +186,34 @@ Display:    'Inter' (same as sans, heavier weights)
 ```
 
 ### Font Weights
+
 ```css
---font-light: 300      /* Use sparingly */
---font-normal: 400     /* Default body text */
---font-medium: 500     /* Labels, emphasized text */
---font-semibold: 600   /* Headings H2-H4 */
---font-bold: 700       /* H1, strong emphasis */
---font-extrabold: 800  /* Display, hero text */
+--font-light: 300 /* Use sparingly */ --font-normal: 400 /* Default body text */
+  --font-medium: 500 /* Labels, emphasized text */ --font-semibold: 600
+  /* Headings H2-H4 */ --font-bold: 700 /* H1, strong emphasis */
+  --font-extrabold: 800 /* Display, hero text */;
 ```
 
 ### Line Heights
+
 ```css
---leading-tight: 1.2       /* Large headings */
---leading-snug: 1.375      /* Medium headings */
---leading-normal: 1.5      /* Body text */
---leading-relaxed: 1.625   /* Comfortable reading */
---leading-loose: 1.875     /* Spacious text */
+--leading-tight: 1.2 /* Large headings */ --leading-snug: 1.375
+  /* Medium headings */ --leading-normal: 1.5 /* Body text */
+  --leading-relaxed: 1.625 /* Comfortable reading */ --leading-loose: 1.875
+  /* Spacious text */;
 ```
 
 ### Letter Spacing
+
 ```css
---tracking-tight: -0.02em  /* Large headings (H1) */
---tracking-normal: 0       /* Default text */
---tracking-wide: 0.05em    /* Small caps, labels */
+--tracking-tight: -0.02em /* Large headings (H1) */ --tracking-normal: 0
+  /* Default text */ --tracking-wide: 0.05em /* Small caps, labels */;
 ```
 
 ### Complete Typography Reference
 
 #### All Available Tailwind Font Sizes
+
 ```
 text-2xs: 10px / 14px      (Custom - very rare use)
 text-xs:  12px / 16px      (Caption, helper text)
@@ -221,11 +233,13 @@ text-8xl: 96px / 1         (Rare, hero sections)
 #### Accessibility & Contrast
 
 All typography must meet WCAG 2.1 Level AA standards:
+
 - **Body text (14px)**: Minimum 4.5:1 contrast ratio
 - **Large text (18px+)**: Minimum 3:1 contrast ratio
 - **Small text (12px)**: Minimum 4.5:1 contrast ratio
 
 ✅ **Current Compliance:**
+
 ```
 Light Mode:
   - Foreground on Background:     18:1 ✓
@@ -246,7 +260,7 @@ Dark Mode:
 ✅ Use semantic heading levels (H1 → H2 → H3 → H4)  
 ✅ Apply `tracking-tighter` to large headings for optical balance  
 ✅ Use `text-data` class for monetary values and numbers  
-✅ Test all text at 320px, 768px, and 1024px breakpoints  
+✅ Test all text at 320px, 768px, and 1024px breakpoints
 
 **DON'T:**
 ❌ Use inline font-size styles: `style={{ fontSize: '14px' }}`  
@@ -254,11 +268,12 @@ Dark Mode:
 ❌ Use text smaller than 12px  
 ❌ Mix font families arbitrarily  
 ❌ Override line-heights without testing readability  
-❌ Use custom font sizes outside the scale  
+❌ Use custom font sizes outside the scale
 
 #### Responsive Typography
 
 For hero sections and large displays, use responsive utilities:
+
 ```tsx
 // Automatically scales between mobile and desktop
 <h1 className="text-display">  // 36px → 72px
@@ -274,6 +289,7 @@ For hero sections and large displays, use responsive utilities:
 #### Testing Checklist
 
 Before shipping typography changes:
+
 - [ ] Verify exact pixel sizes match this documentation
 - [ ] Test on 320px mobile (iPhone SE)
 - [ ] Test on 768px tablet (iPad)
@@ -293,7 +309,7 @@ Before shipping typography changes:
 ```
 xs: 4px      - Tight spacing, icon gaps
 sm: 8px      - Small elements
-md: 16px     - Related elements  
+md: 16px     - Related elements
 lg: 24px     - Component internal spacing
 xl: 32px     - Between sections (mobile)
 2xl: 48px    - Between sections (tablet)
@@ -303,6 +319,7 @@ xl: 32px     - Between sections (mobile)
 ```
 
 ### Component Padding
+
 ```
 Button-sm:   padding: 8px 12px;
 Button-md:   padding: 12px 16px;
@@ -316,6 +333,7 @@ Card:        padding: 16px (mobile), 24px (desktop)
 ## 🧩 Components
 
 ### Button Sizes
+
 - `xs`: 32px height (icon buttons)
 - `sm`: 40px height
 - `md`: 48px height (default)
@@ -323,6 +341,7 @@ Card:        padding: 16px (mobile), 24px (desktop)
 - `xl`: 64px height
 
 ### Button Variants
+
 - **primary**: Main CTAs
 - **secondary**: Alternative actions
 - **outline**: Low-emphasis actions
@@ -330,6 +349,7 @@ Card:        padding: 16px (mobile), 24px (desktop)
 - **destructive**: Dangerous actions
 
 ### Card Component
+
 ```
 Elevation-1: Subtle shadow for grouped content
 Elevation-2: Standard elevation for cards
@@ -337,7 +357,9 @@ Elevation-3: High elevation for overlays
 ```
 
 ### Form Components
+
 All form components must:
+
 - Have explicit labels
 - Support `aria-describedby` for help text
 - Support `aria-invalid` for errors
@@ -348,6 +370,7 @@ All form components must:
 ## ✅ Component Do's and Don'ts
 
 ### Button Do's ✅
+
 - ✅ Use `size="default"` for standard buttons (48px)
 - ✅ Use `variant="default"` for primary CTAs
 - ✅ Use `variant="destructive"` for delete/dangerous actions
@@ -356,6 +379,7 @@ All form components must:
 - ✅ Use loading state while processing
 
 ### Button Don'ts ❌
+
 - ❌ Don't use multiple primary buttons in one section
 - ❌ Don't use colors other than defined variants
 - ❌ Don't remove focus rings for styling
@@ -364,6 +388,7 @@ All form components must:
 - ❌ Don't use inline styles instead of CSS classes
 
 ### Input Do's ✅
+
 - ✅ Always provide a visible label
 - ✅ Use `mobileOptimized` for mobile forms
 - ✅ Show error state with `error` prop
@@ -373,6 +398,7 @@ All form components must:
 - ✅ Use size="lg" for better touch targets
 
 ### Input Don'ts ❌
+
 - ❌ Don't hide labels (use aria-label if needed)
 - ❌ Don't use placeholder as label
 - ❌ Don't use hardcoded colors for invalid state
@@ -381,6 +407,7 @@ All form components must:
 - ❌ Don't make inputs smaller than 40px height
 
 ### Card Do's ✅
+
 - ✅ Use elevation-1 for base content
 - ✅ Use elevation-2 for featured content
 - ✅ Use elevation-3 for modals only
@@ -390,6 +417,7 @@ All form components must:
 - ✅ Keep card padding consistent (16-24px)
 
 ### Card Don'ts ❌
+
 - ❌ Don't mix elevation levels in same context
 - ❌ Don't use elevation-3 for regular content
 - ❌ Don't remove border and shadow for "flat" effect
@@ -398,6 +426,7 @@ All form components must:
 - ❌ Don't ignore dark mode colors
 
 ### Form Do's ✅
+
 - ✅ Use FormField for each input
 - ✅ Always include FormLabel with `required` prop
 - ✅ Use FormDescription for helper text
@@ -407,6 +436,7 @@ All form components must:
 - ✅ Show loading state during submission
 
 ### Form Don'ts ❌
+
 - ❌ Don't skip FormLabel (always include)
 - ❌ Don't use placeholder as label alternative
 - ❌ Don't hide error messages
@@ -420,6 +450,7 @@ All form components must:
 ## ✨ Interactions & Animations
 
 ### Animation Timing
+
 ```css
 --duration-instant: 0ms;
 --duration-fast: 150ms;
@@ -429,6 +460,7 @@ All form components must:
 ```
 
 ### Easing Functions
+
 ```css
 --ease-in: cubic-bezier(0.4, 0, 1, 1);
 --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -436,6 +468,7 @@ All form components must:
 ```
 
 ### Animation Types
+
 - Ripple effects
 - Staggered list animations
 - Slide & fade transitions
@@ -445,6 +478,7 @@ All form components must:
 - Toast notifications
 
 ### Reduced Motion
+
 All animations automatically respect `prefers-reduced-motion`. No setup needed!
 
 ---
@@ -454,24 +488,26 @@ All animations automatically respect `prefers-reduced-motion`. No setup needed!
 ### WCAG 2.1 Level AA
 
 ### Keyboard Navigation
+
 - Tab through all interactive elements in logical order
 - Enter/Space to activate buttons
 - Escape to close modals
 - Arrow keys for menus
 
 ### Screen Reader Support
+
 ```html
-<button aria-label="Close dialog" onClick={onClose}>
+<button aria-label="Close dialog" onClick="{onClose}">
   <X />
 </button>
 
-<div role="status" aria-live="polite">
-  Status message
-</div>
+<div role="status" aria-live="polite">Status message</div>
 ```
 
 ### Focus Indicators
+
 All interactive elements must have visible focus:
+
 ```css
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
@@ -480,7 +516,9 @@ All interactive elements must have visible focus:
 ```
 
 ### Color Contrast
+
 All text must have 4.5:1 contrast ratio (WCAG AA):
+
 ```
 Dark text on light: ✓ 18:1
 Light text on dark: ✓ 18:1
@@ -489,7 +527,9 @@ Muted text: ✓ 4.5:1
 ```
 
 ### Touch Targets
+
 Minimum 44×44px for mobile touch targets:
+
 ```
 Button: min-height: 44px; min-width: 44px;
 Gap: gap: 8px; (between targets)
@@ -500,6 +540,7 @@ Gap: gap: 8px; (between targets)
 ## 📱 Responsive Design
 
 ### Breakpoints
+
 ```
 Mobile:  320px - 639px (default)
 Tablet:  640px - 1023px
@@ -507,46 +548,53 @@ Desktop: 1024px+
 ```
 
 ### Mobile-First Approach
+
 ```css
 /* Mobile (default) */
-.card { padding: 16px; }
+.card {
+  padding: 16px;
+}
 
 /* Tablet */
 @media (min-width: 640px) {
-  .card { padding: 20px; }
+  .card {
+    padding: 20px;
+  }
 }
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .card { padding: 24px; }
+  .card {
+    padding: 24px;
+  }
 }
 ```
 
 ### Breakpoints
 
-| Device Category | Range | Tailwind | Class Prefix | Usage |
-|-----------------|-------|----------|--------------|-------|
-| Mobile (default) | 320px - 639px | — | — | Small phones, no prefix |
-| Mobile Large | 640px - 767px | `sm` | `sm:` | Large phones, tablets start |
-| Tablet | 768px - 1023px | `md` | `md:` | Tablets, iPads |
-| Desktop | 1024px - 1279px | `lg` | `lg:` | Small desktops, laptops |
-| Desktop Large | 1280px - 1399px | `xl` | `xl:` | Standard desktops |
-| Desktop XL | 1400px+ | `2xl` | `2xl:` | Ultra-wide displays |
+| Device Category  | Range           | Tailwind | Class Prefix | Usage                       |
+| ---------------- | --------------- | -------- | ------------ | --------------------------- |
+| Mobile (default) | 320px - 639px   | —        | —            | Small phones, no prefix     |
+| Mobile Large     | 640px - 767px   | `sm`     | `sm:`        | Large phones, tablets start |
+| Tablet           | 768px - 1023px  | `md`     | `md:`        | Tablets, iPads              |
+| Desktop          | 1024px - 1279px | `lg`     | `lg:`        | Small desktops, laptops     |
+| Desktop Large    | 1280px - 1399px | `xl`     | `xl:`        | Standard desktops           |
+| Desktop XL       | 1400px+         | `2xl`    | `2xl:`       | Ultra-wide displays         |
 
 ### Mobile-First Example
 
 ```css
 /* Mobile (default) - applies to all screens */
-.card { 
-  padding: 16px; 
-  gap: 8px; 
+.card {
+  padding: 16px;
+  gap: 8px;
   grid-columns: 1;
 }
 
 /* Tablet */
 @media (min-width: 640px) {
-  .card { 
-    padding: 20px; 
+  .card {
+    padding: 20px;
     gap: 12px;
     grid-columns: 2;
   }
@@ -554,8 +602,8 @@ Desktop: 1024px+
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .card { 
-    padding: 24px; 
+  .card {
+    padding: 24px;
     gap: 16px;
     grid-columns: 3;
   }
@@ -608,7 +656,8 @@ Ensure interactive elements are at least 44×44px:
 - Desktop enhancements use `lg:` and above
 - Reduces CSS bloat by leveraging mobile defaults
 - Typical pattern: `base md: lg: xl: 2xl:` in that order
-```
+
+````
 
 ---
 
@@ -645,9 +694,10 @@ backgroundColor: '#ff0000'      // Use CSS variables
 fontSize: '16px'                // Use text-* classes
 padding: '13px'                 // Use 4/8px grid
 borderRadius: '7px'             // Use standard values
-```
+````
 
 **REQUIRED:**
+
 ```javascript
 backgroundColor: hsl(var(--primary))  // CSS variables
 className="text-base"                 // Text classes
@@ -660,6 +710,7 @@ borderRadius: 8px                     // Standard values
 ## 🎨 Additional Components
 
 ### Dialog Component
+
 - **Use for**: Confirmation dialogs, important alerts
 - **Elevation**: Card elevation-3
 - **Animation**: Fade + scale on open
@@ -667,6 +718,7 @@ borderRadius: 8px                     // Standard values
 - **Mobile**: Full width with padding
 
 ### Alert Component
+
 - **Variants**: default, destructive, success, warning
 - **Use for**: Notifications, status messages
 - **Icon**: Auto-included per variant
@@ -674,24 +726,28 @@ borderRadius: 8px                     // Standard values
 - **Role**: `alert` for screen readers
 
 ### Badge Component
+
 - **Use for**: Status indicators, labels, tags
 - **Variants**: default, secondary, outline, destructive
 - **Sizes**: sm, default
 - **Interactive**: Optional onClick handler
 
 ### Checkbox Component
+
 - **Size**: 20×20px (base)
 - **States**: checked, unchecked, indeterminate
 - **Accessibility**: Proper `aria-checked` attribute
 - **Dark mode**: Automatic adaptation
 
 ### Dropdown Menu
+
 - **Elevation**: Card elevation-3
 - **Animation**: Fade + slide
 - **Keyboard**: Arrow keys, Enter to select, Escape to close
 - **Accessibility**: Role="menuitem", proper ARIA attributes
 
 ### Tooltip
+
 - **Delay**: 200ms before show
 - **Duration**: 150ms animate
 - **Position**: Auto-adjust to viewport
@@ -699,6 +755,7 @@ borderRadius: 8px                     // Standard values
 - **Accessibility**: Optional `aria-label`, no tooltip for essential info
 
 ### Loading States
+
 - **Spinner**: Animated circular icon
 - **Skeleton**: Placeholder content loader
 - **Progress**: For long operations
@@ -709,13 +766,14 @@ borderRadius: 8px                     // Standard values
 ## 🔧 Common Usage Patterns
 
 ### Form with Validation
+
 ```tsx
 const schema = z.object({
-  email: z.string().email('Invalid email'),
-  message: z.string().min(10, 'Message too short'),
-})
+  email: z.string().email("Invalid email"),
+  message: z.string().min(10, "Message too short"),
+});
 
-const form = useForm({ resolver: zodResolver(schema) })
+const form = useForm({ resolver: zodResolver(schema) });
 
 return (
   <Form {...form}>
@@ -736,12 +794,19 @@ return (
       <Button type="submit">Send</Button>
     </form>
   </Form>
-)
+);
 ```
 
 ### Modal Dialog
+
 ```tsx
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 <Dialog open={isOpen} onOpenChange={setIsOpen}>
   <DialogContent>
@@ -758,10 +823,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
       </Button>
     </DialogFooter>
   </DialogContent>
-</Dialog>
+</Dialog>;
 ```
 
 ### Error Boundary with Card
+
 ```tsx
 <Card elevation="1" variant="primary">
   <CardHeader>
@@ -782,6 +848,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 ```
 
 ### Empty State
+
 ```tsx
 <Card elevation="1" className="text-center py-12">
   <CardContent>
@@ -796,10 +863,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 ```
 
 ### List with Actions
+
 ```tsx
 <div className="space-y-2">
-  {items.map(item => (
-    <Card key={item.id} elevation="1" interactive onClick={() => selectItem(item)}>
+  {items.map((item) => (
+    <Card
+      key={item.id}
+      elevation="1"
+      interactive
+      onClick={() => selectItem(item)}
+    >
       <div className="flex items-center justify-between p-4">
         <div>
           <h3 className="font-semibold">{item.name}</h3>
@@ -820,6 +893,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 ```
 
 ### Mobile Optimized Form
+
 ```tsx
 <div className="space-y-6">
   <FormField
@@ -852,6 +926,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 ## 📊 Color System in Components
 
 ### Light Mode (Default)
+
 - **Primary**: `hsl(262 83% 58%)` - Purple, used for primary buttons, focus rings
 - **Secondary**: `hsl(217 91% 60%)` - Blue, used for secondary buttons
 - **Destructive**: `hsl(0 84% 60%)` - Red, used for delete buttons
@@ -861,6 +936,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 - **Foreground**: `hsl(222 47% 11%)` - Dark gray, main text
 
 ### Dark Mode
+
 - All colors automatically adjust for dark backgrounds
 - Text contrast maintained at 4.5:1 (WCAG AA)
 - Backgrounds darken significantly
@@ -868,6 +944,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 - Shadows become more pronounced
 
 **Accessing colors in components:**
+
 ```tsx
 // Use CSS variables, not hardcoded colors
 className="bg-primary"           // ✅ Correct
@@ -885,27 +962,33 @@ color: #FF0000                         // ❌ Wrong
 ## 📱 Responsive Behavior
 
 ### Breakpoints
+
 - **Mobile**: 320px - 639px
 - **Tablet**: 640px - 1023px
 - **Desktop**: 1024px+
 
 ### Component Adjustments
+
 **Cards**
+
 - Mobile: `elevation-2` → `elevation-1`, no hover lift
 - Tablet: Normal elevation
 - Desktop: Normal elevation
 
 **Button**
+
 - Mobile: Minimum 44×44px, gap between buttons 8px
 - Tablet: Normal sizing
 - Desktop: Normal sizing
 
 **Input**
+
 - Mobile: Use `mobileOptimized` prop for 44px height
 - Tablet: Standard sizing
 - Desktop: Standard sizing
 
 **Forms**
+
 - Mobile: Stack fields vertically, full width
 - Tablet: Can use 2-column layout
 - Desktop: Can use 2-3 column layout
@@ -915,17 +998,20 @@ color: #FF0000                         // ❌ Wrong
 ## 📚 Related Documentation
 
 ### Typography
+
 - **TYPOGRAPHY_VERIFICATION.md**: Complete typography verification report
 - **TYPOGRAPHY_ALIGNMENT_SUMMARY.md**: Typography alignment change summary
 - **typography.css**: Typography system implementation
 
 ### Design System
+
 - **QUALITY_GATES.md**: Quality standards and validation
 - **MICRO_INTERACTIONS_REFERENCE.md**: Animation usage guide
 - **DESIGN_SYSTEM_MAINTENANCE.md**: Governance and maintenance processes
 - **CONTRIBUTING_DESIGN_SYSTEM.md**: Contributor guidelines
 
 ### Styles
+
 - **advanced-accessibility.css**: Accessibility patterns
 - **micro-interactions.css**: Animation implementation
 
@@ -934,6 +1020,7 @@ color: #FF0000                         // ❌ Wrong
 ## 🤝 Contributing
 
 When adding new components:
+
 1. Follow design principles
 2. Use existing design tokens
 3. Ensure accessibility compliance
@@ -951,5 +1038,5 @@ When adding new components:
 
 ---
 
-*Last updated: December 2024*  
-*Design System Version: 1.0*
+_Last updated: December 2024_  
+_Design System Version: 1.0_

@@ -1,12 +1,12 @@
-declare module 'vitest' {
-  import type { 
-    Suite, 
-    Test, 
-    ExpectStatic, 
+declare module "vitest" {
+  import type {
+    Suite,
+    Test,
+    ExpectStatic,
     Assertion,
     AsymmetricMatchersContaining,
-    Vi
-  } from 'vitest';
+    Vi,
+  } from "vitest";
 
   export const describe: typeof Suite;
   export const it: typeof Test;
@@ -17,4 +17,3 @@ declare module 'vitest' {
   export const afterEach: (fn: () => void | Promise<void>) => void;
   export const vi: typeof Vi;
 }
-

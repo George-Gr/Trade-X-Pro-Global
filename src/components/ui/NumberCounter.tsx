@@ -9,15 +9,15 @@ interface NumberCounterProps {
   suffix?: string;
   className?: string;
   animation?: boolean;
-  format?: 'number' | 'currency' | 'percentage';
+  format?: "number" | "currency" | "percentage";
 }
 
 /**
  * NumberCounter Component
- * 
+ *
  * Animated number counting component for stats and metrics.
  * Smoothly counts from 0 to the target value with various formatting options.
- * 
+ *
  * Usage:
  * <NumberCounter value={1234.56} duration={2000} decimals={2} />
  * <NumberCounter value={98.7} suffix="%" format="percentage" />
@@ -27,11 +27,11 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
   value,
   duration = 2000,
   decimals = 0,
-  prefix = '',
-  suffix = '',
+  prefix = "",
+  suffix = "",
   className,
   animation = true,
-  format = 'number',
+  format = "number",
 }) => {
   const [count, setCount] = useState(0);
   const [isInView, setIsInView] = useState(false);
@@ -44,7 +44,7 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
           setIsInView(true);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     if (containerRef.current) {
@@ -66,10 +66,10 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      
+
       // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      
+
       const current = easeOutQuart * value;
       setCount(current);
 
@@ -84,44 +84,45 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
 
   const formatValue = (val: number): string => {
     switch (format) {
-      case 'currency':
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
+      case "currency":
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         }).format(val);
-      
-      case 'percentage':
-        return new Intl.NumberFormat('en-US', {
-          style: 'percent',
+
+      case "percentage":
+        return new Intl.NumberFormat("en-US", {
+          style: "percent",
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         }).format(val / 100);
-      
+
       default:
-        return new Intl.NumberFormat('en-US', {
+        return new Intl.NumberFormat("en-US", {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         }).format(val);
     }
   };
 
-  const displayValue = format === 'currency' || format === 'percentage' 
-    ? formatValue(count)
-    : `${prefix}${formatValue(count)}${suffix}`;
+  const displayValue =
+    format === "currency" || format === "percentage"
+      ? formatValue(count)
+      : `${prefix}${formatValue(count)}${suffix}`;
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={cn(
         "font-bold text-foreground transition-colors duration-300",
         animation && "animate-number-count",
-        className
+        className,
       )}
       style={{
         animationDuration: `${duration}ms`,
-        transform: animation ? 'none' : undefined,
+        transform: animation ? "none" : undefined,
       }}
     >
       {displayValue}
@@ -134,10 +135,7 @@ export const CompactNumberCounter: React.FC<NumberCounterProps> = (props) => {
   return (
     <NumberCounter
       {...props}
-      className={cn(
-        "text-lg font-semibold",
-        props.className
-      )}
+      className={cn("text-lg font-semibold", props.className)}
     />
   );
 };
@@ -149,7 +147,7 @@ export const LargeNumberCounter: React.FC<NumberCounterProps> = (props) => {
       {...props}
       className={cn(
         "text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent",
-        props.className
+        props.className,
       )}
     />
   );

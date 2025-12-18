@@ -31,10 +31,16 @@ interface UsePositionAnalysisReturn {
 
 export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
   const { user } = useAuth();
-  const [concentration, setConcentration] = useState<ConcentrationAnalysis | null>(null);
-  const [correlation, setCorrelation] = useState<CorrelationMatrix | null>(null);
-  const [stressTests, setStressTests] = useState<StressTestResults | null>(null);
-  const [diversification, setDiversification] = useState<DiversificationMetrics | null>(null);
+  const [concentration, setConcentration] =
+    useState<ConcentrationAnalysis | null>(null);
+  const [correlation, setCorrelation] = useState<CorrelationMatrix | null>(
+    null,
+  );
+  const [stressTests, setStressTests] = useState<StressTestResults | null>(
+    null,
+  );
+  const [diversification, setDiversification] =
+    useState<DiversificationMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -76,28 +82,29 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
       }
 
       // Calculate total portfolio value
-      const totalPortfolioValue = positions.reduce(
-        (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
-        0
-      ) + (profileData?.equity || 0);
+      const totalPortfolioValue =
+        positions.reduce(
+          (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
+          0,
+        ) + (profileData?.equity || 0);
 
       // Fetch asset specs to get asset classes
       const { data: assetSpecs, error: assetSpecsError } = await supabase
         .from("asset_specs")
         .select("symbol, asset_class")
-        .in("symbol", positions.map(p => p.symbol).filter(Boolean));
+        .in("symbol", positions.map((p) => p.symbol).filter(Boolean));
 
       if (assetSpecsError) throw assetSpecsError;
 
       // Create symbol to asset class mapping
       const symbolToAssetClass: Record<string, string> = {};
-      assetSpecs?.forEach(spec => {
+      assetSpecs?.forEach((spec) => {
         symbolToAssetClass[spec.symbol] = spec.asset_class || "Other";
       });
 
       // Analyze concentration
       const concentrationData = analyzeConcentration(
-        positions.map(p => ({
+        positions.map((p) => ({
           symbol: p.symbol || "",
           assetClass: symbolToAssetClass[p.symbol] || "Other",
           quantity: p.quantity || 0,
@@ -105,38 +112,38 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
           marginRequired: p.margin_used || 0,
           unrealizedPnL: p.unrealized_pnl || 0,
         })),
-        totalPortfolioValue
+        totalPortfolioValue,
       );
       setConcentration(concentrationData);
 
       // Analyze diversification
       const diversificationData = assessDiversification(
-        positions.map(p => ({
+        positions.map((p) => ({
           symbol: p.symbol || "",
           assetClass: symbolToAssetClass[p.symbol] || "Other",
           quantity: p.quantity || 0,
           currentPrice: p.current_price || 0,
         })),
-        totalPortfolioValue
+        totalPortfolioValue,
       );
       setDiversification(diversificationData);
 
       // Run stress tests
       const stressTestData = runStressTests(
-        positions.map(p => ({
+        positions.map((p) => ({
           symbol: p.symbol || "",
-          side: (p.side as 'long' | 'short') || 'long',
+          side: (p.side as "long" | "short") || "long",
           quantity: p.quantity || 0,
           currentPrice: p.current_price || 0,
           liquidationPrice: calculateLiquidationPrice(
             p.current_price || 0,
-            (p.side as 'long' | 'short') || 'long'
+            (p.side as "long" | "short") || "long",
           ),
           marginRequired: p.margin_used || 0,
           unrealizedPnL: p.unrealized_pnl || 0,
         })),
         profileData?.equity || 0,
-        profileData?.margin_used || 0
+        profileData?.margin_used || 0,
       );
       setStressTests(stressTestData);
 
@@ -149,7 +156,8 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
 
       setError(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to analyze positions";
+      const message =
+        err instanceof Error ? err.message : "Failed to analyze positions";
       setError(message);
       console.error("Position analysis error:", message);
     } finally {
@@ -175,7 +183,7 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
         },
         () => {
           fetchAnalysis();
-        }
+        },
       )
       .subscribe();
 
@@ -200,10 +208,10 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
  */
 function calculateLiquidationPrice(
   currentPrice: number,
-  side: 'long' | 'short',
-  leverage: number = 2
+  side: "long" | "short",
+  leverage: number = 2,
 ): number {
-  if (side === 'long') {
+  if (side === "long") {
     return currentPrice / leverage;
   } else {
     return currentPrice * leverage;

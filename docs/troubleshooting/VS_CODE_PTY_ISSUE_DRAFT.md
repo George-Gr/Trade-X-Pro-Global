@@ -1,6 +1,7 @@
 ## VS Code PTY / Integrated Terminal Diagnostic — Draft Issue & Log Collection
 
 Summary
+
 - The diagnostic script found PTY-related warnings and persistent session reconnection expirations in your VS Code logs (14 matches).
 - Key files referenced (from diagnostic output):
   - C:\Users\Alpha\AppData\Roaming\Code\logs\20251217T050941\ptyhost.log
@@ -8,14 +9,17 @@ Summary
   - C:\Users\Alpha\AppData\Roaming\Code\logs\20251217T050941\window1\renderer.log
 
 Sample log excerpts
+
 - 2025-12-17 05:13:49.551 — "[warning] Couldn't get layout info, a terminal was probably disconnected Could not find pty 1 on pty host"
 - 2025-12-17 08:29:48.699 — "[info] Persistent process \"8\": The reconnection grace time of 1m has expired, shutting down pid \"2552\""
 - 2025-12-17 13:49:08.278 — extension/tool invocation errors referencing apply_patch/copilot_applyPatch in the GitHub Copilot Chat logs
 
 What to gather
+
 - The full log files listed above (ptyhost.log, the Copilot Chat exthost log, and renderer.log) for the timestamp ranges covering the errors.
 
 How to collect and package logs (PowerShell)
+
 1. Run the diagnostic script and save its output:
 
 ```powershell

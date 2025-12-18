@@ -87,8 +87,6 @@
   /* Light mode: Very light gray */
 }
 
-
-
 /* ============================================
    UTILITY CLASSES
    ============================================ */
@@ -120,7 +118,7 @@
 .card-focusable:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
-  box-shadow: 
+  box-shadow:
     0 0 0 4px hsl(var(--ring) / 0.2),
     0 4px 6px rgba(0, 0, 0, 0.3);
 }
@@ -159,11 +157,11 @@
   .card-elevation-2 {
     box-shadow: var(--shadow-sm);
   }
-  
+
   .card-elevation-3 {
     box-shadow: var(--shadow-md);
   }
-  
+
   /* Reduce hover effects on mobile - touch doesn't have hover */
   .card-elevation-1:hover,
   .card-elevation-2:hover,
@@ -192,7 +190,7 @@
   .card {
     border: 2px solid hsl(var(--border));
   }
-  
+
   .card-elevation-1,
   .card-elevation-2,
   .card-elevation-3 {

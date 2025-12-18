@@ -1,88 +1,99 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import React, { useState, useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useAccessibility } from "@/contexts/AccessibilityContext";
 
 /**
  * Zod schema for trade form validation
  */
-const tradeSchema = z.object({
-  symbol: z.enum(['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA']).default('AAPL'),
-  quantity: z.string().min(1, 'Quantity is required').refine(
-    (val) => /^\d+$/.test(val) && parseInt(val) > 0,
-    'Quantity must be greater than 0'
-  ),
-  price: z.string().optional().default(''),
-  orderType: z.enum(['market', 'limit', 'stop']).default('market'),
-  timeInForce: z.enum(['day', 'gtc', 'ioc', 'fok']).default('day'),
-  stopLoss: z.string().optional().default(''),
-  takeProfit: z.string().optional().default(''),
-  notes: z.string().optional().default('')
-}).refine(
-  (data) => {
-    // Price is required for limit and stop orders
-    if ((data.orderType === 'limit' || data.orderType === 'stop') && !data.price) {
-      return false;
-    }
-    return true;
-  },
-  {
-    message: 'Price is required for limit and stop orders',
-    path: ['price']
-  }
-).refine(
-  (data) => {
-    // If price is provided, it must be a valid number greater than 0
-    if (data.price) {
-      const p = parseFloat(data.price);
-      if (!Number.isFinite(p) || p <= 0) {
+const tradeSchema = z
+  .object({
+    symbol: z.enum(["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]).default("AAPL"),
+    quantity: z
+      .string()
+      .min(1, "Quantity is required")
+      .refine(
+        (val) => /^\d+$/.test(val) && parseInt(val) > 0,
+        "Quantity must be greater than 0",
+      ),
+    price: z.string().optional().default(""),
+    orderType: z.enum(["market", "limit", "stop"]).default("market"),
+    timeInForce: z.enum(["day", "gtc", "ioc", "fok"]).default("day"),
+    stopLoss: z.string().optional().default(""),
+    takeProfit: z.string().optional().default(""),
+    notes: z.string().optional().default(""),
+  })
+  .refine(
+    (data) => {
+      // Price is required for limit and stop orders
+      if (
+        (data.orderType === "limit" || data.orderType === "stop") &&
+        !data.price
+      ) {
         return false;
       }
-    }
-    return true;
-  },
-  {
-    message: 'Price must be a valid number greater than 0',
-    path: ['price']
-  }
-).refine(
-  (data) => {
-    // If stopLoss is provided, it must be a valid number greater than 0
-    if (data.stopLoss) {
-      const sl = parseFloat(data.stopLoss);
-      if (!Number.isFinite(sl) || sl <= 0) {
-        return false;
+      return true;
+    },
+    {
+      message: "Price is required for limit and stop orders",
+      path: ["price"],
+    },
+  )
+  .refine(
+    (data) => {
+      // If price is provided, it must be a valid number greater than 0
+      if (data.price) {
+        const p = parseFloat(data.price);
+        if (!Number.isFinite(p) || p <= 0) {
+          return false;
+        }
       }
-    }
-    return true;
-  },
-  {
-    message: 'Stop loss must be a valid number greater than 0',
-    path: ['stopLoss']
-  }
-).refine(
-  (data) => {
-    // If takeProfit is provided, it must be a valid number greater than 0
-    if (data.takeProfit) {
-      const tp = parseFloat(data.takeProfit);
-      if (!Number.isFinite(tp) || tp <= 0) {
-        return false;
+      return true;
+    },
+    {
+      message: "Price must be a valid number greater than 0",
+      path: ["price"],
+    },
+  )
+  .refine(
+    (data) => {
+      // If stopLoss is provided, it must be a valid number greater than 0
+      if (data.stopLoss) {
+        const sl = parseFloat(data.stopLoss);
+        if (!Number.isFinite(sl) || sl <= 0) {
+          return false;
+        }
       }
-    }
-    return true;
-  },
-  {
-    message: 'Take profit must be a valid number greater than 0',
-    path: ['takeProfit']
-  }
-);
+      return true;
+    },
+    {
+      message: "Stop loss must be a valid number greater than 0",
+      path: ["stopLoss"],
+    },
+  )
+  .refine(
+    (data) => {
+      // If takeProfit is provided, it must be a valid number greater than 0
+      if (data.takeProfit) {
+        const tp = parseFloat(data.takeProfit);
+        if (!Number.isFinite(tp) || tp <= 0) {
+          return false;
+        }
+      }
+      return true;
+    },
+    {
+      message: "Take profit must be a valid number greater than 0",
+      path: ["takeProfit"],
+    },
+  );
 
 type TradeData = z.infer<typeof tradeSchema>;
 
 /**
  * Accessible Trading Form Component
- * 
+ *
  * Comprehensive trading form with full accessibility support.
  * Includes ARIA labeling, keyboard navigation, and screen reader support.
  */
@@ -94,27 +105,27 @@ export function TradingForm() {
     formState: { errors, isSubmitting },
     watch,
     reset,
-    setValue
+    setValue,
   } = useForm<TradeData>({
     resolver: zodResolver(tradeSchema),
     defaultValues: {
-      symbol: 'AAPL',
-      quantity: '',
-      price: '',
-      orderType: 'market',
-      timeInForce: 'day',
-      stopLoss: '',
-      takeProfit: '',
-      notes: ''
-    }
+      symbol: "AAPL",
+      quantity: "",
+      price: "",
+      orderType: "market",
+      timeInForce: "day",
+      stopLoss: "",
+      takeProfit: "",
+      notes: "",
+    },
   });
 
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [submitMessage, setSubmitMessage] = useState("");
   const { visualPreferences, complianceScore } = useAccessibility();
 
-  const orderType = watch('orderType');
-  const quantity = watch('quantity');
-  const price = watch('price');
+  const orderType = watch("orderType");
+  const quantity = watch("quantity");
+  const price = watch("price");
 
   // Refs for timer cleanup to prevent state updates on unmounted components
   const submitTimeoutRef = useRef<number | null>(null);
@@ -132,16 +143,44 @@ export function TradingForm() {
   }, []);
 
   const orderTypes = [
-    { value: 'market', label: 'Market Order', description: 'Execute at current market price' },
-    { value: 'limit', label: 'Limit Order', description: 'Execute at specified price or better' },
-    { value: 'stop', label: 'Stop Order', description: 'Execute when price reaches stop level' }
+    {
+      value: "market",
+      label: "Market Order",
+      description: "Execute at current market price",
+    },
+    {
+      value: "limit",
+      label: "Limit Order",
+      description: "Execute at specified price or better",
+    },
+    {
+      value: "stop",
+      label: "Stop Order",
+      description: "Execute when price reaches stop level",
+    },
   ];
 
   const timeInForceOptions = [
-    { value: 'day', label: 'Day', description: 'Valid for the current trading day' },
-    { value: 'gtc', label: 'Good Till Cancelled', description: 'Remains active until filled or cancelled' },
-    { value: 'ioc', label: 'Immediate or Cancel', description: 'Fill immediately or cancel' },
-    { value: 'fok', label: 'Fill or Kill', description: 'Fill completely or cancel' }
+    {
+      value: "day",
+      label: "Day",
+      description: "Valid for the current trading day",
+    },
+    {
+      value: "gtc",
+      label: "Good Till Cancelled",
+      description: "Remains active until filled or cancelled",
+    },
+    {
+      value: "ioc",
+      label: "Immediate or Cancel",
+      description: "Fill immediately or cancel",
+    },
+    {
+      value: "fok",
+      label: "Fill or Kill",
+      description: "Fill completely or cancel",
+    },
   ];
 
   const calculateEstimatedCost = () => {
@@ -150,8 +189,8 @@ export function TradingForm() {
   };
 
   const onSubmit = async (data: TradeData) => {
-    setSubmitMessage('Submitting order...');
-    announceToScreenReader('Submitting order');
+    setSubmitMessage("Submitting order...");
+    announceToScreenReader("Submitting order");
 
     // Clear any existing timeout before starting a new one
     if (submitTimeoutRef.current) {
@@ -163,17 +202,17 @@ export function TradingForm() {
     await new Promise<void>((resolve) => {
       submitTimeoutRef.current = window.setTimeout(() => {
         if (isMountedRef.current) {
-          setSubmitMessage('Order submitted successfully!');
-          announceToScreenReader('Order submitted successfully');
+          setSubmitMessage("Order submitted successfully!");
+          announceToScreenReader("Order submitted successfully");
           reset({
-            symbol: 'AAPL',
-            quantity: '',
-            price: '',
-            orderType: 'market',
-            timeInForce: 'day',
-            stopLoss: '',
-            takeProfit: '',
-            notes: ''
+            symbol: "AAPL",
+            quantity: "",
+            price: "",
+            orderType: "market",
+            timeInForce: "day",
+            stopLoss: "",
+            takeProfit: "",
+            notes: "",
           });
         }
         resolve();
@@ -182,7 +221,7 @@ export function TradingForm() {
   };
 
   const announceToScreenReader = (message: string) => {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(message);
       utterance.rate = 0.9;
       utterance.pitch = 1;
@@ -190,29 +229,44 @@ export function TradingForm() {
     }
   };
 
-  const quickFill = (preset: 'buy' | 'sell' | 'clear') => {
-    if (preset === 'clear') {
+  const quickFill = (preset: "buy" | "sell" | "clear") => {
+    if (preset === "clear") {
       reset({
-        symbol: 'AAPL',
-        quantity: '',
-        price: '',
-        orderType: 'market',
-        timeInForce: 'day',
-        stopLoss: '',
-        takeProfit: '',
-        notes: ''
+        symbol: "AAPL",
+        quantity: "",
+        price: "",
+        orderType: "market",
+        timeInForce: "day",
+        stopLoss: "",
+        takeProfit: "",
+        notes: "",
       });
-      announceToScreenReader('Form cleared');
+      announceToScreenReader("Form cleared");
       return;
     }
 
     const samplePrice = 150.25;
-    setValue('quantity', '100');
-    setValue('price', samplePrice.toString());
-    setValue('orderType', 'limit');
-    setValue('stopLoss', preset === 'buy' ? (samplePrice * 0.95).toFixed(2) : (samplePrice * 1.05).toFixed(2));
-    setValue('takeProfit', preset === 'buy' ? (samplePrice * 1.10).toFixed(2) : (samplePrice * 0.90).toFixed(2));
-    setValue('notes', preset === 'buy' ? 'Buy position with stop loss and take profit' : 'Sell position with stop loss and take profit');
+    setValue("quantity", "100");
+    setValue("price", samplePrice.toString());
+    setValue("orderType", "limit");
+    setValue(
+      "stopLoss",
+      preset === "buy"
+        ? (samplePrice * 0.95).toFixed(2)
+        : (samplePrice * 1.05).toFixed(2),
+    );
+    setValue(
+      "takeProfit",
+      preset === "buy"
+        ? (samplePrice * 1.1).toFixed(2)
+        : (samplePrice * 0.9).toFixed(2),
+    );
+    setValue(
+      "notes",
+      preset === "buy"
+        ? "Buy position with stop loss and take profit"
+        : "Sell position with stop loss and take profit",
+    );
 
     announceToScreenReader(`Quick fill ${preset} completed`);
   };
@@ -222,26 +276,28 @@ export function TradingForm() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">New Trade Order</h2>
-          <p className="text-muted-foreground">Create and submit trading orders with full accessibility support</p>
+          <p className="text-muted-foreground">
+            Create and submit trading orders with full accessibility support
+          </p>
         </div>
-        
+
         <div className="flex space-x-2">
           <button
-            onClick={() => quickFill('buy')}
+            onClick={() => quickFill("buy")}
             className="px-4 py-2 bg-green-500 text-white rounded-lg font-medium"
             aria-label="Quick fill buy order"
           >
             Quick Buy
           </button>
           <button
-            onClick={() => quickFill('sell')}
+            onClick={() => quickFill("sell")}
             className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium"
             aria-label="Quick fill sell order"
           >
             Quick Sell
           </button>
           <button
-            onClick={() => quickFill('clear')}
+            onClick={() => quickFill("clear")}
             className="px-4 py-2 bg-gray-500 text-white rounded-lg font-medium"
             aria-label="Clear form"
           >
@@ -258,7 +314,9 @@ export function TradingForm() {
             <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
               $150.25
             </span>
-            <span className="text-sm text-muted-foreground">+0.50 (+0.33%)</span>
+            <span className="text-sm text-muted-foreground">
+              +0.50 (+0.33%)
+            </span>
           </div>
           <div className="text-sm text-muted-foreground">
             Last updated: {new Date().toLocaleTimeString()}
@@ -274,9 +332,11 @@ export function TradingForm() {
               Accessibility: {Math.round(complianceScore)}%
             </span>
             <span className="text-sm text-blue-800">
-              {visualPreferences.preferences.highContrast ? 'High contrast mode enabled' : 
-               visualPreferences.preferences.largerText ? 'Larger text enabled' :
-               'Standard accessibility settings'}
+              {visualPreferences.preferences.highContrast
+                ? "High contrast mode enabled"
+                : visualPreferences.preferences.largerText
+                  ? "Larger text enabled"
+                  : "Standard accessibility settings"}
             </span>
           </div>
           <div className="text-sm text-blue-800">
@@ -290,14 +350,11 @@ export function TradingForm() {
         {/* Symbol and Order Type */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label 
-              htmlFor="symbol" 
-              className="block text-sm font-medium mb-2"
-            >
+            <label htmlFor="symbol" className="block text-sm font-medium mb-2">
               Trading Symbol
             </label>
             <select
-              {...register('symbol')}
+              {...register("symbol")}
               id="symbol"
               aria-describedby="symbol-help"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -308,20 +365,23 @@ export function TradingForm() {
               <option value="AMZN">AMZN - Amazon.com, Inc.</option>
               <option value="TSLA">TSLA - Tesla, Inc.</option>
             </select>
-            <div id="symbol-help" className="text-sm text-muted-foreground mt-1">
+            <div
+              id="symbol-help"
+              className="text-sm text-muted-foreground mt-1"
+            >
               Select the trading symbol for your order
             </div>
           </div>
 
           <div>
-            <label 
-              htmlFor="orderType" 
+            <label
+              htmlFor="orderType"
               className="block text-sm font-medium mb-2"
             >
               Order Type
             </label>
             <select
-              {...register('orderType')}
+              {...register("orderType")}
               id="orderType"
               aria-describedby="orderType-help"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -332,8 +392,11 @@ export function TradingForm() {
                 </option>
               ))}
             </select>
-            <div id="orderType-help" className="text-sm text-muted-foreground mt-1">
-              {orderTypes.find(t => t.value === orderType)?.description}
+            <div
+              id="orderType-help"
+              className="text-sm text-muted-foreground mt-1"
+            >
+              {orderTypes.find((t) => t.value === orderType)?.description}
             </div>
           </div>
         </div>
@@ -341,29 +404,36 @@ export function TradingForm() {
         {/* Quantity and Price */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label 
-              htmlFor="quantity" 
+            <label
+              htmlFor="quantity"
               className="block text-sm font-medium mb-2"
             >
               Quantity
-              <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+              <span className="text-red-500 ml-1" aria-hidden="true">
+                *
+              </span>
             </label>
             <input
-              {...register('quantity')}
+              {...register("quantity")}
               id="quantity"
               type="text"
-              aria-describedby={errors.quantity ? "quantity-error" : "quantity-help"}
+              aria-describedby={
+                errors.quantity ? "quantity-error" : "quantity-help"
+              }
               aria-required="true"
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.quantity ? 'border-red-500' : 'border-gray-300'
+                errors.quantity ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Enter quantity"
             />
-            <div id="quantity-help" className="text-sm text-muted-foreground mt-1">
+            <div
+              id="quantity-help"
+              className="text-sm text-muted-foreground mt-1"
+            >
               Number of shares to trade
             </div>
             {errors.quantity && (
-              <div 
+              <div
                 id="quantity-error"
                 className="text-sm text-red-600 mt-1"
                 role="alert"
@@ -375,34 +445,35 @@ export function TradingForm() {
           </div>
 
           <div>
-            <label 
-              htmlFor="price" 
-              className="block text-sm font-medium mb-2"
-            >
+            <label htmlFor="price" className="block text-sm font-medium mb-2">
               Price
-              {orderType !== 'market' && (
-                <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+              {orderType !== "market" && (
+                <span className="text-red-500 ml-1" aria-hidden="true">
+                  *
+                </span>
               )}
             </label>
             <input
-              {...register('price')}
+              {...register("price")}
               id="price"
               type="text"
               aria-describedby={errors.price ? "price-error" : "price-help"}
-              aria-required={orderType !== 'market'}
+              aria-required={orderType !== "market"}
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.price ? 'border-red-500' : 'border-gray-300'
+                errors.price ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder={orderType === 'market' ? 'Market price' : 'Enter price'}
-              disabled={orderType === 'market'}
+              placeholder={
+                orderType === "market" ? "Market price" : "Enter price"
+              }
+              disabled={orderType === "market"}
             />
             <div id="price-help" className="text-sm text-muted-foreground mt-1">
-              {orderType === 'market' 
-                ? 'Market orders execute at current price' 
-                : 'Specify the price for limit/stop orders'}
+              {orderType === "market"
+                ? "Market orders execute at current price"
+                : "Specify the price for limit/stop orders"}
             </div>
             {errors.price && (
-              <div 
+              <div
                 id="price-error"
                 className="text-sm text-red-600 mt-1"
                 role="alert"
@@ -417,14 +488,14 @@ export function TradingForm() {
         {/* Time in Force and Estimated Cost */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label 
-              htmlFor="timeInForce" 
+            <label
+              htmlFor="timeInForce"
               className="block text-sm font-medium mb-2"
             >
               Time in Force
             </label>
             <select
-              {...register('timeInForce')}
+              {...register("timeInForce")}
               id="timeInForce"
               aria-describedby="timeInForce-help"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -435,13 +506,21 @@ export function TradingForm() {
                 </option>
               ))}
             </select>
-            <div id="timeInForce-help" className="text-sm text-muted-foreground mt-1">
-              {timeInForceOptions.find(t => t.value === watch('timeInForce'))?.description}
+            <div
+              id="timeInForce-help"
+              className="text-sm text-muted-foreground mt-1"
+            >
+              {
+                timeInForceOptions.find((t) => t.value === watch("timeInForce"))
+                  ?.description
+              }
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Estimated Cost</label>
+            <label className="block text-sm font-medium mb-2">
+              Estimated Cost
+            </label>
             <div className="p-3 border rounded-lg bg-gray-50 border-gray-300">
               <p className="text-lg font-semibold">
                 ${calculateEstimatedCost().toLocaleString()}
@@ -456,27 +535,32 @@ export function TradingForm() {
         {/* Stop Loss and Take Profit */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label 
-              htmlFor="stopLoss" 
+            <label
+              htmlFor="stopLoss"
               className="block text-sm font-medium mb-2"
             >
               Stop Loss
             </label>
             <input
-              {...register('stopLoss')}
+              {...register("stopLoss")}
               id="stopLoss"
               type="text"
-              aria-describedby={errors.stopLoss ? "stopLoss-error" : "stopLoss-help"}
+              aria-describedby={
+                errors.stopLoss ? "stopLoss-error" : "stopLoss-help"
+              }
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.stopLoss ? 'border-red-500' : 'border-gray-300'
+                errors.stopLoss ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Optional stop loss price"
             />
-            <div id="stopLoss-help" className="text-sm text-muted-foreground mt-1">
+            <div
+              id="stopLoss-help"
+              className="text-sm text-muted-foreground mt-1"
+            >
               Automatically sell if price drops to this level
             </div>
             {errors.stopLoss && (
-              <div 
+              <div
                 id="stopLoss-error"
                 className="text-sm text-red-600 mt-1"
                 role="alert"
@@ -488,27 +572,32 @@ export function TradingForm() {
           </div>
 
           <div>
-            <label 
-              htmlFor="takeProfit" 
+            <label
+              htmlFor="takeProfit"
               className="block text-sm font-medium mb-2"
             >
               Take Profit
             </label>
             <input
-              {...register('takeProfit')}
+              {...register("takeProfit")}
               id="takeProfit"
               type="text"
-              aria-describedby={errors.takeProfit ? "takeProfit-error" : "takeProfit-help"}
+              aria-describedby={
+                errors.takeProfit ? "takeProfit-error" : "takeProfit-help"
+              }
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.takeProfit ? 'border-red-500' : 'border-gray-300'
+                errors.takeProfit ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Optional take profit price"
             />
-            <div id="takeProfit-help" className="text-sm text-muted-foreground mt-1">
+            <div
+              id="takeProfit-help"
+              className="text-sm text-muted-foreground mt-1"
+            >
               Automatically sell if price rises to this level
             </div>
             {errors.takeProfit && (
-              <div 
+              <div
                 id="takeProfit-error"
                 className="text-sm text-red-600 mt-1"
                 role="alert"
@@ -522,14 +611,11 @@ export function TradingForm() {
 
         {/* Notes */}
         <div>
-          <label 
-            htmlFor="notes" 
-            className="block text-sm font-medium mb-2"
-          >
+          <label htmlFor="notes" className="block text-sm font-medium mb-2">
             Notes
           </label>
           <textarea
-            {...register('notes')}
+            {...register("notes")}
             id="notes"
             aria-describedby="notes-help"
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -547,10 +633,16 @@ export function TradingForm() {
             <h3 className="text-lg font-semibold">Review Order</h3>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
-                Order Type: {orderTypes.find(t => t.value === orderType)?.label}
+                Order Type:{" "}
+                {orderTypes.find((t) => t.value === orderType)?.label}
               </span>
               <span className="text-sm text-muted-foreground">
-                Time in Force: {timeInForceOptions.find(t => t.value === watch('timeInForce'))?.label}
+                Time in Force:{" "}
+                {
+                  timeInForceOptions.find(
+                    (t) => t.value === watch("timeInForce"),
+                  )?.label
+                }
               </span>
             </div>
           </div>
@@ -558,16 +650,16 @@ export function TradingForm() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div className="p-4 bg-blue-50 border border-blue-200 rounded">
               <p className="text-sm text-muted-foreground">Symbol</p>
-              <p className="text-lg font-semibold">{watch('symbol')}</p>
+              <p className="text-lg font-semibold">{watch("symbol")}</p>
             </div>
             <div className="p-4 bg-green-50 border border-green-200 rounded">
               <p className="text-sm text-muted-foreground">Quantity</p>
-              <p className="text-lg font-semibold">{quantity || '0'}</p>
+              <p className="text-lg font-semibold">{quantity || "0"}</p>
             </div>
             <div className="p-4 bg-purple-50 border border-purple-200 rounded">
               <p className="text-sm text-muted-foreground">Price</p>
               <p className="text-lg font-semibold">
-                {price ? `$${parseFloat(price).toLocaleString()}` : 'Market'}
+                {price ? `$${parseFloat(price).toLocaleString()}` : "Market"}
               </p>
             </div>
             <div className="p-4 bg-orange-50 border border-orange-200 rounded">
@@ -583,46 +675,47 @@ export function TradingForm() {
               type="submit"
               disabled={isSubmitting}
               className={`px-6 py-3 rounded-lg font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                isSubmitting 
-                  ? 'bg-gray-500 text-white cursor-not-allowed' 
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
+                isSubmitting
+                  ? "bg-gray-500 text-white cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
               aria-describedby="submit-help"
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Order'}
+              {isSubmitting ? "Submitting..." : "Submit Order"}
             </button>
-            
+
             <button
               type="button"
               onClick={() => {
                 reset({
-                  symbol: 'AAPL',
-                  quantity: '',
-                  price: '',
-                  orderType: 'market',
-                  timeInForce: 'day',
-                  stopLoss: '',
-                  takeProfit: '',
-                  notes: ''
+                  symbol: "AAPL",
+                  quantity: "",
+                  price: "",
+                  orderType: "market",
+                  timeInForce: "day",
+                  stopLoss: "",
+                  takeProfit: "",
+                  notes: "",
                 });
-                announceToScreenReader('Form reset to defaults');
+                announceToScreenReader("Form reset to defaults");
               }}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg font-medium focus:ring-2 focus:ring-gray-500 focus:outline-none"
             >
               Reset
             </button>
           </div>
-          
+
           <div id="submit-help" className="text-sm text-muted-foreground mt-3">
-            Review your order details before submitting. All fields will be validated.
+            Review your order details before submitting. All fields will be
+            validated.
           </div>
-          
+
           {submitMessage && (
-            <div 
+            <div
               className={`mt-4 p-3 rounded ${
-                submitMessage.includes('successfully') 
-                  ? 'bg-green-50 border border-green-200 text-green-800' 
-                  : 'bg-blue-50 border border-blue-200 text-blue-800'
+                submitMessage.includes("successfully")
+                  ? "bg-green-50 border border-green-200 text-green-800"
+                  : "bg-blue-50 border border-blue-200 text-blue-800"
               }`}
               role="status"
               aria-live="polite"

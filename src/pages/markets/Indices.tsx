@@ -9,7 +9,7 @@ export default function Indices() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      
+
       <main className="pt-24 pb-20">
         <section className="bg-gradient-primary/10 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +21,8 @@ export default function Indices() {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Trade diversified market exposure with tight spreads and high leverage
+                Trade diversified market exposure with tight spreads and high
+                leverage
               </p>
             </div>
           </div>
@@ -46,7 +47,7 @@ export default function Indices() {
                     "Diversified market exposure",
                     "Lower volatility than individual stocks",
                     "Track economic performance",
-                    "Hedge portfolio exposure"
+                    "Hedge portfolio exposure",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -62,14 +63,30 @@ export default function Indices() {
                 <h2 className="text-3xl font-bold mb-6">Available Indices</h2>
                 <div className="space-y-4">
                   {[
-                    { region: "US Indices", indices: "S&P 500, Nasdaq 100, Dow Jones 30, Russell 2000" },
-                    { region: "European", indices: "FTSE 100, DAX 40, CAC 40, Euro Stoxx 50" },
-                    { region: "Asian", indices: "Nikkei 225, Hang Seng, ASX 200, Shanghai Composite" },
-                    { region: "Other", indices: "TSX (Canada), SGX (Singapore), Kospi (Korea)" }
+                    {
+                      region: "US Indices",
+                      indices:
+                        "S&P 500, Nasdaq 100, Dow Jones 30, Russell 2000",
+                    },
+                    {
+                      region: "European",
+                      indices: "FTSE 100, DAX 40, CAC 40, Euro Stoxx 50",
+                    },
+                    {
+                      region: "Asian",
+                      indices:
+                        "Nikkei 225, Hang Seng, ASX 200, Shanghai Composite",
+                    },
+                    {
+                      region: "Other",
+                      indices: "TSX (Canada), SGX (Singapore), Kospi (Korea)",
+                    },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
                       <p className="font-semibold mb-2">{item.region}</p>
-                      <p className="text-xs text-muted-foreground">{item.indices}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.indices}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -79,7 +96,9 @@ export default function Indices() {
 
           <Card className="mb-8">
             <CardContent>
-              <h2 className="text-3xl font-bold mb-8">Index Trading Specifications</h2>
+              <h2 className="text-3xl font-bold mb-8">
+                Index Trading Specifications
+              </h2>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
@@ -92,17 +111,47 @@ export default function Indices() {
                   </thead>
                   <tbody>
                     {[
-                      { index: "S&P 500", spread: "0.4 points", leverage: "1:500", hours: "24/5" },
-                      { index: "Nasdaq 100", spread: "0.8 points", leverage: "1:500", hours: "24/5" },
-                      { index: "Dow Jones 30", spread: "1.0 point", leverage: "1:500", hours: "24/5" },
-                      { index: "DAX 40", spread: "1.0 points", leverage: "1:500", hours: "07:00-21:00" },
-                      { index: "FTSE 100", spread: "1.0 points", leverage: "1:500", hours: "07:00-21:00" }
+                      {
+                        index: "S&P 500",
+                        spread: "0.4 points",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        index: "Nasdaq 100",
+                        spread: "0.8 points",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        index: "Dow Jones 30",
+                        spread: "1.0 point",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        index: "DAX 40",
+                        spread: "1.0 points",
+                        leverage: "1:500",
+                        hours: "07:00-21:00",
+                      },
+                      {
+                        index: "FTSE 100",
+                        spread: "1.0 points",
+                        leverage: "1:500",
+                        hours: "07:00-21:00",
+                      },
                     ].map((row, i) => (
-                      <tr key={i} className="border-b border-border hover:bg-muted/50">
+                      <tr
+                        key={i}
+                        className="border-b border-border hover:bg-muted/50"
+                      >
                         <td className="p-4 font-medium">{row.index}</td>
                         <td className="p-4 text-center">{row.spread}</td>
                         <td className="p-4 text-center">{row.leverage}</td>
-                        <td className="p-4 text-center text-muted-foreground">{row.hours}</td>
+                        <td className="p-4 text-center text-muted-foreground">
+                          {row.hours}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -114,13 +163,18 @@ export default function Indices() {
           <div className="text-center">
             <Card className="bg-gradient-primary/10 border-primary/20">
               <CardContent className="p-8">
-                <h2 className="text-3xl font-bold mb-4">Start Trading Indices Today</h2>
+                <h2 className="text-3xl font-bold mb-4">
+                  Start Trading Indices Today
+                </h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access 20+ major indices with professional conditions
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="gradient-primary transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
+                    <Button
+                      size="lg"
+                      className="gradient-primary transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95"
+                    >
                       Open Account
                     </Button>
                   </Link>

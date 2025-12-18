@@ -171,7 +171,7 @@ select:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 0;
   border-color: hsl(var(--ring));
-  box-shadow: 
+  box-shadow:
     0 0 0 4px hsl(var(--ring) / 0.2),
     0 1px 3px rgba(0, 0, 0, 0.1);
   transition: var(--transition-normal);
@@ -355,8 +355,6 @@ tr.clickable:active {
   transition: var(--transition-normal);
 }
 
-
-
 /* ============================================
    ACCESSIBILITY ENHANCEMENTS
    ============================================ */
@@ -371,7 +369,7 @@ tr.clickable:active {
     outline: 3px solid currentColor;
     outline-offset: 3px;
   }
-  
+
   button:disabled,
   input:disabled,
   textarea:disabled,
@@ -394,7 +392,7 @@ tr.clickable:active {
     transition: none !important;
     transform: none !important;
   }
-  
+
   button:not(:disabled):active,
   a:active,
   .card-interactive:active {
@@ -472,7 +470,7 @@ button[data-loading="true"]::after,
     filter: none !important;
     box-shadow: none !important;
   }
-  
+
   button:focus-visible,
   a:focus-visible,
   input:focus-visible {

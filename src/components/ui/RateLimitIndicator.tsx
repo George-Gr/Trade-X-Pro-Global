@@ -3,16 +3,16 @@
  * Shows queue status and rate limit warnings
  */
 
-import * as React from 'react';
-import { AlertCircle, Clock, Loader2 } from 'lucide-react';
-import { useRateLimitStatus } from '@/hooks/useRateLimitStatus';
+import * as React from "react";
+import { AlertCircle, Clock, Loader2 } from "lucide-react";
+import { useRateLimitStatus } from "@/hooks/useRateLimitStatus";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface RateLimitIndicatorProps {
   endpoint?: string;
@@ -21,13 +21,14 @@ interface RateLimitIndicatorProps {
 }
 
 export function RateLimitIndicator({
-  endpoint = 'order',
+  endpoint = "order",
   className,
   showAlways = false,
 }: RateLimitIndicatorProps) {
-  const { queueLength, isProcessing, getRemainingRequests, getResetTime } = useRateLimitStatus({
-    endpoint,
-  });
+  const { queueLength, isProcessing, getRemainingRequests, getResetTime } =
+    useRateLimitStatus({
+      endpoint,
+    });
 
   const remaining = getRemainingRequests(endpoint);
   const resetTime = getResetTime(endpoint);
@@ -46,11 +47,11 @@ export function RateLimitIndicator({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              'flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors',
-              isBlocked && 'bg-destructive/10 text-destructive',
-              isWarning && 'bg-warning/10 text-warning',
-              !isBlocked && !isWarning && 'bg-muted text-muted-foreground',
-              className
+              "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors",
+              isBlocked && "bg-destructive/10 text-destructive",
+              isWarning && "bg-warning/10 text-warning",
+              !isBlocked && !isWarning && "bg-muted text-muted-foreground",
+              className,
             )}
           >
             {isProcessing ? (
@@ -60,18 +61,12 @@ export function RateLimitIndicator({
             ) : (
               <Clock className="h-3 w-3" />
             )}
-            
-            {queueLength > 0 && (
-              <span>Queue: {queueLength}</span>
-            )}
-            
-            {isBlocked && (
-              <span>Rate limited</span>
-            )}
-            
-            {isWarning && !isBlocked && (
-              <span>{remaining} left</span>
-            )}
+
+            {queueLength > 0 && <span>Queue: {queueLength}</span>}
+
+            {isBlocked && <span>Rate limited</span>}
+
+            {isWarning && !isBlocked && <span>{remaining} left</span>}
           </div>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-xs">

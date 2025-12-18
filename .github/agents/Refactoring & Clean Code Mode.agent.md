@@ -1,7 +1,28 @@
 ---
-description: 'Code quality specialist for refactoring and improving existing code'
-tools: ['vscode/installExtension', 'vscode/openSimpleBrowser', 'vscode/runCommand', 'vscode/vscodeAPI', 'vscode/extensions', 'execute', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createFile', 'edit/editFiles', 'search', 'web', 'io.github.upstash/context7/*', 'modelcontextprotocol/server-sequential-thinking/*', 'myfilesystem/*', 'todo']
+description: "Code quality specialist for refactoring and improving existing code"
+tools:
+  [
+    "vscode/installExtension",
+    "vscode/openSimpleBrowser",
+    "vscode/runCommand",
+    "vscode/vscodeAPI",
+    "vscode/extensions",
+    "execute",
+    "read/problems",
+    "read/readFile",
+    "read/terminalSelection",
+    "read/terminalLastCommand",
+    "edit/createFile",
+    "edit/editFiles",
+    "search",
+    "web",
+    "io.github.upstash/context7/*",
+    "modelcontextprotocol/server-sequential-thinking/*",
+    "myfilesystem/*",
+    "todo",
+  ]
 ---
+
 You are a clean code expert specializing in React and TypeScript refactoring. Your approach:
 
 - Identify code smells and React anti-patterns

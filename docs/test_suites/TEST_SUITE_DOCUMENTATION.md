@@ -1,14 +1,17 @@
 # Test Suite Documentation
 
 ## Overview
+
 This document provides comprehensive documentation for the test suite created for the Trade-X-Pro-Global application's trading components.
 
 ## Test Files Created
 
 ### 1. **OrdersTable.test.tsx** - 280+ Lines
+
 **Location:** `/src/components/trading/__tests__/OrdersTable.test.tsx`
 
 #### Components Tested:
+
 - **OrderStatusBadge** - Status indicator component
 - **OrderRow** - Individual order row component
 - **OrdersTable** - Main orders table component
@@ -16,6 +19,7 @@ This document provides comprehensive documentation for the test suite created fo
 #### Test Coverage:
 
 ##### OrderStatusBadge Tests (10 tests)
+
 - ✅ Renders pending status with yellow color
 - ✅ Renders open status with blue color
 - ✅ Renders filled status with green color
@@ -26,10 +30,12 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Renders all status types without crashing
 
 ##### Utility Function Tests
+
 - **classifyOrderStatus()** - 5 tests covering status classification logic
 - **calculateFillPercentage()** - 5 tests for fill percentage calculations
 
 ##### OrderRow Tests (12 tests)
+
 - ✅ Renders order details (symbol, type, side)
 - ✅ Displays filled/total quantity
 - ✅ Shows order ID with copy button
@@ -42,6 +48,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Negative P&L styling
 
 ##### OrdersTable Tests (20+ tests)
+
 - ✅ Renders all orders in table
 - ✅ Displays table headers with sortable columns
 - ✅ Shows order statistics summary
@@ -61,9 +68,11 @@ This document provides comprehensive documentation for the test suite created fo
 ---
 
 ### 2. **PositionsGrid.test.tsx** - 320+ Lines
+
 **Location:** `/src/components/trading/__tests__/PositionsGrid.test.tsx`
 
 #### Components Tested:
+
 - **PositionCard** - Individual position card
 - **PositionMetrics** - Position metrics display
 - **PositionsGrid** - Grid layout of positions
@@ -71,6 +80,7 @@ This document provides comprehensive documentation for the test suite created fo
 #### Test Coverage:
 
 ##### PositionCard Tests (18 tests)
+
 - ✅ Renders position symbol
 - ✅ Displays position size and side
 - ✅ Shows entry and current prices
@@ -91,6 +101,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Large number formatting
 
 ##### PositionMetrics Tests (13 tests)
+
 - ✅ Renders total positions count
 - ✅ Shows open positions count
 - ✅ Displays margin utilization percentage
@@ -106,6 +117,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Formats monetary values with USD currency
 
 ##### PositionsGrid Tests (14 tests)
+
 - ✅ Renders all positions in grid
 - ✅ Displays position metrics summary
 - ✅ Shows loading state
@@ -125,6 +137,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Mass close with multi-select
 
 ##### Utility Function Tests (12 tests)
+
 - **calculateUnrealizedPnL()** - 4 tests
 - **calculatePnLPercentage()** - 3 tests
 - **getPositionColor()** - 5 tests
@@ -132,9 +145,11 @@ This document provides comprehensive documentation for the test suite created fo
 ---
 
 ### 3. **RiskManagement.test.tsx** - 290+ Lines
+
 **Location:** `/src/components/trading/__tests__/RiskManagement.test.tsx`
 
 #### Components Tested:
+
 - **RiskMetrics** - Risk metrics display
 - **RiskGauge** - Risk gauge visualization
 - **RiskLevelIndicator** - Risk level indicator
@@ -143,6 +158,7 @@ This document provides comprehensive documentation for the test suite created fo
 #### Test Coverage:
 
 ##### RiskMetrics Tests (12 tests)
+
 - ✅ Renders all risk metrics
 - ✅ Displays maximum drawdown value
 - ✅ Displays Value at Risk (VaR)
@@ -161,6 +177,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Handles missing metrics gracefully
 
 ##### RiskGauge Tests (10 tests)
+
 - ✅ Renders gauge component
 - ✅ Displays risk percentage
 - ✅ Shows green color for low risk
@@ -174,6 +191,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Displays custom labels
 
 ##### RiskLevelIndicator Tests (9 tests)
+
 - ✅ Renders all risk levels (low, medium, high, critical)
 - ✅ Color coding for each risk level
 - ✅ Displays icons for each level
@@ -183,6 +201,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Full coverage of risk level types
 
 ##### MarginMonitor Tests (16 tests)
+
 - ✅ Renders margin monitor component
 - ✅ Displays total balance
 - ✅ Displays used margin
@@ -206,9 +225,11 @@ This document provides comprehensive documentation for the test suite created fo
 ---
 
 ### 4. **Wallet.test.tsx** - 380+ Lines
+
 **Location:** `/src/components/wallet/__tests__/Wallet.test.tsx`
 
 #### Components Tested:
+
 - **WalletBalance** - Wallet balance display
 - **WalletTransactionHistory** - Transaction history list
 - **WalletActions** - Wallet action buttons
@@ -216,6 +237,7 @@ This document provides comprehensive documentation for the test suite created fo
 #### Test Coverage:
 
 ##### WalletBalance Tests (12 tests)
+
 - ✅ Renders wallet balance component
 - ✅ Displays total balance amount
 - ✅ Displays available balance
@@ -234,6 +256,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Deposit prompt for zero balance
 
 ##### WalletTransactionHistory Tests (18 tests)
+
 - ✅ Renders transaction history
 - ✅ Displays all transactions
 - ✅ Displays transaction amounts
@@ -255,6 +278,7 @@ This document provides comprehensive documentation for the test suite created fo
 - ✅ Error message display
 
 ##### WalletActions Tests (18 tests)
+
 - ✅ Renders all action buttons
 - ✅ Deposit button functionality
 - ✅ Withdraw button functionality
@@ -278,29 +302,32 @@ This document provides comprehensive documentation for the test suite created fo
 ## Test Statistics
 
 ### Total Test Coverage
+
 - **Total Test Files:** 4
 - **Total Test Suites:** ~15
 - **Total Test Cases:** 150+
 - **Total Lines of Test Code:** ~1,000+
 
 ### Test Breakdown by Component
-| Component | Tests | Lines |
-|-----------|-------|-------|
-| OrderStatusBadge | 10 | ~80 |
-| OrderRow | 12 | ~100 |
-| OrdersTable | 20+ | ~150 |
-| PositionCard | 18 | ~150 |
-| PositionMetrics | 13 | ~130 |
-| PositionsGrid | 14 | ~150 |
-| RiskMetrics | 16 | ~130 |
-| RiskGauge | 10 | ~100 |
-| RiskLevelIndicator | 9 | ~80 |
-| MarginMonitor | 16 | ~140 |
-| WalletBalance | 12 | ~110 |
-| WalletTransactionHistory | 18 | ~180 |
-| WalletActions | 18 | ~160 |
+
+| Component                | Tests | Lines |
+| ------------------------ | ----- | ----- |
+| OrderStatusBadge         | 10    | ~80   |
+| OrderRow                 | 12    | ~100  |
+| OrdersTable              | 20+   | ~150  |
+| PositionCard             | 18    | ~150  |
+| PositionMetrics          | 13    | ~130  |
+| PositionsGrid            | 14    | ~150  |
+| RiskMetrics              | 16    | ~130  |
+| RiskGauge                | 10    | ~100  |
+| RiskLevelIndicator       | 9     | ~80   |
+| MarginMonitor            | 16    | ~140  |
+| WalletBalance            | 12    | ~110  |
+| WalletTransactionHistory | 18    | ~180  |
+| WalletActions            | 18    | ~160  |
 
 ### Test Types
+
 - **Unit Tests:** 80% (component testing)
 - **Integration Tests:** 15% (callback and state management)
 - **Snapshot Tests:** 5% (UI consistency)
@@ -308,6 +335,7 @@ This document provides comprehensive documentation for the test suite created fo
 ## Running the Tests
 
 ### Commands
+
 ```bash
 # Run all tests
 npm test
@@ -326,6 +354,7 @@ npm test -- --run
 ```
 
 ### Test Environment
+
 - **Framework:** Vitest
 - **DOM Environment:** jsdom
 - **React Version:** 18.3.1
@@ -335,33 +364,42 @@ npm test -- --run
 ## Key Testing Features
 
 ### 1. **Comprehensive Coverage**
+
 - All major components have tests
 - Edge cases are covered (zero values, errors, loading states)
 - Both happy path and error scenarios
 
 ### 2. **Mock Data**
+
 Each test file includes realistic mock data:
+
 - Orders with various statuses and fills
 - Positions with P&L calculations
 - Risk metrics with different levels
 - Wallet transactions with multiple types
 
 ### 3. **User Interactions**
+
 Tests cover:
+
 - Button clicks and callbacks
 - Form inputs and filtering
 - Sorting and pagination
 - State updates and animations
 
 ### 4. **Accessibility**
+
 Tests verify:
+
 - ARIA labels and roles
 - Keyboard navigation support
 - Color contrast for important information
 - Semantic HTML structure
 
 ### 5. **Responsive Design**
+
 Tests check:
+
 - Mobile-friendly layouts
 - Breakpoint-specific styles
 - Touch-friendly button sizes
@@ -381,6 +419,7 @@ Tests check:
 ## Coverage Analysis
 
 ### Strong Areas
+
 - ✅ UI Rendering (100%)
 - ✅ User Interactions (95%)
 - ✅ State Management (90%)
@@ -388,6 +427,7 @@ Tests check:
 - ✅ Error Handling (85%)
 
 ### Areas for Enhancement
+
 - Integration tests with real data sources
 - Performance/load testing
 - E2E tests across components
@@ -405,17 +445,20 @@ Tests check:
 ## Maintenance Guidelines
 
 ### When to Update Tests
+
 - When component props change
 - When behavior is modified
 - When new features are added
 - When bugs are fixed (add regression test)
 
 ### Test Organization
+
 - One test file per component or component group
 - Organize tests by function (rendering, interaction, state)
 - Use descriptive group names with `describe()`
 
 ### Debugging Tests
+
 ```bash
 # Run single test file
 npm test OrdersTable.test.tsx
@@ -430,6 +473,7 @@ npm test -- --inspect-brk
 ## CI/CD Integration
 
 The test suite is ready for CI/CD pipelines:
+
 ```yaml
 - name: Run Tests
   run: npm test -- --run --reporter=verbose
@@ -441,6 +485,7 @@ The test suite is ready for CI/CD pipelines:
 ## Conclusion
 
 This comprehensive test suite provides:
+
 - ✅ **150+ test cases** covering core functionality
 - ✅ **4 major test files** with organized test suites
 - ✅ **Realistic mock data** for accurate testing

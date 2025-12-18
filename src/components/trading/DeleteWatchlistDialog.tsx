@@ -18,11 +18,14 @@ interface DeleteWatchlistDialogProps {
 
 /**
  * DeleteWatchlistDialog Component
- * 
+ *
  * Alert dialog for confirming watchlist deletion.
  * Extracted to reduce main component complexity.
  */
-const DeleteWatchlistDialog = ({ watchlistName, onDelete }: DeleteWatchlistDialogProps) => {
+const DeleteWatchlistDialog = ({
+  watchlistName,
+  onDelete,
+}: DeleteWatchlistDialogProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -38,7 +41,8 @@ const DeleteWatchlistDialog = ({ watchlistName, onDelete }: DeleteWatchlistDialo
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Watchlist</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete "{watchlistName}"? This action cannot be undone.
+            Are you sure you want to delete "{watchlistName}"? This action
+            cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

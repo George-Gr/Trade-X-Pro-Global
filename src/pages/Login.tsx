@@ -4,7 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { validationRules } from "@/lib/validationRules";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
 import { TrendingUp, AlertCircle, X, ArrowRight, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -34,8 +42,8 @@ const Login = () => {
 
   // Check localStorage for demo banner preference
   useEffect(() => {
-    const bannerDismissed = localStorage.getItem('demoBannerDismissed');
-    if (bannerDismissed === 'true') {
+    const bannerDismissed = localStorage.getItem("demoBannerDismissed");
+    if (bannerDismissed === "true") {
       setShowDemoBanner(false);
     }
   }, []);
@@ -43,13 +51,13 @@ const Login = () => {
   // Demo credentials
   const demoCredentials = {
     email: "demo@tradingpro.com",
-    password: "Demo123!"
+    password: "Demo123!",
   };
 
   // Handle demo login
   const handleDemoLogin = () => {
-    form.setValue('email', demoCredentials.email);
-    form.setValue('password', demoCredentials.password);
+    form.setValue("email", demoCredentials.email);
+    form.setValue("password", demoCredentials.password);
     toast({
       title: "Demo credentials filled",
       description: "Click login to access the demo account",
@@ -59,10 +67,14 @@ const Login = () => {
   // Dismiss demo banner
   const handleDismissBanner = () => {
     setShowDemoBanner(false);
-    localStorage.setItem('demoBannerDismissed', 'true');
+    localStorage.setItem("demoBannerDismissed", "true");
   };
 
-  const { register, handleSubmit, formState: { errors } } = form;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   // Redirect if already logged in
   useEffect(() => {
@@ -111,38 +123,38 @@ const Login = () => {
       <div className="absolute inset-0 z-0">
         {/* Grid pattern */}
         <div className="absolute inset-0 pattern-grid opacity-30" />
-        
+
         {/* Gradient mesh overlay */}
         <div className="absolute inset-0 pattern-mesh" />
-        
+
         {/* Animated gradient orbs */}
-        <motion.div 
+        <motion.div
           className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold/30 to-transparent blur-3xl"
-          animate={{ 
+          animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
-            x: [0, 20, 0]
+            x: [0, 20, 0],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-accent/30 to-transparent blur-3xl"
-          animate={{ 
+          animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.4, 0.2, 0.4],
-            x: [0, -20, 0]
+            x: [0, -20, 0],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-primary-glow/20 to-transparent blur-3xl"
-          animate={{ 
+          animate={{
             scale: [1, 1.1, 1],
-            rotate: [0, 180, 360]
+            rotate: [0, 180, 360],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
-        
+
         {/* Dot pattern overlay */}
         <div className="absolute inset-0 pattern-dots opacity-20" />
       </div>
@@ -150,13 +162,16 @@ const Login = () => {
       <div className="w-full max-w-md space-y-6 relative z-10">
         {/* Demo Info Banner */}
         {showDemoBanner && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="glass-card border border-gold/30 rounded-xl p-4 relative backdrop-blur-xl bg-primary-foreground/10"
           >
             <div className="flex items-start space-x-3">
-              <AlertCircle className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" aria-hidden="true" />
+              <AlertCircle
+                className="h-5 w-5 text-gold mt-0.5 flex-shrink-0"
+                aria-hidden="true"
+              />
               <div className="flex-1">
                 <p className="text-sm font-medium text-primary-foreground">
                   Try our demo account to explore all features
@@ -188,7 +203,7 @@ const Login = () => {
         )}
 
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -198,10 +213,16 @@ const Login = () => {
             <div className="h-12 w-12 rounded-xl bg-gold/20 flex items-center justify-center">
               <TrendingUp className="h-7 w-7 text-gold" />
             </div>
-            <span className="text-2xl font-bold text-primary-foreground">TradePro</span>
+            <span className="text-2xl font-bold text-primary-foreground">
+              TradePro
+            </span>
           </Link>
-          <h1 className="text-3xl font-bold text-primary-foreground mb-2">Welcome Back</h1>
-          <p className="text-primary-foreground/70">Login to your trading account</p>
+          <h1 className="text-3xl font-bold text-primary-foreground mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-primary-foreground/70">
+            Login to your trading account
+          </p>
         </motion.div>
 
         {/* Login Card */}
@@ -213,13 +234,21 @@ const Login = () => {
           <Card className="glass-card border border-primary-foreground/20 backdrop-blur-xl bg-primary-foreground/10 shadow-2xl">
             <div className="space-y-4 p-6">
               <Form {...form}>
-                <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+                <form
+                  onSubmit={handleSubmit(handleLogin)}
+                  className="space-y-4"
+                >
                   <FormField
                     control={form.control}
                     name="email"
                     render={() => (
                       <FormItem>
-                        <FormLabel htmlFor="email" className="text-primary-foreground">Email Address</FormLabel>
+                        <FormLabel
+                          htmlFor="email"
+                          className="text-primary-foreground"
+                        >
+                          Email Address
+                        </FormLabel>
                         <FormControl>
                           <Input
                             id="email"
@@ -229,7 +258,9 @@ const Login = () => {
                             disabled={isLoading}
                           />
                         </FormControl>
-                        <FormDescription className="text-primary-foreground/60">Enter your registered email address</FormDescription>
+                        <FormDescription className="text-primary-foreground/60">
+                          Enter your registered email address
+                        </FormDescription>
                         <FormMessage className="text-destructive" />
                       </FormItem>
                     )}
@@ -240,7 +271,12 @@ const Login = () => {
                     name="password"
                     render={() => (
                       <FormItem>
-                        <FormLabel htmlFor="password" className="text-primary-foreground">Password</FormLabel>
+                        <FormLabel
+                          htmlFor="password"
+                          className="text-primary-foreground"
+                        >
+                          Password
+                        </FormLabel>
                         <FormControl>
                           <Input
                             id="password"
@@ -250,26 +286,33 @@ const Login = () => {
                             disabled={isLoading}
                           />
                         </FormControl>
-                        <FormDescription className="text-primary-foreground/60">Enter your account password</FormDescription>
+                        <FormDescription className="text-primary-foreground/60">
+                          Enter your account password
+                        </FormDescription>
                         <FormMessage className="text-destructive" />
                       </FormItem>
                     )}
                   />
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full btn-glow bg-gold text-gold-foreground hover:bg-gold-hover py-6 text-lg font-bold shadow-lg hover:shadow-gold/25 transition-all duration-300 group"
                     disabled={isLoading}
                     aria-label="Sign in to your trading account"
                   >
                     {isLoading ? "Logging in..." : "Login"}
-                    {!isLoading && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
+                    {!isLoading && (
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    )}
                   </Button>
                 </form>
               </Form>
 
               <div className="text-center space-y-3 pt-4 border-t border-primary-foreground/10">
-                <Link to="/register" className="text-sm text-gold hover:text-gold-hover font-medium transition-colors">
+                <Link
+                  to="/register"
+                  className="text-sm text-gold hover:text-gold-hover font-medium transition-colors"
+                >
                   Don't have an account? Sign up
                 </Link>
                 <div className="text-xs">
@@ -289,7 +332,7 @@ const Login = () => {
         </motion.div>
 
         {/* Trust Badge */}
-        <motion.div 
+        <motion.div
           className="text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

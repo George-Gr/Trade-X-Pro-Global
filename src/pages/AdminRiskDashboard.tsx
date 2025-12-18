@@ -1,23 +1,44 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseBrowserClient";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, TrendingDown, AlertCircle, CheckCircle, XCircle, Activity } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertTriangle,
+  TrendingDown,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Activity,
+} from "lucide-react";
 import { toast } from "sonner";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 
 import type { Database } from "@/integrations/supabase/types";
-type MarginCallEventWithProfiles = Database["public"]["Tables"]["margin_call_events"]["Row"] & {
-  profiles?: {
-    email: string;
-    full_name: string | null;
-    equity: number;
-    margin_used: number;
+type MarginCallEventWithProfiles =
+  Database["public"]["Tables"]["margin_call_events"]["Row"] & {
+    profiles?: {
+      email: string;
+      full_name: string | null;
+      equity: number;
+      margin_used: number;
+    };
   };
-};
 
 const AdminRiskDashboard = () => {
   const queryClient = useQueryClient();
@@ -36,7 +57,11 @@ const AdminRiskDashboard = () => {
     refetchInterval: 10000,
   });
 
-  const criticalCount = marginCalls?.filter(mc => mc.severity === "CRITICAL" || mc.severity === "LIQUIDATION_TRIGGER").length || 0;
+  const criticalCount =
+    marginCalls?.filter(
+      (mc) =>
+        mc.severity === "CRITICAL" || mc.severity === "LIQUIDATION_TRIGGER",
+    ).length || 0;
 
   return (
     <AuthenticatedLayout>
@@ -44,31 +69,45 @@ const AdminRiskDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">Risk Management Dashboard</h1>
-            <p className="text-muted-foreground">Monitor and manage user risk</p>
+            <p className="text-muted-foreground">
+              Monitor and manage user risk
+            </p>
           </div>
-          <Button variant="outline" onClick={() => queryClient.invalidateQueries()}>
-            <Activity className="h-4 w-4 mr-2" />Refresh
+          <Button
+            variant="outline"
+            onClick={() => queryClient.invalidateQueries()}
+          >
+            <Activity className="h-4 w-4 mr-2" />
+            Refresh
           </Button>
         </div>
 
         <div className="grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
-              <CardTitle className="text-sm font-medium">Total Margin Calls</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Margin Calls
+              </CardTitle>
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{marginCalls?.length || 0}</div>
+              <div className="text-2xl font-bold">
+                {marginCalls?.length || 0}
+              </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
-              <CardTitle className="text-sm font-medium">Critical Status</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Critical Status
+              </CardTitle>
               <AlertCircle className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{criticalCount}</div>
+              <div className="text-2xl font-bold text-orange-600">
+                {criticalCount}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -90,7 +129,10 @@ const AdminRiskDashboard = () => {
               <TableBody>
                 {marginCalls?.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground">
+                    <TableCell
+                      colSpan={4}
+                      className="text-center text-muted-foreground"
+                    >
                       No active margin calls
                     </TableCell>
                   </TableRow>
@@ -98,11 +140,21 @@ const AdminRiskDashboard = () => {
                   marginCalls?.map((call: MarginCallEventWithProfiles) => (
                     <TableRow key={call.id}>
                       <TableCell>
-                        <div className="font-medium">{call.profiles?.full_name || "Unknown"}</div>
+                        <div className="font-medium">
+                          {call.profiles?.full_name || "Unknown"}
+                        </div>
                       </TableCell>
-                      <TableCell>{Number(call.margin_level).toFixed(2)}%</TableCell>
                       <TableCell>
-                        <Badge variant={call.severity === "CRITICAL" ? "destructive" : "outline"}>
+                        {Number(call.margin_level).toFixed(2)}%
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            call.severity === "CRITICAL"
+                              ? "destructive"
+                              : "outline"
+                          }
+                        >
                           {call.severity}
                         </Badge>
                       </TableCell>

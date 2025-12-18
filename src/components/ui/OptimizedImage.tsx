@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
   webpSrc?: string;
@@ -6,7 +6,12 @@ interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
   alt: string;
 }
 
-export const OptimizedImage: React.FC<Props> = ({ webpSrc, fallbackSrc, alt, ...rest }) => {
+export const OptimizedImage: React.FC<Props> = ({
+  webpSrc,
+  fallbackSrc,
+  alt,
+  ...rest
+}) => {
   // If no WebP source provided, use regular img
   if (!webpSrc) {
     return <img src={fallbackSrc} alt={alt} loading="lazy" {...rest} />;

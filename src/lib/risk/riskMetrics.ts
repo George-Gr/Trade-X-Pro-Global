@@ -19,14 +19,14 @@ export interface RiskMetrics {
   usedMargin: number;
   marginCallThreshold: number;
   liquidationThreshold: number;
-  riskLevel: 'safe' | 'warning' | 'critical' | 'liquidation';
+  riskLevel: "safe" | "warning" | "critical" | "liquidation";
   capitalAtRisk: number;
   capitalAtRiskPercentage: number;
   timeUntilLiquidation?: number; // in milliseconds
 }
 
 export interface RiskLevelDetails {
-  level: 'safe' | 'warning' | 'critical' | 'liquidation';
+  level: "safe" | "warning" | "critical" | "liquidation";
   description: string;
   color: string;
   backgroundColor: string;
@@ -35,7 +35,7 @@ export interface RiskLevelDetails {
 }
 
 export interface PortfolioRiskAssessment {
-  overallRiskLevel: 'safe' | 'warning' | 'critical' | 'liquidation';
+  overallRiskLevel: "safe" | "warning" | "critical" | "liquidation";
   marginHealth: number; // 0-100
   leverageRatio: number;
   concentrationRisk: number; // 0-100
@@ -56,36 +56,39 @@ export const RISK_THRESHOLDS = {
 
 export const RISK_LEVEL_CONFIG = {
   safe: {
-    level: 'safe' as const,
-    description: 'Your account is in good standing with healthy margin levels',
-    color: 'text-status-safe',
-    backgroundColor: 'bg-status-safe',
+    level: "safe" as const,
+    description: "Your account is in good standing with healthy margin levels",
+    color: "text-status-safe",
+    backgroundColor: "bg-status-safe",
     warningMessage: undefined,
-    recommendedAction: 'Continue monitoring your positions',
+    recommendedAction: "Continue monitoring your positions",
   },
   warning: {
-    level: 'warning' as const,
-    description: 'Your margin level is elevated. Monitor your positions closely.',
-    color: 'text-status-warning',
-    backgroundColor: 'bg-status-warning',
-    warningMessage: 'Margin call risk detected',
-    recommendedAction: 'Consider closing some positions or depositing funds',
+    level: "warning" as const,
+    description:
+      "Your margin level is elevated. Monitor your positions closely.",
+    color: "text-status-warning",
+    backgroundColor: "bg-status-warning",
+    warningMessage: "Margin call risk detected",
+    recommendedAction: "Consider closing some positions or depositing funds",
   },
   critical: {
-    level: 'critical' as const,
-    description: 'Your account is at critical risk. Your account is in close-only mode.',
-    color: 'text-status-critical',
-    backgroundColor: 'bg-status-critical',
-    warningMessage: 'Critical margin level - only close positions allowed',
-    recommendedAction: 'Immediately close positions or deposit significant funds',
+    level: "critical" as const,
+    description:
+      "Your account is at critical risk. Your account is in close-only mode.",
+    color: "text-status-critical",
+    backgroundColor: "bg-status-critical",
+    warningMessage: "Critical margin level - only close positions allowed",
+    recommendedAction:
+      "Immediately close positions or deposit significant funds",
   },
   liquidation: {
-    level: 'liquidation' as const,
-    description: 'Your account will be liquidated immediately.',
-    color: 'text-red-600',
-    backgroundColor: 'bg-red-50',
-    warningMessage: 'LIQUIDATION IN PROGRESS',
-    recommendedAction: 'Contact support immediately',
+    level: "liquidation" as const,
+    description: "Your account will be liquidated immediately.",
+    color: "text-red-600",
+    backgroundColor: "bg-red-50",
+    warningMessage: "LIQUIDATION IN PROGRESS",
+    recommendedAction: "Contact support immediately",
   },
 } as const;
 
@@ -101,7 +104,10 @@ export const RISK_LEVEL_CONFIG = {
  * @param marginUsed - Total margin used by open positions
  * @returns Margin level as percentage
  */
-export function calculateMarginLevel(equity: number, marginUsed: number): number {
+export function calculateMarginLevel(
+  equity: number,
+  marginUsed: number,
+): number {
   if (marginUsed === 0) {
     return 10000; // No positions, infinite margin level
   }
@@ -118,7 +124,10 @@ export function calculateMarginLevel(equity: number, marginUsed: number): number
  * @param marginUsed - Total margin used by open positions
  * @returns Free margin available
  */
-export function calculateFreeMargin(equity: number, marginUsed: number): number {
+export function calculateFreeMargin(
+  equity: number,
+  marginUsed: number,
+): number {
   const freeMargin = equity - marginUsed;
   return Math.max(0, Math.round(freeMargin * 100) / 100);
 }
@@ -131,7 +140,10 @@ export function calculateFreeMargin(equity: number, marginUsed: number): number 
  * @param equity - Account equity
  * @returns Margin usage as percentage
  */
-export function calculateMarginUsagePercentage(marginUsed: number, equity: number): number {
+export function calculateMarginUsagePercentage(
+  marginUsed: number,
+  equity: number,
+): number {
   if (equity === 0) return 100;
 
   const usage = (marginUsed / equity) * 100;
@@ -154,16 +166,16 @@ export function calculateMarginUsagePercentage(marginUsed: number, equity: numbe
  * @returns Risk level classification
  */
 export function classifyRiskLevel(
-  marginLevel: number
-): 'safe' | 'warning' | 'critical' | 'liquidation' {
+  marginLevel: number,
+): "safe" | "warning" | "critical" | "liquidation" {
   if (marginLevel >= RISK_THRESHOLDS.SAFE_LEVEL) {
-    return 'safe';
+    return "safe";
   } else if (marginLevel >= RISK_THRESHOLDS.WARNING_LEVEL) {
-    return 'warning';
+    return "warning";
   } else if (marginLevel >= RISK_THRESHOLDS.LIQUIDATION_LEVEL) {
-    return 'critical';
+    return "critical";
   } else {
-    return 'liquidation';
+    return "liquidation";
   }
 }
 
@@ -174,7 +186,7 @@ export function classifyRiskLevel(
  * @returns Detailed risk level information with colors and recommendations
  */
 export function getRiskLevelDetails(
-  riskLevel: 'safe' | 'warning' | 'critical' | 'liquidation'
+  riskLevel: "safe" | "warning" | "critical" | "liquidation",
 ): RiskLevelDetails {
   return RISK_LEVEL_CONFIG[riskLevel];
 }
@@ -191,7 +203,7 @@ export function getRiskLevelDetails(
  * @returns Total capital at risk
  */
 export function calculateCapitalAtRisk(
-  positions: Array<{ positionValue: number; marginRequired: number }>
+  positions: Array<{ positionValue: number; marginRequired: number }>,
 ): number {
   if (!positions || positions.length === 0) {
     return 0;
@@ -213,7 +225,7 @@ export function calculateCapitalAtRisk(
  */
 export function calculateCapitalAtRiskPercentage(
   capitalAtRisk: number,
-  equity: number
+  equity: number,
 ): number {
   if (equity === 0) return 0;
 
@@ -228,7 +240,10 @@ export function calculateCapitalAtRiskPercentage(
  * @param equity - Account equity
  * @returns Worst-case loss amount
  */
-export function calculateWorstCaseLoss(marginUsed: number, equity: number): number {
+export function calculateWorstCaseLoss(
+  marginUsed: number,
+  equity: number,
+): number {
   const worstCaseLoss = equity - marginUsed * 0.5; // Assuming 50% loss on liquidation
   return Math.round(Math.max(worstCaseLoss, 0) * 100) / 100;
 }
@@ -249,10 +264,10 @@ export function calculateWorstCaseLoss(marginUsed: number, equity: number): numb
  */
 export function calculateLiquidationPrice(
   entryPrice: number,
-  side: 'long' | 'short',
-  leverageRatio: number = 2
+  side: "long" | "short",
+  leverageRatio: number = 2,
 ): number {
-  if (side === 'long') {
+  if (side === "long") {
     return entryPrice / leverageRatio;
   } else {
     return entryPrice * leverageRatio;
@@ -270,11 +285,11 @@ export function calculateLiquidationPrice(
 export function calculateMovementToLiquidation(
   currentPrice: number,
   liquidationPrice: number,
-  side: 'long' | 'short'
+  side: "long" | "short",
 ): number {
   if (currentPrice === 0) return 0;
 
-  if (side === 'long') {
+  if (side === "long") {
     const movement = ((currentPrice - liquidationPrice) / currentPrice) * 100;
     return Math.round(movement * 100) / 100;
   } else {
@@ -298,12 +313,15 @@ export function calculateMovementToLiquidation(
 export function calculateRiskMetrics(
   equity: number,
   marginUsed: number,
-  positions: Array<{ positionValue: number; marginRequired: number }> = []
+  positions: Array<{ positionValue: number; marginRequired: number }> = [],
 ): RiskMetrics {
   const marginLevel = calculateMarginLevel(equity, marginUsed);
   const riskLevel = classifyRiskLevel(marginLevel);
   const capitalAtRisk = calculateCapitalAtRisk(positions);
-  const capitalAtRiskPercentage = calculateCapitalAtRiskPercentage(capitalAtRisk, equity);
+  const capitalAtRiskPercentage = calculateCapitalAtRiskPercentage(
+    capitalAtRisk,
+    equity,
+  );
 
   return {
     currentMarginLevel: marginLevel,
@@ -327,36 +345,49 @@ export function calculateRiskMetrics(
  */
 export function assessPortfolioRisk(
   riskMetrics: RiskMetrics,
-  positions: Array<{ symbol: string; quantity: number; positionValue: number }> = [],
-  concentration: number = 0
+  positions: Array<{
+    symbol: string;
+    quantity: number;
+    positionValue: number;
+  }> = [],
+  concentration: number = 0,
 ): PortfolioRiskAssessment {
   const marginHealth = Math.min(
     100,
-    Math.round((riskMetrics.currentMarginLevel / 300) * 100)
+    Math.round((riskMetrics.currentMarginLevel / 300) * 100),
   );
 
-  const leverageRatio = riskMetrics.usedMargin > 0
-    ? Math.round((riskMetrics.capitalAtRisk / riskMetrics.usedMargin) * 100) / 100
-    : 0;
+  const leverageRatio =
+    riskMetrics.usedMargin > 0
+      ? Math.round((riskMetrics.capitalAtRisk / riskMetrics.usedMargin) * 100) /
+        100
+      : 0;
 
   const recommendedActions: string[] = [];
 
-  if (riskMetrics.riskLevel === 'critical' || riskMetrics.riskLevel === 'liquidation') {
-    recommendedActions.push('Close positions immediately to avoid liquidation');
+  if (
+    riskMetrics.riskLevel === "critical" ||
+    riskMetrics.riskLevel === "liquidation"
+  ) {
+    recommendedActions.push("Close positions immediately to avoid liquidation");
     if (riskMetrics.freeMargin > 0) {
-      recommendedActions.push('Deposit additional funds to increase margin level');
+      recommendedActions.push(
+        "Deposit additional funds to increase margin level",
+      );
     }
-  } else if (riskMetrics.riskLevel === 'warning') {
-    recommendedActions.push('Monitor margin level closely');
-    recommendedActions.push('Consider closing smaller positions');
+  } else if (riskMetrics.riskLevel === "warning") {
+    recommendedActions.push("Monitor margin level closely");
+    recommendedActions.push("Consider closing smaller positions");
   }
 
   if (concentration > 50) {
-    recommendedActions.push('Reduce position concentration for diversification');
+    recommendedActions.push(
+      "Reduce position concentration for diversification",
+    );
   }
 
   if (riskMetrics.capitalAtRiskPercentage > 80) {
-    recommendedActions.push('Reduce overall capital at risk');
+    recommendedActions.push("Reduce overall capital at risk");
   }
 
   return {
@@ -401,7 +432,7 @@ export function isLiquidationRisk(marginLevel: number): boolean {
  */
 export function formatMarginLevel(marginLevel: number): string {
   if (marginLevel >= 10000) {
-    return '∞%'; // Infinite margin level
+    return "∞%"; // Infinite margin level
   }
   return `${marginLevel.toFixed(2)}%`;
 }
@@ -413,6 +444,9 @@ export function formatMarginLevel(marginLevel: number): string {
  * @param currency - Currency code (default USD)
  * @returns Formatted currency string
  */
-export function formatCurrency(amount: number, currency: string = 'USD'): string {
+export function formatCurrency(
+  amount: number,
+  currency: string = "USD",
+): string {
   return `$${amount.toFixed(2)}`;
 }

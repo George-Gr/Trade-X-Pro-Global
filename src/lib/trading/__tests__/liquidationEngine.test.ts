@@ -14,7 +14,7 @@
  * 7. Edge Cases (6 tests)
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
   calculateLiquidationNeeded,
   calculateLiquidationPriority,
@@ -34,14 +34,14 @@ import {
   LiquidationReason,
   type PositionForLiquidation,
   type LiquidationEvent,
-} from '../liquidationEngine';
+} from "../liquidationEngine";
 
 // ============================================================================
 // Test Category 1: Liquidation Necessity (6 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Liquidation Necessity', () => {
-  it('should determine liquidation needed when margin < 50%', () => {
+describe("Liquidation Engine - Liquidation Necessity", () => {
+  it("should determine liquidation needed when margin < 50%", () => {
     const result = calculateLiquidationNeeded(4000, 10000); // 40% margin level
 
     expect(result.isNeeded).toBe(true);
@@ -49,14 +49,14 @@ describe('Liquidation Engine - Liquidation Necessity', () => {
     expect(result.marginToFree).toBeGreaterThan(0);
   });
 
-  it('should determine liquidation not needed when margin >= 50%', () => {
+  it("should determine liquidation not needed when margin >= 50%", () => {
     const result = calculateLiquidationNeeded(10000, 8000);
 
     expect(result.isNeeded).toBe(false);
     expect(result.marginLevel).toBe(125);
   });
 
-  it('should handle critical margin < 30%', () => {
+  it("should handle critical margin < 30%", () => {
     const result = calculateLiquidationNeeded(2000, 10000);
 
     expect(result.isNeeded).toBe(true);
@@ -64,7 +64,7 @@ describe('Liquidation Engine - Liquidation Necessity', () => {
     expect(result.marginToFree).toBeGreaterThan(5000);
   });
 
-  it('should calculate correct margin to free', () => {
+  it("should calculate correct margin to free", () => {
     const result = calculateLiquidationNeeded(5000, 8000);
 
     // Target: 5000 equity = 5000 margin (100% margin)
@@ -73,14 +73,14 @@ describe('Liquidation Engine - Liquidation Necessity', () => {
     expect(result.marginToFree).toBeCloseTo(3000, 0);
   });
 
-  it('should handle zero margin used', () => {
+  it("should handle zero margin used", () => {
     const result = calculateLiquidationNeeded(10000, 0);
 
     expect(result.isNeeded).toBe(false);
     expect(result.marginLevel).toBe(Infinity);
   });
 
-  it('should handle very low equity', () => {
+  it("should handle very low equity", () => {
     const result = calculateLiquidationNeeded(100, 5000);
 
     expect(result.isNeeded).toBe(true);
@@ -93,12 +93,12 @@ describe('Liquidation Engine - Liquidation Necessity', () => {
 // Test Category 2: Position Selection (8 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Position Selection', () => {
+describe("Liquidation Engine - Position Selection", () => {
   const testPositions: PositionForLiquidation[] = [
     {
-      id: 'pos-1',
-      symbol: 'AAPL',
-      side: 'buy',
+      id: "pos-1",
+      symbol: "AAPL",
+      side: "buy",
       quantity: 100,
       entryPrice: 150,
       currentPrice: 140,
@@ -108,9 +108,9 @@ describe('Liquidation Engine - Position Selection', () => {
       leverage: 10,
     },
     {
-      id: 'pos-2',
-      symbol: 'GOOGL',
-      side: 'sell',
+      id: "pos-2",
+      symbol: "GOOGL",
+      side: "sell",
       quantity: 50,
       entryPrice: 140,
       currentPrice: 145,
@@ -120,9 +120,9 @@ describe('Liquidation Engine - Position Selection', () => {
       leverage: 10,
     },
     {
-      id: 'pos-3',
-      symbol: 'MSFT',
-      side: 'buy',
+      id: "pos-3",
+      symbol: "MSFT",
+      side: "buy",
       quantity: 200,
       currentPrice: 380,
       unrealizedPnL: 4000, // Profit - should not liquidate first
@@ -133,54 +133,57 @@ describe('Liquidation Engine - Position Selection', () => {
     },
   ];
 
-  it('should select positions by highest priority (loss × size)', () => {
+  it("should select positions by highest priority (loss × size)", () => {
     const selected = selectPositionsForLiquidation(testPositions, 2000);
 
     // Should pick AAPL first (1000 loss × 14000 value = highest priority)
-    expect(selected[0].symbol).toBe('AAPL');
+    expect(selected[0].symbol).toBe("AAPL");
   });
 
-  it('should select enough positions to free target margin', () => {
+  it("should select enough positions to free target margin", () => {
     const selected = selectPositionsForLiquidation(testPositions, 3000);
 
-    const totalMarginFreed = selected.reduce((sum, p) => sum + p.marginRequired, 0);
+    const totalMarginFreed = selected.reduce(
+      (sum, p) => sum + p.marginRequired,
+      0,
+    );
     expect(totalMarginFreed).toBeGreaterThanOrEqual(3000);
   });
 
-  it('should prioritize loss-making positions', () => {
+  it("should prioritize loss-making positions", () => {
     const selected = selectPositionsForLiquidation(testPositions, 5000);
 
     // AAPL and GOOGL both have losses, should come before MSFT
-    const aaplIndex = selected.findIndex((p) => p.symbol === 'AAPL');
-    const msftIndex = selected.findIndex((p) => p.symbol === 'MSFT');
+    const aaplIndex = selected.findIndex((p) => p.symbol === "AAPL");
+    const msftIndex = selected.findIndex((p) => p.symbol === "MSFT");
     expect(aaplIndex).toBeLessThan(msftIndex);
   });
 
-  it('should handle empty position list', () => {
+  it("should handle empty position list", () => {
     const selected = selectPositionsForLiquidation([], 5000);
     expect(selected).toHaveLength(0);
   });
 
-  it('should handle zero margin to free', () => {
+  it("should handle zero margin to free", () => {
     const selected = selectPositionsForLiquidation(testPositions, 0);
     expect(selected).toHaveLength(0);
   });
 
-  it('should select all positions if needed', () => {
+  it("should select all positions if needed", () => {
     const selected = selectPositionsForLiquidation(testPositions, 10000);
     expect(selected.length).toBeGreaterThan(0);
   });
 
-  it('should calculate priority correctly', () => {
+  it("should calculate priority correctly", () => {
     const priority = calculateLiquidationPriority(1000, 14000);
     expect(priority).toBe(14000000);
   });
 
-  it('should handle positions with zero loss', () => {
+  it("should handle positions with zero loss", () => {
     const position: PositionForLiquidation = {
-      id: 'pos-4',
-      symbol: 'XYZ',
-      side: 'buy',
+      id: "pos-4",
+      symbol: "XYZ",
+      side: "buy",
       quantity: 100,
       entryPrice: 100,
       currentPrice: 100,
@@ -192,7 +195,7 @@ describe('Liquidation Engine - Position Selection', () => {
 
     const selected = selectPositionsForLiquidation([position], 500);
     expect(selected.length).toBe(1);
-    expect(selected[0].id).toBe('pos-4');
+    expect(selected[0].id).toBe("pos-4");
   });
 });
 
@@ -200,47 +203,47 @@ describe('Liquidation Engine - Position Selection', () => {
 // Test Category 3: Price Calculation (6 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Price Calculation', () => {
-  it('should apply 1.5x slippage multiplier', () => {
+describe("Liquidation Engine - Price Calculation", () => {
+  it("should apply 1.5x slippage multiplier", () => {
     const normalSlippage = 2; // 2%
     const liqSlippage = calculateLiquidationSlippage(normalSlippage);
 
     expect(liqSlippage).toBe(3); // 2 × 1.5
   });
 
-  it('should calculate buy position liquidation price (sell at lower)', () => {
-    const price = calculateLiquidationPrice(100, 'buy', 3); // 3% slippage
+  it("should calculate buy position liquidation price (sell at lower)", () => {
+    const price = calculateLiquidationPrice(100, "buy", 3); // 3% slippage
 
     // For buy positions, sell at lower price (slippage disadvantage)
     expect(price).toBeLessThan(100);
     expect(price).toBeCloseTo(97, 0);
   });
 
-  it('should calculate sell position liquidation price (buy at higher)', () => {
-    const price = calculateLiquidationPrice(100, 'sell', 3); // 3% slippage
+  it("should calculate sell position liquidation price (buy at higher)", () => {
+    const price = calculateLiquidationPrice(100, "sell", 3); // 3% slippage
 
     // For sell positions, buy at higher price (slippage disadvantage)
     expect(price).toBeGreaterThan(100);
     expect(price).toBeCloseTo(103, 0);
   });
 
-  it('should handle zero slippage', () => {
-    const buyPrice = calculateLiquidationPrice(100, 'buy', 0);
-    const sellPrice = calculateLiquidationPrice(100, 'sell', 0);
+  it("should handle zero slippage", () => {
+    const buyPrice = calculateLiquidationPrice(100, "buy", 0);
+    const sellPrice = calculateLiquidationPrice(100, "sell", 0);
 
     expect(buyPrice).toBe(100);
     expect(sellPrice).toBe(100);
   });
 
-  it('should handle high slippage', () => {
-    const price = calculateLiquidationPrice(100, 'buy', 10); // 10% slippage
+  it("should handle high slippage", () => {
+    const price = calculateLiquidationPrice(100, "buy", 10); // 10% slippage
 
     expect(price).toBeLessThanOrEqual(90);
   });
 
-  it('should be symmetric for same absolute slippage', () => {
-    const buyPrice = calculateLiquidationPrice(100, 'buy', 5); // 5% slippage
-    const sellPrice = calculateLiquidationPrice(100, 'sell', 5); // 5% slippage
+  it("should be symmetric for same absolute slippage", () => {
+    const buyPrice = calculateLiquidationPrice(100, "buy", 5); // 5% slippage
+    const sellPrice = calculateLiquidationPrice(100, "sell", 5); // 5% slippage
 
     // Absolute distance from 100 should be same
     expect(Math.abs(100 - buyPrice)).toBeCloseTo(Math.abs(sellPrice - 100), 1);
@@ -251,37 +254,37 @@ describe('Liquidation Engine - Price Calculation', () => {
 // Test Category 4: PnL Calculation (5 tests)
 // ============================================================================
 
-describe('Liquidation Engine - PnL Calculation', () => {
-  it('should calculate loss for buy position', () => {
-    const pnl = calculateRealizedPnL('buy', 100, 50, 40);
+describe("Liquidation Engine - PnL Calculation", () => {
+  it("should calculate loss for buy position", () => {
+    const pnl = calculateRealizedPnL("buy", 100, 50, 40);
 
     expect(pnl.amount).toBe(-1000); // (40 - 50) × 100
     expect(pnl.percentage).toBeCloseTo(-20, 1); // -20%
   });
 
-  it('should calculate loss for sell position', () => {
-    const pnl = calculateRealizedPnL('sell', 100, 50, 60);
+  it("should calculate loss for sell position", () => {
+    const pnl = calculateRealizedPnL("sell", 100, 50, 60);
 
     expect(pnl.amount).toBe(-1000); // -(60 - 50) × 100
     expect(pnl.percentage).toBeCloseTo(-20, 1);
   });
 
-  it('should calculate profit for buy position', () => {
-    const pnl = calculateRealizedPnL('buy', 100, 50, 60);
+  it("should calculate profit for buy position", () => {
+    const pnl = calculateRealizedPnL("buy", 100, 50, 60);
 
     expect(pnl.amount).toBe(1000);
     expect(pnl.percentage).toBeCloseTo(20, 1);
   });
 
-  it('should calculate profit for sell position', () => {
-    const pnl = calculateRealizedPnL('sell', 100, 50, 40);
+  it("should calculate profit for sell position", () => {
+    const pnl = calculateRealizedPnL("sell", 100, 50, 40);
 
     expect(pnl.amount).toBe(1000);
     expect(pnl.percentage).toBeCloseTo(20, 1);
   });
 
-  it('should handle zero PnL', () => {
-    const pnl = calculateRealizedPnL('buy', 100, 50, 50);
+  it("should handle zero PnL", () => {
+    const pnl = calculateRealizedPnL("buy", 100, 50, 50);
 
     expect(pnl.amount).toBe(0);
     expect(pnl.percentage).toBe(0);
@@ -292,34 +295,34 @@ describe('Liquidation Engine - PnL Calculation', () => {
 // Test Category 5: Safety Checks (4 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Safety Checks', () => {
-  it('should validate liquidation preconditions met', () => {
+describe("Liquidation Engine - Safety Checks", () => {
+  it("should validate liquidation preconditions met", () => {
     const result = validateLiquidationPreConditions(40, 5, 35);
 
     expect(result.valid).toBe(true);
     expect(result.issues).toHaveLength(0);
   });
 
-  it('should reject if margin level above 50%', () => {
+  it("should reject if margin level above 50%", () => {
     const result = validateLiquidationPreConditions(60, 5, 35);
 
     expect(result.valid).toBe(false);
-    expect(result.issues[0]).toContain('below 50%');
+    expect(result.issues[0]).toContain("below 50%");
   });
 
-  it('should reject if no positions to liquidate', () => {
+  it("should reject if no positions to liquidate", () => {
     const result = validateLiquidationPreConditions(40, 0, 35);
 
     expect(result.valid).toBe(false);
-    expect(result.issues).toContain('No positions to liquidate');
+    expect(result.issues).toContain("No positions to liquidate");
   });
 
-  it('should check market safety for liquidation', () => {
+  it("should check market safety for liquidation", () => {
     const positions: PositionForLiquidation[] = [
       {
-        id: 'pos-1',
-        symbol: 'AAPL',
-        side: 'buy',
+        id: "pos-1",
+        symbol: "AAPL",
+        side: "buy",
         quantity: 100,
         entryPrice: 150,
         currentPrice: 140,
@@ -345,32 +348,34 @@ describe('Liquidation Engine - Safety Checks', () => {
 // Test Category 6: Metrics & Reporting (4 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Metrics & Reporting', () => {
-  it('should format liquidation reason', () => {
-    const formatted = formatLiquidationReason(LiquidationReason.MARGIN_CALL_TIMEOUT);
+describe("Liquidation Engine - Metrics & Reporting", () => {
+  it("should format liquidation reason", () => {
+    const formatted = formatLiquidationReason(
+      LiquidationReason.MARGIN_CALL_TIMEOUT,
+    );
 
-    expect(formatted).toContain('Margin Call Timeout');
+    expect(formatted).toContain("Margin Call Timeout");
   });
 
-  it('should format liquidation status with color', () => {
+  it("should format liquidation status with color", () => {
     const formatted = formatLiquidationStatus(LiquidationStatus.COMPLETED);
 
-    expect(formatted.label).toBe('Completed');
-    expect(formatted.color).toContain('red');
+    expect(formatted.label).toBe("Completed");
+    expect(formatted.color).toContain("red");
   });
 
-  it('should estimate execution time', () => {
+  it("should estimate execution time", () => {
     const time = estimateExecutionTime(5);
 
     // 5 * 50 + 500 = 750ms
     expect(time).toBe(750);
   });
 
-  it('should calculate liquidation metrics', () => {
+  it("should calculate liquidation metrics", () => {
     const event: LiquidationEvent = {
-      id: 'event-1',
-      userId: 'user-1',
-      marginCallEventId: 'call-1',
+      id: "event-1",
+      userId: "user-1",
+      marginCallEventId: "call-1",
       reason: LiquidationReason.MARGIN_CALL_TIMEOUT,
       status: LiquidationStatus.COMPLETED,
       initiatedAt: new Date(),
@@ -385,16 +390,16 @@ describe('Liquidation Engine - Metrics & Reporting', () => {
       details: {
         closedPositions: [
           {
-            positionId: 'p1',
-            symbol: 'AAPL',
-            side: 'buy',
+            positionId: "p1",
+            symbol: "AAPL",
+            side: "buy",
             quantity: 100,
             entryPrice: 150,
             liquidationPrice: 145,
             slippage: 3.33,
             realizedPnL: -500,
             pnlPercentage: -3.33,
-            closureReason: 'Liquidation',
+            closureReason: "Liquidation",
             closedAt: new Date(),
           },
         ],
@@ -416,26 +421,26 @@ describe('Liquidation Engine - Metrics & Reporting', () => {
 // Test Category 7: Edge Cases (6 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Edge Cases', () => {
-  it('should handle liquidation at exactly 50% margin', () => {
+describe("Liquidation Engine - Edge Cases", () => {
+  it("should handle liquidation at exactly 50% margin", () => {
     const result = calculateLiquidationNeeded(5000, 10000);
 
     expect(result.isNeeded).toBe(false); // < 50%, not <=, so 50% is not liquidation
     expect(result.marginLevel).toBe(50);
   });
 
-  it('should handle liquidation at exactly 30% margin (critical)', () => {
+  it("should handle liquidation at exactly 30% margin (critical)", () => {
     const result = calculateLiquidationNeeded(3000, 10000);
 
     expect(result.isNeeded).toBe(true);
     expect(result.marginLevel).toBe(30);
   });
 
-  it('should handle very large position quantities', () => {
+  it("should handle very large position quantities", () => {
     const position: PositionForLiquidation = {
-      id: 'pos-large',
-      symbol: 'BTC',
-      side: 'buy',
+      id: "pos-large",
+      symbol: "BTC",
+      side: "buy",
       quantity: 1000000,
       entryPrice: 50000,
       currentPrice: 48000,
@@ -449,11 +454,11 @@ describe('Liquidation Engine - Edge Cases', () => {
     expect(selected).toHaveLength(1);
   });
 
-  it('should handle very small position quantities', () => {
+  it("should handle very small position quantities", () => {
     const position: PositionForLiquidation = {
-      id: 'pos-small',
-      symbol: 'AAPL',
-      side: 'buy',
+      id: "pos-small",
+      symbol: "AAPL",
+      side: "buy",
       quantity: 0.001,
       entryPrice: 150,
       currentPrice: 140,
@@ -468,18 +473,18 @@ describe('Liquidation Engine - Edge Cases', () => {
     expect(selected).toHaveLength(1);
   });
 
-  it('should handle rapid margin recovery', () => {
+  it("should handle rapid margin recovery", () => {
     const result = calculateLiquidationNeeded(10000, 8000);
 
     // Market recovered, margin now safe
     expect(result.isNeeded).toBe(false);
   });
 
-  it('should generate notification for completed liquidation', () => {
+  it("should generate notification for completed liquidation", () => {
     const event: LiquidationEvent = {
-      id: 'event-1',
-      userId: 'user-1',
-      marginCallEventId: 'call-1',
+      id: "event-1",
+      userId: "user-1",
+      marginCallEventId: "call-1",
       reason: LiquidationReason.CRITICAL_THRESHOLD,
       status: LiquidationStatus.COMPLETED,
       initiatedAt: new Date(),
@@ -513,12 +518,12 @@ describe('Liquidation Engine - Edge Cases', () => {
       executionTimeMs: 750,
       closedPositions: [],
       failedPositions: [],
-      message: '5 positions liquidated',
+      message: "5 positions liquidated",
     });
 
-    expect(notification.type).toBe('LIQUIDATION');
-    expect(notification.priority).toBe('CRITICAL');
-    expect(notification.message).toContain('5 positions liquidated');
+    expect(notification.type).toBe("LIQUIDATION");
+    expect(notification.priority).toBe("CRITICAL");
+    expect(notification.message).toContain("5 positions liquidated");
   });
 });
 
@@ -526,11 +531,11 @@ describe('Liquidation Engine - Edge Cases', () => {
 // Test Category 8: Validation (3 tests)
 // ============================================================================
 
-describe('Liquidation Engine - Validation', () => {
-  it('should validate complete liquidation event', () => {
+describe("Liquidation Engine - Validation", () => {
+  it("should validate complete liquidation event", () => {
     const event: LiquidationEvent = {
-      id: 'event-1',
-      userId: 'user-1',
+      id: "event-1",
+      userId: "user-1",
       marginCallEventId: null,
       reason: LiquidationReason.MARGIN_CALL_TIMEOUT,
       status: LiquidationStatus.COMPLETED,
@@ -555,13 +560,13 @@ describe('Liquidation Engine - Validation', () => {
     expect(validateLiquidationEvent(event)).toBe(true);
   });
 
-  it('should reject invalid status', () => {
+  it("should reject invalid status", () => {
     const event = {
-      id: 'event-1',
-      userId: 'user-1',
+      id: "event-1",
+      userId: "user-1",
       marginCallEventId: null,
       reason: LiquidationReason.MARGIN_CALL_TIMEOUT,
-      status: 'invalid_status',
+      status: "invalid_status",
       initiatedAt: new Date(),
       completedAt: new Date(),
       initialMarginLevel: 40,
@@ -580,13 +585,15 @@ describe('Liquidation Engine - Validation', () => {
       updatedAt: new Date(),
     };
 
-    expect(validateLiquidationEvent(event as unknown as LiquidationEvent)).toBe(false);
+    expect(validateLiquidationEvent(event as unknown as LiquidationEvent)).toBe(
+      false,
+    );
   });
 
-  it('should reject negative margin levels', () => {
+  it("should reject negative margin levels", () => {
     const event = {
-      id: 'event-1',
-      userId: 'user-1',
+      id: "event-1",
+      userId: "user-1",
       marginCallEventId: null,
       reason: LiquidationReason.MARGIN_CALL_TIMEOUT,
       status: LiquidationStatus.COMPLETED,
@@ -608,6 +615,8 @@ describe('Liquidation Engine - Validation', () => {
       updatedAt: new Date(),
     };
 
-    expect(validateLiquidationEvent(event as unknown as LiquidationEvent)).toBe(false);
+    expect(validateLiquidationEvent(event as unknown as LiquidationEvent)).toBe(
+      false,
+    );
   });
 });

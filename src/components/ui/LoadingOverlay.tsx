@@ -11,30 +11,32 @@ interface LoadingOverlayProps {
   fadeDuration?: number;
 }
 
-export function LoadingOverlay({ 
-  isLoading, 
-  children, 
-  className, 
+export function LoadingOverlay({
+  isLoading,
+  children,
+  className,
   overlayClassName,
   shimmer = true,
-  fadeDuration = 300 
+  fadeDuration = 300,
 }: LoadingOverlayProps) {
   return (
     <div className={cn("relative", className)}>
       {children}
-      
+
       {isLoading && (
-        <div 
+        <div
           className={cn(
             "absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center",
             `transition-all duration-${fadeDuration} ease-in-out`,
-            overlayClassName
+            overlayClassName,
           )}
         >
           <div className="text-center space-y-4">
             <div className="relative">
               <div className="h-12 w-12 mx-auto bg-primary/20 rounded-full animate-pulse-slow">
-                {shimmer && <ShimmerEffect className="absolute inset-0 rounded-full" />}
+                {shimmer && (
+                  <ShimmerEffect className="absolute inset-0 rounded-full" />
+                )}
               </div>
             </div>
             <div className="space-y-2">
@@ -64,43 +66,43 @@ export function ProgressLoadingOverlay({
   className,
   showPercentage = true,
   showText = true,
-  text = "Loading..."
+  text = "Loading...",
 }: ProgressLoadingOverlayProps) {
   return (
     <div className={cn("relative", className)}>
       {children}
-      
+
       <div className="absolute inset-0 bg-background/90 backdrop-blur-md z-10">
         <div className="flex items-center justify-center h-full">
           <div className="text-center space-y-6">
             <div className="relative">
               <div className="h-16 w-16 mx-auto">
                 <div className="absolute inset-0 rounded-full border-2 border-muted/50"></div>
-                <div 
+                <div
                   className="absolute inset-0 rounded-full border-2 border-primary border-t-primary animate-spin"
-                  style={{ 
+                  style={{
                     transform: `rotate(${progress * 3.6}deg)`,
-                    transition: 'transform 0.3s ease-out'
+                    transition: "transform 0.3s ease-out",
                   }}
                 ></div>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               {showText && (
                 <div className="text-sm font-medium text-primary-contrast">
                   {text}
                 </div>
               )}
-              
+
               {showPercentage && (
                 <div className="text-xs text-secondary-contrast">
                   {Math.round(progress)}%
                 </div>
               )}
-              
+
               <div className="w-32 mx-auto bg-muted/50 rounded-full h-2">
-                <div 
+                <div
                   className="h-2 bg-primary rounded-full transition-all duration-300 ease-out"
                   style={{ width: `${progress}%` }}
                 ></div>
@@ -120,11 +122,11 @@ interface SkeletonOverlayProps {
   shimmer?: boolean;
 }
 
-export function SkeletonOverlay({ 
-  isLoading, 
-  children, 
-  className, 
-  shimmer = true 
+export function SkeletonOverlay({
+  isLoading,
+  children,
+  className,
+  shimmer = true,
 }: SkeletonOverlayProps) {
   if (!isLoading) {
     return <div className={className}>{children}</div>;
@@ -135,10 +137,8 @@ export function SkeletonOverlay({
       <div className="absolute inset-0 bg-muted/50 rounded animate-pulse-slow">
         {shimmer && <ShimmerEffect className="absolute inset-0 rounded" />}
       </div>
-      
-      <div className="relative opacity-0 pointer-events-none">
-        {children}
-      </div>
+
+      <div className="relative opacity-0 pointer-events-none">{children}</div>
     </div>
   );
 }
@@ -156,24 +156,26 @@ export function OptimisticLoading({
   children,
   className,
   successDuration = 2000,
-  onOptimisticComplete
+  onOptimisticComplete,
 }: OptimisticLoadingProps) {
   React.useEffect(() => {
     if (isOptimistic) {
       const timer = setTimeout(() => {
         onOptimisticComplete?.();
       }, successDuration);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isOptimistic, successDuration, onOptimisticComplete]);
 
   return (
-    <div className={cn(
-      className,
-      isOptimistic && "optimistic-loading",
-      isOptimistic && "animate-pulse-slow"
-    )}>
+    <div
+      className={cn(
+        className,
+        isOptimistic && "optimistic-loading",
+        isOptimistic && "animate-pulse-slow",
+      )}
+    >
       {children}
     </div>
   );

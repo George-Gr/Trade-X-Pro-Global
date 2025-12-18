@@ -6,15 +6,21 @@
     <!-- Conditionally load manifest only in production or when not in auth flow -->
     <script>
       // Only load manifest if not being redirected for auth
-      if (!window.location.href.includes('pf-signin') && !window.location.href.includes('auth/postback')) {
-        var link = document.createElement('link');
-        link.rel = 'manifest';
-        link.href = '/manifest.json';
-        link.crossOrigin = 'use-credentials';
+      if (
+        !window.location.href.includes("pf-signin") &&
+        !window.location.href.includes("auth/postback")
+      ) {
+        var link = document.createElement("link");
+        link.rel = "manifest";
+        link.href = "/manifest.json";
+        link.crossOrigin = "use-credentials";
         document.head.appendChild(link);
       }
     </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#3b82f6" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -22,28 +28,110 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="msapplication-TileColor" content="#3b82f6" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Neo-Digital Premium Typography: Sora (display) + Space Grotesk (body) + JetBrains Mono (data) -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style" 
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;">
-    
-    <title>TradeX Pro - #1 Multi Asset CFD Trading Platform | Trusted Broker</title>
-    <meta name="description" content="Practice CFD trading risk-free with TradeX Pro. Trade forex, stocks, indices, commodities, and crypto with virtual funds on a professional IC Markets-inspired platform." />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      />
+    </noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="
+        this.media = 'all';
+        this.onload = null;
+      "
+    />
+
+    <title>
+      TradeX Pro - Virtual CFD Trading Platform | $50,000 Practice Capital
+    </title>
+    <meta
+      name="description"
+      content="Master CFD trading with $50,000 virtual capital. Trade forex, stocks, indices, commodities, and crypto on a professional platform. Zero risk, real market conditions."
+    />
     <meta name="author" content="TradeX Pro" />
-    <meta name="keywords" content="paper trading, CFD trading, forex simulator, stock trading practice, trading platform, demo account" />
+    <meta
+      name="keywords"
+      content="CFD trading, paper trading, forex trading, stock trading, crypto trading, trading simulator, demo account, virtual trading, risk-free trading"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://tradexpro.com/" />
 
-    <meta property="og:title" content="TradeX Pro - #1 Multi Asset CFD Trading Platform | Trusted Broker" />
-    <meta property="og:description" content="Master trading across 5 asset classes with virtual funds. Professional trading terminal with real-time data and zero risk." />
+    <!-- Open Graph / Facebook -->
+    <meta
+      property="og:title"
+      content="TradeX Pro - Virtual CFD Trading Platform"
+    />
+    <meta
+      property="og:description"
+      content="$50,000 virtual capital. 500+ instruments. Zero risk. Professional trading experience."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://tradexpro.com/" />
+    <meta property="og:image" content="https://tradexpro.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="TradeX Pro" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:site" content="@TradeXPro" />
+    <meta
+      name="twitter:title"
+      content="TradeX Pro - Virtual CFD Trading Platform"
+    />
+    <meta
+      name="twitter:description"
+      content="$50,000 virtual capital. 500+ instruments. Zero risk. Professional trading experience."
+    />
+    <meta
+      name="twitter:image"
+      content="https://tradexpro.com/twitter-image.jpg"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FinancialService",
+        "name": "TradeX Pro",
+        "description": "Virtual CFD trading platform with $50,000 practice capital",
+        "url": "https://tradexpro.com",
+        "logo": "https://tradexpro.com/logo.png",
+        "sameAs": [
+          "https://twitter.com/TradeXPro",
+          "https://facebook.com/TradeXPro",
+          "https://linkedin.com/company/TradeXPro"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "name": "Free Virtual Trading",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Practice trading with $50,000 virtual capital"
+        },
+        "serviceType": "CFD Trading",
+        "availableChannel": {
+          "@type": "ServiceChannel",
+          "serviceUrl": "https://tradexpro.com"
+        }
+      }
+    </script>
   </head>
 
   <body>

@@ -68,7 +68,7 @@ export interface UsePositionUpdateReturn {
   refresh: () => Promise<void>;
   manualUpdate: (
     positionIds?: string[],
-    prices?: Record<string, number>
+    prices?: Record<string, number>,
   ) => Promise<PositionMetrics[]>;
 }
 
@@ -77,7 +77,7 @@ export interface UsePositionUpdateReturn {
 // ============================================================================
 
 export function usePositionUpdate(
-  options: UsePositionUpdateOptions = {}
+  options: UsePositionUpdateOptions = {},
 ): UsePositionUpdateReturn {
   const {
     enabled = true,
@@ -104,7 +104,7 @@ export function usePositionUpdate(
   const fetchPositions = useCallback(
     async (
       positionIds?: string[],
-      prices?: Record<string, number>
+      prices?: Record<string, number>,
     ): Promise<PositionMetrics[]> => {
       if (!user) {
         setError(new Error("User not authenticated"));
@@ -130,13 +130,14 @@ export function usePositionUpdate(
               positions: positionIds,
               prices,
             }),
-          }
+          },
         );
 
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(
-            errorData.error || `HTTP ${response.status}: ${response.statusText}`
+            errorData.error ||
+              `HTTP ${response.status}: ${response.statusText}`,
           );
         }
 
@@ -170,7 +171,7 @@ export function usePositionUpdate(
         return [];
       }
     },
-    [user, onUpdate, onError]
+    [user, onUpdate, onError],
   );
 
   // =========================================================================
@@ -205,7 +206,7 @@ export function usePositionUpdate(
           setPositions((prev) => {
             const updated = [...prev];
             const index = updated.findIndex(
-              (p) => p.position_id === payload.payload.id
+              (p) => p.position_id === payload.payload.id,
             );
 
             if (index >= 0) {
@@ -223,7 +224,7 @@ export function usePositionUpdate(
           });
 
           setLastUpdated(new Date());
-        }
+        },
       )
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
@@ -291,7 +292,7 @@ export function usePositionUpdate(
         setIsRefreshing(false);
       }
     },
-    [fetchPositions]
+    [fetchPositions],
   );
 
   // =========================================================================

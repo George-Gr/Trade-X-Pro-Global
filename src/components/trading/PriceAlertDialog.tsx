@@ -1,9 +1,21 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Bell } from "lucide-react";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { useToast } from "@/hooks/use-toast";
@@ -14,7 +26,11 @@ interface PriceAlertDialogProps {
   onAlertCreated?: () => void;
 }
 
-export const PriceAlertDialog = ({ symbol, currentPrice, onAlertCreated }: PriceAlertDialogProps) => {
+export const PriceAlertDialog = ({
+  symbol,
+  currentPrice,
+  onAlertCreated,
+}: PriceAlertDialogProps) => {
   const [open, setOpen] = useState(false);
   const [targetPrice, setTargetPrice] = useState("");
   const [condition, setCondition] = useState<"above" | "below">("above");
@@ -35,17 +51,17 @@ export const PriceAlertDialog = ({ symbol, currentPrice, onAlertCreated }: Price
         return;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { error } = await supabase
-        .from("price_alerts")
-        .insert({
-          user_id: user.id,
-          symbol,
-          target_price: price,
-          condition,
-        });
+      const { error } = await supabase.from("price_alerts").insert({
+        user_id: user.id,
+        symbol,
+        target_price: price,
+        condition,
+      });
 
       if (error) throw error;
 
@@ -87,7 +103,10 @@ export const PriceAlertDialog = ({ symbol, currentPrice, onAlertCreated }: Price
           </div>
           <div className="space-y-2">
             <Label>Condition</Label>
-            <Select value={condition} onValueChange={(v) => setCondition(v as "above" | "below")}>
+            <Select
+              value={condition}
+              onValueChange={(v) => setCondition(v as "above" | "below")}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -107,7 +126,11 @@ export const PriceAlertDialog = ({ symbol, currentPrice, onAlertCreated }: Price
               onChange={(e) => setTargetPrice(e.target.value)}
             />
           </div>
-          <Button onClick={handleCreateAlert} disabled={isSubmitting} className="w-full">
+          <Button
+            onClick={handleCreateAlert}
+            disabled={isSubmitting}
+            className="w-full"
+          >
             {isSubmitting ? "Creating..." : "Create Alert"}
           </Button>
         </div>

@@ -22,10 +22,11 @@
 ## Button Component
 
 ### Overview
+
 The Button component is the primary call-to-action element. It supports multiple sizes, variants, and states.
 
 **Location:** `src/components/ui/button.tsx`  
-**Variants File:** `src/components/ui/buttonVariants.ts`  
+**Variants File:** `src/components/ui/buttonVariants.ts`
 
 ### Props
 
@@ -33,13 +34,13 @@ The Button component is the primary call-to-action element. It supports multiple
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   // Variants
   variant?: 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link' | 'loading' | 'success' | 'warning'
-  
+
   // Sizes
   size?: 'xs' | 'sm' | 'default' | 'lg' | 'icon' | 'xl'
-  
+
   // Animation
   animation?: 'none' | 'subtle' | 'bouncy' | 'immediate'
-  
+
   // Standard React button props
   asChild?: boolean
   loading?: boolean
@@ -55,14 +56,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 ### Size Guide
 
-| Size | Height | Padding | Font | Use Case | Touch-friendly |
-|------|--------|---------|------|----------|---|
-| xs | 32px | 3px horizontal | xs | Icon buttons, compact | No |
-| sm | 40px | 4px horizontal | sm | Small actions | No |
-| default | 48px | 5px horizontal | base | Standard buttons | Yes |
-| lg | 56px | 6px horizontal | base | Large CTAs | Yes |
-| icon | 48×48px | — | — | Icon-only buttons | Yes |
-| xl | 64px | 8px horizontal | lg | Hero buttons | Yes |
+| Size    | Height  | Padding        | Font | Use Case              | Touch-friendly |
+| ------- | ------- | -------------- | ---- | --------------------- | -------------- |
+| xs      | 32px    | 3px horizontal | xs   | Icon buttons, compact | No             |
+| sm      | 40px    | 4px horizontal | sm   | Small actions         | No             |
+| default | 48px    | 5px horizontal | base | Standard buttons      | Yes            |
+| lg      | 56px    | 6px horizontal | base | Large CTAs            | Yes            |
+| icon    | 48×48px | —              | —    | Icon-only buttons     | Yes            |
+| xl      | 64px    | 8px horizontal | lg   | Hero buttons          | Yes            |
 
 ### Variant Guide
 
@@ -101,23 +102,27 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 ### States
 
 **Hover**
+
 - Background lightens (90-95% opacity)
 - Shadow increases
 - Lifts 1px up (translateY)
 - Cursor changes to pointer
 
 **Active/Pressed**
+
 - Background darkens (80-90% opacity)
 - Scales down slightly (0.98)
 - Shadow reduces
 - Visual feedback of interaction
 
 **Disabled**
+
 - Opacity: 40%
 - Cursor: not-allowed
 - No interactive response
 
 **Focus (Keyboard)**
+
 - 2px ring outline
 - Ring color: primary color
 - Ring offset: 2px
@@ -151,13 +156,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 ### Examples
 
 **Basic Button**
-```tsx
-import { Button } from '@/components/ui/button'
 
-<Button onClick={handleClick}>Click me</Button>
+```tsx
+import { Button } from "@/components/ui/button";
+
+<Button onClick={handleClick}>Click me</Button>;
 ```
 
 **Icon Button**
+
 ```tsx
 <Button size="icon" aria-label="Close dialog">
   <X className="w-4 h-4" />
@@ -165,10 +172,11 @@ import { Button } from '@/components/ui/button'
 ```
 
 **Loading State**
+
 ```tsx
 const [isLoading, setIsLoading] = React.useState(false)
 
-<Button 
+<Button
   loading={isLoading}
   disabled={isLoading}
   onClick={async () => {
@@ -182,10 +190,9 @@ const [isLoading, setIsLoading] = React.useState(false)
 ```
 
 **With Keyboard Shortcut**
+
 ```tsx
-<Button title="Keyboard shortcut: Ctrl+S">
-  Save (Ctrl+S)
-</Button>
+<Button title="Keyboard shortcut: Ctrl+S">Save (Ctrl+S)</Button>
 ```
 
 ---
@@ -193,6 +200,7 @@ const [isLoading, setIsLoading] = React.useState(false)
 ## Input Component
 
 ### Overview
+
 The Input component handles text, email, password, and number inputs with mobile optimization and error handling.
 
 **Location:** `src/components/ui/input.tsx`
@@ -203,16 +211,16 @@ The Input component handles text, email, password, and number inputs with mobile
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   // Custom sizing
   size?: 'sm' | 'default' | 'lg' | 'mobile'
-  
+
   // Form integration
   label?: string
   error?: string
   description?: string
-  
+
   // Mobile optimization
   mobileOptimized?: boolean
   keyboardType?: 'default' | 'numeric' | 'decimal' | 'email' | 'tel'
-  
+
   // Standard HTML input props
   type?: string
   placeholder?: string
@@ -229,12 +237,12 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 ### Size Guide
 
-| Size | Height | Padding | Font | Use Case | Mobile |
-|------|--------|---------|------|----------|--------|
-| sm | 36px | 3px/8px | sm | Compact forms | No |
-| default | 40px | 3px/10px | base/sm | Standard inputs | No |
-| lg | 44px | 4px/12px | base | Large inputs | No |
-| mobile | 44px | 4px/12px | base/sm | Mobile forms | Yes |
+| Size    | Height | Padding  | Font    | Use Case        | Mobile |
+| ------- | ------ | -------- | ------- | --------------- | ------ |
+| sm      | 36px   | 3px/8px  | sm      | Compact forms   | No     |
+| default | 40px   | 3px/10px | base/sm | Standard inputs | No     |
+| lg      | 44px   | 4px/12px | base    | Large inputs    | No     |
+| mobile  | 44px   | 4px/12px | base/sm | Mobile forms    | Yes    |
 
 ### Keyboard Types
 
@@ -258,29 +266,34 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 ### States
 
 **Default**
+
 - Border: 1px solid (var(--input))
 - Background: white
 - Placeholder: muted gray
 - Cursor: text
 
 **Focused**
+
 - Ring: 2px solid (var(--ring))
 - Ring offset: 2px
 - Border: matches ring color
 - Outline: none
 
 **Error**
+
 - Border: 2px solid (var(--destructive))
 - Background: light red
 - aria-invalid: true
 - aria-errormessage: populated
 
 **Disabled**
+
 - Opacity: 60%
 - Background: muted gray
 - Cursor: not-allowed
 
 **Read-only**
+
 - Background: muted gray
 - Cursor: default
 - No focus ring
@@ -316,6 +329,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 ### Examples
 
 **Basic Text Input**
+
 ```tsx
 import { Input } from '@/components/ui/input'
 
@@ -330,6 +344,7 @@ const [value, setValue] = React.useState('')
 ```
 
 **Email with Validation**
+
 ```tsx
 <Input
   type="email"
@@ -341,6 +356,7 @@ const [value, setValue] = React.useState('')
 ```
 
 **Error State**
+
 ```tsx
 const [error, setError] = React.useState('')
 
@@ -360,6 +376,7 @@ const [error, setError] = React.useState('')
 ```
 
 **Mobile Number Input**
+
 ```tsx
 <Input
   type="tel"
@@ -375,6 +392,7 @@ const [error, setError] = React.useState('')
 ## Card Component
 
 ### Overview
+
 The Card component provides a container for grouped content with multiple elevation levels and variants.
 
 **Location:** `src/components/ui/card.tsx`  
@@ -385,30 +403,30 @@ The Card component provides a container for grouped content with multiple elevat
 ```typescript
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   // Elevation system (FE-013)
-  elevation?: '1' | '2' | '3'
-  
+  elevation?: "1" | "2" | "3";
+
   // Background variants
-  variant?: 'primary' | 'secondary' | 'tertiary'
-  
+  variant?: "primary" | "secondary" | "tertiary";
+
   // Interactive behavior
-  interactive?: boolean
-  
+  interactive?: boolean;
+
   // Standard HTML div props
-  className?: string
-  children: React.ReactNode
-  onClick?: React.MouseEventHandler<HTMLDivElement>
-  role?: string
-  tabIndex?: number
+  className?: string;
+  children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  role?: string;
+  tabIndex?: number;
 }
 ```
 
 ### Elevation System
 
-| Level | Shadow | Visual Weight | Use Case |
-|-------|--------|---------------|----------|
-| 1 | shadow-sm | Subtle | Base content, stats, default cards |
-| 2 | shadow-md | Medium | Featured sections, emphasized content |
-| 3 | shadow-lg | Strong | Modals, dialogs, floating panels |
+| Level | Shadow    | Visual Weight | Use Case                              |
+| ----- | --------- | ------------- | ------------------------------------- |
+| 1     | shadow-sm | Subtle        | Base content, stats, default cards    |
+| 2     | shadow-md | Medium        | Featured sections, emphasized content |
+| 3     | shadow-lg | Strong        | Modals, dialogs, floating panels      |
 
 ```tsx
 // Base level - stat cards, content cards
@@ -429,11 +447,11 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 ### Variants
 
-| Variant | Background | Use Case |
-|---------|-----------|----------|
-| primary | Solid white/dark | Main content cards |
-| secondary | Light blue/muted | Supporting content |
-| tertiary | Very light gray | Background elements |
+| Variant   | Background       | Use Case            |
+| --------- | ---------------- | ------------------- |
+| primary   | Solid white/dark | Main content cards  |
+| secondary | Light blue/muted | Supporting content  |
+| tertiary  | Very light gray  | Background elements |
 
 ```tsx
 // Primary - main content
@@ -449,6 +467,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ### Compound Components
 
 **CardHeader**
+
 - Container for title and description
 - Padding: 24px
 - Space: 8px between children
@@ -462,6 +481,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ```
 
 **CardTitle**
+
 - Semantic: h2 heading
 - Font: 1.25rem, semibold
 - Use: Primary heading in card
@@ -471,6 +491,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ```
 
 **CardDescription**
+
 - Font: 14px, muted
 - Use: Subtitle or description text
 
@@ -479,17 +500,17 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ```
 
 **CardContent**
+
 - Container for main content
 - Padding: 24px (no top padding)
 - Use: Primary content area
 
 ```tsx
-<CardContent>
-  Main card content goes here
-</CardContent>
+<CardContent>Main card content goes here</CardContent>
 ```
 
 **CardFooter**
+
 - Container for actions
 - Layout: flex items-center
 - Padding: 24px (no top padding)
@@ -503,6 +524,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ```
 
 **CardCompact**
+
 - Reduced padding: 16px
 - Use: Compact card variations
 
@@ -513,21 +535,25 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ### States
 
 **Default**
+
 - Border: 1px solid
 - Shadow: elevation-level specific
 - Transition: 0.3s ease-in-out
 
 **Hover** (interactive cards)
+
 - Shadow: elevated one level
 - Transform: translateY(-1px)
 - Cursor: pointer
 
 **Disabled**
+
 - Opacity: 60%
 - Cursor: not-allowed
 - Pointer-events: none
 
 **Focus** (focusable cards)
+
 - Outline: 2px solid ring color
 - Outline-offset: 2px
 - Box-shadow: ring glow
@@ -543,30 +569,30 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 ### Examples
 
 **Basic Card**
+
 ```tsx
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 <Card elevation="1" variant="primary">
   <CardHeader>
     <CardTitle>Card Title</CardTitle>
   </CardHeader>
-  <CardContent>
-    Card content goes here
-  </CardContent>
-</Card>
+  <CardContent>Card content goes here</CardContent>
+</Card>;
 ```
 
 **Interactive Card**
+
 ```tsx
-<Card 
-  elevation="2" 
+<Card
+  elevation="2"
   interactive
   onClick={() => navigate(`/items/${id}`)}
   role="button"
   tabIndex={0}
   onKeyDown={(e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      navigate(`/items/${id}`)
+    if (e.key === "Enter" || e.key === " ") {
+      navigate(`/items/${id}`);
     }
   }}
 >
@@ -578,6 +604,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 ```
 
 **With All Components**
+
 ```tsx
 <Card elevation="2">
   <CardHeader>
@@ -599,6 +626,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 ## Form Component
 
 ### Overview
+
 The Form component provides a complete form solution with React Hook Form integration, validation, and accessibility.
 
 **Location:** `src/components/ui/form.tsx`
@@ -634,43 +662,50 @@ const form = useForm<z.infer<typeof formSchema>>({
 ### Props
 
 **Form**
+
 - Extends FormProvider from react-hook-form
 - Wraps entire form
 - Provides form context
 
 **FormField**
+
 ```typescript
 interface FormFieldProps {
-  control: Control  // From useForm
-  name: string      // Field name from schema
-  render: (props: any) => React.ReactNode
+  control: Control; // From useForm
+  name: string; // Field name from schema
+  render: (props: any) => React.ReactNode;
 }
 ```
 
 **FormItem**
+
 - Container for label + control + message
 - Auto-generates unique IDs
 - Handles spacing
 
 **FormLabel**
+
 ```typescript
 interface FormLabelProps extends React.LabelHTMLAttributes {
-  required?: boolean  // Shows red asterisk
-  children: React.ReactNode
+  required?: boolean; // Shows red asterisk
+  children: React.ReactNode;
 }
 ```
 
 **FormControl**
+
 - Wraps input component
 - Applies ARIA attributes
 - Links to description and error IDs
 
 **FormDescription**
+
 - Helper text below input
 - Font: 14px, muted
 - Use: Instructions, hints, examples
 
 **FormMessage**
+
 - Displays validation error
 - Auto-includes error icon
 - Role: alert
@@ -679,27 +714,32 @@ interface FormLabelProps extends React.LabelHTMLAttributes {
 ### Form States
 
 **Default**
+
 - All inputs visible
 - No errors shown
 - Submit button enabled
 
 **Focused** (on input)
+
 - Ring outline visible
 - Input: 2px ring
 - Color: primary
 
 **Error** (validation failed)
+
 - Input border: red
 - FormMessage shows error
 - aria-invalid: true
 - aria-errormessage: set
 
 **Submitting**
+
 - Submit button: loading state
 - Inputs: disabled
 - No further validation
 
 **Success**
+
 - Optional success message
 - Form can be reset
 - Clear user feedback
@@ -709,18 +749,16 @@ interface FormLabelProps extends React.LabelHTMLAttributes {
 ```tsx
 // Built-in validation with Zod
 const schema = z.object({
-  email: z.string()
-    .email('Invalid email format')
-    .min(1, 'Email required'),
-  
-  password: z.string()
-    .min(8, 'Password too short')
-    .regex(/[A-Z]/, 'Need uppercase')
-    .regex(/[0-9]/, 'Need a number'),
-  
-  terms: z.boolean()
-    .refine(val => val === true, 'Must accept terms'),
-})
+  email: z.string().email("Invalid email format").min(1, "Email required"),
+
+  password: z
+    .string()
+    .min(8, "Password too short")
+    .regex(/[A-Z]/, "Need uppercase")
+    .regex(/[0-9]/, "Need a number"),
+
+  terms: z.boolean().refine((val) => val === true, "Must accept terms"),
+});
 
 // Validation happens on:
 // - Blur
@@ -741,15 +779,16 @@ const schema = z.object({
 ### Examples
 
 **Simple Login Form**
+
 ```tsx
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-})
+});
 
 export function LoginForm() {
-  const form = useForm({ resolver: zodResolver(schema) })
-  
+  const form = useForm({ resolver: zodResolver(schema) });
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -766,7 +805,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="password"
@@ -780,15 +819,16 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        
+
         <Button type="submit">Sign In</Button>
       </form>
     </Form>
-  )
+  );
 }
 ```
 
 **With Help Text**
+
 ```tsx
 <FormField
   control={form.control}
@@ -799,9 +839,7 @@ export function LoginForm() {
       <FormControl>
         <Input type="password" {...field} />
       </FormControl>
-      <FormDescription>
-        Min 8 characters, 1 uppercase, 1 number
-      </FormDescription>
+      <FormDescription>Min 8 characters, 1 uppercase, 1 number</FormDescription>
       <FormMessage />
     </FormItem>
   )}
@@ -813,6 +851,7 @@ export function LoginForm() {
 ## Label Component
 
 ### Overview
+
 Simple label component with proper accessibility and disabled state support.
 
 **Location:** `src/components/ui/label.tsx`
@@ -821,10 +860,10 @@ Simple label component with proper accessibility and disabled state support.
 
 ```typescript
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
-  htmlFor?: string      // Links to input ID
-  children: React.ReactNode
-  className?: string
-  disabled?: boolean    // Visual disabled state
+  htmlFor?: string; // Links to input ID
+  children: React.ReactNode;
+  className?: string;
+  disabled?: boolean; // Visual disabled state
 }
 ```
 
@@ -852,32 +891,32 @@ import { Label } from '@/components/ui/label'
 ```tsx
 function ContactForm() {
   const schema = z.object({
-    name: z.string().min(1, 'Name required'),
-    email: z.string().email('Invalid email'),
-    message: z.string().min(10, 'Message too short'),
-  })
-  
+    name: z.string().min(1, "Name required"),
+    email: z.string().email("Invalid email"),
+    message: z.string().min(10, "Message too short"),
+  });
+
   const form = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', email: '', message: '' },
-  })
-  
+    defaultValues: { name: "", email: "", message: "" },
+  });
+
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         body: JSON.stringify(values),
-      })
-      
-      if (!response.ok) throw new Error('Failed to send')
-      
-      toast.success('Message sent!')
-      form.reset()
+      });
+
+      if (!response.ok) throw new Error("Failed to send");
+
+      toast.success("Message sent!");
+      form.reset();
     } catch (error) {
-      toast.error('Failed to send message')
+      toast.error("Failed to send message");
     }
   }
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -894,7 +933,7 @@ function ContactForm() {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="email"
@@ -908,7 +947,7 @@ function ContactForm() {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="message"
@@ -923,47 +962,55 @@ function ContactForm() {
             </FormItem>
           )}
         />
-        
+
         <Button type="submit" className="w-full">
           Send Message
         </Button>
       </form>
     </Form>
-  )
+  );
 }
 ```
 
 ### Pattern: Interactive Card List
 
 ```tsx
-function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) => void }) {
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
-  
+function ItemList({
+  items,
+  onSelect,
+}: {
+  items: Item[];
+  onSelect: (id: string) => void;
+}) {
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+
   return (
     <div className="space-y-2">
-      {items.map(item => (
+      {items.map((item) => (
         <Card
           key={item.id}
           elevation="1"
           interactive
           onClick={() => {
-            setSelectedId(item.id)
-            onSelect(item.id)
+            setSelectedId(item.id);
+            onSelect(item.id);
           }}
           role="button"
           tabIndex={0}
-          className={selectedId === item.id ? 'ring-2 ring-primary' : ''}
+          className={selectedId === item.id ? "ring-2 ring-primary" : ""}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              setSelectedId(item.id)
-              onSelect(item.id)
+            if (e.key === "Enter" || e.key === " ") {
+              setSelectedId(item.id);
+              onSelect(item.id);
             }
           }}
         >
           <div className="flex items-center justify-between p-4">
             <div>
               <h3 className="font-semibold">{item.name}</h3>
-              <p className="text-sm text-muted-foreground">{item.description}</p>
+              <p className="text-sm text-muted-foreground">
+                {item.description}
+              </p>
             </div>
             <Button size="icon" variant="ghost">
               <ChevronRight className="w-4 h-4" />
@@ -972,7 +1019,7 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
         </Card>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -981,6 +1028,7 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 ## Accessibility Checklist
 
 ### For All Components
+
 - [ ] 4.5:1 color contrast (WCAG AA)
 - [ ] Keyboard navigation works
 - [ ] Focus indicators visible
@@ -990,6 +1038,7 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 - [ ] Touch targets 44×44px minimum
 
 ### For Buttons
+
 - [ ] Has type attribute (button, submit, reset)
 - [ ] Icon buttons have aria-label
 - [ ] Disabled state properly styled
@@ -997,6 +1046,7 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 - [ ] Focus ring visible
 
 ### For Inputs
+
 - [ ] Associated label (visible or aria-label)
 - [ ] Error state clearly marked
 - [ ] aria-invalid on error
@@ -1006,6 +1056,7 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 - [ ] Pattern validation if applicable
 
 ### For Forms
+
 - [ ] All inputs labeled
 - [ ] Error messages visible
 - [ ] Required fields marked
@@ -1015,6 +1066,7 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 - [ ] Validation on appropriate events
 
 ### For Cards
+
 - [ ] Heading hierarchy correct
 - [ ] Interactive cards are keyboard accessible
 - [ ] Focus ring visible
@@ -1027,16 +1079,19 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 ### Button Issues
 
 **Problem: Button not responding to clicks**
+
 - Check: `disabled` attribute not set
 - Check: `onClick` handler is passed
 - Check: `type` is not "button" (for submit, use type="submit")
 
 **Problem: Button text cut off**
+
 - Solution: Use `size="lg"` for more padding
 - Solution: Add `className="whitespace-nowrap"` if needed
 - Check: Content not too long for button width
 
 **Problem: Focus ring not visible**
+
 - Check: CSS not overriding focus styles
 - Solution: Use `focus-visible:ring-2` class
 - Check: Dark mode contrast sufficient
@@ -1044,16 +1099,19 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 ### Input Issues
 
 **Problem: Mobile keyboard not optimizing**
+
 - Solution: Use `keyboardType` prop
 - Example: `keyboardType="email"` for email
 - Check: `inputMode` attribute in dev tools
 
 **Problem: Error not displaying**
+
 - Check: `error` prop is passed
 - Check: `FormMessage` component rendered
 - Check: aria-invalid set to true
 
 **Problem: Input too small on mobile**
+
 - Solution: Use `mobileOptimized` prop
 - Solution: Use `size="lg"` or `size="mobile"`
 - Check: Height is 44px minimum
@@ -1061,11 +1119,13 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 ### Card Issues
 
 **Problem: Card shadow looks wrong in dark mode**
+
 - Check: CSS variables using dark mode values
 - Solution: Shadows automatically adjusted
 - Check: Browser dark mode enabled
 
 **Problem: Interactive card not keyboard accessible**
+
 - Add: `role="button"` attribute
 - Add: `tabIndex={0}` for keyboard nav
 - Add: `onKeyDown` handler for Enter/Space
@@ -1073,16 +1133,19 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 ### Form Issues
 
 **Problem: Validation not triggering**
+
 - Check: `resolver` passed to useForm
 - Check: Validation schema matches fields
 - Check: Field names match schema keys
 
 **Problem: Error message not showing**
+
 - Check: `FormMessage` rendered
 - Check: Field has validation error
 - Check: `aria-errormessage` linked
 
 **Problem: Form values not updating**
+
 - Check: `{...field}` spread operator used
 - Check: `name` prop matches schema
 - Check: Control passed to FormField
@@ -1094,12 +1157,14 @@ function ItemList({ items, onSelect }: { items: Item[], onSelect: (id: string) =
 All components automatically support dark mode through CSS variables.
 
 **Light Mode**
+
 - Backgrounds: White, light gray
 - Text: Dark gray, black
 - Borders: Light gray
 - Shadows: Subtle
 
 **Dark Mode**
+
 - Backgrounds: Dark gray, black
 - Text: White, light gray
 - Borders: Medium gray

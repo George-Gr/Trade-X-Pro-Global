@@ -16,12 +16,12 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 pattern-grid opacity-30" />
         <div className="absolute inset-0 pattern-mesh" />
-        <motion.div 
+        <motion.div
           className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold/30 to-transparent blur-3xl"
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-500/30 to-transparent blur-3xl"
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
@@ -71,7 +71,9 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
             >
               <div className="flex items-center justify-center gap-3 mb-2">
                 <Mail className="h-5 w-5 text-gold" />
-                <span className="text-primary-foreground font-medium">Check Your Email</span>
+                <span className="text-primary-foreground font-medium">
+                  Check Your Email
+                </span>
               </div>
               <p className="text-sm text-primary-foreground/60">
                 We've sent a verification link to:
@@ -86,23 +88,41 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
               transition={{ delay: 0.5 }}
               className="space-y-3 mb-6"
             >
-              <h3 className="text-sm font-semibold text-primary-foreground">What's Next?</h3>
+              <h3 className="text-sm font-semibold text-primary-foreground">
+                What's Next?
+              </h3>
               <div className="text-left space-y-2">
                 <div className="flex items-start gap-3 text-sm">
-                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">1</span>
-                  <span className="text-primary-foreground/80">Verify your email address</span>
+                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">
+                    1
+                  </span>
+                  <span className="text-primary-foreground/80">
+                    Verify your email address
+                  </span>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
-                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">2</span>
-                  <span className="text-primary-foreground/80">Complete KYC verification</span>
+                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">
+                    2
+                  </span>
+                  <span className="text-primary-foreground/80">
+                    Complete KYC verification
+                  </span>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
-                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">3</span>
-                  <span className="text-primary-foreground/80">Wait for admin to fund your account</span>
+                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">
+                    3
+                  </span>
+                  <span className="text-primary-foreground/80">
+                    Wait for admin to fund your account
+                  </span>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
-                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">4</span>
-                  <span className="text-primary-foreground/80">Start trading!</span>
+                  <span className="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0 text-gold text-xs font-bold">
+                    4
+                  </span>
+                  <span className="text-primary-foreground/80">
+                    Start trading!
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -114,9 +134,7 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
               transition={{ delay: 0.6 }}
             >
               <Link to="/login">
-                <Button 
-                  className="w-full btn-glow bg-gold text-gold-foreground hover:bg-gold-hover py-6 text-lg font-bold shadow-lg hover:shadow-gold/25 transition-all duration-300 group"
-                >
+                <Button className="w-full btn-glow bg-gold text-gold-foreground hover:bg-gold-hover py-6 text-lg font-bold shadow-lg hover:shadow-gold/25 transition-all duration-300 group">
                   Continue to Login
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -132,7 +150,10 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
           transition={{ delay: 0.7 }}
           className="text-center mt-6"
         >
-          <Link to="/" className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-primary-foreground/70 transition-colors">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-primary-foreground/70 transition-colors"
+          >
             <TrendingUp className="h-4 w-4" />
             <span className="text-sm">Trade X Pro</span>
           </Link>

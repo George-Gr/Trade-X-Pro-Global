@@ -11,6 +11,7 @@
 ## 📊 COMPLETION SUMMARY
 
 ### TASK GROUP 1: ORDER EXECUTION SYSTEM ✅ 100% (6/6 tasks)
+
 - ✅ TASK 1.1.1: Order Validation (8 tests)
 - ✅ TASK 1.1.2: Margin Calculations (45 tests)
 - ✅ TASK 1.1.3: Slippage Simulation (36 tests)
@@ -21,6 +22,7 @@
 **Total:** 172 tests passing, 0 errors, production-ready ✨
 
 ### TASK GROUP 2: POSITION MANAGEMENT ✅ 100% (4/4 tasks)
+
 - ✅ TASK 1.2.1: P&L Calculation (55 tests)
 - ✅ TASK 1.2.2: Position Updates (51 tests)
 - ✅ TASK 1.2.3: Realtime Positions (46 tests)
@@ -29,6 +31,7 @@
 **Total:** 216 tests passing, 0 errors, production-ready ✨
 
 ### TASK GROUP 3: RISK MANAGEMENT & LIQUIDATION ✅ 100% (4/4 tasks)
+
 - ✅ TASK 1.3.1: Margin Call Detection (73 tests)
 - ✅ TASK 1.3.2: Liquidation Execution (42 tests)
 - ✅ TASK 1.3.3: Position Closure Automation (65 tests)
@@ -39,6 +42,7 @@
 **Phase 1 Backend Complete:** ✅ 14/14 tasks (100%), 617 tests passing
 
 ### TASK GROUP 4: CORE TRADING UI ✅ 100% (5/5 tasks)
+
 - ✅ TASK 1.4.1: Trading Panel Order Form (33 tests)
 - ✅ TASK 1.4.2: Portfolio Dashboard (15 tests)
 - ✅ TASK 1.4.3: Orders Table Status Tracking (46 tests)
@@ -54,6 +58,7 @@
 ## 📋 TASK TRACKING SYSTEM
 
 ### Task Status Legend
+
 - 🔴 **NOT STARTED** - No code written yet
 - 🟡 **IN PROGRESS** - Work begun, incomplete
 - 🟢 **COMPLETE** - Fully implemented and tested
@@ -67,12 +72,14 @@
 **Phase 1 Completion Status:** 🎉 **100% COMPLETE** ✅
 
 **All 19 Core Tasks Delivered & Tested:**
+
 - ✅ Order Execution System (6 tasks, 172 tests)
 - ✅ Position Management (4 tasks, 216 tests)
 - ✅ Risk Management & Liquidation (4 tasks, 229 tests)
 - ✅ Core Trading UI (5 tasks, 141 tests)
 
 **Final Metrics:**
+
 - Total Tests: 758 passing (100% success rate)
 - TypeScript Errors: 0
 - Build Status: ✓ Production-ready (7.51s)
@@ -84,31 +91,35 @@
 ## TASK GROUP 1: ORDER EXECUTION SYSTEM
 
 ### ✅ TASK 1.1.1: Order Validation Framework
+
 **Status:** ✅ COMPLETE (validators implemented & integrated; unit tests added and passing — 8 tests)  
 **Time Est:** 8 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Create comprehensive order validation system that validates all order parameters before execution.
 
 **Location:**
+
 - File: `/src/lib/trading/orderValidation.ts` (NEW)
 - File: `/supabase/functions/execute-order/index.ts` (EXISTING - UPDATE)
 
 **Requirements:**
+
 ```typescript
 // orderValidation.ts should export:
-- validateOrderInput() // Zod schema validation
-- validateAssetExists() // Check symbol in asset_master
-- validateQuantity() // Min/max per asset class
-- validateLeverage() // Check against account leverage limit
-- validateMarketHours() // Check if trading allowed now
-- validateAccountStatus() // Check account not suspended
-- validateKYCStatus() // Check kyc_status = 'approved'
+-validateOrderInput() - // Zod schema validation
+  validateAssetExists() - // Check symbol in asset_master
+  validateQuantity() - // Min/max per asset class
+  validateLeverage() - // Check against account leverage limit
+  validateMarketHours() - // Check if trading allowed now
+  validateAccountStatus() - // Check account not suspended
+  validateKYCStatus(); // Check kyc_status = 'approved'
 ```
 
 **Implementation Steps:**
+
 1. [x] Create Zod schema for OrderRequest
 2. [x] Define asset-specific validation rules (min quantity, max position size)
 3. [x] Implement market hours checking logic
@@ -118,6 +129,7 @@ Create comprehensive order validation system that validates all order parameters
 7. [x] Export all validators for use in Edge Function
 
 **Acceptance Criteria:**
+
 - ✅ Invalid symbol → returns 400 error
 - ✅ Quantity < minimum → returns 400 error
 - ✅ Account suspended → returns 403 error
@@ -126,6 +138,7 @@ Create comprehensive order validation system that validates all order parameters
 - ✅ Valid order → passes all validations
 
 **Testing Checklist:**
+
 - [x] Unit test: Invalid symbols rejected
 - [x] Unit test: Quantity boundary conditions
 - [x] Unit test: Account status checks
@@ -148,20 +161,23 @@ This will copy the frontend file into `/supabase/functions/lib/orderValidation.t
 ---
 
 ### 🟢 TASK 1.1.2: Margin Calculation Engine
+
 **Status:** ✅ COMPLETE (all formulas implemented, unit tests added and passing — 27 tests)  
 **Time Est:** 10 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement accurate margin requirement calculations for all asset classes based on leverage and contract sizes.
 
 **Location:**
+
 - File: `/src/lib/trading/marginCalculations.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/marginCalculations.ts` (Deno copy)
 - File: `/supabase/functions/lib/marginCalculations.d.ts` (TypeScript declarations)
 
 **Key Formulas Implemented:**
+
 ```
 Margin Required: M = (P × Price) / Leverage
 Free Margin: FM = Equity - MarginUsed
@@ -171,6 +187,7 @@ Max Position Size: Pmax = (Available Equity × Leverage) / Current Price
 ```
 
 **Implementation Steps:**
+
 1. [x] Extract asset-specific leverage limits from PRD and docs
 2. [x] Define maintenance margin ratios per asset class (forex:2%, stocks:25%, crypto:15%, etc.)
 3. [x] Implement margin calculation with decimal precision (4 decimals)
@@ -181,6 +198,7 @@ Max Position Size: Pmax = (Available Equity × Leverage) / Current Price
 8. [x] Update sync script to include margin calculations
 
 **Acceptance Criteria:**
+
 - ✅ Margin calculated to 4 decimal places
 - ✅ Asset-specific maintenance ratios applied correctly
 - ✅ No floating point precision errors
@@ -190,6 +208,7 @@ Max Position Size: Pmax = (Available Equity × Leverage) / Current Price
 - ✅ Max position size constrained by leverage and available equity
 
 **Testing Checklist:**
+
 - [x] Unit test: Margin required calculation
 - [x] Unit test: Free margin calculation
 - [x] Unit test: Margin level percentage
@@ -208,19 +227,22 @@ Max Position Size: Pmax = (Available Equity × Leverage) / Current Price
 ---
 
 ### 🟢 TASK 1.1.3: Slippage Simulation Engine
+
 **Status:** 🟢 COMPLETE (all formulas implemented, unit & integration tests passing — 36 tests)  
 **Time Est:** 12 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement realistic order slippage simulation based on market conditions, asset volatility, and order size.
 
 **Location:**
+
 - File: `/src/lib/trading/slippageCalculation.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/slippageCalculation.ts` (Deno copy)
 
 **Key Formulas Implemented:**
+
 ```
 Base Slippage = Spread (normal market)
 Volatility Multiplier = (Current IV / Average IV) × Asset Multiplier
@@ -230,6 +252,7 @@ Execution Price = Market Price ± (Slippage × Price Step)
 ```
 
 **Asset-Specific Slippage Ranges (Implemented):**
+
 - Forex Majors (EURUSD, USDJPY, etc.): 0–0.6 pips (3x wider in volatility)
 - Forex Minors: 0.5–2 pips
 - Forex Exotics (USDTRY, etc.): 2–15 pips (4x multiplier in volatility)
@@ -241,6 +264,7 @@ Execution Price = Market Price ± (Slippage × Price Step)
 - Bonds (US10Y): $0.005–$0.05
 
 **Implementation Steps Completed:**
+
 1. [x] Define slippage calculation formula per asset class
 2. [x] Implement volatility detection logic (current vol vs 14-day MA)
 3. [x] Implement order size impact calculation
@@ -252,6 +276,7 @@ Execution Price = Market Price ± (Slippage × Price Step)
 9. [x] Update sync-validators script to include slippage calculations
 
 **Acceptance Criteria - All Met:**
+
 - ✅ Slippage never exceeds max spread for asset class
 - ✅ Larger orders incur more slippage (sizeMultiplier increases)
 - ✅ High-volatility periods multiply slippage (volatilityMultiplier)
@@ -263,11 +288,13 @@ Execution Price = Market Price ± (Slippage × Price Step)
 
 **Testing Results:**
 ✅ **Unit Tests (12):**
+
 - 5 volatility multiplier tests (ratio calculation, high-vol events, minimums)
 - 6 size multiplier tests (order sizing, liquidity levels, penalties)
 - 1 base slippage test (range validation, deterministic generation)
 
 ✅ **Integration Tests (24):**
+
 - 8 calculateSlippage tests (Forex, volatility, order size, after-hours, sell orders, rejection, determinism)
 - 4 slippage in different market conditions (stable/volatile/exotic/liquidation scenarios)
 - 12 helper function tests (getExecutionPrice, asset configs, supported assets, edge cases)
@@ -275,6 +302,7 @@ Execution Price = Market Price ± (Slippage × Price Step)
 **All 36 tests passing ✅**
 
 **Key Exported Functions:**
+
 ```typescript
 - calculateSlippage(input: SlippageCalculationInput) → SlippageResult
 - calculateVolatilityMultiplier(...) → number
@@ -291,15 +319,17 @@ Canonical file at `/src/lib/trading/slippageCalculation.ts`. Run `npm run sync-v
 ---
 
 ### 🟢 TASK 1.1.4: Order Matching & Execution
+
 **Status:** 🟢 COMPLETE (all order types implemented, 44 integration tests passing)  
 **Time Est:** 15 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement core order matching logic that matches buy/sell orders, executes market/limit/stop orders, and updates positions and balances.
 
 **Location:**
+
 - File: `/src/lib/trading/orderMatching.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/orderMatching.ts` (Deno copy - will be auto-synced)
 - File: `/supabase/migrations/20251113_execute_order_atomic.sql` (NEW - Stored Procedure)
@@ -312,6 +342,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 ✅ **Trailing Stop** - Automatically adjust stop based on price movement
 
 **Implementation Steps Completed:**
+
 1. [x] Implement market order execution (immediate fill at market price + slippage)
 2. [x] Implement limit order matching logic (price level check)
 3. [x] Implement stop order trigger detection (price touch detection, prevent oscillation)
@@ -323,6 +354,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 9. [x] Write 44 comprehensive integration & unit tests
 
 **Key Functions Exported:**
+
 ```typescript
 // Order type checkers
 - checkMarketOrderMatch(condition) → MatchingResult
@@ -341,6 +373,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 ```
 
 **Acceptance Criteria - All Met:**
+
 - ✅ Market orders execute immediately at market price ± slippage
 - ✅ Limit orders do not execute above/below limit (buy <= limit, sell >= limit)
 - ✅ Stop orders trigger on price touch (prevents duplicate triggers)
@@ -353,6 +386,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 
 **Testing Results:**
 ✅ **Unit Tests (18):**
+
 - 5 market order matching tests
 - 5 limit order execution tests
 - 5 stop order trigger tests
@@ -360,6 +394,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 - 3 trailing stop tests
 
 ✅ **Integration Tests (26):**
+
 - 6 calculateExecutionPrice tests
 - 4 shouldOrderExecute tests
 - 4 calculatePostExecutionBalance tests
@@ -373,6 +408,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 
 **Database Migration:**
 `20251113_execute_order_atomic.sql` includes:
+
 - `execute_order_atomic()` - Main stored procedure for atomic order execution
 - `calculate_commission()` - Commission calculation per asset class
 - `calculate_margin_required()` - Margin requirement calculation
@@ -380,6 +416,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 - Full RLS security with SECURITY DEFINER
 
 **Stored Procedure Logic:**
+
 1. Validates user profile and asset exists
 2. Calculates execution price with slippage
 3. Calculates commission based on asset class
@@ -393,6 +430,7 @@ Implement core order matching logic that matches buy/sell orders, executes marke
 11. Returns detailed success/error response
 
 **Error Handling:**
+
 - User profile not found → 404
 - Asset not found → 400
 - Insufficient balance → 400 (for buys)
@@ -405,19 +443,22 @@ Canonical file at `/src/lib/trading/orderMatching.ts`. Will be copied to Deno fo
 ---
 
 ### 🟢 TASK 1.1.5: Commission Calculation
+
 **Status:** 🟢 COMPLETE (all commission types implemented, 39 tests passing)  
 **Time Est:** 6 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Calculate per-order commissions based on asset class, order size, and account tier (if applicable).
 
 **Location:**
+
 - File: `/src/lib/trading/commissionCalculation.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/commissionCalculation.ts` (Deno copy)
 
 **Commission Structure Implemented:**
+
 ```
 Forex Majors/Minors/Exotics: $0 (spread-only)
 Indices CFDs: $0 (spread-only)
@@ -435,6 +476,7 @@ Account Tier Multipliers:
 ```
 
 **Implementation Steps Completed:**
+
 1. [x] Create AssetClass enum (Forex, Stock, Index, Commodity, Crypto, ETF, Bond)
 2. [x] Create AccountTier enum (Standard, Silver, Gold, Platinum)
 3. [x] Implement asset class commission mapping (COMMISSION_CONFIG)
@@ -449,6 +491,7 @@ Account Tier Multipliers:
 12. [x] Update sync-validators script to include commission calculations
 
 **Key Exported Functions:**
+
 ```typescript
 // Configuration
 - getCommissionConfig(assetClass) → CommissionConfig
@@ -471,6 +514,7 @@ Account Tier Multipliers:
 ```
 
 **Acceptance Criteria - All Met:**
+
 - ✅ Stock commissions calculated per share ($0.02 average)
 - ✅ Other asset classes show $0 commission
 - ✅ Commission bounded by min ($1) and max ($50)
@@ -481,6 +525,7 @@ Account Tier Multipliers:
 
 **Testing Results:**
 ✅ **Unit Tests (39 total):**
+
 - 3 configuration tests (asset classes, configs, tier coverage)
 - 5 stock commission tests (standard, minimum, maximum)
 - 1 ETF commission test (same as stocks)
@@ -504,15 +549,17 @@ Canonical file at `/src/lib/trading/commissionCalculation.ts`. Run `npm run sync
 ---
 
 ### 🟢 TASK 1.1.6: Complete Execute-Order Function
+
 **Status:** 🟢 COMPLETE (all 5 modules orchestrated, 172 cumulative tests passing)  
 **Time Est:** 5 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Integrate validation, margin calculation, slippage, order matching, and commission into a complete, production-ready execute-order Edge Function.
 
 **Location:**
+
 - File: `/supabase/functions/execute-order/index.ts` (REFACTORED - COMPLETE)
 
 **Integration Implemented:**
@@ -537,15 +584,16 @@ The execute-order function now orchestrates all 5 core trading modules in a comp
 
 **Module Integration:**
 
-| Module | File | Status | Tests |
-|--------|------|--------|-------|
-| Order Validation | orderValidation.ts | ✅ Integrated | 8 passing |
-| Margin Calculations | marginCalculations.ts | ✅ Integrated | 45 passing |
-| Slippage Simulation | slippageCalculation.ts | ✅ Integrated | 36 passing |
-| Order Matching | orderMatching.ts | ✅ Integrated | 44 passing |
+| Module                 | File                     | Status        | Tests      |
+| ---------------------- | ------------------------ | ------------- | ---------- |
+| Order Validation       | orderValidation.ts       | ✅ Integrated | 8 passing  |
+| Margin Calculations    | marginCalculations.ts    | ✅ Integrated | 45 passing |
+| Slippage Simulation    | slippageCalculation.ts   | ✅ Integrated | 36 passing |
+| Order Matching         | orderMatching.ts         | ✅ Integrated | 44 passing |
 | Commission Calculation | commissionCalculation.ts | ✅ Integrated | 39 passing |
 
 **Error Handling - All Implemented:**
+
 - ✅ Validation error → 400 Bad Request with details
 - ✅ KYC/account error → 403 Forbidden
 - ✅ Insufficient margin → 400 Bad Request (with calculated requirement)
@@ -554,6 +602,7 @@ The execute-order function now orchestrates all 5 core trading modules in a comp
 - ✅ Database error → 500 Internal Server Error
 
 **Acceptance Criteria - All Met:**
+
 - ✅ All validation passes before execution
 - ✅ Execution price = market price ± slippage (calculated correctly)
 - ✅ Position and balance updated atomically via stored procedure
@@ -581,6 +630,7 @@ The execute-order function at `/supabase/functions/execute-order/index.ts` now:
 **Testing Verification:**
 
 ✅ **172 Cumulative Tests Passing Across All Modules:**
+
 - 8 order validation tests
 - 45 margin calculation tests
 - 36 slippage simulation tests
@@ -588,6 +638,7 @@ The execute-order function at `/supabase/functions/execute-order/index.ts` now:
 - 39 commission calculation tests
 
 Each module tested independently and verified working correctly. Integration verified through:
+
 - Module imports and type safety (0 TypeScript errors)
 - Execution flow validation
 - Error handling coverage
@@ -596,6 +647,7 @@ Each module tested independently and verified working correctly. Integration ver
 **Stored Procedure Integration:**
 
 The function calls `execute_order_atomic` stored procedure which:
+
 - Creates order record with validated inputs
 - Records fill with execution price and slippage
 - Creates or updates position atomically
@@ -613,6 +665,7 @@ The function calls `execute_order_atomic` stored procedure which:
 For brevity in this document, here's the complete task list structure:
 
 **TASK GROUP 1: ORDER EXECUTION (6 tasks - ~57 hours)**
+
 - 1.1.1: Order Validation Framework (8h) 🟢 COMPLETE
 - 1.1.2: Margin Calculation Engine (10h) 🟢 COMPLETE
 - 1.1.3: Slippage Simulation Engine (12h) 🟢 COMPLETE
@@ -628,20 +681,23 @@ For brevity in this document, here's the complete task list structure:
 ## TASK GROUP 2: REAL-TIME POSITION MANAGEMENT
 
 ### ✅ TASK 1.2.1: Position P&L Calculation Engine
+
 **Status:** ✅ COMPLETE (all formulas implemented, unit tests added and passing — 55 tests)  
 **Time Est:** 12 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement comprehensive profit/loss calculation for all position types (long/short) across asset classes with real-time price updates and precise decimal handling.
 
 **Location:**
+
 - File: `/src/lib/trading/pnlCalculation.ts` (NEW - canonical) ✅
 - File: `/supabase/functions/lib/pnlCalculation.ts` (Deno copy) ✅
 - File: `/src/lib/trading/__tests__/pnlCalculation.test.ts` (NEW - tests) ✅
 
 **Key Formulas Implemented:**
+
 ```
 Unrealized P&L (Long):  UPL = (Current Price - Entry Price) × Quantity
 Unrealized P&L (Short): UPL = (Entry Price - Current Price) × Quantity
@@ -655,6 +711,7 @@ Daily P&L:              Day PL = Σ(Exit Price × Qty - Entry Price × Qty) for 
 ```
 
 **Implementation Steps:**
+
 1. [x] Create TypeScript interfaces for PositionPnL, ClosedTrade, DailyMetrics
 2. [x] Implement unrealized P&L calculation for long and short positions
 3. [x] Implement realized P&L calculation for closed trades
@@ -669,6 +726,7 @@ Daily P&L:              Day PL = Σ(Exit Price × Qty - Entry Price × Qty) for 
 12. [x] Add decimal precision validation (4 decimals)
 
 **Key Exported Functions:**
+
 ```typescript
 // Core calculations
 - calculateUnrealizedPnL(entry: number, current: number, qty: number, side: 'long'|'short') → PnLResult
@@ -691,6 +749,7 @@ Daily P&L:              Day PL = Σ(Exit Price × Qty - Entry Price × Qty) for 
 ```
 
 **Acceptance Criteria:**
+
 - ✅ Unrealized P&L calculated correctly for long and short positions
 - ✅ Realized P&L calculated for closed positions
 - ✅ P&L percentage never exceeds ±100% boundaries for unrealized
@@ -703,6 +762,7 @@ Daily P&L:              Day PL = Σ(Exit Price × Qty - Entry Price × Qty) for 
 - ✅ Edge case: Pyramiding (multiple entries) sums correctly
 
 **Testing Checklist:**
+
 - [x] Unit test: Unrealized P&L long position
 - [x] Unit test: Unrealized P&L short position
 - [x] Unit test: Realized P&L long close
@@ -729,6 +789,7 @@ Daily P&L:              Day PL = Σ(Exit Price × Qty - Entry Price × Qty) for 
 - [x] Edge case: Fractional shares/positions
 
 **Notes:**
+
 - ✅ **COMPLETE** - All 55 tests passing (unit + integration + edge cases)
 - ✅ Canonical file at `/src/lib/trading/pnlCalculation.ts`
 - ✅ Deno copy synchronized to `/supabase/functions/lib/pnlCalculation.ts`
@@ -740,21 +801,24 @@ Daily P&L:              Day PL = Σ(Exit Price × Qty - Entry Price × Qty) for 
 ---
 
 ### ✅ TASK 1.2.2: Real-Time Position Update Function
+
 **Status:** ✅ COMPLETE (Edge Function, stored procedures, React hook, and 51 integration tests implemented and passing)  
 **Time Est:** 15 hours  
 **Owner:** Backend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement edge function that updates position P&L, margin levels, and risk metrics in real-time as prices change. This function is called on every price tick and updates database records for real-time dashboards.
 
 **Location:**
+
 - File: `/supabase/functions/update-positions/index.ts` (NEW - Edge Function) ✅
 - File: `/supabase/migrations/20251113_update_position_metrics.sql` (NEW - Stored Procedure) ✅
 - File: `/src/hooks/usePositionUpdate.tsx` (NEW - Client Hook) ✅
 - File: `/src/lib/trading/__tests__/positionUpdate.test.ts` (NEW - Integration Tests: 51 tests) ✅
 
 **Core Logic:**
+
 ```
 For each open position:
   1. Fetch current market price (from price_cache or Finnhub API)
@@ -769,6 +833,7 @@ For each open position:
 ```
 
 **Implementation Steps:**
+
 1. [x] Create stored procedure `update_position_atomic()` for atomic position metrics update
 2. [x] Implement price fetching logic (cache first, API fallback)
 3. [x] Integrate pnlCalculation functions for real-time P&L
@@ -783,6 +848,7 @@ For each open position:
 12. [x] Add database migration for stored procedure and triggers
 
 **Key Exported Functions (Edge Function):**
+
 ```typescript
 // Main entry point
 POST /update-positions
@@ -796,6 +862,7 @@ POST /update-positions
 ```
 
 **Stored Procedure Signature:**
+
 ```sql
 CREATE OR REPLACE FUNCTION update_position_atomic(
   p_position_id UUID,
@@ -815,6 +882,7 @@ $$;
 ```
 
 **Acceptance Criteria:**
+
 - ✅ Position P&L updates within 500ms of price update
 - ✅ Current price reflects latest market price (within tolerance)
 - ✅ Margin level recalculated on every update
@@ -826,6 +894,7 @@ $$;
 - ✅ No data races (concurrent update safety)
 
 **Testing Checklist:**
+
 - [x] Unit test: Single position update calculation (51 total tests)
 - [x] Unit test: Batch position update logic
 - [x] Unit test: Price fetching (cache hit)
@@ -848,6 +917,7 @@ $$;
 - [x] Performance test: Update latency tracking
 
 **Database Migration:**
+
 - [x] Create stored procedure `update_position_atomic()` with RLS
 - [x] Create function trigger for automatic updates on price_cache changes
 - [x] Add index on positions.user_id for batch lookups
@@ -859,6 +929,7 @@ Option B: Event-driven (trigger on price_cache updates) - more real-time, more c
 **Recommendation:** Start with A, migrate to B once price_cache populated with Finnhub real-time
 
 **Files Completed:**
+
 1. **Database Migration** (`/supabase/migrations/20251113_update_position_metrics.sql` - 300+ lines)
    - Composite type `position_update_result` (10 fields for detailed update response)
    - Enum type `margin_status_enum` (SAFE, WARNING, CRITICAL, LIQUIDATION)
@@ -898,6 +969,7 @@ Option B: Event-driven (trigger on price_cache updates) - more real-time, more c
    - 5 tests: Integration scenarios (full workflows, threshold transitions)
 
 **Notes:**
+
 - This function is **performance-critical**; runs multiple times per second during market hours
 - Integrates seamlessly with pnlCalculation (TASK 1.2.1) and marginCalculations (TASK GROUP 1)
 - Feeds position metrics to TASK 1.2.4 (Margin Monitoring) for alert decisions
@@ -911,21 +983,24 @@ Option B: Event-driven (trigger on price_cache updates) - more real-time, more c
 ---
 
 ### ✅ TASK 1.2.3: Realtime Position Subscription
+
 **Status:** ✅ COMPLETE (Hook implemented, auto-reconnection, debouncing, and 46 integration tests passing)  
 **Time Est:** 8 hours  
 **Owner:** Frontend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement Supabase Realtime subscription for positions table so UI receives live position updates as prices and P&L change in real-time.
 
 **Location:**
+
 - File: `/src/hooks/useRealtimePositions.tsx` (NEW - Custom Hook) ✅
 - File: `/src/lib/trading/__tests__/useRealtimePositions.test.ts` (NEW - Integration Tests: 46 tests) ✅
 - File: `/src/components/trading/PositionsTable.tsx` (INTEGRATE with 1.4.2)
 - File: `/src/components/trading/PortfolioDashboard.tsx` (INTEGRATE with 1.4.4)
 
 **Core Implementation:**
+
 ```typescript
 // Hook provides real-time subscription to positions table
 useRealtimePositions(userId: string, options?: RealtimeOptions) → {
@@ -941,6 +1016,7 @@ useRealtimePositions(userId: string, options?: RealtimeOptions) → {
 ```
 
 **Implementation Steps:**
+
 1. [x] Create useRealtimePositions hook with Supabase realtime subscription
 2. [x] Implement positions query with all required fields
 3. [x] Set up INSERT/UPDATE/DELETE event listeners
@@ -953,6 +1029,7 @@ useRealtimePositions(userId: string, options?: RealtimeOptions) → {
 10. [x] Document event schema and message format
 
 **Key Exported Hook:**
+
 ```typescript
 export function useRealtimePositions(userId: string | null, options?: {
   debounceMs?: number,     // Default: 100ms
@@ -976,6 +1053,7 @@ export function useRealtimePositions(userId: string | null, options?: {
 ```
 
 **Realtime Event Schema:**
+
 ```typescript
 // INSERT/UPDATE/DELETE events on positions table
 {
@@ -1004,6 +1082,7 @@ export function useRealtimePositions(userId: string | null, options?: {
 ```
 
 **Acceptance Criteria:**
+
 - ✅ Positions update in real-time on UI when server updates occur
 - ✅ Reconnect automatically if connection drops (exponential backoff, max 5 attempts)
 - ✅ Debouncing prevents excessive re-renders (default 100ms)
@@ -1016,6 +1095,7 @@ export function useRealtimePositions(userId: string | null, options?: {
 - ✅ Connection status tracked accurately
 
 **Testing Checklist:**
+
 - [x] Unit test: Hook initialization with userId (5 tests)
 - [x] Unit test: Subscribe/unsubscribe lifecycle (5 tests)
 - [x] Unit test: Debouncing behavior (4 tests)
@@ -1030,6 +1110,7 @@ export function useRealtimePositions(userId: string | null, options?: {
 - [x] Memory leak test: No growing memory on repeated mount/unmount (1 test)
 
 **Files Completed:**
+
 1. **React Hook** (`/src/hooks/useRealtimePositions.tsx` - 380+ lines)
    - Full TypeScript implementation with Supabase Realtime integration
    - Auto-reconnection with exponential backoff (1-30 seconds, max 5 attempts)
@@ -1056,6 +1137,7 @@ export function useRealtimePositions(userId: string | null, options?: {
    - 3 tests: Callback execution
 
 **Key Features Implemented:**
+
 - ✅ Auto-reconnection with exponential backoff (1s → 2s → 4s → 8s → 16s, capped at 30s)
 - ✅ Debouncing configurable from 0ms to infinite (default 100ms)
 - ✅ Symbol-based filtering for selective subscriptions
@@ -1068,27 +1150,30 @@ export function useRealtimePositions(userId: string | null, options?: {
 - ✅ Support for multiple concurrent instances
 
 **UI Integration Points:**
+
 - PositionsTable.tsx: Use hook to display live positions with real-time P&L
 - PortfolioDashboard.tsx: Use hook to update portfolio metrics as prices change
 - TradingPanel.tsx: Use hook to show open position P&L during trading execution
 - RiskMonitoring.tsx: Use hook with margin level monitoring (1.2.4 integration)
 
 **Notes:**
+
 - ✅ **COMPLETE** - Hook fully implemented with 46/46 tests passing
 - Supabase Realtime provides push notifications for positions table changes
 - Debouncing at 100ms default balances real-time feel with performance
 - Connection stability critical for user confidence in platform
 - Auto-reconnection ensures users stay connected through temporary network issues
 - Zero production build errors (✓ built in 8.85s)
-- Status:** ✅ COMPLETE (324/324 total tests passing across 8 test files)
+- Status:\*\* ✅ COMPLETE (324/324 total tests passing across 8 test files)
 
 ---
 
 ### ✅ TASK 1.2.4: Margin Level Monitoring & Alerts
+
 **Status:** ✅ COMPLETE (64 unit tests + comprehensive implementation)  
 **Time Est:** 8 hours  
 **Owner:** Backend Dev + Frontend Dev  
-**Priority:** P0 - CRITICAL  
+**Priority:** P0 - CRITICAL
 
 **Description:**
 Implement margin level monitoring that triggers alerts at critical thresholds (warning: 100-150%, critical: 50-100%, liquidation: <50%) and notifies users via in-app notifications and email.
@@ -1096,6 +1181,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
 **Completed Implementation:**
 
 **1. Business Logic Module** ✅
+
 - File: `/src/lib/trading/marginMonitoring.ts` (730+ lines)
 - Enums: MarginStatus (SAFE, WARNING, CRITICAL, LIQUIDATION)
 - 15+ core functions for classification, validation, and monitoring
@@ -1104,6 +1190,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
 - Type-safe interfaces for all data structures
 
 **2. Database Schema** ✅
+
 - File: `/supabase/migrations/20251114_margin_alerts.sql` (400+ lines)
 - Table: `margin_alerts` with full lifecycle tracking
 - Type: `margin_alert_status` enum (pending, notified, resolved, acknowledged)
@@ -1113,6 +1200,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
 - Indexes: Optimized for alert queries and deduplication
 
 **3. Edge Function** ✅
+
 - File: `/supabase/functions/check-margin-levels/index.ts` (300+ lines)
 - Scheduled execution every 60 seconds during market hours
 - Monitors all active users with positions
@@ -1122,6 +1210,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
 - Full error handling and retry logic
 
 **4. React Hook** ✅
+
 - File: `/src/hooks/useMarginMonitoring.tsx` (250+ lines)
 - Real-time margin status monitoring
 - Integration with useRealtimePositions for live updates
@@ -1131,6 +1220,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
 - Alert acknowledgment functionality
 
 **5. UI Component** ✅
+
 - File: `/src/components/risk/MarginLevelAlert.tsx` (400+ lines)
 - Real-time display of margin level and status
 - Color-coded status indicators (green/yellow/orange/red)
@@ -1142,6 +1232,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
 - Status change notifications
 
 **6. Comprehensive Test Suite** ✅
+
 - File: `/src/lib/trading/__tests__/marginMonitoring.test.ts` (64 tests)
   - 10 calculation tests (margin level, leverage, free margin)
   - 8 status classification tests (boundaries, thresholds)
@@ -1156,6 +1247,7 @@ Implement margin level monitoring that triggers alerts at critical thresholds (w
   - 5 edge case tests
 
 **Margin Level Thresholds:**
+
 ```
 Margin Level (%) = (Account Equity / Margin Used) × 100
 
@@ -1173,6 +1265,7 @@ Corresponding Margin Requirement Percentages:
 ```
 
 **Key Functions Implemented:**
+
 ```typescript
 // Classification
 ✅ getMarginStatus(marginLevel: number) → MarginStatus
@@ -1204,6 +1297,7 @@ Corresponding Margin Requirement Percentages:
 ```
 
 **Acceptance Criteria:** ✅ ALL MET
+
 - ✅ Margin status classified correctly (safe/warning/critical/liquidation)
 - ✅ Alerts triggered when crossing thresholds
 - ✅ No duplicate alerts within 5-minute window
@@ -1216,6 +1310,7 @@ Corresponding Margin Requirement Percentages:
 - ✅ Build succeeds with 0 errors
 
 **Testing Results:**
+
 - ✅ Unit test: Margin status classification (safe, warning, critical, liquidation)
 - ✅ Unit test: Threshold boundary conditions
 - ✅ Unit test: Order restriction logic based on status
@@ -1228,6 +1323,7 @@ Corresponding Margin Requirement Percentages:
 - ✅ All tests passing: 388/388 (added 64 margin tests to existing 324)
 
 **Database Integration:**
+
 - ✅ margin_alerts table created with full schema
 - ✅ margin_alert_status enum with lifecycle support
 - ✅ Columns added to profiles: margin_level, margin_status, last_margin_alert_at, time_to_liquidation_minutes
@@ -1237,6 +1333,7 @@ Corresponding Margin Requirement Percentages:
 - ✅ Trigger for automatic alert creation on margin changes
 
 **Files Created/Modified:**
+
 1. `/src/lib/trading/marginMonitoring.ts` - Business logic (730 lines)
 2. `/src/lib/trading/__tests__/marginMonitoring.test.ts` - Tests (64 tests)
 3. `/supabase/migrations/20251114_margin_alerts.sql` - Database schema (400 lines)
@@ -1245,12 +1342,14 @@ Corresponding Margin Requirement Percentages:
 6. `/src/components/risk/MarginLevelAlert.tsx` - UI component (400 lines)
 
 **Build & Test Status:**
+
 - ✅ TypeScript: 0 errors
 - ✅ Build: ✓ built in 7.85s
 - ✅ Tests: 388/388 passing (64 margin tests included)
 - ✅ All core dependencies satisfied
 
 **Notes:**
+
 - Margin monitoring is **security-critical** to prevent overdraft scenarios
 - Integrated with order validation (1.1.1) to prevent new opens at critical
 - Ready to integrate with liquidation execution (1.3.2) for forced closes
@@ -1261,6 +1360,7 @@ Corresponding Margin Requirement Percentages:
 ---
 
 **✅ TASK GROUP 2 - PROGRESS UPDATE:**
+
 - **1.2.1: Position P&L Calculation Engine** ✅ COMPLETE (55 tests passing)
 - **1.2.2: Real-Time Position Update Function** ✅ COMPLETE (51 tests passing)
 - **1.2.3: Realtime Position Subscription** ✅ COMPLETE (46 tests passing)
@@ -1275,17 +1375,19 @@ Corresponding Margin Requirement Percentages:
 ## TASK GROUP 3: RISK MANAGEMENT & LIQUIDATION (Weeks 3-4, ~22 hours)
 
 ### TASK 1.3.1: Margin Call Detection Engine
+
 **Status:** 🟢 COMPLETE  
 **Time Est:** 12 hours  
 **Time Actual:** ~8 hours (estimated)
 **Owner:** Backend Dev  
 **Priority:** P0 - CRITICAL  
-**Completion Date:** 2024-11-15  
+**Completion Date:** 2024-11-15
 
 **Description:**
 Implement real-time margin call detection system that monitors all user positions for margin level decline and triggers margin call events when thresholds are crossed. This engine runs continuously during market hours and integrates with the margin monitoring system (1.2.4) to escalate alerts to liquidation (1.3.2).
 
 **Location:**
+
 - File: `/src/lib/trading/marginCallDetection.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/marginCallDetection.ts` (Deno copy)
 - File: `/supabase/functions/check-risk-levels/index.ts` (REFACTOR - Edge Function)
@@ -1469,6 +1571,7 @@ Margin calls trigger high-urgency notifications:
 ---
 
 ### TASK 1.3.2: Liquidation Execution Logic
+
 **Status:** ✅ COMPLETE  
 **Time Est:** 10 hours (Actual: 3.5 hours)  
 **Owner:** AI Implementation (GitHub Copilot)  
@@ -1479,6 +1582,7 @@ Margin calls trigger high-urgency notifications:
 Automatic position liquidation system that force-closes user positions when margin level falls below liquidation threshold (<50% margin level). This system protects user accounts from overdraft and maintains system integrity.
 
 **Deliverables Summary:**
+
 - ✅ liquidationEngine.ts: 641 lines, 15 functions, full business logic
 - ✅ liquidationEngine.test.ts: 613 lines, 42 comprehensive tests (100% passing)
 - ✅ liquidation_execution.sql: 350+ lines, 3 tables, 14 indexes, RLS policies
@@ -1486,12 +1590,13 @@ Automatic position liquidation system that force-closes user positions when marg
 - ✅ Deno library copy: 380+ lines for Edge Function runtime
 
 **Test Results:** 42/42 passing ✅
-**Total Tests (All TASK GROUP 3):** 115 tests passing  
+**Total Tests (All TASK GROUP 3):** 115 tests passing
 
 **Description:**
 Implement automatic position liquidation system that force-closes user positions when margin level falls below liquidation threshold (<50% margin level). This system ensures the platform protects user accounts from overdraft and maintains system integrity.
 
 **Location:**
+
 - File: `/src/lib/trading/liquidationEngine.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/liquidationEngine.ts` (Deno copy)
 - File: `/supabase/functions/execute-liquidation/index.ts` (NEW - Edge Function)
@@ -1548,6 +1653,7 @@ Execution:
 12. [~] Create Deno copy and sync script integration — PARTIALLY IMPLEMENTED: Deno runtime copy exists at `/supabase/functions/lib/liquidationEngine.ts`, but the `scripts/sync-validators.js` script has not been updated to include this module (sync integration incomplete).
 
 **Verified Findings:**
+
 - Business logic (`/src/lib/trading/liquidationEngine.ts`) exists and implements priority scoring, selection, slippage, execution price calculation, safety checks, metrics and validation.
 - Deno-compatible copy exists in `/supabase/functions/lib/liquidationEngine.ts`.
 - Edge Function `/supabase/functions/execute-liquidation/index.ts` implements selecting positions, fetching market data, computing execution price, updating `positions` to `closed`, recording events, and creating notifications.
@@ -1555,6 +1661,7 @@ Execution:
 - Test suite `/src/lib/trading/__tests__/liquidationEngine.test.ts` is comprehensive for unit coverage.
 
 **Pending / Action Items (recommended):**
+
 - Implement an atomic liquidation path: wrap position closures + event insert + closed_positions insert in a single DB transaction or move execution into a stored procedure (`execute_liquidation_atomic`) to ensure all-or-nothing semantics.
 - Add end-to-end integration tests that exercise the Edge Function against a test Supabase/Postgres instance or a mocked transaction to verify atomicity and full flow.
 - Update `scripts/sync-validators.js` (or central sync script) to include `liquidationEngine.ts` so Deno copies stay in sync with the canonical source.
@@ -1747,6 +1854,7 @@ Before executing liquidation, verify:
 ---
 
 ### TASK 1.3.3: Position Closure Automation
+
 **Status:** ✅ COMPLETE (Verified & Cross-Checked)  
 **Time Est:** 8 hours (Actual: ~2 hours) - ✨ 75% time savings  
 **Owner:** AI Implementation (GitHub Copilot)  
@@ -1758,6 +1866,7 @@ Before executing liquidation, verify:
 Implement automated position closure system that handles closing positions via multiple triggers: profit targets (take-profit), risk limits (stop-loss), time-based expiry, and manual user closure. This system integrates with the trading engine to execute profitable exits and enforce risk controls.
 
 **Location:**
+
 - File: `/src/lib/trading/positionClosureEngine.ts` (NEW - canonical)
 - File: `/supabase/functions/lib/positionClosureEngine.ts` (Deno copy)
 - File: `/supabase/functions/close-position/index.ts` (NEW - Edge Function)
@@ -1785,7 +1894,7 @@ For each open position P:
   4. Check if trailing stop triggered (reversal from peak) → Close with dynamic exit
   5. Check if time-based expiry (hold time > max_duration) → Close on expiry
   6. If none: Position remains open, continue monitoring
-  
+
 Execution:
   1. Fetch current bid/ask prices
   2. Calculate execution price with market slippage
@@ -1853,55 +1962,55 @@ Execution:
 
 ```typescript
 enum ClosureReason {
-  TAKE_PROFIT = 'take_profit',
-  STOP_LOSS = 'stop_loss',
-  TRAILING_STOP = 'trailing_stop',
-  TIME_EXPIRY = 'time_expiry',
-  MANUAL_USER = 'manual_user',
-  MARGIN_CALL = 'margin_call',
-  LIQUIDATION = 'liquidation',
-  ADMIN_FORCED = 'admin_forced',
+  TAKE_PROFIT = "take_profit",
+  STOP_LOSS = "stop_loss",
+  TRAILING_STOP = "trailing_stop",
+  TIME_EXPIRY = "time_expiry",
+  MANUAL_USER = "manual_user",
+  MARGIN_CALL = "margin_call",
+  LIQUIDATION = "liquidation",
+  ADMIN_FORCED = "admin_forced",
 }
 
 enum ClosureStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  PARTIAL = 'partial',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled',
+  PENDING = "pending",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  PARTIAL = "partial",
+  FAILED = "failed",
+  CANCELLED = "cancelled",
 }
 
 interface PositionClosure {
-  id: UUID,
-  position_id: UUID,
-  user_id: UUID,
-  reason: ClosureReason,
-  status: ClosureStatus,
-  
+  id: UUID;
+  position_id: UUID;
+  user_id: UUID;
+  reason: ClosureReason;
+  status: ClosureStatus;
+
   // Closure Details
-  entry_price: number,
-  exit_price: number,
-  quantity: number,
-  partial_quantity?: number,
-  
+  entry_price: number;
+  exit_price: number;
+  quantity: number;
+  partial_quantity?: number;
+
   // P&L
-  realized_pnl: number,
-  pnl_percentage: number,
-  
+  realized_pnl: number;
+  pnl_percentage: number;
+
   // Costs
-  commission: number,
-  slippage: number,
-  
+  commission: number;
+  slippage: number;
+
   // Timing
-  initiated_at: timestamp,
-  completed_at?: timestamp,
-  hold_duration_seconds: number,
-  
+  initiated_at: timestamp;
+  completed_at?: timestamp;
+  hold_duration_seconds: number;
+
   // Metadata
-  notes?: string,
-  created_at: timestamp,
-  updated_at: timestamp,
+  notes?: string;
+  created_at: timestamp;
+  updated_at: timestamp;
 }
 ```
 
@@ -1914,31 +2023,31 @@ CREATE TABLE position_closures (
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   reason closure_reason NOT NULL,
   status closure_status NOT NULL DEFAULT 'pending'::closure_status,
-  
+
   -- Closure Details
   entry_price NUMERIC(15, 4) NOT NULL,
   exit_price NUMERIC(15, 4) NOT NULL,
   quantity NUMERIC(20, 4) NOT NULL,
   partial_quantity NUMERIC(20, 4),
-  
+
   -- P&L
   realized_pnl NUMERIC(15, 2) NOT NULL,
   pnl_percentage NUMERIC(10, 4) NOT NULL,
-  
+
   -- Costs
   commission NUMERIC(15, 2) NOT NULL DEFAULT 0,
   slippage NUMERIC(10, 4) NOT NULL DEFAULT 0,
-  
+
   -- Timing
   initiated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   completed_at TIMESTAMP WITH TIME ZONE,
   hold_duration_seconds INTEGER,
-  
+
   -- Metadata
   notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  
+
   CHECK (exit_price > 0),
   CHECK (quantity > 0),
   CHECK (hold_duration_seconds >= 0)
@@ -2011,6 +2120,7 @@ CREATE POLICY position_closures_service_role ON position_closures FOR ALL USING 
 - [x] Compliance: Closure audit trail complete and immutable (1 test) ✅
 
 **Deliverables Summary:**
+
 - ✅ positionClosureEngine.ts: 770+ lines, 15 functions, full business logic
 - ✅ positionClosureEngine.test.ts: 65 comprehensive tests (100% passing)
 - ✅ position_closure.sql: 350+ lines, 1 table, 6 indexes, RLS policies
@@ -2039,26 +2149,26 @@ CREATE POLICY position_closures_service_role ON position_closures FOR ALL USING 
   position_id: UUID,
   reason: ClosureReason,
   status: ClosureStatus,
-  
+
   // Closure Details
   entry_price: number,
   exit_price: number,
   quantity_closed: number,
   quantity_remaining?: number, // If partial
-  
+
   // P&L
   realized_pnl: number,
   pnl_percentage: number,
-  
+
   // Costs
   commission: number,
   slippage: number,
-  
+
   // State
   new_margin_level: number,
   new_available_margin: number,
   hold_duration_seconds: number,
-  
+
   // Messaging
   message: string,
   notification_sent: boolean
@@ -2131,6 +2241,7 @@ CREATE POLICY position_closures_service_role ON position_closures FOR ALL USING 
 ---
 
 **✅ TASK GROUP 3 SUMMARY:**
+
 - **1.3.1: Margin Call Detection Engine** ✅ COMPLETE (73 tests)
 - **1.3.2: Liquidation Execution Logic** ✅ COMPLETE (42 tests)
 - **1.3.3: Position Closure Automation** ✅ COMPLETE (65 tests)
@@ -2141,6 +2252,7 @@ CREATE POLICY position_closures_service_role ON position_closures FOR ALL USING 
 ---
 
 ### TASK 1.3.4: Risk Threshold Monitoring
+
 **Status:** ✅ COMPLETE (Verified & Cross-Checked)  
 **Time Est:** 5 hours (Actual: ~3 hours) - ✨ 40% time savings  
 **Owner:** AI Implementation (GitHub Copilot)  
@@ -2152,6 +2264,7 @@ CREATE POLICY position_closures_service_role ON position_closures FOR ALL USING 
 Implement comprehensive portfolio-level risk monitoring that tracks multiple risk metrics and triggers alerts when thresholds are exceeded. This system provides real-time risk assessment and protects user accounts from excessive risk exposure.
 
 **Deliverables Summary:**
+
 - ✅ riskThresholdMonitoring.ts: 550+ lines, 20+ functions, full business logic
 - ✅ riskThresholdMonitoring.test.ts: 49 comprehensive tests (100% passing)
 - ✅ risk_threshold_monitoring.sql: 400+ lines, 3 tables, 6 indexes, RLS policies
@@ -2163,6 +2276,7 @@ Implement comprehensive portfolio-level risk monitoring that tracks multiple ris
 **Total Tests (Phase 1 Backend):** 617/617 passing (100% success rate)
 
 **Location:**
+
 - File: `/src/lib/trading/riskThresholdMonitoring.ts` (NEW - canonical) ✅
 - File: `/src/lib/trading/__tests__/riskThresholdMonitoring.test.ts` (NEW - Tests) ✅
 - File: `/supabase/migrations/20251117_risk_threshold_monitoring.sql` (NEW - Database) ✅
@@ -2196,6 +2310,7 @@ For each portfolio:
 **Implementation Details:**
 
 **20+ Core Functions:**
+
 - `calculateTotalExposure()` - Sum all position notional values
 - `calculateConcentration()` - Risk by asset class
 - `calculateDrawdown()` - Current loss from peak
@@ -2208,12 +2323,14 @@ For each portfolio:
 - Plus 11+ utility and formatting functions
 
 **Risk Status Levels:**
+
 - **SAFE** – No violations, all metrics healthy
 - **WARNING** – Minor violations (concentration, correlation, VaR)
 - **CRITICAL** – Major violations (daily loss, drawdown)
 - **MONITOR** – Requires active supervision
 
 **Database Schema:**
+
 - `portfolio_risk_alerts` table (flexible alert storage)
 - `risk_metrics_snapshots` table (historical tracking)
 - `user_risk_thresholds` table (per-user customization)
@@ -2223,6 +2340,7 @@ For each portfolio:
 - Auto-update trigger for timestamp management
 
 **Edge Function (check-portfolio-risk):**
+
 - Runs on POST (user-triggered) or GET (scheduled)
 - Checks all active users for risk violations
 - Creates alerts when thresholds exceeded
@@ -2275,6 +2393,7 @@ For each portfolio:
 
 **Testing Results - All Verified:**
 ✅ **49 Unit/Integration Tests (100% passing):**
+
 - [x] 5 tests: Exposure and concentration calculations ✅
 - [x] 5 tests: Drawdown tracking and limits ✅
 - [x] 4 tests: Daily loss limit enforcement ✅
@@ -2287,6 +2406,7 @@ For each portfolio:
 - [x] 4 tests: Edge cases (large portfolios, zero equity, etc.) ✅
 
 **Key Exported Functions - All Implemented:**
+
 ```typescript
 // Configuration
 - DEFAULT_RISK_THRESHOLDS: Risk limits by type ✅
@@ -2312,6 +2432,7 @@ For each portfolio:
 ```
 
 **Integration Points - All Verified:**
+
 - ✅ Liquidation Engine (1.3.2) - Force closes when critical ✅
 - ✅ Position Closure (1.3.3) - Closure records feed into risk analysis ✅
 - ✅ Position Updates (1.2.2) - Feeds real-time P&L ✅
@@ -2320,6 +2441,7 @@ For each portfolio:
 - ✅ Risk Management UI (1.4.4) - Real-time risk display (pending)
 
 **Database Implementation - All Complete:**
+
 - [x] `portfolio_risk_alerts` table (flexible alert storage) ✅
 - [x] `risk_metrics_snapshots` table (historical tracking) ✅
 - [x] `user_risk_thresholds` table (per-user customization) ✅
@@ -2345,14 +2467,15 @@ For each portfolio:
 
 **All 4 Tasks Complete (100%)**
 
-| Task | Status | Tests | Key Features |
-|------|--------|-------|--------------|
-| 1.3.1: Margin Call Detection | ✅ COMPLETE | 73 tests | Real-time margin monitoring, alert escalation, multi-asset coverage |
-| 1.3.2: Liquidation Execution | ✅ COMPLETE | 42 tests | Force closure, worst-case pricing, atomic transactions, audit logging |
+| Task                               | Status      | Tests    | Key Features                                                                |
+| ---------------------------------- | ----------- | -------- | --------------------------------------------------------------------------- |
+| 1.3.1: Margin Call Detection       | ✅ COMPLETE | 73 tests | Real-time margin monitoring, alert escalation, multi-asset coverage         |
+| 1.3.2: Liquidation Execution       | ✅ COMPLETE | 42 tests | Force closure, worst-case pricing, atomic transactions, audit logging       |
 | 1.3.3: Position Closure Automation | ✅ COMPLETE | 65 tests | TP/SL/Trailing/Time-based/Manual closure, partial closes, priority handling |
-| 1.3.4: Risk Threshold Monitoring | ✅ COMPLETE | 49 tests | 5 risk metrics, customizable thresholds, alerts, snapshots, Edge Function |
+| 1.3.4: Risk Threshold Monitoring   | ✅ COMPLETE | 49 tests | 5 risk metrics, customizable thresholds, alerts, snapshots, Edge Function   |
 
 **Group Summary:**
+
 - Total Tasks: 4/4 (100% ✅)
 - Total Tests: 229/229 passing (100% ✅)
 - Total Code: 1900+ lines (core logic + tests + database)
@@ -2367,17 +2490,19 @@ For each portfolio:
 ## TASK GROUP 4: CORE TRADING UI (Weeks 4-5, ~65 hours)
 
 ### TASK 1.4.1: Trading Panel Order Form
+
 **Status:** ✅ COMPLETE (all components implemented and tested — 33 tests)  
 **Time Est:** 20 hours  
 **Time Actual:** ~12 hours (efficient implementation)  
 **Owner:** Frontend Dev + AI Implementation  
 **Priority:** P0 - CRITICAL  
-**Completion Date:** November 14, 2025  
+**Completion Date:** November 14, 2025
 
 **Description:**
 Implement comprehensive trading panel with order entry form supporting all order types (market, limit, stop, stop-limit, trailing stop), leverage selection, and real-time order preview with slippage and commission estimates. This is the core trading UI component users interact with to execute trades.
 
 **Location:**
+
 - File: `/src/components/trading/TradingPanel.tsx` (REFACTOR - existing partial)
 - File: `/src/components/trading/OrderForm.tsx` (NEW - extracted form component)
 - File: `/src/components/trading/OrderPreview.tsx` (NEW - order summary display)
@@ -2446,13 +2571,13 @@ Trading Panel Components:
 
 ```typescript
 // Main Components
-<TradingPanel 
+<TradingPanel
   symbol?: string,
   onOrderPlaced?: (order: Order) => void,
   onError?: (error: Error) => void
 />
 
-<OrderForm 
+<OrderForm
   symbol: string,
   onSubmit: (formData: OrderFormData) => Promise<void>,
   isLoading?: boolean,
@@ -2495,42 +2620,42 @@ useOrderPreview(symbol: string, side: 'buy'|'sell') → {
 ```typescript
 interface OrderFormData {
   // Basic
-  symbol: string,
-  side: 'long' | 'short',
-  quantity: number,
-  leverage: number,
-  
+  symbol: string;
+  side: "long" | "short";
+  quantity: number;
+  leverage: number;
+
   // Order Type
-  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop',
-  
+  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
+
   // Price levels (conditional on order type)
-  limitPrice?: number,           // For limit and stop-limit
-  stopPrice?: number,            // For stop and stop-limit
-  trailingDistance?: number,     // For trailing stop
-  
+  limitPrice?: number; // For limit and stop-limit
+  stopPrice?: number; // For stop and stop-limit
+  trailingDistance?: number; // For trailing stop
+
   // Risk Management (optional)
-  takeProfitPrice?: number,
-  stopLossPrice?: number,
-  
+  takeProfitPrice?: number;
+  stopLossPrice?: number;
+
   // Advanced
-  timeInForce?: 'GTC' | 'GTD' | 'FOK' | 'IOC',
-  expiryTime?: Date,             // For GTD
-  
+  timeInForce?: "GTC" | "GTD" | "FOK" | "IOC";
+  expiryTime?: Date; // For GTD
+
   // UI State
-  comment?: string
+  comment?: string;
 }
 
 interface OrderPreviewData {
-  executionPrice: number,
-  slippage: number,
-  commission: number,
-  marginRequired: number,
-  availableMargin: number,
-  totalOrderCost: number,
-  maxPositionSize: number,
-  riskRewardRatio: number,
-  estimatedProfitAt?: number,
-  estimatedLossAt?: number
+  executionPrice: number;
+  slippage: number;
+  commission: number;
+  marginRequired: number;
+  availableMargin: number;
+  totalOrderCost: number;
+  maxPositionSize: number;
+  riskRewardRatio: number;
+  estimatedProfitAt?: number;
+  estimatedLossAt?: number;
 }
 ```
 
@@ -2596,17 +2721,19 @@ interface OrderPreviewData {
 ---
 
 ### TASK 1.4.2: Positions Table Real-Time Display
+
 **Status:** ✅ COMPLETE (PortfolioDashboard implemented with all features and tested — 15 tests)  
 **Time Est:** 18 hours  
 **Time Actual:** ~8 hours (efficient implementation)  
 **Owner:** Frontend Dev + AI Implementation  
 **Priority:** P0 - CRITICAL  
-**Completion Date:** November 14, 2025  
+**Completion Date:** November 14, 2025
 
 **Description:**
 Implement real-time positions table showing all open positions with live P&L, margin level, and action buttons (modify, close, add to order). Table updates in real-time via Realtime subscription (1.2.3) and shows current market prices with entry prices for comparison.
 
 **Location:**
+
 - File: `/src/components/trading/PositionsTable.tsx` (REFACTOR - existing scaffold)
 - File: `/src/components/trading/PositionRow.tsx` (NEW - individual position)
 - File: `/src/components/trading/PositionActions.tsx` (NEW - action buttons)
@@ -2722,12 +2849,12 @@ usePositionsTable(options?: PositionsTableOptions) → {
 
 ```typescript
 // For each position, calculate:
-unrealizedPnL = calculateUnrealizedPnL(entry, current, quantity, side)  // 1.2.1
-pnlPercentage = (unrealizedPnL / (entryPrice * quantity)) * 100
-marginLevel = calculateMarginLevel(equity, marginUsed)  // 1.2.4
-percentOfEquity = (notionalValue / accountEquity) * 100
-priceChange = currentPrice - entryPrice
-priceChangePercent = (priceChange / entryPrice) * 100
+unrealizedPnL = calculateUnrealizedPnL(entry, current, quantity, side); // 1.2.1
+pnlPercentage = (unrealizedPnL / (entryPrice * quantity)) * 100;
+marginLevel = calculateMarginLevel(equity, marginUsed); // 1.2.4
+percentOfEquity = (notionalValue / accountEquity) * 100;
+priceChange = currentPrice - entryPrice;
+priceChangePercent = (priceChange / entryPrice) * 100;
 ```
 
 **Acceptance Criteria:** ✅ ALL MET
@@ -2791,6 +2918,7 @@ priceChangePercent = (priceChange / entryPrice) * 100
 ---
 
 ### TASK 1.4.3: Orders Table Status Tracking
+
 **Status:** ✅ COMPLETE (46 tests, 0 errors)  
 **Time Est:** 15 hours  
 **Time Actual:** ~8 hours  
@@ -2802,6 +2930,7 @@ priceChangePercent = (priceChange / entryPrice) * 100
 Implement orders table showing all orders (open, pending, filled, cancelled) with status tracking, fill history, and cancellation controls. Table shows real-time order status updates and integrates with order execution backend.
 
 **Location:**
+
 - File: `/src/components/trading/OrdersTable.tsx` ✅ COMPLETE (298 lines)
 - File: `/src/components/trading/OrderRow.tsx` ✅ COMPLETE (individual order display)
 - File: `/src/components/trading/OrderStatusBadge.tsx` ✅ COMPLETE (status indicator)
@@ -2980,6 +3109,7 @@ FILLED/CLOSED (position created)
 - ✅ Production-ready implementation
 
 **Files Created/Modified:**
+
 1. `/src/components/trading/OrdersTable.tsx` - Main orders table (298 lines)
 2. `/src/components/trading/OrderRow.tsx` - Individual order row display
 3. `/src/components/trading/OrderStatusBadge.tsx` - Status indicator component
@@ -2990,6 +3120,7 @@ FILLED/CLOSED (position created)
 8. `/src/components/trading/__tests__/OrdersTableComprehensive.test.tsx` - 46 comprehensive tests
 
 **Key Features Implemented:**
+
 - Real-time order status updates with Supabase subscription
 - Complete order detail viewing with all metrics
 - Order modification (quantity, price levels)
@@ -3004,6 +3135,7 @@ FILLED/CLOSED (position created)
 ---
 
 ### TASK 1.4.4: Portfolio Dashboard Summary
+
 **Status:** ✅ COMPLETE (All components implemented, export utilities added, 749 tests passing)  
 **Time Est:** 12 hours  
 **Time Actual:** ~10 hours  
@@ -3015,6 +3147,7 @@ FILLED/CLOSED (position created)
 Implement portfolio dashboard showing account summary (balance, equity, margin level, daily P&L), asset allocation, and performance charts. Dashboard updates in real-time as positions change and integrates with all trading metrics modules.
 
 **Location:**
+
 - File: `/src/components/trading/PortfolioDashboard.tsx` (REFACTORED - orchestration component)
 - File: `/src/components/dashboard/AccountSummary.tsx` (NEW - account metrics card)
 - File: `/src/components/dashboard/EquityChart.tsx` (ENHANCED - equity curve chart with timeframe selector, zoom/pan)
@@ -3172,6 +3305,7 @@ percentByClass = (classNotional / totalNotional) * 100
 ---
 
 ### TASK 1.4.5: Position Management UI
+
 **Status:** ✅ COMPLETE (Full UI components with virtualization implemented)  
 **Time Est:** 12-18 hours  
 **Time Actual:** ~12 hours  
@@ -3183,6 +3317,7 @@ percentByClass = (classNotional / totalNotional) * 100
 Provide a production-ready Position Management UI that enables users to view, monitor and manage open positions with fast, real-time P&L, stop-loss/take-profit controls, close/partial close flows, bulk actions, and position-level analytics. Handles 1000+ positions efficiently with virtualization.
 
 **Implemented Files:**
+
 - `/src/components/trading/PositionsTable.tsx` — Fully-featured positions table with selection and bulk actions
 - `/src/components/trading/PositionRow.tsx` — Row component with Close & Details actions
 - `/src/components/trading/PositionCloseDialog.tsx` — Confirmation dialog for partial/full close
@@ -3195,6 +3330,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - `/src/components/trading/__tests__/PositionsTableVirtualized.test.tsx` — **NEW** Performance tests for virtualization (6 tests)
 
 **Key Features Implemented:**
+
 - Real-time P&L and margin impact per position (updates every 1–5s via `useRealtimePositions`)
 - Close / partial close flow with confirmation and toast (via `usePositionClose`)
 - Bulk close selected positions (calls close hook for each selected position)
@@ -3204,12 +3340,14 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - Unit tests validating rendering, close dialog, bulk close flows, and virtualization performance
 
 **Performance Metrics (Verified):**
+
 - ✅ Render 1000 positions: 55ms (well under 1000ms target)
 - ✅ Header always visible (sticky positioning)
 - ✅ Smooth scrolling with virtualized list (only visible rows rendered)
 - ✅ Memory efficient (no lag with large datasets)
 
 **Acceptance Criteria:**
+
 - ✅ Real-time P&L and margin impact per position (updates in 1–5s)
 - ✅ Partial/Full close flow implemented and tested (confirmation + toast + server call)
 - ✅ SL/TP set/update UI available and saves to DB
@@ -3220,6 +3358,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - ✅ Comprehensive unit tests (9 tests + 6 performance tests)
 
 **Testing Checklist (completed):**
+
 - ✅ Unit test: Position row rendering and color-coded P&L (3 tests)
 - ✅ Unit test: P&L calculation helpers (`calculateUnrealizedPnL`, `calculatePnLPercentage`) (helpers tested)
 - ✅ Unit test: `useRealtimePositions` initialization and update handling (existing tests cover)
@@ -3229,16 +3368,19 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - ✅ Performance test: Render 1000 positions with virtualization (6 tests, 55ms render verified)
 
 **Dependencies Added:**
+
 - `react-window@^1.8.10` — Virtualized list rendering for performance
 - `@types/react-window@^1.8.8` — TypeScript support
 
 **Notes & Enhancements:**
+
 - Virtualization is production-ready for very large position sets (tested with 1000 rows).
 - Component structure supports easy addition of sorting/filtering via hooks.
 - Additional E2E tests can verify Edge Function interactions (ledger & fills) in staging.
 - SL/TP updates currently persist directly; can be migrated to dedicated Edge Function for validation if needed.
 
 **Files Created/Modified:**
+
 1. `/src/components/trading/PositionsTable.tsx` — Main positions table
 2. `/src/components/trading/PositionRow.tsx` — Row component
 3. `/src/components/trading/PositionCloseDialog.tsx` — Close confirmation
@@ -3249,15 +3391,16 @@ Provide a production-ready Position Management UI that enables users to view, mo
 8. `/package.json` — Added react-window dependencies
 
 **Build & Test Status:**
+
 - ✅ TypeScript: 0 errors
 - ✅ Build: ✓ built successfully
 - ✅ Tests: 758 passing (added 15 new tests for TASK 1.4.5)
 - ✅ No breaking changes to existing codebase
 - ✅ Production-ready implementation
 
-
 **✅ TASK GROUP 4 SUMMARY:**
-- **1.4.1: Trading Panel Order Form** ✅ COMPLETE (20h est, 12h actual, 33 tests) 
+
+- **1.4.1: Trading Panel Order Form** ✅ COMPLETE (20h est, 12h actual, 33 tests)
 - **1.4.2: Portfolio Dashboard Display** ✅ COMPLETE (18h est, 8h actual, 15 tests)
 - **1.4.3: Orders Table Status Tracking** ✅ COMPLETE (15h est, 8h actual, 46 tests)
 - **1.4.4: Portfolio Dashboard Summary** ✅ COMPLETE (12h est, 10h actual, 24 tests)
@@ -3276,12 +3419,14 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ### FINAL STATUS: 100% COMPLETE ✅
 
 **Phase 1 Total: 19 tasks, ~240 hours**
+
 - TASK GROUP 1: 100% (6/6 tasks) ✅ COMPLETE - 172 tests passing
 - TASK GROUP 2: 100% (4/4 tasks) ✅ COMPLETE - 216 tests passing
 - TASK GROUP 3: 100% (4/4 tasks) ✅ COMPLETE - 229 tests passing
 - TASK GROUP 4: 100% (5/5 tasks) ✅ COMPLETE - 141 tests passing (33+15+46+24+21)
 
 **Final Metrics:**
+
 - **Completed:** 19/19 tasks (100% ✅)
 - **In Progress:** 0 tasks
 - **Not Started:** 0 tasks
@@ -3294,6 +3439,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ### Phase 1 Achievements:
 
 **🏦 Order Execution Engine (TASK GROUP 1)**
+
 - ✅ Complete order validation framework with 8+ validation rules
 - ✅ Accurate margin calculations for all asset classes (45 test cases)
 - ✅ Realistic slippage simulation with volatility multipliers (36 test cases)
@@ -3302,18 +3448,21 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - ✅ Fully integrated execute-order Edge Function orchestrating all modules
 
 **📍 Real-Time Position Management (TASK GROUP 2)**
+
 - ✅ P&L calculation engine for long/short positions (55 test cases)
 - ✅ Real-time position update function with 500ms latency (51 test cases)
 - ✅ Realtime subscription with auto-reconnection & debouncing (46 test cases)
 - ✅ Margin monitoring with alerts at critical thresholds (64 test cases)
 
 **⚠️ Risk Management & Liquidation (TASK GROUP 3)**
+
 - ✅ Margin call detection with escalation logic (73 test cases)
 - ✅ Automatic liquidation engine protecting against overdraft (42 test cases)
 - ✅ Position closure automation with configurable rules (65 test cases)
 - ✅ Comprehensive risk threshold monitoring (49 test cases)
 
 **💹 Core Trading UI (TASK GROUP 4)**
+
 - ✅ Trading panel order form with live preview calculations (33 test cases)
 - ✅ Portfolio dashboard with equity curve & asset allocation (15 test cases)
 - ✅ Orders table with real-time status tracking (46 test cases)
@@ -3323,6 +3472,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ### Production-Ready Deliverables:
 
 **Backend Systems (14 Tasks):**
+
 - 7 core trading modules in TypeScript/Deno
 - 9 Supabase Edge Functions (execute-order, update-positions, check-margin-levels, etc.)
 - 4 database migrations with 50+ tables/functions/triggers
@@ -3330,6 +3480,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - Comprehensive error handling and transaction safety
 
 **Frontend Systems (5 Tasks):**
+
 - 28 React components (forms, tables, dialogs, charts, cards)
 - 9 custom React hooks for data management
 - Real-time subscriptions with 100ms debouncing
@@ -3337,6 +3488,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - Full keyboard accessibility and ARIA labels
 
 **Testing & Quality:**
+
 - 758 unit/integration tests (100% passing)
 - 0 TypeScript compilation errors
 - 0 ESLint errors (strict rules enforced)
@@ -3344,12 +3496,13 @@ Provide a production-ready Position Management UI that enables users to view, mo
 - Performance optimized: virtualization, memoization, lazy loading
 
 ### Ready for Deployment:
+
 ✅ All systems production-ready  
 ✅ Zero critical issues  
 ✅ Full test coverage  
 ✅ Documentation complete  
 ✅ Performance verified  
-✅ Security hardened  
+✅ Security hardened
 
 **Next Phase (Phase 2: Account & KYC Management) can begin immediately.**
 
@@ -3358,11 +3511,13 @@ Provide a production-ready Position Management UI that enables users to view, mo
 # PHASE 2: ACCOUNT & KYC MANAGEMENT (Weeks 4-6)
 
 **TASK GROUP 5: KYC & COMPLIANCE (3 tasks - ~55 hours)**
+
 - 2.1.1: Complete KYC Admin Review Workflow (35h)
 - 2.1.2: User Account Settings & Preferences (20h)
 - 2.1.3: Wallet & Deposit System (30h)
 
 **TASK GROUP 6: ANALYTICS & HISTORY (2 tasks - ~55 hours)**
+
 - 2.2.1: Trading History & Performance Analytics (40h)
 - 2.2.2: Risk Management Suite (35h)
 - 2.2.3: Price Alerts & Notifications (25h)
@@ -3372,6 +3527,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 # PHASE 3: COPY TRADING (Weeks 8-10)
 
 **TASK GROUP 7: COPY TRADING SYSTEM (2 tasks - ~80 hours)**
+
 - 3.1.1: Leaderboard & Leader Discovery (35h)
 - 3.1.2: Copy Trading Execution Engine (45h)
 
@@ -3380,6 +3536,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ## 🎯 QUICK REFERENCE: KEY FILE LOCATIONS
 
 ### Backend (Deno Edge Functions)
+
 ```
 /supabase/functions/
 ├── execute-order/index.ts ................. Core order execution
@@ -3397,6 +3554,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ```
 
 ### Frontend Hooks (React)
+
 ```
 /src/hooks/
 ├── useAuth.tsx ........................... Authentication ✅
@@ -3411,6 +3569,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ```
 
 ### Frontend Components
+
 ```
 /src/components/trading/
 ├── TradingPanel.tsx ...................... Order entry form (PARTIAL)
@@ -3428,6 +3587,7 @@ Provide a production-ready Position Management UI that enables users to view, mo
 ```
 
 ### Database Migrations
+
 ```
 /supabase/migrations/
 ├── 001_core_tables.sql ................... Users, orders, positions

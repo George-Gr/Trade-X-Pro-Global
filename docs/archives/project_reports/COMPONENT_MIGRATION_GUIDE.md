@@ -13,6 +13,7 @@ This guide helps developers migrate existing component usage to match the new co
 ## 🔄 Migration Checklist
 
 ### Phase 1: Button Components
+
 - [ ] Audit all button usage
 - [ ] Replace hardcoded colors with variants
 - [ ] Add `aria-label` to icon buttons
@@ -20,6 +21,7 @@ This guide helps developers migrate existing component usage to match the new co
 - [ ] Test all variant styles
 
 ### Phase 2: Input Components
+
 - [ ] Add explicit labels to all inputs
 - [ ] Implement error state handling
 - [ ] Add mobile optimization where needed
@@ -27,6 +29,7 @@ This guide helps developers migrate existing component usage to match the new co
 - [ ] Add aria-describedby and aria-invalid
 
 ### Phase 3: Card Components
+
 - [ ] Add elevation levels
 - [ ] Set appropriate variants
 - [ ] Test dark mode rendering
@@ -34,6 +37,7 @@ This guide helps developers migrate existing component usage to match the new co
 - [ ] Verify responsive behavior
 
 ### Phase 4: Form Components
+
 - [ ] Migrate to Form/FormField pattern
 - [ ] Implement validation with Zod
 - [ ] Add error messages with FormMessage
@@ -41,6 +45,7 @@ This guide helps developers migrate existing component usage to match the new co
 - [ ] Mark required fields
 
 ### Phase 5: Other Components
+
 - [ ] Update Dialog components
 - [ ] Fix Alert styling
 - [ ] Update Badge usage
@@ -53,15 +58,16 @@ This guide helps developers migrate existing component usage to match the new co
 ### Migration: Button Styles
 
 **Before (Incorrect)**
+
 ```tsx
 // ❌ Hardcoded colors
-<button 
+<button
   style={{
-    backgroundColor: '#6B5FFF',
-    color: 'white',
-    padding: '12px 20px',
-    fontSize: '14px',
-    borderRadius: '6px'
+    backgroundColor: "#6B5FFF",
+    color: "white",
+    padding: "12px 20px",
+    fontSize: "14px",
+    borderRadius: "6px",
   }}
   onClick={handleClick}
 >
@@ -70,16 +76,18 @@ This guide helps developers migrate existing component usage to match the new co
 ```
 
 **After (Correct)**
+
 ```tsx
 // ✅ Design system buttons
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 <Button variant="default" onClick={handleClick}>
   Click me
-</Button>
+</Button>;
 ```
 
 **Benefits:**
+
 - Consistent styling across app
 - Automatic dark mode support
 - Proper accessibility
@@ -91,9 +99,10 @@ import { Button } from '@/components/ui/button'
 ### Migration: Input with Label & Validation
 
 **Before (Incorrect)**
+
 ```tsx
 // ❌ No label, no error handling
-<input 
+<input
   type="email"
   placeholder="Email"
   onChange={(e) => setEmail(e.target.value)}
@@ -101,6 +110,7 @@ import { Button } from '@/components/ui/button'
 ```
 
 **After (Correct)**
+
 ```tsx
 // ✅ Proper label and error handling
 import { Input } from '@/components/ui/input'
@@ -120,7 +130,7 @@ const form = useForm({ resolver: zodResolver(schema) })
       <FormItem>
         <FormLabel>Email</FormLabel>
         <FormControl>
-          <Input 
+          <Input
             type="email"
             placeholder="user@example.com"
             {...field}
@@ -134,6 +144,7 @@ const form = useForm({ resolver: zodResolver(schema) })
 ```
 
 **Benefits:**
+
 - Accessible label
 - Built-in validation
 - Error display
@@ -145,14 +156,15 @@ const form = useForm({ resolver: zodResolver(schema) })
 ### Migration: Card Elevation System
 
 **Before (Incorrect)**
+
 ```tsx
 // ❌ No elevation or hierarchy
-<div 
+<div
   style={{
-    border: '1px solid #DDD',
-    borderRadius: '8px',
-    padding: '16px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+    border: "1px solid #DDD",
+    borderRadius: "8px",
+    padding: "16px",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
   }}
 >
   Card content
@@ -160,21 +172,21 @@ const form = useForm({ resolver: zodResolver(schema) })
 ```
 
 **After (Correct)**
+
 ```tsx
 // ✅ Proper elevation and semantics
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 <Card elevation="1" variant="primary">
   <CardHeader>
     <CardTitle>My Card</CardTitle>
   </CardHeader>
-  <CardContent>
-    Card content
-  </CardContent>
-</Card>
+  <CardContent>Card content</CardContent>
+</Card>;
 ```
 
 **Benefits:**
+
 - Visual hierarchy
 - Consistent elevation levels
 - Dark mode support
@@ -186,12 +198,13 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 ### Migration: Error Messages
 
 **Before (Incorrect)**
+
 ```tsx
 // ❌ Unstructured error handling
 const [error, setError] = React.useState('')
 
 <div>
-  <input 
+  <input
     type="text"
     onChange={(e) => {
       const value = e.target.value
@@ -204,6 +217,7 @@ const [error, setError] = React.useState('')
 ```
 
 **After (Correct)**
+
 ```tsx
 // ✅ Proper form validation and errors
 const schema = z.object({
@@ -230,6 +244,7 @@ const form = useForm({ resolver: zodResolver(schema) })
 ```
 
 **Benefits:**
+
 - Structured validation
 - Auto-managed error state
 - Consistent error styling
@@ -243,6 +258,7 @@ const form = useForm({ resolver: zodResolver(schema) })
 ### Button: Icon Button
 
 **Pattern: Adding aria-label**
+
 ```tsx
 // Before: Inaccessible
 <Button size="icon">
@@ -258,11 +274,12 @@ const form = useForm({ resolver: zodResolver(schema) })
 ### Button: Loading State
 
 **Pattern: Disable during loading**
+
 ```tsx
 // Before: Manual management
 const [loading, setLoading] = React.useState(false)
 
-<button 
+<button
   disabled={loading}
   onClick={async () => {
     setLoading(true)
@@ -296,12 +313,13 @@ const [loading, setLoading] = React.useState(false)
 ### Input: Mobile Optimization
 
 **Pattern: Mobile-friendly inputs**
+
 ```tsx
 // Before: Small on mobile
 <Input type="tel" placeholder="(555) 000-0000" />
 
 // After: Mobile optimized
-<Input 
+<Input
   type="tel"
   keyboardType="tel"
   mobileOptimized
@@ -313,9 +331,10 @@ const [loading, setLoading] = React.useState(false)
 ### Input: Error State
 
 **Pattern: Show errors properly**
+
 ```tsx
 // Before: No visual feedback
-<Input 
+<Input
   value={email}
   onChange={(e) => setEmail(e.target.value)}
 />
@@ -339,9 +358,10 @@ const [loading, setLoading] = React.useState(false)
 ### Card: Interactive Cards
 
 **Pattern: Clickable cards**
+
 ```tsx
 // Before: Not keyboard accessible
-<div 
+<div
   onClick={() => navigate(`/item/${id}`)}
   style={{ cursor: 'pointer', padding: '16px' }}
 >
@@ -349,8 +369,8 @@ const [loading, setLoading] = React.useState(false)
 </div>
 
 // After: Accessible
-<Card 
-  interactive 
+<Card
+  interactive
   onClick={() => navigate(`/item/${id}`)}
   role="button"
   tabIndex={0}
@@ -367,6 +387,7 @@ const [loading, setLoading] = React.useState(false)
 ### Form: Complete Form
 
 **Pattern: Full form implementation**
+
 ```tsx
 // Before: Basic form
 <form onSubmit={(e) => {
@@ -376,18 +397,18 @@ const [loading, setLoading] = React.useState(false)
   handleLogin({ email, password })
 }}>
   <label>Email</label>
-  <input 
+  <input
     value={email}
     onChange={(e) => setEmail(e.target.value)}
   />
-  
+
   <label>Password</label>
-  <input 
+  <input
     type="password"
     value={password}
     onChange={(e) => setPassword(e.target.value)}
   />
-  
+
   <button type="submit">Login</button>
 </form>
 
@@ -417,7 +438,7 @@ const form = useForm({
         </FormItem>
       )}
     />
-    
+
     <FormField
       control={form.control}
       name="password"
@@ -431,7 +452,7 @@ const form = useForm({
         </FormItem>
       )}
     />
-    
+
     <Button type="submit" className="w-full">Sign In</Button>
   </form>
 </Form>
@@ -444,6 +465,7 @@ const form = useForm({
 After migration, verify:
 
 ### Accessibility
+
 - [ ] All inputs have labels
 - [ ] Focus rings visible
 - [ ] Color contrast 4.5:1
@@ -451,6 +473,7 @@ After migration, verify:
 - [ ] Screen reader compatible
 
 ### Visual Design
+
 - [ ] Consistent colors (use variants)
 - [ ] Proper spacing (4/8px grid)
 - [ ] Correct sizing (touch-friendly)
@@ -458,6 +481,7 @@ After migration, verify:
 - [ ] Responsive on all breakpoints
 
 ### Code Quality
+
 - [ ] No hardcoded colors
 - [ ] No inline styles
 - [ ] Using Tailwind classes
@@ -465,6 +489,7 @@ After migration, verify:
 - [ ] No console errors/warnings
 
 ### Mobile Experience
+
 - [ ] 44px minimum touch targets
 - [ ] Proper keyboard types
 - [ ] Responsive layout
@@ -476,30 +501,35 @@ After migration, verify:
 ## 🚀 Implementation Strategy
 
 ### Step 1: Plan
+
 - Identify components to migrate
 - Prioritize high-traffic pages
 - Estimate effort per component
 - Schedule sprints
 
 ### Step 2: Document
+
 - Create task list per component
 - Document expected changes
 - Plan testing approach
 - Identify potential issues
 
 ### Step 3: Implement
+
 - Migrate one component at a time
 - Test thoroughly
 - Get code review
 - Deploy to staging
 
 ### Step 4: Test
+
 - Visual regression testing
 - Accessibility audit
 - Mobile testing
 - User feedback
 
 ### Step 5: Deploy
+
 - Deploy to production
 - Monitor for issues
 - Document changes
@@ -510,18 +540,21 @@ After migration, verify:
 ## 📊 Metrics to Track
 
 ### Before Migration
+
 - Line count of custom CSS
 - Number of hardcoded colors
 - Accessibility violations
 - Mobile usability score
 
 ### After Migration
+
 - Reduced custom CSS
 - Zero hardcoded colors
 - 100% accessibility compliance
 - Improved mobile scores
 
 ### Success Criteria
+
 - 80%+ component usage of design system
 - 100% accessibility compliance
 - Zero hardcoded color violations
@@ -532,7 +565,9 @@ After migration, verify:
 ## 🆘 Troubleshooting
 
 ### Issue: Button style not applying
+
 **Solution**: Check component variant and size props are correct
+
 ```tsx
 // Check these:
 <Button variant="default">      {/* Check variant exists */}
@@ -541,7 +576,9 @@ After migration, verify:
 ```
 
 ### Issue: Form validation not working
+
 **Solution**: Ensure resolver is properly set
+
 ```tsx
 // Must have:
 const form = useForm({
@@ -551,16 +588,22 @@ const form = useForm({
 ```
 
 ### Issue: Card shadow not visible
+
 **Solution**: Check elevation prop is set
+
 ```tsx
 // Add elevation:
-<Card elevation="1">            {/* Elevation required */}
+<Card elevation="1">
+  {" "}
+  {/* Elevation required */}
   <CardContent>Content</CardContent>
 </Card>
 ```
 
 ### Issue: Input not mobile optimized
+
 **Solution**: Add mobile props
+
 ```tsx
 // For mobile:
 <Input

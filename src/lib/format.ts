@@ -27,7 +27,7 @@ export interface FormatOptions {
  */
 export function formatPrice(
   value: number | string | null | undefined,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): string {
   if (value === null || value === undefined || value === "") {
     return "—";
@@ -60,7 +60,7 @@ export function formatPrice(
  */
 export function formatAmount(
   value: number | string | null | undefined,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): string {
   if (value === null || value === undefined || value === "") {
     return "—";
@@ -93,7 +93,7 @@ export function formatAmount(
  */
 export function formatPercent(
   value: number | string | null | undefined,
-  options: { decimals?: number; showSign?: boolean; locale?: string } = {}
+  options: { decimals?: number; showSign?: boolean; locale?: string } = {},
 ): string {
   if (value === null || value === undefined || value === "") {
     return "—";
@@ -121,7 +121,7 @@ export function formatPercent(
  */
 export function formatQuantity(
   value: number | string | null | undefined,
-  options: { decimals?: number; locale?: string; compact?: boolean } = {}
+  options: { decimals?: number; locale?: string; compact?: boolean } = {},
 ): string {
   if (value === null || value === undefined || value === "") {
     return "—";
@@ -147,7 +147,7 @@ export function formatQuantity(
  */
 export function formatCompactNumber(
   value: number | string | null | undefined,
-  options: { decimals?: number; locale?: string } = {}
+  options: { decimals?: number; locale?: string } = {},
 ): string {
   if (value === null || value === undefined || value === "") {
     return "—";
@@ -173,7 +173,7 @@ export function formatCompactNumber(
  */
 export function formatPnL(
   value: number | string | null | undefined,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): { formatted: string; type: "positive" | "negative" | "neutral" } {
   if (value === null || value === undefined || value === "") {
     return { formatted: "—", type: "neutral" };
@@ -185,7 +185,8 @@ export function formatPnL(
   }
 
   const formatted = formatAmount(numValue, { ...options, showCurrency: true });
-  const type = numValue > 0 ? "positive" : numValue < 0 ? "negative" : "neutral";
+  const type =
+    numValue > 0 ? "positive" : numValue < 0 ? "negative" : "neutral";
 
   return { formatted, type };
 }

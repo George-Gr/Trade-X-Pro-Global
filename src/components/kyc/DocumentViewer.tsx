@@ -2,7 +2,13 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { formatToastError } from "@/lib/errorMessageService";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Loader2, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -12,7 +18,11 @@ interface DocumentViewerProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) => {
+const DocumentViewer = ({
+  filePath,
+  open,
+  onOpenChange,
+}: DocumentViewerProps) => {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,10 +45,10 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
       const ext = filePath.split(".").pop()?.toLowerCase();
       setFileType(ext || "");
     } catch (error) {
-      const actionableError = formatToastError(error, 'data_fetching');
+      const actionableError = formatToastError(error, "data_fetching");
       toast({
         ...actionableError,
-        variant: actionableError.variant as "default" | "destructive"
+        variant: actionableError.variant as "default" | "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -123,9 +133,9 @@ const DocumentViewer = ({ filePath, open, onOpenChange }: DocumentViewerProps) =
             </div>
           )}
         </div>
-        
+
         <DialogFooter>
-          <Button 
+          <Button
             onClick={() => onOpenChange(false)}
             variant="outline"
             ref={closeButtonRef}

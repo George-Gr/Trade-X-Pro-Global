@@ -30,7 +30,7 @@ export const TradingPanelConfirmationDialog = ({
   onConfirm,
   onCancel,
 }: TradingPanelConfirmationDialogProps) => {
-  const isBuy = pendingOrder?.side === 'buy';
+  const isBuy = pendingOrder?.side === "buy";
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -50,24 +50,38 @@ export const TradingPanelConfirmationDialog = ({
                 <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground text-sm">Side</span>
-                    <span className={cn(
-                      "font-semibold text-sm px-2 py-0.5 rounded",
-                      isBuy ? "bg-profit/10 text-profit" : "bg-loss/10 text-loss"
-                    )}>
+                    <span
+                      className={cn(
+                        "font-semibold text-sm px-2 py-0.5 rounded",
+                        isBuy
+                          ? "bg-profit/10 text-profit"
+                          : "bg-loss/10 text-loss",
+                      )}
+                    >
                       {pendingOrder.side.toUpperCase()}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground text-sm">Quantity</span>
-                    <span className="font-mono font-semibold text-sm">{pendingOrder.quantity} lots</span>
+                    <span className="text-muted-foreground text-sm">
+                      Quantity
+                    </span>
+                    <span className="font-mono font-semibold text-sm">
+                      {pendingOrder.quantity} lots
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground text-sm">Type</span>
-                    <span className="font-semibold text-sm capitalize">{pendingOrder.type.replace('_', '-')}</span>
+                    <span className="font-semibold text-sm capitalize">
+                      {pendingOrder.type.replace("_", "-")}
+                    </span>
                   </div>
                   <div className="flex justify-between border-t border-border pt-2">
-                    <span className="text-muted-foreground text-sm">Leverage</span>
-                    <span className="font-mono font-semibold text-sm">1:{assetLeverage}</span>
+                    <span className="text-muted-foreground text-sm">
+                      Leverage
+                    </span>
+                    <span className="font-mono font-semibold text-sm">
+                      1:{assetLeverage}
+                    </span>
                   </div>
                 </div>
               )}
@@ -88,9 +102,9 @@ export const TradingPanelConfirmationDialog = ({
             disabled={isExecuting}
             className={cn(
               "flex-1 font-semibold",
-              isBuy 
-                ? "bg-profit hover:bg-profit/90 text-white" 
-                : "bg-loss hover:bg-loss/90 text-white"
+              isBuy
+                ? "bg-profit hover:bg-profit/90 text-white"
+                : "bg-loss hover:bg-loss/90 text-white",
             )}
           >
             {isExecuting ? (
@@ -99,7 +113,7 @@ export const TradingPanelConfirmationDialog = ({
                 Executing...
               </>
             ) : (
-              'Execute Order'
+              "Execute Order"
             )}
           </Button>
         </AlertDialogFooter>

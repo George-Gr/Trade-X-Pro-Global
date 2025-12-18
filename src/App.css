@@ -54,7 +54,9 @@
   border: 1px solid hsl(var(--border));
   background: hsl(var(--card));
   color: hsl(var(--card-foreground));
-  box-shadow: 0 1px 3px hsl(var(--shadow) / 0.1), 0 1px 2px hsl(var(--shadow) / 0.08);
+  box-shadow:
+    0 1px 3px hsl(var(--shadow) / 0.1),
+    0 1px 2px hsl(var(--shadow) / 0.08);
 }
 
 /* Enhanced text contrast for documentation links */
@@ -118,13 +120,15 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   .logo {
     animation: none !important;
   }
@@ -138,12 +142,13 @@
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
+
   a {
     text-decoration: underline;
   }
-  
-  .sr-skip-link, .sr-only {
+
+  .sr-skip-link,
+  .sr-only {
     display: none !important;
   }
 }

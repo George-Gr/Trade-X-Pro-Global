@@ -7,6 +7,7 @@ When the sidebar was toggled from its expanded state to a collapsed state, the m
 ### Visual Representation
 
 **Before Fix:**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ HEADER                                                       │
@@ -31,6 +32,7 @@ Toggle sidebar → collapsed (4rem)
 ```
 
 **After Fix:**
+
 ```
 ┌────┬──────────────────────────────────────────────────────┐
 │    │ HEADER                                               │
@@ -51,6 +53,7 @@ The issue was in `/src/components/layout/AuthenticatedLayoutInner.tsx`. The main
 ```
 
 This meant:
+
 - When sidebar expanded: `md:ml-[var(--sidebar-width)]` (16rem) ✅
 - When sidebar collapsed: Still `md:ml-[var(--sidebar-width)]` (16rem) ❌ **BUG**
 
@@ -63,10 +66,12 @@ The `md:ml-[var(--sidebar-width)]` is a Tailwind utility class that is static an
 **File:** `src/components/layout/AuthenticatedLayoutInner.tsx`
 
 **Changes:**
+
 - Added `isMobile` and `state` extraction from `useSidebar()` hook
 - Implemented conditional className logic that responds to sidebar state
 
 **Before:**
+
 ```tsx
 const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   children,
@@ -82,6 +87,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
 ```
 
 **After:**
+
 ```tsx
 const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   children,
@@ -93,7 +99,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   return (
     <div className="min-h-screen w-full bg-background">
       <AppSidebar />
-      <div 
+      <div
         className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
           isMobile ? '' : state === 'expanded' ? 'md:ml-[var(--sidebar-width)]' : 'md:ml-[var(--sidebar-width-icon)]'
         }`}
@@ -101,6 +107,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
 ```
 
 **Logic:**
+
 - If on mobile: No margin (sidebar is in a drawer/sheet modal)
 - If on desktop and sidebar is expanded: `md:ml-[var(--sidebar-width)]` (16rem / 256px)
 - If on desktop and sidebar is collapsed: `md:ml-[var(--sidebar-width-icon)]` (4rem / 64px)
@@ -134,6 +141,7 @@ Added peer selectors to handle margin transitions at the CSS level:
 ```
 
 This provides:
+
 - A CSS-based fallback that automatically responds to the sidebar's `data-state` attribute
 - Proper cubic-bezier easing for smooth transitions
 - Handling for the "offcanvas" variant where the sidebar disappears completely
@@ -153,29 +161,34 @@ This provides:
 ### Technical Details
 
 **Sidebar Constants (from `src/components/ui/sidebar.tsx`):**
+
 ```typescript
-const SIDEBAR_WIDTH = "16rem";          // 256px (expanded)
-const SIDEBAR_WIDTH_ICON = "4rem";      // 64px (collapsed)
+const SIDEBAR_WIDTH = "16rem"; // 256px (expanded)
+const SIDEBAR_WIDTH_ICON = "4rem"; // 64px (collapsed)
 ```
 
 **CSS Variables (available in all components):**
+
 ```css
 --sidebar-width: 16rem;
 --sidebar-width-icon: 4rem;
 ```
 
 **Transition Timing:**
+
 - Duration: 300ms (matching Tailwind's `duration-300`)
 - Easing: `ease-in-out` (standard cubic)
 
 ## Files Modified
 
 ### 1. `src/components/layout/AuthenticatedLayoutInner.tsx`
+
 - **Lines 51**: Added `isMobile` to destructuring from `useSidebar()`
 - **Lines 84-87**: Changed from static className to dynamic conditional className
 - **Impact**: Main content now responds to sidebar state changes
 
 ### 2. `src/styles/sidebar-layout-fix.css`
+
 - **Lines 47-65**: Added CSS peer selectors for state-based margin transitions
 - **Impact**: CSS-level fallback provides extra reliability and smooth transitions
 
@@ -217,16 +230,17 @@ const SIDEBAR_WIDTH_ICON = "4rem";      // 64px (collapsed)
 
 ## Browser Compatibility
 
-| Browser | Desktop | Mobile | Status |
-|---------|---------|--------|--------|
-| Chrome/Chromium | ✅ | ✅ | Full support |
-| Firefox | ✅ | ✅ | Full support |
-| Safari | ✅ | ✅ | Full support |
-| Edge | ✅ | ✅ | Full support |
+| Browser         | Desktop | Mobile | Status       |
+| --------------- | ------- | ------ | ------------ |
+| Chrome/Chromium | ✅      | ✅     | Full support |
+| Firefox         | ✅      | ✅     | Full support |
+| Safari          | ✅      | ✅     | Full support |
+| Edge            | ✅      | ✅     | Full support |
 
 ## Performance Impact
 
 ✅ **Minimal Performance Impact**
+
 - Uses existing CSS variables (no additional repaints)
 - Transition is GPU-accelerated (margin-left uses `will-change`)
 - No JavaScript loops or expensive calculations
@@ -235,6 +249,7 @@ const SIDEBAR_WIDTH_ICON = "4rem";      // 64px (collapsed)
 ## Accessibility Considerations
 
 ✅ **Maintains WCAG 2.1 AA Compliance**
+
 - Transition doesn't interfere with keyboard navigation
 - Focus management is unaffected
 - Screen readers still announce content correctly
@@ -260,6 +275,7 @@ git revert <commit-hash>
 ```
 
 Or manually revert:
+
 1. In `AuthenticatedLayoutInner.tsx`: Change line 84-87 back to:
    ```tsx
    <div className="flex flex-col min-h-screen md:ml-[var(--sidebar-width)] transition-[margin-left] duration-300 ease-in-out">
@@ -269,11 +285,13 @@ Or manually revert:
 ## Related Issues and Future Improvements
 
 ### Related Components
+
 - `src/components/ui/sidebar.tsx` - Sidebar state management
 - `src/components/layout/AppSidebar.tsx` - Navigation sidebar
 - `src/components/ui/sidebarContext.tsx` - Context provider
 
 ### Potential Future Improvements
+
 - Add resize handler for dynamic width calculations
 - Add animation preferences support (prefers-reduced-motion)
 - Consider using CSS Grid for more robust layout management
@@ -282,6 +300,7 @@ Or manually revert:
 ## Deployment Notes
 
 ✅ **Safe to Deploy**
+
 - No database changes required
 - No environment variables needed
 - No dependency updates

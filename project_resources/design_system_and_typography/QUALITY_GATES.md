@@ -46,6 +46,7 @@ By catching issues early in the development process, we maintain code quality an
 All these checks run automatically before you commit code:
 
 #### 1. Design System Compliance
+
 ```bash
 ✓ No hardcoded colors (must use CSS variables)
 ✓ No hardcoded font sizes (must use text-* classes)
@@ -56,6 +57,7 @@ All these checks run automatically before you commit code:
 ```
 
 #### 2. TypeScript Type Checking
+
 ```bash
 ✓ No `any` types without justification
 ✓ No unused imports
@@ -65,6 +67,7 @@ All these checks run automatically before you commit code:
 ```
 
 #### 3. ESLint Rules
+
 ```bash
 ✓ React best practices
 ✓ React Hooks rules
@@ -75,6 +78,7 @@ All these checks run automatically before you commit code:
 ```
 
 #### 4. CSS/Styling Validation
+
 ```bash
 ✓ No hardcoded colors in inline styles
 ✓ Proper Tailwind class usage
@@ -83,6 +87,7 @@ All these checks run automatically before you commit code:
 ```
 
 #### 5. Accessibility Checks
+
 ```bash
 ✓ Interactive elements have labels
 ✓ Images have alt text
@@ -92,6 +97,7 @@ All these checks run automatically before you commit code:
 ```
 
 #### 6. File Size Checks
+
 ```bash
 ✓ Component files under 500 lines
 ✓ CSS files under 2000 lines
@@ -144,26 +150,26 @@ className="text-lg"          // 18px
 
 ```typescript
 // ❌ FORBIDDEN: Non-grid spacing
-padding: '13px'
-margin: '18px'
-gap: '22px'
+padding: "13px";
+margin: "18px";
+gap: "22px";
 
 // ✅ CORRECT: Use grid-aligned values (4/8px)
-padding: '16px'   // 2x8px
-margin: '12px'    // 3x4px
-gap: '8px'        // 1x8px
+padding: "16px"; // 2x8px
+margin: "12px"; // 3x4px
+gap: "8px"; // 1x8px
 ```
 
 ```typescript
 // ❌ FORBIDDEN: Arbitrary border-radius
-borderRadius: '7px'
-borderRadius: '11px'
-borderRadius: '13px'
+borderRadius: "7px";
+borderRadius: "11px";
+borderRadius: "13px";
 
 // ✅ CORRECT: Use standard values
-borderRadius: '4px'   // .radius-xs
-borderRadius: '8px'   // .radius-md
-borderRadius: '12px'  // .radius-lg
+borderRadius: "4px"; // .radius-xs
+borderRadius: "8px"; // .radius-md
+borderRadius: "12px"; // .radius-lg
 ```
 
 ### Design System Validation Script
@@ -196,6 +202,7 @@ All color values must use CSS variables:
 ```
 
 Available color variables:
+
 - `--primary`, `--secondary`, `--accent`
 - `--background`, `--background-secondary`
 - `--foreground`, `--foreground-secondary`, `--foreground-muted`
@@ -211,6 +218,7 @@ Available color variables:
 All code must meet or exceed WCAG 2.1 Level AA:
 
 #### 1. Keyboard Navigation
+
 ```typescript
 // ✅ Good: All interactive elements keyboard accessible
 <button onClick={handleClick} className="focus-ring">
@@ -224,6 +232,7 @@ All code must meet or exceed WCAG 2.1 Level AA:
 ```
 
 #### 2. Screen Reader Support
+
 ```typescript
 // ✅ Good: Proper ARIA attributes
 <button
@@ -240,6 +249,7 @@ All code must meet or exceed WCAG 2.1 Level AA:
 ```
 
 #### 3. Color Contrast
+
 ```typescript
 // ✅ Good: 4.5:1 contrast ratio
 <p className="text-foreground bg-background">
@@ -253,6 +263,7 @@ All code must meet or exceed WCAG 2.1 Level AA:
 ```
 
 #### 4. Focus Indicators
+
 ```typescript
 // ✅ Good: Visible focus ring
 <input className="focus-ring" type="text" />
@@ -262,6 +273,7 @@ All code must meet or exceed WCAG 2.1 Level AA:
 ```
 
 #### 5. Touch Targets
+
 ```typescript
 // ✅ Good: 44px minimum for mobile
 <button className="h-12 px-4">Click me</button>
@@ -314,11 +326,11 @@ Rules enforced in eslint.config.js:
 
 ```javascript
 // ❌ Forbidden patterns
-debugger;                          // Remove debug statements
-console.log('debug');              // Use proper logging
-var x = 10;                        // Use const/let
-function unused() {}               // Remove unused functions
-import { x } from 'module';        // Use imported variables
+debugger; // Remove debug statements
+console.log("debug"); // Use proper logging
+var x = 10; // Use const/let
+function unused() {} // Remove unused functions
+import { x } from "module"; // Use imported variables
 ```
 
 ### Component Code Style
@@ -378,7 +390,7 @@ export function Button({ ...props }) {
 export const OrderCard: React.FC<OrderCardProps> = ({
   order,
   onEdit,
-  onCancel
+  onCancel,
 }) => {
   // ...
 };
@@ -398,11 +410,11 @@ export const OrderCard: React.FC<OrderCardProps> = ({
 
 Track these Core Web Vitals:
 
-| Metric | Good | Needs Improvement |
-|--------|------|-------------------|
-| LCP (Largest Contentful Paint) | < 2.5s | > 4s |
-| FID (First Input Delay) | < 100ms | > 300ms |
-| CLS (Cumulative Layout Shift) | < 0.1 | > 0.25 |
+| Metric                         | Good    | Needs Improvement |
+| ------------------------------ | ------- | ----------------- |
+| LCP (Largest Contentful Paint) | < 2.5s  | > 4s              |
+| FID (First Input Delay)        | < 100ms | > 300ms           |
+| CLS (Cumulative Layout Shift)  | < 0.1   | > 0.25            |
 
 ### Optimization Checklist
 
@@ -446,9 +458,9 @@ describe('Button component', () => {
   it('should call onClick handler when clicked', () => {
     const handleClick = vi.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     fireEvent.click(screen.getByRole('button'));
-    
+
     expect(handleClick).toHaveBeenCalledOnce();
   });
 });
@@ -540,6 +552,7 @@ Follow Conventional Commits:
 Types: `feat`, `fix`, `chore`, `refactor`, `test`, `docs`, `style`
 
 Examples:
+
 ```bash
 ✅ git commit -m "feat(button): add loading state support"
 ✅ git commit -m "fix(accessibility): improve focus indicator visibility"
@@ -560,6 +573,7 @@ When creating a PR:
 
 ```markdown
 ## Changes
+
 - [ ] Design system compliance verified
 - [ ] Accessibility tested (keyboard nav, screen readers)
 - [ ] Mobile responsiveness tested
@@ -568,13 +582,16 @@ When creating a PR:
 - [ ] No new bundle size warnings
 
 ## Testing
+
 Tested in:
+
 - [ ] Chrome/Firefox
 - [ ] Mobile (iPhone/Android)
 - [ ] Dark mode
 - [ ] Reduced motion
 
 ## Screenshots
+
 [Add relevant screenshots]
 ```
 
@@ -653,5 +670,5 @@ Suggestions for improvements are welcome!
 
 ---
 
-*Last updated: December 2024*  
-*Quality Gates Version: 1.0*
+_Last updated: December 2024_  
+_Quality Gates Version: 1.0_

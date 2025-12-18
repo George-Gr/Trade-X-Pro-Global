@@ -9,6 +9,7 @@ Trade-X-Pro-Global is a sophisticated CFD (Contracts for Difference) trading pla
 ## 1. Project Overview & Fundamentals
 
 ### **Purpose and Business Model**
+
 - **Primary Goal**: Provide a professional-grade CFD trading platform with risk management
 - **Target Audience**: Retail traders seeking practice accounts with virtual funds
 - **Business Model**: Demo trading platform with KYC integration and wallet functionality
@@ -16,33 +17,36 @@ Trade-X-Pro-Global is a sophisticated CFD (Contracts for Difference) trading pla
 
 ### **Technology Stack**
 
-| Layer | Technology | Version | Purpose |
-|-------|------------|---------|---------|
-| **Framework** | React | 18.x | UI Framework |
-| **Language** | TypeScript | 5.x | Type Safety |
-| **Build Tool** | Vite | 5.x | Dev Server & Bundling |
-| **Styling** | Tailwind CSS + shadcn/ui | - | Component Library |
-| **State Management** | React Query + Context | 5.x | Data & UI State |
-| **Backend** | Supabase | 2.x | Auth, DB, Realtime |
-| **Charts** | lightweight-charts | 4.x | Price Visualization |
-| **Monitoring** | Sentry | 8.x | Error Tracking |
-| **PWA** | Vite PWA Plugin | - | Offline Support |
+| Layer                | Technology               | Version | Purpose               |
+| -------------------- | ------------------------ | ------- | --------------------- |
+| **Framework**        | React                    | 18.x    | UI Framework          |
+| **Language**         | TypeScript               | 5.x     | Type Safety           |
+| **Build Tool**       | Vite                     | 5.x     | Dev Server & Bundling |
+| **Styling**          | Tailwind CSS + shadcn/ui | -       | Component Library     |
+| **State Management** | React Query + Context    | 5.x     | Data & UI State       |
+| **Backend**          | Supabase                 | 2.x     | Auth, DB, Realtime    |
+| **Charts**           | lightweight-charts       | 4.x     | Price Visualization   |
+| **Monitoring**       | Sentry                   | 8.x     | Error Tracking        |
+| **PWA**              | Vite PWA Plugin          | -       | Offline Support       |
 
 ### **Architectural Patterns**
 
 **Strengths:**
+
 - **Component-Based Architecture**: Well-organized React component hierarchy with clear separation
 - **Hook-Centric Logic**: Heavy use of custom hooks for business logic encapsulation (30+ custom hooks)
 - **Feature-Sliced Structure**: Logical grouping by feature domains (trading, risk, portfolio)
 - **Repository Pattern**: Database abstraction through Supabase type definitions
 
 **Key Patterns Identified:**
+
 - **Provider Pattern**: Multiple context providers (Auth, Notifications, Layout)
 - **Strategy Pattern**: Pluggable risk monitoring and liquidation engines
 - **Observer Pattern**: Real-time price updates via WebSocket/Supabase subscriptions
 - **Command Pattern**: Order execution through transactional DB functions
 
 ### **Development Methodology**
+
 - **Branch Strategy**: Main branch with feature-based development
 - **Environment Configuration**: Sophisticated multi-environment setup (dev, prod)
 - **Code Generation**: Automated component generation with Lovable integration
@@ -70,12 +74,12 @@ graph TD
 
 ### **User Roles & Permissions**
 
-| Role | Permissions | Implementation |
-|------|-------------|----------------|
-| **Anonymous** | View marketing pages, register | Public routes |
-| **Authenticated User** | Trade, view portfolio, manage orders | ProtectedRoute component |
-| **KYC-Verified User** | Full trading, deposits/withdrawals | hasApprovedKyc() check |
-| **Admin** | User management, risk oversight | isAdmin flag, admin routes |
+| Role                   | Permissions                          | Implementation             |
+| ---------------------- | ------------------------------------ | -------------------------- |
+| **Anonymous**          | View marketing pages, register       | Public routes              |
+| **Authenticated User** | Trade, view portfolio, manage orders | ProtectedRoute component   |
+| **KYC-Verified User**  | Full trading, deposits/withdrawals   | hasApprovedKyc() check     |
+| **Admin**              | User management, risk oversight      | isAdmin flag, admin routes |
 
 **Critical Finding**: The `has_role` database function exists but isn't consistently enforced on the client-side navigation.
 
@@ -106,6 +110,7 @@ Based on the Supabase schema analysis:
 ### **Integration Points**
 
 **External Dependencies:**
+
 - **Finnhub API**: Market data and price feeds (API key exposed)
 - **Supabase Backend**: Full backend-as-a-service (URL + key exposed)
 - **Sentry**: Error monitoring and performance tracking
@@ -118,6 +123,7 @@ Based on the Supabase schema analysis:
 ### **Code Architecture Analysis**
 
 **Strengths:**
+
 - **Modular Hook System**: Each hook has single responsibility (e.g., `useMarginMonitoring`, `useOrderExecution`)
 - **Separation of Concerns**: Clear distinction between UI, business logic, and data layers
 - **Type Safety**: Comprehensive TypeScript types with database schema generation
@@ -127,6 +133,7 @@ Based on the Supabase schema analysis:
 **Code Smells Identified:**
 
 1. **Over-Engineered Build Configuration**
+
    ```typescript
    // vite.config.ts - Unnecessary complexity
    define: {
@@ -135,6 +142,7 @@ Based on the Supabase schema analysis:
      // ... 8 more manual definitions
    }
    ```
+
    **Issue**: Vite automatically handles env variables with `import.meta.env`. Manual definitions are redundant and error-prone.
 
 2. **Excessive Hook Dependencies**
@@ -143,10 +151,12 @@ Based on the Supabase schema analysis:
    - Circular dependency risk between trading hooks
 
 3. **Hardcoded API Keys in Source Code**
+
    ```typescript
    // supabaseBrowserClient.ts
-   const FALLBACK_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+   const FALLBACK_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
    ```
+
    **CRITICAL**: Anonymous key exposed in public repository
 
 4. **Inconsistent Error Handling**
@@ -158,6 +168,7 @@ Based on the Supabase schema analysis:
 ### **Database Design & Data Flow**
 
 **Strengths:**
+
 - **Atomic Operations**: Database functions (`execute_order_atomic`, `close_position_atomic`) ensure consistency
 - **Comprehensive Audit Trail**: Tables for fills, ledger, admin actions
 - **Real-time Capabilities**: Supabase subscriptions for live updates
@@ -170,6 +181,7 @@ Based on the Supabase schema analysis:
 4. **Missing Data Validation**: Client trusts DB responses without schema validation
 
 **Performance Concerns:**
+
 - Real-time subscriptions on high-frequency data may cause memory leaks
 - No pagination on `fills` table queries (will fail at scale)
 - Large JSON fields (`closed_positions`, `details`) not optimized
@@ -180,7 +192,7 @@ Since it's a BaaS architecture, APIs are Supabase RPC calls:
 
 ```typescript
 // Direct database function calls (no REST API layer)
-const { data, error } = await supabase.rpc('execute_order_atomic', {
+const { data, error } = await supabase.rpc("execute_order_atomic", {
   p_user_id: userId,
   p_symbol: symbol,
   // ... parameters
@@ -188,6 +200,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ```
 
 **Issues:**
+
 - **No API Gateway**: Direct client-to-DB calls bypass business logic layer
 - **No Rate Limiting**: No client-side throttling (could overwhelm backend)
 - **No Request Queue**: Concurrent order submissions could create race conditions
@@ -195,6 +208,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **Security Implementations**
 
 **✅ Implemented Security Measures:**
+
 - ProtectedRoute guards for authenticated pages
 - CSRF protection via Supabase auth
 - SQL injection prevention via Supabase prepared statements
@@ -203,6 +217,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 **❌ Critical Vulnerabilities:**
 
 1. **API Key Exposure**
+
    ```typescript
    // VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY exposed in client bundle
    // Anyone can extract and make arbitrary requests
@@ -219,6 +234,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **Performance Considerations**
 
 **✅ Optimizations Present:**
+
 - **Bundle Splitting**: Aggressive code splitting in Vite config
 - **Lazy Loading**: Route and component-level lazy loading
 - **Memoization**: React.memo on components, useMemo for calculations
@@ -236,6 +252,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **Testing Strategy & Coverage**
 
 **Current State:**
+
 - **Test Infrastructure**: Partially present (`/__tests__/` directories)
 - **Hook Testing**: Minimal coverage for critical hooks
 - **E2E Testing**: No visible Playwright/Cypress tests
@@ -249,31 +266,33 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 
 ### **Complete Feature Inventory**
 
-| Feature | Status | Implementation Quality | Complexity |
-|---------|--------|----------------------|------------|
-| **User Authentication** | ✅ Complete | Excellent (Supabase Auth) | Low |
-| **KYC Verification** | ✅ Complete | Good (Document upload) | Medium |
-| **Market Watchlists** | ✅ Complete | Excellent (Real-time) | Low |
-| **Order Placement** | ✅ Complete | Good (Atomic operations) | High |
-| **Position Management** | ✅ Complete | Excellent (Real-time PnL) | High |
-| **Risk Management** | ✅ Complete | Excellent (Monitoring engine) | High |
-| **Margin Calls** | ✅ Complete | Excellent (Automated) | High |
-| **Liquidation Engine** | ✅ Complete | Good (Transaction-based) | Critical |
-| **Portfolio Analytics** | ✅ Complete | Good (Charts) | Medium |
-| **Trading History** | ✅ Complete | Good (Filters) | Medium |
-| **Admin Dashboard** | ✅ Complete | Basic (CRUD operations) | Medium |
-| **PWA Support** | ✅ Complete | Good (Offline cache) | Low |
-| **Mobile Navigation** | ✅ Complete | Excellent (Bottom nav) | Low |
+| Feature                 | Status      | Implementation Quality        | Complexity |
+| ----------------------- | ----------- | ----------------------------- | ---------- |
+| **User Authentication** | ✅ Complete | Excellent (Supabase Auth)     | Low        |
+| **KYC Verification**    | ✅ Complete | Good (Document upload)        | Medium     |
+| **Market Watchlists**   | ✅ Complete | Excellent (Real-time)         | Low        |
+| **Order Placement**     | ✅ Complete | Good (Atomic operations)      | High       |
+| **Position Management** | ✅ Complete | Excellent (Real-time PnL)     | High       |
+| **Risk Management**     | ✅ Complete | Excellent (Monitoring engine) | High       |
+| **Margin Calls**        | ✅ Complete | Excellent (Automated)         | High       |
+| **Liquidation Engine**  | ✅ Complete | Good (Transaction-based)      | Critical   |
+| **Portfolio Analytics** | ✅ Complete | Good (Charts)                 | Medium     |
+| **Trading History**     | ✅ Complete | Good (Filters)                | Medium     |
+| **Admin Dashboard**     | ✅ Complete | Basic (CRUD operations)       | Medium     |
+| **PWA Support**         | ✅ Complete | Good (Offline cache)          | Low        |
+| **Mobile Navigation**   | ✅ Complete | Excellent (Bottom nav)        | Low        |
 
 ### **Feature Quality Analysis**
 
 **High-Quality Features:**
+
 - **Risk Monitoring**: Comprehensive real-time margin monitoring with configurable thresholds
 - **Order Execution**: Atomic DB operations prevent partial fills
 - **User Experience**: Responsive design with mobile-first approach
 - **Accessibility**: Reduced motion support, keyboard navigation
 
 **Problematic Features:**
+
 - **Chart Performance**: 1-second price updates cause unnecessary re-renders
 - **Error Messages**: Generic error messages don't help users resolve issues
 - **Loading States**: Inconsistent loading indicators across pages
@@ -282,6 +301,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **User Experience & Design**
 
 **Strengths:**
+
 - Professional dark/light theme support
 - Consistent design system (shadcn/ui)
 - Mobile-optimized layout with bottom navigation
@@ -289,6 +309,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 - Haptic feedback for mobile actions
 
 **Weaknesses:**
+
 - **Information Density**: Trading page overwhelming for beginners
 - **No Onboarding**: No tutorial for first-time users
 - **Confusing Terminology**: "Trading Panel" vs "Portfolio Dashboard" unclear
@@ -364,18 +385,21 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **Opportunities**
 
 #### **Performance Optimization**
+
 - **WebSocket Multiplexing**: Share connections across users to reduce server load
 - **Virtual Scrolling**: Implement for large history tables
 - **Service Worker Caching**: Cache static assets more aggressively
 - **Image Optimization**: Convert PNG icons to WebP format
 
 #### **Feature Enhancement**
+
 - **TradingView Integration**: Replace lightweight-charts with professional-grade charts
 - **Social Features**: Leaderboards, copy trading
 - **Advanced Order Types**: Trailing stops, OCO orders
 - **Algorithmic Trading**: Strategy builder interface
 
 #### **Scalability**
+
 - **Microservices Migration**: Extract trading engine to standalone service
 - **Redis Cache Layer**: Cache frequently accessed price data
 - **Queue System**: RabbitMQ for order processing
@@ -384,21 +408,25 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **Risks**
 
 #### **Technical Debt**
+
 - **Accumulation Rate**: HIGH - New hooks added without consolidation
 - **Complexity Score**: 8/10 - Steep learning curve for new developers
 - **Refactoring Cost**: 120-160 hours for critical issues
 
 #### **Security Risks**
+
 - **Data Breach Probability**: HIGH - Exposed keys, no RLS verification
 - **Compliance Risk**: MEDIUM - KYC storage may violate GDPR without proper handling
 - **Financial Risk**: CRITICAL - Demo trading could be manipulated for educational fraud
 
 #### **Maintenance Challenges**
+
 - **Vendor Lock-in**: 85% Supabase-dependent
 - **Onboarding Time**: 2-3 weeks for new developers (complex hook ecosystem)
 - **Upgrade Path**: Breaking changes in dependencies could require major refactors
 
 #### **Scalability Concerns**
+
 - **Concurrent Users**: Current architecture supports ~500 concurrent users
 - **Database Load**: No connection pooling visible
 - **Cost Growth**: Supabase costs increase linearly with usage
@@ -410,6 +438,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **🔥 Immediate Actions (Within 24-48 Hours)**
 
 1. **API Key Rotation**
+
    ```bash
    # 1. Rotate Supabase anon key immediately
    # 2. Remove from git history (BFG Repo-Cleaner)
@@ -417,15 +446,17 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
    ```
 
 2. **Add Content Security Policy**
+
    ```typescript
    // vite.config.ts
    corsMiddleware(): {
-     res.setHeader('Content-Security-Policy', 
+     res.setHeader('Content-Security-Policy',
        "default-src 'self'; script-src 'self';");
    }
    ```
 
 3. **Implement Client-Side Rate Limiting**
+
    ```typescript
    // lib/requestQueue.ts
    class RequestQueue {
@@ -436,11 +467,12 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
    ```
 
 4. **Disable Console Logging in Production**
+
    ```typescript
    // logger.ts
-   const isDevelopment = import.meta.env.MODE === 'development';
-   const isProduction = import.meta.env.MODE === 'production';
-   
+   const isDevelopment = import.meta.env.MODE === "development";
+   const isProduction = import.meta.env.MODE === "production";
+
    if (isProduction) {
      console.log = () => {};
      console.warn = () => {};
@@ -451,7 +483,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 5. **Add XSS Protection**
    ```typescript
    // On all user inputs
-   import DOMPurify from 'dompurify';
+   import DOMPurify from "dompurify";
    const sanitized = DOMPurify.sanitize(userInput);
    ```
 
@@ -463,6 +495,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
    - Create hook composition utilities
 
 7. **Implement Comprehensive Testing**
+
    ```bash
    # Test pyramid
    - Unit tests: 60% coverage on trading engine
@@ -471,6 +504,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
    ```
 
 8. **Add Database Migration System**
+
    ```bash
    # Use Supabase CLI for version control
    supabase migration create init
@@ -484,19 +518,21 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 
 10. **Enhanced Error Handling**
     - User-friendly error messages
-   - Retry logic with exponential backoff
-   - Offline mode detection
+
+- Retry logic with exponential backoff
+- Offline mode detection
 
 ### **🎯 Long-term Strategy (3-6 Months)**
 
 11. **Architectural Evolution**
-   ```mermaid
-   graph TD
-     Current[Monolithic SPA] --> Backend[Introduce Backend Layer]
-     Backend --> API[REST/GraphQL API]
-     Backend --> Queues[Message Queue]
-     Backend --> Cache[Redis Cache]
-   ```
+
+```mermaid
+graph TD
+  Current[Monolithic SPA] --> Backend[Introduce Backend Layer]
+  Backend --> API[REST/GraphQL API]
+  Backend --> Queues[Message Queue]
+  Backend --> Cache[Redis Cache]
+```
 
 12. **Security Hardening**
     - Move to server-side authentication (Next.js or similar)
@@ -518,6 +554,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **📚 Best Practices to Adopt**
 
 1. **Environment Management**
+
    ```bash
    # Use .env files properly
    VITE_SUPABASE_URL=your-key-here # NEVER commit to repo
@@ -530,6 +567,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
    - Accompanying test file
 
 3. **Security-First Development**
+
    ```typescript
    // Security checklist per feature
    - [ ] Input validation
@@ -551,6 +589,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ### **🚫 Do's and Don'ts**
 
 **✅ DO:**
+
 - Use server-side API for all sensitive operations
 - Implement optimistic UI with rollback for order placement
 - Add comprehensive logging with context
@@ -560,6 +599,7 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 - Use progressive enhancement for mobile features
 
 **❌ DON'T:**
+
 - Commit API keys to repository (even "publishable" ones)
 - Trust client-side data validation alone
 - Use `any` type in TypeScript
@@ -573,30 +613,35 @@ const { data, error } = await supabase.rpc('execute_order_atomic', {
 ## Implementation Roadmap
 
 ### **Week 1: Emergency Security Fixes**
+
 - [ ] Rotate all exposed API keys
 - [ ] Implement CSP headers
 - [ ] Add rate limiting
 - [ ] Sanitize all user inputs
 
 ### **Week 2-3: Stabilization**
+
 - [ ] Write tests for critical hooks
 - [ ] Fix bundle size issues
 - [ ] Improve error handling UX
 - [ ] Add database migration system
 
 ### **Week 4-6: Feature Enhancement**
+
 - [ ] Consolidate duplicate hooks
 - [ ] Add WebSocket connection management
 - [ ] Implement pagination for large datasets
 - [ ] Create onboarding flow
 
 ### **Month 2-3: Architecture Refinement**
+
 - [ ] Design backend API layer
 - [ ] Extract trading engine
 - [ ] Implement Redis caching
 - [ ] Add comprehensive monitoring
 
 ### **Month 4-6: Scale Preparation**
+
 - [ ] Migrate to microservices
 - [ ] Implement advanced security
 - [ ] Load testing and optimization
@@ -610,7 +655,8 @@ Trade-X-Pro-Global demonstrates impressive technical sophistication with a compr
 
 **Overall Grade: B+ (Good with critical concerns)**
 
-**Recommendation**: 
+**Recommendation**:
+
 - **Immediate**: Address security vulnerabilities (mandatory before launch)
 - **Short-term**: Refactor hook system and add comprehensive testing
 - **Long-term**: Plan migration to more scalable architecture

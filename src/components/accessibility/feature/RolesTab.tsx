@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import type { TabComponentProps } from '../types';
+import React, { useState } from "react";
+import type { TabComponentProps } from "../types";
 
 /**
  * RolesTab Component
- * 
+ *
  * Demonstrates ARIA roles and their usage.
  * Includes examples of interactive elements, navigation, and live regions.
  */
@@ -18,7 +18,7 @@ export function RolesTab({
   onValidateForm,
   onUpdateForm,
   onAnnounceToScreenReader,
-  onSubmitForm
+  onSubmitForm,
 }: TabComponentProps) {
   // State for the interactive slider
   const [sliderValue, setSliderValue] = useState(50);
@@ -32,21 +32,21 @@ export function RolesTab({
    */
   const handleSliderKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
-      case 'ArrowLeft':
-      case 'ArrowDown':
+      case "ArrowLeft":
+      case "ArrowDown":
         e.preventDefault();
-        setSliderValue(prev => Math.max(sliderMin, prev - sliderStep));
+        setSliderValue((prev) => Math.max(sliderMin, prev - sliderStep));
         break;
-      case 'ArrowRight':
-      case 'ArrowUp':
+      case "ArrowRight":
+      case "ArrowUp":
         e.preventDefault();
-        setSliderValue(prev => Math.min(sliderMax, prev + sliderStep));
+        setSliderValue((prev) => Math.min(sliderMax, prev + sliderStep));
         break;
-      case 'Home':
+      case "Home":
         e.preventDefault();
         setSliderValue(sliderMin);
         break;
-      case 'End':
+      case "End":
         e.preventDefault();
         setSliderValue(sliderMax);
         break;
@@ -62,7 +62,9 @@ export function RolesTab({
     const slider = e.currentTarget;
     const rect = slider.getBoundingClientRect();
     const percentage = ((e.clientX - rect.left) / rect.width) * 100;
-    const newValue = Math.round(Math.max(sliderMin, Math.min(sliderMax, percentage)));
+    const newValue = Math.round(
+      Math.max(sliderMin, Math.min(sliderMax, percentage)),
+    );
     setSliderValue(newValue);
   };
   return (
@@ -70,7 +72,7 @@ export function RolesTab({
       {/* ARIA Roles Examples */}
       <div className="bg-card rounded-lg p-6 border">
         <h3 className="font-semibold mb-4">ARIA Roles Examples</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h4 className="font-medium mb-3">Interactive Elements</h4>
@@ -82,7 +84,7 @@ export function RolesTab({
               >
                 Primary Button
               </button>
-              
+
               <button
                 role="button"
                 aria-pressed="false"
@@ -90,7 +92,7 @@ export function RolesTab({
               >
                 Toggle Button
               </button>
-              
+
               <div
                 role="slider"
                 aria-label="Volume control"
@@ -107,14 +109,14 @@ export function RolesTab({
               </div>
             </div>
           </div>
-          
+
           <div>
             <h4 className="font-medium mb-3">Navigation Elements</h4>
             <nav role="navigation" aria-label="Main navigation">
               <ul className="space-y-2">
                 <li>
-                  <a 
-                    href="#" 
+                  <a
+                    href="#"
                     role="link"
                     className="block p-3 bg-blue-50 border border-blue-200 rounded"
                   >
@@ -122,8 +124,8 @@ export function RolesTab({
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href="#" 
+                  <a
+                    href="#"
                     role="link"
                     className="block p-3 bg-green-50 border border-green-200 rounded"
                   >
@@ -131,8 +133,8 @@ export function RolesTab({
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href="#" 
+                  <a
+                    href="#"
                     role="link"
                     className="block p-3 bg-purple-50 border border-purple-200 rounded"
                   >
@@ -148,36 +150,39 @@ export function RolesTab({
       {/* Live Region Examples */}
       <div className="bg-card rounded-lg p-6 border">
         <h3 className="font-semibold mb-4">Live Region Examples</h3>
-        
+
         <div className="space-y-4">
           <div>
             <h4 className="font-medium mb-2">Polite Live Region</h4>
-            <div 
+            <div
               aria-live="polite"
               className="p-4 border rounded bg-blue-50 border-blue-200"
             >
-              This content will be announced to screen readers when it changes, but won't interrupt the user.
+              This content will be announced to screen readers when it changes,
+              but won't interrupt the user.
             </div>
           </div>
-          
+
           <div>
             <h4 className="font-medium mb-2">Assertive Live Region</h4>
-            <div 
+            <div
               aria-live="assertive"
               className="p-4 border rounded bg-red-50 border-red-200"
             >
-              This content will interrupt the user when it changes. Use for important alerts.
+              This content will interrupt the user when it changes. Use for
+              important alerts.
             </div>
           </div>
-          
+
           <div>
             <h4 className="font-medium mb-2">Status Region</h4>
-            <div 
+            <div
               role="status"
               aria-live="polite"
               className="p-4 border rounded bg-green-50 border-green-200"
             >
-              This is a status message that provides information about the state of an operation.
+              This is a status message that provides information about the state
+              of an operation.
             </div>
           </div>
         </div>

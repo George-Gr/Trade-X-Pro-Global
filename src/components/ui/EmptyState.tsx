@@ -17,12 +17,12 @@ interface EmptyStateProps {
 
 /**
  * EmptyState Component
- * 
+ *
  * Displays a consistent empty state with icon, message, and optional call-to-action.
  * Used across tables, lists, and data views when no content is available.
- * 
+ *
  * Usage:
- * <EmptyState 
+ * <EmptyState
  *   icon={Inbox}
  *   title="No messages yet"
  *   description="Start a conversation to see messages here"
@@ -39,7 +39,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   if (variant === "minimal") {
     return (
-      <div className={cn("flex items-center justify-center py-8 text-center", className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center py-8 text-center",
+          className,
+        )}
+      >
         <div className="space-y-2">
           {Icon && <Icon className="h-8 w-8 mx-auto text-muted-foreground" />}
           <p className="text-sm text-muted-foreground">{title}</p>
@@ -49,7 +54,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   }
 
   return (
-    <div className={cn("flex items-center justify-center py-12 px-4", className)}>
+    <div
+      className={cn("flex items-center justify-center py-12 px-4", className)}
+    >
       <div className="text-center space-y-4 max-w-md">
         {Icon && (
           <div className="flex justify-center">

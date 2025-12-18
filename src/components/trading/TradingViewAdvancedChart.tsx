@@ -1,11 +1,28 @@
 import { useEffect, useRef, memo } from "react";
-import { initTradingViewCompatibility } from "@/lib/tradingview-compatibility";
+
+/**
+ * Minimal compatibility initializer for the TradingView widget script.
+ * Keeps behavior local to this component to avoid a missing-module error.
+ */
+function initTradingViewCompatibility(): void {
+  if (typeof window === "undefined") return;
+
+  // Ensure a safe placeholder for TradingView to avoid runtime errors
+  // when the external script probes window.TradingView before it's ready.
+  if (!window.TradingView) {
+    window.TradingView = {};
+  }
+
+  // Additional polyfills or DOM tweaks can be added here if needed.
+}
 
 interface TradingViewAdvancedChartProps {
   symbol: string;
 }
 
-const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => {
+const TradingViewAdvancedChart = ({
+  symbol,
+}: TradingViewAdvancedChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,12 +41,14 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
       // Add extra safety checks and delay to ensure TradingView is fully loaded
       setTimeout(() => {
         try {
-          const TradingViewGlobal = (window as unknown as Record<string, unknown>).TradingView as any | undefined;
+          const TradingViewGlobal = window.TradingView as
+            | { widget: new (config: Record<string, unknown>) => void }
+            | undefined;
           const WidgetCtor = TradingViewGlobal?.widget;
           if (WidgetCtor && containerRef.current) {
             // Use a local reference to the constructor to satisfy TS and runtime checks
-             
-            new (WidgetCtor as any)({
+
+            new (WidgetCtor as new (config: Record<string, unknown>) => void)({
               autosize: true,
               symbol: symbol,
               interval: "15",
@@ -44,26 +63,21 @@ const TradingViewAdvancedChart = ({ symbol }: TradingViewAdvancedChartProps) => 
               allow_symbol_change: false,
               save_image: false,
               container_id: containerRef.current.id,
-              studies: [
-                "STD;SMA",
-                "STD;MACD",
-                "STD;RSI",
-                "STD;Volume"
-              ],
+              studies: ["STD;SMA", "STD;MACD", "STD;RSI", "STD;Volume"],
               disabled_features: ["use_localstorage_for_settings"],
               enabled_features: ["study_templates"],
             });
           }
         } catch (error) {
           // keep as console.error here for diagnostics
-           
-          console.error('TradingView widget initialization error:', error);
+
+          console.error("TradingView widget initialization error:", error);
         }
       }, 100);
     };
-    
+
     script.onerror = (error) => {
-      console.error('Failed to load TradingView script:', error);
+      console.error("Failed to load TradingView script:", error);
     };
 
     const uniqueId = `tradingview_${Math.random().toString(36).substring(7)}`;

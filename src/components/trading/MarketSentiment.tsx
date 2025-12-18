@@ -10,17 +10,20 @@ interface MarketSentimentProps {
 const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
   // Generate mock sentiment data based on symbol
   const sentimentData = useMemo(() => {
-    const hash = symbol.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = symbol
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const random = (seed: number) => ((seed * 9301 + 49297) % 233280) / 233280;
-    
+
     const bullish = Math.floor(random(hash) * 40 + 30);
     const bearish = 100 - bullish;
-    
+
     return {
       bullish,
       bearish,
       volume: Math.floor(random(hash + 1) * 5000 + 1000),
-      sentiment: bullish > 55 ? "bullish" : bullish < 45 ? "bearish" : "neutral"
+      sentiment:
+        bullish > 55 ? "bullish" : bullish < 45 ? "bearish" : "neutral",
     };
   }, [symbol]);
 
@@ -56,18 +59,24 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
       <div className="pt-4 border-t border-border">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Active Traders</span>
-          <span className="font-semibold">{sentimentData.volume.toLocaleString()}</span>
+          <span className="font-semibold">
+            {sentimentData.volume.toLocaleString()}
+          </span>
         </div>
       </div>
 
       <div className="pt-4 border-t border-border">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Overall Sentiment</span>
-          <span className={`font-semibold capitalize ${
-            sentimentData.sentiment === "bullish" ? "text-primary" :
-            sentimentData.sentiment === "bearish" ? "text-destructive" :
-            "text-muted-foreground"
-          }`}>
+          <span
+            className={`font-semibold capitalize ${
+              sentimentData.sentiment === "bullish"
+                ? "text-primary"
+                : sentimentData.sentiment === "bearish"
+                  ? "text-destructive"
+                  : "text-muted-foreground"
+            }`}
+          >
             {sentimentData.sentiment}
           </span>
         </div>

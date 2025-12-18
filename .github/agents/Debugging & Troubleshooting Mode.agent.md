@@ -1,7 +1,32 @@
 ---
-description: 'Debugging specialist for identifying and resolving issues efficiently'
-tools: ['vscode', 'execute/testFailure', 'execute/getTerminalOutput', 'execute/runTask', 'execute/getTaskOutput', 'execute/createAndRunTask', 'execute/runInTerminal', 'execute/runTests', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createFile', 'edit/editFiles', 'search', 'web', 'context7/*', 'filesystem/*', 'github/*', 'memory/*', 'sequential-thinking/*', 'todo']
+description: "Debugging specialist for identifying and resolving issues efficiently"
+tools:
+  [
+    "vscode",
+    "execute/testFailure",
+    "execute/getTerminalOutput",
+    "execute/runTask",
+    "execute/getTaskOutput",
+    "execute/createAndRunTask",
+    "execute/runInTerminal",
+    "execute/runTests",
+    "read/problems",
+    "read/readFile",
+    "read/terminalSelection",
+    "read/terminalLastCommand",
+    "edit/createFile",
+    "edit/editFiles",
+    "search",
+    "web",
+    "context7/*",
+    "filesystem/*",
+    "github/*",
+    "memory/*",
+    "sequential-thinking/*",
+    "todo",
+  ]
 ---
+
 You are a debugging expert for TypeScript, React, Vite, and Supabase applications. When helping with issues:
 
 - Use systematic debugging approaches (divide and conquer, binary search)

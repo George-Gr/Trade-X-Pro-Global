@@ -1,35 +1,213 @@
 {
-    "terminal.integrated.rendererType": "dom",
-    "terminal.integrated.gpuAcceleration": "off",
-    "terminal.integrated.scrollback": 10000,
-    "terminal.integrated.enablePersistentSessions": false,
-    // Enable GitHub Copilot Chat Agent and Codesearch
-    "github.copilot.chat.agent": true,
-    "github.copilot.chat.codesearch": true,
-    // Enable Copilot Chat TypeScript context features
-    "github.copilot.chat.languageContext.fix.typescript": true,
-    "github.copilot.chat.languageContext.inline.typescript": true,
-    "github.copilot.chat.languageContext.typescript": true,
-    "github.copilot.chat.newWorkspace.useContext7": true,
-    "github.copilot.chat.tools.memory": true,
-    "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
-    // Enable shell integration for better command detection and Copilot integration
-    "terminal.integrated.shellIntegration.enabled": true,
-    "terminal.integrated.shellIntegration.environmentReporting": false,
-    // Performance optimizations to prevent extension host unresponsiveness
-    "extensions.autoCheckUpdates": false,
-    "extensions.autoUpdate": false,
-    "extensions.ignoreRecommendations": true,
-    "search.followSymlinks": false,
-    "search.quickOpen.includeSymbols": false,
-    "editor.largeFileOptimizations": false,
-    "editor.maxTokenizationLineLength": 20000,
-    "files.watcherExclude": {
-        "**/.git/objects/**": true,
-        "**/.git/subtree-cache/**": true,
-        "**/node_modules/*/**": true,
-        "**/.parcel-cache/**": true,
-        "**/dist/**": true,
-        "**/build/**": true
+  /* ========== Terminal Configuration ========== */
+  "terminal.integrated.rendererType": "dom",
+  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.environmentReporting": false,
+
+  /* ========== GitHub Copilot Configuration ========== */
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false
+  },
+  "github.copilot.advanced": {
+    "inlineSuggestCount": 3,
+    "inlineSuggestMode": "auto",
+    "debug.overrideChatAccess": "chat"
+  },
+
+  /* GitHub Copilot Chat - Optimized Settings */
+  "github.copilot.chat.agent": true,
+  "github.copilot.chat.codesearch": true,
+  "github.copilot.chat.monitoringLevel": "standard",
+  
+  /* TypeScript Context - Balanced for Performance & Quality */
+  "github.copilot.chat.languageContext.typescript": "smart",
+  "github.copilot.chat.languageContext.fix.typescript": true,
+  "github.copilot.chat.languageContext.inline.typescript": true,
+  "github.copilot.chat.languageContext.references": "smart",
+
+  /* Context Management */
+  "github.copilot.chat.newWorkspace.useContext7": true,
+  "github.copilot.chat.tools.memory": true,
+  "github.copilot.chat.contextRelevancy": "medium",
+  
+  /* Disable aggressive token consumption */
+  "github.copilot.chat.includeSlashCommandSuggestions": false,
+
+  /* ========== TypeScript Language Server & IntelliSense Configuration ========== */
+  /* Use workspace TypeScript version */
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.useWorkspaceTypeScriptVersion": true,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  
+  /* TypeScript Server Memory & Performance */
+  "typescript.tsserver.maxTsServerMemory": 3072,
+  "typescript.tsserver.enableTracing": false,
+  "typescript.tsserver.logVerbosity": "off",
+  "typescript.tsserver.log": "off",
+
+  /* TypeScript Inlay Hints (Inline Type Information) */
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "typescript.inlayHints.returnTypes.enabled": true,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.inlayHints.enumMemberValues.enabled": true,
+
+  /* TypeScript Suggestions & AutoComplete */
+  "typescript.autoClosingTags": true,
+  "typescript.completeFunctionCalls": true,
+  "typescript.quickSuggestionsDelay": 100,
+  
+  /* TypeScript Code Navigation */
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  
+  /* TypeScript Editor Settings */
+  "typescript.check.npmIsInstalled": false,
+  "typescript.disableAutomaticTypeAcquisition": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.extension.nightly.autoUpdate": false,
+  "typescript.preferGoToSourceDefinition": true,
+  "typescript.surveys.enabled": false,
+
+  /* ========== TypeScript Format Configuration ========== */
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
     }
+  },
+
+  /* ========== TypeScript React (JSX) Format Configuration ========== */
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+
+  /* ========== JavaScript Format Configuration ========== */
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  /* ========== Prettier Configuration ========== */
+  "prettier.enable": true,
+  "prettier.useTabs": false,
+  "prettier.tabWidth": 2,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "prettier.bracketSpacing": true,
+  "prettier.jsxBracketSameLine": false,
+  "prettier.arrowParens": "always",
+
+  /* ========== ESLint Configuration ========== */
+  "eslint.enable": true,
+  "eslint.run": "onSave",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.format.enable": true,
+  "eslint.codeActionsOnSave.rules": null,
+  "eslint.codeActionsOnSave.mode": "all",
+
+  /* ========== Editor Inline Suggestions Configuration ========== */
+  "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.mode": "blocksInline",
+  "editor.inlineCompletions.enabled": true,
+
+  /* ========== Editor Suggestions Configuration ========== */
+  "editor.suggest.enabled": true,
+  "editor.suggest.showInlineDetails": true,
+  "editor.suggest.shareSuggestSelections": true,
+  "editor.suggest.preview": true,
+  "editor.suggest.showStatusBar": true,
+  "editor.suggest.maxVisibleSuggestions": 12,
+  "editor.suggest.localityBonus": true,
+  "editor.suggest.filterGraceful": true,
+
+  /* ========== File & Search Configuration ========== */
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.parcel-cache/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.vscode/**": true,
+    "**/.next/**": true,
+    "**/coverage/**": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/dist": true,
+    "**/build": true
+  },
+  "search.followSymlinks": false,
+  "search.quickOpen.includeSymbols": false,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true,
+    "**/.parcel-cache": true
+  },
+
+  /* ========== Editor Performance Optimization ========== */
+  "editor.largeFileOptimizations": true,
+  "editor.maxTokenizationLineLength": 20000,
+  "editor.wordBasedSuggestions": "matchingLines",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
+  /* ========== Extension Management ========== */
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+  "extensions.ignoreRecommendations": false,
+
+  /* ========== Workspace Settings ========== */
+  "workbench.editor.closeOnFileDelete": true,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "window.restoreWindows": "none",
+
+  /* ========== Telemetry & Diagnostics ========== */
+  "telemetry.telemetryLevel": "error",
+  "redhat.telemetry.enabled": false
 }

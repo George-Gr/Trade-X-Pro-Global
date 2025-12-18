@@ -3,13 +3,20 @@ import { PublicFooter } from "@/components/layout/PublicFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Monitor, Smartphone, Zap, TrendingUp, BarChart3, CheckCircle2 } from "lucide-react";
+import {
+  Monitor,
+  Smartphone,
+  Zap,
+  TrendingUp,
+  BarChart3,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function TradingPlatforms() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      
+
       <main className="pt-24 pb-20">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
@@ -22,7 +29,8 @@ export default function TradingPlatforms() {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Access our advanced trading platforms from any device with seamless synchronization and professional features
+                Access our advanced trading platforms from any device with
+                seamless synchronization and professional features
               </p>
             </div>
           </div>
@@ -34,15 +42,16 @@ export default function TradingPlatforms() {
               {
                 icon: Monitor,
                 title: "Desktop Platform",
-                description: "Professional trading terminal for in-depth analysis and execution",
+                description:
+                  "Professional trading terminal for in-depth analysis and execution",
                 features: [
                   "Advanced charting with 100+ indicators",
                   "Multi-window trading layout",
                   "Custom watchlists and alerts",
                   "One-click order execution",
-                  "Portfolio analytics dashboard"
+                  "Portfolio analytics dashboard",
                 ],
-                download: "Download MetaTrader 5"
+                download: "Download MetaTrader 5",
               },
               {
                 icon: Smartphone,
@@ -53,9 +62,9 @@ export default function TradingPlatforms() {
                   "Real-time push notifications",
                   "Touch-optimized interface",
                   "Biometric authentication",
-                  "Offline order placement"
+                  "Offline order placement",
                 ],
-                download: "Download Mobile App"
+                download: "Download Mobile App",
               },
               {
                 icon: Zap,
@@ -66,28 +75,35 @@ export default function TradingPlatforms() {
                   "Cross-platform compatible",
                   "TradingView integration",
                   "Responsive design",
-                  "Instant access from anywhere"
+                  "Instant access from anywhere",
                 ],
-                download: "Launch Web Platform"
-              }
+                download: "Launch Web Platform",
+              },
             ].map((platform, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-150 hover:-translate-y-1">
+              <Card
+                key={index}
+                className="hover:shadow-lg transition-all duration-150 hover:-translate-y-1"
+              >
                 <CardContent>
                   <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mb-4">
                     <platform.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h3 className="text-2xl font-bold mb-2">{platform.title}</h3>
-                  <p className="text-muted-foreground mb-6">{platform.description}</p>
-                  
+                  <p className="text-muted-foreground mb-6">
+                    {platform.description}
+                  </p>
+
                   <ul className="space-y-4 mb-8">
                     {platform.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-4">
                         <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
-                        <span className="text-sm text-muted-foreground">{feature}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button className="w-full bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
                     {platform.download}
                   </Button>
@@ -112,16 +128,59 @@ export default function TradingPlatforms() {
                   </thead>
                   <tbody>
                     {[
-                      { feature: "Real-Time Charts", desktop: true, web: true, mobile: true },
-                      { feature: "Advanced Indicators", desktop: true, web: true, mobile: true },
-                      { feature: "One-Click Trading", desktop: true, web: true, mobile: true },
-                      { feature: "Custom Alerts", desktop: true, web: true, mobile: true },
-                      { feature: "Portfolio Analytics", desktop: true, web: true, mobile: true },
-                      { feature: "Order Templates", desktop: true, web: false, mobile: false },
-                      { feature: "Offline Access", desktop: true, web: false, mobile: true },
-                      { feature: "Multi-Monitor", desktop: true, web: false, mobile: false }
+                      {
+                        feature: "Real-Time Charts",
+                        desktop: true,
+                        web: true,
+                        mobile: true,
+                      },
+                      {
+                        feature: "Advanced Indicators",
+                        desktop: true,
+                        web: true,
+                        mobile: true,
+                      },
+                      {
+                        feature: "One-Click Trading",
+                        desktop: true,
+                        web: true,
+                        mobile: true,
+                      },
+                      {
+                        feature: "Custom Alerts",
+                        desktop: true,
+                        web: true,
+                        mobile: true,
+                      },
+                      {
+                        feature: "Portfolio Analytics",
+                        desktop: true,
+                        web: true,
+                        mobile: true,
+                      },
+                      {
+                        feature: "Order Templates",
+                        desktop: true,
+                        web: false,
+                        mobile: false,
+                      },
+                      {
+                        feature: "Offline Access",
+                        desktop: true,
+                        web: false,
+                        mobile: true,
+                      },
+                      {
+                        feature: "Multi-Monitor",
+                        desktop: true,
+                        web: false,
+                        mobile: false,
+                      },
                     ].map((row, i) => (
-                      <tr key={i} className="border-b border-border hover:bg-muted/50">
+                      <tr
+                        key={i}
+                        className="border-b border-border hover:bg-muted/50"
+                      >
                         <td className="p-4 font-medium">{row.feature}</td>
                         <td className="p-4 text-center">
                           {row.desktop ? (
@@ -162,7 +221,10 @@ export default function TradingPlatforms() {
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95"
+                    >
                       Create Account
                     </Button>
                   </Link>

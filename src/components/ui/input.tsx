@@ -1,10 +1,10 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 const inputVariants = cva(
-  "flex w-full rounded-md border ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-input bg-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-placeholder-foreground disabled:cursor-not-allowed disabled:opacity-60 disabled:bg-muted read-only:bg-muted/50 read-only:cursor-default read-only:focus:ring-0 read-only:focus-visible:ring-0",
+  "flex w-full rounded-md border ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 border-input bg-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-placeholder-foreground disabled:cursor-not-allowed disabled:opacity-60 disabled:bg-muted read-only:bg-muted/50 read-only:cursor-default read-only:focus:ring-0 read-only:focus-visible:ring-0 transition-colors duration-150",
   {
     variants: {
       size: {
@@ -17,42 +17,56 @@ const inputVariants = cva(
     defaultVariants: {
       size: "default",
     },
-  }
+  },
 );
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof inputVariants> {
   label?: string;
   error?: string;
   description?: string;
   mobileOptimized?: boolean;
-  keyboardType?: 'default' | 'numeric' | 'decimal' | 'email' | 'tel';
+  keyboardType?: "default" | "numeric" | "decimal" | "email" | "tel";
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, size, label, error, description, mobileOptimized, keyboardType, ...props }, ref) => {
+  (
+    {
+      className,
+      type,
+      size,
+      label,
+      error,
+      description,
+      mobileOptimized,
+      keyboardType,
+      ...props
+    },
+    ref,
+  ) => {
     // Mobile optimization for keyboards
     const getInputType = () => {
       if (type) return type;
-      if (keyboardType === 'numeric') return 'tel';
-      if (keyboardType === 'decimal') return 'number';
-      if (keyboardType === 'email') return 'email';
-      return 'text';
+      if (keyboardType === "numeric") return "tel";
+      if (keyboardType === "decimal") return "number";
+      if (keyboardType === "email") return "email";
+      return "text";
     };
 
     const getInputMode = () => {
-      if (keyboardType === 'numeric') return 'numeric';
-      if (keyboardType === 'decimal') return 'decimal';
-      if (keyboardType === 'email') return 'email';
-      return 'text';
+      if (keyboardType === "numeric") return "numeric";
+      if (keyboardType === "decimal") return "decimal";
+      if (keyboardType === "email") return "email";
+      return "text";
     };
 
     // Auto-capitalize settings for mobile
     const getAutoCapitalize = () => {
-      if (keyboardType === 'email') return 'none';
-      if (keyboardType === 'tel') return 'none';
-      return 'sentences';
+      if (keyboardType === "email") return "none";
+      if (keyboardType === "tel") return "none";
+      return "sentences";
     };
 
     return (
@@ -60,19 +74,26 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={getInputType()}
         inputMode={getInputMode()}
         autoCapitalize={getAutoCapitalize()}
-        autoComplete={keyboardType === 'email' ? 'email' : undefined}
-        pattern={keyboardType === 'numeric' ? '[0-9]*' : undefined}
+        autoComplete={keyboardType === "email" ? "email" : undefined}
+        pattern={keyboardType === "numeric" ? "[0-9]*" : undefined}
         className={cn(
-          inputVariants({ size: mobileOptimized ? 'mobile' : size }), 
-          error && "form-field-error", // FE-012: Apply error state styling
+          inputVariants({ size: mobileOptimized ? "mobile" : size }),
+          error &&
+            "border-destructive bg-destructive/5 focus-visible:ring-destructive focus:ring-destructive",
           className,
-          mobileOptimized && "mobile-optimized-input"
+          mobileOptimized && "mobile-optimized-input",
         )}
         ref={ref}
         aria-label={label}
-        aria-describedby={description ? `${props.id}-description` : undefined}
+        aria-describedby={
+          error && props.id
+            ? `${props.id}-error`
+            : description && props.id
+              ? `${props.id}-description`
+              : undefined
+        }
         aria-invalid={!!error}
-        aria-errormessage={error ? `${props.id}-error` : undefined}
+        aria-errormessage={error && props.id ? `${props.id}-error` : undefined}
         {...props}
       />
     );

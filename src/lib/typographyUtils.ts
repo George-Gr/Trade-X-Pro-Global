@@ -7,38 +7,38 @@
  * Typography size map for responsive design
  * Maps semantic names to CSS variable values
  */
-export const typographyScaleMap = {
-  h1: 'var(--h1-size)',
-  h2: 'var(--h2-size)',
-  h3: 'var(--h3-size)',
-  h4: 'var(--h4-size)',
-  body: 'var(--body-size)',
-  small: 'var(--small-size)',
-  label: 'var(--label-size)',
-  caption: 'var(--caption-size)',
+export const TYPOGRAPHY_SCALE_MAP = {
+  h1: "var(--h1-size)",
+  h2: "var(--h2-size)",
+  h3: "var(--h3-size)",
+  h4: "var(--h4-size)",
+  body: "var(--body-size)",
+  small: "var(--small-size)",
+  label: "var(--label-size)",
+  caption: "var(--caption-size)",
 } as const;
 
 /**
  * Font weight map
  */
-export const fontWeightMap = {
-  light: 'var(--font-light)',
-  normal: 'var(--font-normal)',
-  medium: 'var(--font-medium)',
-  semibold: 'var(--font-semibold)',
-  bold: 'var(--font-bold)',
-  extrabold: 'var(--font-extrabold)',
+export const FONT_WEIGHT_MAP = {
+  light: "var(--font-light)",
+  normal: "var(--font-normal)",
+  medium: "var(--font-medium)",
+  semibold: "var(--font-semibold)",
+  bold: "var(--font-bold)",
+  extrabold: "var(--font-extrabold)",
 } as const;
 
 /**
  * Line height map
  */
-export const lineHeightMap = {
-  tight: 'var(--leading-tight)',
-  snug: 'var(--leading-snug)',
-  normal: 'var(--leading-normal)',
-  relaxed: 'var(--leading-relaxed)',
-  loose: 'var(--leading-loose)',
+export const LINE_HEIGHT_MAP = {
+  tight: "var(--leading-tight)",
+  snug: "var(--leading-snug)",
+  normal: "var(--leading-normal)",
+  relaxed: "var(--leading-relaxed)",
+  loose: "var(--leading-loose)",
 } as const;
 
 /**
@@ -48,12 +48,12 @@ export const lineHeightMap = {
  */
 export const getHeadingClass = (level: 1 | 2 | 3 | 4 | 5 | 6): string => {
   const classMap = {
-    1: 'typography-h1',
-    2: 'typography-h2',
-    3: 'typography-h3',
-    4: 'typography-h4',
-    5: 'typography-label',
-    6: 'typography-caption',
+    1: "typography-h1",
+    2: "typography-h2",
+    3: "typography-h3",
+    4: "typography-h4",
+    5: "typography-label",
+    6: "typography-caption",
   };
   return classMap[level];
 };
@@ -68,7 +68,7 @@ export const getHeadingClass = (level: 1 | 2 | 3 | 4 | 5 | 6): string => {
 export const createTypographyStyle = (
   size: number,
   weight: number = 400,
-  lineHeight: number = 1.5
+  lineHeight: number = 1.5,
 ): React.CSSProperties => ({
   fontSize: `${size}px`,
   fontWeight: weight,
@@ -87,7 +87,7 @@ export const clampTypography = (
   minSize: number,
   maxSize: number,
   minWidth: number = 320,
-  maxWidth: number = 1280
+  maxWidth: number = 1280,
 ): string => {
   const slope = (maxSize - minSize) / (maxWidth - minWidth);
   const intercept = minSize - (slope * minWidth) / 16;
@@ -102,10 +102,10 @@ export const clampTypography = (
  */
 export const getContrastSafeTextColor = (
   bgLight: string,
-  bgDark: string
+  bgDark: string,
 ): { light: string; dark: string } => ({
-  light: 'hsl(var(--foreground))',
-  dark: 'hsl(var(--foreground))',
+  light: "hsl(var(--foreground))",
+  dark: "hsl(var(--foreground))",
 });
 
 /**
@@ -115,14 +115,14 @@ export const getContrastSafeTextColor = (
  */
 export const getLineClampClass = (lines: number): string => {
   const clampMap: Record<number, string> = {
-    1: 'line-clamp-1',
-    2: 'line-clamp-2',
-    3: 'line-clamp-3',
-    4: 'line-clamp-4',
-    5: 'line-clamp-5',
-    6: 'line-clamp-6',
+    1: "line-clamp-1",
+    2: "line-clamp-2",
+    3: "line-clamp-3",
+    4: "line-clamp-4",
+    5: "line-clamp-5",
+    6: "line-clamp-6",
   };
-  return clampMap[lines] || 'line-clamp-2';
+  return clampMap[lines] || "line-clamp-2";
 };
 
 /**
@@ -130,9 +130,9 @@ export const getLineClampClass = (lines: number): string => {
  * @returns boolean indicating if CSS variables are available
  */
 export const isTypographyLoaded = (): boolean => {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   const h1Size = getComputedStyle(document.documentElement).getPropertyValue(
-    '--h1-size'
+    "--h1-size",
   );
   return h1Size.trim().length > 0;
 };
@@ -142,29 +142,29 @@ export const isTypographyLoaded = (): boolean => {
  * @returns Object with all typography variable values
  */
 export const getTypographyVariables = (): Record<string, string> => {
-  if (typeof window === 'undefined') return {};
+  if (typeof window === "undefined") return {};
 
   const root = document.documentElement;
   const styles = getComputedStyle(root);
 
   return {
-    h1Size: styles.getPropertyValue('--h1-size').trim(),
-    h2Size: styles.getPropertyValue('--h2-size').trim(),
-    h3Size: styles.getPropertyValue('--h3-size').trim(),
-    h4Size: styles.getPropertyValue('--h4-size').trim(),
-    bodySize: styles.getPropertyValue('--body-size').trim(),
-    smallSize: styles.getPropertyValue('--small-size').trim(),
-    labelSize: styles.getPropertyValue('--label-size').trim(),
-    captionSize: styles.getPropertyValue('--caption-size').trim(),
-    h1Weight: styles.getPropertyValue('--h1-weight').trim(),
-    h2Weight: styles.getPropertyValue('--h2-weight').trim(),
-    h3Weight: styles.getPropertyValue('--h3-weight').trim(),
-    h4Weight: styles.getPropertyValue('--h4-weight').trim(),
-    bodyWeight: styles.getPropertyValue('--body-weight').trim(),
-    h1LineHeight: styles.getPropertyValue('--h1-line-height').trim(),
-    h2LineHeight: styles.getPropertyValue('--h2-line-height').trim(),
-    h3LineHeight: styles.getPropertyValue('--h3-line-height').trim(),
-    h4LineHeight: styles.getPropertyValue('--h4-line-height').trim(),
+    h1Size: styles.getPropertyValue("--h1-size").trim(),
+    h2Size: styles.getPropertyValue("--h2-size").trim(),
+    h3Size: styles.getPropertyValue("--h3-size").trim(),
+    h4Size: styles.getPropertyValue("--h4-size").trim(),
+    bodySize: styles.getPropertyValue("--body-size").trim(),
+    smallSize: styles.getPropertyValue("--small-size").trim(),
+    labelSize: styles.getPropertyValue("--label-size").trim(),
+    captionSize: styles.getPropertyValue("--caption-size").trim(),
+    h1Weight: styles.getPropertyValue("--h1-weight").trim(),
+    h2Weight: styles.getPropertyValue("--h2-weight").trim(),
+    h3Weight: styles.getPropertyValue("--h3-weight").trim(),
+    h4Weight: styles.getPropertyValue("--h4-weight").trim(),
+    bodyWeight: styles.getPropertyValue("--body-weight").trim(),
+    h1LineHeight: styles.getPropertyValue("--h1-line-height").trim(),
+    h2LineHeight: styles.getPropertyValue("--h2-line-height").trim(),
+    h3LineHeight: styles.getPropertyValue("--h3-line-height").trim(),
+    h4LineHeight: styles.getPropertyValue("--h4-line-height").trim(),
   };
 };
 
@@ -178,10 +178,12 @@ export const getTypographyVariables = (): Record<string, string> => {
 export const createHeading = (
   level: 1 | 2 | 3 | 4 | 5 | 6,
   content: string,
-  className?: string
+  className?: string,
 ): string => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
-  const classNames = [getHeadingClass(level), className].filter(Boolean).join(' ');
+  const classNames = [getHeadingClass(level), className]
+    .filter(Boolean)
+    .join(" ");
   return `<${Tag} className="${classNames}">${content}</${Tag}>`;
 };
 
@@ -198,22 +200,26 @@ export const validateTypography = (): {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (typeof window === 'undefined') {
-    return { isValid: false, errors: ['Window object not available'], warnings: [] };
+  if (typeof window === "undefined") {
+    return {
+      isValid: false,
+      errors: ["Window object not available"],
+      warnings: [],
+    };
   }
 
   const styles = getComputedStyle(document.documentElement);
   const requiredVars = [
-    '--h1-size',
-    '--h2-size',
-    '--h3-size',
-    '--h4-size',
-    '--body-size',
-    '--small-size',
-    '--h1-weight',
-    '--h2-weight',
-    '--h3-weight',
-    '--h4-weight',
+    "--h1-size",
+    "--h2-size",
+    "--h3-size",
+    "--h4-size",
+    "--body-size",
+    "--small-size",
+    "--h1-weight",
+    "--h2-weight",
+    "--h3-weight",
+    "--h4-weight",
   ];
 
   requiredVars.forEach((variable) => {
@@ -224,11 +230,11 @@ export const validateTypography = (): {
   });
 
   // Check for common issues
-  const h1Size = parseFloat(styles.getPropertyValue('--h1-size'));
-  const bodySize = parseFloat(styles.getPropertyValue('--body-size'));
-  
+  const h1Size = parseFloat(styles.getPropertyValue("--h1-size"));
+  const bodySize = parseFloat(styles.getPropertyValue("--body-size"));
+
   if (h1Size <= bodySize) {
-    warnings.push('H1 size should be larger than body size');
+    warnings.push("H1 size should be larger than body size");
   }
 
   return {
@@ -241,24 +247,26 @@ export const validateTypography = (): {
 /**
  * Log typography diagnostics to console (dev only)
  */
+/* eslint-disable no-console */
 export const logTypographyDiagnostics = (): void => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
-  console.group('Typography System Diagnostics');
-  
+  console.group("Typography System Diagnostics");
+
   const validation = validateTypography();
-  console.warn('Validation:', validation);
-  
+  console.warn("Validation:", validation);
+
   if (validation.isValid) {
     const variables = getTypographyVariables();
     console.table(variables);
-    console.warn('✓ Typography system is properly configured');
+    console.warn("✓ Typography system is properly configured");
   } else {
-    console.error('✗ Typography system has errors:', validation.errors);
+    console.error("✗ Typography system has errors:", validation.errors);
   }
 
   console.groupEnd();
 };
+/* eslint-enable no-console */
 
 export default {
   getHeadingClass,

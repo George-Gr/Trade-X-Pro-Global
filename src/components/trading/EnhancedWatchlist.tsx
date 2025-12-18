@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Search, HelpCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useWatchlists } from "@/hooks/useWatchlists";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
 import { CompareSymbolsDialog } from "./CompareSymbolsDialog";
@@ -15,7 +20,11 @@ import DeleteWatchlistDialog from "./DeleteWatchlistDialog";
 import WatchlistItems from "./WatchlistItems";
 
 // Lazy load heavy components
-const PriceAlertDialog = lazy(() => import("./PriceAlertDialog").then(mod => ({ default: mod.PriceAlertDialog })));
+const PriceAlertDialog = lazy(() =>
+  import("./PriceAlertDialog").then((mod) => ({
+    default: mod.PriceAlertDialog,
+  })),
+);
 
 interface EnhancedWatchlistProps {
   onSelectSymbol?: (symbol: string) => void;
@@ -24,18 +33,21 @@ interface EnhancedWatchlistProps {
 
 /**
  * EnhancedWatchlist Component (Optimized)
- * 
+ *
  * Main watchlist component with refactored subcomponents for better code splitting.
  * Delegates dialog logic to specialized components:
  * - CreateWatchlistDialog: Create new watchlist
  * - AddSymbolDialog: Add symbol to watchlist
  * - DeleteWatchlistDialog: Delete watchlist confirmation
  * - WatchlistItems: List rendering with memoized rows
- * 
+ *
  * This reduces the component size from 355 lines to ~150 lines,
  * enabling better tree-shaking and bundle splitting.
  */
-const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistProps) => {
+const EnhancedWatchlist = ({
+  onSelectSymbol,
+  onQuickTrade,
+}: EnhancedWatchlistProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const {
@@ -50,7 +62,9 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
     removeSymbolFromWatchlist,
   } = useWatchlists();
 
-  const activeItems = activeWatchlistId ? watchlistItems[activeWatchlistId] || [] : [];
+  const activeItems = activeWatchlistId
+    ? watchlistItems[activeWatchlistId] || []
+    : [];
   const activeSymbols = activeItems.map((item) => item.symbol);
 
   const { getPrice } = usePriceUpdates({
@@ -65,7 +79,11 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
     }
   };
 
-  const handleQuickTrade = (symbol: string, side: "buy" | "sell", e: React.MouseEvent) => {
+  const handleQuickTrade = (
+    symbol: string,
+    side: "buy" | "sell",
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation();
     if (onQuickTrade) {
       onQuickTrade(symbol, side);
@@ -80,7 +98,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
   };
 
   const filteredItems = activeItems.filter((item) =>
-    item.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+    item.symbol.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   if (isLoading) {
@@ -101,7 +119,10 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
         <CardContent className="flex-1 pb-4 pt-0">
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-muted/50 rounded animate-pulse">
+              <div
+                key={i}
+                className="flex items-center justify-between p-3 bg-muted/50 rounded animate-pulse"
+              >
                 <div className="flex items-center space-x-3">
                   <div className="h-8 w-16 bg-muted rounded" />
                   <div className="h-4 w-20 bg-muted rounded" />
@@ -137,24 +158,44 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                     <h4 className="font-semibold">Keyboard Shortcuts</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Create Watchlist:</span>
-                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl/Cmd + N</kbd>
+                        <span className="text-muted-foreground">
+                          Create Watchlist:
+                        </span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                          Ctrl/Cmd + N
+                        </kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Add Symbol:</span>
-                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl/Cmd + A</kbd>
+                        <span className="text-muted-foreground">
+                          Add Symbol:
+                        </span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                          Ctrl/Cmd + A
+                        </kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Search Symbols:</span>
-                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl/Cmd + F</kbd>
+                        <span className="text-muted-foreground">
+                          Search Symbols:
+                        </span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                          Ctrl/Cmd + F
+                        </kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Clear Search:</span>
-                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Escape</kbd>
+                        <span className="text-muted-foreground">
+                          Clear Search:
+                        </span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                          Escape
+                        </kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Quick Trade:</span>
-                        <kbd className="px-2 py-1 bg-muted rounded text-xs">Enter on symbol</kbd>
+                        <span className="text-muted-foreground">
+                          Quick Trade:
+                        </span>
+                        <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                          Enter on symbol
+                        </kbd>
                       </div>
                     </div>
                   </div>
@@ -162,9 +203,11 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
               </Tooltip>
             </TooltipProvider>
             <CompareSymbolsDialog symbols={activeSymbols} />
-            <CreateWatchlistDialog onCreateWatchlist={async (name) => {
-              await createWatchlist(name);
-            }} />
+            <CreateWatchlistDialog
+              onCreateWatchlist={async (name) => {
+                await createWatchlist(name);
+              }}
+            />
           </div>
         </div>
 
@@ -198,10 +241,13 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
             </div>
             <h3 className="text-lg font-semibold mb-2">No Watchlists Yet</h3>
             <p className="text-sm text-muted-foreground mb-4 max-w-sm">
-              Create your first watchlist to track your favorite symbols and get real-time price updates.
+              Create your first watchlist to track your favorite symbols and get
+              real-time price updates.
             </p>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">💡 Try creating a watchlist with commonly traded symbols like:</p>
+              <p className="text-xs text-muted-foreground">
+                💡 Try creating a watchlist with commonly traded symbols like:
+              </p>
               <div className="flex flex-wrap gap-2 text-xs">
                 <span className="bg-muted/50 px-2 py-1 rounded">EURUSD</span>
                 <span className="bg-muted/50 px-2 py-1 rounded">GBPUSD</span>
@@ -221,9 +267,7 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                 <TabsList className="w-full justify-start">
                   {watchlists.map((list) => (
                     <div key={list.id} className="relative group">
-                      <TabsTrigger value={list.id}>
-                        {list.name}
-                      </TabsTrigger>
+                      <TabsTrigger value={list.id}>{list.name}</TabsTrigger>
                       {!list.is_default && (
                         <DeleteWatchlistDialog
                           watchlistName={list.name}
@@ -245,7 +289,11 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
             </div>
 
             {watchlists.map((list) => (
-              <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
+              <TabsContent
+                key={list.id}
+                value={list.id}
+                className="flex-1 overflow-hidden mt-2"
+              >
                 <WatchlistItems
                   items={filteredItems}
                   getPrice={(symbol) => {
@@ -254,13 +302,15 @@ const EnhancedWatchlist = ({ onSelectSymbol, onQuickTrade }: EnhancedWatchlistPr
                     return {
                       currentPrice: price.currentPrice,
                       change: price.change,
-                      changePercent: price.changePercent
+                      changePercent: price.changePercent,
                     };
                   }}
                   onSymbolClick={handleSymbolClick}
                   onQuickTrade={handleQuickTrade}
                   onRemoveSymbol={handleRemoveSymbol}
-                  onAddSymbolClick={() => {/* Dialog opens on button click */}}
+                  onAddSymbolClick={() => {
+                    /* Dialog opens on button click */
+                  }}
                 />
               </TabsContent>
             ))}

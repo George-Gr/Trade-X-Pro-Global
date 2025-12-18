@@ -91,7 +91,10 @@ export interface PerformanceTrend {
  * @param unrealizedPnL - Unrealized profit/loss from open positions
  * @returns Total P&L
  */
-export function calculateTotalPnL(realizedPnL: number, unrealizedPnL: number): number {
+export function calculateTotalPnL(
+  realizedPnL: number,
+  unrealizedPnL: number,
+): number {
   const total = realizedPnL + unrealizedPnL;
   return Math.round(total * 100) / 100;
 }
@@ -103,7 +106,10 @@ export function calculateTotalPnL(realizedPnL: number, unrealizedPnL: number): n
  * @param initialCapital - Initial capital
  * @returns P&L as percentage
  */
-export function calculatePnLPercentage(pnl: number, initialCapital: number): number {
+export function calculatePnLPercentage(
+  pnl: number,
+  initialCapital: number,
+): number {
   if (initialCapital === 0) return 0;
   return Math.round((pnl / initialCapital) * 100 * 100) / 100;
 }
@@ -131,7 +137,10 @@ export function calculateROI(pnl: number, capitalInvested: number): number {
  * @param totalTrades - Total number of trades
  * @returns Win rate as percentage (0-100)
  */
-export function calculateWinRate(profitableTrades: number, totalTrades: number): number {
+export function calculateWinRate(
+  profitableTrades: number,
+  totalTrades: number,
+): number {
   if (totalTrades === 0) return 0;
   return Math.round((profitableTrades / totalTrades) * 100 * 100) / 100;
 }
@@ -144,7 +153,10 @@ export function calculateWinRate(profitableTrades: number, totalTrades: number):
  * @param totalLoss - Sum of all losses (absolute value)
  * @returns Profit factor (typically > 1.5 is good)
  */
-export function calculateProfitFactor(totalProfit: number, totalLoss: number): number {
+export function calculateProfitFactor(
+  totalProfit: number,
+  totalLoss: number,
+): number {
   if (totalLoss === 0) {
     return totalProfit > 0 ? 999.99 : 0; // Max out at 999.99 if no losses
   }
@@ -159,7 +171,10 @@ export function calculateProfitFactor(totalProfit: number, totalLoss: number): n
  * @param profitableTrades - Number of profitable trades
  * @returns Average win amount
  */
-export function calculateAverageWin(totalProfit: number, profitableTrades: number): number {
+export function calculateAverageWin(
+  totalProfit: number,
+  profitableTrades: number,
+): number {
   if (profitableTrades === 0) return 0;
   return Math.round((totalProfit / profitableTrades) * 100) / 100;
 }
@@ -171,7 +186,10 @@ export function calculateAverageWin(totalProfit: number, profitableTrades: numbe
  * @param losingTrades - Number of losing trades
  * @returns Average loss amount
  */
-export function calculateAverageLoss(totalLoss: number, losingTrades: number): number {
+export function calculateAverageLoss(
+  totalLoss: number,
+  losingTrades: number,
+): number {
   if (losingTrades === 0) return 0;
   return Math.round((totalLoss / losingTrades) * 100) / 100;
 }
@@ -183,7 +201,10 @@ export function calculateAverageLoss(totalLoss: number, losingTrades: number): n
  * @param averageLoss - Average losing trade
  * @returns Risk-reward ratio
  */
-export function calculateRiskRewardRatio(averageWin: number, averageLoss: number): number {
+export function calculateRiskRewardRatio(
+  averageWin: number,
+  averageLoss: number,
+): number {
   if (averageLoss === 0) return 0;
   const ratio = Math.abs(averageWin / averageLoss);
   return Math.round(ratio * 100) / 100;
@@ -200,11 +221,12 @@ export function calculateRiskRewardRatio(averageWin: number, averageLoss: number
 export function calculateExpectancy(
   winRate: number,
   averageWin: number,
-  averageLoss: number
+  averageLoss: number,
 ): number {
   const winProbability = winRate / 100;
   const lossProbability = 1 - winProbability;
-  const expectancy = winProbability * averageWin - lossProbability * Math.abs(averageLoss);
+  const expectancy =
+    winProbability * averageWin - lossProbability * Math.abs(averageLoss);
   return Math.round(expectancy * 100) / 100;
 }
 
@@ -219,7 +241,10 @@ export function calculateExpectancy(
  * @param peakEquity - Highest equity reached
  * @returns Drawdown amount
  */
-export function calculateDrawdown(currentEquity: number, peakEquity: number): number {
+export function calculateDrawdown(
+  currentEquity: number,
+  peakEquity: number,
+): number {
   if (peakEquity === 0) return 0;
   const drawdown = peakEquity - currentEquity;
   return Math.round(Math.max(drawdown, 0) * 100) / 100;
@@ -232,7 +257,10 @@ export function calculateDrawdown(currentEquity: number, peakEquity: number): nu
  * @param peakEquity - Highest equity reached
  * @returns Drawdown as percentage
  */
-export function calculateDrawdownPercentage(currentEquity: number, peakEquity: number): number {
+export function calculateDrawdownPercentage(
+  currentEquity: number,
+  peakEquity: number,
+): number {
   if (peakEquity === 0) return 0;
   const drawdownPercentage = ((peakEquity - currentEquity) / peakEquity) * 100;
   return Math.round(Math.max(drawdownPercentage, 0) * 100) / 100;
@@ -251,7 +279,12 @@ export function calculateMaxDrawdown(equityHistory: number[]): {
   troughEquity: number;
 } {
   if (equityHistory.length === 0) {
-    return { maxDrawdown: 0, maxDrawdownPercentage: 0, peakEquity: 0, troughEquity: 0 };
+    return {
+      maxDrawdown: 0,
+      maxDrawdownPercentage: 0,
+      peakEquity: 0,
+      troughEquity: 0,
+    };
   }
 
   let peak = equityHistory[0];
@@ -272,9 +305,8 @@ export function calculateMaxDrawdown(equityHistory: number[]): {
     }
   }
 
-  const maxDrawdownPercentage = peakEquity > 0
-    ? (maxDrawdown / peakEquity) * 100
-    : 0;
+  const maxDrawdownPercentage =
+    peakEquity > 0 ? (maxDrawdown / peakEquity) * 100 : 0;
 
   return {
     maxDrawdown: Math.round(maxDrawdown * 100) / 100,
@@ -292,7 +324,10 @@ export function calculateMaxDrawdown(equityHistory: number[]): {
  * @param maxDrawdown - Maximum drawdown
  * @returns Recovery factor
  */
-export function calculateRecoveryFactor(netProfit: number, maxDrawdown: number): number {
+export function calculateRecoveryFactor(
+  netProfit: number,
+  maxDrawdown: number,
+): number {
   if (maxDrawdown === 0) {
     return netProfit > 0 ? 999.99 : 0;
   }
@@ -313,11 +348,17 @@ export function analyzeDrawdown(
   currentEquity: number,
   peakEquity: number,
   maxDrawdown: number,
-  equityHistory: number[] = []
+  equityHistory: number[] = [],
 ): DrawdownAnalysis {
   const currentDrawdown = calculateDrawdown(currentEquity, peakEquity);
-  const currentDrawdownPercentage = calculateDrawdownPercentage(currentEquity, peakEquity);
-  const maxDrawdownPercentage = calculateDrawdownPercentage(peakEquity - maxDrawdown, peakEquity);
+  const currentDrawdownPercentage = calculateDrawdownPercentage(
+    currentEquity,
+    peakEquity,
+  );
+  const maxDrawdownPercentage = calculateDrawdownPercentage(
+    peakEquity - maxDrawdown,
+    peakEquity,
+  );
 
   return {
     currentDrawdown: Math.round(currentDrawdown * 100) / 100,
@@ -326,7 +367,7 @@ export function analyzeDrawdown(
     maxDrawdownPercentage: Math.round(maxDrawdownPercentage * 100) / 100,
     peakEquity,
     troughEquity: peakEquity - maxDrawdown,
-    isRecovering: currentEquity > (peakEquity - maxDrawdown),
+    isRecovering: currentEquity > peakEquity - maxDrawdown,
   };
 }
 
@@ -349,12 +390,12 @@ export function breakdownByAssetClass(
     currentPrice: number;
     unrealizedPnL: number;
   }>,
-  totalPortfolioValue: number
+  totalPortfolioValue: number,
 ): AssetClassMetrics {
   const breakdown: AssetClassMetrics = {};
 
   for (const position of positions) {
-    const assetClass = position.assetClass || 'Other';
+    const assetClass = position.assetClass || "Other";
     const positionValue = position.quantity * position.currentPrice;
 
     if (!breakdown[assetClass]) {
@@ -375,12 +416,14 @@ export function breakdownByAssetClass(
   // Calculate percentages
   for (const assetClass in breakdown) {
     const data = breakdown[assetClass];
-    data.percentageOfPortfolio = totalPortfolioValue > 0
-      ? Math.round((data.totalValue / totalPortfolioValue) * 100 * 100) / 100
-      : 0;
-    data.pnlPercentage = data.totalValue > 0
-      ? Math.round((data.unrealizedPnL / data.totalValue) * 100 * 100) / 100
-      : 0;
+    data.percentageOfPortfolio =
+      totalPortfolioValue > 0
+        ? Math.round((data.totalValue / totalPortfolioValue) * 100 * 100) / 100
+        : 0;
+    data.pnlPercentage =
+      data.totalValue > 0
+        ? Math.round((data.unrealizedPnL / data.totalValue) * 100 * 100) / 100
+        : 0;
   }
 
   return breakdown;
@@ -407,23 +450,23 @@ export function calculatePortfolioMetrics(
   realizedPnL: number,
   unrealizedPnL: number,
   trades: Array<{ pnl: number; isProfit: boolean }> = [],
-  equityHistory: number[] = []
+  equityHistory: number[] = [],
 ): PortfolioMetrics {
   const totalPnL = calculateTotalPnL(realizedPnL, unrealizedPnL);
   const totalPnLPercentage = calculatePnLPercentage(totalPnL, initialCapital);
   const roi = calculateROI(totalPnL, initialCapital);
 
   // Calculate trade statistics
-  const profitableTrades = trades.filter(t => t.isProfit).length;
-  const losingTrades = trades.filter(t => !t.isProfit && t.pnl !== 0).length;
+  const profitableTrades = trades.filter((t) => t.isProfit).length;
+  const losingTrades = trades.filter((t) => !t.isProfit && t.pnl !== 0).length;
   const totalTrades = trades.length;
   const winRate = calculateWinRate(profitableTrades, totalTrades);
 
   const totalProfit = trades
-    .filter(t => t.isProfit)
+    .filter((t) => t.isProfit)
     .reduce((sum, t) => sum + Math.abs(t.pnl), 0);
   const totalLoss = trades
-    .filter(t => !t.isProfit)
+    .filter((t) => !t.isProfit)
     .reduce((sum, t) => sum + Math.abs(t.pnl), 0);
   const profitFactor = calculateProfitFactor(totalProfit, totalLoss);
 
@@ -432,14 +475,17 @@ export function calculatePortfolioMetrics(
   const expectancy = calculateExpectancy(winRate, averageWin, averageLoss);
 
   const largestWin = trades
-    .filter(t => t.isProfit)
+    .filter((t) => t.isProfit)
     .reduce((max, t) => Math.max(max, t.pnl), 0);
   const largestLoss = trades
-    .filter(t => !t.isProfit)
+    .filter((t) => !t.isProfit)
     .reduce((min, t) => Math.min(min, t.pnl), 0);
 
   const maxDrawdownData = calculateMaxDrawdown(equityHistory);
-  const recoveryFactor = calculateRecoveryFactor(totalPnL, maxDrawdownData.maxDrawdown);
+  const recoveryFactor = calculateRecoveryFactor(
+    totalPnL,
+    maxDrawdownData.maxDrawdown,
+  );
 
   const currentDrawdown = calculateDrawdown(equity, maxDrawdownData.peakEquity);
 

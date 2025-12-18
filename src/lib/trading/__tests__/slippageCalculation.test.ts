@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
   calculateSlippage,
   calculateVolatilityMultiplier,
@@ -10,79 +10,79 @@ import {
   getSupportedAssets,
   SlippageCalculationError,
   ASSET_SLIPPAGE_CONFIG,
-} from '../slippageCalculation';
+} from "../slippageCalculation";
 
-describe('Slippage Calculation Engine', () => {
-  describe('calculateVolatilityMultiplier', () => {
-    it('returns 1x when current volatility equals average', () => {
+describe("Slippage Calculation Engine", () => {
+  describe("calculateVolatilityMultiplier", () => {
+    it("returns 1x when current volatility equals average", () => {
       const result = calculateVolatilityMultiplier(15, 15, 3, false);
       expect(result).toBeCloseTo(3); // 15/15 * 3 = 3
     });
 
-    it('increases multiplier when current volatility is higher', () => {
+    it("increases multiplier when current volatility is higher", () => {
       const result = calculateVolatilityMultiplier(20, 15, 3, false);
       expect(result).toBeCloseTo(4); // 20/15 * 3 ≈ 4
       expect(result).toBeGreaterThan(3);
     });
 
-    it('decreases multiplier when current volatility is lower', () => {
+    it("decreases multiplier when current volatility is lower", () => {
       const result = calculateVolatilityMultiplier(10, 15, 3, false);
       expect(result).toBeCloseTo(2); // 10/15 * 3 = 2
       expect(result).toBeLessThan(3);
     });
 
-    it('applies high volatility event multiplier', () => {
+    it("applies high volatility event multiplier", () => {
       const normalResult = calculateVolatilityMultiplier(15, 15, 3, false);
       const eventResult = calculateVolatilityMultiplier(15, 15, 3, true);
       expect(eventResult).toBeCloseTo(normalResult * 1.5);
     });
 
-    it('enforces minimum multiplier of 1x', () => {
+    it("enforces minimum multiplier of 1x", () => {
       const result = calculateVolatilityMultiplier(1, 100, 2, false);
       expect(result).toBeGreaterThanOrEqual(1);
     });
   });
 
-  describe('calculateSizeMultiplier', () => {
-    it('returns ~1x for small orders on very high liquidity', () => {
-      const result = calculateSizeMultiplier(0.5, 'very_high', false);
+  describe("calculateSizeMultiplier", () => {
+    it("returns ~1x for small orders on very high liquidity", () => {
+      const result = calculateSizeMultiplier(0.5, "very_high", false);
       expect(result).toBeCloseTo(1, 0); // Should be close to 1
     });
 
-    it('increases multiplier for larger orders', () => {
-      const small = calculateSizeMultiplier(2, 'very_high', false);
-      const large = calculateSizeMultiplier(15, 'very_high', false);
+    it("increases multiplier for larger orders", () => {
+      const small = calculateSizeMultiplier(2, "very_high", false);
+      const large = calculateSizeMultiplier(15, "very_high", false);
       expect(large).toBeGreaterThan(small);
     });
 
-    it('increases multiplier for lower liquidity', () => {
-      const veryHigh = calculateSizeMultiplier(5, 'very_high', false);
-      const low = calculateSizeMultiplier(5, 'low', false);
+    it("increases multiplier for lower liquidity", () => {
+      const veryHigh = calculateSizeMultiplier(5, "very_high", false);
+      const low = calculateSizeMultiplier(5, "low", false);
       expect(low).toBeGreaterThan(veryHigh);
     });
 
-    it('applies low liquidity penalty multiplier', () => {
-      const normal = calculateSizeMultiplier(5, 'high', false);
-      const lowLiq = calculateSizeMultiplier(5, 'high', true);
+    it("applies low liquidity penalty multiplier", () => {
+      const normal = calculateSizeMultiplier(5, "high", false);
+      const lowLiq = calculateSizeMultiplier(5, "high", true);
       expect(lowLiq).toBeCloseTo(normal * 2);
     });
 
-    it('handles zero order size gracefully', () => {
-      const result = calculateSizeMultiplier(0, 'very_high', false);
+    it("handles zero order size gracefully", () => {
+      const result = calculateSizeMultiplier(0, "very_high", false);
       expect(result).toBeGreaterThanOrEqual(1);
       expect(Number.isFinite(result)).toBe(true);
     });
 
-    it('handles very large order size', () => {
-      const result = calculateSizeMultiplier(100, 'low', true);
+    it("handles very large order size", () => {
+      const result = calculateSizeMultiplier(100, "low", true);
       expect(Number.isFinite(result)).toBe(true);
       expect(result).toBeGreaterThan(1);
     });
   });
 
-  describe('calculateBaseSlippage', () => {
-    it('returns valid slippage within configured range', () => {
-      const config = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+  describe("calculateBaseSlippage", () => {
+    it("returns valid slippage within configured range", () => {
+      const config = ASSET_SLIPPAGE_CONFIG["EURUSD"];
       const randomFunc = () => 0.5;
       const result = calculateBaseSlippage(config, randomFunc);
 
@@ -90,8 +90,8 @@ describe('Slippage Calculation Engine', () => {
       expect(result).toBeLessThanOrEqual(config.maxSlippage);
     });
 
-    it('uses deterministic random generation', () => {
-      const config = ASSET_SLIPPAGE_CONFIG['BTCUSD'];
+    it("uses deterministic random generation", () => {
+      const config = ASSET_SLIPPAGE_CONFIG["BTCUSD"];
       let counter = 0;
       const deterministicRandom = () => (counter++ % 10) / 10;
 
@@ -109,28 +109,28 @@ describe('Slippage Calculation Engine', () => {
     });
   });
 
-  describe('calculateAfterHoursPenalty', () => {
-    it('returns 1x during normal hours', () => {
-      const config = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+  describe("calculateAfterHoursPenalty", () => {
+    it("returns 1x during normal hours", () => {
+      const config = ASSET_SLIPPAGE_CONFIG["EURUSD"];
       const result = calculateAfterHoursPenalty(config, false);
       expect(result).toBe(1);
     });
 
-    it('applies penalty multiplier after hours', () => {
-      const config = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+    it("applies penalty multiplier after hours", () => {
+      const config = ASSET_SLIPPAGE_CONFIG["EURUSD"];
       const result = calculateAfterHoursPenalty(config, true);
       expect(result).toBe(config.afterHoursPenalty);
       expect(result).toBeGreaterThan(1);
     });
   });
 
-  describe('calculateSlippage', () => {
-    it('calculates slippage for Forex Major (EURUSD)', () => {
+  describe("calculateSlippage", () => {
+    it("calculates slippage for Forex Major (EURUSD)", () => {
       const result = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 100000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -142,25 +142,25 @@ describe('Slippage Calculation Engine', () => {
         },
       });
 
-      expect(result).toHaveProperty('baseSlippage');
-      expect(result).toHaveProperty('volatilityMultiplier');
-      expect(result).toHaveProperty('sizeMultiplier');
-      expect(result).toHaveProperty('totalSlippage');
-      expect(result).toHaveProperty('executionPrice');
-      expect(result).toHaveProperty('slippageInPrice');
+      expect(result).toHaveProperty("baseSlippage");
+      expect(result).toHaveProperty("volatilityMultiplier");
+      expect(result).toHaveProperty("sizeMultiplier");
+      expect(result).toHaveProperty("totalSlippage");
+      expect(result).toHaveProperty("executionPrice");
+      expect(result).toHaveProperty("slippageInPrice");
 
       expect(result.totalSlippage).toBeLessThanOrEqual(
-        ASSET_SLIPPAGE_CONFIG['EURUSD'].maxSlippage * 2
+        ASSET_SLIPPAGE_CONFIG["EURUSD"].maxSlippage * 2,
       );
       expect(result.executionPrice).toBeGreaterThan(result.baseSlippage); // Buy slips up
     });
 
-    it('increases slippage with higher volatility', () => {
+    it("increases slippage with higher volatility", () => {
       const baseResult = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 100000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -170,14 +170,14 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: false,
         },
-        seed: 'test1',
+        seed: "test1",
       });
 
       const volResult = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 100000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 25,
           averageVolatility: 12,
@@ -187,19 +187,21 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: false,
         },
-        seed: 'test1',
+        seed: "test1",
       });
 
-      expect(volResult.volatilityMultiplier).toBeGreaterThan(baseResult.volatilityMultiplier);
+      expect(volResult.volatilityMultiplier).toBeGreaterThan(
+        baseResult.volatilityMultiplier,
+      );
       expect(volResult.totalSlippage).toBeGreaterThan(baseResult.totalSlippage);
     });
 
-    it('increases slippage with larger orders', () => {
+    it("increases slippage with larger orders", () => {
       const smallOrder = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 10000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -212,10 +214,10 @@ describe('Slippage Calculation Engine', () => {
       });
 
       const largeOrder = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 2000000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -228,15 +230,17 @@ describe('Slippage Calculation Engine', () => {
       });
 
       // Size multiplier should increase significantly with larger order
-      expect(largeOrder.sizeMultiplier).toBeGreaterThan(smallOrder.sizeMultiplier);
+      expect(largeOrder.sizeMultiplier).toBeGreaterThan(
+        smallOrder.sizeMultiplier,
+      );
     });
 
-    it('applies after-hours penalty', () => {
+    it("applies after-hours penalty", () => {
       const normalHours = calculateSlippage({
-        symbol: 'AAPL',
+        symbol: "AAPL",
         marketPrice: 150,
         orderQuantity: 100,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 20,
           averageVolatility: 20,
@@ -246,14 +250,14 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: false,
         },
-        seed: 'test3',
+        seed: "test3",
       });
 
       const afterHours = calculateSlippage({
-        symbol: 'AAPL',
+        symbol: "AAPL",
         marketPrice: 150,
         orderQuantity: 100,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 20,
           averageVolatility: 20,
@@ -263,18 +267,20 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: true,
         },
-        seed: 'test3',
+        seed: "test3",
       });
 
-      expect(afterHours.totalSlippage).toBeGreaterThan(normalHours.totalSlippage);
+      expect(afterHours.totalSlippage).toBeGreaterThan(
+        normalHours.totalSlippage,
+      );
     });
 
-    it('handles sell orders (slips down)', () => {
+    it("handles sell orders (slips down)", () => {
       const buyResult = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 100000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -284,14 +290,14 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: false,
         },
-        seed: 'test4',
+        seed: "test4",
       });
 
       const sellResult = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 100000,
-        side: 'sell',
+        side: "sell",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -301,26 +307,26 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: false,
         },
-        seed: 'test4',
+        seed: "test4",
       });
 
       // Buy slips up (execution price higher)
-      expect(buyResult.executionPrice).toBeGreaterThan(1.0850);
+      expect(buyResult.executionPrice).toBeGreaterThan(1.085);
 
       // Sell slips down (execution price lower)
-      expect(sellResult.executionPrice).toBeLessThan(1.0850);
+      expect(sellResult.executionPrice).toBeLessThan(1.085);
 
       // Slippage magnitude should be same
       expect(buyResult.slippageInPrice).toBeCloseTo(sellResult.slippageInPrice);
     });
 
-    it('rejects invalid symbol', () => {
+    it("rejects invalid symbol", () => {
       expect(() =>
         calculateSlippage({
-          symbol: 'INVALID_SYMBOL',
+          symbol: "INVALID_SYMBOL",
           marketPrice: 100,
           orderQuantity: 10,
-          side: 'buy',
+          side: "buy",
           conditions: {
             currentVolatility: 15,
             averageVolatility: 15,
@@ -330,17 +336,17 @@ describe('Slippage Calculation Engine', () => {
             orderSizePercentage: 1,
             isAfterHours: false,
           },
-        })
+        }),
       ).toThrow(SlippageCalculationError);
     });
 
-    it('rejects invalid inputs', () => {
+    it("rejects invalid inputs", () => {
       expect(() =>
         calculateSlippage({
-          symbol: 'EURUSD',
+          symbol: "EURUSD",
           marketPrice: -100, // Invalid: negative
           orderQuantity: 10,
-          side: 'buy' as const,
+          side: "buy" as const,
           conditions: {
             currentVolatility: 15,
             averageVolatility: 15,
@@ -350,16 +356,16 @@ describe('Slippage Calculation Engine', () => {
             orderSizePercentage: 1,
             isAfterHours: false,
           },
-        })
+        }),
       ).toThrow();
     });
 
-    it('generates deterministic results with seed', () => {
+    it("generates deterministic results with seed", () => {
       const input = {
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 100000,
-        side: 'buy' as const,
+        side: "buy" as const,
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,
@@ -369,7 +375,7 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 1,
           isAfterHours: false,
         },
-        seed: 'reproducible-seed-123',
+        seed: "reproducible-seed-123",
       };
 
       const result1 = calculateSlippage(input);
@@ -381,17 +387,17 @@ describe('Slippage Calculation Engine', () => {
     });
   });
 
-  describe('getExecutionPrice', () => {
-    it('returns execution price with slippage applied', () => {
-      const result = getExecutionPrice('EURUSD', 1.0850, 'buy', 100000);
-      expect(result).toBeGreaterThan(1.0850); // Buy slips up
-      expect(result).toBeLessThan(1.0860); // But not too much
+  describe("getExecutionPrice", () => {
+    it("returns execution price with slippage applied", () => {
+      const result = getExecutionPrice("EURUSD", 1.085, "buy", 100000);
+      expect(result).toBeGreaterThan(1.085); // Buy slips up
+      expect(result).toBeLessThan(1.086); // But not too much
     });
 
-    it('handles different asset classes', () => {
-      const forex = getExecutionPrice('EURUSD', 1.0850, 'buy', 100000);
-      const stock = getExecutionPrice('AAPL', 150, 'buy', 100);
-      const crypto = getExecutionPrice('BTCUSD', 45000, 'buy', 1);
+    it("handles different asset classes", () => {
+      const forex = getExecutionPrice("EURUSD", 1.085, "buy", 100000);
+      const stock = getExecutionPrice("AAPL", 150, "buy", 100);
+      const crypto = getExecutionPrice("BTCUSD", 45000, "buy", 1);
 
       // All should be valid prices
       expect(forex).toBeGreaterThan(0);
@@ -400,33 +406,33 @@ describe('Slippage Calculation Engine', () => {
     });
   });
 
-  describe('getAssetSlippageConfig', () => {
-    it('returns config for valid asset', () => {
-      const config = getAssetSlippageConfig('EURUSD');
+  describe("getAssetSlippageConfig", () => {
+    it("returns config for valid asset", () => {
+      const config = getAssetSlippageConfig("EURUSD");
       expect(config).toBeDefined();
-      expect(config).toHaveProperty('baseSpread');
-      expect(config).toHaveProperty('minSlippage');
-      expect(config).toHaveProperty('maxSlippage');
-      expect(config).toHaveProperty('liquidity');
+      expect(config).toHaveProperty("baseSpread");
+      expect(config).toHaveProperty("minSlippage");
+      expect(config).toHaveProperty("maxSlippage");
+      expect(config).toHaveProperty("liquidity");
     });
 
-    it('returns undefined for invalid asset', () => {
-      const config = getAssetSlippageConfig('INVALID');
+    it("returns undefined for invalid asset", () => {
+      const config = getAssetSlippageConfig("INVALID");
       expect(config).toBeUndefined();
     });
   });
 
-  describe('getSupportedAssets', () => {
-    it('returns list of supported assets', () => {
+  describe("getSupportedAssets", () => {
+    it("returns list of supported assets", () => {
       const assets = getSupportedAssets();
       expect(Array.isArray(assets)).toBe(true);
       expect(assets.length).toBeGreaterThan(0);
-      expect(assets).toContain('EURUSD');
-      expect(assets).toContain('BTCUSD');
-      expect(assets).toContain('AAPL');
+      expect(assets).toContain("EURUSD");
+      expect(assets).toContain("BTCUSD");
+      expect(assets).toContain("AAPL");
     });
 
-    it('returns unique assets', () => {
+    it("returns unique assets", () => {
       const assets = getSupportedAssets();
       const unique = new Set(assets);
       expect(unique.size).toBe(assets.length);
@@ -435,13 +441,13 @@ describe('Slippage Calculation Engine', () => {
 
   // ===== INTEGRATION TESTS =====
 
-  describe('Integration: Slippage in different market conditions', () => {
-    it('simulates stable market (low vol, normal liquidity)', () => {
+  describe("Integration: Slippage in different market conditions", () => {
+    it("simulates stable market (low vol, normal liquidity)", () => {
       const result = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 50000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 10,
           averageVolatility: 12,
@@ -451,20 +457,20 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 0.25,
           isAfterHours: false,
         },
-        seed: 'stable-market',
+        seed: "stable-market",
       });
 
       // Slippage should be relatively low (base spread to small multiplier)
       expect(result.totalSlippage).toBeLessThan(1);
-      expect(result.executionPrice).toBeCloseTo(1.0850, 2);
+      expect(result.executionPrice).toBeCloseTo(1.085, 2);
     });
 
-    it('simulates volatile market (high vol, earnings)', () => {
+    it("simulates volatile market (high vol, earnings)", () => {
       const result = calculateSlippage({
-        symbol: 'AAPL',
+        symbol: "AAPL",
         marketPrice: 150,
         orderQuantity: 1000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 40, // High volatility
           averageVolatility: 20,
@@ -474,7 +480,7 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 2,
           isAfterHours: false,
         },
-        seed: 'volatile-market',
+        seed: "volatile-market",
       });
 
       // Slippage should be significant
@@ -482,12 +488,12 @@ describe('Slippage Calculation Engine', () => {
       expect(result.totalSlippage).toBeGreaterThan(0.1);
     });
 
-    it('simulates exotic forex after-hours low liquidity', () => {
+    it("simulates exotic forex after-hours low liquidity", () => {
       const result = calculateSlippage({
-        symbol: 'USDTRY',
+        symbol: "USDTRY",
         marketPrice: 32.5,
         orderQuantity: 10000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 25,
           averageVolatility: 20,
@@ -497,7 +503,7 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 5,
           isAfterHours: true,
         },
-        seed: 'exotic-after-hours',
+        seed: "exotic-after-hours",
       });
 
       // Slippage should be very high
@@ -506,12 +512,12 @@ describe('Slippage Calculation Engine', () => {
       expect(result.sizeMultiplier).toBeGreaterThan(1);
     });
 
-    it('simulates crypto large order (liquidation scenario)', () => {
+    it("simulates crypto large order (liquidation scenario)", () => {
       const result = calculateSlippage({
-        symbol: 'BTCUSD',
+        symbol: "BTCUSD",
         marketPrice: 45000,
         orderQuantity: 50, // Large for crypto
-        side: 'sell',
+        side: "sell",
         conditions: {
           currentVolatility: 30,
           averageVolatility: 20,
@@ -521,7 +527,7 @@ describe('Slippage Calculation Engine', () => {
           orderSizePercentage: 20, // Large % of volume
           isAfterHours: false,
         },
-        seed: 'crypto-liquidation',
+        seed: "crypto-liquidation",
       });
 
       // Slippage should be substantial
@@ -530,13 +536,13 @@ describe('Slippage Calculation Engine', () => {
     });
   });
 
-  describe('Edge cases and boundary conditions', () => {
-    it('handles very small prices (crypto pairs)', () => {
+  describe("Edge cases and boundary conditions", () => {
+    it("handles very small prices (crypto pairs)", () => {
       const result = calculateSlippage({
-        symbol: 'XRPUSD',
+        symbol: "XRPUSD",
         marketPrice: 0.52,
         orderQuantity: 100000,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 15,
           averageVolatility: 15,
@@ -552,12 +558,12 @@ describe('Slippage Calculation Engine', () => {
       expect(result.executionPrice).toBeCloseTo(0.52, 5);
     });
 
-    it('handles very large prices (indices)', () => {
+    it("handles very large prices (indices)", () => {
       const result = calculateSlippage({
-        symbol: 'US500',
+        symbol: "US500",
         marketPrice: 5500,
         orderQuantity: 100,
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 15,
           averageVolatility: 15,
@@ -573,12 +579,12 @@ describe('Slippage Calculation Engine', () => {
       expect(result.executionPrice).toBeLessThan(5510);
     });
 
-    it('handles minimum order size', () => {
+    it("handles minimum order size", () => {
       const result = calculateSlippage({
-        symbol: 'EURUSD',
-        marketPrice: 1.0850,
+        symbol: "EURUSD",
+        marketPrice: 1.085,
         orderQuantity: 0.01, // Minimum
-        side: 'buy',
+        side: "buy",
         conditions: {
           currentVolatility: 12,
           averageVolatility: 12,

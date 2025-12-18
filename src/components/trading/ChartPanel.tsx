@@ -41,7 +41,7 @@ const ChartPanel = ({ symbol }: ChartPanelProps) => {
           <Maximize2 className="h-4 w-4" />
         </Button>
       </div>
-      
+
       <div className="flex-1 overflow-hidden">
         <TradingViewErrorBoundary widgetType="Advanced Chart">
           <TradingViewAdvancedChart symbol={symbol} />

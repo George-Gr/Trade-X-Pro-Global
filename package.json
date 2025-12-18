@@ -14,7 +14,9 @@
     "build:dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build --mode development",
     "build:sentry": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build && sentry-cli sourcemaps upload-sourcemaps dist --url-prefix '~/' --strip-prefix './dist'",
     "build:production": "cross-env NODE_OPTIONS=--max-old-space-size=4096 node scripts/setup-node-env.js && cross-env NODE_OPTIONS=--max-old-space-size=4096 VITE_SENTRY_DSN=$SENTRY_DSN vite build",
-    "lint": "eslint .",
+    "lint": "cross-env NODE_OPTIONS=--max-old-space-size=8192 eslint .",
+    "lint:fix": "cross-env NODE_OPTIONS=--max-old-space-size=8192 eslint . --fix",
+    "lint:fast": "eslint . -c eslint.config.dev.js",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "sync-validators": "node ./scripts/sync-validators.js",
@@ -28,10 +30,14 @@
     "supabase:push": "supabase push",
     "supabase:pull": "supabase pull",
     "supabase:migrations": "supabase migrations list",
-    "supabase:functions:deploy": "supabase functions deploy"
-    ,
+    "supabase:functions:deploy": "supabase functions deploy",
     "diagnose:terminal": "node ./scripts/find-vscode-pty-errors.cjs",
-    "collect:pty-logs": "powershell -ExecutionPolicy Bypass -File ./scripts/collect-vscode-pty-logs.ps1"
+    "collect:pty-logs": "powershell -ExecutionPolicy Bypass -File ./scripts/collect-vscode-pty-logs.ps1",
+    "network:check": "node -e \"console.log('Network check:', require('dns').lookup('registry.npmjs.org', (err, address) => console.log(err ? 'Offline' : 'Online')))\"",
+    "network:config": "node scripts/network-config.js",
+    "node:compat": "node scripts/node-compatibility.js",
+    "copilot:config": "node scripts/copilot-config.js",
+    "health:check": "node scripts/health-check.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -94,6 +100,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
+    "web-vitals": "^5.1.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -121,6 +128,7 @@
     "glob": "^13.0.0",
     "globals": "^15.15.0",
     "jsdom": "^27.3.0",
+    "json5": "^2.2.3",
     "lovable-tagger": "^1.1.11",
     "playwright": "^1.43.0",
     "postcss": "^8.5.6",

@@ -26,21 +26,27 @@
 ## 🎯 Security Principles
 
 ### 1. Zero Trust
+
 Never trust any input—validate everything. Assume all data is untrusted until proven otherwise.
 
 ### 2. Least Privilege
+
 Users and services should only have access to what they need.
 
 ### 3. Defense in Depth
+
 Multiple layers of security. Never rely on a single control.
 
 ### 4. Secure by Default
+
 Secure configuration should be the default, not opt-in.
 
 ### 5. Audit Everything
+
 Log security-relevant events. Track access and changes.
 
 ### 6. Fail Securely
+
 When security checks fail, deny access by default.
 
 ---
@@ -57,21 +63,23 @@ import { useAuth } from '@/hooks/useAuth';
 
 export const Protected: React.FC = () => {
   const { user, isLoading } = useAuth();
-  
+
   if (isLoading) return <Spinner />;
   if (!user) return <Redirect to="/login" />;
-  
+
   return <Dashboard />;
 };
 ```
 
 **Supported Methods:**
+
 - Email + Password (verified only)
 - Magic Links
 - OAuth (Google, GitHub)
 - MFA (optional)
 
 **Standards:**
+
 - ✅ Passwords must be 8+ characters
 - ✅ Email verification required
 - ✅ Sessions expire after 24 hours
@@ -84,17 +92,17 @@ export const Protected: React.FC = () => {
 ```typescript
 // ✅ Good: Session cleanup
 useEffect(() => {
-  const { data: { subscription } } = supabase.auth.onAuthStateChange(
-    async (event, session) => {
-      if (event === 'SIGNED_OUT') {
-        // Clear all data
-        localStorage.clear();
-        // Redirect
-        navigate('/login');
-      }
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === "SIGNED_OUT") {
+      // Clear all data
+      localStorage.clear();
+      // Redirect
+      navigate("/login");
     }
-  );
-  
+  });
+
   return () => subscription?.unsubscribe();
 }, []);
 
@@ -120,6 +128,7 @@ const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Not secure!
 ```
 
 **Roles:**
+
 - **admin** - Full platform access, KYC approvals
 - **trader** - Trading, portfolio management
 - **copytrader** - Copy trading features
@@ -132,11 +141,13 @@ const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Not secure!
 ### Encryption
 
 **In Transit:**
+
 - ✅ HTTPS/TLS 1.2+ for all connections
 - ✅ Supabase enforces SSL/TLS
 - ✅ No HTTP traffic allowed
 
 **At Rest:**
+
 - ✅ PostgreSQL encryption (Supabase managed)
 - ✅ Sensitive data fields encrypted in database
 - ✅ Passwords hashed with bcrypt
@@ -149,17 +160,18 @@ const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Not secure!
 try {
   await processPayment(order);
 } catch (error) {
-  logger.error('Payment failed');  // No sensitive data
+  logger.error("Payment failed"); // No sensitive data
   // Report to monitoring without details
 }
 
 // ❌ Bad: Logging sensitive data
-logger.error('Payment failed:', { cardNumber, cvv, error }); // Exposed!
+logger.error("Payment failed:", { cardNumber, cvv, error }); // Exposed!
 ```
 
 ### PII Protection
 
 For KYC and user data:
+
 - ✅ Encrypted fields in database
 - ✅ Limited access via Row-Level Security
 - ✅ Audit logs for access
@@ -186,6 +198,7 @@ Users can request data deletion (GDPR Right to Be Forgotten):
 ### Environment Variables
 
 **Required Setup:**
+
 ```bash
 # .env.local (NEVER commit this)
 VITE_SUPABASE_URL=https://[project].supabase.co
@@ -204,11 +217,11 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // ❌ Bad: Hardcoded secrets
-const supabaseUrl = 'https://project.supabase.co';
-const apiKey = 'sk_live_abc123...'; // EXPOSED!
+const supabaseUrl = "https://project.supabase.co";
+const apiKey = "sk_live_abc123..."; // EXPOSED!
 
 // ❌ Bad: Secrets in client code
-const stripeSecret = 'sk_secret_...'; // Backend only!
+const stripeSecret = "sk_secret_..."; // Backend only!
 ```
 
 ### Secret Rotation
@@ -226,7 +239,7 @@ const stripeSecret = 'sk_secret_...'; // Backend only!
 
 ```typescript
 // ✅ Good: Validate with Zod
-import { z } from 'zod';
+import { z } from "zod";
 
 const orderSchema = z.object({
   symbol: z.string().min(1).max(10),
@@ -237,7 +250,7 @@ const orderSchema = z.object({
 const handleSubmit = (data: unknown) => {
   const result = orderSchema.safeParse(data);
   if (!result.success) {
-    return { error: 'Invalid order' };
+    return { error: "Invalid order" };
   }
   // Process validated data
 };
@@ -254,10 +267,10 @@ const handleSubmit = (data: any) => {
 ```typescript
 // ✅ Good: Use parameterized queries
 const { data, error } = await supabase
-  .from('orders')
-  .select('*')
-  .eq('symbol', userSymbol)
-  .eq('user_id', userId);
+  .from("orders")
+  .select("*")
+  .eq("symbol", userSymbol)
+  .eq("user_id", userId);
 
 // ❌ Bad: String concatenation (not used in this project)
 // const query = `SELECT * FROM orders WHERE symbol = '${userSymbol}'`;
@@ -272,16 +285,16 @@ const { data, error } = await supabase
 // Implement client-side rate limiting for critical operations
 const useRateLimit = (maxRequests: number, windowMs: number) => {
   const [requests, setRequests] = useState<number[]>([]);
-  
+
   return {
     canMakeRequest: () => {
       const now = Date.now();
-      const recent = requests.filter(t => now - t < windowMs);
+      const recent = requests.filter((t) => now - t < windowMs);
       return recent.length < maxRequests;
     },
     recordRequest: () => {
-      setRequests(prev => [...prev, Date.now()]);
-    }
+      setRequests((prev) => [...prev, Date.now()]);
+    },
   };
 };
 ```
@@ -292,9 +305,9 @@ const useRateLimit = (maxRequests: number, windowMs: number) => {
 // Allow requests from trusted domains only
 // Configured in Supabase project settings
 const ALLOWED_ORIGINS = [
-  'https://tradepro.com',
-  'https://app.tradepro.com',
-  'http://localhost:5173', // Dev only
+  "https://tradepro.com",
+  "https://app.tradepro.com",
+  "http://localhost:5173", // Dev only
 ];
 ```
 
@@ -327,22 +340,26 @@ return <div dangerouslySetInnerHTML={{ __html: userInput }} />;
 // No need for manual CSRF tokens
 
 // When modifying data, always use proper methods:
-await supabase.from('orders').insert({ /* ... */ }); // POST
-await supabase.from('orders').update({ /* ... */ }); // PUT
-await supabase.from('orders').delete(); // DELETE
+await supabase.from("orders").insert({
+  /* ... */
+}); // POST
+await supabase.from("orders").update({
+  /* ... */
+}); // PUT
+await supabase.from("orders").delete(); // DELETE
 ```
 
 ### Sensitive Code Removal
 
 ```typescript
 // ❌ Before deployment: Remove all debug code
-if (process.env.NODE_ENV === 'development') {
-  console.log('Debug:', sensitiveData); // OK in dev
+if (process.env.NODE_ENV === "development") {
+  console.log("Debug:", sensitiveData); // OK in dev
 }
 
 // ✅ Use proper logging only
-if (process.env.NODE_ENV === 'development') {
-  logger.debug('Operation completed'); // No sensitive data
+if (process.env.NODE_ENV === "development") {
+  logger.debug("Operation completed"); // No sensitive data
 }
 
 // Remove console.log before commit
@@ -399,9 +416,9 @@ const logAudit = async (
   action: string,
   userId: string,
   resource: string,
-  details: Record<string, any>
+  details: Record<string, any>,
 ) => {
-  await supabase.from('audit_logs').insert({
+  await supabase.from("audit_logs").insert({
     action,
     user_id: userId,
     resource,
@@ -425,6 +442,7 @@ const logAudit = async (
 ### External Services
 
 **Required verification for integrations:**
+
 - ✅ HTTPS/TLS enforcement
 - ✅ API key rotation policy
 - ✅ Rate limiting
@@ -434,28 +452,26 @@ const logAudit = async (
 ### Webhook Verification
 
 ```typescript
-import { createHmac } from 'crypto';
+import { createHmac } from "crypto";
 
 // ✅ Good: Verify webhook signature
 export const verifyWebhookSignature = (
   payload: string,
   signature: string,
-  secret: string
+  secret: string,
 ): boolean => {
-  const hash = createHmac('sha256', secret)
-    .update(payload)
-    .digest('hex');
+  const hash = createHmac("sha256", secret).update(payload).digest("hex");
   return hash === signature;
 };
 
 const handleWebhook = async (req: Request) => {
-  const signature = req.headers.get('x-signature');
+  const signature = req.headers.get("x-signature");
   const body = await req.text();
-  
+
   if (!verifyWebhookSignature(body, signature, process.env.WEBHOOK_SECRET)) {
-    return new Response('Unauthorized', { status: 401 });
+    return new Response("Unauthorized", { status: 401 });
   }
-  
+
   // Process webhook
 };
 
@@ -475,6 +491,7 @@ const handleWebhook = async (req: Request) => {
 **DO NOT** file a public issue for security vulnerabilities.
 
 **Instead:**
+
 1. Email: `security@tradepro.com`
 2. Include:
    - Description of vulnerability
@@ -485,6 +502,7 @@ const handleWebhook = async (req: Request) => {
 4. Allow 30 days for patch before disclosure
 
 **Timeline:**
+
 - Day 0: Report submitted
 - Day 1: Acknowledged
 - Day 7: Assessment complete
@@ -493,11 +511,11 @@ const handleWebhook = async (req: Request) => {
 
 ### Supported Versions
 
-| Version | Status | Security Updates |
-|---------|--------|------------------|
-| 10.x | Current | ✅ Active |
-| 9.x | LTS | ✅ Critical only |
-| < 9.0 | EOL | ❌ None |
+| Version | Status  | Security Updates |
+| ------- | ------- | ---------------- |
+| 10.x    | Current | ✅ Active        |
+| 9.x     | LTS     | ✅ Critical only |
+| < 9.0   | EOL     | ❌ None          |
 
 ---
 
@@ -552,6 +570,7 @@ const handleWebhook = async (req: Request) => {
 **Applies to:** EU residents or EU data processing
 
 **Key Requirements:**
+
 - ✅ Data processing agreement in place
 - ✅ Privacy policy updated
 - ✅ User consent for data processing
@@ -561,6 +580,7 @@ const handleWebhook = async (req: Request) => {
 - ✅ Privacy by design
 
 **Implementation:**
+
 ```typescript
 // Account settings should include:
 // - Download personal data (GDPR Article 15)
@@ -573,6 +593,7 @@ const handleWebhook = async (req: Request) => {
 **Applies to:** California residents
 
 **Key Requirements:**
+
 - ✅ Privacy policy discloses data collection
 - ✅ Right to know (Article 1798.100)
 - ✅ Right to delete (Article 1798.105)
@@ -582,6 +603,7 @@ const handleWebhook = async (req: Request) => {
 ### AML (Anti-Money Laundering)
 
 **Requirements:**
+
 - ✅ KYC verification (Know Your Customer)
 - ✅ Transaction monitoring
 - ✅ Suspicious activity reporting (SAR)
@@ -589,6 +611,7 @@ const handleWebhook = async (req: Request) => {
 - ✅ Sanctions screening
 
 **Implementation:**
+
 ```typescript
 // KYC workflow:
 1. Identity verification (ID document)
@@ -604,6 +627,7 @@ const handleWebhook = async (req: Request) => {
 **Applies to:** If accepting card payments
 
 **Key Requirements:**
+
 - ✅ Never store full card numbers
 - ✅ Use tokenization for payments
 - ✅ TLS 1.2+ for all transactions

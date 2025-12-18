@@ -2,7 +2,7 @@ export type Position = {
   id: string;
   user_id?: string;
   symbol: string;
-  side: 'long' | 'short';
+  side: "long" | "short";
   quantity: number;
   entry_price: number;
   current_price: number;
@@ -11,7 +11,7 @@ export type Position = {
   margin_level?: number;
   opened_at: Date;
   leverage: number;
-  status?: 'open' | 'closing' | 'closed';
+  status?: "open" | "closing" | "closed";
   created_at?: string;
   updated_at?: string;
   // optional advanced fields

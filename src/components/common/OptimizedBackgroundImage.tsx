@@ -6,7 +6,7 @@ interface OptimizedBackgroundImageProps {
   alt?: string;
   className?: string;
   style?: React.CSSProperties;
-  loading?: 'lazy' | 'eager';
+  loading?: "lazy" | "eager";
   priority?: boolean;
   onLoad?: () => void;
   onError?: () => void;
@@ -18,12 +18,12 @@ export const OptimizedBackgroundImage = ({
   alt,
   className,
   style = {},
-  loading = 'lazy',
+  loading = "lazy",
   priority = false,
   onLoad,
   onError,
 }: OptimizedBackgroundImageProps) => {
-  const [imageSrc, setImageSrc] = useState<string>('');
+  const [imageSrc, setImageSrc] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
 
@@ -35,10 +35,10 @@ export const OptimizedBackgroundImage = ({
       try {
         // Check if WebP is supported
         const supportsWebP = await checkWebPSupport();
-        
+
         // Use WebP if supported and available, otherwise fallback to original
         const finalSrc = supportsWebP && webpSrc ? webpSrc : src;
-        
+
         // Preload the image to ensure it's loaded before setting
         const img = new Image();
         img.onload = () => {
@@ -67,12 +67,12 @@ export const OptimizedBackgroundImage = ({
             onError?.();
           }
         };
-        
+
         // Add loading priority hint if specified
         if (priority) {
-          img.fetchPriority = 'high';
+          img.fetchPriority = "high";
         }
-        
+
         img.src = finalSrc;
       } catch (error) {
         setIsLoading(false);
@@ -91,7 +91,8 @@ export const OptimizedBackgroundImage = ({
       webP.onload = webP.onerror = () => {
         resolve(webP.height === 2);
       };
-      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+      webP.src =
+        "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
     });
   };
 
@@ -102,13 +103,13 @@ export const OptimizedBackgroundImage = ({
         className={className}
         style={{
           ...style,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: '#f3f4f6', // Light gray placeholder
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#f3f4f6", // Light gray placeholder
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         aria-label="Loading image"
       >
@@ -125,10 +126,10 @@ export const OptimizedBackgroundImage = ({
         className={className}
         style={{
           ...style,
-          backgroundColor: '#fee2e2', // Light red error state
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          backgroundColor: "#fee2e2", // Light red error state
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         aria-label="Image failed to load"
       >

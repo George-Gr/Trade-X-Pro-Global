@@ -8,13 +8,13 @@ Your application has 35+ outdated packages. A **conservative, phased approach** 
 
 ## The Bottom Line
 
-| Phase | What | When | Risk | Do Now? |
-|-------|------|------|------|---------|
-| **Phase 1** | Patch updates (8 packages) | Now | ✅ Minimal | YES |
-| **Phase 2** | Minor updates (3 packages) | After Phase 1 | ✅ Low | YES |
-| **Phase 3** | Supabase minor update | After Phase 2 | ⚠️ Medium | YES (with caution) |
-| **React 19** | Major ecosystem shift | Q1 2025 | 🔴 High | NO - DEFER |
-| **Router v7** | Major routing overhaul | Q2 2025 | 🔴 High | NO - DEFER |
+| Phase         | What                       | When          | Risk       | Do Now?            |
+| ------------- | -------------------------- | ------------- | ---------- | ------------------ |
+| **Phase 1**   | Patch updates (8 packages) | Now           | ✅ Minimal | YES                |
+| **Phase 2**   | Minor updates (3 packages) | After Phase 1 | ✅ Low     | YES                |
+| **Phase 3**   | Supabase minor update      | After Phase 2 | ⚠️ Medium  | YES (with caution) |
+| **React 19**  | Major ecosystem shift      | Q1 2025       | 🔴 High    | NO - DEFER         |
+| **Router v7** | Major routing overhaul     | Q2 2025       | 🔴 High    | NO - DEFER         |
 
 ---
 
@@ -58,25 +58,28 @@ npm run supabase:pull  # Important!
 
 ## What NOT to Upgrade (Yet)
 
-| Package | Reason |
-|---------|--------|
-| **React 18→19** | Major breaking changes. Requires ecosystem compatibility check. Plan for Q1 2025. |
-| **react-router-dom 6→7** | Fundamental routing overhaul. Requires 40-60 hours refactoring. Skip for now. |
-| **@tailwindcss/typography** | Not essential for trading platform. Skip. |
-| **Zod 3→4** | Works perfectly as-is. Major upgrade adds complexity for minimal benefit. Skip. |
-| **sonner, react-window, recharts** | All stable in current versions. Skip major upgrades. |
+| Package                            | Reason                                                                            |
+| ---------------------------------- | --------------------------------------------------------------------------------- |
+| **React 18→19**                    | Major breaking changes. Requires ecosystem compatibility check. Plan for Q1 2025. |
+| **react-router-dom 6→7**           | Fundamental routing overhaul. Requires 40-60 hours refactoring. Skip for now.     |
+| **@tailwindcss/typography**        | Not essential for trading platform. Skip.                                         |
+| **Zod 3→4**                        | Works perfectly as-is. Major upgrade adds complexity for minimal benefit. Skip.   |
+| **sonner, react-window, recharts** | All stable in current versions. Skip major upgrades.                              |
 
 ---
 
 ## Critical Decisions
 
 ### ❓ Should I upgrade React to 19?
+
 **Answer:** NO - Not yet. React 18.3 is stable and supported. Plan for Q1 2025 with dedicated testing.
 
 ### ❓ Should I upgrade form validation stack?
+
 **Answer:** NO - Current stack (react-hook-form 7.66, zod 3.25, resolvers 3.10) is proven and stable.
 
 ### ❓ Should I upgrade React Router to 7?
+
 **Answer:** NO - v6 is mature. v7 requires significant refactoring (40-60 hours). Only upgrade if building new projects.
 
 ---
@@ -114,12 +117,12 @@ Outdated packages: 35
 
 ## After Each Phase
 
-| Check | Command |
-|-------|---------|
+| Check | Command                    |
+| ----- | -------------------------- |
 | Build | `npm run build:production` |
-| Lint | `npm run lint` |
-| Tests | `npm run test` |
-| Types | Should show 0 errors |
+| Lint  | `npm run lint`             |
+| Tests | `npm run test`             |
+| Types | Should show 0 errors       |
 
 ---
 
@@ -140,7 +143,7 @@ Outdated packages: 35
 🔴 **High Risk:** React Router v7 (40-60 hour refactoring)  
 ⚠️ **Medium Risk:** Supabase update (database compatibility)  
 ✅ **Low Risk:** Form library minor updates  
-✅ **Minimal Risk:** Patch/build tool updates  
+✅ **Minimal Risk:** Patch/build tool updates
 
 ---
 

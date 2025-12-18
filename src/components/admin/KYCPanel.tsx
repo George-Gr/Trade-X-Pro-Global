@@ -6,7 +6,7 @@ import { LoadingButton } from "@/components/ui/LoadingButton";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -25,19 +25,19 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  FileCheck, 
-  Users, 
-  DollarSign, 
-  TrendingUp, 
-  Eye, 
-  Loader2, 
-  Search, 
-  Filter, 
-  Clock, 
-  CheckCircle, 
+import {
+  FileCheck,
+  Users,
+  DollarSign,
+  TrendingUp,
+  Eye,
+  Loader2,
+  Search,
+  Filter,
+  Clock,
+  CheckCircle,
   XCircle,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import DocumentViewer from "@/components/kyc/DocumentViewer";
@@ -67,12 +67,12 @@ interface RejectionDialogProps {
   isLoading: boolean;
 }
 
-const RejectionDialog: React.FC<RejectionDialogProps> = ({ 
-  open, 
-  docId, 
-  onClose, 
-  onSubmit, 
-  isLoading 
+const RejectionDialog: React.FC<RejectionDialogProps> = ({
+  open,
+  docId,
+  onClose,
+  onSubmit,
+  isLoading,
 }) => {
   const [rejectionReason, setRejectionReason] = useState("");
 
@@ -82,17 +82,21 @@ const RejectionDialog: React.FC<RejectionDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      if (!isOpen) {
-        setRejectionReason("");
-        onClose();
-      }
-    }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          setRejectionReason("");
+          onClose();
+        }
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Reject KYC Document</DialogTitle>
           <DialogDescription>
-            Please provide a reason for rejection. This will be shown to the user.
+            Please provide a reason for rejection. This will be shown to the
+            user.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -148,10 +152,13 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
   const [documentTypeFilter, setDocumentTypeFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  
+
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
-  const [rejectionDialog, setRejectionDialog] = useState<{ open: boolean; docId: string | null }>({
+  const [rejectionDialog, setRejectionDialog] = useState<{
+    open: boolean;
+    docId: string | null;
+  }>({
     open: false,
     docId: null,
   });
@@ -160,19 +167,21 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
 
   const fetchKYCDocuments = useCallback(async () => {
     if (!isAdmin) return;
-    
+
     try {
       setIsLoading(true);
       const { data, error } = await supabase
         .from("kyc_documents")
-        .select(`
+        .select(
+          `
           *,
           profiles:user_id (
             full_name,
             email,
             country
           )
-        `)
+        `,
+        )
         .order(sortBy, { ascending: sortOrder === "asc" });
 
       if (data && !error) {
@@ -202,24 +211,30 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
 
   const handleApprove = async (docId: string, userId: string) => {
     if (!user) return;
-    
+
     try {
       setIsApproving(docId);
-      
+
       const { error: docError } = await supabase
         .from("kyc_documents")
         .update({
           status: "approved" as const,
           reviewed_at: new Date().toISOString(),
           reviewed_by: user.id,
-        } as { status: "pending" | "approved" | "rejected" | "resubmitted"; reviewed_at: string; reviewed_by: string })
+        } as {
+          status: "pending" | "approved" | "rejected" | "resubmitted";
+          reviewed_at: string;
+          reviewed_by: string;
+        })
         .eq("id" as const, docId as string);
 
       if (docError) throw docError;
 
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ kyc_status: "approved" as const } as { kyc_status: "pending" | "approved" | "rejected" | "resubmitted" })
+        .update({ kyc_status: "approved" as const } as {
+          kyc_status: "pending" | "approved" | "rejected" | "resubmitted";
+        })
         .eq("id" as const, userId as string);
 
       if (profileError) throw profileError;
@@ -247,7 +262,7 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
 
     try {
       setIsRejecting(true);
-      
+
       const doc = kycDocuments.find((d) => d.id === rejectionDialog.docId);
       if (!doc) return;
 
@@ -258,14 +273,21 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
           reviewed_at: new Date().toISOString(),
           reviewed_by: user?.id,
           rejection_reason: reason,
-        } as { status: "pending" | "approved" | "rejected" | "resubmitted"; reviewed_at: string; reviewed_by: string | undefined; rejection_reason: string })
+        } as {
+          status: "pending" | "approved" | "rejected" | "resubmitted";
+          reviewed_at: string;
+          reviewed_by: string | undefined;
+          rejection_reason: string;
+        })
         .eq("id" as const, rejectionDialog.docId as string);
 
       if (docError) throw docError;
 
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ kyc_status: "rejected" as const } as { kyc_status: "pending" | "approved" | "rejected" | "resubmitted" })
+        .update({ kyc_status: "rejected" as const } as {
+          kyc_status: "pending" | "approved" | "rejected" | "resubmitted";
+        })
         .eq("id" as const, doc.user_id as string);
 
       if (profileError) throw profileError;
@@ -294,13 +316,18 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
     setViewerOpen(true);
   };
 
-  const filteredDocuments = kycDocuments.filter(doc => {
-    const matchesSearch = doc.profiles.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (doc.profiles.full_name && doc.profiles.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         doc.document_type.toLowerCase().includes(searchTerm.toLowerCase());
-    
+  const filteredDocuments = kycDocuments.filter((doc) => {
+    const matchesSearch =
+      doc.profiles.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (doc.profiles.full_name &&
+        doc.profiles.full_name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())) ||
+      doc.document_type.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus = statusFilter === "all" || doc.status === statusFilter;
-    const matchesType = documentTypeFilter === "all" || doc.document_type === documentTypeFilter;
+    const matchesType =
+      documentTypeFilter === "all" || doc.document_type === documentTypeFilter;
 
     return matchesSearch && matchesStatus && matchesType;
   });
@@ -309,10 +336,12 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
     if (sortBy === "profiles.full_name") {
       const nameA = a.profiles.full_name || "";
       const nameB = b.profiles.full_name || "";
-      return sortOrder === "desc" ? nameB.localeCompare(nameA) : nameA.localeCompare(nameB);
+      return sortOrder === "desc"
+        ? nameB.localeCompare(nameA)
+        : nameA.localeCompare(nameB);
     }
     if (sortBy === "profiles.email") {
-      return sortOrder === "desc" 
+      return sortOrder === "desc"
         ? b.profiles.email.localeCompare(a.profiles.email)
         : a.profiles.email.localeCompare(b.profiles.email);
     }
@@ -326,28 +355,36 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
-      case "approved": return "default";
-      case "rejected": return "destructive";
-      case "pending": return "outline";
-      default: return "outline";
+      case "approved":
+        return "default";
+      case "rejected":
+        return "destructive";
+      case "pending":
+        return "outline";
+      default:
+        return "outline";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "approved": return <CheckCircle className="h-3 w-3" />;
-      case "rejected": return <XCircle className="h-3 w-3" />;
-      case "pending": return <Clock className="h-3 w-3" />;
-      default: return null;
+      case "approved":
+        return <CheckCircle className="h-3 w-3" />;
+      case "rejected":
+        return <XCircle className="h-3 w-3" />;
+      case "pending":
+        return <Clock className="h-3 w-3" />;
+      default:
+        return null;
     }
   };
 
   const getStats = () => {
     const total = kycDocuments.length;
-    const pending = kycDocuments.filter(d => d.status === "pending").length;
-    const approved = kycDocuments.filter(d => d.status === "approved").length;
-    const rejected = kycDocuments.filter(d => d.status === "rejected").length;
-    
+    const pending = kycDocuments.filter((d) => d.status === "pending").length;
+    const approved = kycDocuments.filter((d) => d.status === "approved").length;
+    const rejected = kycDocuments.filter((d) => d.status === "rejected").length;
+
     return { total, pending, approved, rejected };
   };
 
@@ -376,7 +413,9 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Pending Review</p>
-              <p className="text-2xl font-bold text-yellow-500">{stats.pending}</p>
+              <p className="text-2xl font-bold text-yellow-500">
+                {stats.pending}
+              </p>
             </div>
           </div>
         </Card>
@@ -388,7 +427,9 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Approved</p>
-              <p className="text-2xl font-bold text-green-500">{stats.approved}</p>
+              <p className="text-2xl font-bold text-green-500">
+                {stats.approved}
+              </p>
             </div>
           </div>
         </Card>
@@ -400,7 +441,9 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Rejected</p>
-              <p className="text-2xl font-bold text-red-500">{stats.rejected}</p>
+              <p className="text-2xl font-bold text-red-500">
+                {stats.rejected}
+              </p>
             </div>
           </div>
         </Card>
@@ -449,7 +492,9 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
                 onClick={fetchKYCDocuments}
                 className="flex items-center gap-2"
               >
-                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                />
                 Refresh
               </Button>
             </div>
@@ -468,55 +513,77 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
             <>
               <div className="mb-4">
                 <span className="text-sm text-muted-foreground">
-                  Showing {sortedDocuments.length} of {kycDocuments.length} documents
+                  Showing {sortedDocuments.length} of {kycDocuments.length}{" "}
+                  documents
                 </span>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead 
+                      <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
                           setSortBy("profiles.full_name");
-                          setSortOrder(sortOrder === "desc" && sortBy === "profiles.full_name" ? "asc" : "desc");
+                          setSortOrder(
+                            sortOrder === "desc" &&
+                              sortBy === "profiles.full_name"
+                              ? "asc"
+                              : "desc",
+                          );
                         }}
                       >
                         Name
                       </TableHead>
-                      <TableHead 
+                      <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
                           setSortBy("profiles.email");
-                          setSortOrder(sortOrder === "desc" && sortBy === "profiles.email" ? "asc" : "desc");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "profiles.email"
+                              ? "asc"
+                              : "desc",
+                          );
                         }}
                       >
                         Email
                       </TableHead>
-                      <TableHead 
+                      <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
                           setSortBy("document_type");
-                          setSortOrder(sortOrder === "desc" && sortBy === "document_type" ? "asc" : "desc");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "document_type"
+                              ? "asc"
+                              : "desc",
+                          );
                         }}
                       >
                         Document Type
                       </TableHead>
-                      <TableHead 
+                      <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
                           setSortBy("created_at");
-                          setSortOrder(sortOrder === "desc" && sortBy === "created_at" ? "asc" : "desc");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "created_at"
+                              ? "asc"
+                              : "desc",
+                          );
                         }}
                       >
                         Submitted
                       </TableHead>
-                      <TableHead 
+                      <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
                           setSortBy("status");
-                          setSortOrder(sortOrder === "desc" && sortBy === "status" ? "asc" : "desc");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "status"
+                              ? "asc"
+                              : "desc",
+                          );
                         }}
                       >
                         Status
@@ -564,7 +631,12 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
                                 <LoadingButton
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => setRejectionDialog({ open: true, docId: doc.id })}
+                                  onClick={() =>
+                                    setRejectionDialog({
+                                      open: true,
+                                      docId: doc.id,
+                                    })
+                                  }
                                   isLoading={isRejecting}
                                   loadingText="Rejecting..."
                                   className="flex items-center gap-1"
@@ -574,7 +646,9 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
                                 </LoadingButton>
                                 <LoadingButton
                                   size="sm"
-                                  onClick={() => handleApprove(doc.id, doc.user_id)}
+                                  onClick={() =>
+                                    handleApprove(doc.id, doc.user_id)
+                                  }
                                   isLoading={isApproving === doc.id}
                                   loadingText="Approving..."
                                   className="flex items-center gap-1"

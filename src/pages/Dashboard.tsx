@@ -1,4 +1,15 @@
-import { TrendingUp, TrendingDown, DollarSign, Activity, BarChart3, Clock, AlertCircle, ArrowRight, Wallet, Zap } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Activity,
+  BarChart3,
+  Clock,
+  AlertCircle,
+  ArrowRight,
+  Wallet,
+  Zap,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +28,11 @@ import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  const currentTime = new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
   type StatTrend = "up" | "down" | "neutral";
 
@@ -67,17 +82,23 @@ const Dashboard = () => {
   ];
 
   // Use real backend hooks for risk metrics & events (includes realtime subscriptions)
-  const { riskMetrics, marginTrend, loading: riskLoading, error: riskError, refetch: refetchRiskMetrics } = useRiskMetrics();
+  const {
+    riskMetrics,
+    marginTrend,
+    loading: riskLoading,
+    error: riskError,
+    refetch: refetchRiskMetrics,
+  } = useRiskMetrics();
   const { events: alertsData, loading: alertsLoading } = useRiskEvents(5);
-  
+
   // Use profit/loss data hook for enhanced chart visualization
-  const { 
-    metrics: profitLossMetrics, 
-    chartData: profitLossData, 
-    loading: profitLossLoading, 
+  const {
+    metrics: profitLossMetrics,
+    chartData: profitLossData,
+    loading: profitLossLoading,
     error: profitLossError,
-    refetch: refetchProfitLoss 
-  } = useProfitLossData('7d');
+    refetch: refetchProfitLoss,
+  } = useProfitLossData("7d");
 
   // Show loading skeleton while data is being fetched
   if (riskLoading || alertsLoading || profitLossLoading) {
@@ -88,21 +109,28 @@ const Dashboard = () => {
     <AuthenticatedLayout>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Dashboard</h1>
-        <p className="text-lg text-muted-foreground">Welcome back to your trading account</p>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+          Dashboard
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Welcome back to your trading account
+        </p>
       </div>
 
       {/* Stats Grid - Using CSS Grid for responsive layout */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 mb-8">
         {stats.map((stat) => {
           const Icon = stat.icon;
-          const isEmptyState = 'empty' in stat && stat.empty;
-          const isNeutral = stat.trend === "neutral" && !stat.change.includes("+") && !stat.change.includes("-");
-          
+          const isEmptyState = "empty" in stat && stat.empty;
+          const isNeutral =
+            stat.trend === "neutral" &&
+            !stat.change.includes("+") &&
+            !stat.change.includes("-");
+
           return (
-            <Card 
-              key={stat.title} 
-              elevation="1" 
+            <Card
+              key={stat.title}
+              elevation="1"
               variant="primary"
               className="rounded-lg border-border/70 focus-within:ring-2 focus-within:ring-offset-2 hover:shadow-lg focus-within:ring-primary transition-shadow duration-300"
             >
@@ -112,20 +140,32 @@ const Dashboard = () => {
                     {stat.title}
                   </CardTitle>
                   {stat.timeContext && (
-                    <p className="text-xs text-secondary-contrast mt-2">{stat.timeContext}</p>
+                    <p className="text-xs text-secondary-contrast mt-2">
+                      {stat.timeContext}
+                    </p>
                   )}
                 </div>
-                <Icon className="h-5 w-5 text-primary flex-shrink-0 ml-4" aria-hidden="true" />
+                <Icon
+                  className="h-5 w-5 text-primary flex-shrink-0 ml-4"
+                  aria-hidden="true"
+                />
               </CardHeader>
-              <CardContent className="space-y-2" role="article" aria-label={`${stat.title}: ${stat.value}`}>
-                <div className="text-3xl font-bold tracking-tight text-primary-contrast">{stat.value}</div>
+              <CardContent
+                className="space-y-2"
+                role="article"
+                aria-label={`${stat.title}: ${stat.value}`}
+              >
+                <div className="text-3xl font-bold tracking-tight text-primary-contrast">
+                  {stat.value}
+                </div>
                 {isEmptyState ? (
                   <div className="mt-2 space-y-2">
                     <p className="text-xs text-secondary-contrast font-medium">
                       {stat.change}
                     </p>
                     <p className="text-xs text-tertiary-contrast leading-relaxed">
-                      You haven't opened any positions yet. Start trading to see them here.
+                      You haven't opened any positions yet. Start trading to see
+                      them here.
                     </p>
                   </div>
                 ) : (
@@ -133,15 +173,22 @@ const Dashboard = () => {
                     {stat.change.includes("+") ? (
                       <>
                         <TrendingUp className="h-4 w-4 text-success-contrast flex-shrink-0" />
-                        <p className="text-xs font-medium text-success-contrast">{stat.change}</p>
+                        <p className="text-xs font-medium text-success-contrast">
+                          {stat.change}
+                        </p>
                       </>
-                    ) : stat.change.includes("-") && !stat.change.includes("0%") ? (
+                    ) : stat.change.includes("-") &&
+                      !stat.change.includes("0%") ? (
                       <>
                         <TrendingDown className="h-4 w-4 text-danger-contrast flex-shrink-0" />
-                        <p className="text-xs font-medium text-danger-contrast">{stat.change}</p>
+                        <p className="text-xs font-medium text-danger-contrast">
+                          {stat.change}
+                        </p>
                       </>
                     ) : (
-                      <p className="text-xs font-medium text-secondary-contrast">{stat.change}</p>
+                      <p className="text-xs font-medium text-secondary-contrast">
+                        {stat.change}
+                      </p>
                     )}
                   </div>
                 )}
@@ -151,9 +198,7 @@ const Dashboard = () => {
         })}
       </div>
       {/* Error Alerts for Connection Issues */}
-      {riskError && (
-        <RealtimeErrorAlert onRetry={refetchRiskMetrics} />
-      )}
+      {riskError && <RealtimeErrorAlert onRetry={refetchRiskMetrics} />}
 
       {/* Risk Management Section - Using CSS Grid for responsive layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-xl section-spacing">
@@ -167,10 +212,14 @@ const Dashboard = () => {
               onRetry={refetchRiskMetrics}
             />
           ) : (
-            <MarginLevelCard loading={riskLoading} marginLevel={riskMetrics?.currentMarginLevel ?? 0} trend={marginTrend} />
+            <MarginLevelCard
+              loading={riskLoading}
+              marginLevel={riskMetrics?.currentMarginLevel ?? 0}
+              trend={marginTrend}
+            />
           )}
         </div>
-        
+
         {/* Profit/Loss card - wired to real backend via useProfitLossData */}
         <div>
           {profitLossError ? (
@@ -181,12 +230,10 @@ const Dashboard = () => {
               onRetry={refetchProfitLoss}
             />
           ) : (
-            <ProfitLossCard 
-              loading={profitLossLoading}
-            />
+            <ProfitLossCard loading={profitLossLoading} />
           )}
         </div>
-        
+
         {/* Risk Alerts card - wired to real backend via useRiskEvents */}
         <div>
           {alertsLoading && !alertsData ? (
@@ -196,8 +243,15 @@ const Dashboard = () => {
               loading={alertsLoading}
               alerts={alertsData?.map((e) => ({
                 id: e.id,
-                level: (e.severity === "critical" || e.severity === "danger") ? "critical" : e.severity === "warning" ? "warning" : "info",
-                title: e.event_type ? String(e.event_type).replace(/_/g, " ") : (e.description || "Risk event"),
+                level:
+                  e.severity === "critical" || e.severity === "danger"
+                    ? "critical"
+                    : e.severity === "warning"
+                      ? "warning"
+                      : "info",
+                title: e.event_type
+                  ? String(e.event_type).replace(/_/g, " ")
+                  : e.description || "Risk event",
                 details: e.description,
               }))}
             />
@@ -208,7 +262,9 @@ const Dashboard = () => {
       {/* Market Watch - Full width component below Risk Management */}
       <Card elevation="2" variant="primary" className="border-border/70 mb-xl">
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-primary-contrast">Market Watch</CardTitle>
+          <CardTitle className="text-base font-semibold text-primary-contrast">
+            Market Watch
+          </CardTitle>
         </CardHeader>
         <CardContent className="h-[400px]">
           <TradingViewErrorBoundary widgetType="Watchlist">
@@ -218,25 +274,33 @@ const Dashboard = () => {
       </Card>
 
       {/* Combined Actions Section - Quick Actions, Ready to Start Trading, and Recent Activity */}
-      <Card elevation="1" variant="secondary" className="border-border/70 mb-xl">
+      <Card
+        elevation="1"
+        variant="secondary"
+        className="border-border/70 mb-xl"
+      >
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-primary-contrast">Trading Actions & Activity</CardTitle>
+          <CardTitle className="text-base font-semibold text-primary-contrast">
+            Trading Actions & Activity
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-xl">
           {/* Quick Actions Section */}
           <div className="space-y-lg">
-            <h3 className="text-sm font-semibold text-primary-contrast mb-md">Quick Actions</h3>
+            <h3 className="text-sm font-semibold text-primary-contrast mb-md">
+              Quick Actions
+            </h3>
             <div className="flex gap-md flex-wrap">
-              <Button 
-                onClick={() => navigate("/trade")} 
+              <Button
+                onClick={() => navigate("/trade")}
                 className="gap-md h-12 px-lg font-medium text-base hover:scale-105 active:scale-95 bg-primary hover:bg-primary/90 transition-all duration-200"
               >
                 <TrendingUp className="h-5 w-5" />
                 Start Trading
               </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => navigate("/portfolio")} 
+              <Button
+                variant="outline"
+                onClick={() => navigate("/portfolio")}
                 className="gap-md h-12 px-lg font-medium text-base hover:scale-105 active:scale-95 hover:border-primary/50 transition-all duration-200"
               >
                 <Activity className="h-5 w-5" />
@@ -247,36 +311,52 @@ const Dashboard = () => {
 
           {/* Ready to Start Trading Section */}
           <div className="space-y-lg">
-            <h3 className="text-sm font-semibold text-primary-contrast mb-md">Ready to Start Trading?</h3>
+            <h3 className="text-sm font-semibold text-primary-contrast mb-md">
+              Ready to Start Trading?
+            </h3>
             <div className="space-y-lg">
               <p className="text-base text-primary-contrast">
-                You currently have <strong>no open positions</strong>. Your account is fully funded and ready for trading.
+                You currently have <strong>no open positions</strong>. Your
+                account is fully funded and ready for trading.
               </p>
               <div className="bg-quick-actions/50 rounded-lg p-lg border border-primary/20 space-y-md">
                 <div className="flex items-start gap-md">
                   <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-sm text-primary-contrast">Choose Your Instrument</p>
-                    <p className="text-xs text-secondary-contrast">Forex, stocks, commodities, crypto, indices, ETFs, or bonds</p>
-                  </div>
-                </div>
-<div className="flex items-start gap-md">
-                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-sm text-primary-contrast">Set Your Trade Parameters</p>
-                    <p className="text-xs text-secondary-contrast">Entry price, position size, stop loss, and take profit</p>
+                    <p className="font-medium text-sm text-primary-contrast">
+                      Choose Your Instrument
+                    </p>
+                    <p className="text-xs text-secondary-contrast">
+                      Forex, stocks, commodities, crypto, indices, ETFs, or
+                      bonds
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-md">
                   <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-sm text-primary-contrast">Execute Your Trade</p>
-                    <p className="text-xs text-secondary-contrast">Review and confirm your position in real-time</p>
+                    <p className="font-medium text-sm text-primary-contrast">
+                      Set Your Trade Parameters
+                    </p>
+                    <p className="text-xs text-secondary-contrast">
+                      Entry price, position size, stop loss, and take profit
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-md">
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-sm text-primary-contrast">
+                      Execute Your Trade
+                    </p>
+                    <p className="text-xs text-secondary-contrast">
+                      Review and confirm your position in real-time
+                    </p>
                   </div>
                 </div>
               </div>
-              <Button 
-                onClick={() => navigate("/trade")} 
+              <Button
+                onClick={() => navigate("/trade")}
                 className="w-full gap-md font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
                 size="lg"
                 aria-label="Open your first trading position"
@@ -289,22 +369,33 @@ const Dashboard = () => {
 
           {/* Recent Activity Section */}
           <div className="space-y-lg">
-            <h3 className="text-sm font-semibold text-primary-contrast mb-md">Recent Activity</h3>
+            <h3 className="text-sm font-semibold text-primary-contrast mb-md">
+              Recent Activity
+            </h3>
             <div className="space-y-md">
               {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center justify-between border-b border-border/50 pb-md last:border-0 last:pb-0">
+                <div
+                  key={index}
+                  className="flex items-center justify-between border-b border-border/50 pb-md last:border-0 last:pb-0"
+                >
                   <div>
-                    <p className="font-medium text-primary-contrast">{activity.action}</p>
-                    <p className="text-sm text-secondary-contrast">{activity.time}</p>
+                    <p className="font-medium text-primary-contrast">
+                      {activity.action}
+                    </p>
+                    <p className="text-sm text-secondary-contrast">
+                      {activity.time}
+                    </p>
                   </div>
-                  <span className="text-sm font-medium text-success-contrast">{activity.status}</span>
+                  <span className="text-sm font-medium text-success-contrast">
+                    {activity.status}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
         </CardContent>
       </Card>
-      </AuthenticatedLayout>
+    </AuthenticatedLayout>
   );
 };
 

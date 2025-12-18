@@ -47,7 +47,7 @@ interface AuthenticatedLayoutContentProps {
 const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   children,
   user,
-  handleLogoutClick
+  handleLogoutClick,
 }) => {
   const { state, open, isMobile } = useSidebar();
   const { setSidebarOpen } = useAuthenticatedLayout();
@@ -58,7 +58,13 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setCurrentTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }));
+      setCurrentTime(
+        now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }),
+      );
     };
     updateTime();
     const interval = setInterval(updateTime, 60000); // Update every minute
@@ -82,22 +88,25 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
       <AppSidebar />
 
       {/* Main Content Area - accounts for fixed sidebar on desktop with dynamic margin based on sidebar state */}
-       <div
-         className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
-           isMobile ? '' : state === 'expanded' ? 'md:ml-64' : 'md:ml-16'
-         }`}
-         style={{
-           marginLeft: !isMobile && state === 'expanded' ? 'var(--sidebar-width, 16rem)' :
-                       !isMobile && state === 'collapsed' ? 'var(--sidebar-width-icon, 4rem)' :
-                       undefined
-         }}
-       >
+      <div
+        className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
+          isMobile ? "" : state === "expanded" ? "md:ml-64" : "md:ml-16"
+        }`}
+        style={{
+          marginLeft:
+            !isMobile && state === "expanded"
+              ? "var(--sidebar-width, 16rem)"
+              : !isMobile && state === "collapsed"
+                ? "var(--sidebar-width-icon, 4rem)"
+                : undefined,
+        }}
+      >
         {/* Demo Mode Banner */}
         <DemoModeIndicator variant="banner" />
-        
+
         {/* Accessibility Navigation */}
         <AccessibilityNavigation />
-        
+
         {/* Top Header - sticky with z-40 to stay above main content */}
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-40 backdrop-blur-sm bg-card/95 shadow-sm">
           <div className="flex items-center gap-4">
@@ -121,13 +130,17 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
               className="h-10 w-10"
               aria-label={isRefreshing ? "Refreshing data..." : "Refresh data"}
             >
-              <RotateCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''} text-muted-foreground`} />
+              <RotateCw
+                className={`h-5 w-5 ${isRefreshing ? "animate-spin" : ""} text-muted-foreground`}
+              />
             </Button>
 
             {/* Account info - hidden on mobile */}
             <div className="hidden lg:flex items-center gap-2 text-sm">
               <span className="text-muted-foreground">Account:</span>
-              <span className="font-semibold text-foreground">{user?.email || "Trading Account"}</span>
+              <span className="font-semibold text-foreground">
+                {user?.email || "Trading Account"}
+              </span>
             </div>
 
             <NotificationCenter />

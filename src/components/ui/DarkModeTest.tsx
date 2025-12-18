@@ -2,9 +2,9 @@
 // The application now uses light theme exclusively.
 // This component is kept for backward compatibility but shows a notice.
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertCircle } from "lucide-react";
 
 const DarkModeTest: React.FC<{ className?: string }> = ({ className }) => {
   return (
@@ -18,8 +18,8 @@ const DarkModeTest: React.FC<{ className?: string }> = ({ className }) => {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Dark mode functionality has been completely removed from this application.
-            The application now uses the light theme exclusively.
+            Dark mode functionality has been completely removed from this
+            application. The application now uses the light theme exclusively.
           </p>
         </CardContent>
       </Card>

@@ -22,7 +22,7 @@ import {
   cn,
   handleMenuKeyboardNavigation,
   generateNavigationAriaLabel,
-  getAriaCurrentState
+  getAriaCurrentState,
 } from "@/lib/utils";
 import { AlertCircle, TrendingUp, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,9 @@ function AppSidebarLoading() {
 
         {/* Loading Main Navigation Section */}
         <SidebarGroup className="py-4">
-          <SidebarGroupLabel className="opacity-0 h-6">Loading</SidebarGroupLabel>
+          <SidebarGroupLabel className="opacity-0 h-6">
+            Loading
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1 px-2">
               {[...Array(8)].map((_, index) => (
@@ -96,8 +98,12 @@ function AppSidebarError() {
             <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold text-foreground">TradeX Pro</span>
-            <span className="text-xs text-muted-foreground">Trading Platform</span>
+            <span className="text-sm font-bold text-foreground">
+              TradeX Pro
+            </span>
+            <span className="text-xs text-muted-foreground">
+              Trading Platform
+            </span>
           </div>
         </div>
 
@@ -105,8 +111,12 @@ function AppSidebarError() {
           <div className="text-muted-foreground mb-3">
             <AlertCircle className="h-10 w-10 mx-auto" />
           </div>
-          <p className="text-sm text-muted-foreground mb-3">Unable to load navigation</p>
-          <p className="text-xs text-muted-foreground/70 mb-4">Please check your connection</p>
+          <p className="text-sm text-muted-foreground mb-3">
+            Unable to load navigation
+          </p>
+          <p className="text-xs text-muted-foreground/70 mb-4">
+            Please check your connection
+          </p>
           <Button
             variant="outline"
             size="sm"
@@ -132,7 +142,7 @@ function AppSidebarContent() {
   const collapsed = state === "collapsed";
 
   // Build user roles array for permission-based filtering
-  const userRoles = user ? ['user', ...(isAdmin ? ['admin'] : [])] : [];
+  const userRoles = user ? ["user", ...(isAdmin ? ["admin"] : [])] : [];
 
   // Get filtered navigation sections based on user roles
   const navigationSections = filterNavigationSectionsByRoles(userRoles);
@@ -141,19 +151,20 @@ function AppSidebarContent() {
   const activePath = useMemo(() => location.pathname, [location.pathname]);
 
   // Separate main navigation from settings/actions
-  const mainSection = useMemo(() => 
-    navigationSections.find(section => section.id === 'main'),
-    [navigationSections]
+  const mainSection = useMemo(
+    () => navigationSections.find((section) => section.id === "main"),
+    [navigationSections],
   );
 
-  const settingsSection = useMemo(() => 
-    navigationSections.find(section => section.id === 'settings'),
-    [navigationSections]
+  const settingsSection = useMemo(
+    () => navigationSections.find((section) => section.id === "settings"),
+    [navigationSections],
   );
 
   // Memoize isActive function
-  const isActive = useCallback((path: string) =>
-    isPathActive(activePath, path), [activePath]
+  const isActive = useCallback(
+    (path: string) => isPathActive(activePath, path),
+    [activePath],
   );
 
   // Handle keyboard navigation
@@ -161,22 +172,29 @@ function AppSidebarContent() {
     (event: React.KeyboardEvent, path: string) => {
       handleMenuKeyboardNavigation(event, navigate, path);
     },
-    [navigate]
+    [navigate],
   );
 
   // Handle logout
   const handleLogoutClick = useCallback(() => {
-    if (window.confirm('Are you sure you want to sign out? Any unsaved changes will be lost.')) {
+    if (
+      window.confirm(
+        "Are you sure you want to sign out? Any unsaved changes will be lost.",
+      )
+    ) {
       handleLogout();
     }
   }, [handleLogout]);
 
-  const handleLogoutKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handleLogoutClick();
-    }
-  }, [handleLogoutClick]);
+  const handleLogoutKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleLogoutClick();
+      }
+    },
+    [handleLogoutClick],
+  );
 
   // Show skeleton loading state
   if (authLoading) {
@@ -196,17 +214,23 @@ function AppSidebarContent() {
     >
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
         {/* Logo/Branding Section */}
-        <div className={cn(
-          "flex items-center gap-3 px-4 py-4 border-b border-border/30",
-          collapsed && "justify-center px-2"
-        )}>
+        <div
+          className={cn(
+            "flex items-center gap-3 px-4 py-4 border-b border-border/30",
+            collapsed && "justify-center px-2",
+          )}
+        >
           <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
             <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           {!collapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-bold text-foreground truncate">TradeX Pro</span>
-              <span className="text-xs text-muted-foreground truncate">Trading Platform</span>
+              <span className="text-sm font-bold text-foreground truncate">
+                TradeX Pro
+              </span>
+              <span className="text-xs text-muted-foreground truncate">
+                Trading Platform
+              </span>
             </div>
           )}
         </div>
@@ -214,10 +238,12 @@ function AppSidebarContent() {
         {/* Main Navigation Section */}
         {mainSection && (
           <SidebarGroup className="py-4 flex-1">
-            <SidebarGroupLabel className={cn(
-              "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
-              collapsed && "sr-only"
-            )}>
+            <SidebarGroupLabel
+              className={cn(
+                "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
+                collapsed && "sr-only",
+              )}
+            >
               {mainSection.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -238,24 +264,35 @@ function AppSidebarContent() {
                           "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
                           "hover:bg-sidebar-accent/50",
                           collapsed && "justify-center px-2",
-                          active && "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
-                          item.disabled && "opacity-50 cursor-not-allowed"
+                          active &&
+                            "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
+                          item.disabled && "opacity-50 cursor-not-allowed",
                         )}
-                        aria-label={generateNavigationAriaLabel(item.label, active, item.disabled)}
+                        aria-label={generateNavigationAriaLabel(
+                          item.label,
+                          active,
+                          item.disabled,
+                        )}
                         aria-current={getAriaCurrentState(active)}
                         role="menuitem"
                         tabIndex={0}
                         aria-disabled={item.disabled}
                       >
-                        <Icon className={cn(
-                          "h-5 w-5 flex-shrink-0 transition-colors",
-                          active ? "text-primary" : "text-muted-foreground"
-                        )} />
-                        <span className={cn(
-                          "flex-1 truncate text-sm",
-                          collapsed && "sr-only",
-                          active ? "text-primary font-medium" : "text-sidebar-foreground"
-                        )}>
+                        <Icon
+                          className={cn(
+                            "h-5 w-5 flex-shrink-0 transition-colors",
+                            active ? "text-primary" : "text-muted-foreground",
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "flex-1 truncate text-sm",
+                            collapsed && "sr-only",
+                            active
+                              ? "text-primary font-medium"
+                              : "text-sidebar-foreground",
+                          )}
+                        >
                           {item.label}
                         </span>
                       </SidebarMenuButton>
@@ -272,10 +309,12 @@ function AppSidebarContent() {
 
         {/* Settings Section - Pinned to bottom */}
         <SidebarGroup className="py-3">
-          <SidebarGroupLabel className={cn(
-            "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
-            collapsed && "sr-only"
-          )}>
+          <SidebarGroupLabel
+            className={cn(
+              "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
+              collapsed && "sr-only",
+            )}
+          >
             Settings
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -283,13 +322,15 @@ function AppSidebarContent() {
               {/* Settings Items */}
               {settingsSection?.items.map((item) => {
                 const Icon = item.icon;
-                const active = isActive(item.path || '');
+                const active = isActive(item.path || "");
 
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
                       onClick={() => item.path && navigate(item.path)}
-                      onKeyDown={(e) => item.path && handleNavigationKeyDown(e, item.path)}
+                      onKeyDown={(e) =>
+                        item.path && handleNavigationKeyDown(e, item.path)
+                      }
                       isActive={active}
                       tooltip={collapsed ? item.label : undefined}
                       disabled={item.disabled}
@@ -297,24 +338,35 @@ function AppSidebarContent() {
                         "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
                         "hover:bg-sidebar-accent/50",
                         collapsed && "justify-center px-2",
-                        active && "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
-                        item.disabled && "opacity-50 cursor-not-allowed"
+                        active &&
+                          "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
+                        item.disabled && "opacity-50 cursor-not-allowed",
                       )}
-                      aria-label={generateNavigationAriaLabel(item.label, active, item.disabled)}
+                      aria-label={generateNavigationAriaLabel(
+                        item.label,
+                        active,
+                        item.disabled,
+                      )}
                       aria-current={getAriaCurrentState(active)}
                       role="menuitem"
                       tabIndex={0}
                       aria-disabled={item.disabled}
                     >
-                      <Icon className={cn(
-                        "h-5 w-5 flex-shrink-0 transition-colors",
-                        active ? "text-primary" : "text-muted-foreground"
-                      )} />
-                      <span className={cn(
-                        "flex-1 truncate text-sm",
-                        collapsed && "sr-only",
-                        active ? "text-primary font-medium" : "text-sidebar-foreground"
-                      )}>
+                      <Icon
+                        className={cn(
+                          "h-5 w-5 flex-shrink-0 transition-colors",
+                          active ? "text-primary" : "text-muted-foreground",
+                        )}
+                      />
+                      <span
+                        className={cn(
+                          "flex-1 truncate text-sm",
+                          collapsed && "sr-only",
+                          active
+                            ? "text-primary font-medium"
+                            : "text-sidebar-foreground",
+                        )}
+                      >
                         {item.label}
                       </span>
                     </SidebarMenuButton>
@@ -331,7 +383,7 @@ function AppSidebarContent() {
                   className={cn(
                     "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
                     "text-destructive hover:bg-destructive/10 hover:text-destructive",
-                    collapsed && "justify-center px-2"
+                    collapsed && "justify-center px-2",
                   )}
                   aria-label="Sign out of your account"
                   aria-describedby="logout-description"
@@ -339,10 +391,12 @@ function AppSidebarContent() {
                   tabIndex={0}
                 >
                   <LogOut className="h-5 w-5 flex-shrink-0" />
-                  <span className={cn(
-                    "flex-1 truncate text-sm",
-                    collapsed && "sr-only"
-                  )}>
+                  <span
+                    className={cn(
+                      "flex-1 truncate text-sm",
+                      collapsed && "sr-only",
+                    )}
+                  >
                     Sign Out
                   </span>
                 </SidebarMenuButton>
@@ -359,7 +413,8 @@ function AppSidebarContent() {
         role="status"
         aria-live="polite"
       >
-        This action will sign you out of your trading account and end your current session.
+        This action will sign you out of your trading account and end your
+        current session.
       </div>
     </Sidebar>
   );

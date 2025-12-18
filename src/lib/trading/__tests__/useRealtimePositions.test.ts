@@ -101,8 +101,11 @@ describe("useRealtimePositions: Initialization", () => {
   });
 
   it("should set connectionStatus to connected after successful load", () => {
-    let connectionStatus: "connecting" | "connected" | "disconnected" | "error" =
-      "connecting";
+    let connectionStatus:
+      | "connecting"
+      | "connected"
+      | "disconnected"
+      | "error" = "connecting";
     expect(connectionStatus).toBe("connecting");
     connectionStatus = "connected";
     expect(connectionStatus).toBe("connected");
@@ -205,7 +208,7 @@ describe("useRealtimePositions: Realtime Updates", () => {
 
     // Update middle position
     positions = positions.map((p) =>
-      p.id === "pos-2" ? { ...p, current_price: 1.1 } : p
+      p.id === "pos-2" ? { ...p, current_price: 1.1 } : p,
     );
 
     expect(positions[0].id).toBe("pos-1");
@@ -227,7 +230,7 @@ describe("useRealtimePositions: Realtime Updates", () => {
               current_price: price,
               unrealized_pnl: (price - p.entry_price) * p.quantity,
             }
-          : p
+          : p,
       );
     });
 
@@ -315,7 +318,7 @@ describe("useRealtimePositions: Filtering", () => {
     const filterSymbol = "BTC/USD";
 
     filteredPositions = filteredPositions.filter(
-      (p) => !filterSymbol || p.symbol === filterSymbol
+      (p) => !filterSymbol || p.symbol === filterSymbol,
     );
 
     expect(filteredPositions).toHaveLength(1);
@@ -458,7 +461,10 @@ describe("useRealtimePositions: Lifecycle & Cleanup", () => {
   });
 
   it("should clear debounce timer on unmount", () => {
-    let debounceTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {}, 100);
+    let debounceTimer: ReturnType<typeof setTimeout> | null = setTimeout(
+      () => {},
+      100,
+    );
     if (debounceTimer) {
       clearTimeout(debounceTimer);
       debounceTimer = null;
@@ -525,7 +531,7 @@ describe("useRealtimePositions: Concurrent Operations", () => {
 
     updates.forEach((update) => {
       positions = positions.map((p) =>
-        p.id === update.id ? { ...p, current_price: update.price } : p
+        p.id === update.id ? { ...p, current_price: update.price } : p,
       );
     });
 
@@ -542,7 +548,7 @@ describe("useRealtimePositions: Concurrent Operations", () => {
     positions = [newPos, ...positions];
 
     positions = positions.map((p) =>
-      p.id === "pos-1" ? { ...p, current_price: 42000 } : p
+      p.id === "pos-1" ? { ...p, current_price: 42000 } : p,
     );
 
     expect(positions).toHaveLength(2);

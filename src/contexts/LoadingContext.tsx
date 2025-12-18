@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, useState } from 'react';
+import React, { createContext, useContext, useCallback, useState } from "react";
 
 /**
  * FE-010: Global Loading States Context
@@ -16,16 +16,16 @@ interface LoadingContextType {
   // Operation tracking
   operations: Map<string, LoadingOperation>;
   isLoading: boolean;
-  
+
   // Methods to manage loading states
   startOperation: (id: string, message?: string) => void;
   updateOperation: (id: string, progress: number) => void;
   endOperation: (id: string) => void;
   cancelOperation: (id: string) => void;
-  
+
   // Get operation by ID
   getOperation: (id: string) => LoadingOperation | undefined;
-  
+
   // Bulk operations
   clearAllOperations: () => void;
 }
@@ -35,8 +35,12 @@ const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 /**
  * Provider component for loading state management
  */
-export function LoadingProvider({ children }: { children?: React.ReactNode } = {}) {
-  const [operations, setOperations] = useState<Map<string, LoadingOperation>>(new Map());
+export function LoadingProvider({
+  children,
+}: { children?: React.ReactNode } = {}) {
+  const [operations, setOperations] = useState<Map<string, LoadingOperation>>(
+    new Map(),
+  );
 
   const startOperation = useCallback((id: string, message?: string) => {
     setOperations((prev) => {
@@ -80,7 +84,7 @@ export function LoadingProvider({ children }: { children?: React.ReactNode } = {
 
   const getOperation = useCallback(
     (id: string) => operations.get(id),
-    [operations]
+    [operations],
   );
 
   const clearAllOperations = useCallback(() => {
@@ -101,9 +105,7 @@ export function LoadingProvider({ children }: { children?: React.ReactNode } = {
   };
 
   return (
-    <LoadingContext.Provider value={value}>
-      {children}
-    </LoadingContext.Provider>
+    <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>
   );
 }
 
@@ -113,7 +115,7 @@ export function LoadingProvider({ children }: { children?: React.ReactNode } = {
 export function useLoadingContext() {
   const context = useContext(LoadingContext);
   if (!context) {
-    throw new Error('useLoadingContext must be used within LoadingProvider');
+    throw new Error("useLoadingContext must be used within LoadingProvider");
   }
   return context;
 }
@@ -122,18 +124,15 @@ export function useLoadingContext() {
  * Custom hook for managing a specific async operation
  */
 export function useAsyncOperation(operationId: string) {
-  const {
-    startOperation,
-    updateOperation,
-    endOperation,
-    getOperation,
-  } = useLoadingContext();
+  const { startOperation, updateOperation, endOperation, getOperation } =
+    useLoadingContext();
 
   const operation = getOperation(operationId);
 
   return {
     start: (message?: string) => startOperation(operationId, message),
-    updateProgress: (progress: number) => updateOperation(operationId, progress),
+    updateProgress: (progress: number) =>
+      updateOperation(operationId, progress),
     end: () => endOperation(operationId),
     isLoading: !!operation,
     progress: operation?.progress ?? 0,

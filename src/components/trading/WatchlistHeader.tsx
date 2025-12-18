@@ -2,7 +2,13 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, FolderPlus, Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useWatchlists } from "@/hooks/useWatchlists";
 
@@ -13,11 +19,11 @@ interface WatchlistHeaderProps {
   onAddSymbol: () => void;
 }
 
-export const WatchlistHeader = ({ 
-  searchQuery, 
-  onSearchChange, 
+export const WatchlistHeader = ({
+  searchQuery,
+  onSearchChange,
   onCreateWatchlist,
-  onAddSymbol 
+  onAddSymbol,
 }: WatchlistHeaderProps) => {
   const [newWatchlistName, setNewWatchlistName] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -52,7 +58,9 @@ export const WatchlistHeader = ({
                     placeholder="e.g., Forex Pairs"
                     value={newWatchlistName}
                     onChange={(e) => setNewWatchlistName(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleCreateWatchlist()}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && handleCreateWatchlist()
+                    }
                   />
                 </div>
                 <Button onClick={handleCreateWatchlist} className="w-full">

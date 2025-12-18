@@ -20,7 +20,9 @@ interface ViewModeContextType {
   isProMode: boolean;
 }
 
-const ViewModeContext = React.createContext<ViewModeContextType | undefined>(undefined);
+const ViewModeContext = React.createContext<ViewModeContextType | undefined>(
+  undefined,
+);
 
 const VIEW_MODE_STORAGE_KEY = "tradex-view-mode";
 
@@ -28,7 +30,9 @@ const VIEW_MODE_STORAGE_KEY = "tradex-view-mode";
  * Provider for managing view mode state across the trading interface
  * Persists preference to localStorage
  */
-export const ViewModeProvider: React.FC<{ children?: React.ReactNode }> = ({ children } = {}) => {
+export const ViewModeProvider: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+} = {}) => {
   const [viewMode, setViewModeState] = React.useState<ViewMode>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
@@ -56,7 +60,7 @@ export const ViewModeProvider: React.FC<{ children?: React.ReactNode }> = ({ chi
       isBasicMode: viewMode === "basic",
       isProMode: viewMode === "pro",
     }),
-    [viewMode, toggleViewMode, setViewMode]
+    [viewMode, toggleViewMode, setViewMode],
   );
 
   return (
@@ -84,11 +88,13 @@ export const useViewMode = (): ViewModeContextType => {
  */
 export const useViewModeSafe = (): ViewModeContextType => {
   const context = React.useContext(ViewModeContext);
-  return context ?? {
-    viewMode: "basic",
-    toggleViewMode: () => {},
-    setViewMode: () => {},
-    isBasicMode: true,
-    isProMode: false,
-  };
+  return (
+    context ?? {
+      viewMode: "basic",
+      toggleViewMode: () => {},
+      setViewMode: () => {},
+      isBasicMode: true,
+      isProMode: false,
+    }
+  );
 };

@@ -1,40 +1,40 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import type { Position } from '@/types/position';
+import React from "react";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { Position } from "@/types/position";
 
 export interface SortConfig {
-  key: keyof Position | 'pnl' | 'margin_level';
-  direction: 'asc' | 'desc';
+  key: keyof Position | "pnl" | "margin_level";
+  direction: "asc" | "desc";
 }
 
-type FilterType = 'all' | 'long' | 'short' | 'profit' | 'loss';
+type FilterType = "all" | "long" | "short" | "profit" | "loss";
 
 interface PositionsHeaderProps {
   positionCount: number;
   filterType: FilterType;
   onFilterChange: (filter: FilterType) => void;
   sortConfig: SortConfig;
-  onSort: (key: SortConfig['key']) => void;
+  onSort: (key: SortConfig["key"]) => void;
 }
 
 export const SortHeader: React.FC<{
   label: string;
-  sortKey: SortConfig['key'];
+  sortKey: SortConfig["key"];
   isActive: boolean;
-  direction: 'asc' | 'desc';
-  onSort: (key: SortConfig['key']) => void;
+  direction: "asc" | "desc";
+  onSort: (key: SortConfig["key"]) => void;
 }> = ({ label, sortKey, isActive, direction, onSort }) => (
   <button
     onClick={() => onSort(sortKey)}
     className="flex items-center gap-2 hover:text-primary transition-colors font-semibold"
-    aria-label={`Sort by ${label}, currently ${isActive ? direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
+    aria-label={`Sort by ${label}, currently ${isActive ? (direction === "asc" ? "ascending" : "descending") : "unsorted"}`}
     aria-pressed={isActive}
   >
     {label}
     {isActive && (
       <ChevronDown
-        className={`h-5 w-5 transition-transform ${direction === 'asc' ? 'rotate-180' : ''}`}
+        className={`h-5 w-5 transition-transform ${direction === "asc" ? "rotate-180" : ""}`}
         aria-hidden="true"
       />
     )}
@@ -53,27 +53,31 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
       {/* Title and Count */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h3 className="font-semibold text-lg">Open Positions ({positionCount})</h3>
+          <h3 className="font-semibold text-lg">
+            Open Positions ({positionCount})
+          </h3>
         </div>
 
         {/* Filter Buttons */}
         <div className="flex items-center gap-3 flex-wrap">
-          {(['all', 'long', 'short', 'profit', 'loss'] as FilterType[]).map((filter) => (
-            <Button
-              key={filter}
-              size="sm"
-              variant={filterType === filter ? 'default' : 'outline'}
-              onClick={() => onFilterChange(filter)}
-              aria-label={`Filter positions by ${filter.charAt(0).toUpperCase() + filter.slice(1)}`}
-              aria-pressed={filterType === filter}
-            >
-              {filter === 'long'
-                ? 'Buy'
-                : filter === 'short'
-                  ? 'Sell'
-                  : filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </Button>
-          ))}
+          {(["all", "long", "short", "profit", "loss"] as FilterType[]).map(
+            (filter) => (
+              <Button
+                key={filter}
+                size="sm"
+                variant={filterType === filter ? "default" : "outline"}
+                onClick={() => onFilterChange(filter)}
+                aria-label={`Filter positions by ${filter.charAt(0).toUpperCase() + filter.slice(1)}`}
+                aria-pressed={filterType === filter}
+              >
+                {filter === "long"
+                  ? "Buy"
+                  : filter === "short"
+                    ? "Sell"
+                    : filter.charAt(0).toUpperCase() + filter.slice(1)}
+              </Button>
+            ),
+          )}
         </div>
       </div>
 
@@ -83,7 +87,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="Symbol"
             sortKey="symbol"
-            isActive={sortConfig.key === 'symbol'}
+            isActive={sortConfig.key === "symbol"}
             direction={sortConfig.direction}
             onSort={onSort}
           />
@@ -92,7 +96,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="Side"
             sortKey="side"
-            isActive={sortConfig.key === 'side'}
+            isActive={sortConfig.key === "side"}
             direction={sortConfig.direction}
             onSort={onSort}
           />
@@ -101,7 +105,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="Qty"
             sortKey="quantity"
-            isActive={sortConfig.key === 'quantity'}
+            isActive={sortConfig.key === "quantity"}
             direction={sortConfig.direction}
             onSort={onSort}
           />
@@ -110,7 +114,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="Entry"
             sortKey="entry_price"
-            isActive={sortConfig.key === 'entry_price'}
+            isActive={sortConfig.key === "entry_price"}
             direction={sortConfig.direction}
             onSort={onSort}
           />
@@ -119,7 +123,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="Current"
             sortKey="current_price"
-            isActive={sortConfig.key === 'current_price'}
+            isActive={sortConfig.key === "current_price"}
             direction={sortConfig.direction}
             onSort={onSort}
           />
@@ -128,7 +132,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="P&L"
             sortKey="pnl"
-            isActive={sortConfig.key === 'pnl'}
+            isActive={sortConfig.key === "pnl"}
             direction={sortConfig.direction}
             onSort={onSort}
           />
@@ -137,7 +141,7 @@ export const PositionsHeader: React.FC<PositionsHeaderProps> = ({
           <SortHeader
             label="Margin"
             sortKey="margin_level"
-            isActive={sortConfig.key === 'margin_level'}
+            isActive={sortConfig.key === "margin_level"}
             direction={sortConfig.direction}
             onSort={onSort}
           />

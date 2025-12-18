@@ -41,6 +41,7 @@ A design system is a comprehensive collection of reusable components, guidelines
 ### TradeX Pro Design System
 
 Our design system is built on:
+
 - **React 18 + TypeScript** for type safety
 - **Tailwind CSS** for utility-first styling
 - **shadcn/ui** for accessible components
@@ -75,9 +76,11 @@ src/
 ## 🎨 Core Principles
 
 ### 1. Clarity First
+
 Every interface element communicates its purpose clearly.
 
 **Examples:**
+
 ```tsx
 // ✅ Clear
 <Button onClick={handleDelete}>Delete Account</Button>
@@ -87,9 +90,11 @@ Every interface element communicates its purpose clearly.
 ```
 
 ### 2. Consistency Over Customization
+
 Maintain design consistency across all features.
 
 **Examples:**
+
 ```tsx
 // ✅ Consistent
 <Card variant="primary" elevation={1}>
@@ -105,9 +110,11 @@ Maintain design consistency across all features.
 ```
 
 ### 3. Accessibility is Mandatory
+
 Every component must be accessible by default.
 
 **Examples:**
+
 ```tsx
 // ✅ Accessible
 <FormField label="Email" required>
@@ -121,27 +128,39 @@ Every component must be accessible by default.
 ```
 
 ### 4. Mobile First
+
 Design for small screens first, then enhance for larger displays.
 
 **Examples:**
+
 ```css
 /* ✅ Mobile-first */
-.card { padding: 16px; }
+.card {
+  padding: 16px;
+}
 @media (min-width: 640px) {
-  .card { padding: 20px; }
+  .card {
+    padding: 20px;
+  }
 }
 
 /* ❌ Desktop-first */
-.card { padding: 24px; }
+.card {
+  padding: 24px;
+}
 @media (max-width: 639px) {
-  .card { padding: 16px; }
+  .card {
+    padding: 16px;
+  }
 }
 ```
 
 ### 5. Performance Matters
+
 Smooth, responsive interactions at 60fps.
 
 **Examples:**
+
 ```css
 /* ✅ Performance-friendly */
 .button {
@@ -151,7 +170,7 @@ Smooth, responsive interactions at 60fps.
 /* ❌ Performance-heavy */
 .button {
   transition: all 0.2s ease-out;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 ```
 
@@ -163,14 +182,14 @@ Smooth, responsive interactions at 60fps.
 
 We use a consistent 8px-based type scale:
 
-| Level | Size | Usage |
-|-------|------|-------|
-| H1 | 32px | Page titles |
-| H2 | 24px | Section headers |
-| H3 | 18px | Card titles |
-| H4 | 16px | Subsection headers |
-| Body | 14px | Regular text |
-| Small | 12px | Helper text |
+| Level | Size | Usage              |
+| ----- | ---- | ------------------ |
+| H1    | 32px | Page titles        |
+| H2    | 24px | Section headers    |
+| H3    | 18px | Card titles        |
+| H4    | 16px | Subsection headers |
+| Body  | 14px | Regular text       |
+| Small | 12px | Helper text        |
 
 ### Usage
 
@@ -247,16 +266,16 @@ All spacing must follow the 4/8px grid:
 ```css
 /* ✅ Grid-aligned */
 .spacing {
-  padding: 16px;    /* 4px × 4 */
-  margin: 24px;     /* 4px × 6 */
-  gap: 8px;         /* 4px × 2 */
+  padding: 16px; /* 4px × 4 */
+  margin: 24px; /* 4px × 6 */
+  gap: 8px; /* 4px × 2 */
 }
 
 /* ❌ Non-grid */
 .spacing {
-  padding: 18px;    /* Not grid-aligned */
-  margin: 22px;     /* Not grid-aligned */
-  gap: 10px;        /* Not grid-aligned */
+  padding: 18px; /* Not grid-aligned */
+  margin: 22px; /* Not grid-aligned */
+  gap: 10px; /* Not grid-aligned */
 }
 ```
 
@@ -301,11 +320,11 @@ Import from the UI library:
 
 ```tsx
 // ✅ Named imports (recommended)
-import { Button, Card, Dialog } from '@/components/ui';
+import { Button, Card, Dialog } from "@/components/ui";
 
 // ✅ Individual imports
-import Button from '@/components/ui/button';
-import Card from '@/components/ui/card';
+import Button from "@/components/ui/button";
+import Card from "@/components/ui/card";
 ```
 
 ### Button Component
@@ -334,9 +353,7 @@ import Card from '@/components/ui/card';
     <CardTitle>Title</CardTitle>
     <CardDescription>Description</CardDescription>
   </CardHeader>
-  <CardContent>
-    Content goes here
-  </CardContent>
+  <CardContent>Content goes here</CardContent>
   <CardFooter>
     <Button>CTA</Button>
   </CardFooter>
@@ -365,6 +382,7 @@ import Card from '@/components/ui/card';
 ### WCAG AA Compliance
 
 All components must meet WCAG AA standards:
+
 - **Text contrast:** Minimum 4.5:1 ratio
 - **Large text:** Minimum 3:1 ratio
 - **Focus indicators:** Visible focus states
@@ -376,7 +394,7 @@ Use ARIA attributes for complex components:
 
 ```tsx
 // ✅ Accessible
-<button 
+<button
   aria-label="Close dialog"
   aria-expanded="false"
 >
@@ -399,7 +417,7 @@ const dialogRef = useRef<HTMLDivElement>(null);
 
 useEffect(() => {
   if (open) {
-    const focusable = dialogRef.current?.querySelector('button, [href], input');
+    const focusable = dialogRef.current?.querySelector("button, [href], input");
     (focusable as HTMLElement)?.focus();
   }
 }, [open]);
@@ -430,7 +448,7 @@ Provide context for screen readers:
 Before committing code, ensure:
 
 - ✅ No hardcoded colors (use CSS variables)
-- ✅ No hardcoded font sizes (use text-* classes)
+- ✅ No hardcoded font sizes (use text-\* classes)
 - ✅ All spacing on 4/8px grid
 - ✅ No arbitrary border-radius values
 - ✅ Proper heading hierarchy (H1 → H2 → H3)
@@ -443,6 +461,7 @@ Before committing code, ensure:
 ### Linting Rules
 
 Our ESLint configuration enforces:
+
 - React best practices
 - TypeScript strict mode
 - No console.log in production
@@ -526,9 +545,9 @@ const [isOpen, setIsOpen] = useState(false);
 const { user, setUser } = useAuth();
 
 // ✅ Derived state
-const filteredItems = useMemo(() => 
-  items.filter(item => item.status === 'active'), 
-  [items]
+const filteredItems = useMemo(
+  () => items.filter((item) => item.status === "active"),
+  [items],
 );
 ```
 
@@ -538,21 +557,18 @@ Optimize for performance:
 
 ```tsx
 // ✅ Memoization
-const expensiveValue = useMemo(() => 
-  calculateExpensiveValue(data), 
-  [data]
-);
+const expensiveValue = useMemo(() => calculateExpensiveValue(data), [data]);
 
 // ✅ Debouncing
 const debouncedSearch = useCallback(
   debounce((query) => setSearchQuery(query), 300),
-  []
+  [],
 );
 
 // ✅ Virtualization for long lists
 <FixedSizeList height={600} itemCount={1000} itemSize={50}>
   {ItemRenderer}
-</FixedSizeList>
+</FixedSizeList>;
 ```
 
 ### 5. Error Handling
@@ -563,16 +579,16 @@ Handle errors gracefully:
 // ✅ Error boundaries
 <ErrorBoundary fallback={<ErrorFallback />}>
   <TradingViewChart />
-</ErrorBoundary>
+</ErrorBoundary>;
 
 // ✅ Try-catch for async operations
 const handleSubmit = async () => {
   try {
     await saveData(data);
-    toast.success('Saved successfully');
+    toast.success("Saved successfully");
   } catch (error) {
-    toast.error('Failed to save');
-    logger.error('Save failed', error);
+    toast.error("Failed to save");
+    logger.error("Save failed", error);
   }
 };
 ```
@@ -584,15 +600,15 @@ const handleSubmit = async () => {
 ### 1. Hardcoded Values
 
 **❌ Avoid:**
+
 ```tsx
-<div style={{ padding: '18px', color: '#6366f1' }}>
-  Content
-</div>
+<div style={{ padding: "18px", color: "#6366f1" }}>Content</div>
 ```
 
 **✅ Use:**
+
 ```tsx
-<div className="p-4" style={{ color: 'hsl(var(--primary))' }}>
+<div className="p-4" style={{ color: "hsl(var(--primary))" }}>
   Content
 </div>
 ```
@@ -600,6 +616,7 @@ const handleSubmit = async () => {
 ### 2. Inconsistent Spacing
 
 **❌ Avoid:**
+
 ```css
 .card {
   padding: 16px;
@@ -608,6 +625,7 @@ const handleSubmit = async () => {
 ```
 
 **✅ Use:**
+
 ```css
 .card {
   padding: 16px;
@@ -618,11 +636,13 @@ const handleSubmit = async () => {
 ### 3. Poor Accessibility
 
 **❌ Avoid:**
+
 ```tsx
 <div onClick={handleClick}>Click me</div>
 ```
 
 **✅ Use:**
+
 ```tsx
 <button onClick={handleClick}>Click me</button>
 ```
@@ -630,11 +650,13 @@ const handleSubmit = async () => {
 ### 4. Non-responsive Design
 
 **❌ Avoid:**
+
 ```tsx
 <div className="w-1/3">Content</div>
 ```
 
 **✅ Use:**
+
 ```tsx
 <div className="w-full md:w-1/3">Content</div>
 ```
@@ -642,12 +664,14 @@ const handleSubmit = async () => {
 ### 5. Inconsistent Typography
 
 **❌ Avoid:**
+
 ```tsx
 <h1 style={{ fontSize: '28px' }}>Title</h1>
 <p style={{ fontSize: '16px' }}>Text</p>
 ```
 
 **✅ Use:**
+
 ```tsx
 <h1 className="text-2xl">Title</h1>
 <p className="text-sm">Text</p>

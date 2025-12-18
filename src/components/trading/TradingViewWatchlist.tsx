@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo, useState, useCallback } from "react";
-import { initTradingViewCompatibility } from "@/lib/tradingview-compatibility";
+import { initTradingViewCompatibility } from "@/lib/tradingViewCompatibility";
 import { useDebouncedChartUpdate } from "@/hooks/useDebouncedChartUpdate";
 import { ProgressiveDataLoader } from "@/lib/chartPerformance";
 
@@ -25,16 +25,16 @@ const TradingViewWatchlist = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
-  
+
   // Define initializeTradingView first
   const initializeTradingView = useCallback(() => {
     if (!containerRef.current || !isVisible) return;
 
     setIsLoading(true);
-    
+
     // Initialize TradingView compatibility fixes
     initTradingViewCompatibility();
-    
+
     const container = containerRef.current;
     container.textContent = "";
 
@@ -50,8 +50,8 @@ const TradingViewWatchlist = () => {
             { name: "FX:EURUSD", displayName: "EUR/USD" },
             { name: "FX:GBPUSD", displayName: "GBP/USD" },
             { name: "FX:USDJPY", displayName: "USD/JPY" },
-            { name: "FX:AUDUSD", displayName: "AUD/USD" }
-          ]
+            { name: "FX:AUDUSD", displayName: "AUD/USD" },
+          ],
         },
         {
           name: "Stocks",
@@ -60,8 +60,8 @@ const TradingViewWatchlist = () => {
             { name: "NASDAQ:AAPL", displayName: "Apple" },
             { name: "NASDAQ:TSLA", displayName: "Tesla" },
             { name: "NASDAQ:GOOGL", displayName: "Alphabet" },
-            { name: "NASDAQ:MSFT", displayName: "Microsoft" }
-          ]
+            { name: "NASDAQ:MSFT", displayName: "Microsoft" },
+          ],
         },
         {
           name: "Crypto",
@@ -70,34 +70,35 @@ const TradingViewWatchlist = () => {
             { name: "BINANCE:BTCUSDT", displayName: "Bitcoin" },
             { name: "BINANCE:ETHUSDT", displayName: "Ethereum" },
             { name: "BINANCE:BNBUSDT", displayName: "BNB" },
-            { name: "BINANCE:SOLUSDT", displayName: "Solana" }
-          ]
-        }
+            { name: "BINANCE:SOLUSDT", displayName: "Solana" },
+          ],
+        },
       ],
       showSymbolLogo: true,
       isTransparent: false,
       colorTheme: "dark",
       locale: "en",
-      backgroundColor: "hsl(var(--card))"
+      backgroundColor: "hsl(var(--card))",
     };
 
     // Use progressive loading for symbols
     const loader = new ProgressiveDataLoader(
-      config.symbolsGroups.flatMap(group => group.symbols),
+      config.symbolsGroups.flatMap((group) => group.symbols),
       2, // Load 2 symbols at a time
       (chunk, isComplete) => {
         // Update progress
         if (isComplete) {
           setIsLoading(false);
         }
-      }
+      },
     );
 
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
     script.async = true;
     script.defer = true; // Load after page is ready
-    
+
     // Set script content with optimized config
     script.textContent = JSON.stringify({
       ...config,
@@ -122,13 +123,13 @@ const TradingViewWatchlist = () => {
       loader.reset();
     };
   }, [isVisible]);
-  
+
   // Use debounced updates for performance
   const [debouncedUpdate] = useDebouncedChartUpdate(
     useCallback(() => {
       initializeTradingView();
     }, [initializeTradingView]),
-    { delay: 300 }
+    { delay: 300 },
   );
 
   const checkVisibility = useCallback(() => {
@@ -136,7 +137,7 @@ const TradingViewWatchlist = () => {
       const rect = containerRef.current.getBoundingClientRect();
       const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
       setIsVisible(isVisible);
-      
+
       if (isVisible && isLoading) {
         debouncedUpdate();
       }
@@ -146,14 +147,14 @@ const TradingViewWatchlist = () => {
   // Handle visibility changes and resize
   useEffect(() => {
     checkVisibility();
-    
+
     const handleScroll = () => checkVisibility();
     const handleResize = () => checkVisibility();
-    
+
     // Use passive listeners for better performance
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize, { passive: true });
-    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+
     // Initial check
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -162,7 +163,7 @@ const TradingViewWatchlist = () => {
           debouncedUpdate();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (containerRef.current) {
@@ -170,8 +171,8 @@ const TradingViewWatchlist = () => {
     }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
       observer.disconnect();
     };
   }, [checkVisibility, debouncedUpdate]);
@@ -188,8 +189,11 @@ const TradingViewWatchlist = () => {
 
   return (
     <div className="tradingview-widget-container h-full relative">
-      <div ref={containerRef} className="tradingview-widget-container__widget h-full" />
-      
+      <div
+        ref={containerRef}
+        className="tradingview-widget-container__widget h-full"
+      />
+
       {/* Loading overlay */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg">
@@ -199,11 +203,13 @@ const TradingViewWatchlist = () => {
           </div>
         </div>
       )}
-      
+
       {/* Placeholder when not visible */}
       {!isVisible && !isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground">Scroll to view market data</p>
+          <p className="text-sm text-muted-foreground">
+            Scroll to view market data
+          </p>
         </div>
       )}
     </div>

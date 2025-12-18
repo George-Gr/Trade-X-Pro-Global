@@ -19,6 +19,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 **Criterion:** Users submit KYC documents via signed upload URLs; server validates file types, sizes, and flags for manual review.
 
 **Implementation:**
+
 - **Signed Upload:** `supabase/functions/submit-kyc/index.ts`
   - Creates KYC request in DB.
   - Generates signed upload URL for direct client-to-storage upload.
@@ -36,6 +37,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
   - Admin actions: `manual_review` → `approved` | `rejected` | `escalated`.
 
 **Files:**
+
 - `supabase/functions/submit-kyc/index.ts` — signed URL generation.
 - `supabase/functions/validate-kyc-upload/index.ts` — file validation & storage.
 - `src/components/kyc/KycUploader.tsx` — client uploader UI.
@@ -49,6 +51,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 **Criterion:** KYC provider callbacks are processed; auto-approve/reject rules are applied; manual review escalates uncertain results.
 
 **Implementation:**
+
 - **Webhook Handler:** `supabase/functions/kyc-webhook/index.ts`
   - Receives provider verification callbacks.
   - Calls `KycService.recordVerification()` to insert verification record.
@@ -64,6 +67,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 - **Status Enum:** `kyc_status` ENUM in DB (submitted, manual_review, approved, rejected, auto_approved, suspended, escalated).
 
 **Files:**
+
 - `supabase/functions/kyc-webhook/index.ts` — provider callback handler.
 - `supabase/functions/mock-kyc-provider/index.ts` — test provider endpoint.
 - `src/lib/kyc/providers/mockProvider.ts` — provider adapter pattern.
@@ -78,6 +82,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 **Criterion:** Admins review pending requests; approve/reject/escalate with reasoning; all actions are audit-logged with actor, timestamp, and status changes.
 
 **Implementation:**
+
 - **Admin Edge Function:** `supabase/functions/admin/kyc-review/index.ts`
   - Parses `Authorization: Bearer <token>` header.
   - Verifies admin role via `user_roles` table query (server-side).
@@ -103,6 +108,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
   - Client-side admin role gate (`isAdmin` from `useAuth()`).
 
 **Files:**
+
 - `supabase/functions/admin/kyc-review/index.ts` — hardened admin endpoint.
 - `src/lib/kyc/adminReview.ts` — reusable review logic.
 - `src/components/kyc/KycAdminDashboard.tsx` — admin UI.
@@ -118,6 +124,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 **Criterion:** RLS policies enforce data isolation; users see only their own KYC data; admins (service role) have full access.
 
 **Implementation:**
+
 - **kyc_requests:**
   - SELECT: User can view only own records (`user_id = auth.uid()`).
   - UPDATE: Service role only (admin operations).
@@ -138,9 +145,11 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 - **Admin Role Verification:** Edge function queries `user_roles` table server-side; rejects non-admin requests with 403.
 
 **Files:**
+
 - `supabase/migrations/20251115_kyc_tables.sql` — RLS policy definitions (20+ policies).
 
 **Implementation Notes:**
+
 - Service role (`SUPABASE_SERVICE_ROLE_KEY`) bypasses RLS for admin operations.
 - Client-side Supabase queries use authenticated user role (subject to RLS).
 - Edge functions use service role to perform admin-only writes.
@@ -154,6 +163,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 **Criterion:** Users cannot trade/withdraw until KYC is approved; status checks happen at gateway points (e.g., order placement, deposit).
 
 **Implementation:**
+
 - **KYC Status Hook:** `src/hooks/useKyc.tsx`
   - Fetches user's latest `kyc_request` and documents.
   - Provides methods: `submitKycRequest()`, `uploadDocument()`, `validateDocument()`.
@@ -161,9 +171,10 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
   - Can be used by trading/withdrawal pages to gate transactions.
 
 - **Client Integration Pattern:**
+
   ```tsx
   const { kycStatus } = useKyc(userId);
-  const canTrade = kycStatus === 'approved' || kycStatus === 'auto_approved';
+  const canTrade = kycStatus === "approved" || kycStatus === "auto_approved";
   if (!canTrade) return <div>Complete KYC to trade</div>;
   ```
 
@@ -172,6 +183,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
   - Recommended: Add CHECK constraint or RLS policy on trading/withdrawal tables.
 
 **Files:**
+
 - `src/hooks/useKyc.tsx` — frontend status hook with actions.
 
 **Status:** Hook implemented; gating integration left for future trading endpoints.
@@ -183,6 +195,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 **Criterion:** Implement retention policies and secure deletion/anonymization of sensitive KYC data after approval or timeout.
 
 **Implementation Notes:**
+
 - **Recommended Architecture** (not yet fully implemented):
   - **Retention Schedule:**
     - Approved KYC: keep request metadata; purge documents after 3 years.
@@ -195,6 +208,7 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
   - **Implementation:** Scheduled Supabase function (cron job) or external cleanup job.
 
 **Files to Create (Future):**
+
 - `supabase/functions/cleanup-kyc-data/index.ts` — scheduled retention job.
 - Migration to add `deleted_at` timestamp to kyc_requests.
 
@@ -204,29 +218,32 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 
 ### 7. **Acceptance Criteria Summary**
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
-| Secure Upload & Validation | ✓ PASS | Signed URLs, file type/size checks, magic byte validation |
-| Provider Integration | ✓ PASS | Webhook handler, auto-approve rules, mock provider |
-| Admin Review Workflow | ✓ PASS | Admin endpoint, RLS, audit logging, UI dashboard |
-| Audit Trail | ✓ PASS | kyc_audit table, actor_id, status transitions logged |
-| RLS & Role Enforcement | ✓ PASS | 20+ RLS policies, service role gates, user isolation |
-| KYC Gating Hook | ✓ PASS | useKyc hook with status fetching and submit/upload/validate methods |
-| Retention Policy Design | ✓ PASS | Schema designed; cleanup job TODO (future priority) |
+| Criterion                  | Status | Evidence                                                            |
+| -------------------------- | ------ | ------------------------------------------------------------------- |
+| Secure Upload & Validation | ✓ PASS | Signed URLs, file type/size checks, magic byte validation           |
+| Provider Integration       | ✓ PASS | Webhook handler, auto-approve rules, mock provider                  |
+| Admin Review Workflow      | ✓ PASS | Admin endpoint, RLS, audit logging, UI dashboard                    |
+| Audit Trail                | ✓ PASS | kyc_audit table, actor_id, status transitions logged                |
+| RLS & Role Enforcement     | ✓ PASS | 20+ RLS policies, service role gates, user isolation                |
+| KYC Gating Hook            | ✓ PASS | useKyc hook with status fetching and submit/upload/validate methods |
+| Retention Policy Design    | ✓ PASS | Schema designed; cleanup job TODO (future priority)                 |
 
 ---
 
 ## Implementation Files Summary
 
 ### Database (`supabase/migrations/`)
+
 - **20251115_kyc_tables.sql** — Tables, enums, RLS policies (complete).
 
 ### Backend Services (`src/lib/kyc/`)
+
 - **kycService.ts** — Core service methods (createKycRequest, uploadDocument, recordVerification, logAudit, updateStatus).
 - **adminReview.ts** — Helper for admin actions (atomic status + audit).
 - **providers/mockProvider.ts** — Mock provider adapter for testing.
 
 ### Edge Functions (`supabase/functions/`)
+
 - **submit-kyc/index.ts** — Signed upload flow, create pending document.
 - **validate-kyc-upload/index.ts** — File validation, storage upload, Deno runtime.
 - **kyc-webhook/index.ts** — Provider callback handler.
@@ -234,14 +251,16 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 - **mock-kyc-provider/index.ts** — Test provider simulator.
 
 ### Frontend (`src/components/kyc/`, `src/hooks/`)
+
 - **KycUploader.tsx** — Client upload UI (submit-kyc → sign URL → PUT → validate).
 - **KycAdminDashboard.tsx** — Admin UI (fetch requests, approve/reject/escalate with Bearer token).
 - **useKyc.tsx** — Hook for status fetching and document submission.
 
 ### Tests
-- **src/lib/kyc/__tests__/adminReview.test.ts** — 3 unit tests for helper.
-- **src/lib/kyc/__tests__/kycService.test.ts** — 5 unit tests for service methods (mocked client).
-- **supabase/functions/admin/kyc-review/__tests__/integration.test.ts** — 8 integration tests.
+
+- **src/lib/kyc/**tests**/adminReview.test.ts** — 3 unit tests for helper.
+- **src/lib/kyc/**tests**/kycService.test.ts** — 5 unit tests for service methods (mocked client).
+- **supabase/functions/admin/kyc-review/**tests**/integration.test.ts** — 8 integration tests.
 
 **Total Tests:** 752 passing.
 
@@ -283,20 +302,24 @@ The KYC Admin Review Workflow has been implemented end-to-end, covering user doc
 ## Deployment Notes
 
 ### Environment Variables Required (Edge Functions)
+
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_KEY` (fallback)
 
 ### RLS Enforcement
+
 - Ensure RLS is enabled on all KYC tables (✓ Done).
 - Verify `user_roles` table exists with `(user_id, role)` columns.
 - Test RLS policies against real Supabase project.
 
 ### Signed URLs
+
 - Supabase signed URLs expire after 1 hour (default).
 - Adjust `expiresIn` in `submit-kyc` if needed.
 
 ### Audit Trail Integrity
+
 - Audit records are immutable (no UPDATE/DELETE policies).
 - Consider archiving to separate table for compliance.
 

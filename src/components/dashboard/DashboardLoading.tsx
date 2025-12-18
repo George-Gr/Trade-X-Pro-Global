@@ -1,4 +1,7 @@
-import { DashboardStatsSkeleton, MarketWatchSkeleton } from "@/components/ui/LoadingSkeleton";
+import {
+  DashboardStatsSkeleton,
+  MarketWatchSkeleton,
+} from "@/components/ui/LoadingSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -71,7 +74,10 @@ export function DashboardLoading() {
             <CardContent>
               <div className="space-y-3">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
+                  <div
+                    key={i}
+                    className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg"
+                  >
                     <Skeleton variant="status" />
                     <div className="flex-1 space-y-1">
                       <Skeleton variant="text" className="h-3 w-3/4" />
@@ -88,7 +94,11 @@ export function DashboardLoading() {
         <MarketWatchSkeleton />
 
         {/* Actions Section */}
-        <Card elevation="1" variant="secondary" className="border-border/70 mb-xl">
+        <Card
+          elevation="1"
+          variant="secondary"
+          className="border-border/70 mb-xl"
+        >
           <CardHeader>
             <CardTitle className="text-base font-semibold text-primary-contrast">
               <Skeleton variant="text" className="h-5 w-1/3" />
@@ -129,7 +139,10 @@ export function DashboardLoading() {
               <Skeleton variant="text" className="h-4 w-1/4 mb-md" />
               <div className="space-y-md">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="flex items-center justify-between border-b border-border/50 pb-md last:border-0 last:pb-0">
+                  <div
+                    key={i}
+                    className="flex items-center justify-between border-b border-border/50 pb-md last:border-0 last:pb-0"
+                  >
                     <div>
                       <Skeleton variant="text" className="h-4 w-1/3" />
                       <Skeleton variant="text" className="h-3 w-1/4" />

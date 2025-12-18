@@ -7,8 +7,8 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "./useAuth";
-import { supabase } from '@/lib/supabaseBrowserClient';
-import type { Position } from '@/types/position';
+import { supabase } from "@/lib/supabaseBrowserClient";
+import type { Position } from "@/types/position";
 
 export interface RealtimePositionUpdate {
   type: "INSERT" | "UPDATE" | "DELETE";
@@ -40,7 +40,7 @@ export interface UseRealtimePositionsReturn {
 
 export function useRealtimePositions(
   userId: string | null,
-  options: RealtimeOptions = {}
+  options: RealtimeOptions = {},
 ): UseRealtimePositionsReturn {
   const {
     debounceMs = 100,
@@ -63,7 +63,9 @@ export function useRealtimePositions(
   const subscriptionRef = useRef<unknown>(null);
   // Mutable ref to hold a reference to the subscribe function. This
   // helps break circular dependencies when other callbacks need to call subscribe
-  const subscribeRef = useRef<((filter?: string) => Promise<void>) | null>(null);
+  const subscribeRef = useRef<((filter?: string) => Promise<void>) | null>(
+    null,
+  );
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttemptsRef = useRef(5);
@@ -96,17 +98,22 @@ export function useRealtimePositions(
           id: r.id as string,
           user_id: r.user_id as string,
           symbol: r.symbol as string,
-          side: (r.side as string) === 'buy' ? 'long' : 'short',
+          side: (r.side as string) === "buy" ? "long" : "short",
           quantity: r.quantity as number,
           entry_price: r.entry_price as number,
           current_price: r.current_price as number,
           unrealized_pnl: (r.unrealized_pnl as number) || 0,
           margin_used: (r.margin_used as number) || 0,
           margin_level: (r.margin_level as number) || 0,
-          status: (r.status as 'open' | 'closed' | 'closing') || 'open',
-          opened_at: r.opened_at ? new Date(r.opened_at as string) : new Date((r.created_at as string) || Date.now()),
-          leverage: typeof r.leverage === 'number' ? (r.leverage as number) : 1,
-          created_at: (r.created_at as string) || (r.opened_at as string) || new Date().toISOString(),
+          status: (r.status as "open" | "closed" | "closing") || "open",
+          opened_at: r.opened_at
+            ? new Date(r.opened_at as string)
+            : new Date((r.created_at as string) || Date.now()),
+          leverage: typeof r.leverage === "number" ? (r.leverage as number) : 1,
+          created_at:
+            (r.created_at as string) ||
+            (r.opened_at as string) ||
+            new Date().toISOString(),
           updated_at: (r.updated_at as string) || new Date().toISOString(),
         };
       });
@@ -145,32 +152,40 @@ export function useRealtimePositions(
         const old = oldPos as Record<string, unknown>;
         const newP = newPos as Record<string, unknown>;
         if (!old || !newP) return null;
-        
+
         return {
-          pnl_change: ((newP.unrealized_pnl as number) || 0) - ((old.unrealized_pnl as number) || 0),
-          price_change: ((newP.current_price as number) || 0) - ((old.current_price as number) || 0),
-          margin_change: ((newP.margin_used as number) || 0) - ((old.margin_used as number) || 0),
+          pnl_change:
+            ((newP.unrealized_pnl as number) || 0) -
+            ((old.unrealized_pnl as number) || 0),
+          price_change:
+            ((newP.current_price as number) || 0) -
+            ((old.current_price as number) || 0),
+          margin_change:
+            ((newP.margin_used as number) || 0) -
+            ((old.margin_used as number) || 0),
         };
       };
 
       // Debounce rapid updates for UPDATE events
       if (type === "UPDATE" && newRecord) {
         const delta = calculateDelta(oldRecord, newRecord);
-        
+
         // Only process significant updates (> 0.01% PnL change or > 0.1% price change)
-        const shouldUpdate = !delta || 
-          Math.abs(delta.pnl_change) > 0.01 || 
-          Math.abs(delta.price_change / (oldRecord?.current_price || 1)) > 0.001;
-        
+        const shouldUpdate =
+          !delta ||
+          Math.abs(delta.pnl_change) > 0.01 ||
+          Math.abs(delta.price_change / (oldRecord?.current_price || 1)) >
+            0.001;
+
         if (!shouldUpdate) {
           return; // Skip insignificant updates
         }
-        
+
         // Clear existing debounce timer
         if (debounceTimerRef.current) {
           clearTimeout(debounceTimerRef.current);
         }
-        
+
         // Debounce the update
         debounceTimerRef.current = setTimeout(() => {
           setPositions((prev) => {
@@ -186,7 +201,7 @@ export function useRealtimePositions(
             return updated;
           });
         }, debounceMs);
-        
+
         return;
       }
 
@@ -219,7 +234,7 @@ export function useRealtimePositions(
         onUpdate(positionsRef.current);
       }
     },
-    [onUpdate, debounceMs]
+    [onUpdate, debounceMs],
   );
 
   const handleSubscriptionError = useCallback(() => {
@@ -252,7 +267,7 @@ export function useRealtimePositions(
       }, backoffMs);
     } else {
       const error = new Error(
-        "Max reconnection attempts exceeded. Check your connection and try again."
+        "Max reconnection attempts exceeded. Check your connection and try again.",
       );
       setError(error);
       setConnectionStatus("error");
@@ -271,7 +286,9 @@ export function useRealtimePositions(
 
       try {
         if (subscriptionRef.current) {
-          await supabase.removeChannel(subscriptionRef.current as import('@supabase/supabase-js').RealtimeChannel);
+          await supabase.removeChannel(
+            subscriptionRef.current as import("@supabase/supabase-js").RealtimeChannel,
+          );
         }
 
         setConnectionStatus("connecting");
@@ -280,11 +297,11 @@ export function useRealtimePositions(
         const channel = supabase
           .channel(`positions:${userId}`)
           .on(
-            'postgres_changes' as const,
+            "postgres_changes" as const,
             {
-              event: '*',
-              schema: 'public',
-              table: 'positions',
+              event: "*",
+              schema: "public",
+              table: "positions",
               filter: `user_id=eq.${userId}`,
             },
             (payload: unknown) => {
@@ -294,7 +311,7 @@ export function useRealtimePositions(
               debounceTimerRef.current = setTimeout(() => {
                 handlePositionUpdate(payload as RealtimePositionUpdate, filter);
               }, debounceMs);
-            }
+            },
           )
           .subscribe((status) => {
             if (status === "SUBSCRIBED") {
@@ -320,7 +337,13 @@ export function useRealtimePositions(
         throw error;
       }
     },
-    [userId, debounceMs, onError, handlePositionUpdate, handleSubscriptionError]
+    [
+      userId,
+      debounceMs,
+      onError,
+      handlePositionUpdate,
+      handleSubscriptionError,
+    ],
   );
 
   // Assign the concrete `subscribe` function to the ref so it can be referenced
@@ -330,7 +353,9 @@ export function useRealtimePositions(
   const unsubscribe = useCallback(async () => {
     if (subscriptionRef.current) {
       try {
-        await supabase.removeChannel(subscriptionRef.current as ReturnType<typeof supabase.channel>);
+        await supabase.removeChannel(
+          subscriptionRef.current as ReturnType<typeof supabase.channel>,
+        );
         subscriptionRef.current = null;
         setIsSubscribed(false);
         setConnectionStatus("disconnected");

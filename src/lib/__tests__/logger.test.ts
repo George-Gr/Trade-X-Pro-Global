@@ -1,12 +1,17 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { logger, createDomainLogger, LogContext, initializeSentry } from '@/lib/logger';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import {
+  logger,
+  createDomainLogger,
+  LogContext,
+  initializeSentry,
+} from "@/lib/logger";
 
 /**
  * Test suite for centralized logging system
  * Tests: logger methods, context tracking, breadcrumbs, Sentry integration
  */
 
-describe('Logger', () => {
+describe("Logger", () => {
   beforeAll(() => {
     // Clear context before each test
     logger.clearGlobalContext();
@@ -19,36 +24,36 @@ describe('Logger', () => {
     logger.clearBreadcrumbs();
   });
 
-  describe('Global Context Management', () => {
-    it('should set and retrieve global context', () => {
+  describe("Global Context Management", () => {
+    it("should set and retrieve global context", () => {
       const context: LogContext = {
-        userId: 'user-123',
-        page: 'trading',
-        action: 'execute_order',
+        userId: "user-123",
+        page: "trading",
+        action: "execute_order",
       };
 
       logger.setGlobalContext(context);
       const retrieved = logger.getGlobalContext();
 
-      expect(retrieved.userId).toBe('user-123');
-      expect(retrieved.page).toBe('trading');
-      expect(retrieved.action).toBe('execute_order');
+      expect(retrieved.userId).toBe("user-123");
+      expect(retrieved.page).toBe("trading");
+      expect(retrieved.action).toBe("execute_order");
     });
 
-    it('should merge contexts correctly', () => {
-      const context1: LogContext = { userId: 'user-123' };
-      const context2: LogContext = { page: 'trading' };
+    it("should merge contexts correctly", () => {
+      const context1: LogContext = { userId: "user-123" };
+      const context2: LogContext = { page: "trading" };
 
       logger.setGlobalContext(context1);
       logger.setGlobalContext(context2);
       const merged = logger.getGlobalContext();
 
-      expect(merged.userId).toBe('user-123');
-      expect(merged.page).toBe('trading');
+      expect(merged.userId).toBe("user-123");
+      expect(merged.page).toBe("trading");
     });
 
-    it('should clear global context', () => {
-      logger.setGlobalContext({ userId: 'user-123' });
+    it("should clear global context", () => {
+      logger.setGlobalContext({ userId: "user-123" });
       logger.clearGlobalContext();
       const context = logger.getGlobalContext();
 
@@ -56,45 +61,45 @@ describe('Logger', () => {
     });
   });
 
-  describe('Breadcrumb Management', () => {
+  describe("Breadcrumb Management", () => {
     beforeEach(() => {
       logger.clearBreadcrumbs();
     });
 
-    it('should add breadcrumbs', () => {
-      logger.addBreadcrumb('user_action', 'Clicked Place Order');
+    it("should add breadcrumbs", () => {
+      logger.addBreadcrumb("user_action", "Clicked Place Order");
       const breadcrumbs = logger.getBreadcrumbs();
 
       expect(breadcrumbs).toHaveLength(1);
-      expect(breadcrumbs[0].category).toBe('user_action');
-      expect(breadcrumbs[0].message).toBe('Clicked Place Order');
+      expect(breadcrumbs[0].category).toBe("user_action");
+      expect(breadcrumbs[0].message).toBe("Clicked Place Order");
     });
 
-    it('should add breadcrumbs with different levels', () => {
-      logger.addBreadcrumb('info', 'User logged in', 'info');
-      logger.addBreadcrumb('warning', 'Low balance', 'warning');
-      logger.addBreadcrumb('error', 'Order failed', 'error');
+    it("should add breadcrumbs with different levels", () => {
+      logger.addBreadcrumb("info", "User logged in", "info");
+      logger.addBreadcrumb("warning", "Low balance", "warning");
+      logger.addBreadcrumb("error", "Order failed", "error");
 
       const breadcrumbs = logger.getBreadcrumbs();
       expect(breadcrumbs).toHaveLength(3);
-      expect(breadcrumbs[0].level).toBe('info');
-      expect(breadcrumbs[1].level).toBe('warning');
-      expect(breadcrumbs[2].level).toBe('error');
+      expect(breadcrumbs[0].level).toBe("info");
+      expect(breadcrumbs[1].level).toBe("warning");
+      expect(breadcrumbs[2].level).toBe("error");
     });
 
-    it('should limit breadcrumbs to MAX_BREADCRUMBS', () => {
+    it("should limit breadcrumbs to MAX_BREADCRUMBS", () => {
       // Add more than 50 breadcrumbs
       for (let i = 0; i < 60; i++) {
-        logger.addBreadcrumb('action', `Action ${i}`);
+        logger.addBreadcrumb("action", `Action ${i}`);
       }
 
       const breadcrumbs = logger.getBreadcrumbs();
       expect(breadcrumbs.length).toBeLessThanOrEqual(50);
-      expect(breadcrumbs[0].message).toContain('Action 10');
+      expect(breadcrumbs[0].message).toContain("Action 10");
     });
 
-    it('should clear breadcrumbs', () => {
-      logger.addBreadcrumb('action', 'Test');
+    it("should clear breadcrumbs", () => {
+      logger.addBreadcrumb("action", "Test");
       logger.clearBreadcrumbs();
       const breadcrumbs = logger.getBreadcrumbs();
 
@@ -102,62 +107,72 @@ describe('Logger', () => {
     });
   });
 
-  describe('Logging Methods', () => {
-    it('should handle info logging', () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  describe("Logging Methods", () => {
+    it("should handle info logging", () => {
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-      logger.info('Test message', { userId: 'user-123' });
+      logger.info("Test message", { userId: "user-123" });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
       consoleSpy.mockRestore();
     });
 
-    it('should handle warn logging', () => {
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    it("should handle warn logging", () => {
+      const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-      logger.warn('Warning message', { metadata: { test: 'value' } as Record<string, unknown> });
+      logger.warn("Warning message", {
+        metadata: { test: "value" } as Record<string, unknown>,
+      });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
       consoleSpy.mockRestore();
     });
 
-    it('should handle error logging with Error object', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      const testError = new Error('Test error');
+    it("should handle error logging with Error object", () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      const testError = new Error("Test error");
 
-      logger.error('Error occurred', testError, { action: 'test' });
+      logger.error("Error occurred", testError, { action: "test" });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
       consoleSpy.mockRestore();
     });
 
-    it('should handle error logging with non-Error object', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    it("should handle error logging with non-Error object", () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
-      logger.error('Error occurred', { status: 500, message: 'Server error' });
+      logger.error("Error occurred", { status: 500, message: "Server error" });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
       consoleSpy.mockRestore();
     });
 
-    it('should handle debug logging', () => {
-      const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    it("should handle debug logging", () => {
+      const consoleSpy = vi
+        .spyOn(console, "debug")
+        .mockImplementation(() => {});
 
-      logger.debug('Debug message', { metadata: { value: 42 } as Record<string, unknown> });
+      logger.debug("Debug message", {
+        metadata: { value: 42 } as Record<string, unknown>,
+      });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
@@ -165,27 +180,27 @@ describe('Logger', () => {
     });
   });
 
-  describe('Performance Timing', () => {
-    it('should time synchronous operations', () => {
-      const result = logger.time('sync_operation', () => {
+  describe("Performance Timing", () => {
+    it("should time synchronous operations", () => {
+      const result = logger.time("sync_operation", () => {
         return 42;
       });
 
       expect(result).toBe(42);
     });
 
-    it('should handle errors in timed operations', () => {
+    it("should handle errors in timed operations", () => {
       const operation = () => {
-        throw new Error('Timed operation failed');
+        throw new Error("Timed operation failed");
       };
 
-      expect(() => logger.time('failing_operation', operation)).toThrow(
-        'Timed operation failed'
+      expect(() => logger.time("failing_operation", operation)).toThrow(
+        "Timed operation failed",
       );
     });
 
-    it('should time async operations', async () => {
-      const result = await logger.timeAsync('async_operation', async () => {
+    it("should time async operations", async () => {
+      const result = await logger.timeAsync("async_operation", async () => {
         return new Promise((resolve) => {
           setTimeout(() => resolve(42), 10);
         });
@@ -194,55 +209,57 @@ describe('Logger', () => {
       expect(result).toBe(42);
     });
 
-    it('should handle errors in timed async operations', async () => {
+    it("should handle errors in timed async operations", async () => {
       const operation = async () => {
-        throw new Error('Async operation failed');
+        throw new Error("Async operation failed");
       };
 
       await expect(
-        logger.timeAsync('failing_async_operation', operation)
-      ).rejects.toThrow('Async operation failed');
+        logger.timeAsync("failing_async_operation", operation),
+      ).rejects.toThrow("Async operation failed");
     });
   });
 
-  describe('Domain Logger', () => {
-    it('should create domain-scoped logger', () => {
-      const domainLogger = createDomainLogger('trading');
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  describe("Domain Logger", () => {
+    it("should create domain-scoped logger", () => {
+      const domainLogger = createDomainLogger("trading");
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-      domainLogger.info('Order executed', { metadata: { orderId: '123' } as Record<string, unknown> });
+      domainLogger.info("Order executed", {
+        metadata: { orderId: "123" } as Record<string, unknown>,
+      });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
         // Should contain domain name
         const callArgs = consoleSpy.mock.calls[0]?.[0];
-        if (callArgs && typeof callArgs === 'string') {
-          expect(callArgs).toContain('[trading]');
+        if (callArgs && typeof callArgs === "string") {
+          expect(callArgs).toContain("[trading]");
         }
       }
 
       consoleSpy.mockRestore();
     });
 
-    it('should add domain-scoped breadcrumbs', () => {
-      const domainLogger = createDomainLogger('kyc');
+    it("should add domain-scoped breadcrumbs", () => {
+      const domainLogger = createDomainLogger("kyc");
 
-      domainLogger.addBreadcrumb('upload', 'Document uploaded');
+      domainLogger.addBreadcrumb("upload", "Document uploaded");
       const breadcrumbs = logger.getBreadcrumbs();
 
       expect(breadcrumbs.length).toBeGreaterThan(0);
       const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
-      expect(lastBreadcrumb.category).toContain('kyc');
+      expect(lastBreadcrumb.category).toContain("kyc");
     });
   });
 
-  describe('Sentry Integration', () => {
-    it('should initialize Sentry', () => {
+  describe("Sentry Integration", () => {
+    it("should initialize Sentry", () => {
       // This should not throw
       expect(() => initializeSentry()).not.toThrow();
     });
 
-    it('should handle missing Sentry DSN gracefully', () => {
+    it("should handle missing Sentry DSN gracefully", () => {
       // Test that initialization handles missing DSN
       const originalEnv = import.meta.env.VITE_SENTRY_DSN;
 
@@ -254,29 +271,31 @@ describe('Logger', () => {
     });
   });
 
-  describe('Timestamp Generation', () => {
-    it('should add timestamp when merging context in log calls', () => {
-      logger.setGlobalContext({ userId: 'user-123' });
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  describe("Timestamp Generation", () => {
+    it("should add timestamp when merging context in log calls", () => {
+      logger.setGlobalContext({ userId: "user-123" });
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
       // When logging, timestamp should be added
-      logger.info('Test message');
+      logger.info("Test message");
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
       consoleSpy.mockRestore();
     });
 
-    it('should generate valid ISO timestamp format', () => {
-      const consolidateSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    it("should generate valid ISO timestamp format", () => {
+      const consolidateSpy = vi
+        .spyOn(console, "log")
+        .mockImplementation(() => {});
 
-      logger.info('Timestamp test', { userId: 'user-123' });
+      logger.info("Timestamp test", { userId: "user-123" });
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         const callArgs = consolidateSpy.mock.calls[0]?.[0];
-        if (callArgs && typeof callArgs === 'string') {
+        if (callArgs && typeof callArgs === "string") {
           // Should contain ISO timestamp at the beginning
           const isoMatch = callArgs.match(/\[\d{4}-\d{2}-\d{2}T/);
           expect(isoMatch).toBeTruthy();
@@ -287,20 +306,20 @@ describe('Logger', () => {
     });
   });
 
-  describe('Context Merge Behavior', () => {
-    it('should merge provided context with global context', () => {
-      logger.setGlobalContext({ userId: 'user-123', page: 'trading' });
+  describe("Context Merge Behavior", () => {
+    it("should merge provided context with global context", () => {
+      logger.setGlobalContext({ userId: "user-123", page: "trading" });
 
       const providedContext: LogContext = {
-        action: 'execute_order',
-        component: 'TradeForm',
+        action: "execute_order",
+        component: "TradeForm",
       };
 
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-      logger.info('Order executed', providedContext);
+      logger.info("Order executed", providedContext);
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 
@@ -308,22 +327,22 @@ describe('Logger', () => {
     });
   });
 
-  describe('Metadata Handling', () => {
-    it('should include metadata in logs', () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  describe("Metadata Handling", () => {
+    it("should include metadata in logs", () => {
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
       const context: LogContext = {
-        userId: 'user-123',
+        userId: "user-123",
         metadata: {
-          orderId: 'order-456',
-          symbol: 'EURUSD',
+          orderId: "order-456",
+          symbol: "EURUSD",
           quantity: 1.5,
         },
       };
 
-      logger.info('Order details', context);
+      logger.info("Order details", context);
 
-      if (import.meta.env.MODE === 'development') {
+      if (import.meta.env.MODE === "development") {
         expect(consoleSpy).toHaveBeenCalled();
       }
 

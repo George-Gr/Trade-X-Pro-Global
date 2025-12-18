@@ -12,12 +12,12 @@ interface SuccessAnimationProps {
 
 /**
  * SuccessAnimation Component
- * 
+ *
  * Displays an animated checkmark with optional message and auto-fade out.
  * Used for form submissions, confirmations, and successful actions.
- * 
+ *
  * Usage:
- * <SuccessAnimation 
+ * <SuccessAnimation
  *   message="Saved successfully!"
  *   onComplete={() => setShowSuccess(false)}
  *   duration={2000}
@@ -47,22 +47,22 @@ export const SuccessAnimation: React.FC<SuccessAnimationProps> = ({
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-3",
-        className
+        className,
       )}
     >
       <div
         className={cn(
           "rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center",
           "animate-success-check",
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       >
-        <CheckCircle2 
+        <CheckCircle2
           className={cn(
             "text-green-600 dark:text-green-400 animate-success-check",
             size === "sm" && "h-6 w-6",
             size === "md" && "h-8 w-8",
-            size === "lg" && "h-12 w-12"
+            size === "lg" && "h-12 w-12",
           )}
         />
       </div>
@@ -108,21 +108,21 @@ export const ErrorAnimation: React.FC<ErrorAnimationProps> = ({
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-3",
-        className
+        className,
       )}
     >
       <div
         className={cn(
           "rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center",
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       >
-        <XCircle 
+        <XCircle
           className={cn(
             "text red-600 dark:text-red-400 animate-error-shake",
             size === "sm" && "h-6 w-6",
             size === "md" && "h-8 w-8",
-            size === "lg" && "h-12 w-12"
+            size === "lg" && "h-12 w-12",
           )}
         />
       </div>
@@ -168,21 +168,21 @@ export const WarningAnimation: React.FC<WarningAnimationProps> = ({
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-3",
-        className
+        className,
       )}
     >
       <div
         className={cn(
           "rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center",
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       >
-        <AlertTriangle 
+        <AlertTriangle
           className={cn(
             "text-amber-600 dark:text-amber-400",
             size === "sm" && "h-6 w-6",
             size === "md" && "h-8 w-8",
-            size === "lg" && "h-12 w-12"
+            size === "lg" && "h-12 w-12",
           )}
         />
       </div>
@@ -228,22 +228,22 @@ export const InfoAnimation: React.FC<InfoAnimationProps> = ({
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-3",
-        className
+        className,
       )}
     >
       <div
         className={cn(
           "rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center",
           "animate-float",
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       >
-        <Info 
+        <Info
           className={cn(
             "text-blue-600 dark:text-blue-400",
             size === "sm" && "h-6 w-6",
             size === "md" && "h-8 w-8",
-            size === "lg" && "h-12 w-12"
+            size === "lg" && "h-12 w-12",
           )}
         />
       </div>

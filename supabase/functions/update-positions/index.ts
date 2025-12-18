@@ -1,9 +1,9 @@
 /**
  * Edge Function: Update Positions
- * 
+ *
  * Real-time position P&L, margin level, and risk metrics updates.
  * Called on every price tick to recalculate position values and margin levels.
- * 
+ *
  * Integrates:
  * - pnlCalculation.ts for P&L calculations
  * - marginCalculations.ts for margin requirements
@@ -91,17 +91,17 @@ Deno.serve(async (req: Request) => {
     // =====================================================================
 
     const requestBody = (await req.json()) as UpdatePositionsRequest;
-    const { user_id, positions: position_ids, prices: price_overrides } =
-      requestBody;
+    const {
+      user_id,
+      positions: position_ids,
+      prices: price_overrides,
+    } = requestBody;
 
     if (!user_id) {
-      return new Response(
-        JSON.stringify({ error: "user_id is required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ error: "user_id is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // =====================================================================
@@ -184,7 +184,7 @@ Deno.serve(async (req: Request) => {
         {
           status: 200,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
     }
 
@@ -234,17 +234,15 @@ Deno.serve(async (req: Request) => {
 
     for (const position of positions) {
       try {
-        const currentPrice = priceMap[position.symbol] || position.current_price;
+        const currentPrice =
+          priceMap[position.symbol] || position.current_price;
 
         // Call stored procedure
-        const { data, error } = await supabase.rpc(
-          "update_position_atomic",
-          {
-            p_position_id: position.id,
-            p_current_price: currentPrice,
-            p_user_id: user_id,
-          }
-        );
+        const { data, error } = await supabase.rpc("update_position_atomic", {
+          p_position_id: position.id,
+          p_current_price: currentPrice,
+          p_user_id: user_id,
+        });
 
         if (error) {
           errors.push({
@@ -331,7 +329,7 @@ Deno.serve(async (req: Request) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 });

@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo } from "react";
-import { initTradingViewCompatibility } from "@/lib/tradingview-compatibility";
+import { initTradingViewCompatibility } from "@/lib/tradingViewCompatibility";
 
 const TradingViewMarketsWidget = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -7,14 +7,15 @@ const TradingViewMarketsWidget = () => {
   useEffect(() => {
     // Initialize TradingView compatibility fixes
     initTradingViewCompatibility();
-    
+
     const container = containerRef.current;
     if (!container) return;
 
     container.textContent = "";
 
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
     script.async = true;
     script.textContent = JSON.stringify({
       colorTheme: "dark",
@@ -45,9 +46,9 @@ const TradingViewMarketsWidget = () => {
             { s: "FX:USDJPY", d: "USD/JPY" },
             { s: "FX:USDCHF", d: "USD/CHF" },
             { s: "FX:AUDUSD", d: "AUD/USD" },
-            { s: "FX:USDCAD", d: "USD/CAD" }
+            { s: "FX:USDCAD", d: "USD/CAD" },
           ],
-          originalTitle: "Forex"
+          originalTitle: "Forex",
         },
         {
           title: "Stocks",
@@ -57,9 +58,9 @@ const TradingViewMarketsWidget = () => {
             { s: "NASDAQ:MSFT", d: "Microsoft" },
             { s: "NASDAQ:TSLA", d: "Tesla" },
             { s: "NASDAQ:NVDA", d: "NVIDIA" },
-            { s: "NYSE:JPM", d: "JPMorgan" }
+            { s: "NYSE:JPM", d: "JPMorgan" },
           ],
-          originalTitle: "Stocks"
+          originalTitle: "Stocks",
         },
         {
           title: "Crypto",
@@ -69,9 +70,9 @@ const TradingViewMarketsWidget = () => {
             { s: "BINANCE:BNBUSDT", d: "BNB" },
             { s: "BINANCE:SOLUSDT", d: "Solana" },
             { s: "BINANCE:ADAUSDT", d: "Cardano" },
-            { s: "BINANCE:XRPUSDT", d: "Ripple" }
+            { s: "BINANCE:XRPUSDT", d: "Ripple" },
           ],
-          originalTitle: "Crypto"
+          originalTitle: "Crypto",
         },
         {
           title: "Indices",
@@ -81,9 +82,9 @@ const TradingViewMarketsWidget = () => {
             { s: "FOREXCOM:DJI", d: "Dow 30" },
             { s: "INDEX:NKY", d: "Nikkei 225" },
             { s: "INDEX:DEU40", d: "DAX" },
-            { s: "FOREXCOM:UKXGBP", d: "FTSE 100" }
+            { s: "FOREXCOM:UKXGBP", d: "FTSE 100" },
           ],
-          originalTitle: "Indices"
+          originalTitle: "Indices",
         },
         {
           title: "Commodities",
@@ -93,11 +94,11 @@ const TradingViewMarketsWidget = () => {
             { s: "TVC:USOIL", d: "Crude Oil" },
             { s: "TVC:UKOIL", d: "Brent Oil" },
             { s: "COMEX:GC1!", d: "Gold Futures" },
-            { s: "NYMEX:CL1!", d: "Crude Futures" }
+            { s: "NYMEX:CL1!", d: "Crude Futures" },
           ],
-          originalTitle: "Commodities"
-        }
-      ]
+          originalTitle: "Commodities",
+        },
+      ],
     });
 
     container.appendChild(script);
@@ -111,7 +112,10 @@ const TradingViewMarketsWidget = () => {
 
   return (
     <div className="tradingview-widget-container h-full">
-      <div ref={containerRef} className="tradingview-widget-container__widget h-full" />
+      <div
+        ref={containerRef}
+        className="tradingview-widget-container__widget h-full"
+      />
     </div>
   );
 };

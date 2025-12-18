@@ -14,7 +14,7 @@ export function LiveChatIndicator() {
       >
         <MessageCircle className="h-6 w-6 text-primary-foreground" />
       </Button>
-      
+
       {isOpen && (
         <div className="absolute bottom-16 right-0 w-80 bg-card border border-border rounded-lg shadow-2xl p-6 animate-fade-in">
           <div className="flex items-center gap-3 mb-4">
@@ -29,30 +29,24 @@ export function LiveChatIndicator() {
               <p className="text-sm text-accent">Online now</p>
             </div>
           </div>
-          
+
           <p className="text-muted-foreground text-sm mb-4">
             Hi there! 👋 Have questions about TradeX Pro? We're here to help!
           </p>
-          
+
           <div className="space-y-2">
-            <a 
-              href="mailto:support@tradexpro.com" 
-              className="block w-full"
-            >
+            <a href="mailto:support@tradexpro.com" className="block w-full">
               <Button className="w-full bg-primary hover:bg-primary/90">
                 Email Support
               </Button>
             </a>
-            <a 
-              href="/company/contact" 
-              className="block w-full"
-            >
+            <a href="/company/contact" className="block w-full">
               <Button variant="outline" className="w-full">
                 Contact Form
               </Button>
             </a>
           </div>
-          
+
           <p className="text-xs text-muted-foreground mt-4 text-center">
             Typical response time: &lt;2 hours
           </p>

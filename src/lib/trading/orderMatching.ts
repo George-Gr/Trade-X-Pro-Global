@@ -1,55 +1,55 @@
 /**
  * Order Matching & Execution Engine
- * 
+ *
  * This module implements order matching logic for different order types:
  * - Market orders: immediate execution at market price + slippage
  * - Limit orders: queued until price reaches target
  * - Stop orders: triggered on price movement, then market execution
  * - Stop-Limit orders: triggered on price, then limit execution
  * - Trailing Stop: adjusts stop dynamically based on price movement
- * 
+ *
  * References:
  * - /project_resources_docs/TradePro v10 — Complete Production-Ready Development Plan.md
  * - IMPLEMENTATION_TASKS_DETAILED.md TASK 1.1.4
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Order types supported by the platform
  */
 export enum OrderType {
-  Market = 'market',
-  Limit = 'limit',
-  Stop = 'stop',
-  StopLimit = 'stop_limit',
+  Market = "market",
+  Limit = "limit",
+  Stop = "stop",
+  StopLimit = "stop_limit",
 }
 
 /**
  * Order execution sides
  */
 export enum OrderSide {
-  Buy = 'buy',
-  Sell = 'sell',
+  Buy = "buy",
+  Sell = "sell",
 }
 
 /**
  * Order execution status
  */
 export enum OrderStatus {
-  Pending = 'pending',
-  Filled = 'filled',
-  Partial = 'partial',
-  Cancelled = 'cancelled',
-  Rejected = 'rejected',
+  Pending = "pending",
+  Filled = "filled",
+  Partial = "partial",
+  Cancelled = "cancelled",
+  Rejected = "rejected",
 }
 
 /**
  * Position status
  */
 export enum PositionStatus {
-  Open = 'open',
-  Closed = 'closed',
+  Open = "open",
+  Closed = "closed",
 }
 
 /**
@@ -57,8 +57,8 @@ export enum PositionStatus {
  */
 export const OrderInputSchema = z.object({
   symbol: z.string().min(1),
-  order_type: z.enum(['market', 'limit', 'stop', 'stop_limit']),
-  side: z.enum(['buy', 'sell']),
+  order_type: z.enum(["market", "limit", "stop", "stop_limit"]),
+  side: z.enum(["buy", "sell"]),
   quantity: z.number().positive(),
   price: z.number().positive().optional(), // For limit orders
   stop_price: z.number().positive().optional(), // For stop/stop-limit orders
@@ -112,19 +112,21 @@ export interface MarketSnapshot {
   bid: number;
   ask: number;
   volatility: number;
-  liquidity: 'very_high' | 'high' | 'medium' | 'low';
+  liquidity: "very_high" | "high" | "medium" | "low";
   timestamp: Date;
 }
 
 /**
  * Check if a market order should execute (always yes for market orders)
- * 
+ *
  * @param condition - Order condition
  * @returns Matching result
  */
-export function checkMarketOrderMatch(condition: OrderCondition): MatchingResult {
+export function checkMarketOrderMatch(
+  condition: OrderCondition,
+): MatchingResult {
   if (condition.orderType !== OrderType.Market) {
-    return { matched: false, reason: 'Not a market order' };
+    return { matched: false, reason: "Not a market order" };
   }
 
   return {
@@ -136,20 +138,20 @@ export function checkMarketOrderMatch(condition: OrderCondition): MatchingResult
 
 /**
  * Check if a limit order should execute
- * 
+ *
  * Buy limit: execute if price <= limit
  * Sell limit: execute if price >= limit
- * 
+ *
  * @param condition - Order condition with limitPrice
  * @param market - Current market data
  * @returns Matching result
  */
 export function checkLimitOrderMatch(
   condition: OrderCondition,
-  market: MarketSnapshot
+  market: MarketSnapshot,
 ): MatchingResult {
   if (!condition.limitPrice) {
-    return { matched: false, reason: 'Limit price not specified' };
+    return { matched: false, reason: "Limit price not specified" };
   }
 
   const shouldExecute =
@@ -173,10 +175,10 @@ export function checkLimitOrderMatch(
 
 /**
  * Check if a stop order should trigger
- * 
+ *
  * Buy stop: trigger if price >= stop level
  * Sell stop: trigger if price <= stop level
- * 
+ *
  * @param condition - Order condition with stop_price
  * @param market - Current market data
  * @param previousPrice - Previous market price
@@ -185,10 +187,10 @@ export function checkLimitOrderMatch(
 export function checkStopOrderTrigger(
   condition: OrderCondition,
   market: MarketSnapshot,
-  previousPrice: number
+  previousPrice: number,
 ): MatchingResult {
   if (!condition.priceLevel) {
-    return { matched: false, reason: 'Stop price not specified' };
+    return { matched: false, reason: "Stop price not specified" };
   }
 
   // Check if price has touched stop level
@@ -206,22 +208,22 @@ export function checkStopOrderTrigger(
   const shouldTrigger = currentPriceTouched && !previousPriceTouched;
 
   if (!shouldTrigger) {
-    return { matched: false, reason: 'Stop level not touched' };
+    return { matched: false, reason: "Stop level not touched" };
   }
 
   return {
     matched: true,
     shouldTrigger: true,
-    reason: 'Stop order triggered',
+    reason: "Stop order triggered",
   };
 }
 
 /**
  * Check if a stop-limit order should execute
- * 
+ *
  * 1. First check if stop is triggered
  * 2. Then check if limit condition is met
- * 
+ *
  * @param condition - Order condition with both stop and limit prices
  * @param market - Current market data
  * @param previousPrice - Previous market price
@@ -230,16 +232,20 @@ export function checkStopOrderTrigger(
 export function checkStopLimitOrderMatch(
   condition: OrderCondition,
   market: MarketSnapshot,
-  previousPrice: number
+  previousPrice: number,
 ): MatchingResult {
   if (!condition.priceLevel || !condition.limitPrice) {
-    return { matched: false, reason: 'Stop or limit price not specified' };
+    return { matched: false, reason: "Stop or limit price not specified" };
   }
 
   // First: check if stop is triggered
-  const stopTriggerResult = checkStopOrderTrigger(condition, market, previousPrice);
+  const stopTriggerResult = checkStopOrderTrigger(
+    condition,
+    market,
+    previousPrice,
+  );
   if (!stopTriggerResult.shouldTrigger) {
-    return { matched: false, reason: 'Stop level not triggered' };
+    return { matched: false, reason: "Stop level not triggered" };
   }
 
   // Second: check if limit condition is met
@@ -253,11 +259,11 @@ export function checkStopLimitOrderMatch(
 
 /**
  * Check if a trailing stop order should trigger
- * 
+ *
  * Trailing stop moves with price:
  * - For buy orders: trigger if price drops below (highest_price - trail_amount)
  * - For sell orders: trigger if price rises above (lowest_price + trail_amount)
- * 
+ *
  * @param condition - Order condition with trailingAmount
  * @param market - Current market data
  * @param highestPrice - Highest price since order creation (for buy)
@@ -270,10 +276,10 @@ export function checkTrailingStopOrderTrigger(
   market: MarketSnapshot,
   highestPrice: number,
   lowestPrice: number,
-  previousPrice: number
+  previousPrice: number,
 ): MatchingResult {
   if (!condition.trailingAmount) {
-    return { matched: false, reason: 'Trailing amount not specified' };
+    return { matched: false, reason: "Trailing amount not specified" };
   }
 
   const shouldTrigger =
@@ -284,19 +290,19 @@ export function checkTrailingStopOrderTrigger(
         previousPrice < lowestPrice + condition.trailingAmount;
 
   if (!shouldTrigger) {
-    return { matched: false, reason: 'Price has not triggered trailing stop' };
+    return { matched: false, reason: "Price has not triggered trailing stop" };
   }
 
   return {
     matched: true,
     shouldTrigger: true,
-    reason: 'Trailing stop triggered',
+    reason: "Trailing stop triggered",
   };
 }
 
 /**
  * Calculate execution price with slippage
- * 
+ *
  * @param marketPrice - Current market price
  * @param side - Order side (buy/sell)
  * @param slippageAmount - Slippage in price units
@@ -305,7 +311,7 @@ export function checkTrailingStopOrderTrigger(
 export function calculateExecutionPrice(
   marketPrice: number,
   side: OrderSide,
-  slippageAmount: number
+  slippageAmount: number,
 ): number {
   if (side === OrderSide.Buy) {
     return marketPrice + slippageAmount; // Buy slips up
@@ -316,7 +322,7 @@ export function calculateExecutionPrice(
 
 /**
  * Determine if order conditions are met for execution
- * 
+ *
  * @param orderCondition - Order to check
  * @param market - Current market snapshot
  * @param previousPrice - Previous market price
@@ -325,7 +331,7 @@ export function calculateExecutionPrice(
 export function shouldOrderExecute(
   orderCondition: OrderCondition,
   market: MarketSnapshot,
-  previousPrice: number = market.currentPrice
+  previousPrice: number = market.currentPrice,
 ): MatchingResult {
   switch (orderCondition.orderType) {
     case OrderType.Market:
@@ -341,16 +347,16 @@ export function shouldOrderExecute(
       return checkStopLimitOrderMatch(orderCondition, market, previousPrice);
 
     default:
-      return { matched: false, reason: 'Unknown order type' };
+      return { matched: false, reason: "Unknown order type" };
   }
 }
 
 /**
  * Execute order and update account state
- * 
+ *
  * Note: This is a calculation-only function. The actual database
  * updates should happen via stored procedures for atomicity.
- * 
+ *
  * @param executionPrice - Price at which order executed
  * @param quantity - Quantity executed
  * @param side - Order side
@@ -363,7 +369,7 @@ export function calculatePostExecutionBalance(
   quantity: number,
   side: OrderSide,
   commission: number,
-  currentBalance: number
+  currentBalance: number,
 ): number {
   const orderCost = executionPrice * quantity;
   const totalCost = orderCost + commission;
@@ -378,7 +384,7 @@ export function calculatePostExecutionBalance(
 
 /**
  * Calculate margin required for position
- * 
+ *
  * @param quantity - Position quantity
  * @param entryPrice - Entry price
  * @param leverage - Leverage multiplier
@@ -387,7 +393,7 @@ export function calculatePostExecutionBalance(
 export function calculateMarginRequired(
   quantity: number,
   entryPrice: number,
-  leverage: number
+  leverage: number,
 ): number {
   const positionValue = quantity * entryPrice;
   return positionValue / leverage;
@@ -395,7 +401,7 @@ export function calculateMarginRequired(
 
 /**
  * Calculate unrealized P&L for a position
- * 
+ *
  * @param quantity - Position quantity
  * @param entryPrice - Entry price
  * @param currentPrice - Current market price
@@ -406,7 +412,7 @@ export function calculateUnrealizedPnL(
   quantity: number,
   entryPrice: number,
   currentPrice: number,
-  side: OrderSide
+  side: OrderSide,
 ): number {
   const priceDifference = currentPrice - entryPrice;
 
@@ -419,7 +425,7 @@ export function calculateUnrealizedPnL(
 
 /**
  * Validate order execution pre-conditions
- * 
+ *
  * @param balance - Current account balance
  * @param marginRequired - Margin needed for position
  * @param freeMargin - Free margin available
@@ -428,14 +434,14 @@ export function calculateUnrealizedPnL(
 export function validateExecutionPreConditions(
   balance: number,
   marginRequired: number,
-  freeMargin: number
+  freeMargin: number,
 ): { valid: boolean; reason?: string } {
   if (balance <= 0) {
-    return { valid: false, reason: 'Insufficient balance' };
+    return { valid: false, reason: "Insufficient balance" };
   }
 
   if (marginRequired > freeMargin) {
-    return { valid: false, reason: 'Insufficient margin' };
+    return { valid: false, reason: "Insufficient margin" };
   }
 
   return { valid: true };
@@ -448,9 +454,9 @@ export class OrderMatchingError extends Error {
   constructor(
     public status: number,
     public details: string,
-    message?: string
+    message?: string,
   ) {
     super(message || details);
-    this.name = 'OrderMatchingError';
+    this.name = "OrderMatchingError";
   }
 }

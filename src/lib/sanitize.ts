@@ -3,7 +3,7 @@
  * All user-generated content should be sanitized before rendering
  */
 
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
 /**
  * Sanitize HTML content to prevent XSS attacks
@@ -11,8 +11,8 @@ import DOMPurify from 'dompurify';
  */
 export function sanitizeHtml(dirty: string): string {
   return DOMPurify.sanitize(dirty, {
-    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
-    ALLOWED_ATTR: ['href', 'target', 'rel'],
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "br", "ul", "ol", "li"],
+    ALLOWED_ATTR: ["href", "target", "rel"],
     ALLOW_DATA_ATTR: false,
   });
 }
@@ -34,17 +34,17 @@ export function sanitizeText(dirty: string): string {
 export function sanitizeEmail(email: string): string {
   const sanitized = sanitizeText(email).toLowerCase().trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(sanitized) ? sanitized : '';
+  return emailRegex.test(sanitized) ? sanitized : "";
 }
 
 /**
  * Sanitize numeric input - returns only valid numbers
  */
 export function sanitizeNumber(value: string | number): number | null {
-  if (typeof value === 'number') {
+  if (typeof value === "number") {
     return isNaN(value) ? null : value;
   }
-  const sanitized = sanitizeText(value).replace(/[^0-9.-]/g, '');
+  const sanitized = sanitizeText(value).replace(/[^0-9.-]/g, "");
   const num = parseFloat(sanitized);
   return isNaN(num) ? null : num;
 }
@@ -55,7 +55,7 @@ export function sanitizeNumber(value: string | number): number | null {
 export function sanitizeSymbol(symbol: string): string {
   return sanitizeText(symbol)
     .toUpperCase()
-    .replace(/[^A-Z0-9_/]/g, '')
+    .replace(/[^A-Z0-9_/]/g, "")
     .slice(0, 20);
 }
 
@@ -64,36 +64,38 @@ export function sanitizeSymbol(symbol: string): string {
  */
 export function sanitizeUrl(url: string): string {
   const sanitized = sanitizeText(url).trim();
-  
+
   // Block dangerous protocols
-  const dangerousProtocols = ['javascript:', 'data:', 'vbscript:'];
+  const dangerousProtocols = ["javascript:", "data:", "vbscript:"];
   const lowerUrl = sanitized.toLowerCase();
-  
+
   for (const protocol of dangerousProtocols) {
     if (lowerUrl.startsWith(protocol)) {
-      return '';
+      return "";
     }
   }
-  
+
   return sanitized;
 }
 
 /**
  * Sanitize form data object
  */
-export function sanitizeFormData<T extends Record<string, unknown>>(data: T): T {
+export function sanitizeFormData<T extends Record<string, unknown>>(
+  data: T,
+): T {
   const sanitized = {} as T;
-  
+
   for (const [key, value] of Object.entries(data)) {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       (sanitized as Record<string, unknown>)[key] = sanitizeText(value);
-    } else if (typeof value === 'number') {
+    } else if (typeof value === "number") {
       (sanitized as Record<string, unknown>)[key] = sanitizeNumber(value);
     } else {
       (sanitized as Record<string, unknown>)[key] = value;
     }
   }
-  
+
   return sanitized;
 }
 

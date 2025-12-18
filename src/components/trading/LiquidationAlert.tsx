@@ -11,10 +11,16 @@
  * - Action buttons for deposit, support, view history
  */
 
-import React from 'react';
-import { AlertCircle, TrendingDown, TrendingUp, DollarSign, X } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import {
+  AlertCircle,
+  TrendingDown,
+  TrendingUp,
+  DollarSign,
+  X,
+} from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -22,9 +28,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
-import type { LiquidationExecutionResult } from '@/lib/trading/liquidationEngine';
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import type { LiquidationExecutionResult } from "@/lib/trading/liquidationEngine";
 
 interface LiquidationAlertProps {
   result: LiquidationExecutionResult;
@@ -52,29 +58,55 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
             </AlertTitle>
             <AlertDescription className="text-sell/90 space-y-4">
               <p>
-                {result.totalPositionsClosed} position{result.totalPositionsClosed !== 1 ? 's' : ''} have been
-                automatically liquidated due to margin call. Your account margin has been restored.
+                {result.totalPositionsClosed} position
+                {result.totalPositionsClosed !== 1 ? "s" : ""} have been
+                automatically liquidated due to margin call. Your account margin
+                has been restored.
               </p>
 
               {/* Liquidation Summary */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
                 <div className="bg-background p-4 rounded border border-sell/30">
-                  <div className="text-xs text-muted-foreground">Positions Closed</div>
-                  <div className="text-lg font-bold text-sell">{result.totalPositionsClosed}</div>
+                  <div className="text-xs text-muted-foreground">
+                    Positions Closed
+                  </div>
+                  <div className="text-lg font-bold text-sell">
+                    {result.totalPositionsClosed}
+                  </div>
                 </div>
                 <div className="bg-background p-4 rounded border border-sell/30">
-                  <div className="text-xs text-muted-foreground">Realized Loss</div>
-                  <div className={cn('text-lg font-bold', result.totalLossRealized < 0 ? 'text-sell' : 'text-buy')}>
+                  <div className="text-xs text-muted-foreground">
+                    Realized Loss
+                  </div>
+                  <div
+                    className={cn(
+                      "text-lg font-bold",
+                      result.totalLossRealized < 0 ? "text-sell" : "text-buy",
+                    )}
+                  >
                     ${Math.abs(result.totalLossRealized).toFixed(2)}
                   </div>
                 </div>
                 <div className="bg-background p-4 rounded border border-sell/30">
-                  <div className="text-xs text-muted-foreground">Slippage Cost</div>
-                  <div className="text-lg font-bold text-orange-700">${result.totalSlippageApplied.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">
+                    Slippage Cost
+                  </div>
+                  <div className="text-lg font-bold text-orange-700">
+                    ${result.totalSlippageApplied.toFixed(2)}
+                  </div>
                 </div>
                 <div className="bg-background p-4 rounded border border-sell/30">
-                  <div className="text-xs text-muted-foreground">Margin Restored</div>
-                  <div className={cn('text-lg font-bold', result.finalMarginLevel > result.initialMarginLevel ? 'text-buy' : 'text-sell')}>
+                  <div className="text-xs text-muted-foreground">
+                    Margin Restored
+                  </div>
+                  <div
+                    className={cn(
+                      "text-lg font-bold",
+                      result.finalMarginLevel > result.initialMarginLevel
+                        ? "text-buy"
+                        : "text-sell",
+                    )}
+                  >
                     {result.finalMarginLevel.toFixed(1)}%
                   </div>
                 </div>
@@ -88,14 +120,16 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                       variant="link"
                       className="text-sell underline p-4 h-auto font-semibold"
                     >
-                      View {result.closedPositions.length} liquidated position{result.closedPositions.length !== 1 ? 's' : ''}
+                      View {result.closedPositions.length} liquidated position
+                      {result.closedPositions.length !== 1 ? "s" : ""}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl">
                     <DialogHeader>
                       <DialogTitle>Liquidated Positions</DialogTitle>
                       <DialogDescription>
-                        Detailed breakdown of positions that were closed during liquidation
+                        Detailed breakdown of positions that were closed during
+                        liquidation
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -106,18 +140,22 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div>
-                              <div className="font-semibold text-foreground">{pos.symbol}</div>
+                              <div className="font-semibold text-foreground">
+                                {pos.symbol}
+                              </div>
                               <div className="text-sm text-muted-foreground capitalize">
-                                {pos.side} {pos.quantity} unit{pos.quantity !== 1 ? 's' : ''}
+                                {pos.side} {pos.quantity} unit
+                                {pos.quantity !== 1 ? "s" : ""}
                               </div>
                             </div>
                             <div
                               className={cn(
-                                'text-lg font-bold',
-                                pos.realizedPnL < 0 ? 'text-sell' : 'text-buy'
+                                "text-lg font-bold",
+                                pos.realizedPnL < 0 ? "text-sell" : "text-buy",
                               )}
                             >
-                              {pos.realizedPnL < 0 ? '-' : '+'}${Math.abs(pos.realizedPnL).toFixed(2)}
+                              {pos.realizedPnL < 0 ? "-" : "+"}$
+                              {Math.abs(pos.realizedPnL).toFixed(2)}
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
@@ -126,7 +164,9 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
                               <div>${pos.entryPrice.toFixed(4)}</div>
                             </div>
                             <div>
-                              <div className="font-medium">Liquidation Price</div>
+                              <div className="font-medium">
+                                Liquidation Price
+                              </div>
                               <div>${pos.liquidationPrice.toFixed(4)}</div>
                             </div>
                             <div>
@@ -148,8 +188,12 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
               {/* Failed Positions Warning */}
               {result.totalPositionsFailed > 0 && (
                 <div className="bg-background border border-orange-200 p-4 rounded text-sm text-orange-900">
-                  <strong>{result.totalPositionsFailed} position{result.totalPositionsFailed !== 1 ? 's' : ''}</strong> failed
-                  to close due to technical issues. These positions may still be open. Contact support.
+                  <strong>
+                    {result.totalPositionsFailed} position
+                    {result.totalPositionsFailed !== 1 ? "s" : ""}
+                  </strong>{" "}
+                  failed to close due to technical issues. These positions may
+                  still be open. Contact support.
                 </div>
               )}
             </AlertDescription>

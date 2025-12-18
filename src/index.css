@@ -52,22 +52,24 @@
 @layer base {
   :root {
     /* === NEO-DIGITAL PREMIUM TYPOGRAPHY === */
-    --font-family-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-family-base: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
-    
+    --font-family-display:
+      "Sora", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family-base:
+      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-family-mono: "JetBrains Mono", "Fira Code", monospace;
+
     /* Smooth theme transitions */
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    
+
     /* === LIGHT MODE - Neo-Digital Premium === */
     --background: 220 20% 97%;
     --background-surface: 220 16% 93%;
     --background-elevated: 220 14% 89%;
     --foreground: 225 30% 8%;
-    --foreground-secondary: 225 15% 35%;
-    --foreground-tertiary: 225 12% 48%;
-    --foreground-muted: 225 10% 60%;
+    --foreground-secondary: 225 20% 30%;
+    --foreground-tertiary: 225 15% 45%;
+    --foreground-muted: 225 12% 50%;
 
     --card: 0 0% 100%;
     --card-foreground: 225 30% 8%;
@@ -84,9 +86,9 @@
     --secondary: 195 100% 50%;
     --secondary-foreground: 225 30% 8%;
 
-    /* Gold/Accent - Warm Amber (Premium, Success) */
-    --gold: 38 95% 54%;
-    --gold-hover: 38 95% 48%;
+    /* Gold/Accent - Warm Amber (Premium, Success) - WCAG AA Compliant */
+    --gold: 38 100% 45%;
+    --gold-hover: 38 100% 40%;
     --gold-foreground: 225 30% 8%;
 
     --muted: 220 16% 93%;
@@ -181,28 +183,85 @@
 
     /* === NEO-DIGITAL PREMIUM GRADIENTS === */
     /* Cinematic depth with layered color transitions */
-    --gradient-primary: linear-gradient(135deg, hsl(258 90% 62%) 0%, hsl(195 100% 50%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(258 90% 62% / 0.95) 0%, hsl(225 50% 15% / 0.98) 50%, hsl(195 100% 50% / 0.9) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(38 95% 54%) 0%, hsl(38 95% 48%) 100%);
-    --gradient-emerald: linear-gradient(135deg, hsl(158 72% 42%) 0%, hsl(158 72% 48%) 100%);
-    --gradient-buy: linear-gradient(135deg, hsl(158 72% 42%) 0%, hsl(158 72% 48%) 100%);
-    --gradient-sell: linear-gradient(135deg, hsl(350 85% 58%) 0%, hsl(350 85% 64%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(258 90% 62% / 0.08) 0%, transparent 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(258 90% 62%) 0%, hsl(38 95% 54%) 100%);
-    --gradient-mesh: radial-gradient(ellipse at top left, hsl(258 90% 62% / 0.12), transparent 50%), radial-gradient(ellipse at bottom right, hsl(195 100% 50% / 0.12), transparent 50%);
-    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.9) 0%, hsl(0 0% 100% / 0.7) 100%);
-    --gradient-surface: linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(220 16% 93%) 100%);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(258 90% 62%) 0%,
+      hsl(195 100% 50%) 100%
+    );
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(258 90% 62% / 0.95) 0%,
+      hsl(225 50% 15% / 0.98) 50%,
+      hsl(195 100% 50% / 0.9) 100%
+    );
+    --gradient-gold: linear-gradient(
+      135deg,
+      hsl(38 95% 54%) 0%,
+      hsl(38 95% 48%) 100%
+    );
+    --gradient-emerald: linear-gradient(
+      135deg,
+      hsl(158 72% 42%) 0%,
+      hsl(158 72% 48%) 100%
+    );
+    --gradient-buy: linear-gradient(
+      135deg,
+      hsl(158 72% 42%) 0%,
+      hsl(158 72% 48%) 100%
+    );
+    --gradient-sell: linear-gradient(
+      135deg,
+      hsl(350 85% 58%) 0%,
+      hsl(350 85% 64%) 100%
+    );
+    --gradient-card: linear-gradient(
+      180deg,
+      hsl(258 90% 62% / 0.08) 0%,
+      transparent 100%
+    );
+    --gradient-premium: linear-gradient(
+      135deg,
+      hsl(258 90% 62%) 0%,
+      hsl(38 95% 54%) 100%
+    );
+    --gradient-mesh:
+      radial-gradient(
+        ellipse at top left,
+        hsl(258 90% 62% / 0.12),
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at bottom right,
+        hsl(195 100% 50% / 0.12),
+        transparent 50%
+      );
+    --gradient-glass: linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.9) 0%,
+      hsl(0 0% 100% / 0.7) 100%
+    );
+    --gradient-surface: linear-gradient(
+      180deg,
+      hsl(220 20% 97%) 0%,
+      hsl(220 16% 93%) 100%
+    );
 
     /* === ELEVATION SYSTEM (Premium Shadows) === */
     --shadow-xs: 0 1px 2px hsl(225 30% 8% / 0.04);
-    --shadow-sm: 0 2px 4px hsl(225 30% 8% / 0.06), 0 1px 2px hsl(225 30% 8% / 0.04);
-    --shadow-md: 0 4px 8px hsl(225 30% 8% / 0.08), 0 2px 4px hsl(225 30% 8% / 0.04);
-    --shadow-lg: 0 12px 24px hsl(225 30% 8% / 0.1), 0 4px 8px hsl(225 30% 8% / 0.06);
-    --shadow-xl: 0 24px 48px hsl(225 30% 8% / 0.12), 0 8px 16px hsl(225 30% 8% / 0.06);
+    --shadow-sm:
+      0 2px 4px hsl(225 30% 8% / 0.06), 0 1px 2px hsl(225 30% 8% / 0.04);
+    --shadow-md:
+      0 4px 8px hsl(225 30% 8% / 0.08), 0 2px 4px hsl(225 30% 8% / 0.04);
+    --shadow-lg:
+      0 12px 24px hsl(225 30% 8% / 0.1), 0 4px 8px hsl(225 30% 8% / 0.06);
+    --shadow-xl:
+      0 24px 48px hsl(225 30% 8% / 0.12), 0 8px 16px hsl(225 30% 8% / 0.06);
     --shadow-2xl: 0 32px 64px hsl(225 30% 8% / 0.16);
-    --shadow-glow: 0 0 24px hsl(258 90% 62% / 0.35), 0 4px 16px hsl(225 30% 8% / 0.15);
+    --shadow-glow:
+      0 0 24px hsl(258 90% 62% / 0.35), 0 4px 16px hsl(225 30% 8% / 0.15);
     --shadow-glow-sm: 0 0 12px hsl(258 90% 62% / 0.25);
-    --shadow-glow-lg: 0 0 48px hsl(258 90% 62% / 0.45), 0 8px 32px hsl(225 30% 8% / 0.2);
+    --shadow-glow-lg:
+      0 0 48px hsl(258 90% 62% / 0.45), 0 8px 32px hsl(225 30% 8% / 0.2);
     --shadow-glow-cyan: 0 0 24px hsl(195 100% 50% / 0.35);
     --quick-actions: 0 0% 100%;
 
@@ -224,16 +283,16 @@
     /* WCAG AA Compliant Accessibility Color Combinations */
     --primary-contrast-bg: 0 0% 100%;
     --primary-contrast-fg: 225 30% 8%;
-    
+
     --secondary-contrast-bg: 220 16% 93%;
     --secondary-contrast-fg: 225 15% 30%;
-    
+
     --success-contrast-bg: 158 72% 42%;
     --success-contrast-fg: 0 0% 100%;
-    
+
     --warning-contrast-bg: 38 92% 50%;
     --warning-contrast-fg: 225 30% 8%;
-    
+
     --danger-contrast-bg: 350 85% 58%;
     --danger-contrast-fg: 0 0% 100%;
 
@@ -263,8 +322,10 @@
     --transition-duration: 200ms;
 
     /* Animations */
-    --animation-loading-slow: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    --animation-loading-fast: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    --animation-loading-slow: pulse-slow 2s cubic-bezier(0.4, 0, 0.2, 1)
+      infinite;
+    --animation-loading-fast: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.2, 1)
+      infinite;
     --animation-shimmer: shimmer 2s infinite;
 
     /* === SIDEBAR WIDTH TOKENS === */
@@ -283,7 +344,8 @@
     color: hsl(var(--foreground));
     line-height: 1.6;
     font-family: var(--font-family-base);
-    transition: background-color var(--transition-duration, 300ms) ease-in-out,
+    transition:
+      background-color var(--transition-duration, 300ms) ease-in-out,
       color var(--transition-duration, 300ms) ease-in-out;
   }
 
@@ -291,7 +353,8 @@
   [class*="bg-"],
   [class*="text-"],
   [class*="border-"] {
-    transition: background-color var(--transition-duration, 300ms) ease-in-out,
+    transition:
+      background-color var(--transition-duration, 300ms) ease-in-out,
       color var(--transition-duration, 300ms) ease-in-out,
       border-color var(--transition-duration, 300ms) ease-in-out;
   }
@@ -358,7 +421,6 @@
 
   /* Fallback for browsers without focus-visible support */
   @supports not (selector(:focus-visible)) {
-
     input:focus,
     select:focus,
     textarea:focus,
@@ -377,7 +439,6 @@
 
   /* Animated Focus Rings for Interactive Elements */
   @keyframes focus-pulse {
-
     0%,
     100% {
       box-shadow:
@@ -404,7 +465,6 @@
 
   /* Fallback for browsers without focus-visible */
   @supports not (selector(:focus-visible)) {
-
     .trading-interface input:focus,
     .trading-interface button:focus,
     .trading-panel input:focus,
@@ -417,7 +477,6 @@
 
   /* High contrast mode focus enhancement */
   @media (prefers-contrast: high) {
-
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -436,7 +495,6 @@
 
   /* Enhanced loading animations */
   @keyframes pulse-slow {
-
     0%,
     100% {
       opacity: 1;
@@ -448,7 +506,6 @@
   }
 
   @keyframes pulse-fast {
-
     0%,
     100% {
       opacity: 1;
@@ -511,7 +568,6 @@
   /* FE-052: Firefox Focus Ring Enhancement - Enhanced for 3px width */
   /* Note: Firefox-specific styles are handled by the base focus-visible styles above */
   @supports (-moz-appearance: none) {
-
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -527,7 +583,6 @@
   /* FE-053: Mobile Landscape Orientation Support */
 
   @media (max-height: 600px) and (orientation: landscape) {
-
     /* Reduce vertical spacing in landscape mode */
     .space-y-6 {
       row-gap: 0.75rem;
@@ -552,7 +607,6 @@
   /* FE-054: Android Chrome Animation Fixes */
   /* Force hardware acceleration for smooth animations */
   @media (max-width: 768px) {
-
     .animate-fade-in,
     .animate-scale-in,
     .animate-slide-in-right,
@@ -566,7 +620,6 @@
 
   /* Reduce motion for accessibility and Android performance */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
@@ -574,6 +627,26 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+  }
+
+  /* FE-055: High Contrast Mode Support (Accessibility) */
+  @media (prefers-contrast: more) {
+    :root {
+      --foreground: 225 40% 5%;
+      --gold: 38 100% 40%;
+      --primary: 258 90% 45%;
+      --destructive: 350 100% 50%;
+    }
+
+    input[aria-invalid="true"],
+    select[aria-invalid="true"],
+    textarea[aria-invalid="true"] {
+      border-width: 2px;
+    }
+
+    .form-field-error {
+      border-width: 2px;
     }
   }
 
@@ -612,5 +685,24 @@
   label:hover {
     cursor: pointer;
     opacity: 0.9;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Allow essential micro-interactions but keep them fast */
+  .btn,
+  .card,
+  .badge {
+    transition: transform 0.01ms !important;
   }
 }

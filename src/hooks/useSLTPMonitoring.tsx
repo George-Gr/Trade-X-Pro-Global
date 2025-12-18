@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSlTpExecution, TriggerType } from './useSlTpExecution';
-import { usePositionUpdate, PositionMetrics } from './usePositionUpdate';
-import { usePriceStream, PriceData } from './usePriceStream';
-import type { Position } from '@/types/position';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useSlTpExecution, TriggerType } from "./useSlTpExecution";
+import { usePositionUpdate, PositionMetrics } from "./usePositionUpdate";
+import { usePriceStream, PriceData } from "./usePriceStream";
+import type { Position } from "@/types/position";
 
 /**
  * Tracks a position that has been triggered by SL/TP
@@ -61,7 +61,9 @@ export const useSLTPMonitoring = () => {
    */
   const getSymbolsToMonitor = useCallback((): string[] => {
     const positionsWithSlTp = positions.filter(
-      (p) => (p.stop_loss !== undefined || p.take_profit !== undefined) && p.margin_status !== 'LIQUIDATION'
+      (p) =>
+        (p.stop_loss !== undefined || p.take_profit !== undefined) &&
+        p.margin_status !== "LIQUIDATION",
     );
     return [...new Set(positionsWithSlTp.map((p) => p.symbol))];
   }, [positions]);
@@ -81,21 +83,21 @@ export const useSLTPMonitoring = () => {
    */
   const shouldTriggerStopLoss = useCallback(
     (position: PositionMetrics, currentPrice: number): boolean => {
-      if (!position.stop_loss || position.margin_status === 'LIQUIDATION') {
+      if (!position.stop_loss || position.margin_status === "LIQUIDATION") {
         return false;
       }
 
-      if (position.side === 'long') {
+      if (position.side === "long") {
         // Buy position: trigger if price drops to or below SL
         return currentPrice <= position.stop_loss;
-      } else if (position.side === 'short') {
+      } else if (position.side === "short") {
         // Sell position: trigger if price rises to or above SL
         return currentPrice >= position.stop_loss;
       }
 
       return false;
     },
-    []
+    [],
   );
 
   /**
@@ -106,21 +108,21 @@ export const useSLTPMonitoring = () => {
    */
   const shouldTriggerTakeProfit = useCallback(
     (position: PositionMetrics, currentPrice: number): boolean => {
-      if (!position.take_profit || position.margin_status === 'LIQUIDATION') {
+      if (!position.take_profit || position.margin_status === "LIQUIDATION") {
         return false;
       }
 
-      if (position.side === 'long') {
+      if (position.side === "long") {
         // Buy position: trigger if price rises to or above TP
         return currentPrice >= position.take_profit;
-      } else if (position.side === 'short') {
+      } else if (position.side === "short") {
         // Sell position: trigger if price drops to or below TP
         return currentPrice <= position.take_profit;
       }
 
       return false;
     },
-    []
+    [],
   );
 
   /**
@@ -134,7 +136,9 @@ export const useSLTPMonitoring = () => {
 
     // Get positions that have SL/TP set
     const positionsWithSlTp = positions.filter(
-      (p) => (p.stop_loss !== undefined || p.take_profit !== undefined) && p.margin_status !== 'LIQUIDATION'
+      (p) =>
+        (p.stop_loss !== undefined || p.take_profit !== undefined) &&
+        p.margin_status !== "LIQUIDATION",
     );
 
     if (positionsWithSlTp.length === 0) {
@@ -165,11 +169,11 @@ export const useSLTPMonitoring = () => {
 
       // Check stop loss first (higher priority)
       if (shouldTriggerStopLoss(position, currentPrice)) {
-        triggerType = 'stop_loss';
+        triggerType = "stop_loss";
       }
       // Then check take profit
       else if (shouldTriggerTakeProfit(position, currentPrice)) {
-        triggerType = 'take_profit';
+        triggerType = "take_profit";
       }
 
       // Execute if trigger detected
@@ -198,7 +202,7 @@ export const useSLTPMonitoring = () => {
             // Silently log error; don't break monitoring
             console.error(
               `Failed to execute ${triggerType} for position ${position.position_id}:`,
-              error
+              error,
             );
             // Keep monitoring despite error
           });
@@ -217,24 +221,27 @@ export const useSLTPMonitoring = () => {
    * Clear triggered positions older than 1 hour
    */
   useEffect(() => {
-    const cleanupInterval = setInterval(() => {
-      setState((prev) => {
-        const now = Date.now();
-        const oneHourMs = 60 * 60 * 1000;
-        const cleaned = new Map(prev.triggeredPositions);
+    const cleanupInterval = setInterval(
+      () => {
+        setState((prev) => {
+          const now = Date.now();
+          const oneHourMs = 60 * 60 * 1000;
+          const cleaned = new Map(prev.triggeredPositions);
 
-        cleaned.forEach((triggered, positionId) => {
-          if (now - triggered.timestamp > oneHourMs) {
-            cleaned.delete(positionId);
+          cleaned.forEach((triggered, positionId) => {
+            if (now - triggered.timestamp > oneHourMs) {
+              cleaned.delete(positionId);
+            }
+          });
+
+          if (cleaned.size !== prev.triggeredPositions.size) {
+            return { ...prev, triggeredPositions: cleaned };
           }
+          return prev;
         });
-
-        if (cleaned.size !== prev.triggeredPositions.size) {
-          return { ...prev, triggeredPositions: cleaned };
-        }
-        return prev;
-      });
-    }, 5 * 60 * 1000); // Clean up every 5 minutes
+      },
+      5 * 60 * 1000,
+    ); // Clean up every 5 minutes
 
     return () => clearInterval(cleanupInterval);
   }, []);

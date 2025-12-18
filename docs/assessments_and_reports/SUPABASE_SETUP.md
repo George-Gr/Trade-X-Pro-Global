@@ -38,20 +38,21 @@ npm run supabase:status
 
 We've added the following npm scripts for easy Supabase management:
 
-| Command | Description |
-|---------|-------------|
-| `npm run supabase:link` | Link local project to Supabase Cloud |
-| `npm run supabase:status` | Show project status and connection info |
-| `npm run supabase:push` | Push local migrations and functions to Cloud |
-| `npm run supabase:pull` | Pull remote changes from Cloud |
-| `npm run supabase:migrations` | List all migrations |
-| `npm run supabase:functions:deploy` | Deploy edge functions to Cloud |
+| Command                             | Description                                  |
+| ----------------------------------- | -------------------------------------------- |
+| `npm run supabase:link`             | Link local project to Supabase Cloud         |
+| `npm run supabase:status`           | Show project status and connection info      |
+| `npm run supabase:push`             | Push local migrations and functions to Cloud |
+| `npm run supabase:pull`             | Pull remote changes from Cloud               |
+| `npm run supabase:migrations`       | List all migrations                          |
+| `npm run supabase:functions:deploy` | Deploy edge functions to Cloud               |
 
 ## Deployment Workflow
 
 ### Push Database Changes to Cloud
 
 1. Create a new migration:
+
    ```bash
    npx supabase migration new migration_name
    ```
@@ -102,12 +103,15 @@ supabase/
 ## Troubleshooting
 
 ### "Not linked to a Supabase project"
+
 - Run `npm run supabase:link` to link your project
 
 ### "Invalid access token"
+
 - Run `npx supabase logout` then `npx supabase login` again
 
 ### View full CLI documentation
+
 ```bash
 npx supabase --help
 ```

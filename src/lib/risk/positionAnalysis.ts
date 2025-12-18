@@ -21,7 +21,7 @@ export interface PositionConcentration {
   percentageOfPortfolio: number;
   marginRequired: number;
   unrealizedPnL: number;
-  risk: 'low' | 'medium' | 'high' | 'critical';
+  risk: "low" | "medium" | "high" | "critical";
 }
 
 export interface ConcentrationAnalysis {
@@ -29,7 +29,7 @@ export interface ConcentrationAnalysis {
   symbolConcentration: Record<string, number>; // % of portfolio
   assetClassConcentration: Record<string, number>;
   herfindahlIndex: number; // 0-10000, higher = more concentrated
-  concentrationLevel: 'low' | 'moderate' | 'high' | 'critical';
+  concentrationLevel: "low" | "moderate" | "high" | "critical";
   topPositions: PositionConcentration[];
   diversificationScore: number; // 0-100
 }
@@ -38,7 +38,7 @@ export interface CorrelationPair {
   symbol1: string;
   symbol2: string;
   correlation: number; // -1 to 1
-  hedgingPotential: 'high' | 'moderate' | 'low';
+  hedgingPotential: "high" | "moderate" | "low";
 }
 
 export interface CorrelationMatrix {
@@ -55,7 +55,7 @@ export interface StressTestScenario {
   liquidatedPositions: string[];
   estimatedLoss: number;
   marginLevel: number;
-  riskLevel: 'safe' | 'warning' | 'critical' | 'liquidation';
+  riskLevel: "safe" | "warning" | "critical" | "liquidation";
 }
 
 export interface StressTestResults {
@@ -106,7 +106,7 @@ export const HERFINDAHL_THRESHOLDS = {
  */
 export function calculateConcentration(
   positionValue: number,
-  totalPortfolioValue: number
+  totalPortfolioValue: number,
 ): number {
   if (totalPortfolioValue === 0) return 0;
   const concentration = (positionValue / totalPortfolioValue) * 100;
@@ -120,16 +120,16 @@ export function calculateConcentration(
  * @returns Risk level
  */
 export function classifyConcentrationRisk(
-  concentration: number
-): 'low' | 'medium' | 'high' | 'critical' {
+  concentration: number,
+): "low" | "medium" | "high" | "critical" {
   if (concentration <= CONCENTRATION_THRESHOLDS.LOW) {
-    return 'low';
+    return "low";
   } else if (concentration <= CONCENTRATION_THRESHOLDS.MODERATE) {
-    return 'medium';
+    return "medium";
   } else if (concentration <= CONCENTRATION_THRESHOLDS.HIGH) {
-    return 'high';
+    return "high";
   } else {
-    return 'critical';
+    return "critical";
   }
 }
 
@@ -160,16 +160,16 @@ export function calculateHerfindahlIndex(concentrations: number[]): number {
  * @returns Concentration level
  */
 export function classifyConcentrationLevel(
-  herfindahlIndex: number
-): 'low' | 'moderate' | 'high' | 'critical' {
+  herfindahlIndex: number,
+): "low" | "moderate" | "high" | "critical" {
   if (herfindahlIndex < HERFINDAHL_THRESHOLDS.PERFECT_COMPETITION) {
-    return 'low';
+    return "low";
   } else if (herfindahlIndex < HERFINDAHL_THRESHOLDS.MODERATE_CONCENTRATION) {
-    return 'moderate';
+    return "moderate";
   } else if (herfindahlIndex < HERFINDAHL_THRESHOLDS.HIGH_CONCENTRATION) {
-    return 'high';
+    return "high";
   } else {
-    return 'critical';
+    return "critical";
   }
 }
 
@@ -189,7 +189,7 @@ export function analyzeConcentration(
     marginRequired: number;
     unrealizedPnL: number;
   }>,
-  totalPortfolioValue: number
+  totalPortfolioValue: number,
 ): ConcentrationAnalysis {
   if (positions.length === 0) {
     return {
@@ -197,7 +197,7 @@ export function analyzeConcentration(
       symbolConcentration: {},
       assetClassConcentration: {},
       herfindahlIndex: 0,
-      concentrationLevel: 'low',
+      concentrationLevel: "low",
       topPositions: [],
       diversificationScore: 100,
     };
@@ -210,8 +210,11 @@ export function analyzeConcentration(
   // Calculate concentrations
   for (const position of positions) {
     const positionValue = position.quantity * position.currentPrice;
-    const concentration = calculateConcentration(positionValue, totalPortfolioValue);
-    const assetClass = position.assetClass || 'Other';
+    const concentration = calculateConcentration(
+      positionValue,
+      totalPortfolioValue,
+    );
+    const assetClass = position.assetClass || "Other";
     const risk = classifyConcentrationRisk(concentration);
 
     symbolConcentration[position.symbol] = concentration;
@@ -246,10 +249,15 @@ export function analyzeConcentration(
   // Calculate diversification score (0-100)
   // Perfect diversification (equal weight) = 100
   // Single position = 0
-  const perfectDiversificationIndex = (10000 / positions.length) * positions.length;
+  const perfectDiversificationIndex =
+    (10000 / positions.length) * positions.length;
   const diversificationScore = Math.max(
     0,
-    Math.round(((perfectDiversificationIndex - herfindahlIndex) / perfectDiversificationIndex) * 100)
+    Math.round(
+      ((perfectDiversificationIndex - herfindahlIndex) /
+        perfectDiversificationIndex) *
+        100,
+    ),
   );
 
   return {
@@ -276,9 +284,12 @@ export function analyzeConcentration(
  */
 export function calculateCorrelation(
   pricesSeries1: number[],
-  pricesSeries2: number[]
+  pricesSeries2: number[],
 ): number {
-  if (pricesSeries1.length !== pricesSeries2.length || pricesSeries1.length < 2) {
+  if (
+    pricesSeries1.length !== pricesSeries2.length ||
+    pricesSeries1.length < 2
+  ) {
     return 0;
   }
 
@@ -289,17 +300,20 @@ export function calculateCorrelation(
   const mean2 = pricesSeries2.reduce((a, b) => a + b) / n;
 
   // Calculate standard deviations
-  const variance1 = pricesSeries1.reduce((sum, val) => sum + Math.pow(val - mean1, 2), 0) / n;
-  const variance2 = pricesSeries2.reduce((sum, val) => sum + Math.pow(val - mean2, 2), 0) / n;
+  const variance1 =
+    pricesSeries1.reduce((sum, val) => sum + Math.pow(val - mean1, 2), 0) / n;
+  const variance2 =
+    pricesSeries2.reduce((sum, val) => sum + Math.pow(val - mean2, 2), 0) / n;
   const std1 = Math.sqrt(variance1);
   const std2 = Math.sqrt(variance2);
 
   if (std1 === 0 || std2 === 0) return 0;
 
   // Calculate covariance
-  const covariance = pricesSeries1.reduce((sum, val, i) => {
-    return sum + (val - mean1) * (pricesSeries2[i] - mean2);
-  }, 0) / n;
+  const covariance =
+    pricesSeries1.reduce((sum, val, i) => {
+      return sum + (val - mean1) * (pricesSeries2[i] - mean2);
+    }, 0) / n;
 
   // Calculate correlation
   const correlation = covariance / (std1 * std2);
@@ -313,14 +327,14 @@ export function calculateCorrelation(
  * @returns Hedging potential
  */
 export function classifyHedgingPotential(
-  correlation: number
-): 'high' | 'moderate' | 'low' {
+  correlation: number,
+): "high" | "moderate" | "low" {
   if (correlation < -0.5) {
-    return 'high'; // Negative correlation = good hedge
+    return "high"; // Negative correlation = good hedge
   } else if (correlation < 0.3) {
-    return 'moderate';
+    return "moderate";
   } else {
-    return 'low'; // Positive correlation = poor hedge
+    return "low"; // Positive correlation = poor hedge
   }
 }
 
@@ -330,7 +344,9 @@ export function classifyHedgingPotential(
  * @param symbolPrices - Map of symbol to price history
  * @returns Correlation matrix
  */
-export function buildCorrelationMatrix(symbolPrices: Map<string, number[]>): CorrelationMatrix {
+export function buildCorrelationMatrix(
+  symbolPrices: Map<string, number[]>,
+): CorrelationMatrix {
   const symbols = Array.from(symbolPrices.keys());
   const n = symbols.length;
   const matrix: number[][] = [];
@@ -370,10 +386,14 @@ export function buildCorrelationMatrix(symbolPrices: Map<string, number[]>): Cor
   }
 
   // Calculate average correlation
-  const allCorrelations = correlationPairs.map(p => p.correlation);
-  const averageCorrelation = allCorrelations.length > 0
-    ? Math.round((allCorrelations.reduce((a, b) => a + b) / allCorrelations.length) * 10000) / 10000
-    : 0;
+  const allCorrelations = correlationPairs.map((p) => p.correlation);
+  const averageCorrelation =
+    allCorrelations.length > 0
+      ? Math.round(
+          (allCorrelations.reduce((a, b) => a + b) / allCorrelations.length) *
+            10000,
+        ) / 10000
+      : 0;
 
   return {
     symbols,
@@ -399,7 +419,7 @@ export function buildCorrelationMatrix(symbolPrices: Map<string, number[]>): Cor
 export function simulateStressScenario(
   positions: Array<{
     symbol: string;
-    side: 'long' | 'short';
+    side: "long" | "short";
     quantity: number;
     currentPrice: number;
     liquidationPrice: number;
@@ -408,7 +428,7 @@ export function simulateStressScenario(
   }>,
   priceMovement: number,
   equity: number,
-  marginUsed: number
+  marginUsed: number,
 ): StressTestScenario {
   let totalPnLChange = 0;
   const liquidatedPositions: string[] = [];
@@ -417,40 +437,45 @@ export function simulateStressScenario(
     const newPrice = position.currentPrice * (1 + priceMovement / 100);
 
     // Check if position is liquidated
-    if (position.side === 'long' && newPrice < position.liquidationPrice) {
+    if (position.side === "long" && newPrice < position.liquidationPrice) {
       liquidatedPositions.push(position.symbol);
       totalPnLChange -= position.unrealizedPnL; // Realize loss
-    } else if (position.side === 'short' && newPrice > position.liquidationPrice) {
+    } else if (
+      position.side === "short" &&
+      newPrice > position.liquidationPrice
+    ) {
       liquidatedPositions.push(position.symbol);
       totalPnLChange -= position.unrealizedPnL; // Realize loss
     } else {
       // Calculate new P&L
-      const pnlChange = position.side === 'long'
-        ? (newPrice - position.currentPrice) * position.quantity
-        : (position.currentPrice - newPrice) * position.quantity;
+      const pnlChange =
+        position.side === "long"
+          ? (newPrice - position.currentPrice) * position.quantity
+          : (position.currentPrice - newPrice) * position.quantity;
       totalPnLChange += pnlChange;
     }
   }
 
   const newEquity = equity + totalPnLChange;
-  const newMarginLevel = marginUsed > 0 ? (newEquity / marginUsed) * 100 : 10000;
+  const newMarginLevel =
+    marginUsed > 0 ? (newEquity / marginUsed) * 100 : 10000;
   const estimatedLoss = Math.max(0, -totalPnLChange);
 
   // Determine risk level
-  let riskLevel: 'safe' | 'warning' | 'critical' | 'liquidation';
+  let riskLevel: "safe" | "warning" | "critical" | "liquidation";
   if (newMarginLevel >= 200) {
-    riskLevel = 'safe';
+    riskLevel = "safe";
   } else if (newMarginLevel >= 100) {
-    riskLevel = 'warning';
+    riskLevel = "warning";
   } else if (newMarginLevel >= 50) {
-    riskLevel = 'critical';
+    riskLevel = "critical";
   } else {
-    riskLevel = 'liquidation';
+    riskLevel = "liquidation";
   }
 
   return {
-    name: `${priceMovement > 0 ? '+' : ''}${priceMovement}% Movement`,
-    description: `All positions move ${priceMovement > 0 ? 'up' : 'down'} by ${Math.abs(priceMovement)}%`,
+    name: `${priceMovement > 0 ? "+" : ""}${priceMovement}% Movement`,
+    description: `All positions move ${priceMovement > 0 ? "up" : "down"} by ${Math.abs(priceMovement)}%`,
     priceMovement,
     liquidatedPositions,
     estimatedLoss: Math.round(estimatedLoss * 100) / 100,
@@ -470,7 +495,7 @@ export function simulateStressScenario(
 export function runStressTests(
   positions: Array<{
     symbol: string;
-    side: 'long' | 'short';
+    side: "long" | "short";
     quantity: number;
     currentPrice: number;
     liquidationPrice: number;
@@ -478,20 +503,21 @@ export function runStressTests(
     unrealizedPnL: number;
   }>,
   equity: number,
-  marginUsed: number
+  marginUsed: number,
 ): StressTestResults {
   const priceMovements = [-20, -10, -5, 5, 10, 20]; // Percentage
-  const scenarios = priceMovements.map(movement =>
-    simulateStressScenario(positions, movement, equity, marginUsed)
+  const scenarios = priceMovements.map((movement) =>
+    simulateStressScenario(positions, movement, equity, marginUsed),
   );
 
   const mostSevereScenario = scenarios.reduce((prev, current) =>
-    current.estimatedLoss > prev.estimatedLoss ? current : prev
+    current.estimatedLoss > prev.estimatedLoss ? current : prev,
   );
 
-  const survivalRate = scenarios.filter(
-    s => s.riskLevel !== 'liquidation'
-  ).length / scenarios.length * 100;
+  const survivalRate =
+    (scenarios.filter((s) => s.riskLevel !== "liquidation").length /
+      scenarios.length) *
+    100;
 
   return {
     scenarios,
@@ -513,7 +539,9 @@ export function runStressTests(
  * @param concentrations - Array of position concentration percentages
  * @returns Effective number of positions
  */
-export function calculateEffectiveNumberOfPositions(concentrations: number[]): number {
+export function calculateEffectiveNumberOfPositions(
+  concentrations: number[],
+): number {
   if (concentrations.length === 0) return 0;
 
   const weightSquaredSum = concentrations.reduce((sum, conc) => {
@@ -538,7 +566,7 @@ export function assessDiversification(
     quantity: number;
     currentPrice: number;
   }>,
-  totalPortfolioValue: number
+  totalPortfolioValue: number,
 ): DiversificationMetrics {
   if (positions.length === 0) {
     return {
@@ -552,22 +580,28 @@ export function assessDiversification(
     };
   }
 
-  const assetClasses = new Set(positions.map(p => p.assetClass || 'Other'));
+  const assetClasses = new Set(positions.map((p) => p.assetClass || "Other"));
 
-  const concentrations = positions.map(p => {
+  const concentrations = positions.map((p) => {
     const value = p.quantity * p.currentPrice;
     return calculateConcentration(value, totalPortfolioValue);
   });
 
   const sortedConcentrations = [...concentrations].sort((a, b) => b - a);
   const largestPosition = sortedConcentrations[0] || 0;
-  const topThreePositions = (sortedConcentrations.slice(0, 3) || []).reduce((a, b) => a + b, 0);
+  const topThreePositions = (sortedConcentrations.slice(0, 3) || []).reduce(
+    (a, b) => a + b,
+    0,
+  );
   const enp = calculateEffectiveNumberOfPositions(concentrations);
 
   // Calculate diversification score
   // Well diversified: < 5 positions concentrated in single asset class
   // 50+ positions = excellent diversification
-  const diversificationScore = Math.min(100, Math.round((enp / positions.length) * 100 * 80) + 20);
+  const diversificationScore = Math.min(
+    100,
+    Math.round((enp / positions.length) * 100 * 80) + 20,
+  );
 
   return {
     numberOfSymbols: positions.length,

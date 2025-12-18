@@ -26,25 +26,30 @@ This brings TASK GROUPS 3-4 to **feature parity** with the detailed breakdown of
 ## 🚀 TASK GROUP 3: RISK MANAGEMENT & LIQUIDATION
 
 ### Overview
+
 Risk management is critical to platform integrity. This group implements:
+
 1. **Margin Call Detection** - Real-time monitoring of margin level decline
 2. **Liquidation Execution** - Forced position closure when margin falls below thresholds
 
 ### Status Summary
-| Task | Status | Hours | Tests | Priority |
-|------|--------|-------|-------|----------|
-| 1.3.1: Margin Call Detection | 🔴 NOT STARTED | 12h | 40+ | P0 |
-| 1.3.2: Liquidation Execution | 🔴 NOT STARTED | 10h | 35+ | P0 |
-| **Group Total** | **0/2 complete** | **22h** | **75+** | **CRITICAL** |
+
+| Task                         | Status           | Hours   | Tests   | Priority     |
+| ---------------------------- | ---------------- | ------- | ------- | ------------ |
+| 1.3.1: Margin Call Detection | 🔴 NOT STARTED   | 12h     | 40+     | P0           |
+| 1.3.2: Liquidation Execution | 🔴 NOT STARTED   | 10h     | 35+     | P0           |
+| **Group Total**              | **0/2 complete** | **22h** | **75+** | **CRITICAL** |
 
 ---
 
 ## TASK 1.3.1: Margin Call Detection Engine
 
 ### What It Does
+
 Monitors user accounts for margin level decline and automatically triggers margin call events when thresholds are crossed. Integrates with existing margin monitoring (1.2.4) to escalate alerts.
 
 ### Key Features
+
 - **Threshold Monitoring**: Detects when margin level drops below 150%, 100%, 50%
 - **State Management**: Tracks margin call lifecycle (pending → notified → resolved/escalated)
 - **Escalation Logic**: Automatically escalates to liquidation after 30 minutes at critical level
@@ -54,6 +59,7 @@ Monitors user accounts for margin level decline and automatically triggers margi
 ### Implementation Details
 
 **Files to Create:**
+
 - `/src/lib/trading/marginCallDetection.ts` - Core business logic (canonical)
 - `/supabase/functions/lib/marginCallDetection.ts` - Deno copy
 - `/supabase/functions/check-risk-levels/index.ts` - Edge Function scheduler
@@ -61,6 +67,7 @@ Monitors user accounts for margin level decline and automatically triggers margi
 - `/src/lib/trading/__tests__/marginCallDetection.test.ts` - Tests (40+)
 
 **Key Exported Functions:**
+
 ```typescript
 - detectMarginCall(accountEquity, marginUsed) → MarginCallDetectionResult
 - isMarginCallTriggered(marginLevel) → boolean
@@ -72,6 +79,7 @@ Monitors user accounts for margin level decline and automatically triggers margi
 ```
 
 **Database Schema Additions:**
+
 ```sql
 - margin_call_events table (triggers, status tracking, escalation)
 - margin_call_status enum (pending, notified, resolved, escalated)
@@ -79,6 +87,7 @@ Monitors user accounts for margin level decline and automatically triggers margi
 ```
 
 **Edge Function Behavior:**
+
 - Runs every 60 seconds during market hours
 - Checks all active users with positions
 - Creates/updates margin call events
@@ -86,11 +95,13 @@ Monitors user accounts for margin level decline and automatically triggers margi
 - Returns statistics for monitoring
 
 ### Testing Strategy
+
 - **Unit Tests (20-25)**: Threshold detection, severity classification, state transitions
 - **Integration Tests (15-20)**: Edge function execution, notification delivery, liquidation escalation
 - **Edge Cases (5-7)**: Multiple positions, rapid margin changes, recovery scenarios
 
 ### Integration Points
+
 - **1.2.4 (Margin Monitoring)**: Margin calls escalate from alerts
 - **1.3.2 (Liquidation)**: Critical calls trigger forced position closure
 - **Notifications**: Send via existing notification system
@@ -100,9 +111,11 @@ Monitors user accounts for margin level decline and automatically triggers margi
 ## TASK 1.3.2: Liquidation Execution Logic
 
 ### What It Does
+
 Force-closes user positions when margin level falls below 50% (liquidation threshold) to protect accounts from overdraft. Executes positions in priority order (largest losses first) using worst-case pricing.
 
 ### Key Features
+
 - **Priority Algorithm**: Liquidates largest loss-making positions first
 - **Worst-Case Pricing**: Applies 1.5x slippage multiplier for market-clearing prices
 - **Atomic Execution**: All positions close successfully or entire liquidation aborts
@@ -112,6 +125,7 @@ Force-closes user positions when margin level falls below 50% (liquidation thres
 ### Implementation Details
 
 **Files to Create:**
+
 - `/src/lib/trading/liquidationEngine.ts` - Core logic (canonical)
 - `/supabase/functions/lib/liquidationEngine.ts` - Deno copy
 - `/supabase/functions/execute-liquidation/index.ts` - Edge Function
@@ -119,6 +133,7 @@ Force-closes user positions when margin level falls below 50% (liquidation thres
 - `/src/lib/trading/__tests__/liquidationEngine.test.ts` - Tests (35+)
 
 **Key Exported Functions:**
+
 ```typescript
 - calculateLiquidationNeeded(accountEquity, marginUsed) → LiquidationResult
 - selectPositionsForLiquidation(positions, targetMarginLevel) → Position[]
@@ -130,6 +145,7 @@ Force-closes user positions when margin level falls below 50% (liquidation thres
 ```
 
 **Database Schema Additions:**
+
 ```sql
 - liquidation_events table (event tracking, status, metrics)
 - liquidation_position_details table (position-level closure details)
@@ -138,6 +154,7 @@ Force-closes user positions when margin level falls below 50% (liquidation thres
 ```
 
 **Liquidation Decision Flow:**
+
 1. Detect margin level < 50% + margin call > 30 minutes
 2. Calculate total notional value to liquidate
 3. Sort positions by loss × size (descending)
@@ -147,11 +164,13 @@ Force-closes user positions when margin level falls below 50% (liquidation thres
 7. Record event and notify user
 
 ### Testing Strategy
+
 - **Unit Tests (15-18)**: Priority calculation, position selection, slippage multipliers
 - **Integration Tests (12-15)**: End-to-end liquidation, multi-position scenarios, atomic transactions
 - **Compliance Tests (3-5)**: Audit trail completeness, data integrity
 
 ### Integration Points
+
 - **1.3.1 (Margin Calls)**: Liquidation triggered by escalated margin calls
 - **1.1.2 (Margin Calc)**: Uses margin level calculations for triggering
 - **1.1.3 (Slippage)**: Applies 1.5x slippage multiplier
@@ -162,29 +181,34 @@ Force-closes user positions when margin level falls below 50% (liquidation thres
 ## 🚀 TASK GROUP 4: CORE TRADING UI
 
 ### Overview
+
 User-facing trading interface. This group implements:
+
 1. **Trading Panel** - Order entry form with real-time preview
 2. **Positions Table** - Real-time position display with P&L
 3. **Orders Table** - Order status and fill tracking
 4. **Portfolio Dashboard** - Account summary and performance charts
 
 ### Status Summary
-| Task | Status | Hours | Tests | Priority |
-|------|--------|-------|-------|----------|
-| 1.4.1: Trading Panel Form | 🟡 IN PROGRESS | 20h | 40+ | P0 |
-| 1.4.2: Positions Table | 🔴 NOT STARTED | 18h | 45+ | P0 |
-| 1.4.3: Orders Table | 🔴 NOT STARTED | 15h | 40+ | P1 |
-| 1.4.4: Portfolio Dashboard | 🟡 IN PROGRESS | 12h | 35+ | P1 |
-| **Group Total** | **2/4 in progress** | **65h** | **160+** | **HIGH** |
+
+| Task                       | Status              | Hours   | Tests    | Priority |
+| -------------------------- | ------------------- | ------- | -------- | -------- |
+| 1.4.1: Trading Panel Form  | 🟡 IN PROGRESS      | 20h     | 40+      | P0       |
+| 1.4.2: Positions Table     | 🔴 NOT STARTED      | 18h     | 45+      | P0       |
+| 1.4.3: Orders Table        | 🔴 NOT STARTED      | 15h     | 40+      | P1       |
+| 1.4.4: Portfolio Dashboard | 🟡 IN PROGRESS      | 12h     | 35+      | P1       |
+| **Group Total**            | **2/4 in progress** | **65h** | **160+** | **HIGH** |
 
 ---
 
 ## TASK 1.4.1: Trading Panel Order Form
 
 ### What It Does
+
 Primary interface for placing orders. Supports all order types (market, limit, stop, stop-limit, trailing stop) with real-time preview of execution price, slippage, commission, and margin requirements.
 
 ### Key Features
+
 - **All Order Types**: Market, limit, stop, stop-limit, trailing stop
 - **Leverage Selection**: 1x to account maximum
 - **Real-Time Preview**: Execution price, slippage, commission, margin requirements updated as user types
@@ -198,6 +222,7 @@ Primary interface for placing orders. Supports all order types (market, limit, s
 ### Implementation Details
 
 **Files to Create:**
+
 - `/src/components/trading/TradingPanel.tsx` - Main panel (refactor existing partial)
 - `/src/components/trading/OrderForm.tsx` - Form component (new)
 - `/src/components/trading/OrderPreview.tsx` - Preview display (new)
@@ -206,6 +231,7 @@ Primary interface for placing orders. Supports all order types (market, limit, s
 - `/src/lib/trading/__tests__/TradingPanel.test.ts` - Tests (40+)
 
 **Key Components:**
+
 ```typescript
 <TradingPanel symbol? onOrderPlaced? />
 <OrderForm symbol onSubmit isLoading? />
@@ -214,6 +240,7 @@ Primary interface for placing orders. Supports all order types (market, limit, s
 ```
 
 **Custom Hooks:**
+
 ```typescript
 useOrderExecution(options?) → {
   submit: (orderData) => Promise<Order>,
@@ -235,31 +262,34 @@ useOrderPreview(symbol, side) → {
 ```
 
 **Form Data Structure:**
+
 ```typescript
 interface OrderFormData {
-  symbol: string,
-  side: 'long' | 'short',
-  quantity: number,
-  leverage: number,
-  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop',
-  limitPrice?: number,
-  stopPrice?: number,
-  trailingDistance?: number,
-  takeProfitPrice?: number,
-  stopLossPrice?: number,
-  timeInForce?: 'GTC' | 'GTD' | 'FOK' | 'IOC',
-  expiryTime?: Date,
-  comment?: string
+  symbol: string;
+  side: "long" | "short";
+  quantity: number;
+  leverage: number;
+  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
+  limitPrice?: number;
+  stopPrice?: number;
+  trailingDistance?: number;
+  takeProfitPrice?: number;
+  stopLossPrice?: number;
+  timeInForce?: "GTC" | "GTD" | "FOK" | "IOC";
+  expiryTime?: Date;
+  comment?: string;
 }
 ```
 
 ### Integrations
+
 - **1.1.2 (Margin)**: Real-time margin requirement calculation
 - **1.1.3 (Slippage)**: Real-time slippage estimation
 - **1.1.5 (Commission)**: Real-time commission calculation
 - **1.1.1 (Validation)**: Form validation using order validators
 
 ### Testing Strategy
+
 - **Unit Tests (20+)**: Form initialization, order type switching, validation
 - **Integration Tests (15+)**: Preview calculation, order submission, API integration
 - **Accessibility Tests (5+)**: ARIA, keyboard nav, focus management
@@ -269,9 +299,11 @@ interface OrderFormData {
 ## TASK 1.4.2: Positions Table Real-Time Display
 
 ### What It Does
+
 Table showing all open positions with live P&L, current prices, margin levels, and action buttons. Updates in real-time via Realtime subscription with sorting and filtering capabilities.
 
 ### Key Features
+
 - **Real-Time Updates**: Live P&L and price updates via Supabase Realtime (1.2.3)
 - **Sortable Columns**: By symbol, P&L, margin level, entry price, quantity, etc.
 - **Filterable**: By asset class, long/short, symbol
@@ -284,6 +316,7 @@ Table showing all open positions with live P&L, current prices, margin levels, a
 ### Implementation Details
 
 **Files to Create:**
+
 - `/src/components/trading/PositionsTable.tsx` - Main table (refactor existing)
 - `/src/components/trading/PositionRow.tsx` - Row component (new)
 - `/src/components/trading/PositionActions.tsx` - Action buttons (new)
@@ -291,6 +324,7 @@ Table showing all open positions with live P&L, current prices, margin levels, a
 - `/src/lib/trading/__tests__/PositionsTable.test.ts` - Tests (45+)
 
 **Key Components:**
+
 ```typescript
 <PositionsTable positions isLoading? currentPrices? onModify? onClose? onAdd? />
 <PositionRow position currentPrice onModify? onClose? onAdd? />
@@ -298,6 +332,7 @@ Table showing all open positions with live P&L, current prices, margin levels, a
 ```
 
 **Custom Hook:**
+
 ```typescript
 usePositionsTable(options?) → {
   positions: Position[],
@@ -315,6 +350,7 @@ usePositionsTable(options?) → {
 ```
 
 **Key Calculations:**
+
 ```
 unrealizedPnL = calculateUnrealizedPnL(entry, current, quantity, side)  // 1.2.1
 pnlPercentage = (unrealizedPnL / (entryPrice * quantity)) * 100
@@ -325,11 +361,13 @@ priceChangePercent = (priceChange / entryPrice) * 100
 ```
 
 ### Integrations
+
 - **1.2.3 (Realtime)**: Live position update subscriptions
 - **1.2.1 (P&L)**: Real-time P&L calculations
 - **1.2.4 (Margin)**: Margin level status colors
 
 ### Testing Strategy
+
 - **Unit Tests (20+)**: Row rendering, calculations, formatting
 - **Integration Tests (20+)**: Realtime subscription, live updates, sorting/filtering
 - **Performance Tests (5+)**: 100+ positions without lag
@@ -339,9 +377,11 @@ priceChangePercent = (priceChange / entryPrice) * 100
 ## TASK 1.4.3: Orders Table Status Tracking
 
 ### What It Does
+
 Table showing all orders (pending, open, filled, cancelled) with status tracking, fill history, and order management controls. Provides visibility into order lifecycle and execution details.
 
 ### Key Features
+
 - **Order Status Display**: Visual badges for PENDING, OPEN, PARTIALLY_FILLED, FILLED, CANCELLED, REJECTED
 - **Fill Progress**: Percentage bar showing fill progress
 - **Order Details**: Type (market/limit/stop), price levels, commission, slippage, realized P&L
@@ -354,6 +394,7 @@ Table showing all orders (pending, open, filled, cancelled) with status tracking
 ### Implementation Details
 
 **Files to Create:**
+
 - `/src/components/trading/OrdersTable.tsx` - Main table (refactor existing)
 - `/src/components/trading/OrderRow.tsx` - Row component (new)
 - `/src/components/trading/OrderStatusBadge.tsx` - Status indicator (new)
@@ -361,6 +402,7 @@ Table showing all orders (pending, open, filled, cancelled) with status tracking
 - `/src/lib/trading/__tests__/OrdersTable.test.ts` - Tests (40+)
 
 **Key Components:**
+
 ```typescript
 <OrdersTable orders isLoading? onModify? onCancel? onViewDetails? />
 <OrderRow order onModify? onCancel? onViewDetails? />
@@ -368,17 +410,20 @@ Table showing all orders (pending, open, filled, cancelled) with status tracking
 ```
 
 **Order Status Lifecycle:**
+
 ```
 PENDING → OPEN → FILLED (closed) or CANCELLED / REJECTED / EXPIRED
 OPEN → PARTIALLY_FILLED → FILLED or CANCELLED
 ```
 
 ### Integrations
+
 - **usePendingOrders**: Existing hook for live order status
 - **Realtime Subscription**: Order status updates
 - **Order Modification**: Integrates with backend order modification API
 
 ### Testing Strategy
+
 - **Unit Tests (18+)**: Badge rendering, calculations, formatting
 - **Integration Tests (18+)**: Order status updates, sorting/filtering, actions
 - **Lifecycle Tests (4+)**: Status transitions, fill progress
@@ -388,9 +433,11 @@ OPEN → PARTIALLY_FILLED → FILLED or CANCELLED
 ## TASK 1.4.4: Portfolio Dashboard Summary
 
 ### What It Does
+
 Comprehensive dashboard showing account summary (balance, equity, margin level, daily P&L), asset allocation pie chart, equity curve, performance metrics, and risk indicators. All data updates in real-time.
 
 ### Key Features
+
 - **Account Summary Card**: Balance, equity, margin metrics, daily/monthly P&L
 - **Asset Allocation**: Pie chart showing breakdown by asset class
 - **Equity Curve**: Line chart showing account equity progression (1D/1W/1M/3M/6M/1Y)
@@ -403,6 +450,7 @@ Comprehensive dashboard showing account summary (balance, equity, margin level, 
 ### Implementation Details
 
 **Files to Create:**
+
 - `/src/components/trading/PortfolioDashboard.tsx` - Main dashboard (refactor existing)
 - `/src/components/dashboard/AccountSummary.tsx` - Summary card (new)
 - `/src/components/dashboard/EquityChart.tsx` - Equity curve chart (new)
@@ -412,6 +460,7 @@ Comprehensive dashboard showing account summary (balance, equity, margin level, 
 - `/src/lib/trading/__tests__/PortfolioDashboard.test.ts` - Tests (35+)
 
 **Key Calculations:**
+
 ```typescript
 totalBalance = SUM(balance FROM profiles)
 totalEquity = totalBalance + SUM(unrealized_pnl FROM positions)
@@ -425,16 +474,19 @@ sharpeRatio = (avgReturn - riskFreeRate) / stdDev(returns)
 ```
 
 ### Data Refresh Strategy
+
 - Real-time updates every 5 seconds (configurable)
 - Integrated with position update hook (1.2.2)
 - Charts update smoothly without jarring transitions
 
 ### Integrations
+
 - **1.2.1 (P&L)**: P&L calculations
 - **1.2.2 (Position Update)**: Live position metrics
 - **1.2.4 (Margin Monitoring)**: Margin level display
 
 ### Testing Strategy
+
 - **Unit Tests (15+)**: Calculations, formatting, chart data
 - **Integration Tests (15+)**: Real-time updates, export functionality
 - **Performance Tests (5+)**: Responsive layout, 10+ years history
@@ -445,16 +497,16 @@ sharpeRatio = (avgReturn - riskFreeRate) / stdDev(returns)
 
 ### What Was Added
 
-| Aspect | Before | After | Added |
-|--------|--------|-------|-------|
-| **Task Group 3 Tasks** | 2 items | 2 detailed specs | 1,800+ lines |
-| **Task Group 4 Tasks** | 4 items | 4 detailed specs | 2,200+ lines |
-| **Total Implementation Detail** | 200 lines | 4,200+ lines | 4,000+ lines |
-| **Database Schemas** | 0 | 6 schemas | 6 complete SQL |
-| **Edge Functions Specs** | 0 | 6 detailed | 6 with flows |
-| **React Components** | 8 (partial) | 28+ (complete) | 20+ new components |
-| **Test Counts** | 0 planned | 235+ tests | 235+ test cases |
-| **Integration Points** | 0 mapped | 12+ mapped | Full integration matrix |
+| Aspect                          | Before      | After            | Added                   |
+| ------------------------------- | ----------- | ---------------- | ----------------------- |
+| **Task Group 3 Tasks**          | 2 items     | 2 detailed specs | 1,800+ lines            |
+| **Task Group 4 Tasks**          | 4 items     | 4 detailed specs | 2,200+ lines            |
+| **Total Implementation Detail** | 200 lines   | 4,200+ lines     | 4,000+ lines            |
+| **Database Schemas**            | 0           | 6 schemas        | 6 complete SQL          |
+| **Edge Functions Specs**        | 0           | 6 detailed       | 6 with flows            |
+| **React Components**            | 8 (partial) | 28+ (complete)   | 20+ new components      |
+| **Test Counts**                 | 0 planned   | 235+ tests       | 235+ test cases         |
+| **Integration Points**          | 0 mapped    | 12+ mapped       | Full integration matrix |
 
 ### Structure Matches TASK GROUPS 1-2
 
@@ -468,11 +520,12 @@ Each task now includes:
 ✅ Database schema definitions (where applicable)  
 ✅ Edge function flows and logic  
 ✅ Integration points with other modules  
-✅ Implementation steps (10-17 per task)  
+✅ Implementation steps (10-17 per task)
 
 ### Key Metrics
 
 **TASK GROUP 3 (Risk Management)**
+
 - Tasks: 2
 - Estimated Hours: 22h
 - Planned Tests: 75+
@@ -480,6 +533,7 @@ Each task now includes:
 - Database Tables: 3 new + enums
 
 **TASK GROUP 4 (Trading UI)**
+
 - Tasks: 4
 - Estimated Hours: 65h
 - Planned Tests: 160+
@@ -487,6 +541,7 @@ Each task now includes:
 - Database Changes: Minimal (uses existing)
 
 **PHASE 1 TOTALS (Updated)**
+
 - Tasks: 16 (10 complete, 2 in progress, 4 not started)
 - Hours: 196h (estimated)
 - Tests: 500+ (388 written, 123 planned)

@@ -7,6 +7,7 @@ Supabase Realtime subscriptions were being **removed** but not **unsubscribed**,
 ## The Solution Pattern
 
 ### ❌ WRONG (Creates Memory Leak)
+
 ```typescript
 useEffect(() => {
   const channel = supabase
@@ -21,6 +22,7 @@ useEffect(() => {
 ```
 
 ### ✅ CORRECT (No Memory Leak)
+
 ```typescript
 useEffect(() => {
   const channel = supabase
@@ -40,6 +42,7 @@ useEffect(() => {
 ## Key Rules
 
 ### Rule 1: Always Unsubscribe Before Removing
+
 ```typescript
 // Step 1: Close the connection
 await channel.unsubscribe();
@@ -49,12 +52,13 @@ supabase.removeChannel(channel);
 ```
 
 ### Rule 2: Cleanup Function Must Exist
+
 Every `.subscribe()` must have a cleanup function in the useEffect return.
 
 ```typescript
 useEffect(() => {
   // ... create and subscribe to channel ...
-  
+
   return () => {
     // ✅ This MUST exist
     channel.unsubscribe();
@@ -64,6 +68,7 @@ useEffect(() => {
 ```
 
 ### Rule 3: Intervals Must Be Cleared
+
 If using `setInterval()` for auto-refresh, clear it on unmount.
 
 ```typescript
@@ -73,7 +78,7 @@ useEffect(() => {
   }, 1000);
 
   return () => {
-    clearInterval(interval);  // ✅ Must clear
+    clearInterval(interval); // ✅ Must clear
   };
 }, []);
 ```
@@ -98,7 +103,7 @@ useEffect(() => {
     // ✅ Unsubscribe both channels
     channel1.unsubscribe();
     channel2.unsubscribe();
-    
+
     // ✅ Remove both
     supabase.removeChannel(channel1);
     supabase.removeChannel(channel2);
@@ -109,22 +114,23 @@ useEffect(() => {
 ## Memory Impact
 
 **Testing revealed:**
+
 - **Before fix**: 110MB memory growth after 20 page navigations (5-10MB/hour)
 - **After fix**: 3MB memory growth after 20 page navigations (0MB/hour leak)
 - **Improvement**: **69% reduction** in memory usage
 
 ## Files Fixed in Task 0.2
 
-| File | Channels | Status |
-|------|----------|--------|
-| NotificationContext.tsx | 5 | ✅ Fixed |
-| usePositionUpdate.tsx | 1 | ✅ Fixed |
-| useOrdersTable.tsx | 1 | ✅ Fixed |
-| useTradingHistory.tsx | 2 | ✅ Fixed |
-| usePendingOrders.tsx | 1 | ✅ Fixed |
-| useMarginMonitoring.tsx | 1 | ✅ Fixed |
-| usePortfolioData.tsx | 2 | ✅ Fixed |
-| **TOTAL** | **13** | **✅ All Fixed** |
+| File                    | Channels | Status           |
+| ----------------------- | -------- | ---------------- |
+| NotificationContext.tsx | 5        | ✅ Fixed         |
+| usePositionUpdate.tsx   | 1        | ✅ Fixed         |
+| useOrdersTable.tsx      | 1        | ✅ Fixed         |
+| useTradingHistory.tsx   | 2        | ✅ Fixed         |
+| usePendingOrders.tsx    | 1        | ✅ Fixed         |
+| useMarginMonitoring.tsx | 1        | ✅ Fixed         |
+| usePortfolioData.tsx    | 2        | ✅ Fixed         |
+| **TOTAL**               | **13**   | **✅ All Fixed** |
 
 ## Code Review Checklist
 

@@ -115,12 +115,12 @@ describe("Position Update: Price Cache", () => {
   it("should handle multiple symbols in cache", () => {
     const priceCache = new Map([
       ["BTC/USD", 42000],
-      ["EURUSD", 1.0950],
+      ["EURUSD", 1.095],
       ["AAPL", 230.5],
     ]);
 
     expect(priceCache.size).toBe(3);
-    expect(priceCache.get("EURUSD")).toBe(1.0950);
+    expect(priceCache.get("EURUSD")).toBe(1.095);
   });
 
   it("should preserve cache entry when price unchanged", () => {
@@ -152,8 +152,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 42000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(2000);
   });
@@ -166,8 +166,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 38000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(-2000);
   });
@@ -180,8 +180,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 38000,
     });
 
-    const pnl = (position.entry_price - position.current_price) *
-      position.quantity;
+    const pnl =
+      (position.entry_price - position.current_price) * position.quantity;
 
     expect(pnl).toBe(2000);
   });
@@ -194,8 +194,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 42000,
     });
 
-    const pnl = (position.entry_price - position.current_price) *
-      position.quantity;
+    const pnl =
+      (position.entry_price - position.current_price) * position.quantity;
 
     expect(pnl).toBe(-2000);
   });
@@ -207,8 +207,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 40000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(0);
   });
@@ -221,8 +221,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 42000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(1000);
   });
@@ -235,8 +235,8 @@ describe("Position Update: Unrealized P&L", () => {
       current_price: 42000.456,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
     const rounded = Math.round(pnl * 10000) / 10000;
 
     expect(rounded).toEqual(expect.any(Number));
@@ -451,13 +451,13 @@ describe("Position Update: Batch Operations", () => {
   it("should update multiple positions", () => {
     const positions = [
       createMockPosition({ symbol: "BTC/USD", current_price: 40000 }),
-      createMockPosition({ symbol: "EURUSD", current_price: 1.0900 }),
+      createMockPosition({ symbol: "EURUSD", current_price: 1.09 }),
       createMockPosition({ symbol: "AAPL", current_price: 230.0 }),
     ];
 
     const prices = new Map([
       ["BTC/USD", 42000],
-      ["EURUSD", 1.0950],
+      ["EURUSD", 1.095],
       ["AAPL", 232.5],
     ]);
 
@@ -467,14 +467,14 @@ describe("Position Update: Batch Operations", () => {
     }));
 
     expect(updated[0].current_price).toBe(42000);
-    expect(updated[1].current_price).toBe(1.0950);
+    expect(updated[1].current_price).toBe(1.095);
     expect(updated[2].current_price).toBe(232.5);
   });
 
   it("should skip unavailable prices in batch update", () => {
     const positions = [
       createMockPosition({ symbol: "BTC/USD", current_price: 40000 }),
-      createMockPosition({ symbol: "EURUSD", current_price: 1.0900 }),
+      createMockPosition({ symbol: "EURUSD", current_price: 1.09 }),
     ];
 
     const prices = new Map([["BTC/USD", 42000]]);
@@ -485,7 +485,7 @@ describe("Position Update: Batch Operations", () => {
     }));
 
     expect(updated[0].current_price).toBe(42000);
-    expect(updated[1].current_price).toBe(1.0900); // Unchanged
+    expect(updated[1].current_price).toBe(1.09); // Unchanged
   });
 
   it("should handle empty batch gracefully", () => {
@@ -554,7 +554,7 @@ describe("Position Update: Error Handling", () => {
     try {
       // Simulate timeout
       await new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Network timeout")), 100)
+        setTimeout(() => reject(new Error("Network timeout")), 100),
       );
     } catch (err) {
       error = (err as Error).message;
@@ -571,7 +571,7 @@ describe("Position Update: Error Handling", () => {
     ];
 
     const valid = invalidPrices.filter(
-      (p) => typeof p.price === "number" && isFinite(p.price)
+      (p) => typeof p.price === "number" && isFinite(p.price),
     );
 
     expect(valid.length).toBe(0);
@@ -623,9 +623,7 @@ describe("Position Update: Performance", () => {
   });
 
   it("should handle 100 concurrent position updates", async () => {
-    const positions = Array.from({ length: 100 }, () =>
-      createMockPosition()
-    );
+    const positions = Array.from({ length: 100 }, () => createMockPosition());
 
     const startTime = performance.now();
 
@@ -647,11 +645,7 @@ describe("Position Update: Performance", () => {
     for (let i = 0; i < 1000; i++) {
       const marginLevel = 100000 / 10000;
       const status =
-        marginLevel > 500
-          ? "SAFE"
-          : marginLevel > 200
-            ? "WARNING"
-            : "CRITICAL";
+        marginLevel > 500 ? "SAFE" : marginLevel > 200 ? "WARNING" : "CRITICAL";
     }
 
     const endTime = performance.now();
@@ -662,9 +656,7 @@ describe("Position Update: Performance", () => {
   });
 
   it("should batch update 50 positions efficiently", () => {
-    const positions = Array.from({ length: 50 }, () =>
-      createMockPosition()
-    );
+    const positions = Array.from({ length: 50 }, () => createMockPosition());
 
     const prices = new Map<string, number>();
     positions.forEach((_, i) => {
@@ -699,8 +691,8 @@ describe("Position Update: Edge Cases", () => {
       current_price: 1000000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(999999);
   });
@@ -713,8 +705,8 @@ describe("Position Update: Edge Cases", () => {
       current_price: 40000.0001,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
     const rounded = Math.round(pnl * 10000) / 10000;
 
     expect(rounded).toBeCloseTo(0.0001, 4);
@@ -728,8 +720,8 @@ describe("Position Update: Edge Cases", () => {
       current_price: 42000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     // (42000 - 40000) * 0.00001 = 0.02
     expect(pnl).toBeCloseTo(0.02, 5);
@@ -740,8 +732,8 @@ describe("Position Update: Edge Cases", () => {
       quantity: 0,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(0);
   });
@@ -752,8 +744,8 @@ describe("Position Update: Edge Cases", () => {
       current_price: 40000,
     });
 
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     expect(pnl).toBe(0);
   });
@@ -791,8 +783,8 @@ describe("Position Update: Integration Scenarios", () => {
     position.current_price = 42000;
 
     // 3. Calculate P&L
-    const pnl = (position.current_price - position.entry_price) *
-      position.quantity;
+    const pnl =
+      (position.current_price - position.entry_price) * position.quantity;
 
     // 4. Calculate margin level - with more reasonable margin usage
     const accountBalance = 10000;
@@ -827,13 +819,13 @@ describe("Position Update: Integration Scenarios", () => {
         id: "pos-2",
         symbol: "EURUSD",
         quantity: 100000,
-        entry_price: 1.0900,
+        entry_price: 1.09,
       }),
     ];
 
     // Update prices
     positions[0].current_price = 42000;
-    positions[1].current_price = 1.0950;
+    positions[1].current_price = 1.095;
 
     // Calculate P&L for each
     const pnls = positions.map((p) => {

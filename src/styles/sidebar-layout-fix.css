@@ -15,9 +15,10 @@
 /* Smooth, performant transitions for show/hide and theme changes */
 .sidebar,
 .sidebar * {
-  transition: background-color var(--transition-fast),
-              color var(--transition-fast),
-              transform var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
   will-change: transform, opacity;
 }
 
@@ -35,8 +36,12 @@
 
 /* Small tweak to avoid flicker on theme inversion in Safari/Chromium */
 @media (prefers-reduced-motion: no-preference) {
-  .sidebar { backface-visibility: hidden; }
-  [data-sidebar="sidebar"] { backface-visibility: hidden; }
+  .sidebar {
+    backface-visibility: hidden;
+  }
+  [data-sidebar="sidebar"] {
+    backface-visibility: hidden;
+  }
 }
 
 /* Ensure header stays above sidebar with proper z-index */
@@ -62,7 +67,8 @@ header[class*="sticky"] {
   }
 
   /* Ensure proper spacing for offcanvas collapsible variant */
-  .group.peer[data-state="collapsed"][data-collapsible="offcanvas"] ~ .flex.flex-col.min-h-screen {
+  .group.peer[data-state="collapsed"][data-collapsible="offcanvas"]
+    ~ .flex.flex-col.min-h-screen {
     margin-left: 0;
   }
 }

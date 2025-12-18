@@ -86,12 +86,24 @@
   animation: stagger-in var(--duration-normal) var(--ease-out) forwards;
 }
 
-.list-item:nth-child(1) { animation-delay: 0ms; }
-.list-item:nth-child(2) { animation-delay: 50ms; }
-.list-item:nth-child(3) { animation-delay: 100ms; }
-.list-item:nth-child(4) { animation-delay: 150ms; }
-.list-item:nth-child(5) { animation-delay: 200ms; }
-.list-item:nth-child(n+6) { animation-delay: 250ms; }
+.list-item:nth-child(1) {
+  animation-delay: 0ms;
+}
+.list-item:nth-child(2) {
+  animation-delay: 50ms;
+}
+.list-item:nth-child(3) {
+  animation-delay: 100ms;
+}
+.list-item:nth-child(4) {
+  animation-delay: 150ms;
+}
+.list-item:nth-child(5) {
+  animation-delay: 200ms;
+}
+.list-item:nth-child(n + 6) {
+  animation-delay: 250ms;
+}
 
 /* ============================================================================
    Slide & Fade Transitions
@@ -171,7 +183,8 @@
 }
 
 @keyframes scale-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -201,7 +214,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -253,8 +267,9 @@
 }
 
 .input-interactive:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)),
-              0 0 0 4px hsl(var(--accent));
+  box-shadow:
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--accent));
 }
 
 /* ============================================================================
@@ -262,8 +277,9 @@
    ========================================================================== */
 
 .card-elevation-transition {
-  transition: box-shadow var(--transition-normal),
-              transform var(--transition-normal);
+  transition:
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
 }
 
 .card-hoverable:hover {
@@ -390,7 +406,8 @@
 }
 
 @keyframes icon-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -540,5 +557,3 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-

@@ -1,9 +1,9 @@
-import React from 'react';
-import type { TabComponentProps } from '../types';
+import React from "react";
+import type { TabComponentProps } from "../types";
 
 /**
  * LiveRegionsTab Component
- * 
+ *
  * Demonstrates dynamic content updates and live regions.
  * Tests progress indicators, status messages, and modal dialogs.
  */
@@ -18,50 +18,56 @@ export function LiveRegionsTab({
   onValidateForm,
   onUpdateForm,
   onAnnounceToScreenReader,
-  onSubmitForm
+  onSubmitForm,
 }: TabComponentProps) {
   return (
     <div className="space-y-6">
       {/* Dynamic Content Testing */}
       <div className="bg-card rounded-lg p-6 border">
         <h3 className="font-semibold mb-4">Dynamic Content Testing</h3>
-        
+
         {/* Dedicated live region for announcements */}
-        <div 
+        <div
           id="announcement-region"
-          aria-live="polite" 
-          aria-atomic="true" 
+          aria-live="polite"
+          aria-atomic="true"
           className="sr-only"
         />
-        
+
         <div className="space-y-4">
           <div className="flex space-x-4">
             <button
-              onClick={() => onAnnounceToScreenReader('Content updated: New notification received')}
+              onClick={() =>
+                onAnnounceToScreenReader(
+                  "Content updated: New notification received",
+                )
+              }
               className="px-4 py-2 bg-blue-500 text-white rounded-lg"
             >
               Update Content (Polite)
             </button>
-            
+
             <button
-              onClick={() => onAnnounceToScreenReader('ALERT: Critical system notification')}
+              onClick={() =>
+                onAnnounceToScreenReader("ALERT: Critical system notification")
+              }
               className="px-4 py-2 bg-red-500 text-white rounded-lg"
             >
               Critical Alert (Assertive)
             </button>
-            
+
             <button
-              onClick={() => onAnnounceToScreenReader('Loading complete')}
+              onClick={() => onAnnounceToScreenReader("Loading complete")}
               className="px-4 py-2 bg-green-500 text-white rounded-lg"
             >
               Status Update
             </button>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 border rounded">
               <h4 className="font-medium mb-2">Progress Indicator</h4>
-              <div 
+              <div
                 role="progressbar"
                 aria-valuenow={75}
                 aria-valuemin={0}
@@ -73,10 +79,10 @@ export function LiveRegionsTab({
               </div>
               <p className="text-sm text-muted-foreground mt-2">75% complete</p>
             </div>
-            
+
             <div className="p-4 border rounded">
               <h4 className="font-medium mb-2">Search Results</h4>
-              <div 
+              <div
                 role="status"
                 aria-live="polite"
                 className="text-sm text-muted-foreground"
@@ -91,12 +97,14 @@ export function LiveRegionsTab({
       {/* Modal Dialog Testing */}
       <div className="bg-card rounded-lg p-6 border">
         <h3 className="font-semibold mb-4">Modal Dialog Testing</h3>
-        
+
         <div className="space-y-4">
           <button
             onClick={() => {
               // Simulate modal opening
-              onAnnounceToScreenReader('Modal dialog opened. Press Escape to close.');
+              onAnnounceToScreenReader(
+                "Modal dialog opened. Press Escape to close.",
+              );
             }}
             className="px-4 py-2 bg-purple-500 text-white rounded-lg"
             aria-haspopup="dialog"
@@ -104,8 +112,8 @@ export function LiveRegionsTab({
           >
             Open Modal Dialog
           </button>
-          
-          <div 
+
+          <div
             id="test-modal"
             role="dialog"
             aria-modal="true"

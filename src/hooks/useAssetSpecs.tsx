@@ -9,7 +9,7 @@ export interface AssetSpec {
   leverage: number; // Fixed broker-set leverage
   pip_size: number;
   base_commission: number;
-  commission_type: 'per_lot' | 'percentage';
+  commission_type: "per_lot" | "percentage";
   is_tradable: boolean;
   created_at: string;
 }

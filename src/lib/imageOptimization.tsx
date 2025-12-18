@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
 /**
  * Image Optimization Utilities
- * 
+ *
  * Provides WebP conversion, lazy loading, responsive images,
  * and SVG optimization for TradeX Pro.
  */
@@ -18,7 +18,7 @@ export interface ResponsiveImageProps {
   height?: number;
   placeholder?: string;
   sizes?: string;
-  loading?: 'lazy' | 'eager';
+  loading?: "lazy" | "eager";
   priority?: boolean;
   quality?: number;
   onLoad?: () => void;
@@ -32,12 +32,12 @@ export function ResponsiveImage({
   width,
   height,
   placeholder,
-  sizes = '100vw',
-  loading = 'lazy',
+  sizes = "100vw",
+  loading = "lazy",
   priority = false,
   quality = 80,
   onLoad,
-  onError
+  onError,
 }: ResponsiveImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -60,22 +60,14 @@ export function ResponsiveImage({
     <picture className={className}>
       {/* AVIF - Best compression */}
       {sources.avif && (
-        <source
-          srcSet={sources.avif}
-          type="image/avif"
-          sizes={sizes}
-        />
+        <source srcSet={sources.avif} type="image/avif" sizes={sizes} />
       )}
-      
+
       {/* WebP - Good compression, wide support */}
       {sources.webp && (
-        <source
-          srcSet={sources.webp}
-          type="image/webp"
-          sizes={sizes}
-        />
+        <source srcSet={sources.webp} type="image/webp" sizes={sizes} />
       )}
-      
+
       {/* Fallback to original format */}
       <img
         ref={imgRef}
@@ -83,31 +75,31 @@ export function ResponsiveImage({
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? 'eager' : loading}
+        loading={priority ? "eager" : loading}
         decoding="async"
         className={`
-          ${isLoaded ? 'opacity-100' : 'opacity-0'}
-          ${hasError ? 'hidden' : ''}
+          ${isLoaded ? "opacity-100" : "opacity-0"}
+          ${hasError ? "hidden" : ""}
           transition-opacity duration-300
-          ${className || ''}
+          ${className || ""}
         `}
         onLoad={handleLoad}
         onError={handleError}
         style={{
-          transition: 'opacity 300ms ease-in-out'
+          transition: "opacity 300ms ease-in-out",
         }}
       />
-      
+
       {/* Placeholder while loading */}
       {!isLoaded && placeholder && (
         <img
           src={placeholder}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'blur(2px)' }}
+          style={{ filter: "blur(2px)" }}
         />
       )}
-      
+
       {/* Fallback text if image fails */}
       {hasError && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground">
@@ -123,26 +115,29 @@ export function ResponsiveImage({
  */
 function generateImageSources(src: string, quality: number) {
   const sources: { webp?: string; avif?: string } = {};
-  
+
   try {
     // Check if we're using a CDN that supports image optimization
-    const isCDN = src.includes('cdn') || src.includes('cloudfront') || src.includes('vercel');
-    
+    const isCDN =
+      src.includes("cdn") ||
+      src.includes("cloudfront") ||
+      src.includes("vercel");
+
     if (isCDN) {
       // CDN optimization parameters
       const params = `?q=${quality}&fm=webp`;
       sources.webp = src + params;
-      sources.avif = src + '?q=' + quality + '&fm=avif';
+      sources.avif = src + "?q=" + quality + "&fm=avif";
     } else {
       // For local images, try to find optimized versions
-      const baseName = src.replace(/\.[^/.]+$/, '');
-      
+      const baseName = src.replace(/\.[^/.]+$/, "");
+
       sources.webp = `${baseName}.webp`;
       sources.avif = `${baseName}.avif`;
     }
   } catch (error) {
     // Silently handle - fallback to original src if source generation fails
-  }  
+  }
   return sources;
 }
 
@@ -152,11 +147,11 @@ function generateImageSources(src: string, quality: number) {
 export function useImageLazyLoading() {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef<HTMLImageElement>(null);
-  
+
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -165,18 +160,18 @@ export function useImageLazyLoading() {
         }
       },
       {
-        rootMargin: '50px 0px',
-        threshold: 0.01
-      }
+        rootMargin: "50px 0px",
+        threshold: 0.01,
+      },
     );
-    
+
     observer.observe(element);
-    
+
     return () => {
       observer.disconnect();
     };
   }, []);
-  
+
   return { ref, shouldLoad: isInView };
 }
 
@@ -194,7 +189,7 @@ export function SvgOptimizer({
   children,
   className,
   title,
-  preserveAspectRatio = 'xMidYMid meet'
+  preserveAspectRatio = "xMidYMid meet",
 }: SvgOptimizerProps) {
   return (
     <svg
@@ -218,46 +213,46 @@ export function SvgOptimizer({
 export class ImagePreloader {
   private cache = new Map<string, HTMLImageElement>();
   private loadingPromises = new Map<string, Promise<HTMLImageElement>>();
-  
+
   preload(src: string): Promise<HTMLImageElement> {
     if (this.cache.has(src)) {
       return Promise.resolve(this.cache.get(src)!);
     }
-    
+
     if (this.loadingPromises.has(src)) {
       return this.loadingPromises.get(src)!;
     }
-    
+
     const promise = new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
-      
+
       img.onload = () => {
         this.cache.set(src, img);
         this.loadingPromises.delete(src);
         resolve(img);
       };
-      
+
       img.onerror = () => {
         this.loadingPromises.delete(src);
         reject(new Error(`Failed to load image: ${src}`));
       };
-      
-      img.decoding = 'async';
+
+      img.decoding = "async";
       img.src = src;
     });
-    
+
     this.loadingPromises.set(src, promise);
     return promise;
   }
-  
+
   preloadMultiple(srcs: string[]): Promise<HTMLImageElement[]> {
-    return Promise.all(srcs.map(src => this.preload(src)));
+    return Promise.all(srcs.map((src) => this.preload(src)));
   }
-  
+
   isCached(src: string): boolean {
     return this.cache.has(src);
   }
-  
+
   clearCache(): void {
     this.cache.clear();
     this.loadingPromises.clear();
@@ -269,51 +264,54 @@ export class ImagePreloader {
  */
 export const ImageOptimizer = {
   // Optimize image for different screen densities
-  getOptimizedSrc: (src: string, density: number = window.devicePixelRatio || 1) => {
-    const baseName = src.replace(/\.[^/.]+$/, '');
-    const extension = src.split('.').pop();
-    
+  getOptimizedSrc: (
+    src: string,
+    density: number = window.devicePixelRatio || 1,
+  ) => {
+    const baseName = src.replace(/\.[^/.]+$/, "");
+    const extension = src.split(".").pop();
+
     // For high DPI screens, try to get higher resolution images
     if (density >= 3) {
       return `${baseName}@3x.${extension}`;
     } else if (density >= 2) {
       return `${baseName}@2x.${extension}`;
     }
-    
+
     return src;
-  },  
+  },
   // Generate responsive image srcSet
   generateSrcSet: (src: string, sizes: number[]) => {
-    return sizes
-      .map(size => `${src} ${size}w`)
-      .join(', ');
+    return sizes.map((size) => `${src} ${size}w`).join(", ");
   },
-  
+
   // Check if WebP is supported
   supportsWebP: async (): Promise<boolean> => {
-    if (typeof window === 'undefined') return false;
-    
+    if (typeof window === "undefined") return false;
+
     return new Promise((resolve) => {
       const webP = new Image();
       webP.onload = webP.onerror = () => {
         resolve(webP.height === 2);
       };
-      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+      webP.src =
+        "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
     });
   },
-  
+
   // Check if AVIF is supported
   supportsAVIF: async (): Promise<boolean> => {
-    if (typeof window === 'undefined') return false;
-    
+    if (typeof window === "undefined") return false;
+
     return new Promise((resolve) => {
       const avif = new Image();
       avif.onload = avif.onerror = () => {
         resolve(avif.height === 2);
       };
-      avif.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgABogQEAwgMg8f8D///8WfhwB8+ErK42A=';
+      avif.src =
+        "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgABogQEAwgMg8f8D///8WfhwB8+ErK42A=";
     });
-  }
+  },
 };
 
 /**
@@ -327,12 +325,12 @@ export interface BlurHashProps {
   punch?: number;
 }
 
-export function BlurHashPlaceholder({ 
-  hash, 
-  width, 
-  height, 
-  className, 
-  punch = 1 
+export function BlurHashPlaceholder({
+  hash,
+  width,
+  height,
+  className,
+  punch = 1,
 }: BlurHashProps) {
   // This would integrate with a BlurHash library
   // For now, provide a simple fallback
@@ -342,9 +340,9 @@ export function BlurHashPlaceholder({
       style={{
         width,
         height,
-        backgroundSize: 'cover',
-        filter: 'blur(1px)',
-        transform: 'scale(1.05)'
+        backgroundSize: "cover",
+        filter: "blur(1px)",
+        transform: "scale(1.05)",
       }}
     />
   );
@@ -368,33 +366,36 @@ export function ProgressiveImage({
   alt,
   className,
   width,
-  height
+  height,
 }: ProgressiveImageProps) {
   const [isHQLoaded, setIsHQLoaded] = useState(false);
   const [isLQLoaded, setIsLQLoaded] = useState(false);
-  
+
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ width, height }}>
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={{ width, height }}
+    >
       {/* Low quality placeholder */}
       {!isLQLoaded && (
         <div className="absolute inset-0 bg-muted animate-pulse" />
       )}
-      
+
       <img
         src={lowQualitySrc}
         alt=""
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-          isLQLoaded ? 'opacity-100' : 'opacity-0'
+          isLQLoaded ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setIsLQLoaded(true)}
       />
-      
+
       {/* High quality image */}
       <img
         src={highQualitySrc}
         alt={alt}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-          isHQLoaded ? 'opacity-100' : 'opacity-0'
+          isHQLoaded ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setIsHQLoaded(true)}
       />
@@ -409,5 +410,5 @@ export default {
   ImageOptimizer,
   BlurHashPlaceholder,
   ProgressiveImage,
-  useImageLazyLoading
+  useImageLazyLoading,
 };

@@ -14,7 +14,7 @@ interface ScrollRevealProps {
 
 const getVariants = (
   direction: "up" | "down" | "left" | "right" | "none",
-  distance: number
+  distance: number,
 ): Variants => {
   const directions = {
     up: { y: distance },
@@ -51,6 +51,10 @@ export function ScrollReveal({
   const isInView = useInView(ref, { once, amount: threshold });
   const variants = getVariants(direction, distance);
 
+  // Faster animations on mobile for better UX
+  const isMobile = window.innerWidth < 768;
+  const animationDuration = isMobile ? Math.min(duration, 0.4) : duration;
+
   return (
     <motion.div
       ref={ref}
@@ -58,7 +62,7 @@ export function ScrollReveal({
       animate={isInView ? "visible" : "hidden"}
       variants={variants}
       transition={{
-        duration,
+        duration: animationDuration,
         delay,
         ease: [0.25, 0.1, 0.25, 1],
       }}
@@ -128,11 +132,15 @@ export function StaggerItem({
 }: StaggerItemProps) {
   const variants = getVariants(direction, distance);
 
+  // Faster animations on mobile for better UX
+  const isMobile = window.innerWidth < 768;
+  const animationDuration = isMobile ? 0.3 : 0.5;
+
   return (
     <motion.div
       variants={variants}
       transition={{
-        duration: 0.5,
+        duration: animationDuration,
         ease: [0.25, 0.1, 0.25, 1],
       }}
       className={className}
@@ -166,7 +174,7 @@ export function AnimatedSectionHeader({
         </ScrollReveal>
       )}
       <ScrollReveal delay={0.1} duration={0.5}>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
           {title}
           {subtitle && (
             <span className="block mt-2 bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
@@ -177,7 +185,7 @@ export function AnimatedSectionHeader({
       </ScrollReveal>
       {description && (
         <ScrollReveal delay={0.2} duration={0.5}>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {description}
           </p>
         </ScrollReveal>

@@ -7,7 +7,10 @@ interface PlaceholderProps {
   description?: string;
 }
 
-export const Placeholder: React.FC<PlaceholderProps> = ({ title, description }) => {
+export const Placeholder: React.FC<PlaceholderProps> = ({
+  title,
+  description,
+}) => {
   return (
     <div className="py-6">
       <EmptyState

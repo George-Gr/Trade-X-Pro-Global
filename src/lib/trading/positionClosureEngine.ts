@@ -151,7 +151,7 @@ export interface ClosureSummary {
  */
 export function checkTakeProfitTriggered(
   position: Position,
-  currentPrice: number
+  currentPrice: number,
 ): boolean {
   if (!position.take_profit_level) return false;
 
@@ -170,7 +170,7 @@ export function checkTakeProfitTriggered(
  */
 export function checkStopLossTriggered(
   position: Position,
-  currentPrice: number
+  currentPrice: number,
 ): boolean {
   if (!position.stop_loss_level) return false;
 
@@ -192,7 +192,7 @@ export function checkStopLossTriggered(
 export function checkTrailingStopTriggered(
   position: Position,
   currentPrice: number,
-  priceHistory: number[] = []
+  priceHistory: number[] = [],
 ): boolean {
   if (!position.trailing_stop_distance || !position.trailing_stop_peak_price) {
     return false;
@@ -220,7 +220,7 @@ export function checkTrailingStopTriggered(
  */
 export function checkTimeBasedExpiryTriggered(
   position: Position,
-  maxHoldDurationMs: number
+  maxHoldDurationMs: number,
 ): boolean {
   const createdAtMs = new Date(position.created_at).getTime();
   const nowMs = Date.now();
@@ -239,7 +239,7 @@ export function checkTimeBasedExpiryTriggered(
 export function shouldForceClosure(
   position: Position,
   marginLevel: number,
-  liquidationTrigger: boolean = false
+  liquidationTrigger: boolean = false,
 ): boolean {
   // Force close if liquidation triggered (system emergency)
   if (liquidationTrigger) return true;
@@ -265,11 +265,13 @@ export function getPrimaryClosureTrigger(
   currentPrice: number,
   marginLevel: number = 100,
   maxHoldDurationMs: number = Infinity,
-  liquidationTrigger: boolean = false
+  liquidationTrigger: boolean = false,
 ): ClosureReason | null {
   // Priority 1: Force closure (margin call, liquidation)
   if (shouldForceClosure(position, marginLevel, liquidationTrigger)) {
-    return liquidationTrigger ? ClosureReason.LIQUIDATION : ClosureReason.MARGIN_CALL;
+    return liquidationTrigger
+      ? ClosureReason.LIQUIDATION
+      : ClosureReason.MARGIN_CALL;
   }
 
   // Priority 2: Take-profit
@@ -311,7 +313,7 @@ export function getPrimaryClosureTrigger(
 export function calculateClosureSlippage(
   symbol: string,
   closureReason: ClosureReason,
-  normalSlippage: number = 0.1
+  normalSlippage: number = 0.1,
 ): number {
   // Force closures get worst-case pricing (1.5x normal slippage)
   if (
@@ -343,12 +345,12 @@ export function calculateClosurePrice(
   position: Position,
   currentPrice: number,
   closureReason: ClosureReason,
-  normalSlippage: number = 0.1
+  normalSlippage: number = 0.1,
 ): number {
   const slippagePercent = calculateClosureSlippage(
     position.symbol,
     closureReason,
-    normalSlippage
+    normalSlippage,
   );
 
   const slippageAmount = currentPrice * (slippagePercent / 100);
@@ -370,7 +372,7 @@ export function calculateClosurePrice(
  */
 export function calculateRealizedPnLOnClosure(
   position: Position,
-  exitPrice: number
+  exitPrice: number,
 ): { pnl: number; pnlPercentage: number } {
   const priceDifference = exitPrice - position.entry_price;
 
@@ -382,7 +384,8 @@ export function calculateRealizedPnLOnClosure(
   } else {
     // Short: profit when price decreases
     const pnl = (position.entry_price - exitPrice) * position.quantity;
-    const pnlPercentage = ((position.entry_price - exitPrice) / position.entry_price) * 100;
+    const pnlPercentage =
+      ((position.entry_price - exitPrice) / position.entry_price) * 100;
     return { pnl, pnlPercentage };
   }
 }
@@ -400,7 +403,7 @@ export function calculateCommissionOnClosure(
   symbol: string,
   quantity: number,
   exitPrice: number,
-  commissionRate: number = 0.1
+  commissionRate: number = 0.1,
 ): number {
   const notionalValue = quantity * exitPrice;
   return (notionalValue * commissionRate) / 100;
@@ -415,7 +418,7 @@ export function calculateCommissionOnClosure(
  */
 export function calculateAvailableMarginAfterClosure(
   position: Position,
-  leverage: number = 2
+  leverage: number = 2,
 ): number {
   // Margin used = (quantity * entry_price) / leverage
   // When position closes, this margin is freed
@@ -436,7 +439,7 @@ export function calculateAvailableMarginAfterClosure(
 export function validateClosurePreConditions(
   position: Position,
   currentPrice: number,
-  marginLevel: number = 100
+  marginLevel: number = 100,
 ): ClosurePreConditions {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -462,9 +465,14 @@ export function validateClosurePreConditions(
   }
 
   // Warn if closing at unfavorable price
-  const unrealizedPnL = calculateRealizedPnLOnClosure(position, currentPrice).pnl;
+  const unrealizedPnL = calculateRealizedPnLOnClosure(
+    position,
+    currentPrice,
+  ).pnl;
   if (unrealizedPnL < 0 && unrealizedPnL < position.unrealized_pnl * 0.9) {
-    warnings.push("Closure price is significantly worse than current market price");
+    warnings.push(
+      "Closure price is significantly worse than current market price",
+    );
   }
 
   // Warn if margin is critical
@@ -487,7 +495,7 @@ export function validateClosurePreConditions(
  */
 export function checkClosureSafety(
   position: Position,
-  marketPrices: Record<string, number>
+  marketPrices: Record<string, number>,
 ): { safe: boolean; issues: string[] } {
   const issues: string[] = [];
 
@@ -526,7 +534,7 @@ export function checkClosureSafety(
 export function executePositionClosure(
   position: Position,
   currentPrice: number,
-  reason: ClosureReason
+  reason: ClosureReason,
 ): ClosureResult {
   // Validate preconditions
   const validation = validateClosurePreConditions(position, currentPrice);
@@ -558,17 +566,16 @@ export function executePositionClosure(
   // Calculate P&L
   const { pnl, pnlPercentage } = calculateRealizedPnLOnClosure(
     position,
-    exitPrice
+    exitPrice,
   );
 
   // Calculate costs
   const commission = calculateCommissionOnClosure(
     position.symbol,
     position.quantity,
-    exitPrice
+    exitPrice,
   );
-  const slippageAmount =
-    Math.abs(currentPrice - exitPrice) * position.quantity;
+  const slippageAmount = Math.abs(currentPrice - exitPrice) * position.quantity;
 
   // Calculate net P&L (after costs)
   const netPnL = pnl - commission;
@@ -614,7 +621,7 @@ export function executePartialClosure(
   position: Position,
   quantityToClose: number,
   currentPrice: number,
-  reason: ClosureReason
+  reason: ClosureReason,
 ): ClosureResult {
   // Validate quantity
   if (quantityToClose <= 0 || quantityToClose > position.quantity) {
@@ -651,10 +658,9 @@ export function executePartialClosure(
   const commission = calculateCommissionOnClosure(
     position.symbol,
     quantityToClose,
-    exitPrice
+    exitPrice,
   );
-  const slippageAmount =
-    Math.abs(currentPrice - exitPrice) * quantityToClose;
+  const slippageAmount = Math.abs(currentPrice - exitPrice) * quantityToClose;
 
   // Calculate hold duration
   const createdAt = new Date(position.created_at).getTime();
@@ -698,7 +704,7 @@ export function executePartialClosure(
 export function updateTrailingStop(
   position: Position,
   currentPrice: number,
-  highPrice: number
+  highPrice: number,
 ): Position {
   if (!position.trailing_stop_distance) {
     return position;
@@ -709,7 +715,9 @@ export function updateTrailingStop(
   if (position.side === "long") {
     // For long: peak is the highest price reached
     // Stop is always below peak by trailing distance
-    if (highPrice > (position.trailing_stop_peak_price || position.entry_price)) {
+    if (
+      highPrice > (position.trailing_stop_peak_price || position.entry_price)
+    ) {
       updated.trailing_stop_peak_price = highPrice;
       updated.stop_loss_level = highPrice - position.trailing_stop_distance;
     }
@@ -736,7 +744,7 @@ export function updateTrailingStop(
  */
 export function getPositionClosureSummary(
   positionId: string,
-  closures: PositionClosure[]
+  closures: PositionClosure[],
 ): ClosureSummary {
   const wins = closures.filter((c) => c.realized_pnl > 0).length;
   const losses = closures.filter((c) => c.realized_pnl < 0).length;
@@ -790,9 +798,11 @@ export function formatClosureReason(reason: ClosureReason): string {
  * @param status - Closure status enum
  * @returns { label, color, icon }
  */
-export function formatClosureStatus(
-  status: ClosureStatus
-): { label: string; color: string; icon: string } {
+export function formatClosureStatus(status: ClosureStatus): {
+  label: string;
+  color: string;
+  icon: string;
+} {
   const statuses: Record<
     ClosureStatus,
     { label: string; color: string; icon: string }
@@ -839,7 +849,7 @@ export function formatClosureStatus(
  */
 export function getClosureImpact(
   position: Position,
-  exitPrice: number
+  exitPrice: number,
 ): {
   realizedPnL: number;
   commission: number;
@@ -850,7 +860,7 @@ export function getClosureImpact(
   const commission = calculateCommissionOnClosure(
     position.symbol,
     position.quantity,
-    exitPrice
+    exitPrice,
   );
   const marginRecovered = calculateAvailableMarginAfterClosure(position);
 

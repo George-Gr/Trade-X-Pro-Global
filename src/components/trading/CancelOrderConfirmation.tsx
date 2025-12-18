@@ -6,16 +6,16 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Loader2, AlertTriangle } from 'lucide-react';
+} from "@/components/ui/alert-dialog";
+import { Loader2, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { formatToastError } from "@/lib/errorMessageService";
 
 export interface Order {
   id: string;
   symbol: string;
-  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
-  side: 'buy' | 'sell';
+  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
+  side: "buy" | "sell";
   quantity: number;
   filled_quantity: number;
   price?: number;
@@ -68,17 +68,17 @@ export const CancelOrderConfirmation = ({
         onCancel();
       }
     } catch (err) {
-      const actionableError = formatToastError(err, 'order_submission');
+      const actionableError = formatToastError(err, "order_submission");
       toast({
         ...actionableError,
-        variant: actionableError.variant as "default" | "destructive"
+        variant: actionableError.variant as "default" | "destructive",
       });
     }
   };
 
   const remainingQuantity = order.quantity - order.filled_quantity;
   const isMostlyFilled = order.filled_quantity > order.quantity * 0.75;
-  const sideColor = order.side === 'buy' ? 'text-buy' : 'text-sell';
+  const sideColor = order.side === "buy" ? "text-buy" : "text-sell";
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onCancel}>
@@ -91,7 +91,8 @@ export const CancelOrderConfirmation = ({
             <div>
               <AlertDialogTitle>Cancel Order?</AlertDialogTitle>
               <AlertDialogDescription className="mt-2">
-                Are you sure you want to cancel this order? This action cannot be undone.
+                Are you sure you want to cancel this order? This action cannot
+                be undone.
               </AlertDialogDescription>
             </div>
           </div>
@@ -100,35 +101,57 @@ export const CancelOrderConfirmation = ({
         {/* Order Details */}
         <div className="bg-muted rounded-lg p-4 space-y-4 my-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Symbol</span>
-            <span className="text-sm font-semibold text-foreground">{order.symbol}</span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Side</span>
-            <span className={`text-sm font-semibold ${sideColor} uppercase`}>{order.side}</span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Type</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Symbol
+            </span>
             <span className="text-sm font-semibold text-foreground">
-              {order.type.replace('_', ' ').toUpperCase()}
+              {order.symbol}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Total Quantity</span>
-            <span className="text-sm font-semibold text-foreground">{order.quantity}</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Side
+            </span>
+            <span className={`text-sm font-semibold ${sideColor} uppercase`}>
+              {order.side}
+            </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Filled Quantity</span>
-            <span className="text-sm font-semibold text-foreground">{order.filled_quantity}</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Type
+            </span>
+            <span className="text-sm font-semibold text-foreground">
+              {order.type.replace("_", " ").toUpperCase()}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted-foreground">
+              Total Quantity
+            </span>
+            <span className="text-sm font-semibold text-foreground">
+              {order.quantity}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted-foreground">
+              Filled Quantity
+            </span>
+            <span className="text-sm font-semibold text-foreground">
+              {order.filled_quantity}
+            </span>
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            <span className="text-sm font-medium text-foreground">Remaining to Cancel</span>
-            <span className="text-sm font-bold text-sell">{remainingQuantity}</span>
+            <span className="text-sm font-medium text-foreground">
+              Remaining to Cancel
+            </span>
+            <span className="text-sm font-bold text-sell">
+              {remainingQuantity}
+            </span>
           </div>
         </div>
 
@@ -136,26 +159,26 @@ export const CancelOrderConfirmation = ({
         {isMostlyFilled && (
           <div className="bg-background border border-blue-200 rounded-lg p-4">
             <p className="text-xs text-blue-700">
-              <strong>Note:</strong> This order is mostly filled ({(order.filled_quantity / order.quantity * 100).toFixed(0)}%).
-              Cancelling will only affect the remaining {remainingQuantity} units.
+              <strong>Note:</strong> This order is mostly filled (
+              {((order.filled_quantity / order.quantity) * 100).toFixed(0)}%).
+              Cancelling will only affect the remaining {remainingQuantity}{" "}
+              units.
             </p>
           </div>
         )}
 
-        {order.status === 'partially_filled' && (
+        {order.status === "partially_filled" && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-xs text-amber-700">
-              <strong>Partial Fill:</strong> Existing filled quantity will remain as a position. Only
-              the pending quantity will be cancelled.
+              <strong>Partial Fill:</strong> Existing filled quantity will
+              remain as a position. Only the pending quantity will be cancelled.
             </p>
           </div>
         )}
 
         {/* Action Buttons */}
         <div className="flex gap-4 justify-end mt-6">
-          <AlertDialogCancel disabled={isLoading}>
-            Keep Order
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>Keep Order</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isLoading}
@@ -167,7 +190,7 @@ export const CancelOrderConfirmation = ({
                 Cancelling...
               </>
             ) : (
-              'Cancel Order'
+              "Cancel Order"
             )}
           </AlertDialogAction>
         </div>

@@ -20,7 +20,7 @@
   .text-primary-contrast {
     color: hsl(var(--primary-contrast));
   }
-  
+
   .text-primary-contrast-light {
     color: hsl(var(--primary-contrast-light));
   }
@@ -29,7 +29,7 @@
   .text-secondary-contrast {
     color: hsl(var(--secondary-contrast));
   }
-  
+
   .text-secondary-contrast-light {
     color: hsl(var(--secondary-contrast-light));
   }
@@ -38,7 +38,7 @@
   .text-tertiary-contrast {
     color: hsl(var(--tertiary-contrast));
   }
-  
+
   .text-tertiary-contrast-light {
     color: hsl(var(--tertiary-contrast-light));
   }
@@ -47,7 +47,7 @@
   .text-muted-contrast {
     color: hsl(var(--muted-contrast));
   }
-  
+
   .text-muted-contrast-light {
     color: hsl(var(--muted-contrast-light));
   }
@@ -56,11 +56,11 @@
   .text-success-contrast {
     color: hsl(var(--success-contrast));
   }
-  
+
   .text-warning-contrast {
     color: hsl(var(--warning-contrast));
   }
-  
+
   .text-danger-contrast {
     color: hsl(var(--danger-contrast));
   }
@@ -70,22 +70,22 @@
     background-color: hsl(var(--primary-contrast-bg));
     color: hsl(var(--primary-contrast-fg));
   }
-  
+
   .bg-secondary-contrast {
     background-color: hsl(var(--secondary-contrast-bg));
     color: hsl(var(--secondary-contrast-fg));
   }
-  
+
   .bg-success-contrast {
     background-color: hsl(var(--success-contrast-bg));
     color: hsl(var(--success-contrast-fg));
   }
-  
+
   .bg-warning-contrast {
     background-color: hsl(var(--warning-contrast-bg));
     color: hsl(var(--warning-contrast-fg));
   }
-  
+
   .bg-danger-contrast {
     background-color: hsl(var(--danger-contrast-bg));
     color: hsl(var(--danger-contrast-fg));
@@ -96,18 +96,20 @@
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
   }
-  
+
   .focus-ring {
-    box-shadow: 0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
-                0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
+    box-shadow:
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
+      0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
   }
 
   /* Enhanced focus ring with animation */
   .focus-ring-animated {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
-    box-shadow: 0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
-                0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
+    box-shadow:
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.3),
+      0 0 0 8px hsl(var(--focus-ring-color) / 0.2);
     animation: focus-pulse 2s ease-in-out infinite;
   }
 
@@ -115,25 +117,29 @@
   .focus-ring-high-contrast {
     outline: 4px solid hsl(var(--contrast-auto-high));
     outline-offset: 2px;
-    box-shadow: 0 0 0 8px hsl(var(--contrast-auto-bg-high) / 0.8),
-                0 0 0 10px hsl(var(--contrast-auto-bg-high) / 0.6);
+    box-shadow:
+      0 0 0 8px hsl(var(--contrast-auto-bg-high) / 0.8),
+      0 0 0 10px hsl(var(--contrast-auto-bg-high) / 0.6);
   }
 
   .dark .focus-visible {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
-    box-shadow: 0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
-                0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
+    box-shadow:
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
+      0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
   }
 
   .dark .focus-ring {
-    box-shadow: 0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
-                0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
+    box-shadow:
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
+      0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
   }
 
   .dark .focus-ring-animated {
-    box-shadow: 0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
-                0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
+    box-shadow:
+      0 0 0 6px hsl(var(--focus-ring-color) / 0.4),
+      0 0 0 8px hsl(var(--focus-ring-color) / 0.3);
   }
 
   /* High Contrast Mode Support */
@@ -141,7 +147,7 @@
     .text-contrast-auto {
       color: hsl(var(--contrast-auto-high));
     }
-    
+
     .bg-contrast-auto {
       background-color: hsl(var(--contrast-auto-bg-high));
     }
@@ -153,13 +159,11 @@
       animation: none !important;
       transition: none !important;
     }
-    
+
     .motion-reduce {
       scroll-behavior: auto;
     }
   }
-
-
 }
 
 /* 
@@ -169,49 +173,47 @@
 
 :root {
   /* Light Mode Contrast Colors */
-  --primary-contrast: 222 47% 11%;          /* Pure dark for maximum contrast on light backgrounds */
-  --primary-contrast-light: 210 40% 98%;    /* Pure white for dark backgrounds */
-  
-  --secondary-contrast: 215 16% 35%;        /* Enhanced gray - 4.5:1 contrast on white */
-  --secondary-contrast-light: 215 20% 65%;  /* Light gray for dark backgrounds */
-  
-  --tertiary-contrast: 215 16% 47%;         /* Medium gray - 7:1 contrast on white */
-  --tertiary-contrast-light: 215 20% 55%;   /* Medium gray for dark backgrounds */
-  
-  --muted-contrast: 215 16% 50%;            /* Improved muted - 3:1 contrast for large text */
-  --muted-contrast-light: 215 20% 45%;      /* Light muted for dark backgrounds */
-  
+  --primary-contrast: 222 47% 11%; /* Pure dark for maximum contrast on light backgrounds */
+  --primary-contrast-light: 210 40% 98%; /* Pure white for dark backgrounds */
+
+  --secondary-contrast: 215 16% 35%; /* Enhanced gray - 4.5:1 contrast on white */
+  --secondary-contrast-light: 215 20% 65%; /* Light gray for dark backgrounds */
+
+  --tertiary-contrast: 215 16% 47%; /* Medium gray - 7:1 contrast on white */
+  --tertiary-contrast-light: 215 20% 55%; /* Medium gray for dark backgrounds */
+
+  --muted-contrast: 215 16% 50%; /* Improved muted - 3:1 contrast for large text */
+  --muted-contrast-light: 215 20% 45%; /* Light muted for dark backgrounds */
+
   /* Status Colors with Guaranteed Contrast */
-  --success-contrast: 142 76% 28%;          /* Green - 4.5:1 contrast */
-  --warning-contrast: 38 92% 42%;           /* Orange - 4.5:1 contrast */
-  --danger-contrast: 0 84% 45%;             /* Red - 4.5:1 contrast */
-  
+  --success-contrast: 142 76% 28%; /* Green - 4.5:1 contrast */
+  --warning-contrast: 38 92% 42%; /* Orange - 4.5:1 contrast */
+  --danger-contrast: 0 84% 45%; /* Red - 4.5:1 contrast */
+
   /* Background/Forground pairs with guaranteed contrast */
   --primary-contrast-bg: 220 60% 20%;
   --primary-contrast-fg: 0 0% 100%;
-  
+
   --secondary-contrast-bg: 210 40% 96%;
   --secondary-contrast-fg: 222 47% 11%;
-  
+
   --success-contrast-bg: 142 76% 96%;
   --success-contrast-fg: 142 76% 28%;
-  
+
   --warning-contrast-bg: 38 92% 96%;
   --warning-contrast-fg: 38 92% 42%;
-  
+
   --danger-contrast-bg: 0 84% 96%;
   --danger-contrast-fg: 0 84% 45%;
-  
+
   /* Focus and Interaction */
   --focus-color: 217 91% 60%;
   --focus-ring-color: 217 91% 60%;
-  
+
   /* High Contrast Mode */
   --contrast-auto-high: 222 47% 8%;
   --contrast-auto-bg-high: 0 0% 100%;
 }
-
-
 
 /* 
  * Enhanced Focus States for Accessibility
@@ -365,12 +367,12 @@ label {
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
+
   /* Ensure links are distinguishable */
   a {
     text-decoration: underline;
   }
-  
+
   /* Hide decorative elements */
   .sr-only,
   .sr-skip-link,
@@ -417,12 +419,12 @@ button.touch-target,
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   /* Remove auto-scrolling */
   [data-autoscroll] {
     scroll-behavior: auto;
   }
-  
+
   /* Disable infinite animations */
   .animate-infinite,
   [class*="animate-pulse"],
@@ -442,14 +444,14 @@ button.touch-target,
     color: hsl(var(--contrast-auto-high)) !important;
     background-color: hsl(var(--contrast-auto-bg-high)) !important;
   }
-  
+
   /* Remove subtle gradients and shadows */
   .no-gradient,
   [class*="gradient"] {
     background-image: none !important;
     background-color: hsl(var(--contrast-auto-bg-high)) !important;
   }
-  
+
   /* Remove background images that might reduce contrast */
   .no-bg-image {
     background-image: none !important;
@@ -464,17 +466,35 @@ button.touch-target,
 @media (update: slow) {
   /* Use patterns and textures in addition to color */
   .color-pattern-success {
-    background-image: linear-gradient(45deg, transparent 48%, hsl(var(--success-contrast)) 48%, hsl(var(--success-contrast)) 52%, transparent 52%);
+    background-image: linear-gradient(
+      45deg,
+      transparent 48%,
+      hsl(var(--success-contrast)) 48%,
+      hsl(var(--success-contrast)) 52%,
+      transparent 52%
+    );
     background-size: 4px 4px;
   }
-  
+
   .color-pattern-warning {
-    background-image: linear-gradient(45deg, transparent 45%, hsl(var(--warning-contrast)) 45%, hsl(var(--warning-contrast)) 55%, transparent 55%);
+    background-image: linear-gradient(
+      45deg,
+      transparent 45%,
+      hsl(var(--warning-contrast)) 45%,
+      hsl(var(--warning-contrast)) 55%,
+      transparent 55%
+    );
     background-size: 6px 6px;
   }
-  
+
   .color-pattern-danger {
-    background-image: linear-gradient(45deg, transparent 40%, hsl(var(--danger-contrast)) 40%, hsl(var(--danger-contrast)) 60%, transparent 60%);
+    background-image: linear-gradient(
+      45deg,
+      transparent 40%,
+      hsl(var(--danger-contrast)) 40%,
+      hsl(var(--danger-contrast)) 60%,
+      transparent 60%
+    );
     background-size: 8px 8px;
   }
 }
@@ -510,13 +530,15 @@ button.touch-target,
 }
 
 @keyframes loading-dots {
-  0%, 20% {
+  0%,
+  20% {
     content: ".";
   }
   40% {
     content: "..";
   }
-  60%, 100% {
+  60%,
+  100% {
     content: "...";
   }
 }
@@ -532,7 +554,7 @@ button.touch-target,
     background-color: #ffffff !important;
     border-color: #000000 !important;
   }
-  
+
   .print-readable {
     font-size: 12pt !important;
     line-height: 1.4 !important;

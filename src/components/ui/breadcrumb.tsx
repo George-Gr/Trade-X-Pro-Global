@@ -113,25 +113,31 @@ const Breadcrumb = React.forwardRef<
 >(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
 Breadcrumb.displayName = "Breadcrumb";
 
-const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWithoutRef<"ol">>(
-  ({ className, ...props }, ref) => (
-    <ol
-      ref={ref}
-      className={cn(
-        "flex flex-wrap items-center wrap-break-word gap-4.5 sm:gap-4.5 text-sm text-muted-foreground",
-        className,
-      )}
-      {...props}
-    />
-  ),
-);
+const BreadcrumbList = React.forwardRef<
+  HTMLOListElement,
+  React.ComponentPropsWithoutRef<"ol">
+>(({ className, ...props }, ref) => (
+  <ol
+    ref={ref}
+    className={cn(
+      "flex flex-wrap items-center wrap-break-word gap-4.5 sm:gap-4.5 text-sm text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
 BreadcrumbList.displayName = "BreadcrumbList";
 
-const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<"li">>(
-  ({ className, ...props }, ref) => (
-    <li ref={ref} className={cn("inline-flex items-center gap-4.5", className)} {...props} />
-  ),
-);
+const BreadcrumbItem = React.forwardRef<
+  HTMLLIElement,
+  React.ComponentPropsWithoutRef<"li">
+>(({ className, ...props }, ref) => (
+  <li
+    ref={ref}
+    className={cn("inline-flex items-center gap-4.5", className)}
+    {...props}
+  />
+));
 BreadcrumbItem.displayName = "BreadcrumbItem";
 
 const BreadcrumbLink = React.forwardRef<
@@ -142,32 +148,51 @@ const BreadcrumbLink = React.forwardRef<
 >(({ asChild, className, ...props }, ref) => {
   const Comp = asChild ? Slot : "a";
 
-  return <Comp ref={ref} className={cn("hover:text-foreground transition-colors", className)} {...props} />;
+  return (
+    <Comp
+      ref={ref}
+      className={cn("hover:text-foreground transition-colors", className)}
+      {...props}
+    />
+  );
 });
 BreadcrumbLink.displayName = "BreadcrumbLink";
 
-const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<"span">>(
-  ({ className, ...props }, ref) => (
-    <span
-      ref={ref}
-      role="link"
-      aria-disabled="true"
-      aria-current="page"
-      className={cn("font-normal text-foreground", className)}
-      {...props}
-    />
-  ),
-);
+const BreadcrumbPage = React.forwardRef<
+  HTMLSpanElement,
+  React.ComponentPropsWithoutRef<"span">
+>(({ className, ...props }, ref) => (
+  <span
+    ref={ref}
+    role="link"
+    aria-disabled="true"
+    aria-current="page"
+    className={cn("font-normal text-foreground", className)}
+    {...props}
+  />
+));
 BreadcrumbPage.displayName = "BreadcrumbPage";
 
-const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
-  <li role="presentation" aria-hidden="true" className={cn("icon-sm", className)} {...props}>
+const BreadcrumbSeparator = ({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"li">) => (
+  <li
+    role="presentation"
+    aria-hidden="true"
+    className={cn("icon-sm", className)}
+    {...props}
+  >
     {children ?? <ChevronRight />}
   </li>
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 
-const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+const BreadcrumbEllipsis = ({
+  className,
+  ...props
+}: React.ComponentProps<"span">) => (
   <span
     role="presentation"
     aria-hidden="true"
@@ -192,25 +217,36 @@ export const AutoBreadcrumb = React.forwardRef<
   const navigate = useNavigate();
 
   // Generate breadcrumb items based on current path
-  const getBreadcrumbItems = (): (BreadcrumbItemConfig & { path?: string })[] => {
-    const pathSegments = location.pathname.split('/').filter((segment: string) => segment.length > 0);
+  const getBreadcrumbItems = (): (BreadcrumbItemConfig & {
+    path?: string;
+  })[] => {
+    const pathSegments = location.pathname
+      .split("/")
+      .filter((segment: string) => segment.length > 0);
     const items: (BreadcrumbItemConfig & { path?: string })[] = [];
 
     // Always start with Home
-    const homeConfig = (BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>)['/'];
-    items.push(homeConfig || { title: 'Home' });
+    const homeConfig = (
+      BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>
+    )["/"];
+    items.push(homeConfig || { title: "Home" });
 
-    let currentPath = '';
+    let currentPath = "";
 
     for (let i = 0; i < pathSegments.length; i++) {
       const segment = pathSegments[i];
       currentPath += `/${segment}`;
 
-      const config = (BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>)[currentPath];
+      const config = (
+        BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>
+      )[currentPath];
       if (config && !config.hideInBreadcrumb) {
         items.push({
           ...config,
-          path: i < pathSegments.length - 1 ? config.path || currentPath : undefined,
+          path:
+            i < pathSegments.length - 1
+              ? config.path || currentPath
+              : undefined,
         });
       }
     }
@@ -229,7 +265,9 @@ export const AutoBreadcrumb = React.forwardRef<
 
   // Truncate long breadcrumb titles
   const truncateTitle = (title: string, maxLength: number) => {
-    return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+    return title.length > maxLength
+      ? `${title.substring(0, maxLength)}...`
+      : title;
   };
 
   if (breadcrumbItems.length <= 1) {
@@ -239,7 +277,10 @@ export const AutoBreadcrumb = React.forwardRef<
   return (
     <Breadcrumb
       ref={ref}
-      className={cn("bg-muted/70 rounded-md px-3 py-2 text-foreground", className)}
+      className={cn(
+        "bg-muted/70 rounded-md px-3 py-2 text-foreground",
+        className,
+      )}
       {...props}
     >
       <BreadcrumbList>
@@ -248,31 +289,29 @@ export const AutoBreadcrumb = React.forwardRef<
           const isFirst = index === 0;
 
           return (
-            <BreadcrumbItem key={isFirst ? 'home' : item.path || item.title}>
+            <BreadcrumbItem key={isFirst ? "home" : item.path || item.title}>
               {isFirst ? (
                 // Home icon for first item
                 <BreadcrumbLink
-                  onClick={() => handleNavigation('/')}
+                  onClick={() => handleNavigation("/")}
                   className="flex items-center gap-1 text-foreground/90 hover:text-primary transition-colors font-medium"
                   aria-label="Go to Home"
                 >
                   {item.icon && <item.icon className="h-4 w-4" />}
                   {!item.icon && truncateTitle(item.title, truncateLength)}
                 </BreadcrumbLink>
+              ) : // Regular breadcrumb item
+              item.path ? (
+                <BreadcrumbLink
+                  onClick={() => handleNavigation(item.path)}
+                  className="text-foreground/90 hover:text-primary transition-colors font-medium cursor-pointer"
+                >
+                  {truncateTitle(item.title, truncateLength)}
+                </BreadcrumbLink>
               ) : (
-                // Regular breadcrumb item
-                item.path ? (
-                  <BreadcrumbLink
-                    onClick={() => handleNavigation(item.path)}
-                    className="text-foreground/90 hover:text-primary transition-colors font-medium cursor-pointer"
-                  >
-                    {truncateTitle(item.title, truncateLength)}
-                  </BreadcrumbLink>
-                ) : (
-                  <BreadcrumbPage className="text-foreground font-semibold">
-                    {truncateTitle(item.title, truncateLength)}
-                  </BreadcrumbPage>
-                )
+                <BreadcrumbPage className="text-foreground font-semibold">
+                  {truncateTitle(item.title, truncateLength)}
+                </BreadcrumbPage>
               )}
 
               {!isLast && <BreadcrumbSeparator className="opacity-70" />}

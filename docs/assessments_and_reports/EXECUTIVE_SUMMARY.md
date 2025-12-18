@@ -9,6 +9,7 @@
 ## 🎯 PROJECT STATUS AT A GLANCE
 
 ### What We Have ✅
+
 - **60% Code Base Ready**
   - React 18 frontend with all ShadCN UI components
   - Supabase backend infrastructure configured
@@ -18,6 +19,7 @@
   - Authentication system working (Supabase Auth)
 
 ### What We Need ❌
+
 - **40% Critical Features Missing**
   - Order execution logic incomplete
   - Position P&L calculations broken
@@ -28,6 +30,7 @@
   - Payment integration incomplete
 
 ### Current Progress
+
 ```
 MVP Features: ████░░░░░░ 30% Complete
 Extended Features: ░░░░░░░░░░ 0% Complete
@@ -39,25 +42,28 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ## 📊 GAP ANALYSIS
 
 ### Critical Gaps (Blocking Production - P0)
-| Gap | Impact | Fix Time | Owner |
-|-----|--------|----------|-------|
-| Order execution incomplete | Can't place orders | 40h | Backend |
-| Position P&L not calculating | Portfolio shows wrong values | 35h | Backend |
-| Realtime not connected | Stale data on frontend | 30h | Backend+Frontend |
-| Margin calls missing | Risk management broken | 30h | Backend |
-| **TOTAL CRITICAL** | **PROJECT BLOCKED** | **~135h** | |
+
+| Gap                          | Impact                       | Fix Time  | Owner            |
+| ---------------------------- | ---------------------------- | --------- | ---------------- |
+| Order execution incomplete   | Can't place orders           | 40h       | Backend          |
+| Position P&L not calculating | Portfolio shows wrong values | 35h       | Backend          |
+| Realtime not connected       | Stale data on frontend       | 30h       | Backend+Frontend |
+| Margin calls missing         | Risk management broken       | 30h       | Backend          |
+| **TOTAL CRITICAL**           | **PROJECT BLOCKED**          | **~135h** |                  |
 
 ### Major Gaps (MVP Needed - P1)
-| Gap | Impact | Fix Time | Owner |
-|-----|--------|----------|-------|
-| Trading panel incomplete | Users can't place orders from UI | 20h | Frontend |
-| Position table incomplete | No real-time position updates | 18h | Frontend |
-| KYC workflow incomplete | Can't onboard users | 35h | Backend+Frontend |
-| Risk dashboard missing | Users can't manage risk | 35h | Backend+Frontend |
-| Wallet/deposits broken | Can't fund accounts | 30h | Backend+Frontend |
-| **TOTAL MAJOR** | **MVP INCOMPLETE** | **~138h** | |
+
+| Gap                       | Impact                           | Fix Time  | Owner            |
+| ------------------------- | -------------------------------- | --------- | ---------------- |
+| Trading panel incomplete  | Users can't place orders from UI | 20h       | Frontend         |
+| Position table incomplete | No real-time position updates    | 18h       | Frontend         |
+| KYC workflow incomplete   | Can't onboard users              | 35h       | Backend+Frontend |
+| Risk dashboard missing    | Users can't manage risk          | 35h       | Backend+Frontend |
+| Wallet/deposits broken    | Can't fund accounts              | 30h       | Backend+Frontend |
+| **TOTAL MAJOR**           | **MVP INCOMPLETE**               | **~138h** |                  |
 
 ### Secondary Gaps (Phase 2 - P2/P3)
+
 - Copy trading system: 80h
 - Backtesting engine: 60h
 - AI analytics: 80h
@@ -70,6 +76,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ### Timeline to MVP (8 weeks, ~330 hours)
 
 **Week 1-2 (Order Execution)**
+
 - Complete order validation framework
 - Implement margin calculations
 - Build slippage simulation
@@ -78,6 +85,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - **Hours:** 50h | **Team:** 1-2 Backend Devs
 
 **Week 2-3 (Real-Time System)**
+
 - Build position P&L calculator
 - Implement position update function
 - Connect realtime subscriptions
@@ -86,6 +94,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - **Hours:** 50h | **Team:** 1-2 Backend Devs
 
 **Week 3-4 (Risk Management)**
+
 - Implement margin call detection
 - Build liquidation engine
 - Add order modification/cancellation
@@ -94,6 +103,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - **Hours:** 45h | **Team:** 1-2 Backend Devs
 
 **Week 4-5 (Trading UI)**
+
 - Complete trading panel form
 - Build positions/orders tables
 - Implement quick-close functionality
@@ -102,6 +112,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - **Hours:** 65h | **Team:** 2-3 Frontend Devs
 
 **Week 5-6 (Account Management)**
+
 - Complete KYC admin workflow
 - Build settings page
 - Implement wallet system
@@ -110,6 +121,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - **Hours:** 85h | **Team:** 2 Backend + 1 Frontend
 
 **Week 6-7 (Analytics & History)**
+
 - Build trading history queries
 - Implement performance analytics
 - Create risk dashboard
@@ -118,6 +130,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - **Hours:** 65h | **Team:** 1 Backend + 1 Frontend
 
 **Week 7-8 (Testing & Launch)**
+
 - End-to-end testing
 - Performance optimization
 - Security audit
@@ -132,9 +145,11 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ## 📋 THREE DOCS YOU NEED
 
 ### 1. **PROJECT_STATUS_AND_ROADMAP.md** (110 pages)
+
 **What:** Complete codebase analysis + PRD gap analysis  
 **Who Should Read:** Tech leads, architects  
 **Key Sections:**
+
 - Codebase structure analysis
 - Database schema status
 - Component status breakdown
@@ -147,9 +162,11 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ---
 
 ### 2. **IMPLEMENTATION_TASKS_DETAILED.md** (This document)
+
 **What:** Step-by-step implementation checklist for all tasks  
 **Who Should Read:** Developers (your daily reference)  
 **Key Sections:**
+
 - 16 detailed Phase 1 tasks
 - Specific file locations
 - Implementation steps
@@ -162,9 +179,11 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ---
 
 ### 3. **PRD.md** (Attached in context)
+
 **What:** Product requirements document  
 **Who Should Read:** Everyone (reference document)  
 **Key Sections:**
+
 - Product vision & goals
 - Feature specifications
 - User personas & workflows
@@ -180,6 +199,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ## 🎬 HOW TO GET STARTED (Next 1 Hour)
 
 ### For Project Manager
+
 1. [ ] Read this document (5 min)
 2. [ ] Read PROJECT_STATUS_AND_ROADMAP.md (30 min focus on Phases 1-2)
 3. [ ] Create task board with the 16 Phase 1 tasks
@@ -187,6 +207,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 5. [ ] Assign 3-4 developers to teams (Backend: 2, Frontend: 2)
 
 ### For Backend Developers
+
 1. [ ] Read this document (5 min)
 2. [ ] Read IMPLEMENTATION_TASKS_DETAILED.md (40 min)
 3. [ ] Review Tasks 1.1.1 - 1.1.6 (Order Execution)
@@ -196,6 +217,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 7. [ ] Open PR when code ready
 
 ### For Frontend Developers
+
 1. [ ] Read this document (5 min)
 2. [ ] Read IMPLEMENTATION_TASKS_DETAILED.md sections on Tasks 1.4.1-1.4.4 (30 min)
 3. [ ] Review current Trading.tsx page in codebase
@@ -209,6 +231,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 ## ⚡ CRITICAL SUCCESS FACTORS
 
 ### Must Haves for MVP
+
 1. **Order Execution:** Users MUST be able to place orders
 2. **Real-Time P&L:** Portfolio MUST update in real-time
 3. **Risk Management:** Margin calls MUST trigger automatically
@@ -218,22 +241,24 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 7. **Reliability:** Platform MUST have 99.5% uptime
 
 ### Estimated Effort
-| Item | Hours | Days | Team |
-|------|-------|------|------|
-| Order Execution (1.1) | 50 | 6-7 | 1 Backend Dev |
-| Real-Time P&L (1.2) | 50 | 6-7 | 1 Backend Dev |
-| Risk Mgmt (1.3) | 30 | 4 | 1 Backend Dev |
-| Trading UI (1.4) | 65 | 8-9 | 2 Frontend Devs |
-| KYC & Settings (2.1) | 55 | 7 | 1 Backend + 1 Frontend |
-| Analytics (2.2) | 55 | 7 | 1 Backend + 1 Frontend |
-| Testing & Launch (2.3) | 40 | 5 | Whole team |
-| **TOTAL MVP** | **345 hours** | **8 weeks** | **3-4 devs** |
+
+| Item                   | Hours         | Days        | Team                   |
+| ---------------------- | ------------- | ----------- | ---------------------- |
+| Order Execution (1.1)  | 50            | 6-7         | 1 Backend Dev          |
+| Real-Time P&L (1.2)    | 50            | 6-7         | 1 Backend Dev          |
+| Risk Mgmt (1.3)        | 30            | 4           | 1 Backend Dev          |
+| Trading UI (1.4)       | 65            | 8-9         | 2 Frontend Devs        |
+| KYC & Settings (2.1)   | 55            | 7           | 1 Backend + 1 Frontend |
+| Analytics (2.2)        | 55            | 7           | 1 Backend + 1 Frontend |
+| Testing & Launch (2.3) | 40            | 5           | Whole team             |
+| **TOTAL MVP**          | **345 hours** | **8 weeks** | **3-4 devs**           |
 
 ---
 
 ## 🔍 WHAT TO LOOK FOR IN CODE REVIEWS
 
 ### For Backend (Deno Edge Functions)
+
 - ✅ Input validation using Zod
 - ✅ Error handling with proper HTTP status codes
 - ✅ Atomic transactions (no partial state)
@@ -243,6 +268,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 - ❌ No hardcoded values (use env vars or database config)
 
 ### For Frontend (React Components)
+
 - ✅ Type safety (no `any` types)
 - ✅ Proper error handling with user-friendly messages
 - ✅ Loading states while async operations
@@ -254,7 +280,7 @@ Total Project: ████░░░░░░░░░░░░░░░░░�
 
 ---
 
-## 📞 QUESTIONS? 
+## 📞 QUESTIONS?
 
 **Common Q&A:**
 
@@ -281,6 +307,7 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 ## 🏆 SUCCESS METRICS
 
 ### By Week 4 (50% Complete)
+
 - [ ] Order execution working end-to-end
 - [ ] Position P&L calculating correctly
 - [ ] Margin calls triggering
@@ -288,6 +315,7 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 - [ ] No critical bugs in staging
 
 ### By Week 6 (75% Complete)
+
 - [ ] All UI components working
 - [ ] KYC workflow complete
 - [ ] Wallet/deposits working
@@ -296,6 +324,7 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 - [ ] 100+ test users trading
 
 ### By Week 8 (100% Complete - MVP Ready)
+
 - [ ] All features working
 - [ ] All tests passing (>80% coverage)
 - [ ] Performance targets met
@@ -308,12 +337,14 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 ## 📅 NEXT STEPS
 
 ### This Week (Nov 12-16)
+
 - [ ] **Today:** Read this doc + PROJECT_STATUS_AND_ROADMAP.md
 - [ ] **Tuesday:** Team kickoff meeting (1 hour)
 - [ ] **Tuesday:** Developers claim first tasks
 - [ ] **Wed-Fri:** Start implementation (all devs shipping code)
 
 ### First Sprint (Nov 16-22)
+
 - [ ] Finish Tasks 1.1.1 - 1.1.3 (Order validation, margin, slippage)
 - [ ] Start Task 1.1.4 (Order execution logic)
 - [ ] Daily standups (15 min)
@@ -321,6 +352,7 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 - [ ] First code reviews
 
 ### By End of Week 2 (Nov 23-29)
+
 - [ ] ✅ Order execution working
 - [ ] ✅ Users can place orders
 - [ ] ✅ Orders appear in order history
@@ -341,16 +373,19 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 ## 🎓 HELPFUL RESOURCES
 
 ### Supabase
+
 - [Edge Functions Docs](https://supabase.com/docs/guides/functions)
 - [Realtime Docs](https://supabase.com/docs/guides/realtime)
 - [PostgreSQL RLS Guide](https://supabase.com/docs/learn/auth-deep-dive/row-level-security)
 
 ### React
+
 - [React Hook Form](https://react-hook-form.com/) (our form library)
 - [Zod](https://zod.dev/) (validation library)
 - [TanStack Query](https://tanstack.com/query/) (data fetching)
 
 ### TypeScript
+
 - [Handbook](https://www.typescriptlang.org/docs/)
 - [Type Safety Guide](https://www.typescriptlang.org/docs/handbook/advanced-types.html)
 
@@ -359,6 +394,7 @@ A: NO. Everything goes to staging first (Week 7). Production launch is Week 8 on
 ## ✅ SIGN-OFF CHECKLIST
 
 Before starting any work:
+
 - [ ] I've read this document
 - [ ] I've read PROJECT_STATUS_AND_ROADMAP.md
 - [ ] I understand my assigned tasks

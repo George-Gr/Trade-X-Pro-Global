@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Typography Scale for TradePro
- * 
+ *
  * Hierarchy levels (defined in src/styles/typography.css):
  * H1 (32px, weight 700): Page titles, major sections
  * H2 (24px, weight 600): Main section headers
@@ -54,11 +54,7 @@ export const H3 = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn("typography-h3", className)}
-    {...props}
-  />
+  <h3 ref={ref} className={cn("typography-h3", className)} {...props} />
 ));
 H3.displayName = "H3";
 
@@ -70,11 +66,7 @@ export const H4 = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h4
-    ref={ref}
-    className={cn("typography-h4", className)}
-    {...props}
-  />
+  <h4 ref={ref} className={cn("typography-h4", className)} {...props} />
 ));
 H4.displayName = "H4";
 
@@ -120,7 +112,10 @@ export const BodySmall = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("typography-small leading-relaxed text-muted-foreground", className)}
+    className={cn(
+      "typography-small leading-relaxed text-muted-foreground",
+      className,
+    )}
     {...props}
   />
 ));
@@ -134,11 +129,7 @@ export const Label = React.forwardRef<
   HTMLLabelElement,
   React.LabelHTMLAttributes<HTMLLabelElement>
 >(({ className, ...props }, ref) => (
-  <label
-    ref={ref}
-    className={cn("typography-label", className)}
-    {...props}
-  />
+  <label ref={ref} className={cn("typography-label", className)} {...props} />
 ));
 Label.displayName = "Label";
 
@@ -159,9 +150,4 @@ export const Caption = React.forwardRef<
 Caption.displayName = "Caption";
 
 // Export all components
-export {
-  H1 as Heading1,
-  H2 as Heading2,
-  H3 as Heading3,
-  H4 as Heading4,
-};
+export { H1 as Heading1, H2 as Heading2, H3 as Heading3, H4 as Heading4 };

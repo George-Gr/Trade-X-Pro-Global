@@ -23,23 +23,23 @@
 
 ### During a Sentry Alert
 
-| Action | Command / Link |
-|--------|---------|
-| Access Sentry | https://sentry.io/organizations/[your-org]/issues/ |
-| View Release Info | Sentry → Issues → [Issue] → Releases tab |
-| Check Deploy History | GitHub → Actions tab |
+| Action               | Command / Link                                     |
+| -------------------- | -------------------------------------------------- |
+| Access Sentry        | https://sentry.io/organizations/[your-org]/issues/ |
+| View Release Info    | Sentry → Issues → [Issue] → Releases tab           |
+| Check Deploy History | GitHub → Actions tab                               |
 | Rollback (if needed) | `git revert [commit-sha]` + `git push origin main` |
-| Check Slack | #[engineering-channel] for alert message |
-| Incident Channel | Create or join #incident-[date] in Slack |
+| Check Slack          | #[engineering-channel] for alert message           |
+| Incident Channel     | Create or join #incident-[date] in Slack           |
 
 ### SLA Response Times
 
-| Severity | Response | Resolution Target |
-|----------|----------|-------------------|
-| Critical (P1) | 15 min | 1 hour |
-| High (P2) | 30 min | 4 hours |
-| Medium (P3) | 1 hour | 1 business day |
-| Low (P4) | Next business day | Best effort |
+| Severity      | Response          | Resolution Target |
+| ------------- | ----------------- | ----------------- |
+| Critical (P1) | 15 min            | 1 hour            |
+| High (P2)     | 30 min            | 4 hours           |
+| Medium (P3)   | 1 hour            | 1 business day    |
+| Low (P4)      | Next business day | Best effort       |
 
 ---
 
@@ -61,6 +61,7 @@ Example Slack alert:
 ```
 
 **Acknowledge receipt in Slack:**
+
 ```
 :eyes: Investigating...
 ```
@@ -117,10 +118,11 @@ LOW (P4):
    - **Breadcrumbs:** User actions before error (from Sentry breadcrumbs)
 
 3. **Check Recent Changes:**
+
    ```bash
    # List last 5 commits to main
    git log --oneline -5 origin/main
-   
+
    # View the commit that introduced the error (compare deploy time)
    git show [commit-sha]
    ```
@@ -180,6 +182,7 @@ git push origin main
 ```
 
 **Post-Rollback Steps:**
+
 1. Update Slack: `Rolled back [commit]. Issue should resolve in ~2 min. Investigating root cause.`
 2. Create a bug ticket (priority: high)
 3. Schedule post-incident review (see Step 7)
@@ -214,6 +217,7 @@ git push origin hotfix/issue-description
 ### Step 7: Communicate Status
 
 **During investigation:**
+
 ```
 🔍 Investigating Sentry alert: [Issue Name]
    Severity: P[1-4]
@@ -223,6 +227,7 @@ git push origin hotfix/issue-description
 ```
 
 **If rollback executed:**
+
 ```
 ⏮️ Rolled back commit [short-sha]
    Status: Monitoring error rate
@@ -231,6 +236,7 @@ git push origin hotfix/issue-description
 ```
 
 **When resolved:**
+
 ```
 ✅ Resolved: [Issue Name]
    Solution: [Fix/Rollback/Monitoring]
@@ -261,6 +267,7 @@ git push origin hotfix/issue-description
 ### P1 (Critical) — Immediate Action
 
 **Triggers:**
+
 - App crash on load (white screen for all users)
 - Authentication broken (all users locked out)
 - Data loss (balances/positions disappearing)
@@ -268,12 +275,14 @@ git push origin hotfix/issue-description
 - Trading platform completely unavailable
 
 **Response:**
+
 - Page on-call engineer immediately
 - Create #incident channel
 - Post mortem within 24 hours
 - Max allowed downtime: 15 minutes
 
 **Example:**
+
 ```
 [Sentry] 🚨 CRITICAL: TypeError: Cannot read property 'user' of undefined
   Affects: 100% of users
@@ -285,18 +294,21 @@ git push origin hotfix/issue-description
 ### P2 (High) — Urgent Response
 
 **Triggers:**
+
 - Feature broken for >10% of users (e.g., trading not working for 1000 users)
 - Performance degradation >50% (page takes 30s instead of 5s)
 - Database connectivity issues
 - Payment processing failing intermittently
 
 **Response:**
+
 - Notify team lead within 30 minutes
 - Decide fix vs. rollback within 1 hour
 - Target resolution: 4 hours
 - Daily status update until resolved
 
 **Example:**
+
 ```
 [Sentry] ⚠️ HIGH: "TypeError: prices is undefined" in OrderExecution
   Affects: ~500 users (5%)
@@ -308,18 +320,21 @@ git push origin hotfix/issue-description
 ### P3 (Medium) — Standard Response
 
 **Triggers:**
+
 - Feature broken for <10% of users
 - Intermittent errors (self-resolve)
 - UI glitches (visual only, functional)
 - Non-critical backend issues
 
 **Response:**
+
 - Add to sprint backlog
 - Prioritize in next standup
 - Target resolution: 1 business day
 - No escalation required
 
 **Example:**
+
 ```
 [Sentry] ℹ️ MEDIUM: "Margin level calculation off by 0.001%"
   Affects: Unknown (rare edge case)
@@ -331,12 +346,14 @@ git push origin hotfix/issue-description
 ### P4 (Low) — Backlog
 
 **Triggers:**
+
 - Development/staging errors
 - Deprecated API warnings
 - Logging infrastructure errors
 - Test failures
 
 **Response:**
+
 - Create ticket for future cleanup
 - No immediate action
 - Review in tech debt sessions
@@ -348,11 +365,13 @@ git push origin hotfix/issue-description
 ### Issue: "TypeError: Cannot read property X of undefined"
 
 **Root Causes:**
+
 1. Missing null check (most common)
 2. API response changed format
 3. User data not loaded yet (race condition)
 
 **Investigation:**
+
 ```bash
 # 1. Get line number from stack trace
 # 2. Check the file in Sentry (breadcrumbs show context)
@@ -367,6 +386,7 @@ grep -n "if (.*\..*) {" src/path/to/file.tsx
 ```
 
 **Fix Pattern:**
+
 ```typescript
 // ❌ BEFORE: Assumes data exists
 const value = data.property.nested.value;
@@ -380,11 +400,13 @@ const value = data?.property?.nested?.value || defaultValue;
 ### Issue: "ReferenceError: X is not defined"
 
 **Root Causes:**
+
 1. Variable scope issue
 2. Missing import statement
 3. Async/await timing issue
 
 **Quick Fix:**
+
 ```bash
 # Find where variable is used
 grep -rn "variableName" src/
@@ -398,11 +420,13 @@ grep -n "import.*variableName" src/path/to/file.tsx
 ### Issue: "Error: Insufficient balance"
 
 **Root Causes:**
+
 1. Margin calculation error
 2. Commission not deducted correctly
 3. Duplicate order execution
 
 **Investigation:**
+
 ```
 1. Check Sentry breadcrumbs for user action sequence
 2. Look at order details: amount, commission, balance
@@ -415,11 +439,13 @@ grep -n "import.*variableName" src/path/to/file.tsx
 ### Issue: "Error: Network timeout (Finnhub API)"
 
 **Root Causes:**
+
 1. Finnhub API down
 2. Network connectivity issue
 3. Rate limiting exceeded
 
 **Quick Check:**
+
 ```bash
 # Check if Finnhub is reachable
 curl -s "https://finnhub.io/api/v1/quote?symbol=EURUSD&token=[KEY]"
@@ -429,6 +455,7 @@ grep -i "rate" sentry-error-breadcrumbs
 ```
 
 **Workaround:**
+
 - Alert users that real-time prices unavailable
 - Use cached/fallback prices
 - No user action needed (system handles gracefully)
@@ -440,12 +467,14 @@ grep -i "rate" sentry-error-breadcrumbs
 ### When to Rollback
 
 **Rollback immediately if:**
+
 - P1 severity and root cause unclear
 - Fix timeline >30 minutes
 - Multiple users reporting complete feature loss
 - Data integrity at risk
 
 **Rollback can wait if:**
+
 - Fix is simple and quick (<15 min)
 - Issue affects <1% of users
 - System already implemented a workaround
@@ -477,6 +506,7 @@ git push origin main
 ### Post-Rollback
 
 1. **Notify team:**
+
    ```
    Rolled back [commit] due to [reason]
    Issue: [Sentry link]
@@ -643,13 +673,13 @@ P4 (Low):
 
 ## Contact Information
 
-| Role | Slack | On-Call |
-|------|-------|---------|
-| Team Lead | @team-lead | [PagerDuty link] |
-| DevOps | @devops | [PagerDuty link] |
-| Database | @db-admin | [PagerDuty link] |
-| Frontend | @frontend-lead | [PagerDuty link] |
-| Backend | @backend-lead | [PagerDuty link] |
+| Role      | Slack          | On-Call          |
+| --------- | -------------- | ---------------- |
+| Team Lead | @team-lead     | [PagerDuty link] |
+| DevOps    | @devops        | [PagerDuty link] |
+| Database  | @db-admin      | [PagerDuty link] |
+| Frontend  | @frontend-lead | [PagerDuty link] |
+| Backend   | @backend-lead  | [PagerDuty link] |
 
 ---
 

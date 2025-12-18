@@ -14,8 +14,6 @@
   outline-offset: 2px;
 }
 
-
-
 /* Enhanced focus ring for critical interactive elements */
 .focus-ring {
   outline: none;
@@ -23,8 +21,9 @@
 
 .focus-ring:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--background)),
-              0 0 0 4px hsl(var(--ring));
+  box-shadow:
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--ring));
 }
 
 .focus-ring-inset {
@@ -42,8 +41,9 @@
 
 .focus-ring-sm:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px hsl(var(--background)),
-              0 0 0 2px hsl(var(--ring));
+  box-shadow:
+    0 0 0 1px hsl(var(--background)),
+    0 0 0 2px hsl(var(--ring));
 }
 
 .focus-ring-critical {
@@ -52,8 +52,9 @@
 
 .focus-ring-critical:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--background)),
-              0 0 0 4px hsl(var(--ring));
+  box-shadow:
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--ring));
 }
 
 /* Skip to main content link (visible on focus) */
@@ -84,7 +85,7 @@
 }
 
 .tab-nav-indicator:focus-visible::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -177,9 +178,9 @@ label {
 }
 
 label[required]::after {
-  content: ' *';
+  content: " *";
   color: hsl(var(--destructive));
-  aria-label: 'required';
+  aria-label: "required";
 }
 
 /* Form field error states with accessibility */
@@ -211,7 +212,7 @@ select[aria-invalid="true"] {
 }
 
 .form-error-message::before {
-  content: '⚠';
+  content: "⚠";
   flex-shrink: 0;
   font-weight: 600;
 }
@@ -320,12 +321,14 @@ h1 ~ h1 {
    ========================================================================== */
 
 /* Proper list markup with semantics */
-ul, ol {
+ul,
+ol {
   margin-bottom: 16px;
   padding-left: 24px;
 }
 
-ul > li, ol > li {
+ul > li,
+ol > li {
   margin-bottom: 8px;
   line-height: 1.6;
 }
@@ -340,7 +343,10 @@ ol {
 }
 
 /* Nested lists */
-ul ul, ol ol, ul ol, ol ul {
+ul ul,
+ol ol,
+ul ol,
+ol ul {
   margin-top: 8px;
   padding-left: 32px;
 }
@@ -380,22 +386,20 @@ a:has(> svg:only-child):not(:has(> span)) {
 /* Ensure sufficient contrast in light mode */
 :root {
   /* Text colors with sufficient contrast */
-  --text-primary: 222 84% 5%;          /* 18:1 contrast on white */
-  --text-secondary: 220 9% 27%;        /* 9.5:1 contrast on white */
-  --text-muted: 220 9% 58%;            /* 4.5:1 contrast on white */
+  --text-primary: 222 84% 5%; /* 18:1 contrast on white */
+  --text-secondary: 220 9% 27%; /* 9.5:1 contrast on white */
+  --text-muted: 220 9% 58%; /* 4.5:1 contrast on white */
 }
-
-
 
 /* High contrast mode support */
 @media (prefers-contrast: more) {
   :root {
-    --text-primary: 222 84% 1%;        /* Pure black */
-    --text-secondary: 220 9% 20%;      /* Darker */
+    --text-primary: 222 84% 1%; /* Pure black */
+    --text-secondary: 220 9% 20%; /* Darker */
   }
 
   .dark {
-    --text-primary: 220 13% 100%;      /* Pure white */
+    --text-primary: 220 13% 100%; /* Pure white */
   }
 
   a {
@@ -429,7 +433,7 @@ a:has(> svg:only-child):not(:has(> span)) {
 }
 
 .status-success::before {
-  content: '✓ ';
+  content: "✓ ";
 }
 
 .status-warning {
@@ -437,7 +441,7 @@ a:has(> svg:only-child):not(:has(> span)) {
 }
 
 .status-warning::before {
-  content: '⚠ ';
+  content: "⚠ ";
 }
 
 .status-error {
@@ -445,7 +449,7 @@ a:has(> svg:only-child):not(:has(> span)) {
 }
 
 .status-error::before {
-  content: '✗ ';
+  content: "✗ ";
 }
 
 /* ============================================================================
@@ -488,14 +492,20 @@ a:has(> svg:only-child):not(:has(> span)) {
    ========================================================================== */
 
 /* Minimum 44x44px touch targets for mobile */
-button, a, input[type="checkbox"], input[type="radio"] {
+button,
+a,
+input[type="checkbox"],
+input[type="radio"] {
   min-height: 44px;
   min-width: 44px;
 }
 
 /* Reset for desktop */
 @media (min-width: 768px) {
-  button, a, input[type="checkbox"], input[type="radio"] {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"] {
     min-height: auto;
     min-width: auto;
   }
@@ -621,5 +631,3 @@ button, a, input[type="checkbox"], input[type="radio"] {
 .focus-test:focus-visible {
   outline: 3px dashed green;
 }
-
-

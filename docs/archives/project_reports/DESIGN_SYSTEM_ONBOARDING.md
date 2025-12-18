@@ -29,6 +29,7 @@ This guide will help you get up to speed with our design system quickly and effi
 ### What is the TradeX Pro Design System?
 
 Our design system is the **single source of truth** for:
+
 - 🎨 **Colors** - Brand colors, semantic colors, and themes
 - 🔤 **Typography** - Font sizes, line heights, and font weights
 - 📏 **Spacing** - Consistent spacing using a 4px/8px grid
@@ -41,7 +42,7 @@ Our design system is the **single source of truth** for:
 ✅ **Accessibility** - WCAG 2.1 Level AA compliance by default  
 ✅ **Performance** - Optimized CSS and component patterns  
 ✅ **Developer Experience** - Clear patterns and excellent tooling  
-✅ **Maintainability** - Centralized design decisions  
+✅ **Maintainability** - Centralized design decisions
 
 ### Your First Component
 
@@ -74,6 +75,7 @@ node scripts/setup-quality-gates.js
 ```
 
 Expected output:
+
 ```
 🔍 Validating design system compliance v2.0...
 
@@ -85,6 +87,7 @@ Found 150 TypeScript files and 12 CSS files
 ### Step 2: Configure Your Editor
 
 #### VS Code Extensions (Recommended)
+
 ```json
 {
   "recommendations": [
@@ -97,6 +100,7 @@ Found 150 TypeScript files and 12 CSS files
 ```
 
 #### Editor Settings (.vscode/settings.json)
+
 ```json
 {
   "editor.formatOnSave": true,
@@ -138,6 +142,7 @@ node scripts/setup-quality-gates.js --ci --strict
 Design tokens are the **atomic building blocks** of our design system.
 
 #### Color Tokens
+
 ```css
 /* Primary brand colors */
 --primary: hsl(210 100% 50%);
@@ -155,30 +160,33 @@ Design tokens are the **atomic building blocks** of our design system.
 ```
 
 #### Typography Scale
+
 ```css
 /* Font sizes - aligned to 4px grid */
---font-size-xs: 12px;   /* 3 × 4px */
---font-size-sm: 14px;   /* 3.5 × 4px */
+--font-size-xs: 12px; /* 3 × 4px */
+--font-size-sm: 14px; /* 3.5 × 4px */
 --font-size-base: 16px; /* 4 × 4px */
---font-size-lg: 18px;   /* 4.5 × 4px */
---font-size-xl: 20px;   /* 5 × 4px */
---font-size-2xl: 24px;  /* 6 × 4px */
+--font-size-lg: 18px; /* 4.5 × 4px */
+--font-size-xl: 20px; /* 5 × 4px */
+--font-size-2xl: 24px; /* 6 × 4px */
 ```
 
 #### Spacing Scale
+
 ```css
 /* 4px/8px grid system */
---spacing-1: 4px;    /* 1 × 4px */
---spacing-2: 8px;    /* 2 × 4px */
---spacing-3: 12px;   /* 3 × 4px */
---spacing-4: 16px;   /* 4 × 4px */
---spacing-6: 24px;   /* 6 × 4px */
---spacing-8: 32px;   /* 8 × 4px */
+--spacing-1: 4px; /* 1 × 4px */
+--spacing-2: 8px; /* 2 × 4px */
+--spacing-3: 12px; /* 3 × 4px */
+--spacing-4: 16px; /* 4 × 4px */
+--spacing-6: 24px; /* 6 × 4px */
+--spacing-8: 32px; /* 8 × 4px */
 ```
 
 ### Component Architecture
 
 #### Class Variance Authority (CVA)
+
 We use CVA for type-safe component variants:
 
 ```typescript
@@ -233,6 +241,7 @@ export function Button({ className, variant, size, loading, children, ...props }
 Every component must be accessible by default:
 
 #### Keyboard Navigation
+
 ```typescript
 // All interactive elements must be keyboard accessible
 <button
@@ -249,6 +258,7 @@ Every component must be accessible by default:
 ```
 
 #### Screen Reader Support
+
 ```typescript
 // Provide clear labels and descriptions
 <button aria-label="Submit form" aria-describedby="submit-help">
@@ -260,6 +270,7 @@ Every component must be accessible by default:
 ```
 
 #### Focus Management
+
 ```typescript
 // Always visible focus indicators
 .focus-visible {
@@ -275,6 +286,7 @@ Every component must be accessible by default:
 ### Adding a New Component
 
 #### 1. Create Component Structure
+
 ```
 src/components/ui/
 └── new-component/
@@ -286,6 +298,7 @@ src/components/ui/
 ```
 
 #### 2. Follow Component Template
+
 ```typescript
 // NewComponent.tsx
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -355,6 +368,7 @@ export function NewComponent({
 ```
 
 #### 3. Test Your Component
+
 ```typescript
 // NewComponent.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -369,7 +383,7 @@ describe('NewComponent', () => {
   it('handles click events', () => {
     const handleClick = jest.fn();
     render(<NewComponent onClick={handleClick}>Click me</NewComponent>);
-    
+
     fireEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -384,6 +398,7 @@ describe('NewComponent', () => {
 ### Adding a New Color
 
 #### 1. Define Color Token
+
 ```css
 /* In your component CSS or global styles */
 :root {
@@ -400,17 +415,19 @@ describe('NewComponent', () => {
 ```
 
 #### 2. Test Accessibility
+
 ```typescript
 // Verify contrast ratios
 const colorContrastTests = [
-  { fg: '--new-color', bg: '--background', expected: '≥4.5:1' },
-  { fg: '--foreground', bg: '--new-color', expected: '≥4.5:1' },
+  { fg: "--new-color", bg: "--background", expected: "≥4.5:1" },
+  { fg: "--foreground", bg: "--new-color", expected: "≥4.5:1" },
 ];
 
-console.log('Color accessibility verified ✅');
+console.log("Color accessibility verified ✅");
 ```
 
 #### 3. Use in Components
+
 ```typescript
 // ✅ Correct usage
 <div className="bg-[var(--new-color)] text-[var(--new-color-foreground)]">
@@ -426,6 +443,7 @@ console.log('Color accessibility verified ✅');
 ### Adding New Spacing
 
 #### 1. Follow Grid System
+
 ```css
 /* Add to global styles or tailwind config */
 :root {
@@ -436,22 +454,24 @@ console.log('Color accessibility verified ✅');
 ```
 
 #### 2. Extend Tailwind (if needed)
+
 ```typescript
 // tailwind.config.ts
 module.exports = {
   theme: {
     extend: {
       spacing: {
-        '7': '28px',
-        '9': '36px', 
-        '11': '44px',
-      }
-    }
-  }
-}
+        "7": "28px",
+        "9": "36px",
+        "11": "44px",
+      },
+    },
+  },
+};
 ```
 
 #### 3. Use in Components
+
 ```typescript
 // ✅ Correct usage
 <div className="p-7 space-y-7"> {/* 28px padding and gaps */}
@@ -467,6 +487,7 @@ module.exports = {
 #### Common Violations and Fixes
 
 ##### Hardcoded Colors
+
 ```typescript
 // ❌ Violation
 <div style={{ backgroundColor: '#3b82f6' }}>Content</div>
@@ -476,6 +497,7 @@ module.exports = {
 ```
 
 ##### Off-Scale Typography
+
 ```typescript
 // ❌ Violation
 <p style={{ fontSize: '15px' }}>Text</p>
@@ -486,6 +508,7 @@ module.exports = {
 ```
 
 ##### Off-Grid Spacing
+
 ```typescript
 // ❌ Violation
 <div style={{ padding: '13px' }}>Content</div>
@@ -501,17 +524,18 @@ module.exports = {
 
 ### Essential Documentation
 
-| Document | Purpose | Read First |
-|----------|---------|------------|
-| **[DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md)** | Core design system reference | ✅ Start here |
-| **[QUALITY_GATES.md](./docs/QUALITY_GATES.md)** | Quality standards and validation | ✅ Important |
-| **[CONTRIBUTING_DESIGN_SYSTEM.md](./CONTRIBUTING_DESIGN_SYSTEM.md)** | Contributing guidelines | 🔄 When contributing |
-| **[DESIGN_SYSTEM_MAINTENANCE.md](./DESIGN_SYSTEM_MAINTENANCE.md)** | Governance and processes | 🔄 For maintainers |
-| **[MICRO_INTERACTIONS_REFERENCE.md](./docs/MICRO_INTERACTIONS_REFERENCE.md)** | Animation patterns | 🔄 For animations |
+| Document                                                                      | Purpose                          | Read First           |
+| ----------------------------------------------------------------------------- | -------------------------------- | -------------------- |
+| **[DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md)**                               | Core design system reference     | ✅ Start here        |
+| **[QUALITY_GATES.md](./docs/QUALITY_GATES.md)**                               | Quality standards and validation | ✅ Important         |
+| **[CONTRIBUTING_DESIGN_SYSTEM.md](./CONTRIBUTING_DESIGN_SYSTEM.md)**          | Contributing guidelines          | 🔄 When contributing |
+| **[DESIGN_SYSTEM_MAINTENANCE.md](./DESIGN_SYSTEM_MAINTENANCE.md)**            | Governance and processes         | 🔄 For maintainers   |
+| **[MICRO_INTERACTIONS_REFERENCE.md](./docs/MICRO_INTERACTIONS_REFERENCE.md)** | Animation patterns               | 🔄 For animations    |
 
 ### Development Tools
 
 #### Design System Validation
+
 ```bash
 # Quick validation
 node scripts/setup-quality-gates.js
@@ -524,6 +548,7 @@ node scripts/setup-quality-gates.js --baseline design-system-baseline.json
 ```
 
 #### Testing Commands
+
 ```bash
 # Run component tests
 npm test
@@ -541,65 +566,148 @@ npm run type:strict
 ### CSS Utilities Reference
 
 #### Spacing Classes
+
 ```css
 /* Margin */
-.m-1 { margin: 4px; }
-.m-2 { margin: 8px; }
-.m-3 { margin: 12px; }
-.m-4 { margin: 16px; }
-.m-6 { margin: 24px; }
-.m-8 { margin: 32px; }
+.m-1 {
+  margin: 4px;
+}
+.m-2 {
+  margin: 8px;
+}
+.m-3 {
+  margin: 12px;
+}
+.m-4 {
+  margin: 16px;
+}
+.m-6 {
+  margin: 24px;
+}
+.m-8 {
+  margin: 32px;
+}
 
 /* Padding */
-.p-1 { padding: 4px; }
-.p-2 { padding: 8px; }
-.p-3 { padding: 12px; }
-.p-4 { padding: 16px; }
-.p-6 { padding: 24px; }
-.p-8 { padding: 32px; }
+.p-1 {
+  padding: 4px;
+}
+.p-2 {
+  padding: 8px;
+}
+.p-3 {
+  padding: 12px;
+}
+.p-4 {
+  padding: 16px;
+}
+.p-6 {
+  padding: 24px;
+}
+.p-8 {
+  padding: 32px;
+}
 
 /* Gap */
-.gap-1 { gap: 4px; }
-.gap-2 { gap: 8px; }
-.gap-3 { gap: 12px; }
-.gap-4 { gap: 16px; }
-.gap-6 { gap: 24px; }
-.gap-8 { gap: 32px; }
+.gap-1 {
+  gap: 4px;
+}
+.gap-2 {
+  gap: 8px;
+}
+.gap-3 {
+  gap: 12px;
+}
+.gap-4 {
+  gap: 16px;
+}
+.gap-6 {
+  gap: 24px;
+}
+.gap-8 {
+  gap: 32px;
+}
 ```
 
 #### Typography Classes
+
 ```css
 /* Font sizes */
-.text-xs { font-size: 12px; line-height: 16px; }    /* 3 × 4px */
-.text-sm { font-size: 14px; line-height: 20px; }    /* 3.5 × 4px */
-.text-base { font-size: 16px; line-height: 24px; }  /* 4 × 4px */
-.text-lg { font-size: 18px; line-height: 28px; }    /* 4.5 × 4px */
-.text-xl { font-size: 20px; line-height: 28px; }    /* 5 × 4px */
-.text-2xl { font-size: 24px; line-height: 32px; }   /* 6 × 4px */
+.text-xs {
+  font-size: 12px;
+  line-height: 16px;
+} /* 3 × 4px */
+.text-sm {
+  font-size: 14px;
+  line-height: 20px;
+} /* 3.5 × 4px */
+.text-base {
+  font-size: 16px;
+  line-height: 24px;
+} /* 4 × 4px */
+.text-lg {
+  font-size: 18px;
+  line-height: 28px;
+} /* 4.5 × 4px */
+.text-xl {
+  font-size: 20px;
+  line-height: 28px;
+} /* 5 × 4px */
+.text-2xl {
+  font-size: 24px;
+  line-height: 32px;
+} /* 6 × 4px */
 
 /* Font weights */
-.font-normal { font-weight: 400; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
+.font-normal {
+  font-weight: 400;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.font-bold {
+  font-weight: 700;
+}
 ```
 
 #### Color Classes
+
 ```css
 /* Primary colors */
-.text-primary { color: hsl(var(--primary)); }
-.bg-primary { background-color: hsl(var(--primary)); }
-.border-primary { border-color: hsl(var(--primary)); }
+.text-primary {
+  color: hsl(var(--primary));
+}
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+.border-primary {
+  border-color: hsl(var(--primary));
+}
 
 /* Semantic colors */
-.text-success { color: hsl(var(--success)); }
-.text-warning { color: hsl(var(--warning)); }
-.text-destructive { color: hsl(var(--destructive)); }
+.text-success {
+  color: hsl(var(--success));
+}
+.text-warning {
+  color: hsl(var(--warning));
+}
+.text-destructive {
+  color: hsl(var(--destructive));
+}
 
 /* UI colors */
-.text-foreground { color: hsl(var(--foreground)); }
-.text-muted { color: hsl(var(--muted-foreground)); }
-.bg-background { background-color: hsl(var(--background)); }
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+.text-muted {
+  color: hsl(var(--muted-foreground));
+}
+.bg-background {
+  background-color: hsl(var(--background));
+}
 ```
 
 ---
@@ -611,40 +719,46 @@ npm run type:strict
 #### Issue: "Design system validation failed"
 
 **Symptoms:**
+
 ```
 🚨 violations detected
 ❌ Design system validation failed
 ```
 
 **Solutions:**
+
 1. **Check the detailed report:**
+
    ```bash
    cat design-system-violations-report.json
    ```
 
 2. **Fix hardcoded colors:**
+
    ```typescript
    // ❌ Before
    style={{ backgroundColor: '#3b82f6' }}
-   
-   // ✅ After  
+
+   // ✅ After
    className="bg-[var(--primary)]"
    ```
 
 3. **Fix off-scale typography:**
+
    ```typescript
    // ❌ Before
    style={{ fontSize: '15px' }}
-   
+
    // ✅ After
    className="text-base"  // 16px
    ```
 
 4. **Fix off-grid spacing:**
+
    ```typescript
    // ❌ Before
    style={{ padding: '13px' }}
-   
+
    // ✅ After
    className="p-3"  // 12px or className="p-4"  // 16px
    ```
@@ -652,12 +766,15 @@ npm run type:strict
 #### Issue: "Component not accessible"
 
 **Symptoms:**
+
 - Keyboard navigation doesn't work
 - Screen reader doesn't announce properly
 - Focus indicators missing
 
 **Solutions:**
+
 1. **Check ARIA attributes:**
+
    ```typescript
    <button
      aria-label="Submit form"
@@ -669,9 +786,10 @@ npm run type:strict
    ```
 
 2. **Verify keyboard handlers:**
+
    ```typescript
    const handleKeyDown = (e) => {
-     if (e.key === 'Enter' || e.key === ' ') {
+     if (e.key === "Enter" || e.key === " ") {
        e.preventDefault();
        onClick();
      }
@@ -689,11 +807,14 @@ npm run type:strict
 #### Issue: "CSS variables not working"
 
 **Symptoms:**
+
 - Colors/styles not applying
 - Inconsistent appearance
 
 **Solutions:**
+
 1. **Verify CSS variable definitions:**
+
    ```css
    :root {
      --primary: hsl(210 100% 50%);
@@ -702,40 +823,49 @@ npm run type:strict
    ```
 
 2. **Check CSS variable usage:**
+
    ```typescript
    // ✅ Correct
-   className="bg-[var(--primary)]"
-   className="text-[var(--foreground)]"
-   
+   className = "bg-[var(--primary)]";
+   className = "text-[var(--foreground)]";
+
    // ❌ Incorrect
-   className="var(--primary)"  // Missing hsl()
+   className = "var(--primary)"; // Missing hsl()
    ```
 
 3. **Ensure proper CSS cascade:**
    ```css
    /* Global styles should define variables */
-   :root { --primary: hsl(210 100% 50%); }
-   .dark { --primary: hsl(210 100% 60%); }  /* Dark mode override */
+   :root {
+     --primary: hsl(210 100% 50%);
+   }
+   .dark {
+     --primary: hsl(210 100% 60%);
+   } /* Dark mode override */
    ```
 
 #### Issue: "Component performance problems"
 
 **Symptoms:**
+
 - Slow rendering
 - Unnecessary re-renders
 - Large bundle size
 
 **Solutions:**
+
 1. **Optimize imports:**
+
    ```typescript
    // ❌ Too broad
-   import * as Icons from 'lucide-react';
-   
+   import * as Icons from "lucide-react";
+
    // ✅ Optimized
-   import { Search, User, Settings } from 'lucide-react';
+   import { Search, User, Settings } from "lucide-react";
    ```
 
 2. **Use React.memo for expensive components:**
+
    ```typescript
    const ExpensiveComponent = React.memo(({ data }) => {
      // Component implementation
@@ -743,12 +873,13 @@ npm run type:strict
    ```
 
 3. **Leverage CSS for animations:**
+
    ```css
    /* ✅ Good: CSS animations */
    .fade-in {
      animation: fadeIn 200ms ease-out;
    }
-   
+
    /* ❌ Bad: JavaScript animations */
    // useEffect(() => { /* Complex JS animation */ })
    ```
@@ -756,16 +887,20 @@ npm run type:strict
 ### Getting Help
 
 #### Slack Channels
+
 - **#design-system** - General design system questions
 - **#frontend-help** - Technical implementation help
 - **#accessibility** - Accessibility-specific questions
 
 #### Office Hours
+
 - **Design System Office Hours**: Thursdays 3-4pm
 - **Frontend Office Hours**: Tuesdays 2-3pm
 
 #### Code Reviews
+
 When you need help with your implementation:
+
 1. **Tag the review appropriately**: `design-system`, `accessibility`, `performance`
 2. **Include context**: What are you trying to achieve?
 3. **Reference documentation**: Link to relevant guides
@@ -777,45 +912,44 @@ When you need help with your implementation:
 ### Creating Custom Variants
 
 #### Advanced CVA Patterns
+
 ```typescript
-const cardVariants = cva(
-  'rounded-lg border p-6',
-  {
-    variants: {
-      variant: {
-        default: 'bg-card text-card-foreground',
-        outlined: 'border-2 border-border bg-transparent',
-        ghost: 'border-0 bg-transparent',
-      },
-      size: {
-        sm: 'p-4 text-sm',
-        md: 'p-6',
-        lg: 'p-8 text-lg',
-      },
-      interactive: {
-        true: 'cursor-pointer hover:bg-accent transition-colors',
-        false: '',
-      },
+const cardVariants = cva("rounded-lg border p-6", {
+  variants: {
+    variant: {
+      default: "bg-card text-card-foreground",
+      outlined: "border-2 border-border bg-transparent",
+      ghost: "border-0 bg-transparent",
     },
-    compoundVariants: [
-      {
-        variant: 'outlined',
-        interactive: true,
-        className: 'hover:border-primary',
-      },
-    ],
-    defaultVariants: {
-      variant: 'default',
-      size: 'md',
-      interactive: false,
+    size: {
+      sm: "p-4 text-sm",
+      md: "p-6",
+      lg: "p-8 text-lg",
     },
-  }
-);
+    interactive: {
+      true: "cursor-pointer hover:bg-accent transition-colors",
+      false: "",
+    },
+  },
+  compoundVariants: [
+    {
+      variant: "outlined",
+      interactive: true,
+      className: "hover:border-primary",
+    },
+  ],
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+    interactive: false,
+  },
+});
 ```
 
 ### Advanced Accessibility Patterns
 
 #### Focus Management
+
 ```typescript
 // Manage focus in modals/dropdowns
 const focusRef = useRef<HTMLDivElement>(null);
@@ -825,7 +959,7 @@ useEffect(() => {
   const focusable = focusRef.current?.querySelector(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   ) as HTMLElement;
-  
+
   focusable?.focus();
 }, [isOpen]);
 
@@ -843,12 +977,13 @@ return (
 ```
 
 #### Complex ARIA Patterns
+
 ```typescript
 // Combobox with full ARIA support
 const ComboBox = ({ options, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  
+
   return (
     <div className="relative">
       <input
@@ -863,7 +998,7 @@ const ComboBox = ({ options, value, onChange }) => {
         onChange={onChange}
         onKeyDown={handleKeyDown}
       />
-      
+
       <ul
         id="combobox-list"
         role="listbox"
@@ -897,31 +1032,31 @@ const ComboBox = ({ options, value, onChange }) => {
 ### Performance Optimization
 
 #### CSS-in-JS Optimization
+
 ```typescript
 // ✅ Good: Static styles
-const buttonStyles = 'px-4 py-2 bg-primary text-primary-foreground rounded';
+const buttonStyles = "px-4 py-2 bg-primary text-primary-foreground rounded";
 
 // ❌ Avoid: Dynamic object creation
 const getButtonStyles = (variant) => ({
-  padding: '16px 8px',
-  backgroundColor: variant === 'primary' ? 'hsl(var(--primary))' : 'hsl(var(--secondary))',
+  padding: "16px 8px",
+  backgroundColor:
+    variant === "primary" ? "hsl(var(--primary))" : "hsl(var(--secondary))",
 });
 
 // ✅ Better: CVA for variants
-const buttonVariants = cva(
-  'px-4 py-2 rounded font-medium',
-  {
-    variants: {
-      variant: {
-        primary: 'bg-primary text-primary-foreground',
-        secondary: 'bg-secondary text-secondary-foreground',
-      }
-    }
-  }
-);
+const buttonVariants = cva("px-4 py-2 rounded font-medium", {
+  variants: {
+    variant: {
+      primary: "bg-primary text-primary-foreground",
+      secondary: "bg-secondary text-secondary-foreground",
+    },
+  },
+});
 ```
 
 #### Component Lazy Loading
+
 ```typescript
 // Lazy load heavy components
 const Chart = lazy(() => import('./Chart'));
@@ -939,32 +1074,32 @@ const Dashboard = () => {
 
 ```typescript
 // useDesignSystemTheme.ts
-import { useContext } from 'react';
-import { ThemeContext } from '@/contexts/theme-context';
+import { useContext } from "react";
+import { ThemeContext } from "@/contexts/theme-context";
 
 export function useDesignSystemTheme() {
   const context = useContext(ThemeContext);
-  
+
   return {
     theme: context.theme,
     setTheme: context.setTheme,
-    isDark: context.theme === 'dark',
+    isDark: context.theme === "dark",
     // Convenience getters
     colors: {
-      primary: 'hsl(var(--primary))',
-      background: 'hsl(var(--background))',
-      foreground: 'hsl(var(--foreground))',
+      primary: "hsl(var(--primary))",
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
     },
     spacing: {
-      xs: 'var(--spacing-1)',
-      sm: 'var(--spacing-2)',
-      md: 'var(--spacing-4)',
-      lg: 'var(--spacing-6)',
+      xs: "var(--spacing-1)",
+      sm: "var(--spacing-2)",
+      md: "var(--spacing-4)",
+      lg: "var(--spacing-6)",
     },
     typography: {
-      sm: 'text-sm leading-5',
-      base: 'text-base leading-6',
-      lg: 'text-lg leading-7',
+      sm: "text-sm leading-5",
+      base: "text-base leading-6",
+      lg: "text-lg leading-7",
     },
   };
 }
@@ -1000,14 +1135,14 @@ Congratulations! You now have everything you need to be productive with the Trad
 ✅ **Ask questions** in #design-system when stuck  
 ✅ **Follow the patterns** - they're there to help you  
 ✅ **Prioritize accessibility** - it's not optional  
-✅ **Keep learning** - the design system evolves  
+✅ **Keep learning** - the design system evolves
 
 ---
 
 ## 📞 Contact & Support
 
 - **Design System Team**: designsystem@tradex.pro
-- **Slack**: #design-system-council  
+- **Slack**: #design-system-council
 - **Documentation**: [See all docs](./README.md)
 - **Emergency**: Frontend Tech Lead
 
@@ -1015,7 +1150,7 @@ Congratulations! You now have everything you need to be productive with the Trad
 
 ---
 
-*This onboarding guide is a living document. If you find gaps or have suggestions for improvement, please contribute to make it better for the next developer.*
+_This onboarding guide is a living document. If you find gaps or have suggestions for improvement, please contribute to make it better for the next developer._
 
 **Document Version**: 1.0  
 **Next Review**: March 2025  

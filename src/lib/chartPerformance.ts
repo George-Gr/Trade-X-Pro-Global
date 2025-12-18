@@ -3,7 +3,7 @@
  * Provides virtualization, animation frame management, and performance optimizations
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface ChartPerformanceConfig {
   maxDataPoints: number;
@@ -18,7 +18,7 @@ export const DEFAULT_PERFORMANCE_CONFIG: ChartPerformanceConfig = {
   virtualizationThreshold: 100,
   updateInterval: 16, // ~60fps
   debounceDelay: 300,
-  enablePooling: true
+  enablePooling: true,
 };
 
 /**
@@ -55,7 +55,9 @@ export class ChartDataVirtualizer {
   }
 
   needsVirtualization(): boolean {
-    return this.data.length > DEFAULT_PERFORMANCE_CONFIG.virtualizationThreshold;
+    return (
+      this.data.length > DEFAULT_PERFORMANCE_CONFIG.virtualizationThreshold
+    );
   }
 
   // Smooth scrolling animation using requestAnimationFrame
@@ -197,7 +199,10 @@ export class ChartPool {
       pool.sort((a, b) => {
         const aId = (a as { _poolId?: string })?._poolId;
         const bId = (b as { _poolId?: string })?._poolId;
-        return (this.lastUsed.get(aId || '') || 0) - (this.lastUsed.get(bId || '') || 0);
+        return (
+          (this.lastUsed.get(aId || "") || 0) -
+          (this.lastUsed.get(bId || "") || 0)
+        );
       });
       const instance = pool.pop()! as T;
 
@@ -226,7 +231,7 @@ export class ChartPool {
   release(key: string, instance: unknown): void {
     const poolId = (instance as { _poolId?: string })?._poolId;
     if (!poolId) {
-      console.warn('Attempting to release non-pooled instance');
+      console.warn("Attempting to release non-pooled instance");
       return;
     }
 
@@ -244,18 +249,20 @@ export class ChartPool {
   private resetInstance(instance: unknown): void {
     // Reset common chart instance properties
     const inst = instance as Record<string, unknown>;
-    if (typeof inst.clear === 'function') {
+    if (typeof inst.clear === "function") {
       (inst.clear as () => void)();
     }
-    if (typeof inst.reset === 'function') {
+    if (typeof inst.reset === "function") {
       (inst.reset as () => void)();
     }
     // Reset canvas context if applicable
-    if (typeof inst.getContext === 'function') {
-      const ctx = (inst.getContext as (contextId: string) => unknown)('2d') as { clearRect: (x: number, y: number, w: number, h: number) => void } | null;
+    if (typeof inst.getContext === "function") {
+      const ctx = (inst.getContext as (contextId: string) => unknown)("2d") as {
+        clearRect: (x: number, y: number, w: number, h: number) => void;
+      } | null;
       if (ctx) {
-        const w = typeof inst.width === 'number' ? inst.width : 0;
-        const h = typeof inst.height === 'number' ? inst.height : 0;
+        const w = typeof inst.width === "number" ? inst.width : 0;
+        const h = typeof inst.height === "number" ? inst.height : 0;
         ctx.clearRect(0, 0, w, h);
       }
     }
@@ -271,56 +278,68 @@ export class ChartPool {
     return this.pool.get(key)?.length || 0;
   }
 
-  getUsageStats(key?: string): { totalInstances: number; totalUsage: number; avgUsage: number } {
+  getUsageStats(key?: string): {
+    totalInstances: number;
+    totalUsage: number;
+    avgUsage: number;
+  } {
     if (key) {
       const pool = this.pool.get(key) || [];
-      const usageCounts = pool.map(item => {
+      const usageCounts = pool.map((item) => {
         const poolId = (item as Record<string, unknown>)._poolId;
-        return typeof poolId === 'string' ? (this.usageCount.get(poolId) || 0) : 0;
+        return typeof poolId === "string"
+          ? this.usageCount.get(poolId) || 0
+          : 0;
       });
-      const totalUsage = usageCounts.reduce((sum: number, count) => sum + (typeof count === 'number' ? count : 0), 0);
+      const totalUsage = usageCounts.reduce(
+        (sum: number, count) => sum + (typeof count === "number" ? count : 0),
+        0,
+      );
 
       return {
         totalInstances: pool.length,
         totalUsage,
-        avgUsage: pool.length > 0 ? totalUsage / pool.length : 0
+        avgUsage: pool.length > 0 ? totalUsage / pool.length : 0,
       };
     }
 
     // Overall stats
     const allPools = Array.from(this.pool.values()).flat();
     let totalUsageSum = 0;
-    allPools.forEach(item => {
+    allPools.forEach((item) => {
       const poolId = (item as Record<string, unknown>)._poolId;
-      const count = typeof poolId === 'string' ? (this.usageCount.get(poolId) || 0) : 0;
-      totalUsageSum += typeof count === 'number' ? count : 0;
+      const count =
+        typeof poolId === "string" ? this.usageCount.get(poolId) || 0 : 0;
+      totalUsageSum += typeof count === "number" ? count : 0;
     });
 
     return {
       totalInstances: allPools.length,
       totalUsage: totalUsageSum,
-      avgUsage: allPools.length > 0 ? totalUsageSum / allPools.length : 0
+      avgUsage: allPools.length > 0 ? totalUsageSum / allPools.length : 0,
     };
   }
 
   // Cleanup old instances
-  cleanup(maxAge: number = 300000): void { // 5 minutes default
+  cleanup(maxAge: number = 300000): void {
+    // 5 minutes default
     const now = Date.now();
 
     for (const [key, pool] of this.pool) {
-      const activeItems = pool.filter(item => {
+      const activeItems = pool.filter((item) => {
         const poolId = (item as Record<string, unknown>)._poolId;
-        const lastUsed = typeof poolId === 'string' ? (this.lastUsed.get(poolId) || 0) : 0;
-        return (now - lastUsed) < maxAge;
+        const lastUsed =
+          typeof poolId === "string" ? this.lastUsed.get(poolId) || 0 : 0;
+        return now - lastUsed < maxAge;
       });
 
       this.pool.set(key, activeItems);
 
       // Remove tracking data for cleaned items
-      pool.forEach(item => {
+      pool.forEach((item) => {
         if (!activeItems.includes(item)) {
           const poolId = (item as Record<string, unknown>)._poolId;
-          if (typeof poolId === 'string') {
+          if (typeof poolId === "string") {
             this.usageCount.delete(poolId);
             this.lastUsed.delete(poolId);
           }
@@ -330,7 +349,8 @@ export class ChartPool {
   }
 
   // Periodic cleanup
-  startCleanupTimer(interval: number = 60000): () => void { // 1 minute default
+  startCleanupTimer(interval: number = 60000): () => void {
+    // 1 minute default
     const timer = setInterval(() => {
       this.cleanup();
     }, interval);
@@ -348,7 +368,10 @@ export class ChartFactory {
   private pool: ChartPool = new ChartPool();
   private factories: Map<string, (...args: unknown[]) => unknown> = new Map();
 
-  registerChartType(type: string, factory: (...args: unknown[]) => unknown): void {
+  registerChartType(
+    type: string,
+    factory: (...args: unknown[]) => unknown,
+  ): void {
     this.factories.set(type, factory);
   }
 
@@ -363,7 +386,7 @@ export class ChartFactory {
 
     // Initialize chart with arguments
     const chartObj = chart as unknown as Record<string, unknown>;
-    if (typeof chartObj.initialize === 'function') {
+    if (typeof chartObj.initialize === "function") {
       (chartObj.initialize as (...args: unknown[]) => void)(...args);
     }
 
@@ -388,14 +411,14 @@ export class ChartFactory {
  */
 export const useChartPerformance = (
   data: unknown[],
-  config: Partial<ChartPerformanceConfig> = DEFAULT_PERFORMANCE_CONFIG
+  config: Partial<ChartPerformanceConfig> = DEFAULT_PERFORMANCE_CONFIG,
 ) => {
   const mergedConfig = { ...DEFAULT_PERFORMANCE_CONFIG, ...config };
   const [visibleData, setVisibleData] = useState<unknown[]>(data);
   const [isVirtualized, setIsVirtualized] = useState(false);
 
   const virtualizerRef = useRef<ChartDataVirtualizer>(
-    new ChartDataVirtualizer(data, mergedConfig.virtualizationThreshold)
+    new ChartDataVirtualizer(data, mergedConfig.virtualizationThreshold),
   );
   const frameManagerRef = useRef<AnimationFrameManager>();
   const debouncerRef = useRef<DebouncedChartUpdater>();
@@ -403,7 +426,10 @@ export const useChartPerformance = (
 
   // Update virtualizer when data changes
   useEffect(() => {
-    virtualizerRef.current = new ChartDataVirtualizer(data, mergedConfig.virtualizationThreshold);
+    virtualizerRef.current = new ChartDataVirtualizer(
+      data,
+      mergedConfig.virtualizationThreshold,
+    );
     setIsVirtualized(virtualizerRef.current.needsVirtualization());
 
     if (!isVirtualized || data.length <= mergedConfig.virtualizationThreshold) {
@@ -411,12 +437,15 @@ export const useChartPerformance = (
     }
   }, [data, mergedConfig.virtualizationThreshold, isVirtualized]);
 
-  const updateViewport = useCallback((offset: number, size: number) => {
-    if (!isVirtualized) return;
+  const updateViewport = useCallback(
+    (offset: number, size: number) => {
+      if (!isVirtualized) return;
 
-    virtualizerRef.current.setViewport(offset, size);
-    setVisibleData(virtualizerRef.current.getVisibleData());
-  }, [isVirtualized]);
+      virtualizerRef.current.setViewport(offset, size);
+      setVisibleData(virtualizerRef.current.getVisibleData());
+    },
+    [isVirtualized],
+  );
 
   const startAnimation = useCallback(() => {
     if (frameManagerRef.current?.isAnimating()) return;
@@ -435,14 +464,23 @@ export const useChartPerformance = (
     }
   }, []);
 
-  const debouncedUpdate = useCallback(<T,>(callback: (...args: T[]) => void, ...args: T[]) => {
-    const updater = new DebouncedChartUpdater(() => callback(...(args as T[])), mergedConfig.debounceDelay);
-    updater.update();
-  }, [mergedConfig.debounceDelay]);
+  const debouncedUpdate = useCallback(
+    <T>(callback: (...args: T[]) => void, ...args: T[]) => {
+      const updater = new DebouncedChartUpdater(
+        () => callback(...(args as T[])),
+        mergedConfig.debounceDelay,
+      );
+      updater.update();
+    },
+    [mergedConfig.debounceDelay],
+  );
 
-  const acquireFromPool = useCallback(<T extends { _poolId?: string }>(key: string, factory: () => T): T => {
-    return poolRef.current.acquire(key, factory) as T;
-  }, []);
+  const acquireFromPool = useCallback(
+    <T extends { _poolId?: string }>(key: string, factory: () => T): T => {
+      return poolRef.current.acquire(key, factory) as T;
+    },
+    [],
+  );
 
   const releaseToPool = useCallback((key: string, instance: unknown) => {
     poolRef.current.release(key, instance);
@@ -471,7 +509,7 @@ export const useChartPerformance = (
     acquireFromPool,
     releaseToPool,
     totalDataPoints: data.length,
-    virtualizationThreshold: mergedConfig.virtualizationThreshold
+    virtualizationThreshold: mergedConfig.virtualizationThreshold,
   };
 };
 
@@ -485,7 +523,11 @@ export class ProgressiveDataLoader {
   private isLoading: boolean = false;
   private onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void;
 
-  constructor(data: unknown[], chunkSize: number, onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void) {
+  constructor(
+    data: unknown[],
+    chunkSize: number,
+    onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void,
+  ) {
     this.data = data;
     this.chunkSize = chunkSize;
     this.onChunkLoaded = onChunkLoaded;
@@ -495,7 +537,10 @@ export class ProgressiveDataLoader {
     if (this.isLoading || this.currentIndex >= this.data.length) return;
 
     this.isLoading = true;
-    const endIndex = Math.min(this.currentIndex + this.chunkSize, this.data.length);
+    const endIndex = Math.min(
+      this.currentIndex + this.chunkSize,
+      this.data.length,
+    );
     const chunk = this.data.slice(this.currentIndex, endIndex);
 
     // Simulate async loading
@@ -557,7 +602,9 @@ export class ChartPerformanceMonitor {
 
   getAverageTime(operation: string): number {
     const times = this.measurements.get(operation) || [];
-    return times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
+    return times.length > 0
+      ? times.reduce((a, b) => a + b, 0) / times.length
+      : 0;
   }
 
   getLatestTime(operation: string): number {
@@ -573,7 +620,10 @@ export class ChartPerformanceMonitor {
 /**
  * Optimized data processing for charts
  */
-export const optimizeChartData = (data: unknown[], config: ChartPerformanceConfig = DEFAULT_PERFORMANCE_CONFIG): unknown[] => {
+export const optimizeChartData = (
+  data: unknown[],
+  config: ChartPerformanceConfig = DEFAULT_PERFORMANCE_CONFIG,
+): unknown[] => {
   if (data.length <= config.maxDataPoints) {
     return data;
   }

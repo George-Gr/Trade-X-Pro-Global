@@ -8,7 +8,10 @@ const NotFound = () => {
 
   useEffect(() => {
     document.title = "404 - Page Not Found | TradeX Pro";
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    console.error(
+      "404 Error: User attempted to access non-existent route:",
+      location.pathname,
+    );
   }, [location.pathname]);
 
   return (

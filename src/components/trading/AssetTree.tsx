@@ -12,7 +12,9 @@ interface AssetCategory {
 }
 
 const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(["Forex"]);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([
+    "Forex",
+  ]);
 
   const categories: AssetCategory[] = [
     {
@@ -71,7 +73,7 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
     setExpandedCategories((prev) =>
       prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
-        : [...prev, categoryName]
+        : [...prev, categoryName],
     );
   };
 
@@ -107,11 +109,17 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
                       key={asset.symbol}
                       onClick={() => onSelectSymbol(asset.symbol)}
                       className={`w-full flex items-center justify-between px-6 py-4 hover:bg-secondary/50 transition-colors text-left ${
-                        selectedSymbol === asset.symbol ? "bg-primary/10 border-l-2 border-l-primary" : ""
+                        selectedSymbol === asset.symbol
+                          ? "bg-primary/10 border-l-2 border-l-primary"
+                          : ""
                       }`}
                     >
-                      <span className="text-sm font-medium">{asset.symbol}</span>
-                      <span className="text-xs text-muted-foreground">{asset.name}</span>
+                      <span className="text-sm font-medium">
+                        {asset.symbol}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {asset.name}
+                      </span>
                     </button>
                   ))}
                 </div>

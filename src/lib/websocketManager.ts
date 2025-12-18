@@ -1,16 +1,21 @@
 /**
  * WebSocket Connection Manager
- * 
+ *
  * Provides connection pooling, exponential backoff retry,
  * health checks, and automatic reconnection for Supabase realtime
  */
 
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { logger } from './logger';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { supabase } from "@/lib/supabaseBrowserClient";
+import { logger } from "./logger";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 // Connection states
-type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error';
+type ConnectionState =
+  | "disconnected"
+  | "connecting"
+  | "connected"
+  | "reconnecting"
+  | "error";
 
 // Backoff configuration
 interface BackoffConfig {
@@ -69,7 +74,9 @@ class WebSocketManager {
   private subscriptions = new Map<string, Subscription>();
   private options: WebSocketManagerOptions;
   private healthCheckInterval: number | null = null;
-  private connectionStateListeners = new Set<(state: ConnectionState, connectionId: string) => void>();
+  private connectionStateListeners = new Set<
+    (state: ConnectionState, connectionId: string) => void
+  >();
 
   constructor(options: Partial<WebSocketManagerOptions> = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
@@ -80,15 +87,16 @@ class WebSocketManager {
    * Calculate exponential backoff delay with jitter
    */
   private calculateBackoffDelay(retryCount: number): number {
-    const { initialDelayMs, maxDelayMs, multiplier, jitterFactor } = this.options.backoff;
-    
+    const { initialDelayMs, maxDelayMs, multiplier, jitterFactor } =
+      this.options.backoff;
+
     // Exponential delay
     const exponentialDelay = initialDelayMs * Math.pow(multiplier, retryCount);
     const cappedDelay = Math.min(exponentialDelay, maxDelayMs);
-    
+
     // Add jitter to prevent thundering herd
     const jitter = cappedDelay * jitterFactor * (Math.random() - 0.5) * 2;
-    
+
     return Math.round(cappedDelay + jitter);
   }
 
@@ -99,8 +107,9 @@ class WebSocketManager {
     // Find existing connection with capacity
     for (const connection of this.connections.values()) {
       if (
-        connection.state === 'connected' &&
-        connection.subscriptionCount < this.options.maxSubscriptionsPerConnection
+        connection.state === "connected" &&
+        connection.subscriptionCount <
+          this.options.maxSubscriptionsPerConnection
       ) {
         // Prefer connections already subscribed to the same table
         if (preferredTable && connection.tables.has(preferredTable)) {
@@ -112,8 +121,9 @@ class WebSocketManager {
     // Find any connection with capacity
     for (const connection of this.connections.values()) {
       if (
-        connection.state === 'connected' &&
-        connection.subscriptionCount < this.options.maxSubscriptionsPerConnection
+        connection.state === "connected" &&
+        connection.subscriptionCount <
+          this.options.maxSubscriptionsPerConnection
       ) {
         return connection;
       }
@@ -124,14 +134,17 @@ class WebSocketManager {
       // Find least used connection
       let leastUsed: PooledConnection | null = null;
       for (const connection of this.connections.values()) {
-        if (!leastUsed || connection.subscriptionCount < leastUsed.subscriptionCount) {
+        if (
+          !leastUsed ||
+          connection.subscriptionCount < leastUsed.subscriptionCount
+        ) {
           leastUsed = connection;
         }
       }
       if (leastUsed) {
         return leastUsed;
       }
-      throw new Error('Connection pool exhausted');
+      throw new Error("Connection pool exhausted");
     }
 
     // Create new connection
@@ -143,7 +156,7 @@ class WebSocketManager {
    */
   private createConnection(): PooledConnection {
     const connectionId = `ws-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    
+
     const channel = supabase.channel(connectionId, {
       config: {
         broadcast: { self: false },
@@ -154,7 +167,7 @@ class WebSocketManager {
     const connection: PooledConnection = {
       id: connectionId,
       channel,
-      state: 'connecting',
+      state: "connecting",
       subscriptionCount: 0,
       createdAt: new Date(),
       lastActivity: new Date(),
@@ -163,29 +176,32 @@ class WebSocketManager {
     };
 
     this.connections.set(connectionId, connection);
-    this.notifyStateChange('connecting', connectionId);
+    this.notifyStateChange("connecting", connectionId);
 
     // Subscribe to connection
     channel.subscribe((status) => {
-      if (status === 'SUBSCRIBED') {
-        connection.state = 'connected';
+      if (status === "SUBSCRIBED") {
+        connection.state = "connected";
         connection.retryCount = 0;
         connection.lastActivity = new Date();
-        this.notifyStateChange('connected', connectionId);
-        logger.info('WebSocket connection established', {
-          metadata: { connectionId, subscriptionCount: connection.subscriptionCount },
+        this.notifyStateChange("connected", connectionId);
+        logger.info("WebSocket connection established", {
+          metadata: {
+            connectionId,
+            subscriptionCount: connection.subscriptionCount,
+          },
         });
-      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-        connection.state = 'error';
-        this.notifyStateChange('error', connectionId);
+      } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+        connection.state = "error";
+        this.notifyStateChange("error", connectionId);
         this.scheduleReconnect(connectionId);
-      } else if (status === 'CLOSED') {
-        connection.state = 'disconnected';
-        this.notifyStateChange('disconnected', connectionId);
+      } else if (status === "CLOSED") {
+        connection.state = "disconnected";
+        this.notifyStateChange("disconnected", connectionId);
       }
     });
 
-    logger.info('WebSocket connection created', { metadata: { connectionId } });
+    logger.info("WebSocket connection created", { metadata: { connectionId } });
     return connection;
   }
 
@@ -198,11 +214,15 @@ class WebSocketManager {
 
     const delay = this.calculateBackoffDelay(connection.retryCount);
     connection.retryCount++;
-    connection.state = 'reconnecting';
-    this.notifyStateChange('reconnecting', connectionId);
+    connection.state = "reconnecting";
+    this.notifyStateChange("reconnecting", connectionId);
 
-    logger.info('Scheduling WebSocket reconnection', {
-      metadata: { connectionId, retryCount: connection.retryCount, delayMs: delay },
+    logger.info("Scheduling WebSocket reconnection", {
+      metadata: {
+        connectionId,
+        retryCount: connection.retryCount,
+        delayMs: delay,
+      },
     });
 
     setTimeout(async () => {
@@ -217,7 +237,7 @@ class WebSocketManager {
     const connection = this.connections.get(connectionId);
     if (!connection) return;
 
-    logger.info('Attempting WebSocket reconnection', {
+    logger.info("Attempting WebSocket reconnection", {
       metadata: { connectionId, attempt: connection.retryCount },
     });
 
@@ -235,38 +255,47 @@ class WebSocketManager {
       });
 
       connection.channel = newChannel;
-      connection.state = 'connecting';
-      this.notifyStateChange('connecting', connectionId);
+      connection.state = "connecting";
+      this.notifyStateChange("connecting", connectionId);
 
       // Re-subscribe all subscriptions
-      const subscriptionsToRestore = Array.from(this.subscriptions.values())
-        .filter(sub => sub.connectionId === connectionId);
+      const subscriptionsToRestore = Array.from(
+        this.subscriptions.values(),
+      ).filter((sub) => sub.connectionId === connectionId);
 
       for (const sub of subscriptionsToRestore) {
         newChannel.on(
-          'postgres_changes' as never,
-          { event: sub.event, schema: 'public', table: sub.table, ...(sub.filter ? { filter: sub.filter } : {}) } as never,
-          sub.callback as never
+          "postgres_changes" as never,
+          {
+            event: sub.event,
+            schema: "public",
+            table: sub.table,
+            ...(sub.filter ? { filter: sub.filter } : {}),
+          } as never,
+          sub.callback as never,
         );
       }
 
       newChannel.subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          connection.state = 'connected';
+        if (status === "SUBSCRIBED") {
+          connection.state = "connected";
           connection.retryCount = 0;
           connection.lastActivity = new Date();
-          this.notifyStateChange('connected', connectionId);
-          logger.info('WebSocket reconnection successful', {
-            metadata: { connectionId, restoredSubscriptions: subscriptionsToRestore.length },
+          this.notifyStateChange("connected", connectionId);
+          logger.info("WebSocket reconnection successful", {
+            metadata: {
+              connectionId,
+              restoredSubscriptions: subscriptionsToRestore.length,
+            },
           });
-        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          connection.state = 'error';
-          this.notifyStateChange('error', connectionId);
+        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          connection.state = "error";
+          this.notifyStateChange("error", connectionId);
           this.scheduleReconnect(connectionId);
         }
       });
     } catch (error) {
-      logger.error('WebSocket reconnection failed', error, {
+      logger.error("WebSocket reconnection failed", error, {
         metadata: { connectionId },
       });
       this.scheduleReconnect(connectionId);
@@ -278,18 +307,23 @@ class WebSocketManager {
    */
   subscribe(
     table: string,
-    event: '*' | 'INSERT' | 'UPDATE' | 'DELETE',
+    event: "*" | "INSERT" | "UPDATE" | "DELETE",
     callback: (payload: unknown) => void,
-    filter?: string
+    filter?: string,
   ): string {
     const connection = this.getOrCreateConnection(table);
     const subscriptionId = `sub-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
     // Add subscription to channel
     connection.channel.on(
-      'postgres_changes' as never,
-      { event, schema: 'public', table, ...(filter ? { filter } : {}) } as never,
-      callback as never
+      "postgres_changes" as never,
+      {
+        event,
+        schema: "public",
+        table,
+        ...(filter ? { filter } : {}),
+      } as never,
+      callback as never,
     );
 
     // Track subscription
@@ -307,7 +341,7 @@ class WebSocketManager {
     connection.tables.add(table);
     connection.lastActivity = new Date();
 
-    logger.info('Subscription created', {
+    logger.info("Subscription created", {
       metadata: { subscriptionId, connectionId: connection.id, table, event },
     });
 
@@ -327,9 +361,13 @@ class WebSocketManager {
       connection.lastActivity = new Date();
 
       // Remove table from tracking if no more subscriptions
-      const hasOtherSubs = Array.from(this.subscriptions.values())
-        .some(sub => sub.connectionId === connection.id && sub.table === subscription.table && sub.id !== subscriptionId);
-      
+      const hasOtherSubs = Array.from(this.subscriptions.values()).some(
+        (sub) =>
+          sub.connectionId === connection.id &&
+          sub.table === subscription.table &&
+          sub.id !== subscriptionId,
+      );
+
       if (!hasOtherSubs) {
         connection.tables.delete(subscription.table);
       }
@@ -341,7 +379,7 @@ class WebSocketManager {
     }
 
     this.subscriptions.delete(subscriptionId);
-    logger.info('Subscription removed', { metadata: { subscriptionId } });
+    logger.info("Subscription removed", { metadata: { subscriptionId } });
     return true;
   }
 
@@ -356,12 +394,14 @@ class WebSocketManager {
       await connection.channel.unsubscribe();
       supabase.removeChannel(connection.channel);
     } catch (error) {
-      logger.warn('Error closing connection', { metadata: { connectionId, error } });
+      logger.warn("Error closing connection", {
+        metadata: { connectionId, error },
+      });
     }
 
     this.connections.delete(connectionId);
-    this.notifyStateChange('disconnected', connectionId);
-    logger.info('Connection closed', { metadata: { connectionId } });
+    this.notifyStateChange("disconnected", connectionId);
+    logger.info("Connection closed", { metadata: { connectionId } });
   }
 
   /**
@@ -382,17 +422,24 @@ class WebSocketManager {
     for (const [connectionId, connection] of this.connections.entries()) {
       // Check for stale connections
       const idleTime = now - connection.lastActivity.getTime();
-      if (idleTime > this.options.healthCheckIntervalMs * 3 && connection.subscriptionCount === 0) {
-        logger.info('Closing idle connection', { metadata: { connectionId, idleTime } });
+      if (
+        idleTime > this.options.healthCheckIntervalMs * 3 &&
+        connection.subscriptionCount === 0
+      ) {
+        logger.info("Closing idle connection", {
+          metadata: { connectionId, idleTime },
+        });
         this.closeConnection(connectionId);
         continue;
       }
 
       // Check for stuck connections
-      if (connection.state === 'connecting') {
+      if (connection.state === "connecting") {
         const connectingTime = now - connection.createdAt.getTime();
         if (connectingTime > this.options.connectionTimeoutMs) {
-          logger.warn('Connection timeout, scheduling reconnect', { metadata: { connectionId } });
+          logger.warn("Connection timeout, scheduling reconnect", {
+            metadata: { connectionId },
+          });
           this.scheduleReconnect(connectionId);
         }
       }
@@ -402,7 +449,9 @@ class WebSocketManager {
   /**
    * Add state change listener
    */
-  onStateChange(listener: (state: ConnectionState, connectionId: string) => void): () => void {
+  onStateChange(
+    listener: (state: ConnectionState, connectionId: string) => void,
+  ): () => void {
     this.connectionStateListeners.add(listener);
     return () => this.connectionStateListeners.delete(listener);
   }
@@ -410,12 +459,15 @@ class WebSocketManager {
   /**
    * Notify all state change listeners
    */
-  private notifyStateChange(state: ConnectionState, connectionId: string): void {
+  private notifyStateChange(
+    state: ConnectionState,
+    connectionId: string,
+  ): void {
     for (const listener of this.connectionStateListeners) {
       try {
         listener(state, connectionId);
       } catch (error) {
-        logger.error('State change listener error', error);
+        logger.error("State change listener error", error);
       }
     }
   }
@@ -437,7 +489,7 @@ class WebSocketManager {
     return {
       totalConnections: this.connections.size,
       totalSubscriptions: this.subscriptions.size,
-      connections: Array.from(this.connections.values()).map(c => ({
+      connections: Array.from(this.connections.values()).map((c) => ({
         id: c.id,
         state: c.state,
         subscriptionCount: c.subscriptionCount,
@@ -462,7 +514,7 @@ class WebSocketManager {
 
     this.subscriptions.clear();
     this.connectionStateListeners.clear();
-    logger.info('WebSocket manager destroyed');
+    logger.info("WebSocket manager destroyed");
   }
 }
 

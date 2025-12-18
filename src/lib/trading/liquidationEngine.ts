@@ -20,28 +20,28 @@
  * - marginCalculations (1.1.2): Margin recalculation
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Liquidation status enum
  */
 export enum LiquidationStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  PARTIAL = 'partial',
-  CANCELLED = 'cancelled',
+  PENDING = "pending",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  FAILED = "failed",
+  PARTIAL = "partial",
+  CANCELLED = "cancelled",
 }
 
 /**
  * Liquidation reason enum
  */
 export enum LiquidationReason {
-  MARGIN_CALL_TIMEOUT = 'margin_call_timeout', // 30+ min in critical margin
-  CRITICAL_THRESHOLD = 'critical_threshold', // Margin < 30%
-  MANUAL_FORCED = 'manual_forced', // Admin-initiated
-  RISK_LIMIT_BREACH = 'risk_limit_breach', // Concentration risk
+  MARGIN_CALL_TIMEOUT = "margin_call_timeout", // 30+ min in critical margin
+  CRITICAL_THRESHOLD = "critical_threshold", // Margin < 30%
+  MANUAL_FORCED = "manual_forced", // Admin-initiated
+  RISK_LIMIT_BREACH = "risk_limit_breach", // Concentration risk
 }
 
 /**
@@ -50,7 +50,7 @@ export enum LiquidationReason {
 export interface LiquidatedPosition {
   positionId: string;
   symbol: string;
-  side: 'buy' | 'sell';
+  side: "buy" | "sell";
   quantity: number;
   entryPrice: number;
   liquidationPrice: number;
@@ -102,7 +102,7 @@ export interface SafetyCheckResult {
 export interface PositionForLiquidation {
   id: string;
   symbol: string;
-  side: 'buy' | 'sell';
+  side: "buy" | "sell";
   quantity: number;
   entryPrice: number;
   currentPrice: number;
@@ -182,7 +182,7 @@ export function calculateLiquidationNeeded(
       marginLevel: Infinity,
       marginToFree: 0,
       targetMarginLevel: 100,
-      message: 'No margin used',
+      message: "No margin used",
     };
   }
 
@@ -302,14 +302,14 @@ export function calculateLiquidationSlippage(normalSlippage: number): number {
  */
 export function calculateLiquidationPrice(
   currentPrice: number,
-  side: 'buy' | 'sell',
+  side: "buy" | "sell",
   slippage: number,
 ): number {
   const slippageAmount = currentPrice * (slippage / 100);
 
   // For buy positions (go short to close), get worse price (higher)
   // For sell positions (go long to close), get worse price (lower)
-  if (side === 'buy') {
+  if (side === "buy") {
     return currentPrice - slippageAmount; // Sell at lower price
   } else {
     return currentPrice + slippageAmount; // Buy at higher price
@@ -330,14 +330,14 @@ export function calculateLiquidationPrice(
  * // { amount: -200, percentage: -4 }
  */
 export function calculateRealizedPnL(
-  side: 'buy' | 'sell',
+  side: "buy" | "sell",
   quantity: number,
   entryPrice: number,
   exitPrice: number,
 ): { amount: number; percentage: number } {
   const priceDiff = exitPrice - entryPrice;
-  const amount = side === 'buy' ? priceDiff * quantity : -priceDiff * quantity;
-  const percentage = (priceDiff / entryPrice) * 100 * (side === 'buy' ? 1 : -1);
+  const amount = side === "buy" ? priceDiff * quantity : -priceDiff * quantity;
+  const percentage = (priceDiff / entryPrice) * 100 * (side === "buy" ? 1 : -1);
 
   return {
     amount: Math.round(amount * 100) / 100,
@@ -369,7 +369,7 @@ export function validateLiquidationPreConditions(
   }
 
   if (positionCount === 0) {
-    issues.push('No positions to liquidate');
+    issues.push("No positions to liquidate");
   }
 
   if (timeInCriticalMinutes < 30 && marginLevel > 30) {
@@ -430,7 +430,8 @@ export function checkLiquidationSafety(
     isSafe: issues.length === 0,
     issues,
     marketImpactEstimate: maxSlippage,
-    estimatedSlippage: positions.length > 0 ? totalSlippage / positions.length : 0,
+    estimatedSlippage:
+      positions.length > 0 ? totalSlippage / positions.length : 0,
     positionsToClose: positions.length,
     estimatedTimeMs,
   };
@@ -457,26 +458,26 @@ export function generateLiquidationNotification(
   result: LiquidationExecutionResult,
 ): Record<string, unknown> {
   return {
-    type: 'LIQUIDATION',
-    priority: 'CRITICAL',
-    icon: '🚨',
-    title: 'Account Liquidation Executed',
+    type: "LIQUIDATION",
+    priority: "CRITICAL",
+    icon: "🚨",
+    title: "Account Liquidation Executed",
     message: `${result.totalPositionsClosed} positions liquidated due to margin call. Account margin restored from ${event.initialMarginLevel.toFixed(2)}% to ${result.finalMarginLevel.toFixed(2)}%. Total realized loss: $${Math.abs(result.totalLossRealized).toFixed(2)}.`,
     actions: [
       {
-        label: 'View Details',
-        action: 'NAVIGATE_LIQUIDATION_DETAILS',
-        color: 'primary',
+        label: "View Details",
+        action: "NAVIGATE_LIQUIDATION_DETAILS",
+        color: "primary",
       },
       {
-        label: 'Deposit Funds',
-        action: 'NAVIGATE_WALLET',
-        color: 'secondary',
+        label: "Deposit Funds",
+        action: "NAVIGATE_WALLET",
+        color: "secondary",
       },
       {
-        label: 'Contact Support',
-        action: 'NAVIGATE_SUPPORT',
-        color: 'secondary',
+        label: "Contact Support",
+        action: "NAVIGATE_SUPPORT",
+        color: "secondary",
       },
     ],
     metadata: {
@@ -505,7 +506,9 @@ export function generateLiquidationNotification(
  * const metrics = calculateLiquidationMetrics(event);
  * // { positionsLiquidated: 3, totalLoss: -1500, ... }
  */
-export function calculateLiquidationMetrics(event: LiquidationEvent): LiquidationMetrics {
+export function calculateLiquidationMetrics(
+  event: LiquidationEvent,
+): LiquidationMetrics {
   const positions = event.details.closedPositions;
 
   if (positions.length === 0) {
@@ -552,10 +555,10 @@ export function calculateLiquidationMetrics(event: LiquidationEvent): Liquidatio
  */
 export function formatLiquidationReason(reason: LiquidationReason): string {
   const labels: Record<LiquidationReason, string> = {
-    [LiquidationReason.MARGIN_CALL_TIMEOUT]: 'Margin Call Timeout (30+ min)',
-    [LiquidationReason.CRITICAL_THRESHOLD]: 'Critical Margin Level (<30%)',
-    [LiquidationReason.MANUAL_FORCED]: 'Admin-Initiated Liquidation',
-    [LiquidationReason.RISK_LIMIT_BREACH]: 'Risk Limit Breach',
+    [LiquidationReason.MARGIN_CALL_TIMEOUT]: "Margin Call Timeout (30+ min)",
+    [LiquidationReason.CRITICAL_THRESHOLD]: "Critical Margin Level (<30%)",
+    [LiquidationReason.MANUAL_FORCED]: "Admin-Initiated Liquidation",
+    [LiquidationReason.RISK_LIMIT_BREACH]: "Risk Limit Breach",
   };
   return labels[reason];
 }
@@ -570,16 +573,22 @@ export function formatLiquidationStatus(status: LiquidationStatus): {
   label: string;
   color: string;
 } {
-  const labels: Record<
-    LiquidationStatus,
-    { label: string; color: string }
-  > = {
-    [LiquidationStatus.PENDING]: { label: 'Pending', color: 'text-yellow-600' },
-    [LiquidationStatus.IN_PROGRESS]: { label: 'In Progress', color: 'text-blue-600' },
-    [LiquidationStatus.COMPLETED]: { label: 'Completed', color: 'text-red-600' },
-    [LiquidationStatus.FAILED]: { label: 'Failed', color: 'text-red-600' },
-    [LiquidationStatus.PARTIAL]: { label: 'Partial', color: 'text-orange-600' },
-    [LiquidationStatus.CANCELLED]: { label: 'Cancelled', color: 'text-muted-foreground' },
+  const labels: Record<LiquidationStatus, { label: string; color: string }> = {
+    [LiquidationStatus.PENDING]: { label: "Pending", color: "text-yellow-600" },
+    [LiquidationStatus.IN_PROGRESS]: {
+      label: "In Progress",
+      color: "text-blue-600",
+    },
+    [LiquidationStatus.COMPLETED]: {
+      label: "Completed",
+      color: "text-red-600",
+    },
+    [LiquidationStatus.FAILED]: { label: "Failed", color: "text-red-600" },
+    [LiquidationStatus.PARTIAL]: { label: "Partial", color: "text-orange-600" },
+    [LiquidationStatus.CANCELLED]: {
+      label: "Cancelled",
+      color: "text-muted-foreground",
+    },
   };
   return labels[status];
 }
@@ -606,7 +615,9 @@ export function estimateExecutionTime(positionCount: number): number {
  * @param event - Event to validate
  * @returns true if valid
  */
-export function validateLiquidationEvent(event: Partial<LiquidationEvent>): boolean {
+export function validateLiquidationEvent(
+  event: Partial<LiquidationEvent>,
+): boolean {
   try {
     const schema = z.object({
       id: z.string().min(1),

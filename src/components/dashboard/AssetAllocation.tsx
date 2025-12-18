@@ -1,30 +1,47 @@
-import React, { Suspense } from 'react';
-import { Card } from '@/components/ui/card';
-import { usePortfolioData } from '@/hooks/usePortfolioData';
-import type { PieProps } from 'recharts';
+import React, { Suspense } from "react";
+import { Card } from "@/components/ui/card";
+import { usePortfolioData } from "@/hooks/usePortfolioData";
+import type { PieProps } from "recharts";
 
 // Dynamic import wrapper for recharts components
-const DynamicPieChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.PieChart,
-})));
+const DynamicPieChart = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.PieChart,
+  })),
+);
 
-const DynamicPie = React.lazy(() => import('recharts').then(m => ({
-  default: m.Pie as React.ComponentType<PieProps>,
-})));
+const DynamicPie = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.Pie as React.ComponentType<PieProps>,
+  })),
+);
 
-const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell,
-})));
+const DynamicCell = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.Cell,
+  })),
+);
 
-const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip,
-})));
+const DynamicTooltip = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.Tooltip,
+  })),
+);
 
-const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
-  default: m.ResponsiveContainer,
-})));
+const DynamicResponsiveContainer = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.ResponsiveContainer,
+  })),
+);
 
-const COLORS = ['#4ade80', '#f97316', '#60a5fa', '#f87171', '#c084fc', '#94a3b8'];
+const COLORS = [
+  "#4ade80",
+  "#f97316",
+  "#60a5fa",
+  "#f87171",
+  "#c084fc",
+  "#94a3b8",
+];
 
 // Loading component for charts
 const ChartLoadingSkeleton = () => (
@@ -33,11 +50,13 @@ const ChartLoadingSkeleton = () => (
   </div>
 );
 
-export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> = ({ onSelect }) => {
+export const AssetAllocation: React.FC<{
+  onSelect?: (symbol: string) => void;
+}> = ({ onSelect }) => {
   const { positions } = usePortfolioData();
 
   const groups = positions.reduce<Record<string, number>>((acc, pos) => {
-    const cls = (pos.asset_class || 'OTHER').toUpperCase();
+    const cls = (pos.asset_class || "OTHER").toUpperCase();
     const notional = Math.abs((pos.current_price || 0) * pos.quantity * 100000);
     acc[cls] = (acc[cls] || 0) + notional;
     return acc;
@@ -60,13 +79,24 @@ export const AssetAllocation: React.FC<{ onSelect?: (symbol: string) => void }> 
         <Suspense fallback={<ChartLoadingSkeleton />}>
           <DynamicResponsiveContainer>
             <DynamicPieChart>
-              <DynamicPie dataKey="value" data={data} innerRadius={40} outerRadius={80} paddingAngle={2}>
+              <DynamicPie
+                dataKey="value"
+                data={data}
+                innerRadius={40}
+                outerRadius={80}
+                paddingAngle={2}
+              >
                 {data.map((entry, index) => (
-                  <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <DynamicCell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </DynamicPie>
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              <DynamicTooltip formatter={(value: any) => `$${Number(value).toLocaleString()}`} />
+              <DynamicTooltip
+                formatter={(value: any) => `$${Number(value).toLocaleString()}`}
+              />
             </DynamicPieChart>
           </DynamicResponsiveContainer>
         </Suspense>

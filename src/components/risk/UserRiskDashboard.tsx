@@ -28,16 +28,30 @@ import {
 } from "@/lib/risk/exportUtils";
 
 interface RiskDashboardProps {
-  onExport?: (format: 'csv' | 'pdf') => void;
+  onExport?: (format: "csv" | "pdf") => void;
 }
 
 export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
-  const { riskMetrics, portfolioRiskAssessment, loading: riskLoading, refetch: refetchRisk } =
-    useRiskMetrics();
-  const { portfolioMetrics, drawdownAnalysis, assetClassMetrics, equityHistory, loading: metricsLoading } =
-    usePortfolioMetrics();
-  const { concentration, stressTests, diversification, loading: analysisLoading, refetch: refetchAnalysis } =
-    usePositionAnalysis();
+  const {
+    riskMetrics,
+    portfolioRiskAssessment,
+    loading: riskLoading,
+    refetch: refetchRisk,
+  } = useRiskMetrics();
+  const {
+    portfolioMetrics,
+    drawdownAnalysis,
+    assetClassMetrics,
+    equityHistory,
+    loading: metricsLoading,
+  } = usePortfolioMetrics();
+  const {
+    concentration,
+    stressTests,
+    diversification,
+    loading: analysisLoading,
+    refetch: refetchAnalysis,
+  } = usePositionAnalysis();
   const { toast } = useToast();
 
   const loading = riskLoading || metricsLoading || analysisLoading;
@@ -52,7 +66,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         assetClassMetrics,
         concentration,
         stressTests,
-        `risk-dashboard-${new Date().toISOString().split('T')[0]}.csv`
+        `risk-dashboard-${new Date().toISOString().split("T")[0]}.csv`,
       );
       toast({
         title: "Export Successful",
@@ -65,7 +79,15 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         variant: "destructive",
       });
     }
-  }, [riskMetrics, portfolioMetrics, drawdownAnalysis, assetClassMetrics, concentration, stressTests, toast]);
+  }, [
+    riskMetrics,
+    portfolioMetrics,
+    drawdownAnalysis,
+    assetClassMetrics,
+    concentration,
+    stressTests,
+    toast,
+  ]);
 
   const handleExportPDF = useCallback(() => {
     try {
@@ -75,7 +97,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         drawdownAnalysis,
         assetClassMetrics,
         concentration,
-        stressTests
+        stressTests,
       );
       openRiskDashboardReport(html);
       toast({
@@ -89,7 +111,15 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         variant: "destructive",
       });
     }
-  }, [riskMetrics, portfolioMetrics, drawdownAnalysis, assetClassMetrics, concentration, stressTests, toast]);
+  }, [
+    riskMetrics,
+    portfolioMetrics,
+    drawdownAnalysis,
+    assetClassMetrics,
+    concentration,
+    stressTests,
+    toast,
+  ]);
 
   const handleRefresh = () => {
     refetchRisk();
@@ -114,30 +144,20 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Risk Dashboard</h1>
-          <p className="text-muted-foreground">Real-time risk monitoring and analysis</p>
+          <p className="text-muted-foreground">
+            Real-time risk monitoring and analysis
+          </p>
         </div>
         <div className="flex gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-          >
+          <Button variant="outline" size="sm" onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportCSV}
-          >
+          <Button variant="outline" size="sm" onClick={handleExportCSV}>
             <Download className="h-4 w-4 mr-2" />
             CSV
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportPDF}
-          >
+          <Button variant="outline" size="sm" onClick={handleExportPDF}>
             <Download className="h-4 w-4 mr-2" />
             Report
           </Button>
@@ -152,26 +172,27 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
 
       {/* Risk Alerts and Trade Stats */}
       <RiskAlertsPanel
-        riskLevel={riskMetrics?.riskLevel || 'safe'}
+        riskLevel={riskMetrics?.riskLevel || "safe"}
         riskMetrics={riskMetrics}
         portfolioMetrics={portfolioMetrics}
         drawdownAnalysis={drawdownAnalysis}
         portfolioRiskAssessment={portfolioRiskAssessment}
       />
 
-{/* Charts and Analysis */}
+      {/* Charts and Analysis */}
       <RiskChartsPanel
         equityHistory={equityHistory}
         assetClassMetrics={assetClassMetrics}
         portfolioMetrics={portfolioMetrics}
         stressTests={{
           ...stressTests,
-          scenarios: stressTests?.scenarios?.map(s => ({
-            ...s,
-            priceMovement: String(s.priceMovement)
-          })) || [],
+          scenarios:
+            stressTests?.scenarios?.map((s) => ({
+              ...s,
+              priceMovement: String(s.priceMovement),
+            })) || [],
           maxPossibleLoss: stressTests?.maxPossibleLoss || 0,
-          survivalRate: stressTests?.survivalRate || 0
+          survivalRate: stressTests?.survivalRate || 0,
         }}
         diversification={diversification}
         concentration={concentration}

@@ -17,6 +17,7 @@ npm run health:check
 **Issue**: Conflicting GitHub Copilot settings in `.vscode/settings.json`
 
 **Solution**: Removed conflicting settings:
+
 - Removed `github.copilot.chat.languageContext.typescript.items`
 - Removed `github.copilot.chat.agent.autoFix`
 
@@ -27,6 +28,7 @@ npm run health:check
 **Issue**: VS Code extension host becoming unresponsive
 
 **Solution**: Added performance optimizations to `.vscode/settings.json`:
+
 - Disabled automatic extension updates
 - Optimized file watching
 - Reduced search overhead
@@ -39,6 +41,7 @@ npm run health:check
 **Issue**: File system events being dropped by FSEvents client
 
 **Solution**: Added file watcher exclusions in `.vscode/settings.json`:
+
 - Excluded `.git` directories
 - Excluded `node_modules`
 - Excluded build directories
@@ -51,11 +54,13 @@ npm run health:check
 **Issue**: Network errors and marketplace connection problems
 
 **Solution**: Created network configuration script:
+
 - `npm run network:config` - Creates `.npmrc` and `.yarnrc` with optimized settings
 - Added network timeout configurations
 - Configured retry mechanisms
 
-**Files Created**: 
+**Files Created**:
+
 - `scripts/network-config.js`
 - `.npmrc` (created when script runs)
 - `.yarnrc` (created when script runs)
@@ -65,6 +70,7 @@ npm run health:check
 **Issue**: Warnings about deprecated Node.js modules (punycode, SQLite experimental)
 
 **Solution**: Created compatibility script:
+
 - `npm run node:compat` - Checks Node.js version and deprecated modules
 - Provides guidance on suppressing warnings
 
@@ -75,6 +81,7 @@ npm run health:check
 **Issue**: Exceeded Copilot token usage limits
 
 **Solution**: Created Copilot configuration script:
+
 - `npm run copilot:config` - Analyzes Copilot settings
 - Provides optimization tips to reduce token usage
 - Checks for configuration conflicts
@@ -83,17 +90,18 @@ npm run health:check
 
 ## Available Scripts
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `npm run health:check` | Comprehensive workspace health check | `npm run health:check` |
-| `npm run network:config` | Fix network connectivity issues | `npm run network:config` |
-| `npm run node:compat` | Check Node.js compatibility | `npm run node:compat` |
-| `npm run copilot:config` | Configure GitHub Copilot | `npm run copilot:config` |
-| `npm run network:check` | Quick network connectivity test | `npm run network:check` |
+| Script                   | Purpose                              | Usage                    |
+| ------------------------ | ------------------------------------ | ------------------------ |
+| `npm run health:check`   | Comprehensive workspace health check | `npm run health:check`   |
+| `npm run network:config` | Fix network connectivity issues      | `npm run network:config` |
+| `npm run node:compat`    | Check Node.js compatibility          | `npm run node:compat`    |
+| `npm run copilot:config` | Configure GitHub Copilot             | `npm run copilot:config` |
+| `npm run network:check`  | Quick network connectivity test      | `npm run network:check`  |
 
 ## Manual Troubleshooting
 
 ### For Network Issues:
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -106,18 +114,21 @@ npm config list | grep proxy
 ```
 
 ### For VS Code Issues:
+
 1. Restart VS Code
 2. Disable unnecessary extensions
 3. Clear VS Code cache: `rm -rf ~/.vscode/extensions`
 4. Reinstall problematic extensions
 
 ### For GitHub Copilot Issues:
+
 1. Sign out and back into GitHub in VS Code
 2. Check GitHub Copilot subscription status
 3. Reduce context usage in settings
 4. Use shorter conversations
 
 ### For File Watcher Issues:
+
 1. Increase FSEvents limit: `sudo sysctl -w kern.maxfiles=65536`
 2. Add more exclusions to `.vscode/settings.json`
 3. Restart VS Code

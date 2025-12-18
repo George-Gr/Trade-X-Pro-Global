@@ -48,7 +48,9 @@ export const SectionHeader = ({
         )}
       </h2>
       {description && (
-        <p className={`text-lg md:text-xl text-muted-foreground ${descriptionMaxWidth}`}>
+        <p
+          className={`text-lg md:text-xl text-muted-foreground ${descriptionMaxWidth}`}
+        >
           {description}
         </p>
       )}

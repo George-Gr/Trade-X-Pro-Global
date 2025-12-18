@@ -1,22 +1,25 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { OrderStatusBadge } from './OrderStatusBadge';
-import { calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
-import { Copy, X } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { OrderStatusBadge } from "./OrderStatusBadge";
+import {
+  calculateFillPercentage,
+  type OrderStatus,
+} from "@/lib/trading/orderUtils";
+import { Copy, X } from "lucide-react";
 
 export interface Order {
   id: string;
   symbol: string;
-  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
-  side: 'buy' | 'sell';
+  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
+  side: "buy" | "sell";
   quantity: number;
   filled_quantity: number;
   price?: number;
@@ -58,18 +61,29 @@ export const OrderDetailDialog = ({
   onModify,
   onCancel,
 }: OrderDetailDialogProps) => {
-  const fillPercentage = order ? calculateFillPercentage(order.filled_quantity, order.quantity) : 0;
-  const canModify = order ? ['open', 'partially_filled'].includes(order.status) : false;
-  const canCancel = order ? ['pending', 'open', 'partially_filled'].includes(order.status) : false;
+  const fillPercentage = order
+    ? calculateFillPercentage(order.filled_quantity, order.quantity)
+    : 0;
+  const canModify = order
+    ? ["open", "partially_filled"].includes(order.status)
+    : false;
+  const canCancel = order
+    ? ["pending", "open", "partially_filled"].includes(order.status)
+    : false;
 
-  const sideColor = order?.side === 'buy' ? 'bg-background border-blue-200' : 'bg-background border-orange-200';
-  const sideTextColor = order?.side === 'buy' ? 'text-blue-700' : 'text-orange-700';
+  const sideColor =
+    order?.side === "buy"
+      ? "bg-background border-blue-200"
+      : "bg-background border-orange-200";
+  const sideTextColor =
+    order?.side === "buy" ? "text-blue-700" : "text-orange-700";
 
-  const orderTypeLabel = order?.type
-    .replace('_', '-')
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ') || '';
+  const orderTypeLabel =
+    order?.type
+      .replace("_", "-")
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ") || "";
 
   const copyOrderId = () => {
     if (order) navigator.clipboard.writeText(order.id);
@@ -84,8 +98,10 @@ export const OrderDetailDialog = ({
         avgPrice: 0,
       };
     }
-    const totalCost = order.filled_quantity * (order.average_fill_price || order.price || 0);
-    const commissionsAndSlippage = (order.commission || 0) + (order.slippage || 0);
+    const totalCost =
+      order.filled_quantity * (order.average_fill_price || order.price || 0);
+    const commissionsAndSlippage =
+      (order.commission || 0) + (order.slippage || 0);
     const netCost = totalCost + commissionsAndSlippage;
 
     return {
@@ -104,7 +120,9 @@ export const OrderDetailDialog = ({
         <DialogHeader className="flex flex-row items-start justify-between">
           <div className="flex-1">
             <DialogTitle className="text-xl">Order Details</DialogTitle>
-            <DialogDescription>Complete order information and execution details</DialogDescription>
+            <DialogDescription>
+              Complete order information and execution details
+            </DialogDescription>
           </div>
           <button
             onClick={onClose}
@@ -120,7 +138,9 @@ export const OrderDetailDialog = ({
           <div className={`p-4 rounded-lg border ${sideColor}`}>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className={`text-2xl font-bold ${sideTextColor}`}>{order.symbol}</h3>
+                <h3 className={`text-2xl font-bold ${sideTextColor}`}>
+                  {order.symbol}
+                </h3>
                 <p className="text-sm text-muted-foreground mt-2">
                   Order ID: {order.id}
                   <button
@@ -134,34 +154,45 @@ export const OrderDetailDialog = ({
               </div>
               <div className="text-right">
                 <div className="text-sm text-muted-foreground">Status</div>
-                <OrderStatusBadge status={order.status} fillPercentage={fillPercentage} />
+                <OrderStatusBadge
+                  status={order.status}
+                  fillPercentage={fillPercentage}
+                />
               </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
                 <span className="text-xs text-muted-foreground">Side</span>
-                <div className={`text-lg font-bold ${sideTextColor} uppercase`}>{order.side}</div>
+                <div className={`text-lg font-bold ${sideTextColor} uppercase`}>
+                  {order.side}
+                </div>
               </div>
               <div>
                 <span className="text-xs text-muted-foreground">Type</span>
-                <div className="text-lg font-bold text-foreground">{orderTypeLabel}</div>
+                <div className="text-lg font-bold text-foreground">
+                  {orderTypeLabel}
+                </div>
               </div>
               <div>
                 <span className="text-xs text-muted-foreground">Filled</span>
-                <div className="text-lg font-bold text-foreground">{fillPercentage}%</div>
+                <div className="text-lg font-bold text-foreground">
+                  {fillPercentage}%
+                </div>
               </div>
               <div>
                 <span className="text-xs text-muted-foreground">Total P&L</span>
                 <div
                   className={`text-lg font-bold ${
-                    order.realized_pnl && order.realized_pnl > 0 ? 'text-buy text-green-600' : 'text-sell text-red-600'
+                    order.realized_pnl && order.realized_pnl > 0
+                      ? "text-buy text-green-600"
+                      : "text-sell text-red-600"
                   }`}
                 >
                   {order.realized_pnl !== undefined ? (
                     <>${order.realized_pnl.toFixed(2)}</>
                   ) : (
-                    'N/A'
+                    "N/A"
                   )}
                 </div>
               </div>
@@ -173,18 +204,30 @@ export const OrderDetailDialog = ({
             {/* Left Column */}
             <div className="space-y-4">
               <div className="bg-muted p-4 rounded-lg border border-border">
-                <h4 className="font-semibold text-foreground mb-4">Order Quantities</h4>
+                <h4 className="font-semibold text-foreground mb-4">
+                  Order Quantities
+                </h4>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Total Quantity</span>
-                    <span className="font-medium text-foreground">{order.quantity}</span>
+                    <span className="text-muted-foreground">
+                      Total Quantity
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {order.quantity}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Filled Quantity</span>
-                    <span className="font-medium text-foreground">{order.filled_quantity}</span>
+                    <span className="text-muted-foreground">
+                      Filled Quantity
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {order.filled_quantity}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Remaining Quantity</span>
+                    <span className="text-muted-foreground">
+                      Remaining Quantity
+                    </span>
                     <span className="font-medium text-foreground">
                       {order.quantity - order.filled_quantity}
                     </span>
@@ -199,36 +242,50 @@ export const OrderDetailDialog = ({
               </div>
 
               <div className="bg-muted p-4 rounded-lg border border-border">
-                <h4 className="font-semibold text-foreground mb-4">Price Levels</h4>
+                <h4 className="font-semibold text-foreground mb-4">
+                  Price Levels
+                </h4>
                 <div className="space-y-4">
-                  {order.type === 'market' && (
+                  {order.type === "market" && (
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Market Order</span>
+                      <span className="text-muted-foreground">
+                        Market Order
+                      </span>
                       <Badge variant="secondary">Market</Badge>
                     </div>
                   )}
                   {order.price && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Order Price</span>
-                      <span className="font-medium text-foreground">{order.price.toFixed(4)}</span>
+                      <span className="font-medium text-foreground">
+                        {order.price.toFixed(4)}
+                      </span>
                     </div>
                   )}
                   {order.limit_price && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Limit Price</span>
-                      <span className="font-medium text-foreground">{order.limit_price.toFixed(4)}</span>
+                      <span className="font-medium text-foreground">
+                        {order.limit_price.toFixed(4)}
+                      </span>
                     </div>
                   )}
                   {order.stop_price && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Stop Price</span>
-                      <span className="font-medium text-foreground">{order.stop_price.toFixed(4)}</span>
+                      <span className="font-medium text-foreground">
+                        {order.stop_price.toFixed(4)}
+                      </span>
                     </div>
                   )}
                   {order.average_fill_price && (
                     <div className="flex justify-between items-center pt-4 border-t border-border">
-                      <span className="text-muted-foreground font-medium">Average Fill Price</span>
-                      <span className="font-bold text-foreground">{order.average_fill_price.toFixed(4)}</span>
+                      <span className="text-muted-foreground font-medium">
+                        Average Fill Price
+                      </span>
+                      <span className="font-bold text-foreground">
+                        {order.average_fill_price.toFixed(4)}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -238,33 +295,47 @@ export const OrderDetailDialog = ({
             {/* Right Column */}
             <div className="space-y-4">
               <div className="bg-muted p-4 rounded-lg border border-border">
-                <h4 className="font-semibold text-foreground mb-4">Execution Costs</h4>
+                <h4 className="font-semibold text-foreground mb-4">
+                  Execution Costs
+                </h4>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Total Cost</span>
-                    <span className="font-medium text-foreground">${stats.totalCost.toFixed(2)}</span>
+                    <span className="font-medium text-foreground">
+                      ${stats.totalCost.toFixed(2)}
+                    </span>
                   </div>
                   {order.commission !== undefined && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Commission</span>
-                      <span className="font-medium text-foreground">${order.commission.toFixed(2)}</span>
+                      <span className="font-medium text-foreground">
+                        ${order.commission.toFixed(2)}
+                      </span>
                     </div>
                   )}
                   {order.slippage !== undefined && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Slippage</span>
-                      <span className="font-medium text-foreground">{order.slippage.toFixed(2)}%</span>
+                      <span className="font-medium text-foreground">
+                        {order.slippage.toFixed(2)}%
+                      </span>
                     </div>
                   )}
                   <div className="flex justify-between items-center pt-4 border-t border-border">
-                    <span className="text-muted-foreground font-medium">Net Cost</span>
-                    <span className="font-bold text-foreground">${stats.netCost.toFixed(2)}</span>
+                    <span className="text-muted-foreground font-medium">
+                      Net Cost
+                    </span>
+                    <span className="font-bold text-foreground">
+                      ${stats.netCost.toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>
 
               <div className="bg-muted p-4 rounded-lg border border-border">
-                <h4 className="font-semibold text-foreground mb-4">Timestamps</h4>
+                <h4 className="font-semibold text-foreground mb-4">
+                  Timestamps
+                </h4>
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Created</span>

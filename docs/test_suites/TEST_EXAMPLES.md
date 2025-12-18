@@ -1,6 +1,7 @@
 # Test Suite Examples & Code Patterns
 
 ## Overview
+
 This file shows concrete examples from the comprehensive test suite to help developers understand the testing patterns and approach used.
 
 ---
@@ -565,53 +566,53 @@ it('should disable withdraw button when no balance', () => {
 
 ```typescript
 // Utility function tests
-describe('calculateUnrealizedPnL', () => {
-  it('should calculate positive P&L for long positions', () => {
+describe("calculateUnrealizedPnL", () => {
+  it("should calculate positive P&L for long positions", () => {
     const pnl = calculateUnrealizedPnL({
-      side: 'long',
+      side: "long",
       quantity: 100,
-      entry_price: 1.0850,
-      current_price: 1.0900,
+      entry_price: 1.085,
+      current_price: 1.09,
     });
     expect(pnl).toBe(0.5); // (1.0900 - 1.0850) * 100
   });
 
-  it('should calculate positive P&L for short positions', () => {
+  it("should calculate positive P&L for short positions", () => {
     const pnl = calculateUnrealizedPnL({
-      side: 'short',
+      side: "short",
       quantity: 100,
-      entry_price: 1.0900,
-      current_price: 1.0850,
+      entry_price: 1.09,
+      current_price: 1.085,
     });
     expect(pnl).toBe(0.5); // (1.0900 - 1.0850) * 100
   });
 
-  it('should return zero for no price change', () => {
+  it("should return zero for no price change", () => {
     const pnl = calculateUnrealizedPnL({
-      side: 'long',
+      side: "long",
       quantity: 100,
-      entry_price: 1.0850,
-      current_price: 1.0850,
+      entry_price: 1.085,
+      current_price: 1.085,
     });
     expect(pnl).toBe(0);
   });
 });
 
 // P&L percentage tests
-describe('calculatePnLPercentage', () => {
-  it('should calculate P&L percentage correctly', () => {
+describe("calculatePnLPercentage", () => {
+  it("should calculate P&L percentage correctly", () => {
     const percentage = calculatePnLPercentage({
-      entry_price: 1.0850,
-      current_price: 1.0900,
+      entry_price: 1.085,
+      current_price: 1.09,
       leverage: 1,
     });
     expect(percentage).toBeCloseTo(0.46, 1);
   });
 
-  it('should account for leverage in calculation', () => {
+  it("should account for leverage in calculation", () => {
     const percentage = calculatePnLPercentage({
-      entry_price: 1.0850,
-      current_price: 1.0900,
+      entry_price: 1.085,
+      current_price: 1.09,
       leverage: 10,
     });
     expect(percentage).toBeGreaterThan(4.6);
@@ -619,23 +620,23 @@ describe('calculatePnLPercentage', () => {
 });
 
 // Color coding tests
-describe('getPositionColor', () => {
-  it('should return green for profitable long positions', () => {
+describe("getPositionColor", () => {
+  it("should return green for profitable long positions", () => {
     const color = getPositionColor({
-      side: 'long',
-      entry_price: 1.0850,
-      current_price: 1.0900,
+      side: "long",
+      entry_price: 1.085,
+      current_price: 1.09,
     });
-    expect(color).toBe('green');
+    expect(color).toBe("green");
   });
 
-  it('should return gray for breakeven positions', () => {
+  it("should return gray for breakeven positions", () => {
     const color = getPositionColor({
-      side: 'long',
-      entry_price: 1.0850,
-      current_price: 1.0850,
+      side: "long",
+      entry_price: 1.085,
+      current_price: 1.085,
     });
-    expect(color).toBe('gray');
+    expect(color).toBe("gray");
   });
 });
 ```
@@ -645,6 +646,7 @@ describe('getPositionColor', () => {
 ## Testing Patterns Summary
 
 ### Pattern 1: Basic Rendering
+
 ```typescript
 it('should render component', () => {
   render(<Component />);
@@ -653,23 +655,25 @@ it('should render component', () => {
 ```
 
 ### Pattern 2: User Interaction
+
 ```typescript
 it('should handle click', async () => {
   const user = userEvent.setup();
   const callback = vi.fn();
   render(<Component onClick={callback} />);
-  
+
   await user.click(screen.getByRole('button'));
   expect(callback).toHaveBeenCalled();
 });
 ```
 
 ### Pattern 3: Form Input
+
 ```typescript
 it('should update on input', async () => {
   const user = userEvent.setup();
   render(<Component />);
-  
+
   const input = screen.getByPlaceholderText('Enter text');
   await user.type(input, 'test');
   expect(input).toHaveValue('test');
@@ -677,10 +681,11 @@ it('should update on input', async () => {
 ```
 
 ### Pattern 4: Async Operations
+
 ```typescript
 it('should load data', async () => {
   render(<Component />);
-  
+
   expect(screen.getByText('Loading')).toBeInTheDocument();
   const result = await screen.findByText('Loaded');
   expect(result).toBeInTheDocument();
@@ -688,6 +693,7 @@ it('should load data', async () => {
 ```
 
 ### Pattern 5: Conditional Rendering
+
 ```typescript
 it('should show error', () => {
   const error = new Error('Failed');
@@ -701,6 +707,7 @@ it('should show error', () => {
 ## Conclusion
 
 These examples demonstrate:
+
 - ✅ Comprehensive testing of React components
 - ✅ Testing user interactions and callbacks
 - ✅ Testing state changes and calculations

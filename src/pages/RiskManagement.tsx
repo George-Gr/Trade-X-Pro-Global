@@ -2,7 +2,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { formatToastError } from "@/lib/errorMessageService";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -54,9 +60,9 @@ export default function RiskManagement() {
     try {
       const supabase = await getSupabaseClient();
       const { data, error } = await supabase
-        .from('risk_settings')
-        .select('*')
-        .eq('user_id', user.id)
+        .from("risk_settings")
+        .select("*")
+        .eq("user_id", user.id)
         .single();
 
       if (error) throw error;
@@ -75,10 +81,11 @@ export default function RiskManagement() {
         });
       }
     } catch (err: unknown) {
-      const actionableError = formatToastError(err, 'data_fetching');
+      const actionableError = formatToastError(err, "data_fetching");
       toast({
         ...actionableError,
-        variant: actionableError.variant === "destructive" ? "destructive" : "default",
+        variant:
+          actionableError.variant === "destructive" ? "destructive" : "default",
       });
     } finally {
       setLoading(false);
@@ -96,9 +103,9 @@ export default function RiskManagement() {
     try {
       const supabase = await getSupabaseClient();
       const { error } = await supabase
-        .from('risk_settings')
+        .from("risk_settings")
         .update(settings)
-        .eq('user_id', user.id);
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
@@ -107,10 +114,11 @@ export default function RiskManagement() {
         description: "Your risk management settings have been updated",
       });
     } catch (err: unknown) {
-      const actionableError = formatToastError(err, 'form_validation');
+      const actionableError = formatToastError(err, "form_validation");
       toast({
         ...actionableError,
-        variant: actionableError.variant === "destructive" ? "destructive" : "default",
+        variant:
+          actionableError.variant === "destructive" ? "destructive" : "default",
       });
     } finally {
       setSaving(false);
@@ -137,7 +145,9 @@ export default function RiskManagement() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
-                <CardTitle className="text-sm font-medium">Margin Level</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Margin Level
+                </CardTitle>
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -160,14 +170,16 @@ export default function RiskManagement() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
-                <CardTitle className="text-sm font-medium">Max Positions</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Max Positions
+                </CardTitle>
                 <Lock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">0 / {settings.max_positions}</div>
-                <p className="text-xs text-muted-foreground">
-                  Open positions
-                </p>
+                <div className="text-2xl font-bold">
+                  0 / {settings.max_positions}
+                </div>
+                <p className="text-xs text-muted-foreground">Open positions</p>
               </CardContent>
             </Card>
 
@@ -192,6 +204,6 @@ export default function RiskManagement() {
           <RiskSettingsForm />
         </div>
       </div>
-      </AuthenticatedLayout>
+    </AuthenticatedLayout>
   );
 }

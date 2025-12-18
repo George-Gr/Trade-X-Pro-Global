@@ -7,6 +7,7 @@ The sidebar navigation items (Dashboard, Trade, Portfolio, History, Pending Orde
 ## Root Cause
 
 The issue was in the top spacing of the sidebar content in `src/components/layout/AppSidebar.tsx`. The original spacing element only provided `h-6` (1.5rem / 24px) of vertical offset, which was insufficient to account for:
+
 - Header height: 64px (h-16 Tailwind class)
 - Proper visual buffer/margin: 8px additional spacing for better UX
 
@@ -15,11 +16,13 @@ The issue was in the top spacing of the sidebar content in `src/components/layou
 ## Solution Implemented
 
 ### Modified File
+
 `src/components/layout/AppSidebar.tsx`
 
 ### Specific CSS Changes
 
 **Before:**
+
 ```tsx
 <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
   {/* Top spacing to prevent overlap with header */}
@@ -27,6 +30,7 @@ The issue was in the top spacing of the sidebar content in `src/components/layou
 ```
 
 **After:**
+
 ```tsx
 <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
   {/* Top spacing to prevent overlap with header - accounts for 64px header + 8px buffer */}
@@ -35,10 +39,10 @@ The issue was in the top spacing of the sidebar content in `src/components/layou
 
 ### CSS Properties Adjusted
 
-| Property | Old Value | New Value | Rationale |
-|----------|-----------|-----------|-----------|
-| Tailwind Class | `h-6` (24px) | `h-20` (80px) | Increased from 24px to 80px to accommodate full header height (64px) plus visual buffer (16px for comfortable spacing) |
-| Purpose | Insufficient spacing | Proper vertical offset | Ensures Dashboard button and all subsequent nav items start below the header |
+| Property       | Old Value            | New Value              | Rationale                                                                                                              |
+| -------------- | -------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Tailwind Class | `h-6` (24px)         | `h-20` (80px)          | Increased from 24px to 80px to accommodate full header height (64px) plus visual buffer (16px for comfortable spacing) |
+| Purpose        | Insufficient spacing | Proper vertical offset | Ensures Dashboard button and all subsequent nav items start below the header                                           |
 
 ### How This Works
 
@@ -52,9 +56,11 @@ The Tailwind `h-20` class creates a 5rem (80px) high invisible `<div>` element a
 ## Technical Details
 
 ### Header Configuration
+
 From `src/components/layout/AuthenticatedLayoutInner.tsx`:
+
 ```tsx
-<header className="h-16 bg-card border-b border-border flex items-center 
+<header className="h-16 bg-card border-b border-border flex items-center
   justify-between px-lg sticky top-0 z-50 backdrop-blur-sm bg-card/95 shadow-sm">
 ```
 
@@ -62,7 +68,9 @@ From `src/components/layout/AuthenticatedLayoutInner.tsx`:
 - `sticky top-0 z-50` = Header stays at top with high z-index
 
 ### Sidebar Structure
+
 From `src/components/layout/AppSidebar.tsx`:
+
 ```tsx
 <Sidebar collapsible="icon" ...>
   <SidebarContent className="...h-full">
@@ -76,14 +84,17 @@ From `src/components/layout/AppSidebar.tsx`:
 ## Browser and Device Compatibility
 
 ✅ **Desktop Browsers**
+
 - Chrome, Firefox, Safari, Edge
 - Full header visibility with proper spacing
 
 ✅ **Mobile Devices**
+
 - iOS/Android mobile browsers
 - Responsive spacing maintained
 
 ✅ **Responsive Breakpoints**
+
 - md: (768px) - Sidebar visible, spacing applied
 - sm: (640px) - Mobile sheet layout, spacing honored
 - Mobile-first layout maintains consistency
@@ -91,6 +102,7 @@ From `src/components/layout/AppSidebar.tsx`:
 ## Before/After Comparison
 
 ### Before Fix
+
 ```
 ┌─────────────────────────┐
 │      HEADER (64px)      │ ← z-index: 50
@@ -102,6 +114,7 @@ From `src/components/layout/AppSidebar.tsx`:
 ```
 
 ### After Fix
+
 ```
 ┌─────────────────────────┐
 │      HEADER (64px)      │ ← z-index: 50
@@ -119,7 +132,7 @@ To verify the fix:
 
 1. **Visual Check**: Dashboard button should start clearly below the header
 2. **Clickability**: All navigation items should be fully clickable
-3. **Responsiveness**: 
+3. **Responsiveness**:
    - Resize to different breakpoints
    - Verify spacing remains consistent
 4. **Collapsed State**: When sidebar is collapsed to icon-only mode, spacing still applies
@@ -134,6 +147,7 @@ To verify the fix:
 ## Performance Impact
 
 ✅ **No Performance Impact**
+
 - Uses CSS Tailwind class only
 - No JavaScript overhead
 - No additional DOM elements beyond the single spacing `<div>`
@@ -142,6 +156,7 @@ To verify the fix:
 ## Accessibility Considerations
 
 ✅ **Maintains WCAG 2.1 AA Compliance**
+
 - Navigation items remain in logical reading order
 - Focus states work correctly
 - Screen readers encounter nav items in proper sequence
@@ -150,12 +165,14 @@ To verify the fix:
 ## Future Maintenance Notes
 
 If header height changes:
+
 1. Recalculate required offset: `new_header_height + visual_buffer`
 2. Update the `h-20` class to appropriate Tailwind height class
 3. Test across all screen sizes
 4. Update this documentation
 
 Current mapping for quick reference:
+
 - `h-6` = 24px (removed - insufficient)
 - `h-16` = 64px (header height)
 - `h-20` = 80px (header 64px + 16px buffer - CURRENT)

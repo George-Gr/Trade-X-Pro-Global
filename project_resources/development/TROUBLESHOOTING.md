@@ -8,16 +8,16 @@
 
 ## 🎯 Quick Problem Finder
 
-| Problem | Section | Solution |
-|---------|---------|----------|
-| Port 8080 in use | Environment Issues | Kill process or use different port |
-| Module not found | Build Errors | Reinstall dependencies |
-| TypeScript errors | Type Check Errors | Clear cache and rebuild |
-| Styling not applied | Styling Issues | Check Tailwind classes, CSS variables |
-| Component not rendering | Component Issues | Check browser console, React DevTools |
-| Design validation failing | Design System | Use `npm run validate:design --fix` |
-| Tests failing | Testing Issues | Check test file, run with --watch |
-| Build fails | Build Errors | Check console output, increase memory |
+| Problem                   | Section            | Solution                              |
+| ------------------------- | ------------------ | ------------------------------------- |
+| Port 8080 in use          | Environment Issues | Kill process or use different port    |
+| Module not found          | Build Errors       | Reinstall dependencies                |
+| TypeScript errors         | Type Check Errors  | Clear cache and rebuild               |
+| Styling not applied       | Styling Issues     | Check Tailwind classes, CSS variables |
+| Component not rendering   | Component Issues   | Check browser console, React DevTools |
+| Design validation failing | Design System      | Use `npm run validate:design --fix`   |
+| Tests failing             | Testing Issues     | Check test file, run with --watch     |
+| Build fails               | Build Errors       | Check console output, increase memory |
 
 ---
 
@@ -26,6 +26,7 @@
 ### Port 8080 Already in Use
 
 **Problem:**
+
 ```
 Error: listen EADDRINUSE: address already in use :::8080
 ```
@@ -33,6 +34,7 @@ Error: listen EADDRINUSE: address already in use :::8080
 **Solutions:**
 
 **Option 1: Kill existing process**
+
 ```bash
 # macOS/Linux
 lsof -i :8080 | grep LISTEN
@@ -44,12 +46,14 @@ taskkill /PID <PID> /F
 ```
 
 **Option 2: Use different port**
+
 ```bash
 PORT=3000 npm run dev
 # Now access http://localhost:3000
 ```
 
 **Option 3: Restart machine**
+
 ```bash
 # If above doesn't work, restart your computer
 ```
@@ -57,6 +61,7 @@ PORT=3000 npm run dev
 ### Supabase Connection Failed
 
 **Problem:**
+
 ```
 Error: Failed to connect to Supabase
 Error: Invalid API key
@@ -65,6 +70,7 @@ Error: Invalid API key
 **Solutions:**
 
 1. **Check credentials in `.env.local`**
+
 ```bash
 cat .env.local
 # Should show:
@@ -86,6 +92,7 @@ cat .env.local
    - Try logging into Supabase dashboard directly
 
 4. **Clear cache and retry**
+
 ```bash
 rm -rf node_modules .vite dist
 npm install
@@ -95,13 +102,15 @@ npm run dev
 ### Environment Variable Not Loaded
 
 **Problem:**
+
 ```javascript
-console.log(import.meta.env.VITE_SUPABASE_URL)  // undefined
+console.log(import.meta.env.VITE_SUPABASE_URL); // undefined
 ```
 
 **Solutions:**
 
 1. **Restart dev server after changing `.env.local`**
+
 ```bash
 # Stop server (Ctrl+C)
 # Edit .env.local
@@ -109,6 +118,7 @@ npm run dev  # Restart
 ```
 
 2. **Use correct prefix for Vite variables**
+
 ```bash
 # ✅ CORRECT - Vite exposes VITE_* variables
 VITE_SUPABASE_URL=...
@@ -118,6 +128,7 @@ SUPABASE_URL=...
 ```
 
 3. **Check variable is actually defined**
+
 ```bash
 grep VITE_SUPABASE_URL .env.local
 # Should show the value
@@ -130,6 +141,7 @@ grep VITE_SUPABASE_URL .env.local
 ### Module Not Found Error
 
 **Problem:**
+
 ```
 Error: Cannot find module '@/components/Button'
 Error: Module not found: ./missing-file.tsx
@@ -138,6 +150,7 @@ Error: Module not found: ./missing-file.tsx
 **Solutions:**
 
 1. **Check file path is correct**
+
 ```bash
 # Check if file exists
 ls src/components/Button.tsx
@@ -147,6 +160,7 @@ ls src/components/Button.tsx
 ```
 
 2. **Reinstall dependencies**
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -154,6 +168,7 @@ npm run build
 ```
 
 3. **Clear caches**
+
 ```bash
 npm run clean
 npm install
@@ -163,6 +178,7 @@ npm run dev
 ### Import Path Issues
 
 **Problem:**
+
 ```
 Error: Cannot find module '@/integrations/supabase/client'
 ```
@@ -182,6 +198,7 @@ import { supabase } from '../../../integrations/supabase/client'
 ### Build Out of Memory
 
 **Problem:**
+
 ```
 FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory
 ```
@@ -198,6 +215,7 @@ NODE_OPTIONS="--max-old-space-size=8192" npm run build
 ### Build Takes Too Long
 
 **Problem:**
+
 ```
 Build takes > 2 minutes
 ```
@@ -222,6 +240,7 @@ npm prune --production
 ### TypeScript "Property does not exist" Error
 
 **Problem:**
+
 ```
 Error: Property 'color' does not exist on type 'Props'
 ```
@@ -229,29 +248,32 @@ Error: Property 'color' does not exist on type 'Props'
 **Solutions:**
 
 1. **Add property to type definition**
+
 ```tsx
 // ❌ WRONG
 interface Props {
-  title: string
+  title: string;
 }
 
 // ✅ CORRECT
 interface Props {
-  title: string
-  color?: string
+  title: string;
+  color?: string;
 }
 ```
 
 2. **Use correct import for types**
+
 ```tsx
 // ❌ WRONG - Missing 'type' keyword
-import { Props } from './types'
+import { Props } from "./types";
 
 // ✅ CORRECT
-import type { Props } from './types'
+import type { Props } from "./types";
 ```
 
 3. **Check if type exists**
+
 ```bash
 npm run type-check
 # Shows all type errors with line numbers
@@ -260,6 +282,7 @@ npm run type-check
 ### "Cannot find name" Error
 
 **Problem:**
+
 ```
 Error: Cannot find name 'FormData'
 Error: Cannot find name 'fetch'
@@ -268,12 +291,14 @@ Error: Cannot find name 'fetch'
 **Solutions:**
 
 1. **Check TypeScript config has correct lib**
+
 ```json
 // tsconfig.json should include:
 "lib": ["ES2020", "DOM", "DOM.Iterable"]
 ```
 
 2. **Add type declaration file**
+
 ```bash
 touch src/types/globals.d.ts
 # Add: declare const FormData: typeof FormData
@@ -285,6 +310,7 @@ touch src/types/globals.d.ts
 ### React Component Return Type Error
 
 **Problem:**
+
 ```
 Error: JSX element type 'Component' does not have any construct or call signatures
 ```
@@ -293,21 +319,21 @@ Error: JSX element type 'Component' does not have any construct or call signatur
 
 ```tsx
 // ✅ CORRECT
-import type { FC } from 'react'
+import type { FC } from "react";
 
 const MyComponent: FC = () => {
-  return <div>Content</div>
-}
+  return <div>Content</div>;
+};
 
 // ✅ ALSO CORRECT
 function MyComponent() {
-  return <div>Content</div>
+  return <div>Content</div>;
 }
 
 // ❌ WRONG
 const MyComponent = () => {
-  return <div>Content</div>
-} // Missing return type
+  return <div>Content</div>;
+}; // Missing return type
 ```
 
 ---
@@ -317,6 +343,7 @@ const MyComponent = () => {
 ### Tailwind Classes Not Applied
 
 **Problem:**
+
 ```html
 <!-- Not styled -->
 <div className="text-red-600 bg-blue-500">No color</div>
@@ -325,26 +352,30 @@ const MyComponent = () => {
 **Solutions:**
 
 1. **Check Tailwind is configured**
+
 ```bash
 grep tailwindcss tailwind.config.ts
 # Should exist and be configured
 ```
 
 2. **Verify file is included in Tailwind scanning**
+
 ```javascript
 // tailwind.config.js
 content: [
-  "./src/**/*.{js,ts,jsx,tsx}",  // Make sure this includes your files
-]
+  "./src/**/*.{js,ts,jsx,tsx}", // Make sure this includes your files
+];
 ```
 
 3. **Restart dev server**
+
 ```bash
 # Stop: Ctrl+C
 npm run dev
 ```
 
 4. **Don't use arbitrary values**
+
 ```tsx
 // ❌ WRONG - Won't work
 <div className="text-[#FF0000]">Red text</div>
@@ -359,19 +390,22 @@ npm run dev
 ### CSS Variables Not Working
 
 **Problem:**
+
 ```javascript
-const color = 'hsl(var(--primary))'  // undefined
+const color = "hsl(var(--primary))"; // undefined
 ```
 
 **Solutions:**
 
 1. **Check CSS variable is defined in styles**
+
 ```bash
 grep "primary:" src/styles/variables.css
 # Should show: --primary: 262 83% 58%
 ```
 
 2. **Use correct syntax in TypeScript**
+
 ```tsx
 // ❌ WRONG
 style={{ color: 'hsl(var(--primary))' }}
@@ -384,6 +418,7 @@ className="text-primary"
 ```
 
 3. **Check dark mode is working**
+
 ```tsx
 // Browser DevTools → Elements
 // <html> should have class="dark" in dark mode
@@ -392,6 +427,7 @@ className="text-primary"
 ### Design System Validation Failing
 
 **Problem:**
+
 ```
 Design validation failed:
 - Found hardcoded color #FF0000
@@ -420,6 +456,7 @@ npm run validate:design -- --fix
 ### Component Not Rendering
 
 **Problem:**
+
 ```
 Page loads but component is not visible
 ```
@@ -437,28 +474,35 @@ Page loads but component is not visible
    - Check component props are correct
 
 3. **Check if component is imported**
+
 ```tsx
 // ❌ WRONG - Not imported
-<MyComponent />
+<MyComponent />;
 
 // ✅ CORRECT
-import { MyComponent } from '@/components/MyComponent'
-<MyComponent />
+import { MyComponent } from "@/components/MyComponent";
+<MyComponent />;
 ```
 
 4. **Check rendering logic**
+
 ```tsx
 // ❌ WRONG - Conditional might be false
-{showComponent && <Component />}
+{
+  showComponent && <Component />;
+}
 
 // ✅ CORRECT - Debug to see if condition is true
-{showComponent && <Component />}
+{
+  showComponent && <Component />;
+}
 // Add console.log('showComponent:', showComponent)
 ```
 
 ### Form Not Submitting
 
 **Problem:**
+
 ```
 Form visible but doesn't submit when clicking button
 ```
@@ -466,6 +510,7 @@ Form visible but doesn't submit when clicking button
 **Solutions:**
 
 1. **Check button has type="submit"**
+
 ```tsx
 // ❌ WRONG
 <button onClick={handleSubmit}>Submit</button>
@@ -475,6 +520,7 @@ Form visible but doesn't submit when clicking button
 ```
 
 2. **Check form wraps inputs**
+
 ```tsx
 // ✅ CORRECT
 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -490,6 +536,7 @@ Form visible but doesn't submit when clicking button
 ```
 
 3. **Check validation isn't blocking**
+
 ```bash
 # Open browser console
 # Try submitting form
@@ -500,6 +547,7 @@ Form visible but doesn't submit when clicking button
 ### Modal/Dialog Not Closing
 
 **Problem:**
+
 ```
 Dialog/Modal opens but won't close
 ```
@@ -533,6 +581,7 @@ const [open, setOpen] = useState(false)
 ### Tests Failing
 
 **Problem:**
+
 ```
 FAIL  src/components/Button.test.tsx
   ✕ renders correctly (15ms)
@@ -542,38 +591,41 @@ FAIL  src/components/Button.test.tsx
 **Solutions:**
 
 1. **Check test setup**
+
 ```bash
 # Make sure vitest.setup.ts exists and is configured
 grep setup vitest.config.ts
 ```
 
 2. **Mock external APIs**
+
 ```typescript
 // In your test file
-global.fetch = vi.fn(() =>
-  Promise.resolve({ ok: true, json: () => ({}) })
-)
+global.fetch = vi.fn(() => Promise.resolve({ ok: true, json: () => ({}) }));
 ```
 
 3. **Run tests with debugging**
+
 ```bash
 npm run test -- --reporter=verbose
 npm run test -- --watch  # Re-run on file changes
 ```
 
 4. **Check imports in test**
+
 ```tsx
 // ✅ CORRECT
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 // ❌ WRONG - Missing imports
-render(<Component />)  // render is not defined
+render(<Component />); // render is not defined
 ```
 
 ### Test Timeout
 
 **Problem:**
+
 ```
 Timeout: Task timed out after 5000ms
 ```
@@ -582,17 +634,18 @@ Timeout: Task timed out after 5000ms
 
 ```typescript
 // Increase timeout
-it('should do something async', async () => {
+it("should do something async", async () => {
   // test code
-}, 10000)  // 10 second timeout
+}, 10000); // 10 second timeout
 
 // Or globally in vitest.config.ts
-testTimeout: 10000
+testTimeout: 10000;
 ```
 
 ### Cannot Find Test File
 
 **Problem:**
+
 ```
 Error: Cannot find test file for components/Button.tsx
 ```
@@ -600,6 +653,7 @@ Error: Cannot find test file for components/Button.tsx
 **Solutions:**
 
 Create test file in right location:
+
 ```bash
 # Create test file
 mkdir -p src/components/Button/__tests__
@@ -618,6 +672,7 @@ src/hooks/__tests__/useCustom.test.ts
 ### Cannot Connect to Supabase
 
 **Problem:**
+
 ```
 Error: Connection refused
 Error: getaddrinfo ENOTFOUND
@@ -642,6 +697,7 @@ cat .env.local | grep SUPABASE
 ### Database Schema Out of Sync
 
 **Problem:**
+
 ```
 Column 'new_column' does not exist
 ```
@@ -659,6 +715,7 @@ npm run supabase:pull
 ### Types Not Updated After Schema Change
 
 **Problem:**
+
 ```
 Type 'user' is not assignable to type 'never'
 ```
@@ -686,6 +743,7 @@ npm run type-check
 ### Blank White Page
 
 **Problem:**
+
 ```
 App loads but shows blank white page
 ```
@@ -698,13 +756,15 @@ App loads but shows blank white page
    - Debug from there
 
 2. **Check if React is rendering**
+
 ```javascript
 // In browser console
-document.getElementById('root')
+document.getElementById("root");
 // Should show <div id="root"> with content
 ```
 
 3. **Check main.tsx is correct**
+
 ```typescript
 // src/main.tsx should have:
 import { StrictMode } from 'react'
@@ -721,6 +781,7 @@ createRoot(document.getElementById('root')!).render(
 ### Memory Leak Warning in Console
 
 **Problem:**
+
 ```
 Warning: An update to Component inside a StrictMode tree is not wrapped in act(...)
 ```
@@ -730,23 +791,24 @@ Warning: An update to Component inside a StrictMode tree is not wrapped in act(.
 ```tsx
 // ✅ CORRECT - Cleanup effect
 useEffect(() => {
-  const subscription = supabase.on('change', handler).subscribe()
-  
+  const subscription = supabase.on("change", handler).subscribe();
+
   return () => {
-    supabase.removeChannel(subscription)  // Cleanup!
-  }
-}, [])
+    supabase.removeChannel(subscription); // Cleanup!
+  };
+}, []);
 
 // ❌ WRONG - No cleanup
 useEffect(() => {
-  const subscription = supabase.on('change', handler).subscribe()
+  const subscription = supabase.on("change", handler).subscribe();
   // Missing return cleanup
-}, [])
+}, []);
 ```
 
 ### Console Error: "Cannot find module"
 
 **Problem:**
+
 ```
 Uncaught Error: Cannot find module '@/lib/utils'
 ```
@@ -754,17 +816,20 @@ Uncaught Error: Cannot find module '@/lib/utils'
 **Solutions:**
 
 1. **Check module path exists**
+
 ```bash
 ls src/lib/utils.ts
 ```
 
 2. **Check import path matches**
+
 ```tsx
 // If file is src/lib/utils.ts, import should be:
-import { helper } from '@/lib/utils'
+import { helper } from "@/lib/utils";
 ```
 
 3. **Check @ alias is configured**
+
 ```javascript
 // vite.config.ts should have:
 resolve: {
@@ -781,6 +846,7 @@ resolve: {
 ### Debugging Checklist
 
 Before asking for help, try:
+
 - [ ] Read relevant section in this guide
 - [ ] Check browser console for errors (F12)
 - [ ] Run `npm run lint` and `npm run type-check`

@@ -27,6 +27,7 @@
 ## Button Component
 
 ### Overview
+
 The Button component is the primary call-to-action element. It supports multiple sizes, variants, and states. Always use Button for interactive actions.
 
 **Location:** `src/components/ui/button.tsx`
@@ -35,34 +36,41 @@ The Button component is the primary call-to-action element. It supports multiple
 
 ```typescript
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link'
-  size?: 'xs' | 'sm' | 'default' | 'lg' | 'icon' | 'xl'
-  asChild?: boolean
-  loading?: boolean
-  className?: string
-  disabled?: boolean
-  type?: 'button' | 'submit' | 'reset'
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
-  'aria-label'?: string
-  'aria-pressed'?: boolean
-  children: React.ReactNode
+  variant?:
+    | "default"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "destructive"
+    | "link";
+  size?: "xs" | "sm" | "default" | "lg" | "icon" | "xl";
+  asChild?: boolean;
+  loading?: boolean;
+  className?: string;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  "aria-label"?: string;
+  "aria-pressed"?: boolean;
+  children: React.ReactNode;
 }
 ```
 
 ### Sizes
 
-| Size | Height | Min Width | Padding | Touch Target | Use Case |
-|------|--------|-----------|---------|--------------|----------|
-| `xs` | 32px | — | 4px 8px | ❌ No | Icon buttons, compact spaces |
-| `sm` | 40px | — | 6px 12px | ❌ No | Small secondary actions |
-| `default` | 48px | 48px | 8px 16px | ✅ Yes | Standard buttons (default) |
-| `lg` | 56px | — | 12px 24px | ✅ Yes | Large CTAs, hero sections |
-| `icon` | 48px | 48px | — | ✅ Yes | Icon-only buttons |
-| `xl` | 64px | — | 16px 24px | ✅ Yes | Full-width CTAs |
+| Size      | Height | Min Width | Padding   | Touch Target | Use Case                     |
+| --------- | ------ | --------- | --------- | ------------ | ---------------------------- |
+| `xs`      | 32px   | —         | 4px 8px   | ❌ No        | Icon buttons, compact spaces |
+| `sm`      | 40px   | —         | 6px 12px  | ❌ No        | Small secondary actions      |
+| `default` | 48px   | 48px      | 8px 16px  | ✅ Yes       | Standard buttons (default)   |
+| `lg`      | 56px   | —         | 12px 24px | ✅ Yes       | Large CTAs, hero sections    |
+| `icon`    | 48px   | 48px      | —         | ✅ Yes       | Icon-only buttons            |
+| `xl`      | 64px   | —         | 16px 24px | ✅ Yes       | Full-width CTAs              |
 
 ### Variants
 
 #### Default (Primary)
+
 ```tsx
 <Button variant="default">Save Changes</Button>
 <Button variant="default" size="lg">Get Started</Button>
@@ -71,51 +79,62 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   <Settings className="w-4 h-4" />
 </Button>
 ```
+
 **Use:** Primary call-to-action, main actions  
 **Color:** Primary blue, white text  
 **States:** Hover (darker), Active (pressed), Disabled (muted)
 
 #### Secondary
+
 ```tsx
 <Button variant="secondary">Cancel</Button>
 <Button variant="secondary" size="sm">Learn More</Button>
 ```
+
 **Use:** Secondary actions, alternative paths  
 **Color:** Secondary blue, white text  
 **States:** Similar to default
 
 #### Outline
+
 ```tsx
 <Button variant="outline">Edit</Button>
 <Button variant="outline" size="lg">View All</Button>
 ```
+
 **Use:** Neutral actions, low-emphasis options  
 **Color:** Border + text, transparent background  
 **States:** Filled on hover/active
 
 #### Ghost
+
 ```tsx
 <Button variant="ghost">More Options</Button>
 <Button variant="ghost" size="sm">Skip</Button>
 ```
+
 **Use:** Minimal actions, text-like appearance  
 **Color:** Text only, no border  
 **States:** Background on hover
 
 #### Destructive
+
 ```tsx
 <Button variant="destructive">Delete Account</Button>
 <Button variant="destructive" size="sm">Remove</Button>
 ```
+
 **Use:** Dangerous actions, deletions  
 **Color:** Red, white text  
 **States:** Darker red on hover
 
 #### Link
+
 ```tsx
 <Button variant="link">Learn more →</Button>
 <Button variant="link" size="sm">View source</Button>
 ```
+
 **Use:** Inline links, navigation  
 **Color:** Primary blue, underline on hover  
 **States:** Darker on hover
@@ -134,50 +153,44 @@ Use the `loading` prop to disable and show loading indicator.
 ### Examples
 
 #### CTA Button
+
 ```tsx
-<Button 
-  size="lg" 
-  onClick={handleSubmit}
-  className="w-full"
->
+<Button size="lg" onClick={handleSubmit} className="w-full">
   Start Trading
 </Button>
 ```
 
 #### Icon Button
+
 ```tsx
-<Button 
-  variant="ghost" 
-  size="icon" 
-  aria-label="Close dialog"
-  onClick={onClose}
->
+<Button variant="ghost" size="icon" aria-label="Close dialog" onClick={onClose}>
   <X className="w-4 h-4" />
 </Button>
 ```
 
 #### Button Group
+
 ```tsx
 <div className="flex gap-3">
-  <Button variant="outline" onClick={onCancel}>Cancel</Button>
+  <Button variant="outline" onClick={onCancel}>
+    Cancel
+  </Button>
   <Button onClick={onConfirm}>Confirm</Button>
 </div>
 ```
 
 #### Loading CTA
+
 ```tsx
-<Button 
-  disabled={isLoading} 
-  loading={isLoading}
-  size="lg"
->
-  {isLoading ? 'Processing' : 'Submit'}
+<Button disabled={isLoading} loading={isLoading} size="lg">
+  {isLoading ? "Processing" : "Submit"}
 </Button>
 ```
 
 ### Do's & Don'ts
 
 **DO:**
+
 - ✅ Use `size="default"` or `lg` for touch targets (44px+ minimum)
 - ✅ Use `variant="destructive"` for delete/dangerous actions
 - ✅ Provide `aria-label` for icon-only buttons
@@ -186,6 +199,7 @@ Use the `loading` prop to disable and show loading indicator.
 - ✅ Combine with Tooltip for additional context
 
 **DON'T:**
+
 - ❌ Use multiple `variant="default"` in same section
 - ❌ Remove focus rings for styling
 - ❌ Use `<button onClick>` for navigation (use `<Link>` or `<a>`)
@@ -198,6 +212,7 @@ Use the `loading` prop to disable and show loading indicator.
 ## Input Component
 
 ### Overview
+
 The Input component is used for single-line text entry. Always pair with a Label component.
 
 **Location:** `src/components/ui/input.tsx`
@@ -206,88 +221,77 @@ The Input component is used for single-line text entry. Always pair with a Label
 
 ```typescript
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'date' | 'time'
-  placeholder?: string
-  disabled?: boolean
-  required?: boolean
-  error?: boolean
-  className?: string
-  'aria-label'?: string
-  'aria-describedby'?: string
-  'aria-invalid'?: boolean
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
-  onBlur?: React.FocusEventHandler<HTMLInputElement>
+  type?:
+    | "text"
+    | "email"
+    | "password"
+    | "number"
+    | "tel"
+    | "url"
+    | "date"
+    | "time";
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+  error?: boolean;
+  className?: string;
+  "aria-label"?: string;
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 }
 ```
 
 ### Sizes
 
-| Size | Height | Padding | Font | Use Case |
-|------|--------|---------|------|----------|
-| `default` | 40px | 8px 12px | sm | Standard inputs |
-| `sm` | 32px | 4px 8px | xs | Compact forms |
-| `lg` | 48px | 12px 16px | base | Large forms, mobile |
+| Size      | Height | Padding   | Font | Use Case            |
+| --------- | ------ | --------- | ---- | ------------------- |
+| `default` | 40px   | 8px 12px  | sm   | Standard inputs     |
+| `sm`      | 32px   | 4px 8px   | xs   | Compact forms       |
+| `lg`      | 48px   | 12px 16px | base | Large forms, mobile |
 
 ### Examples
 
 #### Email Input
+
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="email">Email Address</Label>
-  <Input 
-    id="email"
-    type="email" 
-    placeholder="you@example.com"
-    required
-  />
+  <Input id="email" type="email" placeholder="you@example.com" required />
 </div>
 ```
 
 #### Password Input
+
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="password">Password</Label>
-  <Input 
-    id="password"
-    type="password" 
-    placeholder="••••••••"
-    required
-  />
+  <Input id="password" type="password" placeholder="••••••••" required />
 </div>
 ```
 
 #### Number Input
+
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="amount">Amount</Label>
-  <Input 
-    id="amount"
-    type="number" 
-    placeholder="0.00"
-    min="0"
-    step="0.01"
-  />
+  <Input id="amount" type="number" placeholder="0.00" min="0" step="0.01" />
 </div>
 ```
 
 #### Disabled Input
+
 ```tsx
-<Input 
-  placeholder="Disabled input"
-  disabled
-  value="Cannot edit"
-/>
+<Input placeholder="Disabled input" disabled value="Cannot edit" />
 ```
 
 #### Error State
+
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="username">Username</Label>
-  <Input 
-    id="username"
-    aria-invalid="true"
-    aria-describedby="username-error"
-  />
+  <Input id="username" aria-invalid="true" aria-describedby="username-error" />
   <p id="username-error" className="text-sm text-destructive">
     Username already taken
   </p>
@@ -297,6 +301,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 ### Do's & Don'ts
 
 **DO:**
+
 - ✅ Always pair with `<Label>` component
 - ✅ Use correct `type` attribute for mobile keyboard optimization
 - ✅ Provide `placeholder` for input examples
@@ -305,6 +310,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 - ✅ Use `size="lg"` for better touch targets on mobile
 
 **DON'T:**
+
 - ❌ Use placeholder as the only label
 - ❌ Hide the label component
 - ❌ Use `disabled` without good reason
@@ -317,6 +323,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 ## Card Component
 
 ### Overview
+
 The Card component is a container for related content. Use elevation and variants to create hierarchy.
 
 **Location:** `src/components/ui/card.tsx`
@@ -325,13 +332,13 @@ The Card component is a container for related content. Use elevation and variant
 
 ```typescript
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  elevation?: '1' | '2' | '3'
-  variant?: 'primary' | 'secondary' | 'outline'
-  interactive?: boolean
-  selected?: boolean
-  className?: string
-  onClick?: React.MouseEventHandler<HTMLDivElement>
-  children: React.ReactNode
+  elevation?: "1" | "2" | "3";
+  variant?: "primary" | "secondary" | "outline";
+  interactive?: boolean;
+  selected?: boolean;
+  className?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  children: React.ReactNode;
 }
 
 interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -343,62 +350,61 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 ### Elevations
 
-| Elevation | Shadow | Use Case |
-|-----------|--------|----------|
-| `1` | Subtle | Base content, grouped items |
-| `2` | Standard | Featured content, main cards |
-| `3` | High | Modal/overlay, important dialogs |
+| Elevation | Shadow   | Use Case                         |
+| --------- | -------- | -------------------------------- |
+| `1`       | Subtle   | Base content, grouped items      |
+| `2`       | Standard | Featured content, main cards     |
+| `3`       | High     | Modal/overlay, important dialogs |
 
 ### Variants
 
 #### Primary
+
 ```tsx
 <Card elevation="2" variant="primary">
   <CardHeader>
     <CardTitle>Account Settings</CardTitle>
   </CardHeader>
-  <CardContent>
-    {/* Main content */}
-  </CardContent>
+  <CardContent>{/* Main content */}</CardContent>
 </Card>
 ```
+
 **Use:** Main content cards  
 **Color:** Default background, standard border
 
 #### Secondary
+
 ```tsx
 <Card elevation="1" variant="secondary">
-  <CardContent>
-    Secondary information
-  </CardContent>
+  <CardContent>Secondary information</CardContent>
 </Card>
 ```
+
 **Use:** Supporting content, sidebars  
 **Color:** Elevated background
 
 #### Outline
+
 ```tsx
 <Card elevation="1" variant="outline">
-  <CardContent>
-    Outlined content
-  </CardContent>
+  <CardContent>Outlined content</CardContent>
 </Card>
 ```
+
 **Use:** Low-emphasis content  
 **Color:** Transparent background, visible border
 
 ### Examples
 
 #### Basic Card
+
 ```tsx
 <Card elevation="2">
   <CardHeader>
     <CardTitle>Card Title</CardTitle>
     <CardDescription>Card description or subtitle</CardDescription>
   </CardHeader>
-  <CardContent>
-    Card content goes here
-  </CardContent>
+  <CardContent>Card content goes here</CardContent>
   <CardFooter>
     <Button>Action</Button>
   </CardFooter>
@@ -406,12 +412,13 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 ```
 
 #### Interactive Card
+
 ```tsx
-<Card 
-  elevation="2" 
-  interactive 
+<Card
+  elevation="2"
+  interactive
   onClick={() => selectPortfolio(portfolio)}
-  className={selected ? 'ring-2 ring-primary' : ''}
+  className={selected ? "ring-2 ring-primary" : ""}
 >
   <CardHeader>
     <CardTitle>{portfolio.name}</CardTitle>
@@ -423,9 +430,10 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 ```
 
 #### Card List
+
 ```tsx
 <div className="space-y-2">
-  {items.map(item => (
+  {items.map((item) => (
     <Card key={item.id} elevation="1">
       <div className="flex items-center justify-between p-4">
         <div>
@@ -440,25 +448,25 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 ```
 
 #### Card with Image
+
 ```tsx
 <Card elevation="2">
-  <img 
-    src={image} 
+  <img
+    src={image}
     alt="Card image"
     className="w-full h-48 object-cover rounded-t-lg"
   />
   <CardHeader>
     <CardTitle>Image Title</CardTitle>
   </CardHeader>
-  <CardContent>
-    Content below image
-  </CardContent>
+  <CardContent>Content below image</CardContent>
 </Card>
 ```
 
 ### Do's & Don'ts
 
 **DO:**
+
 - ✅ Use `elevation="1"` for base content
 - ✅ Use `elevation="2"` for featured content
 - ✅ Use `elevation="3"` for modals/overlays only
@@ -467,6 +475,7 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 - ✅ Combine elevation + variant appropriately
 
 **DON'T:**
+
 - ❌ Mix elevation levels in same context
 - ❌ Use elevation-3 for regular content
 - ❌ Remove border and shadow for "flat" effect
@@ -479,6 +488,7 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 ## Form Component
 
 ### Overview
+
 The Form component provides schema validation using React Hook Form + Zod. Use `FormField`, `FormLabel`, and `FormMessage` for complete form structure.
 
 **Location:** `src/components/ui/form.tsx`
@@ -527,20 +537,19 @@ const form = useForm<z.infer<typeof formSchema>>({
 ### Components
 
 #### FormField
+
 ```tsx
 <FormField
   control={form.control}
   name="fieldName"
-  render={({ field }) => (
-    <FormItem>
-      {/* Form item content */}
-    </FormItem>
-  )}
+  render={({ field }) => <FormItem>{/* Form item content */}</FormItem>}
 />
 ```
+
 Connects form state to input field. Always use with `render` prop.
 
 #### FormItem
+
 ```tsx
 <FormItem>
   <FormLabel>Field Label</FormLabel>
@@ -550,56 +559,65 @@ Connects form state to input field. Always use with `render` prop.
   <FormMessage />
 </FormItem>
 ```
+
 Container for label, input, and error message.
 
 #### FormLabel
+
 ```tsx
 <FormLabel required>Email Address</FormLabel>
 ```
+
 **Props:**
+
 - `required` - Shows red asterisk
 - `htmlFor` - Connect to input id
 
 #### FormControl
+
 ```tsx
 <FormControl>
   <Input type="email" {...field} />
 </FormControl>
 ```
+
 Wrapper for input element. Passes field props.
 
 #### FormDescription
+
 ```tsx
-<FormDescription>
-  We'll never share your email address
-</FormDescription>
+<FormDescription>We'll never share your email address</FormDescription>
 ```
+
 Helper text below input. Optional.
 
 #### FormMessage
+
 ```tsx
 <FormMessage />
 ```
+
 Shows validation error messages automatically from schema.
 
 ### Examples
 
 #### Complete Login Form
+
 ```tsx
 const loginSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Password must be 8 characters'),
-})
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Password must be 8 characters"),
+});
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
-  })
+    defaultValues: { email: "", password: "" },
+  });
 
   const onSubmit = async (data) => {
     // Handle login
-  }
+  };
 
   return (
     <Form {...form}>
@@ -637,11 +655,12 @@ export function LoginForm() {
         </Button>
       </form>
     </Form>
-  )
+  );
 }
 ```
 
 #### Multi-Step Form
+
 ```tsx
 const [step, setStep] = useState(1)
 
@@ -679,6 +698,7 @@ return (
 ### Do's & Don'ts
 
 **DO:**
+
 - ✅ Use FormField for each input
 - ✅ Always include FormLabel with `required` prop
 - ✅ Use FormDescription for helper text
@@ -688,6 +708,7 @@ return (
 - ✅ Disable submit button during submission
 
 **DON'T:**
+
 - ❌ Skip FormLabel (always include)
 - ❌ Use placeholder as label alternative
 - ❌ Hide FormMessage errors
@@ -701,6 +722,7 @@ return (
 ## Dialog Component
 
 ### Overview
+
 The Dialog component is a modal for important information or actions.
 
 **Location:** `src/components/ui/dialog.tsx`
@@ -708,6 +730,7 @@ The Dialog component is a modal for important information or actions.
 ### Examples
 
 #### Confirmation Dialog
+
 ```tsx
 const [open, setOpen] = useState(false)
 
@@ -735,6 +758,7 @@ const [open, setOpen] = useState(false)
 ```
 
 #### Form Dialog
+
 ```tsx
 <Dialog open={open} onOpenChange={setOpen}>
   <DialogTrigger asChild>
@@ -764,6 +788,7 @@ const [open, setOpen] = useState(false)
 ## Select Component
 
 ### Overview
+
 The Select component is for dropdown selection lists.
 
 **Location:** `src/components/ui/select.tsx`
@@ -794,11 +819,7 @@ The Select component is for dropdown selection lists.
 
 ```tsx
 <div className="flex items-center space-x-2">
-  <Checkbox 
-    id="terms" 
-    checked={agreed}
-    onCheckedChange={setAgreed}
-  />
+  <Checkbox id="terms" checked={agreed} onCheckedChange={setAgreed} />
   <Label htmlFor="terms">I agree to terms</Label>
 </div>
 ```
@@ -843,6 +864,7 @@ The Select component is for dropdown selection lists.
 ## Alert Component
 
 ### Overview
+
 The Alert component shows important information or status messages.
 
 ### Examples
@@ -870,6 +892,7 @@ The Alert component shows important information or status messages.
 ## Dropdown Menu
 
 ### Overview
+
 The Dropdown Menu component provides context actions.
 
 ### Examples
@@ -925,9 +948,9 @@ export function LoginPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField name="email" render={() => /* ... */} />
             <FormField name="password" render={() => /* ... */} />
-            <Button 
-              type="submit" 
-              size="lg" 
+            <Button
+              type="submit"
+              size="lg"
               className="w-full"
               disabled={isLoading}
               loading={isLoading}
@@ -959,7 +982,7 @@ export function LoginPage() {
 
 ```tsx
 <div className="space-y-2">
-  {items.map(item => (
+  {items.map((item) => (
     <Card key={item.id} elevation="1" interactive onClick={() => select(item)}>
       <div className="flex items-center justify-between p-4">
         <div>
@@ -970,7 +993,7 @@ export function LoginPage() {
           <Button size="sm" variant="ghost" onClick={() => edit(item)}>
             Edit
           </Button>
-          <Button size="sm" variant="ghost" onClick={() => delete(item)}>
+          <Button size="sm" variant="ghost" onClick={() => delete item}>
             Delete
           </Button>
         </div>
@@ -983,25 +1006,29 @@ export function LoginPage() {
 ### Error Alert Pattern
 
 ```tsx
-{error && (
-  <Alert variant="destructive">
-    <AlertCircle className="h-4 w-4" />
-    <AlertTitle>Error</AlertTitle>
-    <AlertDescription>{error.message}</AlertDescription>
-  </Alert>
-)}
+{
+  error && (
+    <Alert variant="destructive">
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>{error.message}</AlertDescription>
+    </Alert>
+  );
+}
 ```
 
 ### Loading State Pattern
 
 ```tsx
-{isLoading ? (
-  <div className="flex justify-center py-8">
-    <Loader className="w-6 h-6 animate-spin" />
-  </div>
-) : (
-  <ComponentContent />
-)}
+{
+  isLoading ? (
+    <div className="flex justify-center py-8">
+      <Loader className="w-6 h-6 animate-spin" />
+    </div>
+  ) : (
+    <ComponentContent />
+  );
+}
 ```
 
 ---
@@ -1009,6 +1036,7 @@ export function LoginPage() {
 ## ✅ Accessibility Checklist
 
 **For Every Component:**
+
 - [ ] Has proper semantic HTML (`<button>`, `<input>`, etc.)
 - [ ] Focus visible and logical (Tab order correct)
 - [ ] `aria-label` or `aria-labelledby` provided when needed
@@ -1021,6 +1049,7 @@ export function LoginPage() {
 - [ ] Works with screen readers
 
 **For Forms:**
+
 - [ ] Labels visible and required marked with `*`
 - [ ] Error messages clear and specific
 - [ ] Validation on blur/change, not just submit
@@ -1028,6 +1057,7 @@ export function LoginPage() {
 - [ ] Help text with `FormDescription`
 
 **For Interactive:**
+
 - [ ] All functionality keyboard accessible
 - [ ] Focus rings visible
 - [ ] `aria-expanded`, `aria-pressed` when applicable
@@ -1040,6 +1070,7 @@ export function LoginPage() {
 ### General Rules
 
 **DO:**
+
 - ✅ Use components from `shadcn-ui` / design system
 - ✅ Use Tailwind classes for styling
 - ✅ Use CSS variables for colors
@@ -1049,6 +1080,7 @@ export function LoginPage() {
 - ✅ Respect `prefers-reduced-motion`
 
 **DON'T:**
+
 - ❌ Hardcode colors (use CSS variables)
 - ❌ Use inline styles for sizing/spacing
 - ❌ Skip labels for inputs

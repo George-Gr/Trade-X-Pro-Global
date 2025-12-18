@@ -12,7 +12,7 @@
  * - Modal that appears on margin call escalation
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,12 +21,15 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, AlertCircle, Clock, TrendingDown } from 'lucide-react';
-import { MarginCallSeverity, MarginCallStatus } from '@/lib/trading/marginCallDetection';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle, AlertCircle, Clock, TrendingDown } from "lucide-react";
+import {
+  MarginCallSeverity,
+  MarginCallStatus,
+} from "@/lib/trading/marginCallDetection";
+import { cn } from "@/lib/utils";
 
 interface MarginCallWarningModalProps {
   isOpen: boolean;
@@ -36,7 +39,11 @@ interface MarginCallWarningModalProps {
   status: MarginCallStatus;
   timeInCallMinutes: number | null;
   timeToLiquidationMinutes: number | null;
-  recommendedActions: Array<{ action: string; urgency: string; description: string }>;
+  recommendedActions: Array<{
+    action: string;
+    urgency: string;
+    description: string;
+  }>;
   onDeposit?: () => void;
   onClosePosition?: () => void;
   onViewRisk?: () => void;
@@ -71,10 +78,10 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   }, [isOpen, timeToLiquidationMinutes]);
 
   const getMarginColor = (level: number) => {
-    if (level >= 200) return 'text-buy bg-background';
-    if (level >= 100) return 'text-yellow-600 bg-background';
-    if (level >= 50) return 'text-orange-600 bg-background';
-    return 'text-sell bg-destructive/5';
+    if (level >= 200) return "text-buy bg-background";
+    if (level >= 100) return "text-yellow-600 bg-background";
+    if (level >= 50) return "text-orange-600 bg-background";
+    return "text-sell bg-destructive/5";
   };
 
   const getSeverityIcon = () => {
@@ -87,13 +94,13 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   const getSeverityTitle = () => {
     switch (severity) {
       case MarginCallSeverity.STANDARD:
-        return 'Margin Call Warning';
+        return "Margin Call Warning";
       case MarginCallSeverity.URGENT:
-        return 'Urgent Margin Call';
+        return "Urgent Margin Call";
       case MarginCallSeverity.CRITICAL:
-        return '🚨 Critical Liquidation Risk';
+        return "🚨 Critical Liquidation Risk";
       default:
-        return 'Margin Alert';
+        return "Margin Alert";
     }
   };
 
@@ -106,7 +113,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
       case MarginCallSeverity.CRITICAL:
         return `Your account is in CRITICAL condition at ${marginLevel.toFixed(2)}%. Liquidation may be triggered automatically if you don't act immediately.`;
       default:
-        return 'Your account margin level is low.';
+        return "Your account margin level is low.";
     }
   };
 
@@ -124,10 +131,17 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
         </AlertDialogHeader>
 
         {/* Margin Level Display */}
-        <div className={cn('p-4 rounded-lg font-mono text-lg', getMarginColor(marginLevel))}>
+        <div
+          className={cn(
+            "p-4 rounded-lg font-mono text-lg",
+            getMarginColor(marginLevel),
+          )}
+        >
           <div className="flex justify-between items-center">
             <span>Margin Level:</span>
-            <span className="font-bold text-2xl">{marginLevel.toFixed(2)}%</span>
+            <span className="font-bold text-2xl">
+              {marginLevel.toFixed(2)}%
+            </span>
           </div>
         </div>
 
@@ -146,9 +160,12 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
               <div className="flex items-center gap-4 p-4 bg-background rounded">
                 <TrendingDown className="w-4 h-4 text-sell" />
                 <div>
-                  <div className="font-semibold text-sell">Est. Time to Liquidation</div>
+                  <div className="font-semibold text-sell">
+                    Est. Time to Liquidation
+                  </div>
                   <div className="text-sell/80">
-                    {Math.floor(countdownSeconds / 60)}:{String(countdownSeconds % 60).padStart(2, '0')}
+                    {Math.floor(countdownSeconds / 60)}:
+                    {String(countdownSeconds % 60).padStart(2, "0")}
                   </div>
                 </div>
               </div>
@@ -165,8 +182,12 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
                 <li key={idx} className="flex items-start gap-4 text-sm">
                   <span className="text-sell font-bold">•</span>
                   <div>
-                    <div className="font-medium capitalize">{action.action.replace(/_/g, ' ')}</div>
-                    <div className="text-muted-foreground">{action.description}</div>
+                    <div className="font-medium capitalize">
+                      {action.action.replace(/_/g, " ")}
+                    </div>
+                    <div className="text-muted-foreground">
+                      {action.description}
+                    </div>
                   </div>
                 </li>
               ))}
@@ -180,8 +201,9 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
             <AlertTriangle className="h-4 w-4 text-sell" />
             <AlertTitle className="text-sell">Critical Alert</AlertTitle>
             <AlertDescription className="text-sell/80">
-              Your account is at severe risk of automatic liquidation. Close positions or deposit funds
-              immediately to prevent forced liquidation with additional losses.
+              Your account is at severe risk of automatic liquidation. Close
+              positions or deposit funds immediately to prevent forced
+              liquidation with additional losses.
             </AlertDescription>
           </Alert>
         )}
@@ -195,7 +217,8 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
           >
             View Risk Dashboard
           </Button>
-          {severity === MarginCallSeverity.URGENT || severity === MarginCallSeverity.CRITICAL ? (
+          {severity === MarginCallSeverity.URGENT ||
+          severity === MarginCallSeverity.CRITICAL ? (
             <>
               <Button
                 variant="secondary"

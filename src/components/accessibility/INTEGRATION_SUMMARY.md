@@ -37,16 +37,20 @@ The comprehensive accessibility system has been successfully integrated into the
 ### 1. App.tsx Integration
 
 **Context Provider**: Added `AccessibilityProvider` wrapping the entire application
+
 ```tsx
 <AccessibilityProvider>
   <AccessibilityStyles />
-  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+  <BrowserRouter
+    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+  >
     {/* Routes */}
   </BrowserRouter>
 </AccessibilityProvider>
 ```
 
 **New Routes**: Added accessibility-specific routes
+
 ```tsx
 <Route path="/accessibility" element={/* Accessibility Testing Suite */} />
 <Route path="/accessibility/dashboard" element={/* Advanced Dashboard */} />
@@ -55,6 +59,7 @@ The comprehensive accessibility system has been successfully integrated into the
 ### 2. Layout Integration
 
 **Floating Accessibility Menu**: Integrated into `AuthenticatedLayoutInner.tsx`
+
 - Always visible in authenticated areas
 - Provides quick access to all accessibility features
 - Keyboard accessible with shortcuts
@@ -63,6 +68,7 @@ The comprehensive accessibility system has been successfully integrated into the
 ### 3. Settings Page Enhancement
 
 **Comprehensive Preferences**: Added full accessibility settings section
+
 - Visual preferences (high contrast, reduce motion, larger text)
 - Color blind mode selection
 - Screen reader mode toggle
@@ -73,6 +79,7 @@ The comprehensive accessibility system has been successfully integrated into the
 ### 4. Component Integration
 
 **Trading Components**: Enhanced with accessibility context
+
 - `TradingForm.tsx` - Shows accessibility status and compliance score
 - `TradingDashboard.tsx` - Displays real-time accessibility preferences
 - Both components respond to global accessibility settings
@@ -82,6 +89,7 @@ The comprehensive accessibility system has been successfully integrated into the
 ### 1. Global Accessibility Context
 
 **State Management**: Centralized accessibility state
+
 ```tsx
 interface AccessibilityContextType {
   visualPreferences: ReturnType<typeof useVisualAccessibilityPreferences>;
@@ -98,6 +106,7 @@ interface AccessibilityContextType {
 ### 2. Floating Accessibility Navigation
 
 **Quick Access**: Always available floating menu
+
 - Toggle high contrast: Ctrl+Shift+H
 - Toggle reduce motion: Ctrl+Shift+M
 - Toggle screen reader: Ctrl+Shift+S
@@ -107,6 +116,7 @@ interface AccessibilityContextType {
 ### 3. Visual Preferences
 
 **User Customization**: Comprehensive visual settings
+
 - High contrast mode with enhanced colors
 - Motion reduction for animations
 - Larger text support
@@ -116,6 +126,7 @@ interface AccessibilityContextType {
 ### 4. Keyboard Navigation
 
 **Trading Shortcuts**: Complete keyboard control
+
 - Buy order: Ctrl+B
 - Sell order: Ctrl+S
 - Close position: Ctrl+C
@@ -126,6 +137,7 @@ interface AccessibilityContextType {
 ### 5. Screen Reader Support
 
 **Full Compatibility**: Complete screen reader support
+
 - Semantic HTML structure
 - Proper ARIA labels and roles
 - Live region announcements
@@ -135,6 +147,7 @@ interface AccessibilityContextType {
 ### 6. Color Contrast Verification
 
 **WCAG Compliance**: Real-time contrast checking
+
 - 4.5:1 minimum contrast ratio
 - 7:1 enhanced contrast ratio
 - Automatic color adjustment suggestions
@@ -152,8 +165,9 @@ interface AccessibilityContextType {
 ### For Developers
 
 1. **Context Usage**: Use `useAccessibility()` hook in components
+
 ```tsx
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { useAccessibility } from "@/contexts/AccessibilityContext";
 
 const { visualPreferences, complianceScore } = useAccessibility();
 ```

@@ -9,7 +9,7 @@ export default function Commodities() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      
+
       <main className="pt-24 pb-20">
         <section className="bg-gradient-primary/10 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +21,8 @@ export default function Commodities() {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Trade 30+ commodities with competitive spreads and portfolio diversification
+                Trade 30+ commodities with competitive spreads and portfolio
+                diversification
               </p>
             </div>
           </div>
@@ -46,7 +47,7 @@ export default function Commodities() {
                     "Hedge against inflation",
                     "No physical delivery required",
                     "Spot and futures available",
-                    "Access global commodity markets"
+                    "Access global commodity markets",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -59,17 +60,33 @@ export default function Commodities() {
 
             <Card>
               <CardContent>
-                <h2 className="text-3xl font-bold mb-6">Available Commodities</h2>
+                <h2 className="text-3xl font-bold mb-6">
+                  Available Commodities
+                </h2>
                 <div className="space-y-4">
                   {[
-                    { category: "Precious Metals", items: "Gold, Silver, Platinum, Palladium" },
-                    { category: "Energy", items: "WTI Crude Oil, Brent Crude, Natural Gas" },
-                    { category: "Agricultural", items: "Coffee, Sugar, Wheat, Corn, Soybeans" },
-                    { category: "Industrial", items: "Copper, Aluminium, Zinc, Nickel" }
+                    {
+                      category: "Precious Metals",
+                      items: "Gold, Silver, Platinum, Palladium",
+                    },
+                    {
+                      category: "Energy",
+                      items: "WTI Crude Oil, Brent Crude, Natural Gas",
+                    },
+                    {
+                      category: "Agricultural",
+                      items: "Coffee, Sugar, Wheat, Corn, Soybeans",
+                    },
+                    {
+                      category: "Industrial",
+                      items: "Copper, Aluminium, Zinc, Nickel",
+                    },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
                       <p className="font-semibold mb-2">{item.category}</p>
-                      <p className="text-xs text-muted-foreground">{item.items}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.items}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -79,7 +96,9 @@ export default function Commodities() {
 
           <Card className="mb-8">
             <CardContent>
-              <h2 className="text-3xl font-bold mb-8">Commodity Trading Specifications</h2>
+              <h2 className="text-3xl font-bold mb-8">
+                Commodity Trading Specifications
+              </h2>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
@@ -92,17 +111,47 @@ export default function Commodities() {
                   </thead>
                   <tbody>
                     {[
-                      { commodity: "Gold (XAU/USD)", spread: "$0.10", leverage: "1:500", hours: "24/5" },
-                      { commodity: "Silver (XAG/USD)", spread: "$0.02", leverage: "1:500", hours: "24/5" },
-                      { commodity: "WTI Crude Oil", spread: "$0.03", leverage: "1:500", hours: "24/5" },
-                      { commodity: "Brent Crude", spread: "$0.03", leverage: "1:500", hours: "24/5" },
-                      { commodity: "Natural Gas", spread: "$0.01", leverage: "1:100", hours: "24/5" }
+                      {
+                        commodity: "Gold (XAU/USD)",
+                        spread: "$0.10",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        commodity: "Silver (XAG/USD)",
+                        spread: "$0.02",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        commodity: "WTI Crude Oil",
+                        spread: "$0.03",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        commodity: "Brent Crude",
+                        spread: "$0.03",
+                        leverage: "1:500",
+                        hours: "24/5",
+                      },
+                      {
+                        commodity: "Natural Gas",
+                        spread: "$0.01",
+                        leverage: "1:100",
+                        hours: "24/5",
+                      },
                     ].map((row, i) => (
-                      <tr key={i} className="border-b border-border hover:bg-muted/50">
+                      <tr
+                        key={i}
+                        className="border-b border-border hover:bg-muted/50"
+                      >
                         <td className="p-4 font-medium">{row.commodity}</td>
                         <td className="p-4 text-center">{row.spread}</td>
                         <td className="p-4 text-center">{row.leverage}</td>
-                        <td className="p-4 text-center text-muted-foreground">{row.hours}</td>
+                        <td className="p-4 text-center text-muted-foreground">
+                          {row.hours}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -114,13 +163,18 @@ export default function Commodities() {
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
               <CardContent className="p-8">
-                <h2 className="text-3xl font-bold mb-4">Start Trading Commodities Today</h2>
+                <h2 className="text-3xl font-bold mb-4">
+                  Start Trading Commodities Today
+                </h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access 30+ commodities with professional conditions
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95"
+                    >
                       Open Account
                     </Button>
                   </Link>

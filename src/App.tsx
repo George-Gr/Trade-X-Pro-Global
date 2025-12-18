@@ -3,7 +3,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ErrorContextProvider } from "@/components/ErrorContextProvider";
@@ -81,9 +87,9 @@ const queryClient = new QueryClient();
 
 // Layout Components
 const MobileBottomNavigation = lazy(() =>
-  import("./components/layout/MobileBottomNavigation").then(module => ({
-    default: module.MobileBottomNavigation
-  }))
+  import("./components/layout/MobileBottomNavigation").then((module) => ({
+    default: module.MobileBottomNavigation,
+  })),
 );
 
 const App = () => {
@@ -94,7 +100,7 @@ const App = () => {
 
     // Initialize breadcrumb tracking
     logger.info("Breadcrumb tracker initialized", {
-      action: "breadcrumb_tracker_init"
+      action: "breadcrumb_tracker_init",
     });
   }, []);
 
@@ -108,271 +114,356 @@ const App = () => {
                 <Toaster />
                 <Sonner />
                 <GlobalLoadingIndicator />
-              <ErrorBoundary
-              componentName="App"
-              onError={(error, errorInfo) => {
-                // Log to logger with context
-                logger.error("Root app error boundary caught", error, {
-                  action: "app_error_boundary",
-                  component: "App",
-                  metadata: {
-                    componentStack: errorInfo?.componentStack,
-                  },
-                });
-                // Sentry integration would be handled by logger in production
-              }}
-            >
-              <AccessibilityProvider>
-                <style>{accessibilityStyles}</style>
-                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                <Suspense
-                  fallback={
-                    <div className="min-h-screen flex items-center justify-center bg-background">
-                      <div className="text-center space-y-4">
-                        <div className="relative">
-                          <div className="h-12 w-12 mx-auto bg-primary/20 rounded-full animate-pulse-slow">
-                            <ShimmerEffect className="absolute inset-0 rounded-full" />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-lg font-semibold text-primary-contrast">
-                            <Skeleton variant="text" className="h-6 w-32 mx-auto" />
-                          </div>
-                          <div className="text-sm text-secondary-contrast">
-                            <Skeleton variant="text" className="h-4 w-24 mx-auto" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  }
+                <ErrorBoundary
+                  componentName="App"
+                  onError={(error, errorInfo) => {
+                    // Log to logger with context
+                    logger.error("Root app error boundary caught", error, {
+                      action: "app_error_boundary",
+                      component: "App",
+                      metadata: {
+                        componentStack: errorInfo?.componentStack,
+                      },
+                    });
+                    // Sentry integration would be handled by logger in production
+                  }}
                 >
-                  <main>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/login" element={<Login />} />
+                  <AccessibilityProvider>
+                    <style>{accessibilityStyles}</style>
+                    <BrowserRouter
+                      future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                      }}
+                    >
+                      <Suspense
+                        fallback={
+                          <div className="min-h-screen flex items-center justify-center bg-background">
+                            <div className="text-center space-y-4">
+                              <div className="relative">
+                                <div className="h-12 w-12 mx-auto bg-primary/20 rounded-full animate-pulse-slow">
+                                  <ShimmerEffect className="absolute inset-0 rounded-full" />
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="text-lg font-semibold text-primary-contrast">
+                                  <Skeleton
+                                    variant="text"
+                                    className="h-6 w-32 mx-auto"
+                                  />
+                                </div>
+                                <div className="text-sm text-secondary-contrast">
+                                  <Skeleton
+                                    variant="text"
+                                    className="h-4 w-24 mx-auto"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        }
+                      >
+                        <main>
+                          <Routes>
+                            <Route path="/" element={<Index />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
 
-                      {/* Legal Pages */}
-                      <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
-                      <Route path="/legal/terms" element={<Terms />} />
-                      <Route path="/legal/risk-disclosure" element={<RiskDisclosure />} />
-                      <Route path="/legal/cookie-policy" element={<CookiePolicy />} />
-                      <Route path="/legal/aml-policy" element={<AMLPolicy />} />
+                            {/* Legal Pages */}
+                            <Route
+                              path="/legal/privacy-policy"
+                              element={<PrivacyPolicy />}
+                            />
+                            <Route path="/legal/terms" element={<Terms />} />
+                            <Route
+                              path="/legal/risk-disclosure"
+                              element={<RiskDisclosure />}
+                            />
+                            <Route
+                              path="/legal/cookie-policy"
+                              element={<CookiePolicy />}
+                            />
+                            <Route
+                              path="/legal/aml-policy"
+                              element={<AMLPolicy />}
+                            />
 
-                      {/* Public Trading Pages */}
-                      <Route path="/trading/instruments" element={<TradingInstruments />} />
-                      <Route path="/trading/platforms" element={<TradingPlatforms />} />
-                      <Route path="/trading/account-types" element={<AccountTypes />} />
-                      <Route path="/trading/conditions" element={<TradingConditions />} />
-                      <Route path="/trading/tools" element={<TradingTools />} />
+                            {/* Public Trading Pages */}
+                            <Route
+                              path="/trading/instruments"
+                              element={<TradingInstruments />}
+                            />
+                            <Route
+                              path="/trading/platforms"
+                              element={<TradingPlatforms />}
+                            />
+                            <Route
+                              path="/trading/account-types"
+                              element={<AccountTypes />}
+                            />
+                            <Route
+                              path="/trading/conditions"
+                              element={<TradingConditions />}
+                            />
+                            <Route
+                              path="/trading/tools"
+                              element={<TradingTools />}
+                            />
 
-                      {/* Markets Pages */}
-                      <Route path="/markets/forex" element={<Forex />} />
-                      <Route path="/markets/stocks" element={<Stocks />} />
-                      <Route path="/markets/indices" element={<Indices />} />
-                      <Route path="/markets/commodities" element={<Commodities />} />
-                      <Route path="/markets/cryptocurrencies" element={<Cryptocurrencies />} />
+                            {/* Markets Pages */}
+                            <Route path="/markets/forex" element={<Forex />} />
+                            <Route
+                              path="/markets/stocks"
+                              element={<Stocks />}
+                            />
+                            <Route
+                              path="/markets/indices"
+                              element={<Indices />}
+                            />
+                            <Route
+                              path="/markets/commodities"
+                              element={<Commodities />}
+                            />
+                            <Route
+                              path="/markets/cryptocurrencies"
+                              element={<Cryptocurrencies />}
+                            />
 
-                      {/* Education Pages */}
-                      <Route path="/education/webinar" element={<Webinar />} />
-                      <Route path="/education/certifications" element={<Certifications />} />
-                      <Route path="/education/tutorials" element={<Tutorials />} />
-                      <Route path="/education/mentorship" element={<Mentorship />} />
-                      <Route path="/education/glossary" element={<Glossary />} />
+                            {/* Education Pages */}
+                            <Route
+                              path="/education/webinar"
+                              element={<Webinar />}
+                            />
+                            <Route
+                              path="/education/certifications"
+                              element={<Certifications />}
+                            />
+                            <Route
+                              path="/education/tutorials"
+                              element={<Tutorials />}
+                            />
+                            <Route
+                              path="/education/mentorship"
+                              element={<Mentorship />}
+                            />
+                            <Route
+                              path="/education/glossary"
+                              element={<Glossary />}
+                            />
 
-                      {/* Company Pages */}
-                      <Route path="/company/about" element={<AboutUs />} />
-                      <Route path="/company/regulation" element={<Regulation />} />
-                      <Route path="/company/security" element={<Security />} />
-                      <Route path="/company/partners" element={<Partners />} />
-                      <Route path="/company/contact" element={<ContactUs />} />
+                            {/* Company Pages */}
+                            <Route
+                              path="/company/about"
+                              element={<AboutUs />}
+                            />
+                            <Route
+                              path="/company/regulation"
+                              element={<Regulation />}
+                            />
+                            <Route
+                              path="/company/security"
+                              element={<Security />}
+                            />
+                            <Route
+                              path="/company/partners"
+                              element={<Partners />}
+                            />
+                            <Route
+                              path="/company/contact"
+                              element={<ContactUs />}
+                            />
 
-                      {/* Protected Routes with Mobile-Optimized Layout */}
-                      <Route
-                        path="/dashboard"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <Dashboard />
-                                {/* Mobile bottom navigation for dashboard */}
-                                <MobileBottomNavigation />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/trade"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <Trade />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/portfolio"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <Portfolio />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/history"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <History />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/pending-orders"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <PendingOrders />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/wallet"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <Wallet />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/settings"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <Settings />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/kyc"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <KYC />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/admin"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute adminOnly>
-                              <AuthenticatedLayoutProvider>
-                                <Admin />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/admin/risk"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute adminOnly>
-                              <AuthenticatedLayoutProvider>
-                                <AdminRiskDashboard />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/risk-management"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <RiskManagement />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/notifications"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <Notifications />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/accessibility"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <AccessibilityTestingSuite />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/accessibility/dashboard"
-                        element={
-                          <ErrorBoundary>
-                            <ProtectedRoute>
-                              <AuthenticatedLayoutProvider>
-                                <AdvancedAccessibilityDashboard />
-                              </AuthenticatedLayoutProvider>
-                            </ProtectedRoute>
-                          </ErrorBoundary>
-                        }
-                      />
-                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      {import.meta.env.DEV && <Route path="/dev/sentry-test" element={<DevSentryTest />} />}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                </Suspense>
-                </BrowserRouter>
-              </AccessibilityProvider>
-            </ErrorBoundary>
-             </LoadingProvider>
+                            {/* Protected Routes with Mobile-Optimized Layout */}
+                            <Route
+                              path="/dashboard"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <Dashboard />
+                                      {/* Mobile bottom navigation for dashboard */}
+                                      <MobileBottomNavigation />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/trade"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <Trade />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/portfolio"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <Portfolio />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/history"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <History />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/pending-orders"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <PendingOrders />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/wallet"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <Wallet />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/settings"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <Settings />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/kyc"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <KYC />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/admin"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute adminOnly>
+                                    <AuthenticatedLayoutProvider>
+                                      <Admin />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/admin/risk"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute adminOnly>
+                                    <AuthenticatedLayoutProvider>
+                                      <AdminRiskDashboard />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/risk-management"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <RiskManagement />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/notifications"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <Notifications />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/accessibility"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <AccessibilityTestingSuite />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/accessibility/dashboard"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute>
+                                    <AuthenticatedLayoutProvider>
+                                      <AdvancedAccessibilityDashboard />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                            {import.meta.env.DEV && (
+                              <Route
+                                path="/dev/sentry-test"
+                                element={<DevSentryTest />}
+                              />
+                            )}
+                            <Route path="*" element={<NotFound />} />
+                          </Routes>
+                        </main>
+                      </Suspense>
+                    </BrowserRouter>
+                  </AccessibilityProvider>
+                </ErrorBoundary>
+              </LoadingProvider>
             </ViewModeProvider>
-            </NotificationProvider>
-            </TooltipProvider>
-            </ErrorContextProvider>
-            </QueryClientProvider>
+          </NotificationProvider>
+        </TooltipProvider>
+      </ErrorContextProvider>
+    </QueryClientProvider>
   );
 };
 

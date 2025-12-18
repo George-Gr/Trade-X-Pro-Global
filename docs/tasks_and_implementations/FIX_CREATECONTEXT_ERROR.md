@@ -42,34 +42,40 @@ Updated the `manualChunks` configuration to:
 ## Files Modified
 
 ### 1. `/vite.config.ts`
+
 - Enhanced `manualChunks` function with better dependency categorization
 - Used more specific path matching (`/react/`, `/react-dom/`) to avoid false matches
 - Added explicit chunks for form libraries and routing
 
 ### 2. `/index.html`
+
 - No changes needed (Vite handles script loading automatically)
 - The module script continues to work correctly with proper chunk dependencies
 
 ## How to Verify the Fix
 
 ### Build Check
+
 ```bash
 npm run build
 ```
 
 Look for these vendor chunks in the build output:
+
 - `vendor-react-*.js` (must be loaded first)
 - `vendor-radix-*.js` (depends on React)
 - `vendor-router-*.js` (depends on React)
 - Other categorized chunks
 
 ### Runtime Check
+
 1. Open the application in a browser
 2. Check the browser's Network tab (DevTools)
 3. Verify `vendor-react-*.js` loads before other vendor chunks
 4. Look for the error in the Console tab - it should not appear
 
 ### Local Development
+
 ```bash
 npm run dev
 ```
@@ -108,6 +114,7 @@ By using `manualChunks` with proper categorization, Vite's Rollup plugin:
 ### Best Practices
 
 1. **Always import React at the top of files using React APIs**:
+
    ```tsx
    import React, { createContext } from "react";
    // or

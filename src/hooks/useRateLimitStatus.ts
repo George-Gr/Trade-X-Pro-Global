@@ -2,9 +2,13 @@
  * Hook for monitoring rate limit status with UI feedback
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { rateLimiter, RateLimitStatus, checkRateLimit } from '@/lib/rateLimiter';
-import { toast } from 'sonner';
+import { useState, useEffect, useCallback } from "react";
+import {
+  rateLimiter,
+  RateLimitStatus,
+  checkRateLimit,
+} from "@/lib/rateLimiter";
+import { toast } from "sonner";
 
 interface UseRateLimitStatusOptions {
   endpoint?: string;
@@ -13,17 +17,15 @@ interface UseRateLimitStatusOptions {
 }
 
 export function useRateLimitStatus(options: UseRateLimitStatusOptions = {}) {
-  const { 
-    endpoint, 
-    warnThreshold = 20, 
-    showWarnings = true 
-  } = options;
+  const { endpoint, warnThreshold = 20, showWarnings = true } = options;
 
-  const [status, setStatus] = useState<RateLimitStatus>(rateLimiter.getStatus());
+  const [status, setStatus] = useState<RateLimitStatus>(
+    rateLimiter.getStatus(),
+  );
   const [hasWarned, setHasWarned] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = rateLimiter.subscribe(newStatus => {
+    const unsubscribe = rateLimiter.subscribe((newStatus) => {
       setStatus(newStatus);
 
       // Check if we should warn user about approaching limits
@@ -31,9 +33,9 @@ export function useRateLimitStatus(options: UseRateLimitStatusOptions = {}) {
         const endpointStatus = newStatus.endpoints[endpoint];
         if (endpointStatus) {
           const percentRemaining = (endpointStatus.remaining / 10) * 100; // Assuming max 10 for orders
-          
+
           if (percentRemaining <= warnThreshold && percentRemaining > 0) {
-            toast.warning('Rate limit warning', {
+            toast.warning("Rate limit warning", {
               description: `You have ${endpointStatus.remaining} requests remaining. Slow down to avoid being blocked.`,
             });
             setHasWarned(true);
@@ -48,20 +50,29 @@ export function useRateLimitStatus(options: UseRateLimitStatusOptions = {}) {
     return unsubscribe;
   }, [endpoint, warnThreshold, showWarnings, hasWarned]);
 
-  const canMakeRequest = useCallback((ep?: string): boolean => {
-    const targetEndpoint = ep || endpoint || 'default';
-    return checkRateLimit(targetEndpoint).allowed;
-  }, [endpoint]);
+  const canMakeRequest = useCallback(
+    (ep?: string): boolean => {
+      const targetEndpoint = ep || endpoint || "default";
+      return checkRateLimit(targetEndpoint).allowed;
+    },
+    [endpoint],
+  );
 
-  const getRemainingRequests = useCallback((ep?: string): number => {
-    const targetEndpoint = ep || endpoint || 'default';
-    return checkRateLimit(targetEndpoint).remaining;
-  }, [endpoint]);
+  const getRemainingRequests = useCallback(
+    (ep?: string): number => {
+      const targetEndpoint = ep || endpoint || "default";
+      return checkRateLimit(targetEndpoint).remaining;
+    },
+    [endpoint],
+  );
 
-  const getResetTime = useCallback((ep?: string): number => {
-    const targetEndpoint = ep || endpoint || 'default';
-    return checkRateLimit(targetEndpoint).resetIn;
-  }, [endpoint]);
+  const getResetTime = useCallback(
+    (ep?: string): number => {
+      const targetEndpoint = ep || endpoint || "default";
+      return checkRateLimit(targetEndpoint).resetIn;
+    },
+    [endpoint],
+  );
 
   return {
     status,

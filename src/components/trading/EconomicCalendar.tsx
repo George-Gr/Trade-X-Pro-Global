@@ -1,6 +1,6 @@
 import { useEffect, useRef, memo } from "react";
 import { Card } from "@/components/ui/card";
-import { initTradingViewCompatibility } from "@/lib/tradingview-compatibility";
+import { initTradingViewCompatibility } from "@/lib/tradingViewCompatibility";
 
 const EconomicCalendar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -8,14 +8,15 @@ const EconomicCalendar = () => {
   useEffect(() => {
     // Initialize TradingView compatibility fixes
     initTradingViewCompatibility();
-    
+
     const container = containerRef.current;
     if (!container) return;
 
     container.textContent = "";
 
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
     script.async = true;
     script.textContent = JSON.stringify({
       width: "100%",
@@ -24,7 +25,7 @@ const EconomicCalendar = () => {
       isTransparent: false,
       locale: "en",
       importanceFilter: "0,1",
-      countryFilter: "us,eu,gb,jp,cn,ca,au"
+      countryFilter: "us,eu,gb,jp,cn,ca,au",
     });
 
     container.appendChild(script);
@@ -42,7 +43,10 @@ const EconomicCalendar = () => {
         <h3 className="font-semibold text-sm">Economic Calendar</h3>
       </div>
       <div className="tradingview-widget-container h-[400px]">
-        <div ref={containerRef} className="tradingview-widget-container__widget h-full" />
+        <div
+          ref={containerRef}
+          className="tradingview-widget-container__widget h-full"
+        />
       </div>
     </Card>
   );

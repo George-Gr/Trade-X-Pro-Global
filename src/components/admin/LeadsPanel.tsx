@@ -32,7 +32,16 @@ import {
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, Eye, Loader2, Search, FileCheck, User, Briefcase, Target } from "lucide-react";
+import {
+  DollarSign,
+  Eye,
+  Loader2,
+  Search,
+  FileCheck,
+  User,
+  Briefcase,
+  Target,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Lead {
@@ -82,13 +91,16 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  
+
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [selectedKYCDocs, setSelectedKYCDocs] = useState<KYCDocument[]>([]);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  
-  const [fundDialog, setFundDialog] = useState<{ open: boolean; userId: string | null }>({
+
+  const [fundDialog, setFundDialog] = useState<{
+    open: boolean;
+    userId: string | null;
+  }>({
     open: false,
     userId: null,
   });
@@ -132,14 +144,14 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
     // Subscribe to leads changes
     const channel = supabase
-      .channel('leads-changes')
+      .channel("leads-changes")
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'leads' },
+        "postgres_changes",
+        { event: "*", schema: "public", table: "leads" },
         (payload) => {
-          logger.debug('Lead change', { metadata: payload });
+          logger.debug("Lead change", { metadata: payload });
           fetchLeads();
-        }
+        },
       )
       .subscribe();
 
@@ -199,13 +211,16 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     try {
       setIsFunding(true);
 
-      const { data, error } = await supabase.functions.invoke('admin-fund-account', {
-        body: {
-          user_id: fundDialog.userId,
-          amount: amount,
-          description: 'Initial account funding via Lead Management'
-        }
-      });
+      const { data, error } = await supabase.functions.invoke(
+        "admin-fund-account",
+        {
+          body: {
+            user_id: fundDialog.userId,
+            amount: amount,
+            description: "Initial account funding via Lead Management",
+          },
+        },
+      );
 
       if (error) throw error;
 
@@ -220,7 +235,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
       setFundAmount("");
       setFundDialog({ open: false, userId: null });
-      
+
       // Refresh profile data if viewing lead details
       if (selectedLead && selectedLead.user_id === fundDialog.userId) {
         const { data: profileData } = await supabase
@@ -245,13 +260,17 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     }
   };
 
-  const handleKYCAction = async (docId: string, action: 'approved' | 'rejected', reason?: string) => {
+  const handleKYCAction = async (
+    docId: string,
+    action: "approved" | "rejected",
+    reason?: string,
+  ) => {
     try {
       const { error } = await supabase
         .from("kyc_documents")
         .update({
           status: action as "pending" | "approved" | "rejected" | "resubmitted",
-          rejection_reason: action === 'rejected' ? reason : null,
+          rejection_reason: action === "rejected" ? reason : null,
           reviewed_at: new Date().toISOString(),
         })
         .eq("id" as const, docId as string);
@@ -285,62 +304,74 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     }
   };
 
-  const filteredLeads = leads.filter(lead => {
-    const matchesSearch = 
+  const filteredLeads = leads.filter((lead) => {
+    const matchesSearch =
       lead.lead_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `${lead.first_name} ${lead.last_name}`.toLowerCase().includes(searchTerm.toLowerCase());
+      `${lead.first_name} ${lead.last_name}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "all" || lead.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "all" || lead.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 2,
     }).format(amount);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "new": return "bg-blue-500";
-      case "contacted": return "bg-yellow-500";
-      case "qualified": return "bg-green-500";
-      case "converted": return "bg-purple-500";
-      default: return "bg-gray-500";
+      case "new":
+        return "bg-blue-500";
+      case "contacted":
+        return "bg-yellow-500";
+      case "qualified":
+        return "bg-green-500";
+      case "converted":
+        return "bg-purple-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getKycColor = (status: string) => {
     switch (status) {
-      case "approved": return "bg-green-500";
-      case "rejected": return "bg-red-500";
-      case "pending": return "bg-yellow-500";
-      default: return "bg-gray-500";
+      case "approved":
+        return "bg-green-500";
+      case "rejected":
+        return "bg-red-500";
+      case "pending":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getExperienceLabel = (exp: string) => {
     const labels: Record<string, string> = {
-      'none': 'No Experience',
-      'beginner': 'Beginner (< 1 year)',
-      'intermediate': 'Intermediate (1-3 years)',
-      'experienced': 'Experienced (3-5 years)',
-      'expert': 'Expert (5+ years)',
+      none: "No Experience",
+      beginner: "Beginner (< 1 year)",
+      intermediate: "Intermediate (1-3 years)",
+      experienced: "Experienced (3-5 years)",
+      expert: "Expert (5+ years)",
     };
     return labels[exp] || exp;
   };
 
   const getFinancialLabel = (fin: string) => {
     const labels: Record<string, string> = {
-      'under-1000': 'Under $1,000',
-      '1000-5000': '$1,000 - $5,000',
-      '5000-25000': '$5,000 - $25,000',
-      '25000-100000': '$25,000 - $100,000',
-      'over-100000': 'Over $100,000',
+      "under-1000": "Under $1,000",
+      "1000-5000": "$1,000 - $5,000",
+      "5000-25000": "$5,000 - $25,000",
+      "25000-100000": "$25,000 - $100,000",
+      "over-100000": "Over $100,000",
     };
     return labels[fin] || fin;
   };
@@ -443,7 +474,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="capitalize">
-                            <span className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(lead.status)}`} />
+                            <span
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(lead.status)}`}
+                            />
                             {lead.status}
                           </Badge>
                         </TableCell>
@@ -464,7 +497,12 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => setFundDialog({ open: true, userId: lead.user_id })}
+                              onClick={() =>
+                                setFundDialog({
+                                  open: true,
+                                  userId: lead.user_id,
+                                })
+                              }
                               className="flex items-center gap-1"
                             >
                               <DollarSign className="h-3 w-3" />
@@ -493,9 +531,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
         <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Lead Details</SheetTitle>
-            <SheetDescription>
-              {selectedLead?.lead_number}
-            </SheetDescription>
+            <SheetDescription>{selectedLead?.lead_number}</SheetDescription>
           </SheetHeader>
 
           {selectedLead && (
@@ -519,7 +555,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                 <TabsContent value="profile" className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-muted-foreground">First Name</Label>
+                      <Label className="text-muted-foreground">
+                        First Name
+                      </Label>
                       <p className="font-medium">{selectedLead.first_name}</p>
                     </div>
                     <div>
@@ -532,11 +570,15 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                     </div>
                     <div>
                       <Label className="text-muted-foreground">Phone</Label>
-                      <p className="font-medium">{selectedLead.phone || 'N/A'}</p>
+                      <p className="font-medium">
+                        {selectedLead.phone || "N/A"}
+                      </p>
                     </div>
                     <div className="col-span-2">
                       <Label className="text-muted-foreground">Address</Label>
-                      <p className="font-medium">{selectedLead.address || 'N/A'}</p>
+                      <p className="font-medium">
+                        {selectedLead.address || "N/A"}
+                      </p>
                     </div>
                   </div>
 
@@ -546,26 +588,36 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                       <h4 className="font-semibold mb-3">Account Status</h4>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Label className="text-muted-foreground">Balance</Label>
+                          <Label className="text-muted-foreground">
+                            Balance
+                          </Label>
                           <p className="font-mono text-lg font-bold text-green-500">
                             {formatCurrency(selectedProfile.balance)}
                           </p>
                         </div>
                         <div>
-                          <Label className="text-muted-foreground">Equity</Label>
+                          <Label className="text-muted-foreground">
+                            Equity
+                          </Label>
                           <p className="font-mono text-lg">
                             {formatCurrency(selectedProfile.equity)}
                           </p>
                         </div>
                         <div>
-                          <Label className="text-muted-foreground">KYC Status</Label>
+                          <Label className="text-muted-foreground">
+                            KYC Status
+                          </Label>
                           <Badge variant="outline" className="capitalize mt-1">
-                            <span className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(selectedProfile.kyc_status)}`} />
+                            <span
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(selectedProfile.kyc_status)}`}
+                            />
                             {selectedProfile.kyc_status}
                           </Badge>
                         </div>
                         <div>
-                          <Label className="text-muted-foreground">Account Status</Label>
+                          <Label className="text-muted-foreground">
+                            Account Status
+                          </Label>
                           <Badge variant="outline" className="capitalize mt-1">
                             {selectedProfile.account_status}
                           </Badge>
@@ -573,7 +625,12 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                       </div>
                       <Button
                         className="w-full mt-4"
-                        onClick={() => setFundDialog({ open: true, userId: selectedLead.user_id })}
+                        onClick={() =>
+                          setFundDialog({
+                            open: true,
+                            userId: selectedLead.user_id,
+                          })
+                        }
                       >
                         <DollarSign className="h-4 w-4 mr-2" />
                         Add Funds
@@ -585,24 +642,44 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                 <TabsContent value="trading" className="space-y-4 mt-4">
                   <div className="space-y-4">
                     <div>
-                      <Label className="text-muted-foreground">Trading Experience</Label>
-                      <p className="font-medium">{getExperienceLabel(selectedLead.trading_experience)}</p>
+                      <Label className="text-muted-foreground">
+                        Trading Experience
+                      </Label>
+                      <p className="font-medium">
+                        {getExperienceLabel(selectedLead.trading_experience)}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">Occupation</Label>
-                      <p className="font-medium capitalize">{selectedLead.occupation.replace('-', ' ')}</p>
+                      <Label className="text-muted-foreground">
+                        Occupation
+                      </Label>
+                      <p className="font-medium capitalize">
+                        {selectedLead.occupation.replace("-", " ")}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">Financial Capability</Label>
-                      <p className="font-medium">{getFinancialLabel(selectedLead.financial_capability)}</p>
+                      <Label className="text-muted-foreground">
+                        Financial Capability
+                      </Label>
+                      <p className="font-medium">
+                        {getFinancialLabel(selectedLead.financial_capability)}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">Reason for Joining</Label>
-                      <p className="text-sm mt-1 p-3 bg-muted rounded-lg">{selectedLead.reason_for_joining}</p>
+                      <Label className="text-muted-foreground">
+                        Reason for Joining
+                      </Label>
+                      <p className="text-sm mt-1 p-3 bg-muted rounded-lg">
+                        {selectedLead.reason_for_joining}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">Trading Goals</Label>
-                      <p className="text-sm mt-1 p-3 bg-muted rounded-lg">{selectedLead.trading_goals}</p>
+                      <Label className="text-muted-foreground">
+                        Trading Goals
+                      </Label>
+                      <p className="text-sm mt-1 p-3 bg-muted rounded-lg">
+                        {selectedLead.trading_goals}
+                      </p>
                     </div>
                   </div>
                 </TabsContent>
@@ -617,22 +694,29 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                       {selectedKYCDocs.map((doc) => (
                         <Card key={doc.id} className="p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium capitalize">{doc.document_type.replace('_', ' ')}</span>
+                            <span className="font-medium capitalize">
+                              {doc.document_type.replace("_", " ")}
+                            </span>
                             <Badge variant="outline" className="capitalize">
-                              <span className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(doc.status)}`} />
+                              <span
+                                className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(doc.status)}`}
+                              />
                               {doc.status}
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground mb-3">
-                            Submitted: {new Date(doc.created_at).toLocaleDateString()}
+                            Submitted:{" "}
+                            {new Date(doc.created_at).toLocaleDateString()}
                           </p>
-                          {doc.status === 'pending' && (
+                          {doc.status === "pending" && (
                             <div className="flex gap-2">
                               <Button
                                 size="sm"
                                 variant="default"
                                 className="flex-1"
-                                onClick={() => handleKYCAction(doc.id, 'approved')}
+                                onClick={() =>
+                                  handleKYCAction(doc.id, "approved")
+                                }
                               >
                                 Approve
                               </Button>
@@ -640,7 +724,13 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                                 size="sm"
                                 variant="destructive"
                                 className="flex-1"
-                                onClick={() => handleKYCAction(doc.id, 'rejected', 'Document not valid')}
+                                onClick={() =>
+                                  handleKYCAction(
+                                    doc.id,
+                                    "rejected",
+                                    "Document not valid",
+                                  )
+                                }
                               >
                                 Reject
                               </Button>
@@ -663,7 +753,10 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       </Sheet>
 
       {/* Fund Account Dialog */}
-      <Dialog open={fundDialog.open} onOpenChange={() => setFundDialog({ open: false, userId: null })}>
+      <Dialog
+        open={fundDialog.open}
+        onOpenChange={() => setFundDialog({ open: false, userId: null })}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Fund User Account</DialogTitle>
@@ -687,14 +780,22 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setFundDialog({ open: false, userId: null })} disabled={isFunding}>
+            <Button
+              variant="outline"
+              onClick={() => setFundDialog({ open: false, userId: null })}
+              disabled={isFunding}
+            >
               Cancel
             </Button>
             <LoadingButton
               onClick={handleFundAccount}
               isLoading={isFunding}
               loadingText="Adding Funds..."
-              disabled={!fundAmount || isNaN(Number(fundAmount)) || Number(fundAmount) <= 0}
+              disabled={
+                !fundAmount ||
+                isNaN(Number(fundAmount)) ||
+                Number(fundAmount) <= 0
+              }
             >
               Add Funds
             </LoadingButton>

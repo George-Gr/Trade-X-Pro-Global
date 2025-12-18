@@ -1,11 +1,11 @@
 /**
  * Trading Error Boundary
- * 
+ *
  * Specialized error boundary for trading-related components that handles
  * critical trading errors with enhanced logging and user-friendly fallbacks.
  */
 
-import React from 'react';
+import React from "react";
 import { AlertTriangle, RefreshCw, Home, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,7 +22,11 @@ interface TradingErrorBoundaryState {
 interface TradingErrorBoundaryProps {
   children: React.ReactNode;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  fallback?: React.ComponentType<{ error: Error; onRetry: () => void; onReset: () => void }>;
+  fallback?: React.ComponentType<{
+    error: Error;
+    onRetry: () => void;
+    onReset: () => void;
+  }>;
   maxRetries?: number;
   critical?: boolean; // Whether this is a critical trading component
 }
@@ -36,63 +40,69 @@ class TradingErrorBoundary extends React.Component<
     this.state = {
       hasError: false,
       error: null,
-      errorId: '',
-      retryCount: 0
+      errorId: "",
+      retryCount: 0,
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<TradingErrorBoundaryState> {
+  static getDerivedStateFromError(
+    error: Error,
+  ): Partial<TradingErrorBoundaryState> {
     // Generate unique error ID for tracking
     const errorId = `trading-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
-    
+
     return {
       hasError: true,
       error,
-      errorId
+      errorId,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     const { critical = false } = this.props;
-    
+
     // Enhanced error logging for trading components
-    logger.error(`Trading Error Boundary caught an error: ${error.message}`, error, {
-      component: "TradingErrorBoundary",
-      action: "trading_error_boundary_catch",
-      metadata: {
-        errorId: this.state.errorId,
-        critical,
-        componentStack: errorInfo?.componentStack,
-        retryCount: this.state.retryCount,
-        timestamp: new Date().toISOString(),
-        // Add trading-specific context
-        tradingContext: {
-          // These would be populated by the trading system
-          currentPosition: null,
-          activeOrders: null,
-          marketStatus: null
-        }
+    logger.error(
+      `Trading Error Boundary caught an error: ${error.message}`,
+      error,
+      {
+        component: "TradingErrorBoundary",
+        action: "trading_error_boundary_catch",
+        metadata: {
+          errorId: this.state.errorId,
+          critical,
+          componentStack: errorInfo?.componentStack,
+          retryCount: this.state.retryCount,
+          timestamp: new Date().toISOString(),
+          // Add trading-specific context
+          tradingContext: {
+            // These would be populated by the trading system
+            currentPosition: null,
+            activeOrders: null,
+            marketStatus: null,
+          },
+        },
       },
-    });
+    );
 
     // Add breadcrumb for trading error tracking
     logger.addBreadcrumb(
       "error",
       `Trading component error: ${error.message}`,
-      critical ? "error" : "warning"
+      critical ? "error" : "warning",
     );
 
     // Log as critical error if marked as such
     if (critical) {
       logger.addBreadcrumb(
         "critical",
-        `CRITICAL: Trading component failed - ${error.message}`
+        `CRITICAL: Trading component failed - ${error.message}`,
       );
     }
-    
+
     // Update state with errorInfo
     this.setState({ errorInfo });
-    
+
     // Call custom error handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -102,12 +112,12 @@ class TradingErrorBoundary extends React.Component<
   handleRetry = () => {
     const { retryCount } = this.state;
     const { maxRetries = 3 } = this.props;
-    
+
     if (retryCount >= maxRetries) {
       logger.warn("Maximum retry attempts reached for trading component", {
         component: "TradingErrorBoundary",
         action: "max_retries_exceeded",
-        metadata: { retryCount, maxRetries }
+        metadata: { retryCount, maxRetries },
       });
       return;
     }
@@ -115,52 +125,52 @@ class TradingErrorBoundary extends React.Component<
     this.setState({
       hasError: false,
       error: null,
-      errorId: '',
-      retryCount: retryCount + 1
+      errorId: "",
+      retryCount: retryCount + 1,
     });
 
     logger.addBreadcrumb(
       "info",
-      `Retrying trading component (attempt ${retryCount + 1})`
+      `Retrying trading component (attempt ${retryCount + 1})`,
     );
   };
 
   handleReset = () => {
     logger.info("Trading component reset requested by user", {
       component: "TradingErrorBoundary",
-      action: "trading_component_reset"
+      action: "trading_component_reset",
     });
-    
+
     this.setState({
       hasError: false,
       error: null,
-      errorId: '',
-      retryCount: 0
+      errorId: "",
+      retryCount: 0,
     });
   };
 
   handleGoHome = () => {
     logger.info("User navigated away from trading error", {
       component: "TradingErrorBoundary",
-      action: "user_navigate_away"
+      action: "user_navigate_away",
     });
-    
+
     // Navigate to home page
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
     }
   };
 
   render() {
     const { critical = false } = this.props;
-    
+
     if (this.state.hasError && this.state.error) {
       // Use custom fallback if provided
       if (this.props.fallback) {
         const FallbackComponent = this.props.fallback;
         return (
-          <FallbackComponent 
-            error={this.state.error} 
+          <FallbackComponent
+            error={this.state.error}
             onRetry={this.handleRetry}
             onReset={this.handleReset}
           />
@@ -179,14 +189,19 @@ class TradingErrorBoundary extends React.Component<
                   <AlertTriangle className="w-6 h-6 text-destructive" />
                 )}
                 <div>
-                  <CardTitle className={critical ? "text-destructive" : "text-foreground"}>
-                    {critical ? "Trading System Error" : "Trading Component Error"}
+                  <CardTitle
+                    className={
+                      critical ? "text-destructive" : "text-foreground"
+                    }
+                  >
+                    {critical
+                      ? "Trading System Error"
+                      : "Trading Component Error"}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    {critical 
+                    {critical
                       ? "Your trading session has been paused for safety"
-                      : "A trading component encountered an error"
-                    }
+                      : "A trading component encountered an error"}
                   </p>
                 </div>
               </div>
@@ -196,8 +211,7 @@ class TradingErrorBoundary extends React.Component<
                 <p className="text-sm text-slate-600 dark:text-slate-300">
                   {critical
                     ? "We've detected a critical issue with the trading system. Your positions are secure, but trading has been temporarily disabled."
-                    : "An unexpected error occurred in the trading interface. Your data is safe and can be restored."
-                  }
+                    : "An unexpected error occurred in the trading interface. Your data is safe and can be restored."}
                 </p>
 
                 {/* Retry section */}
@@ -207,17 +221,18 @@ class TradingErrorBoundary extends React.Component<
                       Auto-save is active. You can try to restore the component.
                     </p>
                     <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={this.handleRetry}
                         className="flex-1"
                       >
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        Try Again ({this.state.retryCount + 1}/{this.props.maxRetries || 3})
+                        Try Again ({this.state.retryCount + 1}/
+                        {this.props.maxRetries || 3})
                       </Button>
-                      <Button 
-                        variant="secondary" 
+                      <Button
+                        variant="secondary"
                         size="sm"
                         onClick={this.handleReset}
                       >
@@ -243,12 +258,15 @@ class TradingErrorBoundary extends React.Component<
                       size="sm"
                       className="flex-1"
                       onClick={() => {
-                        logger.info("User contacted support from critical trading error", {
-                          component: "TradingErrorBoundary",
-                          action: "contact_support_from_error"
-                        });
+                        logger.info(
+                          "User contacted support from critical trading error",
+                          {
+                            component: "TradingErrorBoundary",
+                            action: "contact_support_from_error",
+                          },
+                        );
                         // In a real app, this would open support chat or email
-                        window.open('mailto:support@tradexpro.com', '_blank');
+                        window.open("mailto:support@tradexpro.com", "_blank");
                       }}
                     >
                       Contact Support
@@ -260,7 +278,8 @@ class TradingErrorBoundary extends React.Component<
                 {this.state.errorId && (
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-mono text-center mt-2">
                     Error ID: {this.state.errorId}
-                    {this.state.retryCount > 0 && ` (Retry: ${this.state.retryCount})`}
+                    {this.state.retryCount > 0 &&
+                      ` (Retry: ${this.state.retryCount})`}
                   </p>
                 )}
 
@@ -285,8 +304,9 @@ class TradingErrorBoundary extends React.Component<
                         </details>
                       )}
                       <p className="text-xs text-muted-foreground mt-2">
-                        This error boundary is specifically designed for trading components
-                        and includes enhanced error tracking for financial operations.
+                        This error boundary is specifically designed for trading
+                        components and includes enhanced error tracking for
+                        financial operations.
                       </p>
                     </div>
                   </details>

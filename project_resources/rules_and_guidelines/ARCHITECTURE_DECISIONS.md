@@ -23,14 +23,18 @@
 ## 📄 ADR-001: Feature-Based Code Organization
 
 ### Decision
+
 Organize code by **features/domains** rather than by technical layers (components, lib, hooks, etc.).
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Architecture Team
 
 ### Context
+
 Initial project used layer-based organization:
+
 ```
 src/
 ├── components/     (all components)
@@ -40,13 +44,16 @@ src/
 ```
 
 This caused issues:
+
 - Difficult to find related code
 - Hard to move features between projects
 - Unclear dependencies between modules
 - Scaling pain as project grew
 
 ### Decision
+
 Adopt **feature-based organization** with clear module boundaries:
+
 ```
 src/
 ├── components/trading/      (trading feature)
@@ -58,6 +65,7 @@ src/
 ```
 
 ### Rationale
+
 1. **Cohesion:** Related code lives together
 2. **Scalability:** Features can grow independently
 3. **Extraction:** Features can be moved to separate packages
@@ -65,6 +73,7 @@ src/
 5. **Modularity:** Easier to understand feature scope
 
 ### Consequences
+
 - ✅ Easier to onboard new developers
 - ✅ Faster to locate feature code
 - ✅ Clear feature boundaries
@@ -72,11 +81,13 @@ src/
 - ⚠️ Need discipline to maintain boundaries
 
 ### When to Revisit
+
 - If team grows > 20 people
 - If splitting into monorepo becomes necessary
 - If performance issues require restructuring
 
 ### Related Documents
+
 - STYLE_GUIDE.md - File Organization section
 - PRD.md - Feature descriptions
 
@@ -85,14 +96,18 @@ src/
 ## 📄 ADR-002: Tailwind CSS + CSS Variables for Styling
 
 ### Decision
+
 Use **Tailwind CSS v4** for utility-first styling with **CSS variables** for design tokens.
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Design System Team
 
 ### Context
+
 Initially considered:
+
 1. **CSS Modules** - Good scoping, verbose
 2. **Styled Components** - JS-in-CSS, runtime overhead
 3. **Tailwind CSS** - Utility-first, smaller bundle
@@ -101,16 +116,17 @@ Initially considered:
 Chose Tailwind + CSS Variables to get benefits of both utility framework + tokenization.
 
 ### Decision
+
 ```tsx
 // Use Tailwind utilities with CSS variable fallback
 <div className="bg-primary text-white p-4">
-  This uses CSS variables under the hood:
-  background: hsl(var(--primary))
-  color: hsl(var(--foreground))
+  This uses CSS variables under the hood: background: hsl(var(--primary)) color:
+  hsl(var(--foreground))
 </div>
 ```
 
 ### Rationale
+
 1. **Speed:** Utility-first = rapid prototyping
 2. **Consistency:** CSS variables enforce design tokens
 3. **Dark Mode:** CSS variables work with prefers-color-scheme
@@ -120,6 +136,7 @@ Chose Tailwind + CSS Variables to get benefits of both utility framework + token
 7. **Accessibility:** Built-in a11y utilities
 
 ### Consequences
+
 - ✅ Smaller CSS bundles
 - ✅ Consistent design system
 - ✅ Fast development iteration
@@ -129,6 +146,7 @@ Chose Tailwind + CSS Variables to get benefits of both utility framework + token
 - ⚠️ Team must agree on class naming
 
 ### Best Practices
+
 ```tsx
 // ✅ CORRECT - Use Tailwind classes
 <Button className="text-primary bg-white">
@@ -144,11 +162,13 @@ style={{ color: 'hsl(var(--accent))' }}
 ```
 
 ### When to Revisit
+
 - If Tailwind v5+ introduces breaking changes
 - If CSS Variables support degrades in target browsers
 - If performance metrics show CSS is bottleneck
 
 ### Related Documents
+
 - DESIGN_SYSTEM.md - CSS variables section
 - STYLE_GUIDE.md - Tailwind best practices
 
@@ -157,21 +177,27 @@ style={{ color: 'hsl(var(--accent))' }}
 ## 📄 ADR-003: 8px/4px Spacing Grid System
 
 ### Decision
+
 Use an **8px base spacing unit with 4px subdivisions** for all layout and spacing.
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Design System Team
 
 ### Context
+
 Spacing inconsistencies caused visual misalignment:
+
 - Developers used arbitrary values: 13px, 17px, 5px
 - No visual consistency in designs
 - Hard to scale design system
 - Difficult to explain spacing to developers
 
 ### Decision
+
 Enforce 4px/8px grid:
+
 ```css
 /* 4px base grid with 8px steps */
 4px   (xs)
@@ -187,6 +213,7 @@ Enforce 4px/8px grid:
 ```
 
 ### Rationale
+
 1. **Visual Harmony:** 8px = standard in design systems
 2. **Flexibility:** 4px allows micro-adjustments
 3. **Scalability:** Easy to multiply (2x, 3x)
@@ -195,6 +222,7 @@ Enforce 4px/8px grid:
 6. **Consistency:** Predictable spacing throughout
 
 ### Consequences
+
 - ✅ Visually consistent spacing
 - ✅ Design changes easier
 - ✅ Developer guidelines clear
@@ -203,6 +231,7 @@ Enforce 4px/8px grid:
 - ⚠️ Audit tool validates compliance
 
 ### Implementation
+
 ```tsx
 // ✅ CORRECT - 8px grid
 <div className="p-4 space-y-6">    {/* 16px padding, 24px gaps */}
@@ -219,11 +248,13 @@ npm run validate:design  // Catches spacing violations
 ```
 
 ### When to Revisit
+
 - If 8px/4px proves inflexible for specific components
 - If performance metrics show over-engineering
 - If design language changes significantly
 
 ### Related Documents
+
 - DESIGN_SYSTEM.md - Spacing & Layout section
 - STYLE_GUIDE.md - Spacing utilities
 - QUALITY_GATES.md - Validation rules
@@ -233,29 +264,35 @@ npm run validate:design  // Catches spacing violations
 ## 📄 ADR-004: Loose TypeScript Configuration
 
 ### Decision
+
 Use **loose TypeScript configuration** (`noImplicitAny: false`, `strictNullChecks: false`) for rapid development, with strict mode for critical paths.
 
 ### Status
+
 ✅ **APPROVED** | Nov 2024  
 **Owner:** Architecture Team
 
 ### Context
+
 Strict TypeScript has benefits but slows development:
+
 ```typescript
 // Strict mode requires this much boilerplate:
 const getData = (id?: string | undefined | null): Promise<Data | null> => {
-  if (!id) return Promise.resolve(null)
-  return fetch(`/api/${id}`).then(r => r.json())
-}
+  if (!id) return Promise.resolve(null);
+  return fetch(`/api/${id}`).then((r) => r.json());
+};
 
 // Loose mode allows faster iteration:
 const getData = (id) => {
-  return fetch(`/api/${id}`).then(r => r.json())
-}
+  return fetch(`/api/${id}`).then((r) => r.json());
+};
 ```
 
 ### Decision
+
 Use loose TypeScript config by default:
+
 ```json
 // tsconfig.json
 {
@@ -268,12 +305,14 @@ Use loose TypeScript config by default:
 ```
 
 But require strict typing for:
+
 - Public APIs
 - Shared utilities in `src/lib/`
 - Component props
 - Business logic in `src/lib/trading/`
 
 ### Rationale
+
 1. **Speed:** Developers iterate faster
 2. **Adoption:** New developers onboard easier
 3. **Pragmatism:** Not all code needs strict typing
@@ -281,6 +320,7 @@ But require strict typing for:
 5. **Maintainability:** Still get basic type checking
 
 ### Consequences
+
 - ✅ Faster development
 - ✅ Easier onboarding
 - ✅ Less ceremony for simple code
@@ -289,40 +329,43 @@ But require strict typing for:
 - ⚠️ Requires developer discipline
 
 ### Best Practices
+
 ```typescript
 // ✅ COMPONENT PROPS - Always strict
 interface ButtonProps {
-  variant: 'default' | 'secondary' | 'outline'
-  size: 'sm' | 'md' | 'lg'
-  onClick: (event: React.MouseEvent) => void
-  children: React.ReactNode
+  variant: "default" | "secondary" | "outline";
+  size: "sm" | "md" | "lg";
+  onClick: (event: React.MouseEvent) => void;
+  children: React.ReactNode;
 }
 
 // ✅ PUBLIC FUNCTIONS - Always strict
 export function calculatePortfolioValue(positions: Position[]): number {
-  return positions.reduce((sum, p) => sum + p.value, 0)
+  return positions.reduce((sum, p) => sum + p.value, 0);
 }
 
 // ✅ EVENT HANDLERS - Use appropriate types
 const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const value = event.target.value  // TypeScript knows this is string
-}
+  const value = event.target.value; // TypeScript knows this is string
+};
 
 // ✅ LOOSE - Internal implementations
 const formatData = (data) => {
-  return data.map(item => ({
+  return data.map((item) => ({
     ...item,
-    formatted: new Date(item.date).toLocaleDateString()
-  }))
-}
+    formatted: new Date(item.date).toLocaleDateString(),
+  }));
+};
 ```
 
 ### When to Revisit
+
 - If type-related bugs exceed 5% of issues
 - If team size > 10 requires more structure
 - If moving to stricter project
 
 ### Related Documents
+
 - STYLE_GUIDE.md - TypeScript standards section
 - tsconfig.json - Configuration file
 
@@ -331,14 +374,18 @@ const formatData = (data) => {
 ## 📄 ADR-005: React Context + React Query for State
 
 ### Decision
+
 Use **React Context for global UI state** and **React Query for server state**.
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Architecture Team
 
 ### Context
+
 Considered:
+
 1. **Redux** - Powerful but over-engineered for this project
 2. **Zustand** - Minimal but less ecosystem
 3. **Context + Hooks** - Built-in, sufficient
@@ -346,9 +393,11 @@ Considered:
 5. **MobX** - Declarative but complex
 
 ### Decision
+
 Split state responsibility:
 
 **React Context** (Global UI State):
+
 ```typescript
 // src/contexts/auth.tsx
 <AuthProvider>
@@ -361,14 +410,16 @@ Split state responsibility:
 ```
 
 **React Query** (Server State):
+
 ```typescript
 const { data, isLoading } = useQuery({
-  queryKey: ['positions'],
-  queryFn: () => supabase.from('positions').select()
-})
+  queryKey: ["positions"],
+  queryFn: () => supabase.from("positions").select(),
+});
 ```
 
 ### Rationale
+
 1. **Simplicity:** Built-in React features, not external lib for Context
 2. **Server State:** React Query handles caching, retries, sync
 3. **Performance:** Context only for small global state
@@ -377,6 +428,7 @@ const { data, isLoading } = useQuery({
 6. **Ecosystem:** React Query has excellent dev tools
 
 ### Consequences
+
 - ✅ Simple state management
 - ✅ React Query handles server sync
 - ✅ Context good for UI state
@@ -386,6 +438,7 @@ const { data, isLoading } = useQuery({
 - ⚠️ Not ideal for large nested state
 
 ### Implementation
+
 ```tsx
 // ✅ CONTEXT - UI state only
 <AuthProvider>
@@ -394,26 +447,28 @@ const { data, isLoading } = useQuery({
       <App />
     </SidebarProvider>
   </ThemeProvider>
-</AuthProvider>
+</AuthProvider>;
 
 // ✅ REACT QUERY - Server state
 const { data: positions } = useQuery({
-  queryKey: ['positions', portfolioId],
+  queryKey: ["positions", portfolioId],
   queryFn: () => fetchPositions(portfolioId),
   staleTime: 5 * 60 * 1000, // 5 minutes
   refetchOnWindowFocus: true,
-})
+});
 
 // ✅ LOCAL HOOKS - Component state
-const [isOpen, setIsOpen] = useState(false)
+const [isOpen, setIsOpen] = useState(false);
 ```
 
 ### When to Revisit
+
 - If state management needs become more complex
 - If team standardizes on different approach
 - If React 19 changes state patterns
 
 ### Related Documents
+
 - STYLE_GUIDE.md - State management patterns
 - src/hooks/ - Example custom hooks
 
@@ -422,14 +477,18 @@ const [isOpen, setIsOpen] = useState(false)
 ## 📄 ADR-006: shadcn-ui Component Library
 
 ### Decision
+
 Use **shadcn-ui** as primary component library (Radix UI + Tailwind CSS).
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Design System Team
 
 ### Context
+
 Evaluated:
+
 1. **Material-UI** - Comprehensive, heavy, styled-components
 2. **Chakra UI** - Great a11y, emotion CSS-in-JS
 3. **shadcn-ui** - Lightweight, copy-paste, Tailwind-native
@@ -437,7 +496,9 @@ Evaluated:
 5. **Custom Components** - Full control, high maintenance
 
 ### Decision
+
 Adopt shadcn-ui with custom extensions:
+
 ```
 src/components/ui/          # shadcn-ui components
 ├── button.tsx
@@ -448,6 +509,7 @@ src/components/ui/          # shadcn-ui components
 ```
 
 Custom variants and extensions in separate files:
+
 ```
 src/components/custom/      # Project-specific components
 ├── TradeButton.tsx          # Button with trading defaults
@@ -456,6 +518,7 @@ src/components/custom/      # Project-specific components
 ```
 
 ### Rationale
+
 1. **Tailwind Native:** Uses Tailwind, aligns with our stack
 2. **Customizable:** Copy-paste = full control
 3. **Accessibility:** Built on Radix UI (excellent a11y)
@@ -465,6 +528,7 @@ src/components/custom/      # Project-specific components
 7. **Community:** Large ecosystem of extensions
 
 ### Consequences
+
 - ✅ Lightweight, customizable components
 - ✅ Tailwind-first approach
 - ✅ Excellent accessibility
@@ -474,10 +538,11 @@ src/components/custom/      # Project-specific components
 - ⚠️ Breaking changes in Radix UI affect all copies
 
 ### Implementation
+
 ```tsx
 // ✅ USE shadcn-ui components
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function MyComponent() {
   return (
@@ -486,25 +551,25 @@ export function MyComponent() {
         <Button>Click me</Button>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // ✅ EXTEND with custom components
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 export function TradeButton(props) {
-  return (
-    <Button variant="default" className="w-full" {...props} />
-  )
+  return <Button variant="default" className="w-full" {...props} />;
 }
 ```
 
 ### When to Revisit
+
 - If Radix UI introduces breaking changes
 - If need component library with NPM updates
 - If team prefers different design system
 
 ### Related Documents
+
 - COMPONENT_API.md - Component specifications
 - DESIGN_SYSTEM.md - Design tokens
 - project_resources/components/ - Component files
@@ -514,48 +579,56 @@ export function TradeButton(props) {
 ## 📄 ADR-007: CSS Variables for Dark Mode
 
 ### Decision
+
 Use **CSS variables with `prefers-color-scheme`** for dark mode instead of JavaScript toggles.
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Design System Team
 
 ### Context
+
 Initial approach used JavaScript theme switching:
+
 ```javascript
 // Old approach - JS-based
-localStorage.setItem('theme', 'dark')
-document.documentElement.classList.add('dark')
+localStorage.setItem("theme", "dark");
+document.documentElement.classList.add("dark");
 ```
 
 Issues:
+
 - Flash of wrong color on page load
 - Complex JavaScript state management
 - Manual synchronization with OS preference
 - Performance penalty from JS execution
 
 ### Decision
+
 Use CSS-native dark mode:
+
 ```css
 /* src/styles/root.css */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: 262 83% 58%;           /* Light: purple */
-    --foreground: 210 40% 98%;        /* Light: light gray */
-    --background: 222 84% 5%;         /* Dark: dark gray */
+    --primary: 262 83% 58%; /* Light: purple */
+    --foreground: 210 40% 98%; /* Light: light gray */
+    --background: 222 84% 5%; /* Dark: dark gray */
   }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --primary: 262 83% 58%;           /* Light: same purple */
-    --foreground: 222 84% 5%;         /* Light: dark gray */
-    --background: 0 0% 100%;          /* Light: white */
+    --primary: 262 83% 58%; /* Light: same purple */
+    --foreground: 222 84% 5%; /* Light: dark gray */
+    --background: 0 0% 100%; /* Light: white */
   }
 }
 ```
 
 ### Rationale
+
 1. **No Flash:** Color scheme loads before paint
 2. **User Preference:** Respects OS dark mode setting
 3. **Performance:** No JavaScript execution needed
@@ -564,6 +637,7 @@ Use CSS-native dark mode:
 6. **Maintenance:** Single source of truth (CSS variables)
 
 ### Consequences
+
 - ✅ No flash on load
 - ✅ Automatic OS integration
 - ✅ Better performance
@@ -573,6 +647,7 @@ Use CSS-native dark mode:
 - ⚠️ Can't override per-component
 
 ### Implementation
+
 ```tsx
 // ✅ AUTOMATIC - Dark mode works without code
 // Browser automatically applies dark mode CSS based on OS preference
@@ -589,11 +664,13 @@ Use CSS-native dark mode:
 ```
 
 ### When to Revisit
+
 - If need manual theme toggle button
 - If design requires multiple themes
 - If `prefers-color-scheme` support becomes obsolete
 
 ### Related Documents
+
 - DESIGN_SYSTEM.md - Color system section
 - styles/root.css - Implementation
 
@@ -602,14 +679,18 @@ Use CSS-native dark mode:
 ## 📄 ADR-008: Playwright for E2E Testing
 
 ### Decision
+
 Use **Playwright** for end-to-end testing.
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** QA Team
 
 ### Context
+
 Evaluated:
+
 1. **Cypress** - Great DX but resource-heavy
 2. **Playwright** - Fast, multiple browsers, good DX
 3. **Puppeteer** - Lower-level, more setup
@@ -617,22 +698,25 @@ Evaluated:
 5. **No E2E** - Skip E2E entirely
 
 ### Decision
+
 Adopt Playwright for E2E testing:
+
 ```typescript
 // e2e/login.spec.ts
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test";
 
-test('user can log in', async ({ page }) => {
-  await page.goto('http://localhost:8080')
-  await page.fill('input[type="email"]', 'test@example.com')
-  await page.fill('input[type="password"]', 'password')
-  await page.click('button[type="submit"]')
-  
-  await expect(page).toHaveURL('http://localhost:8080/dashboard')
-})
+test("user can log in", async ({ page }) => {
+  await page.goto("http://localhost:8080");
+  await page.fill('input[type="email"]', "test@example.com");
+  await page.fill('input[type="password"]', "password");
+  await page.click('button[type="submit"]');
+
+  await expect(page).toHaveURL("http://localhost:8080/dashboard");
+});
 ```
 
 ### Rationale
+
 1. **Speed:** Fast test execution
 2. **Reliability:** Great flake resistance
 3. **Multi-Browser:** Test Chrome, Firefox, Safari
@@ -642,6 +726,7 @@ test('user can log in', async ({ page }) => {
 7. **CI-Friendly:** Works great in GitHub Actions
 
 ### Consequences
+
 - ✅ Fast test execution
 - ✅ Multiple browser support
 - ✅ Good debugging experience
@@ -651,29 +736,32 @@ test('user can log in', async ({ page }) => {
 - ⚠️ Resource usage in CI/CD
 
 ### Best Practices
+
 ```typescript
 // ✅ CORRECT - Wait for elements
-await expect(page.locator('button')).toBeVisible()
-await page.click('button')
+await expect(page.locator("button")).toBeVisible();
+await page.click("button");
 
 // ✅ CORRECT - Use test fixtures
 test.beforeEach(async ({ page }) => {
-  await loginUser(page)
-})
+  await loginUser(page);
+});
 
 // ❌ WRONG - Hard-coded waits
-await page.waitForTimeout(2000)
+await page.waitForTimeout(2000);
 
 // ❌ WRONG - Flaky selectors
-await page.click('.btn')  // Too generic
+await page.click(".btn"); // Too generic
 ```
 
 ### When to Revisit
+
 - If team wants different E2E approach
 - If Playwright introduces breaking changes
 - If need different browser automation
 
 ### Related Documents
+
 - e2e/ - Test files
 - playwright.config.ts - Configuration
 
@@ -682,14 +770,18 @@ await page.click('.btn')  // Too generic
 ## 📄 ADR-009: Supabase for Backend
 
 ### Decision
+
 Use **Supabase** as backend infrastructure (managed PostgreSQL, Auth, Realtime, Edge Functions).
 
 ### Status
+
 ✅ **APPROVED** | Dec 2024  
 **Owner:** Backend Team
 
 ### Context
+
 Considered:
+
 1. **Firebase** - Ease of use but vendor lock-in
 2. **AWS** - Powerful but complex setup
 3. **Vercel Postgres** - Good but limited features
@@ -697,7 +789,9 @@ Considered:
 5. **Self-hosted DB** - Full control, high ops burden
 
 ### Decision
+
 Use Supabase managed services:
+
 - **PostgreSQL:** Primary database
 - **Auth:** User authentication (JWT)
 - **Realtime:** WebSocket subscriptions
@@ -705,6 +799,7 @@ Use Supabase managed services:
 - **Storage:** File uploads
 
 ### Rationale
+
 1. **Type Safety:** Generate types from schema
 2. **Realtime:** Built-in WebSocket subscriptions
 3. **SQL Power:** Full PostgreSQL capabilities
@@ -714,6 +809,7 @@ Use Supabase managed services:
 7. **Cost:** Generous free tier for development
 
 ### Consequences
+
 - ✅ Strong type generation
 - ✅ Real-time features built-in
 - ✅ PostgreSQL power
@@ -723,37 +819,41 @@ Use Supabase managed services:
 - ⚠️ Costs scale with usage
 
 ### Implementation
+
 ```typescript
 // ✅ USE Supabase client
-import { supabase } from '@/integrations/supabase/client'
+import { supabase } from "@/integrations/supabase/client";
 
 // Query with type safety
 const { data, error } = await supabase
-  .from('positions')
+  .from("positions")
   .select()
-  .eq('portfolio_id', portfolioId)
+  .eq("portfolio_id", portfolioId);
 
 // Types automatically generated from schema
-const position: Database['public']['Tables']['positions']['Row']
+const position: Database["public"]["Tables"]["positions"]["Row"];
 
 // Real-time subscriptions
 supabase
-  .channel('positions')
-  .on('postgres_changes', 
-    { event: '*', schema: 'public', table: 'positions' },
+  .channel("positions")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "positions" },
     (payload) => {
-      console.log('Position changed:', payload)
-    }
+      console.log("Position changed:", payload);
+    },
   )
-  .subscribe()
+  .subscribe();
 ```
 
 ### When to Revisit
+
 - If need different database engine
 - If costs become prohibitive
 - If want to self-host backend
 
 ### Related Documents
+
 - src/integrations/supabase/ - Client and types
 - supabase/ - Migrations and functions
 - DEVELOPMENT_SETUP.md - Database setup
@@ -763,6 +863,7 @@ supabase
 ## 🔄 Decision Review Process
 
 ### How Decisions Are Made
+
 1. **Identify Problem:** What decision needs to be made?
 2. **Gather Options:** What are the alternatives?
 3. **Evaluate:** Pros/cons of each option
@@ -772,7 +873,9 @@ supabase
 7. **Review:** Every 6 months
 
 ### When to Challenge a Decision
+
 If you disagree with a decision:
+
 1. **Understand Why:** Read the ADR
 2. **Gather Data:** Can you prove it's wrong?
 3. **Propose Alternative:** What would you choose instead?
@@ -780,6 +883,7 @@ If you disagree with a decision:
 5. **Document Change:** Update ADR if agreed
 
 ### When to Revisit an ADR
+
 - If circumstances change significantly
 - If new data proves decision wrong
 - If team consensus shifts

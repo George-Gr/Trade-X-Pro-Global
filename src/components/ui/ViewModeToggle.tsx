@@ -30,7 +30,8 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
   className,
   showLabels = true,
 }) => {
-  const { viewMode, setViewMode, toggleViewMode, isProMode } = useViewModeSafe();
+  const { viewMode, setViewMode, toggleViewMode, isProMode } =
+    useViewModeSafe();
 
   if (variant === "compact") {
     return (
@@ -44,7 +45,7 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
               className={cn(
                 "h-8 px-2 gap-1",
                 isProMode && "text-primary",
-                className
+                className,
               )}
             >
               {isProMode ? (
@@ -67,7 +68,12 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
 
   if (variant === "buttons") {
     return (
-      <div className={cn("flex rounded-lg border border-border p-1 gap-1", className)}>
+      <div
+        className={cn(
+          "flex rounded-lg border border-border p-1 gap-1",
+          className,
+        )}
+      >
         <Button
           variant={viewMode === "basic" ? "default" : "ghost"}
           size="sm"
@@ -98,7 +104,9 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
           htmlFor="view-mode-toggle"
           className={cn(
             "text-sm cursor-pointer transition-colors",
-            !isProMode ? "text-foreground font-medium" : "text-muted-foreground"
+            !isProMode
+              ? "text-foreground font-medium"
+              : "text-muted-foreground",
           )}
           onClick={() => setViewMode("basic")}
         >
@@ -117,7 +125,7 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
           htmlFor="view-mode-toggle"
           className={cn(
             "text-sm cursor-pointer transition-colors",
-            isProMode ? "text-foreground font-medium" : "text-muted-foreground"
+            isProMode ? "text-foreground font-medium" : "text-muted-foreground",
           )}
           onClick={() => setViewMode("pro")}
         >
@@ -132,10 +140,10 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
 /**
  * Wrapper component that conditionally renders children based on view mode
  */
-export const ProModeOnly: React.FC<{ children?: React.ReactNode; fallback?: React.ReactNode }> = ({
-  children,
-  fallback = null,
-} = {}) => {
+export const ProModeOnly: React.FC<{
+  children?: React.ReactNode;
+  fallback?: React.ReactNode;
+}> = ({ children, fallback = null } = {}) => {
   const { isProMode } = useViewModeSafe();
   return <>{isProMode ? children : fallback}</>;
 };
@@ -143,7 +151,9 @@ export const ProModeOnly: React.FC<{ children?: React.ReactNode; fallback?: Reac
 /**
  * Wrapper component that only renders in basic mode
  */
-export const BasicModeOnly: React.FC<{ children?: React.ReactNode }> = ({ children } = {}) => {
+export const BasicModeOnly: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+} = {}) => {
   const { isBasicMode } = useViewModeSafe();
   return <>{isBasicMode ? children : null}</>;
 };

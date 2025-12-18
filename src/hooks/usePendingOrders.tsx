@@ -26,7 +26,9 @@ export const usePendingOrders = () => {
       setLoading(true);
       setError(null);
 
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         throw new Error("User not authenticated");
       }
@@ -44,7 +46,9 @@ export const usePendingOrders = () => {
       setOrders(data || []);
     } catch (err: unknown) {
       // Error fetching pending orders
-      setError(err instanceof Error ? err.message : "Failed to fetch pending orders");
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch pending orders",
+      );
     } finally {
       setLoading(false);
     }
@@ -52,7 +56,7 @@ export const usePendingOrders = () => {
 
   const cancelOrder = async (orderId: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('cancel-order', {
+      const { data, error } = await supabase.functions.invoke("cancel-order", {
         body: { order_id: orderId },
       });
 
@@ -70,16 +74,25 @@ export const usePendingOrders = () => {
       // Error cancelling order
       toast({
         title: "Cancellation Failed",
-        description: err instanceof Error ? err.message : "Failed to cancel order",
+        description:
+          err instanceof Error ? err.message : "Failed to cancel order",
         variant: "destructive",
       });
       return false;
     }
   };
 
-  const modifyOrder = async (orderId: string, updates: { quantity?: number; price?: number; stop_loss?: number; take_profit?: number }) => {
+  const modifyOrder = async (
+    orderId: string,
+    updates: {
+      quantity?: number;
+      price?: number;
+      stop_loss?: number;
+      take_profit?: number;
+    },
+  ) => {
     try {
-      const { data, error } = await supabase.functions.invoke('modify-order', {
+      const { data, error } = await supabase.functions.invoke("modify-order", {
         body: { order_id: orderId, ...updates },
       });
 
@@ -97,7 +110,8 @@ export const usePendingOrders = () => {
       // Error modifying order
       toast({
         title: "Modification Failed",
-        description: err instanceof Error ? err.message : "Failed to modify order",
+        description:
+          err instanceof Error ? err.message : "Failed to modify order",
         variant: "destructive",
       });
       return false;
@@ -109,17 +123,17 @@ export const usePendingOrders = () => {
 
     // Subscribe to real-time updates
     const channel = supabase
-      .channel('pending-orders-changes')
+      .channel("pending-orders-changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'orders',
+          event: "*",
+          schema: "public",
+          table: "orders",
         },
         () => {
           fetchPendingOrders();
-        }
+        },
       )
       .subscribe();
 

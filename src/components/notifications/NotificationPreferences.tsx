@@ -1,5 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/lib/supabaseBrowserClient";
@@ -80,7 +86,10 @@ export function NotificationPreferences() {
       <div className="space-y-6">
         <div className="space-y-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex items-center justify-between p-4 border border-border/50 rounded-lg">
+            <div
+              key={i}
+              className="flex items-center justify-between p-4 border border-border/50 rounded-lg"
+            >
               <div className="space-y-1">
                 <div className="h-4 w-48 bg-muted/50 rounded animate-pulse" />
                 <div className="h-3 w-32 bg-muted/50 rounded animate-pulse" />
@@ -114,7 +123,9 @@ export function NotificationPreferences() {
             <Switch
               id="email_enabled"
               checked={preferences.email_enabled}
-              onCheckedChange={(checked) => updatePreference("email_enabled", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("email_enabled", checked)
+              }
             />
           </div>
           <div className="flex items-center justify-between">
@@ -127,7 +138,9 @@ export function NotificationPreferences() {
             <Switch
               id="toast_enabled"
               checked={preferences.toast_enabled}
-              onCheckedChange={(checked) => updatePreference("toast_enabled", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("toast_enabled", checked)
+              }
             />
           </div>
         </div>
@@ -135,7 +148,10 @@ export function NotificationPreferences() {
         <div className="space-y-4">
           <h4 className="font-medium">Notification Types</h4>
           <div className="flex items-center justify-between">
-            <Label htmlFor="order_notifications" className="flex flex-col space-y-2">
+            <Label
+              htmlFor="order_notifications"
+              className="flex flex-col space-y-2"
+            >
               <span>Order & Position Updates</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Filled orders and position changes
@@ -144,11 +160,16 @@ export function NotificationPreferences() {
             <Switch
               id="order_notifications"
               checked={preferences.order_notifications}
-              onCheckedChange={(checked) => updatePreference("order_notifications", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("order_notifications", checked)
+              }
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="margin_notifications" className="flex flex-col space-y-2">
+            <Label
+              htmlFor="margin_notifications"
+              className="flex flex-col space-y-2"
+            >
               <span>Margin Alerts</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Margin calls and warnings
@@ -157,11 +178,16 @@ export function NotificationPreferences() {
             <Switch
               id="margin_notifications"
               checked={preferences.margin_notifications}
-              onCheckedChange={(checked) => updatePreference("margin_notifications", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("margin_notifications", checked)
+              }
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="pnl_notifications" className="flex flex-col space-y-2">
+            <Label
+              htmlFor="pnl_notifications"
+              className="flex flex-col space-y-2"
+            >
               <span>P&L Milestones</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Profit and loss achievements
@@ -170,11 +196,16 @@ export function NotificationPreferences() {
             <Switch
               id="pnl_notifications"
               checked={preferences.pnl_notifications}
-              onCheckedChange={(checked) => updatePreference("pnl_notifications", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("pnl_notifications", checked)
+              }
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="kyc_notifications" className="flex flex-col space-y-2">
+            <Label
+              htmlFor="kyc_notifications"
+              className="flex flex-col space-y-2"
+            >
               <span>KYC Updates</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Document verification status
@@ -183,11 +214,16 @@ export function NotificationPreferences() {
             <Switch
               id="kyc_notifications"
               checked={preferences.kyc_notifications}
-              onCheckedChange={(checked) => updatePreference("kyc_notifications", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("kyc_notifications", checked)
+              }
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="price_alert_notifications" className="flex flex-col space-y-2">
+            <Label
+              htmlFor="price_alert_notifications"
+              className="flex flex-col space-y-2"
+            >
               <span>Price Alerts</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Custom price target notifications
@@ -196,11 +232,16 @@ export function NotificationPreferences() {
             <Switch
               id="price_alert_notifications"
               checked={preferences.price_alert_notifications}
-              onCheckedChange={(checked) => updatePreference("price_alert_notifications", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("price_alert_notifications", checked)
+              }
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="risk_notifications" className="flex flex-col space-y-2">
+            <Label
+              htmlFor="risk_notifications"
+              className="flex flex-col space-y-2"
+            >
               <span>Risk Events</span>
               <span className="font-normal text-sm text-muted-foreground">
                 Critical account and risk alerts
@@ -209,7 +250,9 @@ export function NotificationPreferences() {
             <Switch
               id="risk_notifications"
               checked={preferences.risk_notifications}
-              onCheckedChange={(checked) => updatePreference("risk_notifications", checked)}
+              onCheckedChange={(checked) =>
+                updatePreference("risk_notifications", checked)
+              }
             />
           </div>
         </div>

@@ -9,6 +9,7 @@
 ## ⚡ Quick Start (5 Minutes)
 
 ### Prerequisites
+
 ```bash
 node --version    # Should be 18.0.0 or higher
 npm --version     # Should be 9.0.0 or higher
@@ -16,6 +17,7 @@ git --version     # Any recent version
 ```
 
 ### Setup Steps
+
 ```bash
 # 1. Clone repository
 git clone https://github.com/[your-org]/Trade-X-Pro-Global.git
@@ -42,17 +44,20 @@ npm run dev
 ### 1. Prerequisites
 
 **Required Software:**
+
 - Node.js 18.0.0+ ([download](https://nodejs.org/))
 - npm 9.0.0+ (comes with Node)
 - Git ([download](https://git-scm.com/))
 - VS Code (recommended, [download](https://code.visualstudio.com/))
 
 **Recommended VS Code Extensions:**
+
 - ESLint (`dbaeumer.vscode-eslint`)
 - Tailwind CSS IntelliSense (`bradlc.vscode-tailwindcss`)
 - TypeScript Vue Plugin (`Vue.vscode-typescript-vue-plugin`)
 
 **System Requirements:**
+
 - At least 4GB RAM free
 - At least 2GB disk space
 - Stable internet connection
@@ -80,6 +85,7 @@ npm list --depth=0
 ```
 
 **Expected packages (major ones):**
+
 - react@18.x
 - vite@5.x
 - tailwindcss@4.x
@@ -89,11 +95,13 @@ npm list --depth=0
 ### 4. Environment Configuration
 
 Create `.env.local` file:
+
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local`:
+
 ```env
 # Supabase Configuration (REQUIRED)
 VITE_SUPABASE_URL=https://[your-project-id].supabase.co
@@ -104,6 +112,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGc...
 ```
 
 **Getting Supabase Credentials:**
+
 1. Go to [Supabase Dashboard](https://app.supabase.com/)
 2. Select your project
 3. Go to Settings → API
@@ -136,6 +145,7 @@ npm run dev
 ```
 
 **Output should show:**
+
 ```
   VITE v5.x.x  ready in xxx ms
 
@@ -157,6 +167,7 @@ Changes to React components automatically reload in browser. No manual refresh n
 ### Accessing Dev Server from Other Machines
 
 For testing on mobile or other devices:
+
 ```bash
 # Find your machine IP
 ipconfig getifaddr en0    # macOS
@@ -256,6 +267,7 @@ npm run build
 Creates optimized bundle in `dist/` folder.
 
 **Build checks:**
+
 - TypeScript type checking ✅
 - Linting ✅
 - Minification ✅
@@ -289,6 +301,7 @@ npm run validate:design
 ```
 
 Checks for:
+
 - Hardcoded colors (should use CSS variables)
 - Invalid spacing values (should be 4px/8px grid)
 - Non-standard border radius
@@ -296,6 +309,7 @@ Checks for:
 - Tailwind best practices
 
 **Fix automatically:**
+
 ```bash
 npm run validate:design -- --fix
 ```
@@ -316,6 +330,7 @@ http://[YOUR_COMPUTER_IP]:8080
 ### Simulate Mobile Browsers
 
 Using Chrome DevTools:
+
 1. Press `F12` or `Ctrl+Shift+I` (Windows) / `Cmd+Option+I` (Mac)
 2. Click Device Toolbar icon (top-left)
 3. Select device (iPhone, Android, etc.)
@@ -345,6 +360,7 @@ npm run supabase:pull
 Downloads latest database schema and generates TypeScript types.
 
 **When to run:**
+
 - After schema changes in Supabase
 - When team member updates migrations
 - Before starting work on new features
@@ -459,6 +475,7 @@ NODE_OPTIONS="--max-old-space-size=4096" npm run build
 ## 📚 File Organization
 
 ### Project Structure
+
 ```
 Trade-X-Pro-Global/
 ├── src/
@@ -597,6 +614,7 @@ npm run help            # Show all commands
 ## 🆘 Getting Help
 
 **Problem Solving Steps:**
+
 1. Check [TROUBLESHOOTING.md](/project_resources/development/TROUBLESHOOTING.md)
 2. Search error message online
 3. Check project GitHub Issues
@@ -604,6 +622,7 @@ npm run help            # Show all commands
 5. Schedule pair programming session
 
 **Provide When Asking for Help:**
+
 - Error message (full output)
 - Steps to reproduce
 - What you've already tried

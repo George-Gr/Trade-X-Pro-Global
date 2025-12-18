@@ -15,6 +15,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🎨 FRONTEND LAYER ANALYSIS
 
 ### Visual & UI Quality
+
 - Pixel-perfect alignment and spacing consistency
 - Typography scale adherence and consistency
 - Color palette usage and design token compliance
@@ -25,6 +26,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Print stylesheet quality
 
 ### Component Architecture
+
 - React component structure and organization
 - Component composition vs inheritance patterns
 - Custom hooks extraction and reusability
@@ -37,6 +39,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Suspense boundary implementation
 
 ### TypeScript Quality
+
 - Type safety and strictness
 - 'any' type usage (should be minimal)
 - Type guards and discriminated unions
@@ -48,6 +51,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Third-party library type definitions
 
 ### State Management
+
 - Local vs global state decisions
 - Context API usage and performance
 - State management library integration (Zustand, Redux, etc.)
@@ -59,6 +63,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Real-time data handling (Supabase subscriptions)
 
 ### Routing & Navigation
+
 - Route structure and organization
 - Protected route implementation
 - Route parameter handling
@@ -70,6 +75,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Route-based code splitting
 
 ### Forms & Validation
+
 - Form library usage (React Hook Form, Formik)
 - Client-side validation implementation
 - Error message quality and clarity
@@ -81,6 +87,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Validation schema consistency
 
 ### Interaction & Animation
+
 - Hover states on all interactive elements
 - Focus indicators for keyboard navigation
 - Active/pressed states
@@ -94,6 +101,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Reduced motion preferences
 
 ### Accessibility (WCAG 2.1 AA)
+
 - Semantic HTML usage
 - ARIA attributes and roles correctness
 - Keyboard navigation flow
@@ -108,6 +116,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Live regions for dynamic content
 
 ### Performance Optimization
+
 - Bundle size analysis
 - Code splitting strategy
 - Lazy loading implementation
@@ -121,6 +130,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Cumulative Layout Shift issues
 
 ### Tailwind CSS & Styling
+
 - Design token adherence
 - Arbitrary value usage (should be minimal)
 - Utility class organization and ordering
@@ -133,6 +143,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Component-specific styles organization
 
 ### Shadcn UI Integration
+
 - Component library consistency
 - Custom vs Shadcn components decision
 - Theme customization via CSS variables
@@ -147,6 +158,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## ⚙️ BACKEND LAYER ANALYSIS (Deno + Supabase)
 
 ### API Architecture
+
 - RESTful design principles adherence
 - API endpoint naming conventions
 - HTTP method usage correctness
@@ -157,6 +169,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - RPC function design and usage
 
 ### Deno Edge Functions
+
 - Function organization and structure
 - Environment variable handling
 - Cold start optimization
@@ -169,6 +182,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Concurrent request handling
 
 ### Authentication & Authorization
+
 - Supabase Auth integration quality
 - JWT token handling and validation
 - Session management strategy
@@ -181,6 +195,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Auth state synchronization
 
 ### API Request/Response Handling
+
 - Input validation and sanitization
 - Request body parsing
 - Query parameter validation
@@ -193,6 +208,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - CORS configuration
 
 ### Error Handling
+
 - Global error handler implementation
 - Error logging and tracking
 - User-friendly error messages
@@ -204,6 +220,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Logging context and correlation IDs
 
 ### Business Logic
+
 - Domain logic organization
 - Business rule implementation
 - Validation logic placement (client vs server)
@@ -215,6 +232,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Event-driven architecture patterns
 
 ### Integration Points
+
 - Third-party API integrations
 - Webhook handlers
 - External service error handling
@@ -230,6 +248,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🗄️ DATABASE LAYER ANALYSIS (Supabase/PostgreSQL)
 
 ### Schema Design
+
 - Table structure and normalization
 - Relationship design (1:1, 1:N, N:M)
 - Foreign key constraints
@@ -243,6 +262,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Audit trail columns
 
 ### Data Types & Constraints
+
 - Data type appropriateness
 - VARCHAR length decisions
 - Numeric precision and scale
@@ -254,6 +274,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Domain types for reusability
 
 ### Indexing Strategy
+
 - Index coverage for common queries
 - Composite index design
 - Partial index usage
@@ -265,6 +286,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Index selectivity analysis
 
 ### Row Level Security (RLS)
+
 - RLS policies on all tables
 - Policy correctness and security
 - Policy performance impact
@@ -276,6 +298,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Policy documentation
 
 ### Database Functions & Triggers
+
 - Function purpose and necessity
 - PL/pgSQL code quality
 - Function performance
@@ -287,6 +310,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Error handling in functions
 
 ### Queries & Performance
+
 - N+1 query problems
 - Query optimization opportunities
 - JOIN strategy (INNER, LEFT, etc.)
@@ -299,6 +323,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Query batching opportunities
 
 ### Migrations & Versioning
+
 - Migration file organization
 - Up/down migration completeness
 - Migration idempotency
@@ -309,6 +334,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Production migration safety
 
 ### Data Integrity
+
 - Referential integrity enforcement
 - Cascade delete/update decisions
 - Orphaned record prevention
@@ -318,6 +344,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Constraint violation handling
 
 ### Supabase-Specific Features
+
 - Real-time subscription usage
 - Storage bucket configuration
 - Storage security policies
@@ -331,6 +358,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🔒 SECURITY ANALYSIS
 
 ### Authentication Security
+
 - Password hashing strength
 - JWT secret management
 - Token expiration settings
@@ -341,6 +369,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - OAuth state parameter validation
 
 ### Authorization Security
+
 - RLS policy completeness
 - Authorization check consistency
 - Privilege escalation prevention
@@ -351,6 +380,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Admin vs user separation
 
 ### Input Validation & Sanitization
+
 - SQL injection prevention
 - XSS (Cross-Site Scripting) prevention
 - Command injection prevention
@@ -363,6 +393,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - JSON parsing safety
 
 ### Data Protection
+
 - Sensitive data encryption at rest
 - Sensitive data encryption in transit
 - PII (Personal Identifiable Information) handling
@@ -374,6 +405,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Backup encryption
 
 ### Environment & Secrets Management
+
 - Environment variable usage
 - Secrets in version control check
 - API key exposure prevention
@@ -384,6 +416,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Secret rotation strategy
 
 ### API Security
+
 - CORS configuration correctness
 - CSRF protection
 - Rate limiting implementation
@@ -395,6 +428,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - API documentation security
 
 ### File Upload Security
+
 - File type validation
 - File size limits
 - Malware scanning (if applicable)
@@ -404,6 +438,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - CDN security configuration
 
 ### Dependencies & Supply Chain
+
 - Dependency vulnerability scanning
 - Outdated package identification
 - Known CVE in dependencies
@@ -417,6 +452,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🚀 PERFORMANCE ANALYSIS
 
 ### Frontend Performance
+
 - Bundle size optimization
 - Code splitting effectiveness
 - Lazy loading coverage
@@ -429,6 +465,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Lighthouse performance score
 
 ### Backend Performance
+
 - API response time
 - Database query performance
 - Function execution time
@@ -440,6 +477,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - CPU usage
 
 ### Database Performance
+
 - Query execution plans (EXPLAIN ANALYZE)
 - Index usage verification
 - Full table scan identification
@@ -450,6 +488,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Vacuum and maintenance jobs
 
 ### Caching Strategy
+
 - Browser caching headers
 - API response caching
 - Database query caching
@@ -460,6 +499,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Stale data handling
 
 ### Network Performance
+
 - API payload size
 - HTTP/2 or HTTP/3 usage
 - Compression (gzip, brotli)
@@ -470,6 +510,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Asset delivery optimization
 
 ### Real-Time Performance
+
 - WebSocket connection management
 - Supabase real-time subscription efficiency
 - Message queue size
@@ -482,6 +523,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🧪 TESTING & QUALITY ASSURANCE
 
 ### Test Coverage
+
 - Unit test coverage percentage
 - Integration test coverage
 - E2E test coverage
@@ -491,6 +533,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Critical path coverage
 
 ### Test Quality
+
 - Test case completeness
 - Edge case coverage
 - Error scenario testing
@@ -501,6 +544,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Test isolation and independence
 
 ### Testing Strategy
+
 - Testing framework selection
 - Test organization and structure
 - Test naming conventions
@@ -511,6 +555,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - CI/CD integration
 
 ### Code Quality Tools
+
 - Linter configuration (ESLint, Deno lint)
 - Formatter configuration (Prettier)
 - Type checker configuration (TypeScript strict mode)
@@ -525,6 +570,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 📐 ARCHITECTURE & DESIGN PATTERNS
 
 ### Overall Architecture
+
 - Architectural pattern (MVC, Hexagonal, Clean, etc.)
 - Layer separation and boundaries
 - Dependency direction
@@ -535,6 +581,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Maintainability assessment
 
 ### Design Patterns
+
 - Pattern appropriateness
 - Pattern implementation quality
 - Repository pattern usage
@@ -545,6 +592,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Adapter pattern for integrations
 
 ### Code Organization
+
 - File and folder structure
 - Module boundaries
 - Circular dependency detection
@@ -555,6 +603,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Separation of concerns
 
 ### API Design Patterns
+
 - RESTful resource modeling
 - Endpoint versioning
 - Pagination strategy
@@ -569,6 +618,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🔧 CONFIGURATION & INFRASTRUCTURE
 
 ### Build Configuration
+
 - Vite configuration optimization
 - TypeScript configuration strictness
 - Environment variable handling
@@ -578,6 +628,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Build output analysis
 
 ### Deployment Configuration
+
 - Deployment strategy (Vercel, Netlify, etc.)
 - Environment variable management
 - Build script correctness
@@ -587,6 +638,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Canary deployment support
 
 ### Monitoring & Logging
+
 - Error tracking setup (Sentry, etc.)
 - Application logging strategy
 - Log levels appropriateness
@@ -597,6 +649,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Alert configuration
 
 ### CI/CD Pipeline
+
 - Pipeline configuration
 - Automated testing in pipeline
 - Linting and formatting checks
@@ -607,6 +660,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Pipeline failure handling
 
 ### Environment Configuration
+
 - Development environment setup
 - Staging environment configuration
 - Production environment configuration
@@ -620,6 +674,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 📚 DOCUMENTATION & MAINTAINABILITY
 
 ### Code Documentation
+
 - Inline comment quality and necessity
 - JSDoc/TSDoc coverage
 - Complex logic explanation
@@ -630,6 +685,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Architecture decision records (ADRs)
 
 ### Project Documentation
+
 - README.md completeness
 - Setup instructions accuracy
 - Development workflow documentation
@@ -640,6 +696,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Architecture diagrams
 
 ### Code Readability
+
 - Variable and function naming
 - Code formatting consistency
 - Code style consistency
@@ -650,6 +707,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Early return usage
 
 ### Maintainability
+
 - Technical debt identification
 - Refactoring opportunities
 - Deprecated code removal
@@ -664,6 +722,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🔄 DATA FLOW & STATE MANAGEMENT
 
 ### Data Flow Architecture
+
 - Unidirectional data flow
 - Data fetching strategy
 - Cache management
@@ -673,6 +732,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Data persistence strategy
 
 ### State Synchronization
+
 - Client-server state sync
 - Race condition handling
 - Stale data detection
@@ -681,6 +741,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Event sourcing (if applicable)
 
 ### Error Recovery
+
 - Network error handling
 - Timeout handling
 - Retry logic
@@ -694,6 +755,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 ## 🌐 CROSS-CUTTING CONCERNS
 
 ### Internationalization (i18n)
+
 - i18n library usage
 - Translation coverage
 - Language switching
@@ -703,6 +765,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Translation file organization
 
 ### Error Tracking & Debugging
+
 - Error boundary implementation
 - Error logging to service
 - Source map configuration
@@ -711,6 +774,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - User session tracking
 
 ### Feature Flags
+
 - Feature flag implementation
 - Flag configuration management
 - A/B testing support
@@ -718,6 +782,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 - Flag cleanup strategy
 
 ### Analytics & Metrics
+
 - Analytics integration
 - Event tracking
 - User behavior tracking
@@ -732,6 +797,7 @@ Perform a complete, multi-layered analysis covering ALL aspects of the stack:
 Generate the **IMPLEMENTATION_ROADMAP.md** with:
 
 ### 1. Executive Summary
+
 ```
 Overall Completion: [X%]
 Frontend Status: [X%] - [Brief assessment]
@@ -749,6 +815,7 @@ Estimated Time to Production-Ready: [X weeks/months]
 ```
 
 ### 2. Project Health Dashboard
+
 - **What's Working Well**: Successfully implemented features and solid architectural decisions
 - **Critical Issues**: Priority-ranked blockers preventing deployment or causing major problems
 - **Technical Debt Summary**: Major refactoring needed, performance bottlenecks, security vulnerabilities
@@ -758,13 +825,16 @@ Estimated Time to Production-Ready: [X weeks/months]
 - **Security Posture**: Overall security health
 
 ### 3. PRD Alignment Analysis
+
 Create a comprehensive matrix mapping PRD requirements to implementation status:
+
 - ✅ **Fully Implemented**: Working as specified with tests
 - ⚠️ **Partially Implemented**: Started but incomplete or buggy
 - ❌ **Not Implemented**: Missing entirely
 - 🔄 **Needs Refactoring**: Implemented but poorly or incorrectly
 
 Include:
+
 - Feature completion percentage
 - User story implementation status
 - Technical requirement fulfillment
@@ -776,6 +846,7 @@ Include:
 For EVERY issue found across ALL layers, document:
 
 **Issue [LAYER]-[ID]: [Clear Action Title]**
+
 - **Layer**: Frontend | Backend | Database | Security | Performance | Architecture | Testing | Infrastructure
 - **Status**: ❌ Not Started | 🔄 In Progress | ✅ Complete
 - **Severity**: 🚨 Critical | 🔴 High | 🟡 Medium | 🟢 Low
@@ -785,18 +856,21 @@ For EVERY issue found across ALL layers, document:
 - **Dependencies**: Must complete [Issue X] first
 
 **Problem Description**:
+
 - What's wrong and why it matters
 - Impact on users, security, performance, or maintainability
 - Root cause analysis
 - How this got into the codebase
 
 **Current State**:
+
 ```typescript
 // Show exact problematic code with context
 // Include file path and line numbers
 ```
 
 **User/System Impact**:
+
 - Functional impact
 - Security implications
 - Performance degradation
@@ -804,6 +878,7 @@ For EVERY issue found across ALL layers, document:
 - Maintenance burden
 
 **Solution**:
+
 ```typescript
 // Show corrected implementation
 // Include all necessary changes
@@ -811,6 +886,7 @@ For EVERY issue found across ALL layers, document:
 ```
 
 **Implementation Steps**:
+
 1. Detailed step-by-step instructions
 2. Files to create/modify with full paths
 3. Database migrations needed (with SQL)
@@ -821,6 +897,7 @@ For EVERY issue found across ALL layers, document:
 8. Tests to write/update
 
 **Acceptance Criteria**:
+
 - [ ] Specific, testable outcome 1
 - [ ] Specific, testable outcome 2
 - [ ] All error cases handled
@@ -830,6 +907,7 @@ For EVERY issue found across ALL layers, document:
 - [ ] Documentation updated
 
 **Testing Steps**:
+
 1. Unit tests to write/run
 2. Integration tests needed
 3. Manual testing procedures
@@ -838,11 +916,13 @@ For EVERY issue found across ALL layers, document:
 6. Load testing (if applicable)
 
 **Security Considerations**:
+
 - Security implications of the fix
 - Additional security measures needed
 - Penetration testing requirements
 
 **Performance Considerations**:
+
 - Performance impact of the fix
 - Optimization opportunities
 - Benchmarking requirements
@@ -852,6 +932,7 @@ For EVERY issue found across ALL layers, document:
 ### 5. Layer-Specific Breakdowns
 
 #### 🎨 Frontend Issues Summary
+
 - Total frontend issues: [X]
 - By category: Visual [X], Component [X], State [X], Performance [X], A11y [X]
 - Critical path blockers
@@ -859,6 +940,7 @@ For EVERY issue found across ALL layers, document:
 - Long-term improvements
 
 #### ⚙️ Backend Issues Summary
+
 - Total backend issues: [X]
 - By category: API [X], Business Logic [X], Integration [X], Error Handling [X]
 - Critical path blockers
@@ -866,6 +948,7 @@ For EVERY issue found across ALL layers, document:
 - Long-term improvements
 
 #### 🗄️ Database Issues Summary
+
 - Total database issues: [X]
 - By category: Schema [X], RLS [X], Queries [X], Indexes [X], Migrations [X]
 - Critical path blockers
@@ -873,6 +956,7 @@ For EVERY issue found across ALL layers, document:
 - Long-term improvements
 
 #### 🔒 Security Issues Summary
+
 - Total security issues: [X]
 - By severity: Critical [X], High [X], Medium [X], Low [X]
 - **MUST FIX BEFORE LAUNCH**
@@ -880,6 +964,7 @@ For EVERY issue found across ALL layers, document:
 - Compliance requirements
 
 #### 🚀 Performance Issues Summary
+
 - Total performance issues: [X]
 - Frontend metrics: LCP [X], FID [X], CLS [X]
 - Backend metrics: Avg response time [X], P95 [X], P99 [X]
@@ -889,6 +974,7 @@ For EVERY issue found across ALL layers, document:
 ### 6. Architecture Assessment
 
 **Current Architecture**:
+
 - Pattern analysis
 - Strengths
 - Weaknesses
@@ -896,6 +982,7 @@ For EVERY issue found across ALL layers, document:
 - Maintainability concerns
 
 **Recommended Improvements**:
+
 - Short-term fixes
 - Long-term refactoring
 - Pattern adoption suggestions
@@ -904,6 +991,7 @@ For EVERY issue found across ALL layers, document:
 ### 7. Technology Stack Evaluation
 
 **Current Stack**:
+
 - TypeScript [version] - [Assessment]
 - React [version] - [Assessment]
 - Tailwind CSS [version] - [Assessment]
@@ -913,6 +1001,7 @@ For EVERY issue found across ALL layers, document:
 - Supabase - [Assessment]
 
 **Recommendations**:
+
 - Version upgrades needed
 - Alternative library suggestions
 - Deprecated dependency replacement
@@ -921,6 +1010,7 @@ For EVERY issue found across ALL layers, document:
 ### 8. Testing Coverage Report
 
 **Current Coverage**:
+
 - Unit tests: [X%]
 - Integration tests: [X%]
 - E2E tests: [X%]
@@ -928,12 +1018,14 @@ For EVERY issue found across ALL layers, document:
 - API tests: [X%]
 
 **Coverage Gaps**:
+
 - Untested critical paths
 - Missing edge case tests
 - Insufficient error scenario coverage
 - Integration points lacking tests
 
 **Testing Improvements Needed**:
+
 - Tests to write
 - Testing infrastructure needed
 - CI/CD integration improvements
@@ -941,18 +1033,21 @@ For EVERY issue found across ALL layers, document:
 ### 9. Security Audit Report
 
 **Vulnerability Summary**:
+
 - Critical: [X]
 - High: [X]
 - Medium: [X]
 - Low: [X]
 
 **Compliance Status**:
+
 - OWASP Top 10 coverage
 - GDPR considerations
 - Data protection compliance
 - Industry-specific requirements
 
 **Security Hardening Checklist**:
+
 - [ ] All inputs validated and sanitized
 - [ ] All RLS policies in place and tested
 - [ ] No secrets in code or version control
@@ -967,6 +1062,7 @@ For EVERY issue found across ALL layers, document:
 ### 10. Performance Benchmark Report
 
 **Frontend Performance**:
+
 - Lighthouse score: [X/100]
 - Bundle size: [X KB]
 - LCP: [X ms]
@@ -975,6 +1071,7 @@ For EVERY issue found across ALL layers, document:
 - TTFB: [X ms]
 
 **Backend Performance**:
+
 - Average response time: [X ms]
 - P95 response time: [X ms]
 - P99 response time: [X ms]
@@ -982,6 +1079,7 @@ For EVERY issue found across ALL layers, document:
 - Database query avg time: [X ms]
 
 **Performance Goals**:
+
 - Target metrics
 - Current vs target gap
 - Optimization priorities
@@ -989,10 +1087,12 @@ For EVERY issue found across ALL layers, document:
 ### 11. Systematic Implementation Roadmap
 
 #### 🚨 Phase 0: Critical Fixes (BLOCK DEPLOYMENT)
+
 **Estimated Time**: [X hours/days]
 **Must Complete Before Launch**: YES
 
 Issues that MUST be fixed:
+
 - Security vulnerabilities
 - Data corruption risks
 - Broken core functionality
@@ -1000,6 +1100,7 @@ Issues that MUST be fixed:
 - Compliance violations
 
 **Task 0.1**: [Issue Title]
+
 - Full task details as specified above
 - [ ] Checklist item
 - [ ] Checklist item
@@ -1007,6 +1108,7 @@ Issues that MUST be fixed:
 [Repeat for all critical issues]
 
 **Phase 0 Completion Criteria**:
+
 - [ ] All security vulnerabilities patched
 - [ ] Core user flows work end-to-end
 - [ ] No data integrity risks
@@ -1015,10 +1117,12 @@ Issues that MUST be fixed:
 ---
 
 #### 🔴 Phase 1: Core Features & High Priority (MVP)
+
 **Estimated Time**: [X weeks]
 **Dependencies**: Phase 0 complete
 
 Features and fixes required for MVP:
+
 - Complete core user stories
 - Essential API endpoints
 - Primary user flows
@@ -1034,6 +1138,7 @@ Features and fixes required for MVP:
 [Continue for all Phase 1 tasks]
 
 **Phase 1 Completion Criteria**:
+
 - [ ] All PRD core features implemented
 - [ ] User can complete primary workflows
 - [ ] Basic performance acceptable
@@ -1043,10 +1148,12 @@ Features and fixes required for MVP:
 ---
 
 #### 🟡 Phase 2: Enhanced Functionality & Medium Priority
+
 **Estimated Time**: [X weeks]
 **Dependencies**: Phase 1 complete
 
 Secondary features and improvements:
+
 - Nice-to-have features
 - Performance optimizations
 - Enhanced error handling
@@ -1059,6 +1166,7 @@ Secondary features and improvements:
 [Continue for all Phase 2 tasks]
 
 **Phase 2 Completion Criteria**:
+
 - [ ] Secondary features complete
 - [ ] Performance optimized
 - [ ] Error handling comprehensive
@@ -1068,10 +1176,12 @@ Secondary features and improvements:
 ---
 
 #### 🟢 Phase 3: Polish, Optimization & Low Priority
+
 **Estimated Time**: [X weeks]
 **Dependencies**: Phase 2 complete
 
 Polish and refinements:
+
 - UI/UX refinements
 - Micro-interactions
 - Edge case handling
@@ -1085,6 +1195,7 @@ Polish and refinements:
 [Continue for all Phase 3 tasks]
 
 **Phase 3 Completion Criteria**:
+
 - [ ] Application feels polished
 - [ ] Edge cases handled
 - [ ] Documentation complete
@@ -1094,10 +1205,12 @@ Polish and refinements:
 ---
 
 #### 🔵 Phase 4: Future Enhancements & Nice-to-Haves
+
 **Estimated Time**: [X weeks]
 **Dependencies**: Phase 3 complete
 
 Post-launch improvements:
+
 - Advanced features
 - Experimental features
 - Platform expansions
@@ -1126,8 +1239,9 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ```
 
 **Dependency Map**:
+
 ```
-[Issue 0.1: Database RLS] 
+[Issue 0.1: Database RLS]
     ↓
 [Issue 1.2: Auth Implementation]
     ↓
@@ -1139,6 +1253,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 13. Risk Assessment & Mitigation
 
 **High-Risk Areas**:
+
 - Security vulnerabilities
 - Performance bottlenecks
 - Data migration challenges
@@ -1146,6 +1261,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Scaling concerns
 
 **Risk Mitigation Strategies**:
+
 - Backup plans
 - Rollback procedures
 - Testing strategies
@@ -1154,6 +1270,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 14. Quality Gates & Checkpoints
 
 **Before Each Phase Completion**:
+
 - [ ] All tasks in phase completed
 - [ ] Tests written and passing
 - [ ] Code review completed
@@ -1166,6 +1283,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 15. Best Practices & Recommendations
 
 #### Development Workflow
+
 - Git branching strategy
 - Commit message conventions
 - PR review checklist
@@ -1173,6 +1291,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Testing requirements before merge
 
 #### Code Quality Standards
+
 - TypeScript strict mode enabled
 - ESLint rules enforced
 - Prettier formatting consistent
@@ -1181,6 +1300,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Test coverage minimums (>80%)
 
 #### Security Best Practices
+
 - Security review checklist
 - Dependency update schedule
 - Secret rotation policy
@@ -1188,6 +1308,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Security testing requirements
 
 #### Performance Best Practices
+
 - Performance budget
 - Bundle size limits
 - Lighthouse score minimums
@@ -1195,6 +1316,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Database query performance standards
 
 #### Accessibility Standards
+
 - WCAG 2.1 Level AA compliance
 - Keyboard navigation requirements
 - Screen reader testing
@@ -1204,6 +1326,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 16. Maintenance & Monitoring Strategy
 
 **Ongoing Maintenance**:
+
 - Dependency update schedule
 - Security patch policy
 - Database maintenance tasks
@@ -1212,6 +1335,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - User feedback incorporation
 
 **Monitoring Setup**:
+
 - Application performance monitoring (APM)
 - Error tracking service
 - Uptime monitoring
@@ -1222,6 +1346,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 17. Team Onboarding & Knowledge Transfer
 
 **Documentation for New Developers**:
+
 - Architecture overview
 - Setup instructions
 - Development workflow
@@ -1230,6 +1355,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Common issues and solutions
 
 **Key Architectural Decisions**:
+
 - Why TypeScript
 - Why Deno over Node.js
 - Why Supabase
@@ -1239,6 +1365,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 18. Success Metrics
 
 **Technical Metrics**:
+
 - Build time: <[X] minutes
 - Bundle size: <[X] KB
 - Lighthouse score: >[X]/100
@@ -1248,6 +1375,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Uptime: >[X]%
 
 **Business Metrics**:
+
 - Time to interactive: <[X]s
 - Error rate: <[X]%
 - User satisfaction score
@@ -1255,6 +1383,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Support ticket volume
 
 **Quality Metrics**:
+
 - Code review approval rate
 - Bug escape rate
 - Mean time to resolution (MTTR)
@@ -1264,17 +1393,20 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 19. Long-Term Roadmap
 
 **Next 3 Months**:
+
 - Immediate priorities
 - Quick wins
 - Foundation building
 
 **Next 6 Months**:
+
 - Platform stabilization
 - Performance optimization
 - Feature expansion
 - Technical debt reduction
 
 **Next 12 Months**:
+
 - Scalability improvements
 - Advanced feature development
 - Platform maturity
@@ -1283,6 +1415,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ### 20. Appendices
 
 #### Appendix A: Code Examples & Patterns
+
 - Recommended component patterns
 - API endpoint templates
 - Database query patterns
@@ -1291,6 +1424,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Form validation patterns
 
 #### Appendix B: Tool & Library Recommendations
+
 - Development tools
 - Testing libraries
 - Monitoring services
@@ -1299,6 +1433,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Documentation generators
 
 #### Appendix C: Reference Architecture
+
 - System architecture diagram
 - Data flow diagrams
 - Database schema visualization
@@ -1307,6 +1442,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Authentication flow diagram
 
 #### Appendix D: Glossary
+
 - Technical terms
 - Acronyms
 - Project-specific terminology
@@ -1317,6 +1453,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ## 🎯 SPECIFIC ANALYSIS INSTRUCTIONS
 
 ### 1. Be Comprehensive and Systematic
+
 - Examine EVERY file in the codebase
 - Check EVERY component, API endpoint, database table
 - Review EVERY integration point
@@ -1325,6 +1462,7 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - Measure EVERY performance metric
 
 ### 2. Think Like Multiple Experts Simultaneously
+
 - **As a Security Expert**: Find every vulnerability, every weak point, every potential exploit
 - **As a Performance Engineer**: Identify every bottleneck, every inefficiency, every optimization opportunity
 - **As a Frontend Specialist**: See every visual inconsistency, every UX friction point, every accessibility issue
@@ -1335,12 +1473,14 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 - **As a Product Manager**: Verify PRD alignment, feature completeness, user value delivery
 
 ### 3. Prioritize Ruthlessly
+
 - **Critical (🚨)**: Blocks launch, causes data loss, major security vulnerability, broken core functionality
 - **High (🔴)**: Significantly impacts users, major performance issue, important feature gap
 - **Medium (🟡)**: Noticeable issue, technical debt, optimization opportunity
 - **Low (🟢)**: Minor refinement, nice-to-have, future enhancement
 
 ### 4. Be Specific, Never Vague
+
 ❌ **BAD**: "The authentication needs work"
 ✅ **GOOD**: "JWT tokens in localStorage are vulnerable to XSS. Move to httpOnly cookies. File: `src/utils/auth.ts` lines 45-52. Implement in Deno Edge Function at `supabase/functions/auth/index.ts`"
 
@@ -1351,7 +1491,9 @@ Issue 0.1 → Issue 0.3 → Issue 1.2 → Issue 1.5 → Issue 2.1 → Launch
 ✅ **GOOD**: "UserDashboard component is 450 lines. Extract PostList (lines 120-250), UserProfile (lines 260-380), and ActivityFeed (lines 390-440) into separate components. File: `src/components/UserDashboard.tsx`"
 
 ### 5. Provide Complete Solutions
+
 For every issue, include:
+
 - Exact file locations and line numbers
 - Current problematic code
 - Corrected implementation with full context
@@ -1363,7 +1505,9 @@ For every issue, include:
 - Verification steps
 
 ### 6. Consider the Entire System Impact
+
 When identifying an issue, consider:
+
 - Does fixing this break anything else?
 - What are the downstream effects?
 - Are there related issues that should be fixed together?
@@ -1371,7 +1515,9 @@ When identifying an issue, consider:
 - How does this affect existing users and data?
 
 ### 7. Map Everything to PRD
+
 For every PRD requirement:
+
 - Verify if implemented
 - Check if correctly implemented
 - Identify gaps
@@ -1380,7 +1526,9 @@ For every PRD requirement:
 - Validate error handling
 
 ### 8. Measure and Quantify
+
 Don't just say "slow" or "bad" - provide metrics:
+
 - "Bundle size is 2.3MB (target: <100KB after gzip)"
 - "API response time is 2.4s (target: <200ms)"
 - "Lighthouse score is 42/100 (target: >90)"
@@ -1389,13 +1537,16 @@ Don't just say "slow" or "bad" - provide metrics:
 - "47 missing accessibility features"
 
 ### 9. Balance Idealism with Pragmatism
+
 - Identify the "perfect" solution
 - Also identify the "good enough for now" solution
 - Note when technical debt is acceptable
 - Highlight where corners CANNOT be cut (security, data integrity)
 
 ### 10. Create Actionable, Independent Tasks
+
 Each task should be:
+
 - Completable by a developer without asking questions
 - Testable with clear success criteria
 - Estimatable with reasonable accuracy
@@ -1406,6 +1557,7 @@ Each task should be:
 ## 🚀 EXECUTION METHODOLOGY
 
 ### Phase 1: Initial Reconnaissance (Quick Scan)
+
 **Time**: 30-60 minutes
 
 1. **Project Structure Review**
@@ -1429,6 +1581,7 @@ Each task should be:
    - Check build and deployment setup
 
 ### Phase 2: Deep Dive Analysis (Systematic Audit)
+
 **Time**: 4-8 hours (depending on codebase size)
 
 1. **Frontend Layer (2-3 hours)**
@@ -1474,6 +1627,7 @@ Each task should be:
    - Review code quality tools
 
 ### Phase 3: Issue Cataloging & Prioritization
+
 **Time**: 1-2 hours
 
 1. **Compile Issues**
@@ -1495,6 +1649,7 @@ Each task should be:
    - Add buffer for unknowns
 
 ### Phase 4: Report Generation
+
 **Time**: 2-3 hours
 
 1. **Write Comprehensive Report**
@@ -1516,6 +1671,7 @@ Each task should be:
    - Validate estimates
 
 ### Phase 5: Systematic Execution (Ongoing)
+
 **Time**: Weeks to months (depending on scope)
 
 1. **Execute Phase by Phase**
@@ -1985,6 +2141,7 @@ The pursuit of full-stack excellence starts NOW. 🎯🔍🚀
 Your full-stack audit is complete and excellent when:
 
 ### Comprehensiveness
+
 - ✅ Every file in the codebase has been examined
 - ✅ Every component, page, and feature has been tested
 - ✅ Every API endpoint has been reviewed
@@ -1994,6 +2151,7 @@ Your full-stack audit is complete and excellent when:
 - ✅ Every PRD requirement has been mapped
 
 ### Quality of Issues Found
+
 - ✅ 100-500+ specific, actionable issues documented
 - ✅ Issues span all layers (frontend, backend, database, security, performance)
 - ✅ Each issue has exact file location and line numbers
@@ -2003,6 +2161,7 @@ Your full-stack audit is complete and excellent when:
 - ✅ Issues are properly categorized and prioritized
 
 ### PRD Alignment
+
 - ✅ Every PRD requirement is listed
 - ✅ Every requirement is mapped to codebase
 - ✅ Implementation status is clear (✅⚠️❌🔄)
@@ -2011,6 +2170,7 @@ Your full-stack audit is complete and excellent when:
 - ✅ Incomplete implementations are noted
 
 ### Roadmap Quality
+
 - ✅ Phases are logical and dependency-aware
 - ✅ Critical path is clearly identified
 - ✅ Timeline is realistic with buffer
@@ -2019,6 +2179,7 @@ Your full-stack audit is complete and excellent when:
 - ✅ Risk mitigation strategies are included
 
 ### Actionability
+
 - ✅ Any developer can pick up any task and complete it
 - ✅ No vague instructions ("improve performance")
 - ✅ All specific ("Add index on (user_id, created_at) in messages table")
@@ -2027,6 +2188,7 @@ Your full-stack audit is complete and excellent when:
 - ✅ Test cases specified
 
 ### Report Completeness
+
 - ✅ All 24 sections present and complete
 - ✅ Executive summary with clear metrics
 - ✅ Visual timeline and dependency maps
@@ -2055,5 +2217,7 @@ You are the Full-Stack Codebase Auditor - a systems-level thinker with expertise
 Examine every layer. Find every issue. Map every requirement. Provide every solution.
 
 The path to production excellence starts with this audit. Make it count. 🎯🔍💪🚀
+
+```
 
 ```

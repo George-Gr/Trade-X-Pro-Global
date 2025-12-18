@@ -1,6 +1,6 @@
 /**
  * Performance Utilities
- * 
+ *
  * Debouncing, throttling, and memoization helpers for chart and real-time updates
  */
 
@@ -9,7 +9,7 @@
  */
 export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -29,7 +29,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
  */
 export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let lastFunc: ReturnType<typeof setTimeout> | null = null;
   let lastRan: number | null = null;
@@ -42,12 +42,15 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
       if (lastFunc) {
         clearTimeout(lastFunc);
       }
-      lastFunc = setTimeout(() => {
-        if (Date.now() - lastRan! >= limit) {
-          func(...args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
+      lastFunc = setTimeout(
+        () => {
+          if (Date.now() - lastRan! >= limit) {
+            func(...args);
+            lastRan = Date.now();
+          }
+        },
+        limit - (Date.now() - lastRan),
+      );
     }
   };
 }
@@ -56,7 +59,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
  * RAF (requestAnimationFrame) throttle for smooth 60fps updates
  */
 export function rafThrottle<T extends (...args: unknown[]) => unknown>(
-  func: T
+  func: T,
 ): (...args: Parameters<T>) => void {
   let rafId: number | null = null;
   let lastArgs: Parameters<T> | null = null;
@@ -79,7 +82,7 @@ export function rafThrottle<T extends (...args: unknown[]) => unknown>(
  */
 export function memoize<T extends (...args: unknown[]) => unknown>(
   func: T,
-  options: { maxSize?: number; ttl?: number } = {}
+  options: { maxSize?: number; ttl?: number } = {},
 ): T {
   const { maxSize = 100, ttl = 0 } = options;
   const cache = new Map<string, { value: ReturnType<T>; timestamp: number }>();
@@ -111,7 +114,7 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
  */
 export function batchCalls<T>(
   func: (items: T[]) => void,
-  wait: number
+  wait: number,
 ): (item: T) => void {
   let batch: T[] = [];
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -136,7 +139,7 @@ export function batchCalls<T>(
 export function rateLimit<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number,
-  windowMs: number
+  windowMs: number,
 ): (...args: Parameters<T>) => boolean {
   const calls: number[] = [];
 
@@ -165,10 +168,10 @@ export function rateLimit<T extends (...args: unknown[]) => unknown>(
  */
 export function defer<T extends (...args: unknown[]) => unknown>(
   func: T,
-  priority: 'high' | 'low' = 'low'
+  priority: "high" | "low" = "low",
 ): (...args: Parameters<T>) => void {
   return function deferred(...args: Parameters<T>) {
-    if (priority === 'high' && typeof requestIdleCallback !== 'undefined') {
+    if (priority === "high" && typeof requestIdleCallback !== "undefined") {
       requestIdleCallback(() => func(...args), { timeout: 100 });
     } else {
       setTimeout(() => func(...args), 0);
@@ -183,7 +186,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
   if (typeof a !== typeof b) return false;
   if (a === null || b === null) return a === b;
-  if (typeof a !== 'object') return false;
+  if (typeof a !== "object") return false;
 
   const aObj = a as Record<string, unknown>;
   const bObj = b as Record<string, unknown>;
@@ -192,7 +195,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
 
   if (aKeys.length !== bKeys.length) return false;
 
-  return aKeys.every(key => deepEqual(aObj[key], bObj[key]));
+  return aKeys.every((key) => deepEqual(aObj[key], bObj[key]));
 }
 
 /**

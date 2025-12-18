@@ -16,7 +16,7 @@ interface UseLoadingOptions {
 
 export function useLoading<T = unknown>(
   asyncFunction: (...args: unknown[]) => Promise<T>,
-  options: UseLoadingOptions = {}
+  options: UseLoadingOptions = {},
 ) {
   const {
     initialLoading = false,
@@ -45,7 +45,7 @@ export function useLoading<T = unknown>(
       // Create new abort controller
       abortControllerRef.current = new AbortController();
 
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
       try {
         // Debounce the request
@@ -53,13 +53,13 @@ export function useLoading<T = unknown>(
           clearTimeout(timeoutRef.current);
         }
 
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           timeoutRef.current = setTimeout(resolve, debounceMs);
         });
 
         // Check if request was cancelled
         if (abortControllerRef.current.signal.aborted) {
-          throw new Error('Request cancelled');
+          throw new Error("Request cancelled");
         }
 
         const result = await asyncFunction(...args);
@@ -82,7 +82,8 @@ export function useLoading<T = unknown>(
           return null;
         }
 
-        const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+        const errorMessage =
+          error instanceof Error ? error.message : "An error occurred";
         setState({
           isLoading: false,
           error: errorMessage,
@@ -93,7 +94,7 @@ export function useLoading<T = unknown>(
         return null;
       }
     },
-    [asyncFunction, debounceMs, onSuccess, onError]
+    [asyncFunction, debounceMs, onSuccess, onError],
   );
 
   const reset = useCallback(() => {
@@ -111,7 +112,7 @@ export function useLoading<T = unknown>(
   }, []);
 
   const clearError = useCallback(() => {
-    setState(prev => ({ ...prev, error: null }));
+    setState((prev) => ({ ...prev, error: null }));
   }, []);
 
   // Cleanup on unmount
@@ -132,9 +133,16 @@ export function useLoading<T = unknown>(
     reset,
     clearError,
     // Convenience methods for optimistic updates
-    startOptimistic: () => setState(prev => ({ ...prev, isLoading: true })),
-    finishOptimistic: (data?: unknown) => setState(prev => ({ ...prev, isLoading: false, data: data || prev.data, error: null })),
-    failOptimistic: (error: string) => setState(prev => ({ ...prev, isLoading: false, error })),
+    startOptimistic: () => setState((prev) => ({ ...prev, isLoading: true })),
+    finishOptimistic: (data?: unknown) =>
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        data: data || prev.data,
+        error: null,
+      })),
+    failOptimistic: (error: string) =>
+      setState((prev) => ({ ...prev, isLoading: false, error })),
   };
 }
 
@@ -146,11 +154,11 @@ export function useProgressiveLoading() {
   const startLoading = useCallback((steps?: number) => {
     setProgress(0);
     setIsComplete(false);
-    
+
     if (steps) {
       const stepProgress = 100 / steps;
       let currentStep = 0;
-      
+
       return {
         nextStep: () => {
           currentStep++;
@@ -163,7 +171,7 @@ export function useProgressiveLoading() {
         },
       };
     }
-    
+
     return {
       nextStep: () => false,
       complete: () => {
@@ -199,7 +207,7 @@ export function useSkeletonTiming(minimumDisplayTime = 1000) {
   const stopSkeleton = useCallback(() => {
     const elapsed = Date.now() - (startTimeRef.current || Date.now());
     const remainingTime = Math.max(0, minimumDisplayTime - elapsed);
-    
+
     setTimeout(() => {
       setShouldShowSkeleton(false);
     }, remainingTime);

@@ -18,28 +18,28 @@ The application's Row Level Security (RLS) policies are **properly configured** 
 
 ### ✅ SAFE FOR ANON KEY ACCESS (Read-Only User Data)
 
-| Table | RLS | User Access | Service Role Access | Notes |
-|-------|-----|---|---|---|
-| `profiles` | ✅ | Read own, Update non-financial | Full (financial updates) | Users can't modify equity/margin |
-| `positions` | ✅ | Read own | INSERT/UPDATE via functions only | Write protected |
-| `orders` | ✅ | Read own | INSERT/UPDATE/DELETE via functions | Write protected |
-| `fills` | ✅ | Read own | INSERT only via functions | Write protected |
-| `ledger` | ✅ | Read own | INSERT only via functions | Write protected |
-| `position_lots` | ✅ | Read own | INSERT/UPDATE via functions | Write protected |
-| `risk_events` | ✅ | Read own unresolved | Write via functions | Auto-populated by triggers |
-| `margin_history` | ✅ | Read own (7-day) | INSERT via functions | Auto-populated by triggers |
-| `margin_call_events` | ✅ | Read own | Write via functions | Audit trail enabled |
-| `price_alerts` | ✅ | Read/write own | Full | User preferences |
-| `notifications` | ✅ | Read own | Write via functions | One-way from server |
+| Table                | RLS | User Access                    | Service Role Access                | Notes                            |
+| -------------------- | --- | ------------------------------ | ---------------------------------- | -------------------------------- |
+| `profiles`           | ✅  | Read own, Update non-financial | Full (financial updates)           | Users can't modify equity/margin |
+| `positions`          | ✅  | Read own                       | INSERT/UPDATE via functions only   | Write protected                  |
+| `orders`             | ✅  | Read own                       | INSERT/UPDATE/DELETE via functions | Write protected                  |
+| `fills`              | ✅  | Read own                       | INSERT only via functions          | Write protected                  |
+| `ledger`             | ✅  | Read own                       | INSERT only via functions          | Write protected                  |
+| `position_lots`      | ✅  | Read own                       | INSERT/UPDATE via functions        | Write protected                  |
+| `risk_events`        | ✅  | Read own unresolved            | Write via functions                | Auto-populated by triggers       |
+| `margin_history`     | ✅  | Read own (7-day)               | INSERT via functions               | Auto-populated by triggers       |
+| `margin_call_events` | ✅  | Read own                       | Write via functions                | Audit trail enabled              |
+| `price_alerts`       | ✅  | Read/write own                 | Full                               | User preferences                 |
+| `notifications`      | ✅  | Read own                       | Write via functions                | One-way from server              |
 
 ### ⚠️ ADMIN-ONLY TABLES (Not Accessible via Anon Key)
 
-| Table | Access | Purpose |
-|-------|--------|---------|
-| `admin_audit_log` | Admins only | Track admin actions |
-| `user_roles` | Service role only | User permission management |
-| `kyc_requests` | Users & Service role | KYC verification workflow |
-| `rate_limits` | Service role only | API rate limiting |
+| Table             | Access               | Purpose                    |
+| ----------------- | -------------------- | -------------------------- |
+| `admin_audit_log` | Admins only          | Track admin actions        |
+| `user_roles`      | Service role only    | User permission management |
+| `kyc_requests`    | Users & Service role | KYC verification workflow  |
+| `rate_limits`     | Service role only    | API rate limiting          |
 
 ---
 
@@ -48,10 +48,11 @@ The application's Row Level Security (RLS) policies are **properly configured** 
 ### 1. Financial Data Protection (CRITICAL)
 
 **Profiles Table - Write Protection:**
+
 ```sql
 -- Users CANNOT modify equity/margin_used/balance
 CREATE POLICY "Users can update own non-financial profile data" ON profiles
-  FOR UPDATE 
+  FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (
     auth.uid() = id AND
@@ -68,6 +69,7 @@ CREATE POLICY "Users can update own non-financial profile data" ON profiles
 ### 2. Order/Position Write Protection (CRITICAL)
 
 **Orders, Positions, Fills Tables:**
+
 ```sql
 CREATE POLICY "Orders created via edge functions only" ON orders
   FOR INSERT WITH CHECK (false);
@@ -78,9 +80,10 @@ CREATE POLICY "Orders created via edge functions only" ON orders
 ### 3. User Data Isolation (MEDIUM)
 
 **Positions, Orders, Ledger:**
+
 ```sql
 CREATE POLICY "Users can view own positions" ON positions
-  FOR SELECT 
+  FOR SELECT
   USING (auth.uid() = user_id);
 ```
 
@@ -89,9 +92,10 @@ CREATE POLICY "Users can view own positions" ON positions
 ### 4. Risk Event Logging (MEDIUM)
 
 **Risk Events, Margin History:**
+
 ```sql
 CREATE POLICY margin_history_user_isolation ON margin_history
-  FOR SELECT 
+  FOR SELECT
   USING (auth.uid() = user_id);
 ```
 
@@ -128,16 +132,16 @@ CREATE POLICY margin_history_user_isolation ON margin_history
 
 ### Anon Key Permissions: ✅ VERIFIED SAFE
 
-| Operation | Allowed | Reason |
-|-----------|---------|--------|
-| Read user's own profile | ✅ Yes | RLS filters by `auth.uid()` |
-| Read user's positions | ✅ Yes | RLS filters by `user_id` |
-| Update profile name/email | ✅ Yes | Non-financial columns only |
-| Update profile balance | ❌ No | RLS CHECK constraint prevents it |
-| Create order | ❌ No | `WITH CHECK (false)` |
-| Update position | ❌ No | `WITH CHECK (false)` |
-| View other user's data | ❌ No | RLS `USING` clause filters |
-| Call Edge Functions | ✅ Yes | But requires `auth.uid()` match |
+| Operation                 | Allowed | Reason                           |
+| ------------------------- | ------- | -------------------------------- |
+| Read user's own profile   | ✅ Yes  | RLS filters by `auth.uid()`      |
+| Read user's positions     | ✅ Yes  | RLS filters by `user_id`         |
+| Update profile name/email | ✅ Yes  | Non-financial columns only       |
+| Update profile balance    | ❌ No   | RLS CHECK constraint prevents it |
+| Create order              | ❌ No   | `WITH CHECK (false)`             |
+| Update position           | ❌ No   | `WITH CHECK (false)`             |
+| View other user's data    | ❌ No   | RLS `USING` clause filters       |
+| Call Edge Functions       | ✅ Yes  | But requires `auth.uid()` match  |
 
 ---
 
@@ -246,15 +250,15 @@ FOR DELETE USING (false);
 
 ```sql
 -- Users can only read their own margin history
-CREATE POLICY margin_history_user_isolation 
-  ON margin_history 
-  FOR SELECT 
+CREATE POLICY margin_history_user_isolation
+  ON margin_history
+  FOR SELECT
   USING (auth.uid() = user_id);
 
 -- Only service role can insert history (via profile update trigger)
 CREATE POLICY margin_history_service_role_insert
-  ON margin_history 
-  FOR INSERT 
+  ON margin_history
+  FOR INSERT
   WITH CHECK (auth.role() = 'service_role');
 ```
 
@@ -287,6 +291,7 @@ SELECT * FROM margin_history WHERE user_id = auth.uid();
 ✅ **APPROVED FOR PRODUCTION**
 
 The anon key usage is safe. Financial data is protected by multiple layers:
+
 1. Database RLS policies
 2. Application-level auth checks
 3. Edge Functions for sensitive operations

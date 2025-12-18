@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 /**
  * Hook to detect prefers-reduced-motion setting
@@ -8,9 +8,9 @@ export const useReducedMotion = (): boolean => {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
-    const mediaQuery = '(prefers-reduced-motion: reduce)';
+    const mediaQuery = "(prefers-reduced-motion: reduce)";
     const mq = window.matchMedia(mediaQuery);
 
     const updateMotionPreference = (e: MediaQueryListEvent) => {
@@ -21,10 +21,10 @@ export const useReducedMotion = (): boolean => {
     setReducedMotion(mq.matches);
 
     // Listen for changes
-    mq.addEventListener('change', updateMotionPreference);
+    mq.addEventListener("change", updateMotionPreference);
 
     return () => {
-      mq.removeEventListener('change', updateMotionPreference);
+      mq.removeEventListener("change", updateMotionPreference);
     };
   }, []);
 
@@ -36,14 +36,14 @@ export const useReducedMotion = (): boolean => {
  */
 export const useAnimationClasses = (
   animationClasses: string,
-  reducedMotionClasses: string = ''
+  reducedMotionClasses: string = "",
 ): string => {
   const reducedMotion = useReducedMotion();
-  
+
   if (reducedMotion) {
     return reducedMotionClasses;
   }
-  
+
   return animationClasses;
 };
 
@@ -51,9 +51,9 @@ export const useAnimationClasses = (
  * Utility function to check if animations should be disabled
  */
 export const shouldReduceMotion = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (typeof window === "undefined") return false;
+
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
 /**
@@ -61,15 +61,18 @@ export const shouldReduceMotion = (): boolean => {
  */
 export const withReducedMotion = <P extends object>(
   Component: React.ComponentType<P>,
-  fallbackProps?: Partial<P>
+  fallbackProps?: Partial<P>,
 ): React.FC<P> => {
   return (props: P) => {
     const reducedMotion = useReducedMotion();
-    
+
     if (reducedMotion && fallbackProps) {
-      return React.createElement(Component, { ...props, ...fallbackProps } as P);
+      return React.createElement(Component, {
+        ...props,
+        ...fallbackProps,
+      } as P);
     }
-    
+
     return React.createElement(Component, props as P);
   };
 };

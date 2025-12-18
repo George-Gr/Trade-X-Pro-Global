@@ -1,7 +1,9 @@
 ## Fix Summary: ReferenceError - Cannot access 'subscribe' before initialization
 
 ### Problem
+
 The Trade page was crashing with:
+
 ```
 Error: ReferenceError: Cannot access 'subscribe' before initialization
 at EnhancedPositionsTable (EnhancedPositionsTable.tsx:47:22)
@@ -23,6 +25,7 @@ at EnhancedPositionsTable (EnhancedPositionsTable.tsx:47:22)
    - This cascading dependency created a temporal dead zone where `subscribe` couldn't be accessed
 
 **Call Chain that Triggered the Error**:
+
 ```
 Component Render
   ↓
@@ -42,15 +45,18 @@ TDZ Error: Cannot access 'subscribe' before initialization
 **Two-Part Fix**:
 
 #### Part 1: Reordering (Critical)
+
 - Moved `subscribeRef.current = subscribe` assignment to **AFTER** the `subscribe` useCallback is fully defined
 - This prevents the assignment from referencing an uninitialized variable
 
 #### Part 2: Breaking the Circular Dependency (Essential)
+
 - Removed `subscribe` from the useEffect dependency array
 - Instead, use `subscribeRef.current` inside the useEffect to call subscribe
 - This breaks the circular chain: useEffect → subscribe → handleSubscriptionError → subscribeRef
 
 **Before**:
+
 ```tsx
 useEffect(() => {
   loadPositions().then(() => {
@@ -63,6 +69,7 @@ useEffect(() => {
 ```
 
 **After**:
+
 ```tsx
 useEffect(() => {
   loadPositions().then(() => {
@@ -93,15 +100,18 @@ useEffect(() => {
 ### Testing Verification
 
 ✅ **All tests pass**:
+
 - `src/lib/trading/__tests__/useRealtimePositions.test.ts` - 46 tests passing
 - `src/components/trading/__tests__/EnhancedTradingComponents.test.tsx` - 14 tests passing (including EnhancedPositionsTable)
 - `src/hooks/__tests__/useRealtimePositions-tdz-fix.test.ts` - 5 tests passing (new TDZ verification)
 
 ✅ **Build succeeds**:
+
 - No TypeScript compilation errors
 - Production bundle builds successfully (447.71 KB gzipped)
 
 ✅ **No regressions**:
+
 - All subscription management tests pass
 - All reconnection logic tests pass
 - All lifecycle and cleanup tests pass
@@ -116,9 +126,10 @@ useEffect(() => {
 
 ### Technical Depth: Why useRef Solves This
 
-JavaScript's temporal dead zone exists for `const` declarations - you cannot access them before the declaration line executes. 
+JavaScript's temporal dead zone exists for `const` declarations - you cannot access them before the declaration line executes.
 
 By using `useRef`:
+
 - The ref is created at hook initialization (mutable container)
 - We assign values to the ref (`.current`) at appropriate times
 - Refs are not subject to TDZ rules - we can read/write them safely at any point
@@ -133,6 +144,7 @@ By using `useRef`:
 ### Future Prevention
 
 To prevent similar issues:
+
 1. **Code Review Pattern**: Check dependency arrays for forward references to variables declared later
 2. **Linting**: ESLint rule could detect const variables used in deps before their declaration
 3. **Pattern Guide**: Document using refs to break circular useCallback dependencies in team docs

@@ -2,7 +2,7 @@ name: Sentry Staging Verification
 
 on:
   push:
-    branches: [ staging ]
+    branches: [staging]
   workflow_dispatch:
 
 jobs:
@@ -56,20 +56,20 @@ jobs:
         if: ${{ steps.check_sentry.outputs.configured == 'true' }}
         run: |
           set -euo pipefail
-          
+
           echo "================================================"
           echo "Verifying Sentry Event Ingestion"
           echo "================================================"
-          
+
           QUERY="Staging smoke test: commit=${{ github.sha }} run=${{ github.run_id }}"
           ENCODED_QUERY=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$QUERY")
           AUTH="Authorization: Bearer ${SENTRY_AUTH_TOKEN}"
           URL="https://sentry.io/api/0/projects/${SENTRY_ORG}/${SENTRY_PROJECT}/events/?query=${ENCODED_QUERY}"
-          
+
           echo "Polling Sentry API..."
           echo "Max attempts: 12 (60 seconds total)"
           echo ""
-          
+
           FOUND=0
           for i in {1..12}; do
             printf "Attempt %2d/12: " "$i"
@@ -87,7 +87,7 @@ jobs:
             
             sleep 5
           done
-          
+
           echo ""
           echo "================================================"
           if [ "$FOUND" -eq 1 ]; then

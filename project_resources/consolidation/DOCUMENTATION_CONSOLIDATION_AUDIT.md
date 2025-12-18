@@ -12,7 +12,8 @@
 
 **Target State:** 10 core authoritative documents serving all development needs with zero duplication.
 
-**Expected Impact:** 
+**Expected Impact:**
+
 - 80% reduction in documentation files
 - Faster developer onboarding
 - Elimination of conflicting information
@@ -25,30 +26,30 @@
 
 ### TIER 1: Essential Authoritative Documents (Mandatory)
 
-| # | Document | Purpose | Audience | Status |
-|---|----------|---------|----------|--------|
-| 1 | **DESIGN_SYSTEM.md** | Master design principles, tokens, color, typography, spacing, components | All developers | Available (needs consolidation) |
-| 2 | **COMPONENT_API.md** | Complete component specs, props, variants, accessibility, dark mode | Frontend developers | Fragmented across 4 files |
-| 3 | **CONTRIBUTING_DESIGN_SYSTEM.md** | Process for contributing components and design tokens | Frontend/Design team | Available |
-| 4 | **QUALITY_GATES.md** | Standards, validation rules, enforcement, CI/CD checks | All developers | Available |
-| 5 | **STYLE_GUIDE.md** | Code conventions, TypeScript, React, Tailwind patterns | All developers | Available |
-| 6 | **ACCESSIBILITY_STANDARDS.md** | WCAG compliance, testing, implementation, validation | All developers | Fragmented |
-| 7 | **DEVELOPMENT_SETUP.md** | Environment setup, build, dev server, testing | New developers | Available (scattered) |
+| #   | Document                          | Purpose                                                                  | Audience             | Status                          |
+| --- | --------------------------------- | ------------------------------------------------------------------------ | -------------------- | ------------------------------- |
+| 1   | **DESIGN_SYSTEM.md**              | Master design principles, tokens, color, typography, spacing, components | All developers       | Available (needs consolidation) |
+| 2   | **COMPONENT_API.md**              | Complete component specs, props, variants, accessibility, dark mode      | Frontend developers  | Fragmented across 4 files       |
+| 3   | **CONTRIBUTING_DESIGN_SYSTEM.md** | Process for contributing components and design tokens                    | Frontend/Design team | Available                       |
+| 4   | **QUALITY_GATES.md**              | Standards, validation rules, enforcement, CI/CD checks                   | All developers       | Available                       |
+| 5   | **STYLE_GUIDE.md**                | Code conventions, TypeScript, React, Tailwind patterns                   | All developers       | Available                       |
+| 6   | **ACCESSIBILITY_STANDARDS.md**    | WCAG compliance, testing, implementation, validation                     | All developers       | Fragmented                      |
+| 7   | **DEVELOPMENT_SETUP.md**          | Environment setup, build, dev server, testing                            | New developers       | Available (scattered)           |
 
 ### TIER 2: Supporting Reference Documents (Important)
 
-| # | Document | Purpose | Audience | Status |
-|---|----------|---------|----------|--------|
-| 8 | **DESIGN_TOKENS_CHANGELOG.md** | Token versioning, changelog, deprecation | Design system maintainers | Available |
-| 9 | **ARCHITECTURE_DECISIONS.md** | ADRs for design decisions, why patterns exist | Senior developers | Missing |
-| 10 | **TROUBLESHOOTING.md** | Common issues, solutions, debugging | All developers | Available (scattered) |
+| #   | Document                       | Purpose                                       | Audience                  | Status                |
+| --- | ------------------------------ | --------------------------------------------- | ------------------------- | --------------------- |
+| 8   | **DESIGN_TOKENS_CHANGELOG.md** | Token versioning, changelog, deprecation      | Design system maintainers | Available             |
+| 9   | **ARCHITECTURE_DECISIONS.md**  | ADRs for design decisions, why patterns exist | Senior developers         | Missing               |
+| 10  | **TROUBLESHOOTING.md**         | Common issues, solutions, debugging           | All developers            | Available (scattered) |
 
 ### TIER 3: Deployment/Admin (Reference)
 
-| # | Document | Purpose | Audience | Status |
-|---|----------|---------|----------|--------|
-| 11 | **DEPLOYMENT.md** | Production deployment, monitoring, incident response | DevOps/Lead developers | Available (scattered) |
-| 12 | **SECURITY.md** | Security policies, compliance | All developers | Available |
+| #   | Document          | Purpose                                              | Audience               | Status                |
+| --- | ----------------- | ---------------------------------------------------- | ---------------------- | --------------------- |
+| 11  | **DEPLOYMENT.md** | Production deployment, monitoring, incident response | DevOps/Lead developers | Available (scattered) |
+| 12  | **SECURITY.md**   | Security policies, compliance                        | All developers         | Available             |
 
 ---
 
@@ -57,6 +58,7 @@
 ### Existing Files Status
 
 #### **Design System Documents**
+
 ```
 AVAILABLE:
 ✓ project_resources/design_system_and_typography/DESIGN_SYSTEM.md (868 lines)
@@ -78,6 +80,7 @@ FRAGMENTED:
 ```
 
 #### **Audit & Assessment Documents**
+
 ```
 REDUNDANT (same findings reported multiple times):
 ✗ docs/audit_reports/AUDIT_INDEX.md
@@ -95,6 +98,7 @@ All report the same 16 issues and compliance metrics (98%)
 ```
 
 #### **Process & Guidelines Documents**
+
 ```
 AVAILABLE:
 ✓ project_resources/rules_and_guidelines/AGENT.md (1130 lines) [AI AGENT GUIDE]
@@ -104,6 +108,7 @@ AVAILABLE:
 ```
 
 #### **Knowledge & Reference Documents**
+
 ```
 ANALYSIS/REFERENCE (can be archived):
 ⚠ project_resources/prompts/Full-Stack_Codebase_Analysis.md (2041 lines) [PROMPT - for AI use]
@@ -120,6 +125,7 @@ ANALYSIS/REFERENCE (can be archived):
 ```
 
 #### **Assessment Reports (Archivable)**
+
 ```
 Can be MOVED to docs/archives/:
 - ANALYSIS_DELIVERABLES.md
@@ -141,12 +147,14 @@ Can be MOVED to docs/archives/:
 ### Document 1: DESIGN_SYSTEM.md (Master Doc)
 
 **Current Source:**
+
 - `project_resources/design_system_and_typography/DESIGN_SYSTEM.md` (868 lines) ← PRIMARY
 - `project_resources/rules_and_guidelines/TYPOGRAPHY_SYSTEM.md` (558 lines) ← MERGE
 - `project_resources/design_system_and_typography/DESIGN_SYSTEM_MAINTENANCE.md` (300 lines) ← EXTRACT GOVERNANCE
 - Sections from `QUALITY_GATES.md` for design enforcement
 
 **Content Includes:**
+
 - Design principles (Clarity, Consistency, Accessibility, Mobile-first, Performance)
 - Color system (Primary, Semantic, Functional, Dark mode)
 - Typography (8 levels, font families, usage examples, responsive)
@@ -165,12 +173,14 @@ Can be MOVED to docs/archives/:
 ### Document 2: COMPONENT_API.md (New Consolidated)
 
 **Consolidate From:**
+
 - `project_resources/components/COMPONENT_SPECIFICATIONS.md` (1000+ lines) ← PRIMARY
 - `project_resources/components/COMPONENT_QUICK_REFERENCE.md` (500+ lines) ← MERGE
 - `project_resources/components/COMPONENT_MIGRATION_GUIDE.md` (600+ lines) ← EXTRACT MIGRATION SECTION
 - `project_resources/components/COMPONENT_DOCUMENTATION_INDEX.md` (400+ lines) ← EXTRACT NAVIGATION
 
 **Sections:**
+
 - Table of contents with quick navigation
 - API reference for each component (Button, Input, Card, Form, Select, Dialog, etc.)
 - Props interface with types
@@ -190,11 +200,13 @@ Can be MOVED to docs/archives/:
 ### Document 3: CONTRIBUTING_DESIGN_SYSTEM.md (Governance Process)
 
 **Consolidate From:**
+
 - `project_resources/design_system_and_typography/CONTRIBUTING_DESIGN_SYSTEM.md` (500 lines) ← PRIMARY
 - Sections from `DESIGN_SYSTEM_MAINTENANCE.md`
 - Sections from `QUALITY_GATES.md` (validation/enforcement)
 
 **Sections:**
+
 - Component contribution workflow (3-phase: Design → Implementation → Review)
 - Code review checklist (40+ criteria)
 - Pull request requirements
@@ -213,6 +225,7 @@ Can be MOVED to docs/archives/:
 ### Document 4: QUALITY_GATES.md (Enhanced)
 
 **Source:**
+
 - `project_resources/design_system_and_typography/QUALITY_GATES.md` (658 lines) ← PRIMARY
 - Rules from other docs
 
@@ -223,6 +236,7 @@ Can be MOVED to docs/archives/:
 ### Document 5: STYLE_GUIDE.md (Already Comprehensive)
 
 **Source:**
+
 - `project_resources/rules_and_guidelines/STYLE_GUIDE.md` (1979 lines) ← KEEP AS PRIMARY
 
 **Already contains:** TypeScript, React, File org, Naming, Tailwind, Forms, Supabase, Error handling, Testing, Performance, Common pitfalls
@@ -234,11 +248,13 @@ Can be MOVED to docs/archives/:
 ### Document 6: ACCESSIBILITY_STANDARDS.md (New Consolidated)
 
 **Consolidate From:**
+
 - `project_resources/rules_and_guidelines/ACCESSIBILITY_IMPLEMENTATION_GUIDE.md` (229+ lines) ← PRIMARY
 - Accessibility sections from DESIGN_SYSTEM.md
 - WCAG requirements from QUALITY_GATES.md
 
 **Sections:**
+
 - WCAG 2.1 Level AA compliance standards
 - Testing and validation methods
 - Implementation checklist
@@ -257,11 +273,13 @@ Can be MOVED to docs/archives/:
 ### Document 7: DEVELOPMENT_SETUP.md (New Consolidated)
 
 **Consolidate From:**
+
 - `project_resources/design_system_and_typography/DESIGN_SYSTEM_ONBOARDING.md` (1007 lines) ← PRIMARY
 - DEVELOPMENT_SETUP sections from other docs
 - Environment setup from README.md
 
 **Sections:**
+
 - Quick setup (npm install, environment variables)
 - Dev server startup
 - Configuration overview
@@ -279,6 +297,7 @@ Can be MOVED to docs/archives/:
 ### Document 8: DESIGN_TOKENS_CHANGELOG.md (Keep)
 
 **Source:**
+
 - `project_resources/design_system_and_typography/DESIGN_TOKEN_CHANGELOG.md` ← KEEP
 
 **Already comprehensive for token versioning and management.**
@@ -288,10 +307,12 @@ Can be MOVED to docs/archives/:
 ### Document 9: ARCHITECTURE_DECISIONS.md (New)
 
 **Create From:**
+
 - Decisions scattered in AGENT.md, DESIGN_SYSTEM.md, and various reports
 - New document to explain the "why" behind design decisions
 
 **Sections:**
+
 - ADR 001: Why feature-based organization
 - ADR 002: Why Tailwind CSS + CSS variables
 - ADR 003: Why 8px/4px spacing grid
@@ -309,12 +330,14 @@ Can be MOVED to docs/archives/:
 ### Document 10: TROUBLESHOOTING.md (New Consolidated)
 
 **Consolidate From:**
+
 - Troubleshooting sections from DESIGN_SYSTEM_ONBOARDING.md
 - Console log fixes from docs/console_logs/
 - Common issues from various reports
 - Lint error fixes from docs/lint_errors/
 
 **Sections:**
+
 - Common development issues
 - Design system validation errors
 - TypeScript errors
@@ -334,6 +357,7 @@ Can be MOVED to docs/archives/:
 ## Part 4: Documents to Remove/Archive
 
 ### Remove (Save as Archives)
+
 ```
 Audit & Assessment Reports → Archive to docs/archives/audit_reports/:
 ├── docs/audit_reports/AUDIT_INDEX.md [DUPLICATE OF SUMMARY]
@@ -387,6 +411,7 @@ Prompts & Analysis (Move to prompts/ folder, not primary docs):
 ```
 
 ### Keep (But may organize differently)
+
 ```
 ✓ project_resources/rules_and_guidelines/AGENT.md (AI agent guidelines)
 ✓ project_resources/rules_and_guidelines/SECURITY.md
@@ -467,20 +492,21 @@ docs/
 
 ### What Gets Removed and Why
 
-| Document | Size | Reason | Alternative |
-|----------|------|--------|-------------|
-| AUDIT_INDEX.md, AUDIT_SUMMARY.md, etc. | 12 docs | All report same 16 issues with 98% compliance. No new value. Findings documented in DESIGN_SYSTEM_AUDIT_REPORT.md | Single report in archives |
-| COMPONENT_QUICK_REFERENCE.md | 500 lines | Same content as COMPONENT_SPECIFICATIONS.md, will be in COMPONENT_API.md | COMPONENT_API.md |
-| COMPONENT_MIGRATION_GUIDE.md | 600 lines | Migration content merged into COMPONENT_API.md migration section | COMPONENT_API.md section |
-| TYPOGRAPHY_SYSTEM.md | 558 lines | Duplicates DESIGN_SYSTEM.md typography section | DESIGN_SYSTEM.md |
-| DESIGN_SYSTEM_MAINTENANCE.md | 300 lines | Governance content merged into CONTRIBUTING_DESIGN_SYSTEM.md | CONTRIBUTING_DESIGN_SYSTEM.md |
-| DESIGN_SYSTEM_ONBOARDING.md | 1007 lines | Setup content merged into DEVELOPMENT_SETUP.md | DEVELOPMENT_SETUP.md |
-| COMPLETION_REPORT.md, etc. | 20+ docs | Historical project reports, no active reference needed | Archive folder |
-| Frontend_Analysis.md (duplicate) | 450 lines | Exact duplicate of Complete_Frontend_Analysis.md | Keep one version |
+| Document                               | Size       | Reason                                                                                                            | Alternative                   |
+| -------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| AUDIT_INDEX.md, AUDIT_SUMMARY.md, etc. | 12 docs    | All report same 16 issues with 98% compliance. No new value. Findings documented in DESIGN_SYSTEM_AUDIT_REPORT.md | Single report in archives     |
+| COMPONENT_QUICK_REFERENCE.md           | 500 lines  | Same content as COMPONENT_SPECIFICATIONS.md, will be in COMPONENT_API.md                                          | COMPONENT_API.md              |
+| COMPONENT_MIGRATION_GUIDE.md           | 600 lines  | Migration content merged into COMPONENT_API.md migration section                                                  | COMPONENT_API.md section      |
+| TYPOGRAPHY_SYSTEM.md                   | 558 lines  | Duplicates DESIGN_SYSTEM.md typography section                                                                    | DESIGN_SYSTEM.md              |
+| DESIGN_SYSTEM_MAINTENANCE.md           | 300 lines  | Governance content merged into CONTRIBUTING_DESIGN_SYSTEM.md                                                      | CONTRIBUTING_DESIGN_SYSTEM.md |
+| DESIGN_SYSTEM_ONBOARDING.md            | 1007 lines | Setup content merged into DEVELOPMENT_SETUP.md                                                                    | DEVELOPMENT_SETUP.md          |
+| COMPLETION_REPORT.md, etc.             | 20+ docs   | Historical project reports, no active reference needed                                                            | Archive folder                |
+| Frontend_Analysis.md (duplicate)       | 450 lines  | Exact duplicate of Complete_Frontend_Analysis.md                                                                  | Keep one version              |
 
 ### What Gets Archived and Why
 
 Archives are for **historical reference**, not active development use:
+
 - Audit reports showing what was fixed
 - Project completion reports
 - Task implementation summaries
@@ -488,6 +514,7 @@ Archives are for **historical reference**, not active development use:
 - Status updates from previous work phases
 
 **When to use archives:**
+
 - Understanding historical decisions
 - Tracing issue resolution
 - Training (seeing what problems were solved)
@@ -544,6 +571,7 @@ Archives are for **historical reference**, not active development use:
 ## Part 8: Key Metrics & Success Criteria
 
 ### Before Consolidation
+
 ```
 Design System Documents:     15 files
 Component Documentation:      4 files
@@ -560,6 +588,7 @@ Onboarding Time:          3-4 hours
 ```
 
 ### After Consolidation
+
 ```
 Design System Documents:     8 files (DESIGN_SYSTEM, QUALITY_GATES, CONTRIBUTING, TOKENS, MICRO)
 Component Documentation:     1 file (COMPONENT_API)
@@ -577,6 +606,7 @@ Onboarding Time:           30 min - 1 hour (-75%)
 ```
 
 ### Success Criteria ✅
+
 - [ ] 0 duplicate information across active docs
 - [ ] Single source of truth for each topic
 - [ ] Developer can onboard in <45 minutes
@@ -592,18 +622,18 @@ Onboarding Time:           30 min - 1 hour (-75%)
 
 ### Coverage Analysis
 
-| Core Document | Required? | Currently Available? | Fragmented? | Consolidation Effort |
-|---|---|---|---|---|
-| DESIGN_SYSTEM.md | ✅ YES | ✅ YES | ⚠️ SOME (typography separate) | MEDIUM |
-| COMPONENT_API.md | ✅ YES | ⚠️ PARTIAL | ✅ HIGH (4 files) | HIGH |
-| CONTRIBUTING_DESIGN_SYSTEM.md | ✅ YES | ✅ YES | ⚠️ SOME (governance scattered) | MEDIUM |
-| QUALITY_GATES.md | ✅ YES | ✅ YES | ❌ NO | LOW (update refs only) |
-| STYLE_GUIDE.md | ✅ YES | ✅ YES | ❌ NO | LOW (update refs only) |
-| ACCESSIBILITY_STANDARDS.md | ✅ YES | ⚠️ PARTIAL | ✅ YES (3+ places) | MEDIUM |
-| DEVELOPMENT_SETUP.md | ✅ YES | ⚠️ PARTIAL | ✅ YES (2+ files) | MEDIUM |
-| ARCHITECTURE_DECISIONS.md | ✅ YES | ❌ NO | N/A | HIGH (new) |
-| DESIGN_TOKENS_CHANGELOG.md | ✅ YES | ✅ YES | ❌ NO | LOW (keep as-is) |
-| TROUBLESHOOTING.md | ✅ YES | ⚠️ PARTIAL | ✅ YES (scattered) | MEDIUM |
+| Core Document                 | Required? | Currently Available? | Fragmented?                    | Consolidation Effort   |
+| ----------------------------- | --------- | -------------------- | ------------------------------ | ---------------------- |
+| DESIGN_SYSTEM.md              | ✅ YES    | ✅ YES               | ⚠️ SOME (typography separate)  | MEDIUM                 |
+| COMPONENT_API.md              | ✅ YES    | ⚠️ PARTIAL           | ✅ HIGH (4 files)              | HIGH                   |
+| CONTRIBUTING_DESIGN_SYSTEM.md | ✅ YES    | ✅ YES               | ⚠️ SOME (governance scattered) | MEDIUM                 |
+| QUALITY_GATES.md              | ✅ YES    | ✅ YES               | ❌ NO                          | LOW (update refs only) |
+| STYLE_GUIDE.md                | ✅ YES    | ✅ YES               | ❌ NO                          | LOW (update refs only) |
+| ACCESSIBILITY_STANDARDS.md    | ✅ YES    | ⚠️ PARTIAL           | ✅ YES (3+ places)             | MEDIUM                 |
+| DEVELOPMENT_SETUP.md          | ✅ YES    | ⚠️ PARTIAL           | ✅ YES (2+ files)              | MEDIUM                 |
+| ARCHITECTURE_DECISIONS.md     | ✅ YES    | ❌ NO                | N/A                            | HIGH (new)             |
+| DESIGN_TOKENS_CHANGELOG.md    | ✅ YES    | ✅ YES               | ❌ NO                          | LOW (keep as-is)       |
+| TROUBLESHOOTING.md            | ✅ YES    | ⚠️ PARTIAL           | ✅ YES (scattered)             | MEDIUM                 |
 
 ---
 
@@ -611,15 +641,16 @@ Onboarding Time:           30 min - 1 hour (-75%)
 
 ### Potential Risks
 
-| Risk | Mitigation |
-|------|-----------|
-| **Lost Information** | Before removing any file, extract all unique content into new consolidated doc |
-| **Broken Links** | Run automated link checker after reorganization |
-| **Developer Confusion** | Create DOCUMENTATION_MAP.md showing old → new locations |
-| **Missing Content** | Senior dev review of each new consolidated document |
-| **Incomplete Migration** | Checklist for each document with sign-off |
+| Risk                     | Mitigation                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------ |
+| **Lost Information**     | Before removing any file, extract all unique content into new consolidated doc |
+| **Broken Links**         | Run automated link checker after reorganization                                |
+| **Developer Confusion**  | Create DOCUMENTATION_MAP.md showing old → new locations                        |
+| **Missing Content**      | Senior dev review of each new consolidated document                            |
+| **Incomplete Migration** | Checklist for each document with sign-off                                      |
 
 ### Backup Strategy
+
 - Create branch before starting
 - Keep archives for 6 months minimum
 - Version control all changes

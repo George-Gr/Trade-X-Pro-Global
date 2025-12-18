@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { ErrorContext, ErrorContextType } from '@/contexts/ErrorContext';
+import { useContext } from "react";
+import { ErrorContext, ErrorContextType } from "@/contexts/ErrorContext";
 
 /**
  * Hook to use error context for logging and tracking
@@ -30,8 +30,8 @@ export function useErrorContext(): ErrorContextType {
 
   if (context === undefined) {
     throw new Error(
-      'useErrorContext must be used within ErrorContextProvider. ' +
-        'Wrap your application with <ErrorContextProvider> in App.tsx'
+      "useErrorContext must be used within ErrorContextProvider. " +
+        "Wrap your application with <ErrorContextProvider> in App.tsx",
     );
   }
 

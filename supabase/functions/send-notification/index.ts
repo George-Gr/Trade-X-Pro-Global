@@ -4,16 +4,17 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 const NotificationRequestSchema = z.object({
-  user_id: z.string().uuid('Invalid user ID format'),
-  type: z.string().min(1, 'Type required').max(50, 'Type too long'),
-  title: z.string().min(1, 'Title required').max(200, 'Title too long'),
-  message: z.string().min(1, 'Message required').max(2000, 'Message too long'),
+  user_id: z.string().uuid("Invalid user ID format"),
+  type: z.string().min(1, "Type required").max(50, "Type too long"),
+  title: z.string().min(1, "Title required").max(200, "Title too long"),
+  message: z.string().min(1, "Message required").max(2000, "Message too long"),
   data: z.record(z.any()).optional(),
-  send_email: z.boolean().optional().default(true)
+  send_email: z.boolean().optional().default(true),
 });
 
 serve(async (req: Request) => {
@@ -27,37 +28,50 @@ serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Authenticate the request
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const token = authHeader.replace("Bearer ", "");
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Check rate limit: 5 requests per minute
-    const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
+    const { data: rateLimitOk } = await supabase.rpc("check_rate_limit", {
       p_user_id: user.id,
-      p_endpoint: 'send-notification',
+      p_endpoint: "send-notification",
       p_max_requests: 5,
-      p_window_seconds: 60
+      p_window_seconds: 60,
     });
 
     if (!rateLimitOk) {
-      console.log('Rate limit exceeded for user');
+      console.log("Rate limit exceeded for user");
       return new Response(
-        JSON.stringify({ error: 'Too many requests. Please wait before sending another notification.' }),
-        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } }
+        JSON.stringify({
+          error:
+            "Too many requests. Please wait before sending another notification.",
+        }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Retry-After": "60",
+          },
+        },
       );
     }
 
@@ -66,13 +80,21 @@ serve(async (req: Request) => {
     const validation = NotificationRequestSchema.safeParse(body);
 
     if (!validation.success) {
-      console.error('Input validation failed:', validation.error);
+      console.error("Input validation failed:", validation.error);
       return new Response(
-        JSON.stringify({ 
-          error: 'Invalid input', 
-           details: validation.error.issues.map((i: unknown) => `${(i as { path: string[]; message: string }).path.join('.')}: ${(i as { path: string[]; message: string }).message}`).join(', ')
+        JSON.stringify({
+          error: "Invalid input",
+          details: validation.error.issues
+            .map(
+              (i: unknown) =>
+                `${(i as { path: string[]; message: string }).path.join(".")}: ${(i as { path: string[]; message: string }).message}`,
+            )
+            .join(", "),
         }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -81,16 +103,21 @@ serve(async (req: Request) => {
     // Ensure caller can only send to themselves (unless admin)
     if (user_id !== user.id) {
       const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
         .single();
-        
+
       if (!roleData) {
         return new Response(
-          JSON.stringify({ error: 'Forbidden: Can only send notifications to yourself' }),
-          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({
+            error: "Forbidden: Can only send notifications to yourself",
+          }),
+          {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
         );
       }
     }
@@ -125,7 +152,10 @@ serve(async (req: Request) => {
       console.log("Notification type disabled for user:", type);
       return new Response(
         JSON.stringify({ message: "Notification type disabled" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        },
       );
     }
 
@@ -153,11 +183,11 @@ serve(async (req: Request) => {
           console.warn("RESEND_API_KEY not configured, skipping email");
         } else {
           const emailHtml = generateEmailHtml(title, message, data);
-          
+
           const emailResponse = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {
-              "Authorization": `Bearer ${resendApiKey}`,
+              Authorization: `Bearer ${resendApiKey}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -183,15 +213,18 @@ serve(async (req: Request) => {
 
     return new Response(
       JSON.stringify({ message: "Notification created successfully" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      },
     );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Error in send-notification function:", err);
-    return new Response(
-      JSON.stringify({ error: message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-    );
+    return new Response(JSON.stringify({ error: message }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });
 
@@ -199,16 +232,16 @@ function checkNotificationEnabled(type: string, preferences: unknown): boolean {
   if (!preferences) return true;
 
   const typeMap: Record<string, string> = {
-    'order_filled': 'order_notifications',
-    'order_executed': 'order_notifications',
-    'margin_warning': 'margin_notifications',
-    'margin_call': 'margin_notifications',
-    'stop_out': 'margin_notifications',
-    'pnl_milestone': 'pnl_notifications',
-    'position_update': 'order_notifications',
-    'kyc_update': 'kyc_notifications',
-    'price_alert': 'price_alert_notifications',
-    'risk_event': 'risk_notifications',
+    order_filled: "order_notifications",
+    order_executed: "order_notifications",
+    margin_warning: "margin_notifications",
+    margin_call: "margin_notifications",
+    stop_out: "margin_notifications",
+    pnl_milestone: "pnl_notifications",
+    position_update: "order_notifications",
+    kyc_update: "kyc_notifications",
+    price_alert: "price_alert_notifications",
+    risk_event: "risk_notifications",
   };
 
   const prefKey = typeMap[type];
@@ -216,7 +249,11 @@ function checkNotificationEnabled(type: string, preferences: unknown): boolean {
   return !prefKey || prefs[prefKey] !== false;
 }
 
-function generateEmailHtml(title: string, message: string, data?: Record<string, unknown>): string {
+function generateEmailHtml(
+  title: string,
+  message: string,
+  data?: Record<string, unknown>,
+): string {
   // Escape HTML to prevent XSS
   const escapeHtml = (unsafe: string) => {
     return unsafe
@@ -253,16 +290,24 @@ function generateEmailHtml(title: string, message: string, data?: Record<string,
           </div>
           <div class="content">
             <p>${safeMessage}</p>
-            ${data ? `
+            ${
+              data
+                ? `
               <div class="data">
                 <h3 style="margin-top: 0;">Details:</h3>
-                ${Object.entries(data).map(([key, value]) => `
+                ${Object.entries(data)
+                  .map(
+                    ([key, value]) => `
                   <div class="data-item">
                     <span class="label">${escapeHtml(formatLabel(key))}:</span> ${escapeHtml(formatValue(value))}
                   </div>
-                `).join('')}
+                `,
+                  )
+                  .join("")}
               </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
           <div class="footer">
             <p>This is an automated notification from your trading platform.</p>
@@ -275,14 +320,17 @@ function generateEmailHtml(title: string, message: string, data?: Record<string,
 }
 
 function formatLabel(key: string): string {
-  return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return key
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function formatValue(value: unknown): string {
-  if (typeof value === 'number') {
+  if (typeof value === "number") {
     return value.toFixed(2);
   }
-  if (typeof value === 'object') {
+  if (typeof value === "object") {
     return JSON.stringify(value);
   }
   return String(value);

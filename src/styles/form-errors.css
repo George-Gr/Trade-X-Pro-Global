@@ -307,7 +307,8 @@ textarea.warning {
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {
@@ -323,8 +324,6 @@ textarea.warning {
 input.error.shake {
   animation: shake 0.4s ease-in-out;
 }
-
-
 
 /* ============================================
    ACCESSIBILITY
@@ -345,7 +344,7 @@ input.error.shake {
     border-width: 2px;
     border-color: hsl(var(--destructive));
   }
-  
+
   .error-message,
   .error-summary {
     border-width: 2px;

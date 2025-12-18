@@ -13,6 +13,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ### Heading Hierarchy
 
 #### H1 - Page Titles (32px, weight: 700)
+
 - **Size:** 32px (2rem)
 - **Weight:** 700 (bold)
 - **Line Height:** 1.2
@@ -31,6 +32,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ---
 
 #### H2 - Section Headers (24px, weight: 600)
+
 - **Size:** 24px (1.5rem)
 - **Weight:** 600 (semibold)
 - **Line Height:** 1.33
@@ -49,6 +51,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ---
 
 #### H3 - Card Titles (18px, weight: 600)
+
 - **Size:** 18px (1.125rem)
 - **Weight:** 600 (semibold)
 - **Line Height:** 1.33
@@ -66,6 +69,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ---
 
 #### H4 - Subsection Headers (16px, weight: 600)
+
 - **Size:** 16px (1rem)
 - **Weight:** 600 (semibold)
 - **Line Height:** 1.375
@@ -85,6 +89,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ### Body Text Hierarchy
 
 #### Body - Regular Text (14px, weight: 400)
+
 - **Size:** 14px (0.875rem)
 - **Weight:** 400 (normal)
 - **Line Height:** 1.625
@@ -102,6 +107,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ---
 
 #### Small - Helper Text (12px, weight: 400)
+
 - **Size:** 12px (0.75rem)
 - **Weight:** 400 (normal)
 - **Line Height:** 1.5
@@ -119,6 +125,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ---
 
 #### Label - Form Labels (14px, weight: 500)
+
 - **Size:** 14px (0.875rem)
 - **Weight:** 500 (medium)
 - **Line Height:** 1.43
@@ -136,6 +143,7 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 ---
 
 #### Caption - Metadata (12px, weight: 500)
+
 - **Size:** 12px (0.75rem)
 - **Weight:** 500 (medium)
 - **Line Height:** 1.5
@@ -157,20 +165,22 @@ The TradeX Pro Dashboard implements a comprehensive typography hierarchy system 
 All typography values are defined as CSS custom properties for easy customization and responsive scaling.
 
 ### Font Size Variables
+
 ```css
---text-xs: 0.75rem;       /* 12px */
---text-sm: 0.875rem;      /* 14px */
---text-base: 1rem;        /* 16px */
---text-lg: 1.125rem;      /* 18px */
---text-xl: 1.25rem;       /* 20px */
---text-2xl: 1.5rem;       /* 24px */
---text-3xl: 1.875rem;     /* 30px */
---text-4xl: 2.25rem;      /* 36px */
---text-5xl: 3rem;         /* 48px */
---text-6xl: 3.75rem;      /* 60px */
+--text-xs: 0.75rem; /* 12px */
+--text-sm: 0.875rem; /* 14px */
+--text-base: 1rem; /* 16px */
+--text-lg: 1.125rem; /* 18px */
+--text-xl: 1.25rem; /* 20px */
+--text-2xl: 1.5rem; /* 24px */
+--text-3xl: 1.875rem; /* 30px */
+--text-4xl: 2.25rem; /* 36px */
+--text-5xl: 3rem; /* 48px */
+--text-6xl: 3.75rem; /* 60px */
 ```
 
 ### Font Weight Variables
+
 ```css
 --font-light: 300;
 --font-normal: 400;
@@ -181,6 +191,7 @@ All typography values are defined as CSS custom properties for easy customizatio
 ```
 
 ### Line Height Variables
+
 ```css
 --leading-tight: 1.2;
 --leading-snug: 1.375;
@@ -190,23 +201,24 @@ All typography values are defined as CSS custom properties for easy customizatio
 ```
 
 ### Heading-Specific Variables
+
 ```css
---h1-size: 2rem;           /* 32px */
+--h1-size: 2rem; /* 32px */
 --h1-weight: 700;
 --h1-line-height: 1.2;
 --h1-letter-spacing: -0.02em;
 
---h2-size: 1.5rem;         /* 24px */
+--h2-size: 1.5rem; /* 24px */
 --h2-weight: 600;
 --h2-line-height: 1.33;
 --h2-letter-spacing: -0.01em;
 
---h3-size: 1.125rem;       /* 18px */
+--h3-size: 1.125rem; /* 18px */
 --h3-weight: 600;
 --h3-line-height: 1.33;
 --h3-letter-spacing: 0;
 
---h4-size: 1rem;           /* 16px */
+--h4-size: 1rem; /* 16px */
 --h4-weight: 600;
 --h4-line-height: 1.375;
 --h4-letter-spacing: 0;
@@ -219,59 +231,67 @@ All typography values are defined as CSS custom properties for easy customizatio
 ### React Components (typography.tsx)
 
 #### H1 Component
-```tsx
-import { H1 } from '@/components/ui/typography';
 
-<H1>Page Title</H1>
+```tsx
+import { H1 } from "@/components/ui/typography";
+
+<H1>Page Title</H1>;
 ```
 
 #### H2 Component
-```tsx
-import { H2 } from '@/components/ui/typography';
 
-<H2>Section Header</H2>
+```tsx
+import { H2 } from "@/components/ui/typography";
+
+<H2>Section Header</H2>;
 ```
 
 #### H3 Component
-```tsx
-import { H3 } from '@/components/ui/typography';
 
-<H3>Card Title</H3>
+```tsx
+import { H3 } from "@/components/ui/typography";
+
+<H3>Card Title</H3>;
 ```
 
 #### H4 Component
-```tsx
-import { H4 } from '@/components/ui/typography';
 
-<H4>Subsection Header</H4>
+```tsx
+import { H4 } from "@/components/ui/typography";
+
+<H4>Subsection Header</H4>;
 ```
 
 #### Body Component
-```tsx
-import { Body } from '@/components/ui/typography';
 
-<Body>This is regular body text</Body>
+```tsx
+import { Body } from "@/components/ui/typography";
+
+<Body>This is regular body text</Body>;
 ```
 
 #### BodySmall Component
-```tsx
-import { BodySmall } from '@/components/ui/typography';
 
-<BodySmall>This is smaller text</BodySmall>
+```tsx
+import { BodySmall } from "@/components/ui/typography";
+
+<BodySmall>This is smaller text</BodySmall>;
 ```
 
 #### Label Component
-```tsx
-import { Label } from '@/components/ui/typography';
 
-<Label>Form Label</Label>
+```tsx
+import { Label } from "@/components/ui/typography";
+
+<Label>Form Label</Label>;
 ```
 
 #### Caption Component
-```tsx
-import { Caption } from '@/components/ui/typography';
 
-<Caption>Metadata or timestamp</Caption>
+```tsx
+import { Caption } from "@/components/ui/typography";
+
+<Caption>Metadata or timestamp</Caption>;
 ```
 
 ---
@@ -283,53 +303,58 @@ import { Caption } from '@/components/ui/typography';
 Comprehensive utility functions for working with the typography system.
 
 #### getHeadingClass(level: 1-6)
+
 Get the typography class name for a heading level.
 
 ```tsx
-import { getHeadingClass } from '@/lib/typographyUtils';
+import { getHeadingClass } from "@/lib/typographyUtils";
 
 const className = getHeadingClass(2);
 // Returns: 'typography-h2'
 ```
 
 #### createTypographyStyle()
+
 Create a custom typography style object.
 
 ```tsx
-import { createTypographyStyle } from '@/lib/typographyUtils';
+import { createTypographyStyle } from "@/lib/typographyUtils";
 
 const style = createTypographyStyle(16, 600, 1.5);
 // Returns: { fontSize: '16px', fontWeight: 600, lineHeight: 1.5 }
 ```
 
 #### isTypographyLoaded()
+
 Check if typography CSS variables are loaded.
 
 ```tsx
-import { isTypographyLoaded } from '@/lib/typographyUtils';
+import { isTypographyLoaded } from "@/lib/typographyUtils";
 
 if (isTypographyLoaded()) {
-  console.log('Typography system is ready');
+  console.log("Typography system is ready");
 }
 ```
 
 #### validateTypography()
+
 Validate the typography system configuration.
 
 ```tsx
-import { validateTypography } from '@/lib/typographyUtils';
+import { validateTypography } from "@/lib/typographyUtils";
 
 const validation = validateTypography();
 if (!validation.isValid) {
-  console.error('Typography errors:', validation.errors);
+  console.error("Typography errors:", validation.errors);
 }
 ```
 
 #### logTypographyDiagnostics()
+
 Log typography diagnostics to console (dev only).
 
 ```tsx
-import { logTypographyDiagnostics } from '@/lib/typographyUtils';
+import { logTypographyDiagnostics } from "@/lib/typographyUtils";
 
 logTypographyDiagnostics();
 // Logs all typography variables and validates the system
@@ -342,6 +367,7 @@ logTypographyDiagnostics();
 The typography system scales responsively across breakpoints:
 
 ### Tablet (max-width: 768px)
+
 - H1: 28px (from 32px)
 - H2: 22px (from 24px)
 - H3: 16px (from 18px)
@@ -350,6 +376,7 @@ The typography system scales responsively across breakpoints:
 - Label: 13px (from 14px)
 
 ### Mobile (max-width: 640px)
+
 - H1: 24px (from 32px)
 - H2: 20px (from 24px)
 - H3: 15px (from 18px)
@@ -365,6 +392,7 @@ The scaling is automatic and controlled by CSS media queries.
 ### ✅ DO
 
 1. **Use semantic HTML elements**
+
    ```tsx
    <h1 className="typography-h1">Title</h1>
    <h2 className="typography-h2">Section</h2>
@@ -372,17 +400,20 @@ The scaling is automatic and controlled by CSS media queries.
    ```
 
 2. **Use typography utility classes**
+
    ```tsx
    <div className="typography-label">Label</div>
    ```
 
 3. **Use React components for consistency**
+
    ```tsx
-   import { H1, H2, Body } from '@/components/ui/typography';
-   <H1>Title</H1>
+   import { H1, H2, Body } from "@/components/ui/typography";
+   <H1>Title</H1>;
    ```
 
 4. **Maintain proper hierarchy**
+
    ```tsx
    <H1>Main Title</H1>
    <H2>Section</H2>
@@ -391,7 +422,9 @@ The scaling is automatic and controlled by CSS media queries.
 
 5. **Use CSS variables when customizing**
    ```tsx
-   <p style={{ fontSize: 'var(--body-size)', fontWeight: 'var(--body-weight)' }}>
+   <p
+     style={{ fontSize: "var(--body-size)", fontWeight: "var(--body-weight)" }}
+   >
      Text
    </p>
    ```
@@ -399,12 +432,14 @@ The scaling is automatic and controlled by CSS media queries.
 ### ❌ DON'T
 
 1. **Don't use hardcoded font sizes**
+
    ```tsx
    ❌ <h1 style={{ fontSize: '32px' }}>Title</h1>
    ✅ <h1 className="typography-h1">Title</h1>
    ```
 
 2. **Don't skip heading levels**
+
    ```tsx
    ❌ <h1>Title</h1>
      <h3>Subsection</h3> {/* Skipped H2 */}
@@ -414,6 +449,7 @@ The scaling is automatic and controlled by CSS media queries.
    ```
 
 3. **Don't mix Tailwind and typography classes inconsistently**
+
    ```tsx
    ❌ <h1 className="text-3xl font-bold">Title</h1>
    ✅ <h1 className="typography-h1">Title</h1>
@@ -466,18 +502,21 @@ The scaling is automatic and controlled by CSS media queries.
 If you have existing components using Tailwind typography classes, migrate them as follows:
 
 #### Old (Tailwind)
+
 ```tsx
 <h1 className="text-3xl font-bold">Title</h1>
 <p className="text-sm font-normal">Body</p>
 ```
 
 #### New (CSS Variables)
+
 ```tsx
 <h1 className="typography-h1">Title</h1>
 <p className="typography-body">Body</p>
 ```
 
 Or use components:
+
 ```tsx
 <H1>Title</H1>
 <Body>Body</Body>
@@ -488,36 +527,40 @@ Or use components:
 ## Validation & Debugging
 
 ### Check if typography is loaded
+
 ```tsx
-import { isTypographyLoaded } from '@/lib/typographyUtils';
+import { isTypographyLoaded } from "@/lib/typographyUtils";
 
 console.log(isTypographyLoaded()); // true/false
 ```
 
 ### Get all typography variables
+
 ```tsx
-import { getTypographyVariables } from '@/lib/typographyUtils';
+import { getTypographyVariables } from "@/lib/typographyUtils";
 
 const vars = getTypographyVariables();
 console.table(vars);
 ```
 
 ### Run diagnostics in console
+
 ```tsx
-import { logTypographyDiagnostics } from '@/lib/typographyUtils';
+import { logTypographyDiagnostics } from "@/lib/typographyUtils";
 
 logTypographyDiagnostics();
 // Logs validation, variables, and any issues
 ```
 
 ### Validate system configuration
+
 ```tsx
-import { validateTypography } from '@/lib/typographyUtils';
+import { validateTypography } from "@/lib/typographyUtils";
 
 const result = validateTypography();
-console.log('Valid:', result.isValid);
-console.log('Errors:', result.errors);
-console.log('Warnings:', result.warnings);
+console.log("Valid:", result.isValid);
+console.log("Errors:", result.errors);
+console.log("Warnings:", result.warnings);
 ```
 
 ---

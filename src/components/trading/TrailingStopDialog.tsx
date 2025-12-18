@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +33,9 @@ export const TrailingStopDialog = ({
 }: TrailingStopDialogProps) => {
   const [open, setOpen] = useState(false);
   const [enabled, setEnabled] = useState(trailingStopEnabled);
-  const [distance, setDistance] = useState(trailingStopDistance?.toString() || "0.0010");
+  const [distance, setDistance] = useState(
+    trailingStopDistance?.toString() || "0.0010",
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -60,9 +68,10 @@ export const TrailingStopDialog = ({
       if (enabled && !trailingStopEnabled) {
         updates.highest_price = side === "buy" ? currentPrice : null;
         updates.lowest_price = side === "sell" ? currentPrice : null;
-        updates.trailing_stop_price = side === "buy" 
-          ? currentPrice - distanceValue 
-          : currentPrice + distanceValue;
+        updates.trailing_stop_price =
+          side === "buy"
+            ? currentPrice - distanceValue
+            : currentPrice + distanceValue;
       }
 
       const { error } = await supabase
@@ -133,7 +142,8 @@ export const TrailingStopDialog = ({
                   placeholder="0.0010"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Stop loss will automatically adjust to maintain this distance as price moves in your favor
+                  Stop loss will automatically adjust to maintain this distance
+                  as price moves in your favor
                 </p>
               </div>
 
@@ -141,7 +151,7 @@ export const TrailingStopDialog = ({
                 <div className="font-semibold">How it works:</div>
                 <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                   <li>
-                    {side === "buy" 
+                    {side === "buy"
                       ? "As price rises, stop loss moves up to lock in profits"
                       : "As price falls, stop loss moves down to lock in profits"}
                   </li>
@@ -152,7 +162,11 @@ export const TrailingStopDialog = ({
             </>
           )}
 
-          <Button onClick={handleSave} disabled={isSubmitting} className="w-full">
+          <Button
+            onClick={handleSave}
+            disabled={isSubmitting}
+            className="w-full"
+          >
             {isSubmitting ? "Saving..." : "Save Settings"}
           </Button>
         </div>

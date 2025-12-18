@@ -1,4 +1,5 @@
 # Frontend Perfection Implementation Guide
+
 **TradeX Pro Landing Page | Systematic Fix Execution**
 
 ---
@@ -10,38 +11,43 @@
 **File to Edit:** `src/components/landing/HeroSection.tsx`
 
 **Current Code (Line 127):**
+
 ```tsx
 <section className="relative overflow-hidden bg-primary min-h-[90vh] flex items-center">
 ```
 
 **Replace With:**
+
 ```tsx
-<section 
+<section
   className="relative overflow-hidden bg-primary flex items-center py-16 md:py-20 lg:py-24 min-h-screen md:min-h-[90vh]"
   aria-label="Hero section - Master Global Markets"
 >
 ```
 
 **Also Update (Line 135 - Headline):**
+
 ```tsx
 // Old:
-className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6"
+className = "text-4xl md:text-5xl font-bold text-primary-foreground mb-6";
 
 // New:
-className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4 md:mb-6"
+className =
+  "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4 md:mb-6";
 ```
 
 **Update Floating Animation (Line 40-50):**
+
 ```tsx
 // Replace y animation:
-animate={{ 
-  opacity: 1, 
+animate={{
+  opacity: 1,
   y: [0, -10, 0],  // ❌ Remove this
 }}
 
 // With:
-animate={{ 
-  opacity: 1, 
+animate={{
+  opacity: 1,
   y: 0,  // ✅ Animate TO y:0
 }}
 transition={{
@@ -55,6 +61,7 @@ style={{
 ```
 
 **Testing After Fix:**
+
 ```bash
 # Test at multiple viewport widths
 # iPhone SE: 375px
@@ -76,24 +83,26 @@ Find the `buttonVariants` definition and add to the base styles:
 
 ```tsx
 // Add these classes to the main button styles:
-"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 ```
 
 **File 2 to Edit:** `src/components/layout/PublicHeader.tsx` (Line 78)
 
 **Current Code:**
+
 ```tsx
-<Link 
-  to="/" 
-  className="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-2 py-1 -ml-2" 
+<Link
+  to="/"
+  className="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-2 py-1 -ml-2"
   aria-label="TradeX Pro - Home"
 >
 ```
 
 **Replace With:**
+
 ```tsx
-<Link 
-  to="/" 
+<Link
+  to="/"
   className={cn(
     "flex items-center gap-2.5 rounded-lg px-2 py-1 -ml-2",
     "transition-all duration-200",
@@ -108,6 +117,7 @@ Find the `buttonVariants` definition and add to the base styles:
 **File 3 to Edit:** `src/components/layout/PublicHeader.tsx` (NavLink Component, Line 48-68)
 
 **Current Code:**
+
 ```tsx
 const NavLink = ({ to, icon, title, description }: NavLinkProps) => (
   <NavigationMenuLink asChild>
@@ -122,6 +132,7 @@ const NavLink = ({ to, icon, title, description }: NavLinkProps) => (
 ```
 
 **Replace With:**
+
 ```tsx
 const NavLink = ({ to, icon, title, description }: NavLinkProps) => (
   <NavigationMenuLink asChild>
@@ -139,6 +150,7 @@ const NavLink = ({ to, icon, title, description }: NavLinkProps) => (
 ```
 
 **Testing Keyboard Navigation:**
+
 ```bash
 # Open landing page in browser
 # Press TAB repeatedly
@@ -156,22 +168,23 @@ const NavLink = ({ to, icon, title, description }: NavLinkProps) => (
 **File:** `src/components/landing/HeroSection.tsx`
 
 **Current Floating Animation (Lines 40-50):**
+
 ```tsx
-const FloatingCard = ({ 
-  children, 
-  className = "", 
+const FloatingCard = ({
+  children,
+  className = "",
   delay = 0,
-  duration = 6
+  duration = 6,
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
-    animate={{ 
-      opacity: 1, 
-      y: [0, -10, 0],  // ❌ CAUSES LAYOUT SHIFT
+    animate={{
+      opacity: 1,
+      y: [0, -10, 0], // ❌ CAUSES LAYOUT SHIFT
     }}
     transition={{
       opacity: { duration: 0.5, delay },
-      y: { duration, repeat: Infinity, ease: "easeInOut", delay }
+      y: { duration, repeat: Infinity, ease: "easeInOut", delay },
     }}
     className={className}
   >
@@ -181,50 +194,51 @@ const FloatingCard = ({
 ```
 
 **Replace Entire Component With:**
+
 ```tsx
-const FloatingCard = ({ 
-  children, 
-  className = "", 
+const FloatingCard = ({
+  children,
+  className = "",
   delay = 0,
-  duration = 6
-}: { 
-  children: React.ReactNode; 
+  duration = 6,
+}: {
+  children: React.ReactNode;
   className?: string;
   delay?: number;
   duration?: number;
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
-    animate={{ 
-      opacity: 1, 
-      y: 0,  // ✅ Animate TO y:0 (no floating)
+    animate={{
+      opacity: 1,
+      y: 0, // ✅ Animate TO y:0 (no floating)
     }}
     transition={{
       opacity: { duration: 0.5, delay },
-      y: { duration: 0.6, delay, ease: "easeOut" }
+      y: { duration: 0.6, delay, ease: "easeOut" },
     }}
     className={cn(
       className,
-      "will-change-transform"  // GPU acceleration
+      "will-change-transform", // GPU acceleration
     )}
     style={{
-      transform: "translateZ(0)"  // Enable GPU
+      transform: "translateZ(0)", // Enable GPU
     }}
   >
     {/* Separate floating animation using transform only */}
     <motion.div
-      animate={{ 
-        y: [0, -8, 0]  // Use motion.div's built-in y, not position
+      animate={{
+        y: [0, -8, 0], // Use motion.div's built-in y, not position
       }}
       transition={{
         duration: 5 + delay,
         repeat: Infinity,
         ease: "easeInOut",
-        delay: delay * 0.1
+        delay: delay * 0.1,
       }}
       className="will-change-transform"
       style={{
-        transform: "translateZ(0)"
+        transform: "translateZ(0)",
       }}
     >
       {children}
@@ -234,6 +248,7 @@ const FloatingCard = ({
 ```
 
 **Performance Verification:**
+
 ```bash
 # Open Chrome DevTools
 # Go to Performance tab
@@ -292,7 +307,7 @@ const buttonVariants = cva(
       size: {
         xs: "px-2.5 py-1.5 text-xs min-h-[32px]",
         sm: "px-4 py-2 text-sm min-h-[36px]",
-        md: "px-6 py-3 text-base min-h-[44px]",      // ← Mobile minimum
+        md: "px-6 py-3 text-base min-h-[44px]", // ← Mobile minimum
         lg: "px-8 py-4 text-base md:text-lg min-h-[44px] md:min-h-[48px]",
         xl: "px-10 py-5 text-lg md:text-xl min-h-[48px] md:min-h-[52px]",
       },
@@ -300,7 +315,7 @@ const buttonVariants = cva(
     defaultVariants: {
       size: "md",
     },
-  }
+  },
 );
 ```
 
@@ -309,9 +324,10 @@ const buttonVariants = cva(
 Search for `className="bg-gold text-gold-foreground hover:bg-gold-hover px-10 py-6`
 
 Replace with:
+
 ```tsx
-size="lg"
-className="bg-gold text-gold-foreground hover:bg-gold-hover w-full sm:w-auto"
+size = "lg";
+className = "bg-gold text-gold-foreground hover:bg-gold-hover w-full sm:w-auto";
 ```
 
 ---
@@ -321,27 +337,30 @@ className="bg-gold text-gold-foreground hover:bg-gold-hover w-full sm:w-auto"
 **File:** `src/index.css` (Lines 85-100)
 
 **Current Colors:**
+
 ```css
---gold: 38 95% 54%;  /* Too light - 3.2:1 contrast */
+--gold: 38 95% 54%; /* Too light - 3.2:1 contrast */
 --foreground-secondary: 225 15% 35%;
 --foreground-tertiary: 225 12% 48%;
---foreground-muted: 225 10% 60%;  /* Too light */
+--foreground-muted: 225 10% 60%; /* Too light */
 ```
 
 **Update To:**
+
 ```css
---gold: 38 100% 45%;  /* Darker - 4.8:1 contrast ✓ */
+--gold: 38 100% 45%; /* Darker - 4.8:1 contrast ✓ */
 --gold-hover: 38 100% 40%;
---foreground-secondary: 225 20% 30%;  /* Darker */
+--foreground-secondary: 225 20% 30%; /* Darker */
 --foreground-tertiary: 225 15% 45%;
---foreground-muted: 225 12% 50%;  /* Darker */
+--foreground-muted: 225 12% 50%; /* Darker */
 ```
 
 **Add High Contrast Mode:**
+
 ```css
 @media (prefers-contrast: more) {
   :root {
-    --foreground: 225 40% 5%;  /* Near black */
+    --foreground: 225 40% 5%; /* Near black */
     --gold: 38 100% 40%;
     --primary: 258 90% 45%;
   }
@@ -349,6 +368,7 @@ className="bg-gold text-gold-foreground hover:bg-gold-hover w-full sm:w-auto"
 ```
 
 **Verification:** Test with WebAIM Contrast Checker
+
 - Gold on white: 4.8:1 ✓
 - Primary on white: 8.2:1 ✓
 - Foreground on white: 12:1 ✓
@@ -362,10 +382,10 @@ className="bg-gold text-gold-foreground hover:bg-gold-hover w-full sm:w-auto"
 Add state management and route tracking:
 
 ```tsx
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -379,18 +399,21 @@ export const PublicHeader = () => {
   // Close menu on ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setMenuOpen(false);
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
     <header className="...">
       {/* Update NavigationMenu with state */}
-      <NavigationMenu value={menuOpen ? 'open' : ''} onValueChange={(val) => setMenuOpen(!!val)}>
+      <NavigationMenu
+        value={menuOpen ? "open" : ""}
+        onValueChange={(val) => setMenuOpen(!!val)}
+      >
         {/* Menu items close automatically */}
       </NavigationMenu>
     </header>
@@ -402,25 +425,26 @@ export const PublicHeader = () => {
 
 ## File-by-File Implementation Summary
 
-| Issue | File | Changes | Time |
-|-------|------|---------|------|
-| Hero height | `HeroSection.tsx` | Remove min-h-[90vh], add py- classes | 25min |
-| Focus indicators | `button.tsx`, `PublicHeader.tsx` | Add focus-visible rings | 30min |
-| CLS fix | `HeroSection.tsx` | Replace y animation | 20min |
-| Button sizes | `button.tsx`, `Index.tsx` | Add min-h, use size prop | 20min |
-| Contrast | `index.css` | Darken gold, text colors | 25min |
-| Menu close | `PublicHeader.tsx` | Add state + location tracking | 20min |
-| Typography | `Index.tsx`, `HeroSection.tsx` | Add responsive text sizes | 15min |
-| Form errors | `input.tsx`, `+forms` | Add error variant + styling | 35min |
-| Border-radius | Multiple | Standardize rounded-xl | 10min |
-| Loading states | Form buttons | Add loading indicator | 15min |
-| **TOTAL** | | | **7h 35min** |
+| Issue            | File                             | Changes                              | Time         |
+| ---------------- | -------------------------------- | ------------------------------------ | ------------ |
+| Hero height      | `HeroSection.tsx`                | Remove min-h-[90vh], add py- classes | 25min        |
+| Focus indicators | `button.tsx`, `PublicHeader.tsx` | Add focus-visible rings              | 30min        |
+| CLS fix          | `HeroSection.tsx`                | Replace y animation                  | 20min        |
+| Button sizes     | `button.tsx`, `Index.tsx`        | Add min-h, use size prop             | 20min        |
+| Contrast         | `index.css`                      | Darken gold, text colors             | 25min        |
+| Menu close       | `PublicHeader.tsx`               | Add state + location tracking        | 20min        |
+| Typography       | `Index.tsx`, `HeroSection.tsx`   | Add responsive text sizes            | 15min        |
+| Form errors      | `input.tsx`, `+forms`            | Add error variant + styling          | 35min        |
+| Border-radius    | Multiple                         | Standardize rounded-xl               | 10min        |
+| Loading states   | Form buttons                     | Add loading indicator                | 15min        |
+| **TOTAL**        |                                  |                                      | **7h 35min** |
 
 ---
 
 ## Testing Workflow
 
 ### After Each Fix:
+
 ```bash
 # 1. Run TypeScript check
 npm run type:strict
@@ -442,6 +466,7 @@ npm run build
 ```
 
 ### Before Final Submission:
+
 ```bash
 # Full test suite
 npm run lint
@@ -469,23 +494,29 @@ npm run build
 ## Common Issues During Implementation
 
 ### Issue: "Can't find module" errors after changes
-**Solution:** 
+
+**Solution:**
+
 ```bash
 npm run dev:clean  # Clears cache and rebuilds
 ```
 
 ### Issue: Focus ring not visible
+
 **Solution:** Ensure `focus-visible` is applied, not just `focus`:
+
 ```tsx
 // ❌ Wrong
-className="focus:ring-2"
+className = "focus:ring-2";
 
 // ✅ Correct
-className="focus-visible:ring-2 focus-visible:ring-offset-2"
+className = "focus-visible:ring-2 focus-visible:ring-offset-2";
 ```
 
 ### Issue: Animation still causing layout shift
+
 **Solution:** Verify you're using `transform` not layout properties:
+
 ```tsx
 // ❌ Causes shift
 animate={{ y: [0, -10, 0] }}
@@ -499,15 +530,15 @@ animate={{ translateY: [0, -8, 0] }}
 
 ## Success Metrics After Implementation
 
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| **CLS Score** | < 0.1 | TBD | 🔄 |
-| **Focus Indicators** | 100% visible | 0% | 🔄 |
-| **Touch Target Size** | 44x44px | Mixed | 🔄 |
-| **Contrast Ratio** | 4.5:1+ | 3.2:1 | 🔄 |
-| **WCAG AA Compliance** | 95%+ | 30% | 🔄 |
-| **Mobile Viewport** | Fits no scroll | Overflows | 🔄 |
-| **Lighthouse Score** | > 90 | TBD | 🔄 |
+| Metric                 | Target         | Current   | Status |
+| ---------------------- | -------------- | --------- | ------ |
+| **CLS Score**          | < 0.1          | TBD       | 🔄     |
+| **Focus Indicators**   | 100% visible   | 0%        | 🔄     |
+| **Touch Target Size**  | 44x44px        | Mixed     | 🔄     |
+| **Contrast Ratio**     | 4.5:1+         | 3.2:1     | 🔄     |
+| **WCAG AA Compliance** | 95%+           | 30%       | 🔄     |
+| **Mobile Viewport**    | Fits no scroll | Overflows | 🔄     |
+| **Lighthouse Score**   | > 90           | TBD       | 🔄     |
 
 ---
 
@@ -524,4 +555,4 @@ animate={{ translateY: [0, -8, 0] }}
 
 ---
 
-*Implementation Guide | TradeX Pro Frontend Excellence Program*
+_Implementation Guide | TradeX Pro Frontend Excellence Program_

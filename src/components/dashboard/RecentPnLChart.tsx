@@ -1,39 +1,67 @@
-import React, { useMemo, Suspense } from 'react';
-import { Card } from '@/components/ui/card';
-import { formatTooltipValue } from '@/lib/chartUtils';
+import React, { useMemo, Suspense } from "react";
+import { Card } from "@/components/ui/card";
+import { formatTooltipValue } from "@/lib/chartUtils";
 
 // Dynamic import wrapper for recharts components
-const DynamicBarChart = React.lazy(() => import('recharts').then(m => ({
-  default: m.BarChart as React.ComponentType<React.ComponentProps<typeof m.BarChart>>,
-})));
+const DynamicBarChart = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.BarChart as React.ComponentType<
+      React.ComponentProps<typeof m.BarChart>
+    >,
+  })),
+);
 
-const DynamicBar = React.lazy(() => import('recharts').then(m => ({
-  default: m.Bar as React.ComponentType<React.ComponentProps<typeof m.Bar>>,
-})));
+const DynamicBar = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.Bar as React.ComponentType<React.ComponentProps<typeof m.Bar>>,
+  })),
+);
 
-const DynamicXAxis = React.lazy(() => import('recharts').then(m => ({
-  default: m.XAxis as React.ComponentType<React.ComponentProps<typeof m.XAxis>>,
-})));
+const DynamicXAxis = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.XAxis as React.ComponentType<
+      React.ComponentProps<typeof m.XAxis>
+    >,
+  })),
+);
 
-const DynamicYAxis = React.lazy(() => import('recharts').then(m => ({
-  default: m.YAxis as React.ComponentType<React.ComponentProps<typeof m.YAxis>>,
-})));
+const DynamicYAxis = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.YAxis as React.ComponentType<
+      React.ComponentProps<typeof m.YAxis>
+    >,
+  })),
+);
 
-const DynamicTooltip = React.lazy(() => import('recharts').then(m => ({
-  default: m.Tooltip as React.ComponentType<React.ComponentProps<typeof m.Tooltip>>,
-})));
+const DynamicTooltip = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.Tooltip as React.ComponentType<
+      React.ComponentProps<typeof m.Tooltip>
+    >,
+  })),
+);
 
-const DynamicResponsiveContainer = React.lazy(() => import('recharts').then(m => ({
-  default: m.ResponsiveContainer as React.ComponentType<React.ComponentProps<typeof m.ResponsiveContainer>>,
-})));
+const DynamicResponsiveContainer = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.ResponsiveContainer as React.ComponentType<
+      React.ComponentProps<typeof m.ResponsiveContainer>
+    >,
+  })),
+);
 
-const DynamicCartesianGrid = React.lazy(() => import('recharts').then(m => ({
-  default: m.CartesianGrid as React.ComponentType<React.ComponentProps<typeof m.CartesianGrid>>,
-})));
+const DynamicCartesianGrid = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.CartesianGrid as React.ComponentType<
+      React.ComponentProps<typeof m.CartesianGrid>
+    >,
+  })),
+);
 
-const DynamicCell = React.lazy(() => import('recharts').then(m => ({
-  default: m.Cell as React.ComponentType<React.ComponentProps<typeof m.Cell>>,
-})));
+const DynamicCell = React.lazy(() =>
+  import("recharts").then((m) => ({
+    default: m.Cell as React.ComponentType<React.ComponentProps<typeof m.Cell>>,
+  })),
+);
 
 // Loading component for charts
 const ChartLoadingSkeleton = () => (
@@ -48,6 +76,17 @@ interface DailyPnL {
   isProfit: boolean;
 }
 
+/**
+ * Recent P&L Chart Component
+ *
+ * Displays a visual chart of recent daily profit and loss data for the user's trading activity.
+ * Renders a bar chart showing the last 30 days of P&L with color-coded bars indicating
+ * profitable (green) and unprofitable (red) days. Includes tooltips with detailed information
+ * and a summary of total profit/loss over the period.
+ *
+ * @component
+ * @returns {JSX.Element} The RecentPnLChart component
+ */
 export const RecentPnLChart: React.FC = () => {
   const data = useMemo((): DailyPnL[] => {
     // Generate synthetic last 30 days of P&L data
@@ -100,17 +139,26 @@ export const RecentPnLChart: React.FC = () => {
         <div className="aspect-video w-full">
           <Suspense fallback={<ChartLoadingSkeleton />}>
             <DynamicResponsiveContainer>
-              <DynamicBarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+              <DynamicBarChart
+                data={data}
+                margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+              >
                 <DynamicCartesianGrid strokeDasharray="3 3" vertical={false} />
                 <DynamicXAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <DynamicYAxis tick={{ fontSize: 11 }} />
                 <DynamicTooltip
-                  formatter={formatTooltipValue as any}
-                  contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)' }}
+                  formatter={(value: unknown) => formatTooltipValue(value)}
+                  contentStyle={{
+                    backgroundColor: "var(--background)",
+                    border: "1px solid var(--border)",
+                  }}
                 />
                 <DynamicBar dataKey="pnl" isAnimationActive={false}>
                   {data.map((entry, index) => (
-                    <DynamicCell key={`cell-${index}`} fill={entry.isProfit ? '#4ade80' : '#f87171'} />
+                    <DynamicCell
+                      key={`cell-${index}`}
+                      fill={entry.isProfit ? "#4ade80" : "#f87171"}
+                    />
                   ))}
                 </DynamicBar>
               </DynamicBarChart>
@@ -122,7 +170,11 @@ export const RecentPnLChart: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
           <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Total P&L</p>
-            <p className={`font-semibold ${stats.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
+            <p
+              className={`font-semibold ${
+                stats.totalPnL >= 0 ? "text-profit" : "text-loss"
+              }`}
+            >
               ${stats.totalPnL.toLocaleString()}
             </p>
           </div>
@@ -132,7 +184,9 @@ export const RecentPnLChart: React.FC = () => {
           </div>
           <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Max Profit</p>
-            <p className="font-semibold text-profit">${stats.maxProfit.toLocaleString()}</p>
+            <p className="font-semibold text-profit">
+              ${stats.maxProfit.toLocaleString()}
+            </p>
           </div>
           <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Profit Days</p>
@@ -144,7 +198,9 @@ export const RecentPnLChart: React.FC = () => {
           </div>
           <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Max Loss</p>
-            <p className="font-semibold text-loss">${stats.maxLoss.toLocaleString()}</p>
+            <p className="font-semibold text-loss">
+              ${stats.maxLoss.toLocaleString()}
+            </p>
           </div>
         </div>
       </div>

@@ -211,7 +211,7 @@ input + .icon,
     width: 24px;
     height: 24px;
   }
-  
+
   /* Ensure minimum touch target size */
   button .icon,
   a .icon {

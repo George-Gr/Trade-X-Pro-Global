@@ -21,6 +21,7 @@ Both issues have been **completely resolved** with best-practice memoization tec
 ## Errors Fixed
 
 ### Error 1: Maximum Update Depth Exceeded in AccessibilityContext
+
 ```
 App.tsx:39 Uncaught SyntaxError: Maximum update depth exceeded.
 This can happen when a component calls setState inside a useEffect,
@@ -29,17 +30,20 @@ or one of the dependencies keeps changing.
 ```
 
 **Root Cause:**
+
 - Custom hooks returned new object references on every render
 - Effects depended on these objects → dependency always "changed"
 - State updates → re-render → new object references → infinite loop
 
 ### Error 2: Scope Issues in NotificationContext
+
 ```
 Functions markAsRead and markAllAsRead were defined outside the component,
 causing reference errors to user state and setUnreadCount.
 ```
 
 **Root Cause:**
+
 - Functions defined in component scope but referencing variables from different scope
 - Context value recreated on every render causing consumers to re-render
 - No memoization of callback functions
@@ -53,12 +57,15 @@ causing reference errors to user state and setUnreadCount.
 **Changes Made:**
 
 #### Added Imports
+
 ```typescript
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from "react";
 ```
 
 #### Refactored useEffect Dependencies
+
 **Before:** Depended on entire objects
+
 ```typescript
 useEffect(() => {
   // apply styles
@@ -66,64 +73,82 @@ useEffect(() => {
 ```
 
 **After:** Depends on primitive values
+
 ```typescript
 useEffect(() => {
   // apply styles
 }, [
   visualPreferences.preferences.highContrast,
   visualPreferences.preferences.reduceMotion,
-  visualPreferences.preferences.largerText
+  visualPreferences.preferences.largerText,
 ]); // ✅ Primitive values are stable
 ```
 
 #### Memoized Callbacks
+
 ```typescript
 const toggleHighContrast = useCallback(() => {
-  visualPreferences.updatePreference('highContrast', !visualPreferences.preferences.highContrast);
+  visualPreferences.updatePreference(
+    "highContrast",
+    !visualPreferences.preferences.highContrast,
+  );
 }, [visualPreferences]);
 
 const toggleReduceMotion = useCallback(() => {
-  visualPreferences.updatePreference('reduceMotion', !visualPreferences.preferences.reduceMotion);
+  visualPreferences.updatePreference(
+    "reduceMotion",
+    !visualPreferences.preferences.reduceMotion,
+  );
 }, [visualPreferences]);
 
-const toggleColorBlindMode = useCallback((mode: string) => {
-  if (colorBlindMode.colorBlindMode.type === mode) {
-    colorBlindMode.applyColorBlindSimulation({ type: 'none', intensity: 0 });
-  } else {
-    colorBlindMode.applyColorBlindSimulation({ type: mode as any, intensity: 1 });
-  }
-}, [colorBlindMode]);
+const toggleColorBlindMode = useCallback(
+  (mode: string) => {
+    if (colorBlindMode.colorBlindMode.type === mode) {
+      colorBlindMode.applyColorBlindSimulation({ type: "none", intensity: 0 });
+    } else {
+      colorBlindMode.applyColorBlindSimulation({
+        type: mode as any,
+        intensity: 1,
+      });
+    }
+  },
+  [colorBlindMode],
+);
 ```
 
 #### Memoized Context Value
+
 ```typescript
-const value: AccessibilityContextType = useMemo(() => ({
-  visualPreferences,
-  colorBlindMode,
-  keyboardShortcuts,
-  colorContrast,
-  screenReaderEnabled,
-  setScreenReaderEnabled,
-  accessibilityEnabled,
-  setAccessibilityEnabled,
-  toggleHighContrast,
-  toggleReduceMotion,
-  toggleColorBlindMode,
-  complianceScore,
-  updateComplianceScore
-}), [
-  visualPreferences,
-  colorBlindMode,
-  keyboardShortcuts,
-  colorContrast,
-  screenReaderEnabled,
-  accessibilityEnabled,
-  toggleHighContrast,
-  toggleReduceMotion,
-  toggleColorBlindMode,
-  complianceScore,
-  updateComplianceScore
-]);
+const value: AccessibilityContextType = useMemo(
+  () => ({
+    visualPreferences,
+    colorBlindMode,
+    keyboardShortcuts,
+    colorContrast,
+    screenReaderEnabled,
+    setScreenReaderEnabled,
+    accessibilityEnabled,
+    setAccessibilityEnabled,
+    toggleHighContrast,
+    toggleReduceMotion,
+    toggleColorBlindMode,
+    complianceScore,
+    updateComplianceScore,
+  }),
+  [
+    visualPreferences,
+    colorBlindMode,
+    keyboardShortcuts,
+    colorContrast,
+    screenReaderEnabled,
+    accessibilityEnabled,
+    toggleHighContrast,
+    toggleReduceMotion,
+    toggleColorBlindMode,
+    complianceScore,
+    updateComplianceScore,
+  ],
+);
 ```
 
 ### 2. `src/contexts/NotificationContext.tsx`
@@ -131,28 +156,35 @@ const value: AccessibilityContextType = useMemo(() => ({
 **Changes Made:**
 
 #### Added Imports
+
 ```typescript
 import { useCallback, useMemo } from "react";
 ```
 
 #### Moved Functions Inside Component with useCallback
+
 **Before:** Functions outside component scope
+
 ```typescript
 const markAsRead = async (id: string) => {
-  if (!user) return;  // user undefined!
+  if (!user) return; // user undefined!
 };
 ```
 
 **After:** Functions inside component with proper capture
+
 ```typescript
-const markAsRead = useCallback(async (id: string) => {
-  if (!user) return;  // user properly captured from closure
-  await supabase
-    .from("notifications")
-    .update({ read: true })
-    .eq("id", id)
-    .eq("user_id", user.id);
-}, [user]);
+const markAsRead = useCallback(
+  async (id: string) => {
+    if (!user) return; // user properly captured from closure
+    await supabase
+      .from("notifications")
+      .update({ read: true })
+      .eq("id", id)
+      .eq("user_id", user.id);
+  },
+  [user],
+);
 
 const markAllAsRead = useCallback(async () => {
   if (!user) return;
@@ -166,10 +198,11 @@ const markAllAsRead = useCallback(async () => {
 ```
 
 #### Memoized Context Value
+
 ```typescript
 const value = useMemo(
   () => ({ unreadCount, markAsRead, markAllAsRead }),
-  [unreadCount, markAsRead, markAllAsRead]
+  [unreadCount, markAsRead, markAllAsRead],
 );
 ```
 
@@ -180,7 +213,9 @@ const value = useMemo(
 ### Why These Fixes Work
 
 #### 1. Primitive Value Dependencies
+
 JavaScript compares primitives by value (not reference):
+
 ```typescript
 // These are equal even if recreated
 const value1 = true;
@@ -196,29 +231,25 @@ console.log(obj1 === obj2); // false
 So depending on `preferences.highContrast` (boolean) instead of `preferences` (object) prevents unnecessary effect triggers.
 
 #### 2. useCallback Stability
+
 ```typescript
 // Without useCallback: New function every render
 const handler = () => setState(value);
 
 // With useCallback: Same function if dependencies unchanged
-const handler = useCallback(
-  () => setState(value),
-  [value]
-);
+const handler = useCallback(() => setState(value), [value]);
 ```
 
 This prevents context consumers from re-rendering unnecessarily.
 
 #### 3. useMemo for Context Values
+
 ```typescript
 // Without useMemo: Context value object recreated every render
-const value = { state, method };  // New object reference every time
+const value = { state, method }; // New object reference every time
 
 // With useMemo: Context value stable if dependencies unchanged
-const value = useMemo(
-  () => ({ state, method }),
-  [state, method]
-);
+const value = useMemo(() => ({ state, method }), [state, method]);
 ```
 
 This ensures consumers only re-render when actual state changes, not when the provider re-renders.
@@ -228,11 +259,13 @@ This ensures consumers only re-render when actual state changes, not when the pr
 ## Verification & Testing
 
 ### Compilation
+
 ✅ **No TypeScript errors**
 ✅ **No linting errors**
 ✅ **All imports correct**
 
 ### Runtime Testing
+
 1. **App loads without white screen** ✅
 2. **No "Maximum update depth exceeded" errors** ✅
 3. **Accessibility toggles work** (Ctrl+H, Ctrl+M, Ctrl+S) ✅
@@ -240,6 +273,7 @@ This ensures consumers only re-render when actual state changes, not when the pr
 5. **Console clean on load** ✅
 
 ### Performance
+
 - **No memory leaks** - Proper cleanup in effects
 - **No unnecessary re-renders** - Memoization working correctly
 - **Stable context values** - Consumers only re-render on state changes
@@ -249,21 +283,25 @@ This ensures consumers only re-render when actual state changes, not when the pr
 ## Best Practices Applied
 
 ### 1. Dependency Array Precision
+
 ✅ Use primitive values instead of objects  
 ✅ Use specific properties instead of entire objects  
 ✅ Never use derived/computed values
 
 ### 2. Callback Memoization
+
 ✅ Wrap all context methods with `useCallback`  
 ✅ Include all dependencies in dependency array  
 ✅ Use stable references
 
 ### 3. Context Value Memoization
+
 ✅ Always memoize context value with `useMemo`  
 ✅ Update dependencies when state changes  
 ✅ Prevents unnecessary re-renders of consumers
 
 ### 4. Function Scope
+
 ✅ Define functions inside components that need them  
 ✅ Use closures to capture needed variables  
 ✅ Avoid defining functions outside components
@@ -273,6 +311,7 @@ This ensures consumers only re-render when actual state changes, not when the pr
 ## Prevention Guide for Future Development
 
 ### Context Provider Template
+
 ```typescript
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
@@ -314,6 +353,7 @@ export function useMyContext() {
 ```
 
 ### Code Review Checklist
+
 - [ ] Are all context values memoized with `useMemo`?
 - [ ] Are all callbacks memoized with `useCallback`?
 - [ ] Do effects depend on primitives, not objects?
@@ -330,6 +370,7 @@ A comprehensive guide has been created:
 📄 **File:** `project_resources/fixes_and_improvements/INFINITE_LOOP_FIX_GUIDE.md`
 
 This guide includes:
+
 - Detailed root cause analysis
 - Complete solution explanations
 - Prevention guidelines
@@ -342,11 +383,11 @@ This guide includes:
 
 ## Summary of Changes
 
-| File | Issue | Fix | Status |
-|------|-------|-----|--------|
-| AccessibilityContext.tsx | Object dependency changes | Depend on primitives, use useMemo | ✅ Fixed |
-| NotificationContext.tsx | Function scope issues | Move inside component, useCallback | ✅ Fixed |
-| App.tsx | Initial import duplication | Remove duplicate import | ✅ Fixed |
+| File                     | Issue                      | Fix                                | Status   |
+| ------------------------ | -------------------------- | ---------------------------------- | -------- |
+| AccessibilityContext.tsx | Object dependency changes  | Depend on primitives, use useMemo  | ✅ Fixed |
+| NotificationContext.tsx  | Function scope issues      | Move inside component, useCallback | ✅ Fixed |
+| App.tsx                  | Initial import duplication | Remove duplicate import            | ✅ Fixed |
 
 ---
 

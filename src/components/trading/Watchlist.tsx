@@ -19,12 +19,60 @@ interface WatchlistItem {
 const Watchlist = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([
-    { symbol: "EURUSD", name: "Euro / US Dollar", bid: 1.0845, ask: 1.0847, change: 0.0012, changePercent: 0.11, isFavorite: true },
-    { symbol: "GBPUSD", name: "British Pound / US Dollar", bid: 1.2634, ask: 1.2636, change: -0.0021, changePercent: -0.17, isFavorite: true },
-    { symbol: "USDJPY", name: "US Dollar / Japanese Yen", bid: 149.82, ask: 149.85, change: 0.32, changePercent: 0.21, isFavorite: true },
-    { symbol: "AUDUSD", name: "Australian Dollar / US Dollar", bid: 0.6423, ask: 0.6425, change: 0.0008, changePercent: 0.12, isFavorite: true },
-    { symbol: "BTCUSD", name: "Bitcoin / US Dollar", bid: 43250.00, ask: 43280.00, change: 850.00, changePercent: 2.01, isFavorite: false },
-    { symbol: "XAUUSD", name: "Gold / US Dollar", bid: 2045.80, ask: 2046.20, change: -5.40, changePercent: -0.26, isFavorite: false },
+    {
+      symbol: "EURUSD",
+      name: "Euro / US Dollar",
+      bid: 1.0845,
+      ask: 1.0847,
+      change: 0.0012,
+      changePercent: 0.11,
+      isFavorite: true,
+    },
+    {
+      symbol: "GBPUSD",
+      name: "British Pound / US Dollar",
+      bid: 1.2634,
+      ask: 1.2636,
+      change: -0.0021,
+      changePercent: -0.17,
+      isFavorite: true,
+    },
+    {
+      symbol: "USDJPY",
+      name: "US Dollar / Japanese Yen",
+      bid: 149.82,
+      ask: 149.85,
+      change: 0.32,
+      changePercent: 0.21,
+      isFavorite: true,
+    },
+    {
+      symbol: "AUDUSD",
+      name: "Australian Dollar / US Dollar",
+      bid: 0.6423,
+      ask: 0.6425,
+      change: 0.0008,
+      changePercent: 0.12,
+      isFavorite: true,
+    },
+    {
+      symbol: "BTCUSD",
+      name: "Bitcoin / US Dollar",
+      bid: 43250.0,
+      ask: 43280.0,
+      change: 850.0,
+      changePercent: 2.01,
+      isFavorite: false,
+    },
+    {
+      symbol: "XAUUSD",
+      name: "Gold / US Dollar",
+      bid: 2045.8,
+      ask: 2046.2,
+      change: -5.4,
+      changePercent: -0.26,
+      isFavorite: false,
+    },
   ]);
 
   const [availableSymbols] = useState([
@@ -40,7 +88,11 @@ const Watchlist = () => {
     const interval = setInterval(() => {
       setWatchlist((prev) =>
         prev.map((item) => {
-          const volatility = item.symbol.includes("BTC") ? 100 : item.symbol.includes("XAU") ? 2 : 0.0002;
+          const volatility = item.symbol.includes("BTC")
+            ? 100
+            : item.symbol.includes("XAU")
+              ? 2
+              : 0.0002;
           const change = (Math.random() - 0.5) * volatility;
           const newBid = item.bid + change;
           const newAsk = item.ask + change;
@@ -54,7 +106,7 @@ const Watchlist = () => {
             change: newChange,
             changePercent: newChangePercent,
           };
-        })
+        }),
       );
     }, 2000);
 
@@ -64,8 +116,10 @@ const Watchlist = () => {
   const toggleFavorite = (symbol: string) => {
     setWatchlist((prev) =>
       prev.map((item) =>
-        item.symbol === symbol ? { ...item, isFavorite: !item.isFavorite } : item
-      )
+        item.symbol === symbol
+          ? { ...item, isFavorite: !item.isFavorite }
+          : item,
+      ),
     );
   };
 
@@ -94,19 +148,21 @@ const Watchlist = () => {
   const filteredWatchlist = watchlist.filter(
     (item) =>
       item.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const formatPrice = (price: number, symbol: string) => {
     if (symbol.includes("JPY")) return price.toFixed(2);
-    if (symbol.includes("BTC") || symbol.includes("XAU")) return price.toFixed(2);
+    if (symbol.includes("BTC") || symbol.includes("XAU"))
+      return price.toFixed(2);
     return price.toFixed(4);
   };
 
   const getSpread = (bid: number, ask: number, symbol: string) => {
     const spread = ask - bid;
     if (symbol.includes("JPY")) return spread.toFixed(2);
-    if (symbol.includes("BTC") || symbol.includes("XAU")) return spread.toFixed(2);
+    if (symbol.includes("BTC") || symbol.includes("XAU"))
+      return spread.toFixed(2);
     return spread.toFixed(4);
   };
 
@@ -151,7 +207,7 @@ const Watchlist = () => {
                         "h-4 w-4 transition-colors",
                         item.isFavorite
                           ? "fill-primary text-primary"
-                          : "text-muted-foreground hover:text-foreground"
+                          : "text-muted-foreground hover:text-foreground",
                       )}
                     />
                   </button>
@@ -159,11 +215,13 @@ const Watchlist = () => {
                   {/* Symbol & Name */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-sm">{item.symbol}</span>
+                      <span className="font-semibold text-sm">
+                        {item.symbol}
+                      </span>
                       <TrendIcon
                         className={cn(
                           "h-3 w-3",
-                          isPositive ? "text-profit" : "text-loss"
+                          isPositive ? "text-profit" : "text-loss",
                         )}
                       />
                     </div>
@@ -199,7 +257,7 @@ const Watchlist = () => {
                     <div
                       className={cn(
                         "text-sm font-semibold font-mono",
-                        isPositive ? "text-profit" : "text-loss"
+                        isPositive ? "text-profit" : "text-loss",
                       )}
                     >
                       {isPositive ? "+" : ""}
@@ -208,7 +266,7 @@ const Watchlist = () => {
                     <div
                       className={cn(
                         "text-xs font-medium",
-                        isPositive ? "text-profit" : "text-loss"
+                        isPositive ? "text-profit" : "text-loss",
                       )}
                     >
                       {isPositive ? "+" : ""}
@@ -222,7 +280,10 @@ const Watchlist = () => {
                     className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 rounded p-4"
                     aria-label={`Remove ${item.symbol} from watchlist`}
                   >
-                    <X className="h-4 w-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
+                    <X
+                      className="h-4 w-4 text-muted-foreground hover:text-destructive"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
               );

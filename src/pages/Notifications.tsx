@@ -10,7 +10,8 @@ export default function Notifications() {
           <div>
             <h1 className="typography-h1">Notifications</h1>
             <p className="text-muted-foreground mt-2">
-              Manage your notification preferences and view your notification history
+              Manage your notification preferences and view your notification
+              history
             </p>
           </div>
 

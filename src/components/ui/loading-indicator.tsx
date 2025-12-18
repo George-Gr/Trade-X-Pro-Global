@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 
 /**
  * FE-010: Loading States System
@@ -13,9 +13,9 @@ interface LoadingIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Optional label text */
   label?: string;
   /** Size variant: sm (16px), md (24px), lg (32px) */
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   /** Loading indicator style */
-  variant?: 'spinner' | 'pulse' | 'dots';
+  variant?: "spinner" | "pulse" | "dots";
 }
 
 /**
@@ -24,34 +24,46 @@ interface LoadingIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
 export function LoadingIndicator({
   isLoading = true,
   label,
-  size = 'md',
-  variant = 'spinner',
+  size = "md",
+  variant = "spinner",
   className,
   ...props
 }: LoadingIndicatorProps) {
   if (!isLoading) return null;
 
   const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8',
+    sm: "h-4 w-4",
+    md: "h-6 w-6",
+    lg: "h-8 w-8",
   };
 
   return (
-    <div className={cn('flex items-center justify-center gap-2', className)} {...props}>
-      {variant === 'spinner' && (
-        <Loader2 className={cn('animate-spin text-primary', sizeClasses[size])} />
+    <div
+      className={cn("flex items-center justify-center gap-2", className)}
+      {...props}
+    >
+      {variant === "spinner" && (
+        <Loader2
+          className={cn("animate-spin text-primary", sizeClasses[size])}
+        />
       )}
-      {variant === 'pulse' && (
-        <div className={cn('rounded-full bg-primary animate-pulse', sizeClasses[size])} />
+      {variant === "pulse" && (
+        <div
+          className={cn(
+            "rounded-full bg-primary animate-pulse",
+            sizeClasses[size],
+          )}
+        />
       )}
-      {variant === 'dots' && (
+      {variant === "dots" && (
         <div className="flex gap-1">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className={cn('rounded-full bg-primary', sizeClasses[size])}
-              style={{ animation: `pulse 1.4s ease-in-out ${i * 0.16}s infinite` }}
+              className={cn("rounded-full bg-primary", sizeClasses[size])}
+              style={{
+                animation: `pulse 1.4s ease-in-out ${i * 0.16}s infinite`,
+              }}
             />
           ))}
         </div>
@@ -63,7 +75,7 @@ export function LoadingIndicator({
 
 interface LoadingStateProps extends React.HTMLAttributes<HTMLDivElement> {
   /** State: loading, success, or error */
-  state: 'loading' | 'success' | 'error';
+  state: "loading" | "success" | "error";
   /** Message to display */
   message?: string;
   /** Show icon */
@@ -83,18 +95,18 @@ export function LoadingState({
   const stateConfig = {
     loading: {
       icon: Loader2,
-      color: 'text-primary',
-      iconClass: 'animate-spin',
+      color: "text-primary",
+      iconClass: "animate-spin",
     },
     success: {
       icon: CheckCircle2,
-      color: 'text-success',
-      iconClass: '',
+      color: "text-success",
+      iconClass: "",
     },
     error: {
       icon: AlertCircle,
-      color: 'text-destructive',
-      iconClass: '',
+      color: "text-destructive",
+      iconClass: "",
     },
   };
 
@@ -103,14 +115,12 @@ export function LoadingState({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-2 py-8',
-        className
+        "flex flex-col items-center justify-center gap-2 py-8",
+        className,
       )}
       {...props}
     >
-      {showIcon && (
-        <Icon className={cn('h-8 w-8', color, iconClass)} />
-      )}
+      {showIcon && <Icon className={cn("h-8 w-8", color, iconClass)} />}
       {message && (
         <p className="text-sm text-muted-foreground text-center">{message}</p>
       )}
@@ -137,9 +147,11 @@ export function LoadingBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium',
-        isLoading ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
-        className
+        "inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium",
+        isLoading
+          ? "bg-primary/10 text-primary"
+          : "bg-muted text-muted-foreground",
+        className,
       )}
       {...props}
     >
@@ -155,7 +167,7 @@ interface LoadingOverlayProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Optional message */
   message?: string;
   /** Opacity level: light, medium, heavy */
-  opacity?: 'light' | 'medium' | 'heavy';
+  opacity?: "light" | "medium" | "heavy";
 }
 
 /**
@@ -164,27 +176,27 @@ interface LoadingOverlayProps extends React.HTMLAttributes<HTMLDivElement> {
 export function LoadingOverlay({
   isLoading,
   message,
-  opacity = 'medium',
+  opacity = "medium",
   className,
   children,
   ...props
 }: LoadingOverlayProps) {
   const opacityClasses = {
-    light: 'bg-background/30',
-    medium: 'bg-background/50',
-    heavy: 'bg-background/70',
+    light: "bg-background/30",
+    medium: "bg-background/50",
+    heavy: "bg-background/70",
   };
 
   return (
-    <div className={cn('relative', className)} {...props}>
+    <div className={cn("relative", className)} {...props}>
       {children}
       {isLoading && (
         <div
           className={cn(
-            'absolute inset-0 flex items-center justify-center rounded-lg',
-            'transition-opacity duration-200',
+            "absolute inset-0 flex items-center justify-center rounded-lg",
+            "transition-opacity duration-200",
             opacityClasses[opacity],
-            'backdrop-blur-sm z-50'
+            "backdrop-blur-sm z-50",
           )}
         >
           <div className="flex flex-col items-center gap-3">
@@ -235,7 +247,7 @@ export function LoadingProgress({
   const safeProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <div className={cn('w-full', className)} {...props}>
+    <div className={cn("w-full", className)} {...props}>
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
         <div
           className="h-full w-full bg-primary transition-all duration-300 ease-out"

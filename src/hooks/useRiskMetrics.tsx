@@ -80,14 +80,17 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       // Fetch margin call events for margin trend (last 7 days) for sparkline
       let marginHistoryData: unknown[] = [];
-      
+
       try {
         const { data: callEventsData, error: callEventsError } = await supabase
-          .from('margin_call_events')
-          .select('margin_level, triggered_at')
-          .eq('user_id', user.id)
-          .gt('triggered_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-          .order('triggered_at', { ascending: true });
+          .from("margin_call_events")
+          .select("margin_level, triggered_at")
+          .eq("user_id", user.id)
+          .gt(
+            "triggered_at",
+            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          )
+          .order("triggered_at", { ascending: true });
 
         if (callEventsError) {
           console.warn("Failed to fetch margin call events:", callEventsError);
@@ -108,7 +111,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       const metrics = calculateRiskMetrics(
         profileData.equity || 0,
         profileData.margin_used || 0,
-        positions
+        positions,
       );
 
       setRiskMetrics(metrics);
@@ -118,10 +121,12 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
         const trend = marginHistoryData
           .map((d: unknown) => {
             const dObj = d as Record<string, unknown>;
-            return typeof dObj.margin_level === 'number' ? dObj.margin_level : 0;
+            return typeof dObj.margin_level === "number"
+              ? dObj.margin_level
+              : 0;
           })
           .filter((level: number) => level > 0); // Filter out invalid levels
-        
+
         if (trend.length > 0) {
           setMarginTrend(trend);
         } else {
@@ -141,19 +146,27 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
           ? positionsData.map((p: unknown) => {
               const pObj = p as Record<string, unknown>;
               return {
-                symbol: typeof pObj.symbol === 'string' ? pObj.symbol : String(pObj.symbol ?? ''),
-                quantity: typeof pObj.quantity === 'number' ? pObj.quantity : Number(pObj.quantity ?? 0),
-                positionValue: (Number(pObj.quantity ?? 0)) * (Number(pObj.current_price ?? 0)),
+                symbol:
+                  typeof pObj.symbol === "string"
+                    ? pObj.symbol
+                    : String(pObj.symbol ?? ""),
+                quantity:
+                  typeof pObj.quantity === "number"
+                    ? pObj.quantity
+                    : Number(pObj.quantity ?? 0),
+                positionValue:
+                  Number(pObj.quantity ?? 0) * Number(pObj.current_price ?? 0),
               };
             })
           : [],
-        concentration
+        concentration,
       );
       setPortfolioRiskAssessment(assessment);
 
       setError(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to fetch risk metrics";
+      const message =
+        err instanceof Error ? err.message : "Failed to fetch risk metrics";
       setError(message);
       console.error("Risk metrics error:", message);
     } finally {
@@ -188,7 +201,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
             },
             () => {
               fetchRiskData();
-            }
+            },
           )
           .subscribe();
 
@@ -205,7 +218,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
             },
             () => {
               fetchRiskData();
-            }
+            },
           )
           .subscribe();
       } catch (error) {
@@ -253,14 +266,14 @@ function calculateConcentration(positions: Position[]): number {
 
   const totalValue = positions.reduce(
     (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
-    0
+    0,
   );
 
   if (totalValue === 0) return 0;
 
   // Find largest position concentration
   const largestValue = Math.max(
-    ...positions.map(p => (p.quantity || 0) * (p.current_price || 0))
+    ...positions.map((p) => (p.quantity || 0) * (p.current_price || 0)),
   );
 
   return (largestValue / totalValue) * 100;

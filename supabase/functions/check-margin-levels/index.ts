@@ -6,16 +6,16 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
  *
  * Purpose: Monitor user margin levels and create alerts when status changes
  * Trigger: Scheduled execution every 60 seconds during market hours
- * 
+ *
  * Task: TASK 1.2.4 - Margin Level Monitoring & Alerts
- * 
+ *
  * Actions:
  * 1. Fetch all active users with positions
  * 2. Calculate current margin levels
  * 3. Detect margin status changes
  * 4. Create alerts and notifications
  * 5. Track statistics and errors
- * 
+ *
  * Returns:
  * {
  *   success: boolean,
@@ -90,7 +90,7 @@ function getMarginStatus(marginLevel: number | null): string {
  */
 function calculateMarginLevel(
   equity: number,
-  marginUsed: number
+  marginUsed: number,
 ): number | null {
   if (marginUsed === 0) return Infinity;
   if (marginUsed < 0) return null;
@@ -103,7 +103,7 @@ function calculateMarginLevel(
 function shouldCreateAlert(
   currentStatus: string,
   previousStatus: string | null,
-  minAlertWindowMinutes: number = 5
+  minAlertWindowMinutes: number = 5,
 ): boolean {
   // Always alert on status change
   return currentStatus !== previousStatus;
@@ -137,9 +137,7 @@ function estimateTimeToLiquidation(marginLevel: number): number | null {
   return Math.max(1, Math.round(marginLevel));
 }
 
-async function checkMarginLevels(
-  req: Request
-): Promise<CheckResponse> {
+async function checkMarginLevels(req: Request): Promise<CheckResponse> {
   const startTime = Date.now();
   const errors: CheckResponse["errors"] = [];
   const statusChanges = {
@@ -196,7 +194,7 @@ async function checkMarginLevels(
 
         const currentMarginLevel = calculateMarginLevel(
           user.equity,
-          user.margin_used
+          user.margin_used,
         );
 
         if (currentMarginLevel === null) {
@@ -217,10 +215,7 @@ async function checkMarginLevels(
         });
 
         // Create alert if status changed
-        if (
-          statusChanged &&
-          shouldCreateAlert(currentStatus, previousStatus)
-        ) {
+        if (statusChanged && shouldCreateAlert(currentStatus, previousStatus)) {
           const actionRequired = getActionRequired(currentStatus);
           const timeToLiquidation =
             estimateTimeToLiquidation(currentMarginLevel);
@@ -257,19 +252,19 @@ async function checkMarginLevels(
                 currentStatus === "SAFE"
                   ? "info"
                   : currentStatus === "WARNING"
-                  ? "warning"
-                  : currentStatus === "CRITICAL"
-                  ? "critical"
-                  : "emergency",
+                    ? "warning"
+                    : currentStatus === "CRITICAL"
+                      ? "critical"
+                      : "emergency",
               action_required: actionRequired,
               recommended_urgency:
                 currentStatus === "SAFE"
                   ? "info"
                   : currentStatus === "WARNING"
-                  ? "warning"
-                  : currentStatus === "CRITICAL"
-                  ? "critical"
-                  : "emergency",
+                    ? "warning"
+                    : currentStatus === "CRITICAL"
+                      ? "critical"
+                      : "emergency",
               status: "pending",
             })
             .select()
@@ -287,22 +282,24 @@ async function checkMarginLevels(
           alertsCreated++;
           if (previousStatus === "SAFE" && currentStatus === "WARNING") {
             statusChanges.to_warning++;
-          } else if (previousStatus === "WARNING" && currentStatus === "CRITICAL") {
+          } else if (
+            previousStatus === "WARNING" &&
+            currentStatus === "CRITICAL"
+          ) {
             statusChanges.to_critical++;
           } else if (currentStatus === "LIQUIDATION") {
             statusChanges.to_liquidation++;
           } else if (
-            (previousStatus === "CRITICAL" || previousStatus === "WARNING" || previousStatus === "LIQUIDATION") &&
+            (previousStatus === "CRITICAL" ||
+              previousStatus === "WARNING" ||
+              previousStatus === "LIQUIDATION") &&
             currentStatus === "SAFE"
           ) {
             statusChanges.recovered++;
           }
 
           // Create notification for critical alerts
-          if (
-            currentStatus === "CRITICAL" ||
-            currentStatus === "LIQUIDATION"
-          ) {
+          if (currentStatus === "CRITICAL" || currentStatus === "LIQUIDATION") {
             await supabase.from("notifications").insert({
               user_id: user.id,
               type: "margin_alert",
@@ -314,19 +311,23 @@ async function checkMarginLevels(
                 currentStatus === "LIQUIDATION"
                   ? `Your margin level is ${currentMarginLevel}%. Liquidation risk detected. Take immediate action.`
                   : `Your margin level is ${currentMarginLevel}%. Please reduce positions or add funds.`,
-              severity: currentStatus === "LIQUIDATION" ? "emergency" : "critical",
+              severity:
+                currentStatus === "LIQUIDATION" ? "emergency" : "critical",
               action_url: "/risk-management",
               read: false,
             });
-            
+
             // Send critical email notification
             try {
-              await supabase.functions.invoke('send-critical-email', {
+              await supabase.functions.invoke("send-critical-email", {
                 body: {
                   to: user.email,
-                  type: currentStatus === "LIQUIDATION" ? 'liquidation' : 'margin_critical',
+                  type:
+                    currentStatus === "LIQUIDATION"
+                      ? "liquidation"
+                      : "margin_critical",
                   data: {
-                    user_name: user.email.split('@')[0],
+                    user_name: user.email.split("@")[0],
                     margin_level: currentMarginLevel,
                     equity: user.equity,
                     margin_used: user.margin_used,
@@ -335,21 +336,23 @@ async function checkMarginLevels(
                   },
                 },
               });
-              console.log(`Critical email sent to ${user.email} for ${currentStatus}`);
+              console.log(
+                `Critical email sent to ${user.email} for ${currentStatus}`,
+              );
             } catch (emailError) {
-              console.error('Failed to send critical email:', emailError);
+              console.error("Failed to send critical email:", emailError);
             }
           }
-          
+
           // Send warning email for WARNING status on first trigger
           if (currentStatus === "WARNING" && previousStatus === "SAFE") {
             try {
-              await supabase.functions.invoke('send-critical-email', {
+              await supabase.functions.invoke("send-critical-email", {
                 body: {
                   to: user.email,
-                  type: 'margin_warning',
+                  type: "margin_warning",
                   data: {
-                    user_name: user.email.split('@')[0],
+                    user_name: user.email.split("@")[0],
                     margin_level: currentMarginLevel,
                     equity: user.equity,
                     margin_used: user.margin_used,
@@ -359,7 +362,7 @@ async function checkMarginLevels(
               });
               console.log(`Warning email sent to ${user.email}`);
             } catch (emailError) {
-              console.error('Failed to send warning email:', emailError);
+              console.error("Failed to send warning email:", emailError);
             }
           }
         }
@@ -401,20 +404,20 @@ async function checkMarginLevels(
 
 serve(async (req) => {
   // Validate CRON_SECRET to prevent unauthorized access
-  const CRON_SECRET = Deno.env.get('CRON_SECRET');
-  const providedSecret = req.headers.get('X-Cron-Secret');
+  const CRON_SECRET = Deno.env.get("CRON_SECRET");
+  const providedSecret = req.headers.get("X-Cron-Secret");
 
   if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
-    console.error('Unauthorized access attempt to check-margin-levels');
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized' }),
-      { status: 401, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error("Unauthorized access attempt to check-margin-levels");
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const result = await checkMarginLevels(req);
   return new Response(JSON.stringify(result), {
-    headers: { 'Content-Type': 'application/json' },
-    status: result.success ? 200 : 500
+    headers: { "Content-Type": "application/json" },
+    status: result.success ? 200 : 500,
   });
 });

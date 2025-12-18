@@ -1,10 +1,10 @@
 /**
  * Execute Liquidation - Edge Function
- * 
+ *
  * TASK 1.3.2: Liquidation Execution Logic
  * Scheduled or event-triggered function that executes position liquidations
  * when margin call escalation reaches the liquidation threshold
- * 
+ *
  * Responsibilities:
  * - Process liquidation events from margin call detection
  * - Select and execute position closures atomically
@@ -13,11 +13,11 @@
  * - Handle failures with recovery logic
  */
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 // Import types and functions from Deno lib
-import { 
+import {
   calculateLiquidationNeeded,
   selectPositionsForLiquidation,
   calculateLiquidationPrice,
@@ -27,7 +27,7 @@ import {
   calculateLiquidationMetrics,
   LiquidationReason,
   LiquidationStatus,
-} from '../lib/liquidationEngine.ts';
+} from "../lib/liquidationEngine.ts";
 
 /**
  * Type definitions for liquidation execution
@@ -38,14 +38,14 @@ interface MarginCallEvent {
   accountEquity: number;
   marginUsed: number;
   marginLevel: number;
-  severity: 'WARNING' | 'CRITICAL' | 'LIQUIDATION_TRIGGER';
+  severity: "WARNING" | "CRITICAL" | "LIQUIDATION_TRIGGER";
   triggeredAt: string;
 }
 
 interface UserPosition {
   id: string;
   symbol: string;
-  side: 'buy' | 'sell';
+  side: "buy" | "sell";
   quantity: number;
   entryPrice: number;
   currentPrice: number;
@@ -94,9 +94,9 @@ async function executeLiquidationForEvent(
   try {
     // 0. Fetch margin call duration to validate time-in-critical (30+ minutes)
     const { data: marginCall, error: callError } = await supabaseClient
-      .from('margin_call_events')
-      .select('triggered_at')
-      .eq('id', marginCallEvent.id)
+      .from("margin_call_events")
+      .select("triggered_at")
+      .eq("id", marginCallEvent.id)
       .single();
 
     if (callError || !marginCall) {
@@ -113,12 +113,17 @@ async function executeLiquidationForEvent(
         executionTimeMs: performance.now() - startTime,
         closedPositions: [],
         failedPositions: [],
-        message: `Failed to fetch margin call event: ${callError?.message || 'Unknown'}`,
+        message: `Failed to fetch margin call event: ${callError?.message || "Unknown"}`,
       };
     }
 
     const timeInCriticalMinutes = Math.floor(
-      (Date.now() - new Date(((marginCall as unknown) as Record<string, unknown>).triggered_at as string).getTime()) / (1000 * 60)
+      (Date.now() -
+        new Date(
+          (marginCall as unknown as Record<string, unknown>)
+            .triggered_at as string,
+        ).getTime()) /
+        (1000 * 60),
     );
 
     // 1. Validate preconditions (including time-in-critical check)
@@ -142,18 +147,19 @@ async function executeLiquidationForEvent(
         executionTimeMs: performance.now() - startTime,
         closedPositions: [],
         failedPositions: [],
-        message: `Precondition validation failed: ${preconditionCheck.issues.join(', ')}`,
+        message: `Precondition validation failed: ${preconditionCheck.issues.join(", ")}`,
       };
     }
 
     // 2. Fetch user's open positions
     const { data: positions, error: posError } = await supabaseClient
-      .from('positions')
-      .select('*')
-      .eq('user_id', marginCallEvent.userId)
-      .eq('status', 'open');
+      .from("positions")
+      .select("*")
+      .eq("user_id", marginCallEvent.userId)
+      .eq("status", "open");
 
-    if (posError) throw new Error(`Failed to fetch positions: ${posError.message}`);
+    if (posError)
+      throw new Error(`Failed to fetch positions: ${posError.message}`);
     if (!positions || positions.length === 0) {
       return {
         success: false,
@@ -168,7 +174,7 @@ async function executeLiquidationForEvent(
         executionTimeMs: performance.now() - startTime,
         closedPositions: [],
         failedPositions: [],
-        message: 'No open positions to liquidate',
+        message: "No open positions to liquidate",
       };
     }
 
@@ -216,7 +222,7 @@ async function executeLiquidationForEvent(
         executionTimeMs: performance.now() - startTime,
         closedPositions: [],
         failedPositions: [],
-        message: 'Could not select positions for liquidation',
+        message: "Could not select positions for liquidation",
       };
     }
 
@@ -227,21 +233,26 @@ async function executeLiquidationForEvent(
       try {
         // Get current market price and calculate execution price
         const { data: priceData, error: priceError } = await supabaseClient
-          .from('market_data')
-          .select('bid, ask')
-          .eq('symbol', position.symbol)
+          .from("market_data")
+          .select("bid, ask")
+          .eq("symbol", position.symbol)
           .single();
 
-        if (priceError) throw new Error(`Market data unavailable for ${position.symbol}`);
+        if (priceError)
+          throw new Error(`Market data unavailable for ${position.symbol}`);
 
-        const bid = ((priceData as unknown) as Record<string, unknown>).bid as number || position.currentPrice;
-        const ask = ((priceData as unknown) as Record<string, unknown>).ask as number || position.currentPrice;
-        
+        const bid =
+          ((priceData as unknown as Record<string, unknown>).bid as number) ||
+          position.currentPrice;
+        const ask =
+          ((priceData as unknown as Record<string, unknown>).ask as number) ||
+          position.currentPrice;
+
         // Calculate slippage based on spread
         const spread = ask - bid;
         const midPrice = (bid + ask) / 2;
         const slippagePercent = (spread / midPrice) * 100 * 1.5; // 1.5x multiplier
-        
+
         // Calculate execution price with slippage
         const executionPrice = calculateLiquidationPrice(
           position.currentPrice,
@@ -268,7 +279,9 @@ async function executeLiquidationForEvent(
           realized_pnl: pnl.amount,
         });
       } catch (error) {
-        console.warn(`Failed to prepare position ${position.id} for liquidation: ${error}`);
+        console.warn(
+          `Failed to prepare position ${position.id} for liquidation: ${error}`,
+        );
       }
     }
 
@@ -286,25 +299,27 @@ async function executeLiquidationForEvent(
         executionTimeMs: performance.now() - startTime,
         closedPositions: [],
         failedPositions: [],
-        message: 'No positions could be prepared for liquidation',
+        message: "No positions could be prepared for liquidation",
       };
     }
 
     // 6. Call atomic stored procedure to execute liquidation in single transaction
-    const { data: atomicResult, error: atomicError } = await (supabaseClient as any).rpc(
-      'execute_liquidation_atomic',
-      {
-        p_user_id: marginCallEvent.userId,
-        p_margin_call_event_id: marginCallEvent.id,
-        p_positions_to_liquidate: positionsToClose,
-      }
-    );
+    const { data: atomicResult, error: atomicError } = await (
+      supabaseClient as any
+    ).rpc("execute_liquidation_atomic", {
+      p_user_id: marginCallEvent.userId,
+      p_margin_call_event_id: marginCallEvent.id,
+      p_positions_to_liquidate: positionsToClose,
+    });
 
     if (atomicError) {
-      console.error('Atomic liquidation failed:', atomicError);
-      const errorMsg = typeof atomicError === 'object' && atomicError !== null && 'message' in atomicError 
-        ? (atomicError as { message: string }).message 
-        : 'Unknown error';
+      console.error("Atomic liquidation failed:", atomicError);
+      const errorMsg =
+        typeof atomicError === "object" &&
+        atomicError !== null &&
+        "message" in atomicError
+          ? (atomicError as { message: string }).message
+          : "Unknown error";
       return {
         success: false,
         liquidationEventId,
@@ -317,12 +332,18 @@ async function executeLiquidationForEvent(
         averageLiquidationPrice: 0,
         executionTimeMs: performance.now() - startTime,
         closedPositions: [],
-        failedPositions: selectedPositions.map(p => ({ positionId: p.id, error: errorMsg })),
+        failedPositions: selectedPositions.map((p) => ({
+          positionId: p.id,
+          error: errorMsg,
+        })),
         message: `Atomic liquidation execution failed: ${errorMsg}`,
       };
     }
 
-    if (!atomicResult || !(atomicResult as unknown as Record<string, unknown>).success) {
+    if (
+      !atomicResult ||
+      !(atomicResult as unknown as Record<string, unknown>).success
+    ) {
       const result = atomicResult as unknown as Record<string, unknown>;
       return {
         success: false,
@@ -330,14 +351,19 @@ async function executeLiquidationForEvent(
         totalPositionsClosed: (result?.total_positions_closed as number) || 0,
         totalPositionsFailed: (result?.total_positions_failed as number) || 0,
         initialMarginLevel: marginCallEvent.marginLevel,
-        finalMarginLevel: (result?.final_margin_level as number) || marginCallEvent.marginLevel,
+        finalMarginLevel:
+          (result?.final_margin_level as number) || marginCallEvent.marginLevel,
         totalLossRealized: (result?.total_loss as number) || 0,
         totalSlippageApplied: (result?.total_slippage as number) || 0,
-        averageLiquidationPrice: positionsToClose.length > 0
-          ? positionsToClose.reduce((sum, p) => sum + (p.liquidation_price as number), 0) / positionsToClose.length
-          : 0,
+        averageLiquidationPrice:
+          positionsToClose.length > 0
+            ? positionsToClose.reduce(
+                (sum, p) => sum + (p.liquidation_price as number),
+                0,
+              ) / positionsToClose.length
+            : 0,
         executionTimeMs: performance.now() - startTime,
-        closedPositions: positionsToClose.map(p => ({
+        closedPositions: positionsToClose.map((p) => ({
           positionId: p.position_id as string,
           symbol: p.symbol as string,
           closedAt: Date.now(),
@@ -346,12 +372,15 @@ async function executeLiquidationForEvent(
           slippage: p.slippage as number,
         })),
         failedPositions: [],
-        message: `Liquidation partially failed: ${(result?.message as string) || 'Unknown error'}`,
+        message: `Liquidation partially failed: ${(result?.message as string) || "Unknown error"}`,
       };
     }
 
     // 7. Send notifications
-    const atomicResultTyped = atomicResult as unknown as Record<string, unknown>;
+    const atomicResultTyped = atomicResult as unknown as Record<
+      string,
+      unknown
+    >;
     const notification = generateLiquidationNotification(
       {
         id: atomicResultTyped.liquidation_event_id as string,
@@ -364,7 +393,9 @@ async function executeLiquidationForEvent(
         initialMarginLevel: marginCallEvent.marginLevel,
         finalMarginLevel: atomicResultTyped.final_margin_level as number,
         initialEquity: marginCallEvent.accountEquity,
-        finalEquity: marginCallEvent.accountEquity + (atomicResultTyped.total_loss as number),
+        finalEquity:
+          marginCallEvent.accountEquity +
+          (atomicResultTyped.total_loss as number),
         positionsLiquidated: atomicResultTyped.total_positions_closed as number,
         total_realized_pnl: atomicResultTyped.total_loss as number,
         totalSlippageApplied: atomicResultTyped.total_slippage as number,
@@ -385,11 +416,15 @@ async function executeLiquidationForEvent(
         finalMarginLevel: atomicResultTyped.final_margin_level,
         totalLossRealized: atomicResultTyped.total_loss,
         totalSlippageApplied: atomicResultTyped.total_slippage,
-        averageLiquidationPrice: positionsToClose.length > 0
-          ? positionsToClose.reduce((sum, p) => sum + (p.liquidation_price as number), 0) / positionsToClose.length
-          : 0,
+        averageLiquidationPrice:
+          positionsToClose.length > 0
+            ? positionsToClose.reduce(
+                (sum, p) => sum + (p.liquidation_price as number),
+                0,
+              ) / positionsToClose.length
+            : 0,
         executionTimeMs: performance.now() - startTime,
-        closedPositions: positionsToClose.map(p => ({
+        closedPositions: positionsToClose.map((p) => ({
           positionId: p.position_id,
           symbol: p.symbol,
           closedAt: Date.now(),
@@ -399,12 +434,12 @@ async function executeLiquidationForEvent(
         })),
         failedPositions: [],
         message: `Liquidation executed: ${atomicResultTyped.total_positions_closed} positions closed`,
-      }
+      },
     );
 
     // Send via Supabase Realtime
     const { error: notifError } = await (supabaseClient as any)
-      .from('notifications')
+      .from("notifications")
       .insert({
         user_id: marginCallEvent.userId,
         type: notification.type,
@@ -415,9 +450,9 @@ async function executeLiquidationForEvent(
         read: false,
         created_at: new Date().toISOString(),
       });
-    
+
     if (notifError) {
-      console.error('Failed to send notification:', notifError);
+      console.error("Failed to send notification:", notifError);
     }
 
     return {
@@ -429,11 +464,15 @@ async function executeLiquidationForEvent(
       finalMarginLevel: atomicResultTyped.final_margin_level as number,
       totalLossRealized: atomicResultTyped.total_loss as number,
       totalSlippageApplied: atomicResultTyped.total_slippage as number,
-      averageLiquidationPrice: positionsToClose.length > 0
-        ? positionsToClose.reduce((sum, p) => sum + (p.liquidation_price as number), 0) / positionsToClose.length
-        : 0,
+      averageLiquidationPrice:
+        positionsToClose.length > 0
+          ? positionsToClose.reduce(
+              (sum, p) => sum + (p.liquidation_price as number),
+              0,
+            ) / positionsToClose.length
+          : 0,
       executionTimeMs: performance.now() - startTime,
-      closedPositions: positionsToClose.map(p => ({
+      closedPositions: positionsToClose.map((p) => ({
         positionId: p.position_id,
         symbol: p.symbol,
         closedAt: Date.now(),
@@ -444,9 +483,8 @@ async function executeLiquidationForEvent(
       failedPositions: [],
       message: `Liquidation completed: ${atomicResultTyped.total_positions_closed} positions closed`,
     };
-
   } catch (error) {
-    console.error('Liquidation execution error:', error);
+    console.error("Liquidation execution error:", error);
     return {
       success: false,
       liquidationEventId,
@@ -460,7 +498,7 @@ async function executeLiquidationForEvent(
       executionTimeMs: performance.now() - startTime,
       closedPositions: [],
       failedPositions: [],
-      message: `Liquidation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `Liquidation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
     };
   }
 }
@@ -473,44 +511,44 @@ async function executeLiquidationForEvent(
  */
 serve(async (req: Request): Promise<Response> => {
   // ALWAYS validate CRON secret - no bypass allowed
-  const CRON_SECRET = Deno.env.get('CRON_SECRET');
-  const providedSecret = req.headers.get('X-Cron-Secret');
+  const CRON_SECRET = Deno.env.get("CRON_SECRET");
+  const providedSecret = req.headers.get("X-Cron-Secret");
 
   if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
-    console.error('Unauthorized access attempt to execute-liquidation');
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized' }),
-      { status: 401, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error("Unauthorized access attempt to execute-liquidation");
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const supabaseClient = createClient(
-    Deno.env.get('SUPABASE_URL') || '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '',
+    Deno.env.get("SUPABASE_URL") || "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "",
   );
 
   try {
     // 1. If POST request, process single event
-    if (req.method === 'POST') {
-      const marginCallEvent = await req.json() as MarginCallEvent;
+    if (req.method === "POST") {
+      const marginCallEvent = (await req.json()) as MarginCallEvent;
       // @ts-expect-error - Type casting for Supabase client
-      const result = await executeLiquidationForEvent(supabaseClient as unknown, marginCallEvent);
-      
-      return new Response(
-        JSON.stringify(result),
-        {
-          status: result.success ? 200 : 400,
-          headers: { 'Content-Type': 'application/json' },
-        },
+      const result = await executeLiquidationForEvent(
+        supabaseClient as unknown,
+        marginCallEvent,
       );
+
+      return new Response(JSON.stringify(result), {
+        status: result.success ? 200 : 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // 2. If GET/CRON, process all pending liquidations
     const { data: pendingEvents, error: fetchError } = await supabaseClient
-      .from('margin_call_events')
-      .select('*')
-      .eq('status', 'liquidation_triggered')
-      .order('triggered_at', { ascending: true });
+      .from("margin_call_events")
+      .select("*")
+      .eq("status", "liquidation_triggered")
+      .order("triggered_at", { ascending: true });
 
     if (fetchError) {
       throw new Error(`Failed to fetch pending events: ${fetchError.message}`);
@@ -520,12 +558,12 @@ serve(async (req: Request): Promise<Response> => {
       return new Response(
         JSON.stringify({
           success: true,
-          message: 'No pending liquidations',
+          message: "No pending liquidations",
           processedCount: 0,
         }),
         {
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         },
       );
     }
@@ -533,11 +571,19 @@ serve(async (req: Request): Promise<Response> => {
     // Process all pending events
     const results = await Promise.all(
       // @ts-expect-error - Type casting for Supabase client
-      pendingEvents.map((event: unknown) => executeLiquidationForEvent(supabaseClient as unknown, event as MarginCallEvent))
+      pendingEvents.map((event: unknown) =>
+        executeLiquidationForEvent(
+          supabaseClient as unknown,
+          event as MarginCallEvent,
+        ),
+      ),
     );
 
-    const successCount = results.filter(r => r.success).length;
-    const totalClosed = results.reduce((sum, r) => sum + r.totalPositionsClosed, 0);
+    const successCount = results.filter((r) => r.success).length;
+    const totalClosed = results.reduce(
+      (sum, r) => sum + r.totalPositionsClosed,
+      0,
+    );
 
     return new Response(
       JSON.stringify({
@@ -549,19 +595,18 @@ serve(async (req: Request): Promise<Response> => {
       }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       },
     );
-
   } catch (error) {
-    console.error('Execute-liquidation error:', error);
+    console.error("Execute-liquidation error:", error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       },
     );
   }

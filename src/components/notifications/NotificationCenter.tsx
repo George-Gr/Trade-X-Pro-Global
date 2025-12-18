@@ -63,7 +63,7 @@ export function NotificationCenter() {
         },
         () => {
           fetchNotifications();
-        }
+        },
       )
       .subscribe();
 
@@ -150,7 +150,9 @@ export function NotificationCenter() {
                 }`}
               >
                 <div className="flex items-start gap-4 w-full">
-                  <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
+                  <span className="text-2xl">
+                    {getNotificationIcon(notification.type)}
+                  </span>
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between gap-4">
                       <p className="font-medium text-sm leading-tight">

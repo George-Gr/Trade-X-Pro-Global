@@ -22,7 +22,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <SafeComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(screen.getByText("Safe Component")).toBeInTheDocument();
 
@@ -38,7 +38,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
     expect(screen.getByText("Something went wrong")).toBeInTheDocument();
 
@@ -54,12 +54,12 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     // Check that the error UI is displayed with error message
     expect(screen.getByText("Something went wrong")).toBeInTheDocument();
-    
+
     // Verify error tracking ID is shown
     expect(screen.getByText(/Error ID:/)).toBeInTheDocument();
 
@@ -76,7 +76,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary onError={onErrorMock}>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(onErrorMock).toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe("ErrorBoundary", () => {
       expect.any(Error),
       expect.objectContaining({
         componentStack: expect.any(String),
-      })
+      }),
     );
 
     console.error = originalError;
@@ -100,7 +100,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary fallback={customFallback}>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText("Custom Error UI")).toBeInTheDocument();
@@ -118,7 +118,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     const tryAgainButton = screen.getByRole("button", { name: /Try Again/i });
@@ -129,7 +129,9 @@ describe("ErrorBoundary", () => {
     await user.click(tryAgainButton);
 
     // The button should still exist in the DOM (error UI is still shown)
-    expect(screen.getByRole("button", { name: /Try Again/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Try Again/i }),
+    ).toBeInTheDocument();
 
     console.error = originalError;
   });
@@ -145,7 +147,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     const goHomeButton = screen.getByRole("button", { name: /Go Home/i });
@@ -165,11 +167,11 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <ThrowingComponent />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(
-      screen.getByText(/If this error persists, please contact support/)
+      screen.getByText(/If this error persists, please contact support/),
     ).toBeInTheDocument();
 
     console.error = originalError;

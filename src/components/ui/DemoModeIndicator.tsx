@@ -1,14 +1,13 @@
 /**
  * Demo Mode Indicator Component (TASK-036)
- * 
+ *
  * Persistent banner indicating demo mode to prevent user confusion.
  * Shows clear distinction between virtual and real funds.
  */
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { AlertTriangle, X, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { cn } from "../../lib/utils";
+import { AlertTriangle, X, Info } from "lucide-react";
+import { Button } from "./button";
 
 interface DemoModeIndicatorProps {
   /** Whether demo mode is active */
@@ -20,19 +19,19 @@ interface DemoModeIndicatorProps {
   /** Custom class name */
   className?: string;
   /** Variant style */
-  variant?: 'banner' | 'badge' | 'minimal';
+  variant?: "banner" | "badge" | "minimal";
 }
 
-const DISMISS_STORAGE_KEY = 'demo-mode-indicator-dismissed';
+const DISMISS_STORAGE_KEY = "demo-mode-indicator-dismissed";
 const DISMISS_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 
-export const DemoModeIndicator: React.FC<DemoModeIndicatorProps> = ({
+export const DemoModeIndicator = ({
   isDemoMode = true,
   virtualBalance,
   dismissible = true,
   className,
-  variant = 'banner'
-}) => {
+  variant = "banner",
+}: DemoModeIndicatorProps) => {
   const [isDismissed, setIsDismissed] = useState(false);
 
   // Check if was previously dismissed (with expiration)
@@ -63,22 +62,22 @@ export const DemoModeIndicator: React.FC<DemoModeIndicatorProps> = ({
 
   // Format virtual balance
   const formattedBalance = virtualBalance
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0
+        maximumFractionDigits: 0,
       }).format(virtualBalance)
     : null;
 
-  if (variant === 'badge') {
+  if (variant === "badge") {
     return (
       <div
         className={cn(
-          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full',
-          'bg-warning/20 text-warning border border-warning/30',
-          'text-xs font-medium',
-          className
+          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full",
+          "bg-warning/20 text-warning border border-warning/30",
+          "text-xs font-medium",
+          className,
         )}
         role="status"
         aria-label="Demo mode active"
@@ -92,14 +91,14 @@ export const DemoModeIndicator: React.FC<DemoModeIndicatorProps> = ({
     );
   }
 
-  if (variant === 'minimal') {
+  if (variant === "minimal") {
     return (
       <div
         className={cn(
-          'flex items-center gap-2 px-3 py-1.5',
-          'bg-warning/10 border-l-4 border-warning',
-          'text-sm text-warning',
-          className
+          "flex items-center gap-2 px-3 py-1.5",
+          "bg-warning/10 border-l-4 border-warning",
+          "text-sm text-warning",
+          className,
         )}
         role="status"
         aria-label="Demo mode active"
@@ -117,17 +116,17 @@ export const DemoModeIndicator: React.FC<DemoModeIndicatorProps> = ({
   return (
     <div
       className={cn(
-        'relative flex items-center justify-center gap-3 px-4 py-2',
-        'bg-gradient-to-r from-warning/20 via-warning/15 to-warning/20',
-        'border-b border-warning/30',
-        'text-warning',
-        className
+        "relative flex items-center justify-center gap-3 px-4 py-2",
+        "bg-gradient-to-r from-warning/20 via-warning/15 to-warning/20",
+        "border-b border-warning/30",
+        "text-warning",
+        className,
       )}
       role="alert"
       aria-live="polite"
     >
       <AlertTriangle className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-      
+
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
         <span className="font-semibold">Demo Mode Active</span>
         <span className="hidden sm:inline text-warning/80">•</span>
@@ -160,19 +159,22 @@ export const DemoModeIndicator: React.FC<DemoModeIndicatorProps> = ({
 };
 
 /**
+ * Demo mode return object - static to avoid allocations
+ */
+const DEMO_MODE_RETURN = {
+  isDemoMode: true,
+  virtualBalance: 100000,
+};
+
+/**
  * Hook to check if currently in demo mode
  * In a real implementation, this would check user account type
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const useDemoMode = () => {
   // For now, always return true since this is a demo trading platform
   // In production, this would check the user's account type from the database
-  const isDemoMode = true;
-  const virtualBalance = 100000; // Default demo balance
-
-  return {
-    isDemoMode,
-    virtualBalance
-  };
+  return DEMO_MODE_RETURN;
 };
 
 export default DemoModeIndicator;

@@ -37,17 +37,17 @@ export const LoadingButton = ({
   className,
   ...props
 }: LoadingButtonProps) => {
-  
   const getButtonContent = () => {
     if (isLoading) {
       return (
         <>
-          {showSpinner && (loadingIcon || <Loader2 className="h-4 w-4 mr-2 animate-spin" />)}
+          {showSpinner &&
+            (loadingIcon || <Loader2 className="h-4 w-4 mr-2 animate-spin" />)}
           {loadingText}
         </>
       );
     }
-    
+
     if (isSuccess) {
       return (
         <>
@@ -56,7 +56,7 @@ export const LoadingButton = ({
         </>
       );
     }
-    
+
     if (isError) {
       return (
         <>
@@ -65,7 +65,7 @@ export const LoadingButton = ({
         </>
       );
     }
-    
+
     return children;
   };
 
@@ -80,10 +80,13 @@ export const LoadingButton = ({
       disabled={getButtonDisabled()}
       className={cn(
         className,
-        (isLoading || isSuccess || isError) && `transition-all duration-${animationDuration} ease-in-out`,
+        (isLoading || isSuccess || isError) &&
+          `transition-all duration-${animationDuration} ease-in-out`,
         isLoading && "opacity-90 hover:opacity-90",
-        isSuccess && "bg-success-contrast text-success-contrast-foreground hover:bg-success-contrast/90",
-        isError && "bg-danger-contrast text-danger-contrast-foreground hover:bg-danger-contrast/90"
+        isSuccess &&
+          "bg-success-contrast text-success-contrast-foreground hover:bg-success-contrast/90",
+        isError &&
+          "bg-danger-contrast text-danger-contrast-foreground hover:bg-danger-contrast/90",
       )}
     >
       {getButtonContent()}

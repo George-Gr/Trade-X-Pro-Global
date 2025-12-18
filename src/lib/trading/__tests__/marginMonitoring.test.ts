@@ -262,7 +262,7 @@ describe("Margin Monitoring: Alert Deduplication", () => {
     const shouldAlert = shouldCreateAlert(
       MarginStatus.WARNING,
       MarginStatus.SAFE,
-      null
+      null,
     );
     expect(shouldAlert).toBe(true);
   });
@@ -271,7 +271,7 @@ describe("Margin Monitoring: Alert Deduplication", () => {
     const shouldAlert = shouldCreateAlert(
       MarginStatus.CRITICAL,
       MarginStatus.WARNING,
-      null
+      null,
     );
     expect(shouldAlert).toBe(true);
   });
@@ -282,7 +282,7 @@ describe("Margin Monitoring: Alert Deduplication", () => {
       MarginStatus.WARNING,
       MarginStatus.WARNING,
       fiveMinutesAgo,
-      5
+      5,
     );
     expect(shouldAlert).toBe(false);
   });
@@ -293,18 +293,13 @@ describe("Margin Monitoring: Alert Deduplication", () => {
       MarginStatus.WARNING,
       MarginStatus.WARNING,
       sixMinutesAgo,
-      5
+      5,
     );
     expect(shouldAlert).toBe(true);
   });
 
   it("should always create alert if no previous status", () => {
-    const shouldAlert = shouldCreateAlert(
-      MarginStatus.SAFE,
-      null,
-      null,
-      5
-    );
+    const shouldAlert = shouldCreateAlert(MarginStatus.SAFE, null, null, 5);
     expect(shouldAlert).toBe(true);
   });
 });
@@ -318,7 +313,9 @@ describe("Margin Monitoring: Formatting & UI", () => {
     expect(formatMarginStatus(MarginStatus.SAFE)).toBe("Safe");
     expect(formatMarginStatus(MarginStatus.WARNING)).toBe("Warning");
     expect(formatMarginStatus(MarginStatus.CRITICAL)).toBe("Critical");
-    expect(formatMarginStatus(MarginStatus.LIQUIDATION)).toBe("Liquidation Risk");
+    expect(formatMarginStatus(MarginStatus.LIQUIDATION)).toBe(
+      "Liquidation Risk",
+    );
   });
 
   it("should format margin level as percentage", () => {
@@ -336,7 +333,7 @@ describe("Margin Monitoring: Formatting & UI", () => {
     expect(getMarginStatusClass(MarginStatus.WARNING)).toBe("margin-warning");
     expect(getMarginStatusClass(MarginStatus.CRITICAL)).toBe("margin-critical");
     expect(getMarginStatusClass(MarginStatus.LIQUIDATION)).toBe(
-      "margin-liquidation"
+      "margin-liquidation",
     );
   });
 

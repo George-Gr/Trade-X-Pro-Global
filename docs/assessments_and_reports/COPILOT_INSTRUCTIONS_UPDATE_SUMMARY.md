@@ -9,30 +9,36 @@
 ## What Changed
 
 ### Overview
+
 Updated `.github/copilot-instructions.md` with comprehensive, production-ready instructions for AI coding agents working on TradePro v10. This document replaces the previous version with a more concise, actionable guide that captures project-specific patterns, constraints, and workflows.
 
 ### Key Improvements
 
 #### 1. **Consolidated & Organized**
+
 - Merged valuable content from existing `copilot-instructions.md` and `project_resources/rules_and_guidelines/AGENT.md`
 - Reorganized for quick scanning and actionability
 - Removed redundancy while preserving critical patterns
 - **Target Length:** ~640 lines (concise yet comprehensive)
 
 #### 2. **Enhanced Quick Start Section**
+
 - Added "Before Any Task" checklist (4 critical items)
 - Listed essential setup steps upfront
 - Included required environment variables
 - Provided essential commands at top level
 
 #### 3. **Strengthened Critical Constraints**
+
 - Explicit DO/DON'T lists with emoji emphasis
 - Critical memory leak patterns highlighted
 - Common mistake prevention (import paths, RLS policies, cleanup)
 - Security-focused warnings
 
 #### 4. **Improved Pattern Examples**
+
 Five production-ready code patterns with real-world context:
+
 1. **Real-Time Data Hook** — Supabase subscriptions with cleanup
 2. **Form Validation** — React Hook Form + Zod integration
 3. **Supabase Query** — Error handling patterns
@@ -40,18 +46,21 @@ Five production-ready code patterns with real-world context:
 5. **Error Boundary** — Component error catching
 
 #### 5. **Comprehensive Trading Engine Reference**
+
 - Detailed module table (10 trading modules)
 - Clear responsibility mapping
 - Examples for each module
 - Direct reference to codebase locations
 
 #### 6. **Decision Framework**
+
 - When to create custom hooks
 - When to extract services
 - When to use Context vs React Query
 - Naming conventions aligned with codebase
 
 #### 7. **Debugging & Testing Workflow**
+
 - Local development setup (3-terminal workflow)
 - Common issues & solutions table
 - Test patterns (unit, component, integration)
@@ -128,24 +137,28 @@ Five production-ready code patterns with real-world context:
 ## Key Discoveries from Codebase Analysis
 
 ### Trading Engine Architecture
+
 - **14 specialized modules** in `src/lib/trading/`
 - **30+ custom hooks** in `src/hooks/`
 - **Feature-based organization** working well
 - **Comprehensive test suite** already in place
 
 ### State Management Approach
+
 - **Layered architecture** (useState → hooks → Context → React Query → Realtime)
 - **Supabase as source of truth** for server data
 - **RLS policies** providing automatic user isolation
 - **Real-time subscriptions** for live features
 
 ### Developer Workflows
+
 - **Vite dev server** with fast HMR
 - **Lazy-loaded pages** in App.tsx
 - **Bundle splitting** via manual chunks
 - **Type generation** from Supabase schema
 
 ### Codebase Maturity
+
 - **Version 10.0** (stable foundation)
 - **Phase 1 MVP** largely complete (~75%)
 - **Active development** with incremental improvements
@@ -156,6 +169,7 @@ Five production-ready code patterns with real-world context:
 ## What This Enables
 
 ✅ **AI agents can now:**
+
 - Understand project architecture in 5 minutes
 - Find patterns for any common task
 - Avoid common pitfalls (memory leaks, import paths, RLS)
@@ -165,6 +179,7 @@ Five production-ready code patterns with real-world context:
 - Contribute production-ready features
 
 ✅ **Better code consistency across:**
+
 - Component patterns
 - Hook implementations
 - Service structure
@@ -173,6 +188,7 @@ Five production-ready code patterns with real-world context:
 - Security practices
 
 ✅ **Faster onboarding for:**
+
 - New AI agents (Copilot, Claude, etc.)
 - Human developers
 - Code reviewers
@@ -198,6 +214,7 @@ Five production-ready code patterns with real-world context:
 ## Next Steps (Optional Enhancements)
 
 ### Possible Future Updates
+
 1. Add URL references to Lovable project dashboard
 2. Include CI/CD workflow details (GitHub Actions)
 3. Document Sentry error tracking setup
@@ -206,6 +223,7 @@ Five production-ready code patterns with real-world context:
 6. Document API endpoint patterns (if applicable)
 
 ### How to Update This File
+
 - Edit `.github/copilot-instructions.md` directly
 - Keep sections under 100 lines each
 - Include code examples from actual codebase
@@ -229,6 +247,7 @@ Five production-ready code patterns with real-world context:
 ## Feedback & Iteration
 
 If you notice:
+
 - ❌ Missing patterns
 - ❌ Outdated references
 - ❌ Unclear explanations
@@ -246,4 +265,3 @@ Please update the file with fresh analysis. The goal is to keep this as the **si
 - **Tables:** 4 decision/reference tables
 - **Commands:** 10 essential npm scripts
 - **Critical Constraints:** 15+ specific DO/DON'T items
-

@@ -112,38 +112,38 @@ export interface TradeStatistics {
 
 /**
  * Hook for fetching and managing trading history data.
- * 
+ *
  * @description
  * This hook provides comprehensive access to:
  * - Closed positions with P&L details
  * - Complete order history
  * - Account ledger entries
  * - Aggregated trading statistics
- * 
+ *
  * Data is automatically refreshed via real-time subscriptions when
  * positions or orders are updated.
- * 
+ *
  * @example
  * ```tsx
- * const { 
- *   closedPositions, 
- *   orders, 
- *   ledger, 
- *   statistics, 
- *   loading, 
- *   refresh 
+ * const {
+ *   closedPositions,
+ *   orders,
+ *   ledger,
+ *   statistics,
+ *   loading,
+ *   refresh
  * } = useTradingHistory();
- * 
+ *
  * // Display win rate
  * if (statistics) {
  *   console.log(`Win rate: ${statistics.winRate.toFixed(1)}%`);
  *   console.log(`Total P&L: $${statistics.totalPnL.toFixed(2)}`);
  * }
- * 
+ *
  * // Force refresh data
  * const handleRefresh = () => refresh();
  * ```
- * 
+ *
  * @returns {Object} Hook return object
  * @returns {TradeHistoryItem[]} closedPositions - Array of closed trades
  * @returns {OrderHistoryItem[]} orders - Array of all orders
@@ -155,7 +155,9 @@ export interface TradeStatistics {
  */
 export const useTradingHistory = () => {
   const { user } = useAuth();
-  const [closedPositions, setClosedPositions] = useState<TradeHistoryItem[]>([]);
+  const [closedPositions, setClosedPositions] = useState<TradeHistoryItem[]>(
+    [],
+  );
   const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
   const [ledger, setLedger] = useState<LedgerEntry[]>([]);
   const [statistics, setStatistics] = useState<TradeStatistics | null>(null);
@@ -204,14 +206,16 @@ export const useTradingHistory = () => {
       const trades: TradeHistoryItem[] = (positionsData || []).map((pos) => ({
         id: pos.id,
         symbol: pos.symbol,
-        side: (pos.side === 'buy' || pos.side === 'sell') ? pos.side : 'buy',
+        side: pos.side === "buy" || pos.side === "sell" ? pos.side : "buy",
         quantity: pos.quantity,
         entry_price: pos.entry_price,
         exit_price: (pos.current_price ?? pos.entry_price) as number,
         realized_pnl: pos.realized_pnl ?? 0,
         commission: 0,
         opened_at: pos.opened_at ?? new Date().toISOString(),
-        closed_at: (pos.closed_at ?? pos.opened_at ?? new Date().toISOString()) as string,
+        closed_at: (pos.closed_at ??
+          pos.opened_at ??
+          new Date().toISOString()) as string,
         margin_used: pos.margin_used,
       }));
 
@@ -219,22 +223,24 @@ export const useTradingHistory = () => {
       const stats = calculateStatistics(trades);
 
       setClosedPositions(trades);
-      const typedOrders = (ordersData || []).map(o => ({
+      const typedOrders = (ordersData || []).map((o) => ({
         ...o,
         price: o.fill_price ?? o.price,
         commission: o.commission ?? 0,
-        side: (o.side === 'buy' || o.side === 'sell') ? o.side : 'buy',
+        side: o.side === "buy" || o.side === "sell" ? o.side : "buy",
       })) as OrderHistoryItem[];
-      const typedLedger = (ledgerData || []).map(l => ({
+      const typedLedger = (ledgerData || []).map((l) => ({
         ...l,
-        description: l.description ?? '',
+        description: l.description ?? "",
       })) as LedgerEntry[];
       setOrders(typedOrders);
       setLedger(typedLedger);
       setStatistics(stats);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch trading history");
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch trading history",
+      );
     } finally {
       setLoading(false);
     }
@@ -301,7 +307,7 @@ export const useTradingHistory = () => {
         },
         () => {
           fetchTradingHistory();
-        }
+        },
       )
       .subscribe();
 
@@ -317,7 +323,7 @@ export const useTradingHistory = () => {
         },
         () => {
           fetchTradingHistory();
-        }
+        },
       )
       .subscribe();
 

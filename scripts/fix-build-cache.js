@@ -2,7 +2,7 @@
 
 /**
  * Fix Build Cache and Hash Issues Script
- * 
+ *
  * This script resolves chunk 404 errors by:
  * 1. Clearing all build caches
  * 2. Rebuilding with consistent chunk naming
@@ -10,21 +10,21 @@
  * 4. Updating deployment configurations
  */
 
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Colors for console output
 const colors = {
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  reset: '\x1b[0m',
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  reset: "\x1b[0m",
 };
 
 function log(color, message) {
@@ -32,69 +32,71 @@ function log(color, message) {
 }
 
 function executeCommand(command, description) {
-  log('blue', `Executing: ${description}`);
+  log("blue", `Executing: ${description}`);
   try {
-    execSync(command, { stdio: 'inherit' });
-    log('green', `✅ ${description} completed successfully`);
+    execSync(command, { stdio: "inherit" });
+    log("green", `✅ ${description} completed successfully`);
   } catch (error) {
-    log('red', `❌ ${description} failed: ${error.message}`);
+    log("red", `❌ ${description} failed: ${error.message}`);
     process.exit(1);
   }
 }
 
 function clearBuildCaches() {
-  log('yellow', '🧹 Clearing all build caches...');
-  
+  log("yellow", "🧹 Clearing all build caches...");
+
   const cachePaths = [
-    './node_modules/.vite',
-    './dist',
-    './.vite',
-    './.next',
-    './.turbo',
-    './coverage',
-    './.nyc_output',
-    './playwright-report',
-    './.cache',
+    "./node_modules/.vite",
+    "./dist",
+    "./.vite",
+    "./.next",
+    "./.turbo",
+    "./coverage",
+    "./.nyc_output",
+    "./playwright-report",
+    "./.cache",
   ];
 
-  cachePaths.forEach(cachePath => {
+  cachePaths.forEach((cachePath) => {
     if (fs.existsSync(cachePath)) {
-      log('blue', `Removing ${cachePath}`);
+      log("blue", `Removing ${cachePath}`);
       fs.rmSync(cachePath, { recursive: true, force: true });
     }
   });
 
-  log('green', '✅ All build caches cleared');
+  log("green", "✅ All build caches cleared");
 }
 
 function verifyViteConfig() {
-  log('yellow', '🔧 Verifying Vite configuration...');
-  
-  const viteConfigPath = './vite.config.ts';
-  const viteConfig = fs.readFileSync(viteConfigPath, 'utf8');
-  
+  log("yellow", "🔧 Verifying Vite configuration...");
+
+  const viteConfigPath = "./vite.config.ts";
+  const viteConfig = fs.readFileSync(viteConfigPath, "utf8");
+
   // Check for critical configuration elements
   const requiredConfigs = [
-    'emptyOutDir: true',
-    'chunkFileNames',
-    'entryFileNames',
-    'manualChunks'
+    "emptyOutDir: true",
+    "chunkFileNames",
+    "entryFileNames",
+    "manualChunks",
   ];
-  
-  const hasRequiredConfigs = requiredConfigs.some(config => 
-    typeof config === 'string' ? viteConfig.includes(config) : viteConfig.includes(config.name)
+
+  const hasRequiredConfigs = requiredConfigs.some((config) =>
+    typeof config === "string"
+      ? viteConfig.includes(config)
+      : viteConfig.includes(config.name),
   );
-  
+
   if (!hasRequiredConfigs) {
-    log('yellow', '⚠️ Some required Vite configurations may be missing');
+    log("yellow", "⚠️ Some required Vite configurations may be missing");
   }
-  
-  log('green', '✅ Vite configuration verified');
+
+  log("green", "✅ Vite configuration verified");
 }
 
 function createBuildScript() {
-  log('yellow', '📝 Creating optimized build script...');
-  
+  log("yellow", "📝 Creating optimized build script...");
+
   const buildScript = `#!/bin/bash
 
 # TradeX Pro Production Build Script
@@ -131,15 +133,15 @@ echo "📁 Output directory: ./dist"
 echo "🌐 Ready for deployment"
 `;
 
-  fs.writeFileSync('./scripts/build-production.sh', buildScript);
-  fs.chmodSync('./scripts/build-production.sh', '755');
-  
-  log('green', '✅ Build script created');
+  fs.writeFileSync("./scripts/build-production.sh", buildScript);
+  fs.chmodSync("./scripts/build-production.sh", "755");
+
+  log("green", "✅ Build script created");
 }
 
 function createBuildVerification() {
-  log('yellow', '🔍 Creating build verification script...');
-  
+  log("yellow", "🔍 Creating build verification script...");
+
   const verifyScript = `import fs from 'fs';
 import path from 'path';
 
@@ -210,14 +212,14 @@ console.log('✅ HTML file properly configured');
 console.log('🎉 Build is ready for deployment!');
 `;
 
-  fs.writeFileSync('./scripts/verify-build.js', verifyScript);
-  
-  log('green', '✅ Build verification script created');
+  fs.writeFileSync("./scripts/verify-build.js", verifyScript);
+
+  log("green", "✅ Build verification script created");
 }
 
 function createDeploymentManifest() {
-  log('yellow', '📋 Creating deployment manifest script...');
-  
+  log("yellow", "📋 Creating deployment manifest script...");
+
   const manifestScript = `import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -281,14 +283,14 @@ console.log(\`📦 \${Object.keys(manifest.chunks).length} chunks\`);
 console.log(\`🎨 \${Object.keys(manifest.assets).length} assets\`);
 `;
 
-  fs.writeFileSync('./scripts/generate-deployment-manifest.js', manifestScript);
-  
-  log('green', '✅ Deployment manifest script created');
+  fs.writeFileSync("./scripts/generate-deployment-manifest.js", manifestScript);
+
+  log("green", "✅ Deployment manifest script created");
 }
 
 function createCacheBusting() {
-  log('yellow', '🔧 Creating cache busting configuration...');
-  
+  log("yellow", "🔧 Creating cache busting configuration...");
+
   const vercelConfig = `# TradeX Pro Vercel Configuration
 # Fixes chunk 404 errors with proper caching
 
@@ -344,8 +346,8 @@ function createCacheBusting() {
   ]
 }`;
 
-  fs.writeFileSync('./vercel.json', vercelConfig);
-  
+  fs.writeFileSync("./vercel.json", vercelConfig);
+
   // Also create for deployment verification
   const vercelHeader = `# Vercel Headers for TradeX Pro
 # Ensures proper caching for chunk files
@@ -361,15 +363,15 @@ function createCacheBusting() {
   X-Frame-Options: DENY
   X-XSS-Protection: 1; mode=block`;
 
-  fs.writeFileSync('./dist/_headers', vercelHeader);
-  
-  log('green', '✅ Cache busting configuration created');
+  fs.writeFileSync("./dist/_headers", vercelHeader);
+
+  log("green", "✅ Cache busting configuration created");
 }
 
 function main() {
-  log('blue', '🛠️ TradeX Pro Build Cache Fix Script');
-  log('blue', '====================================');
-  
+  log("blue", "🛠️ TradeX Pro Build Cache Fix Script");
+  log("blue", "====================================");
+
   try {
     clearBuildCaches();
     verifyViteConfig();
@@ -377,16 +379,15 @@ function main() {
     createBuildVerification();
     createDeploymentManifest();
     createCacheBusting();
-    
-    log('green', '🎉 All build fixes applied successfully!');
-    log('yellow', '📋 Next steps:');
-    log('blue', '1. Run: npm run build');
-    log('blue', '2. Or use: ./scripts/build-production.sh');
-    log('blue', '3. Deploy with: vercel --prod');
-    log('blue', '4. Monitor deployment for chunk loading');
-    
+
+    log("green", "🎉 All build fixes applied successfully!");
+    log("yellow", "📋 Next steps:");
+    log("blue", "1. Run: npm run build");
+    log("blue", "2. Or use: ./scripts/build-production.sh");
+    log("blue", "3. Deploy with: vercel --prod");
+    log("blue", "4. Monitor deployment for chunk loading");
   } catch (error) {
-    log('red', `❌ Error: ${error.message}`);
+    log("red", `❌ Error: ${error.message}`);
     process.exit(1);
   }
 }

@@ -8,11 +8,11 @@
  * - Reorder buttons
  */
 
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import type { OrderTableItem } from '@/hooks/useOrdersTable';
+import React from "react";
+import { ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import type { OrderTableItem } from "@/hooks/useOrdersTable";
 
 interface DesktopOrderTableProps {
   orders: OrderTableItem[];
@@ -20,11 +20,11 @@ interface DesktopOrderTableProps {
   onExpandToggle: (orderId: string) => void;
   onReorderClick: (order: OrderTableItem) => void;
   onSortClick: (key: OrderSortKey) => void;
-  sortConfig: { key: OrderSortKey; direction: 'asc' | 'desc' };
+  sortConfig: { key: OrderSortKey; direction: "asc" | "desc" };
   renderExpandedContent: (order: OrderTableItem) => React.ReactNode;
 }
 
-export type OrderSortKey = 'created_at' | 'symbol' | 'quantity' | 'price';
+export type OrderSortKey = "created_at" | "symbol" | "quantity" | "price";
 
 const DesktopOrderTable: React.FC<DesktopOrderTableProps> = ({
   orders,
@@ -37,44 +37,50 @@ const DesktopOrderTable: React.FC<DesktopOrderTableProps> = ({
 }) => {
   const getStatusColor = (status: string): string => {
     switch (status) {
-      case 'filled':
-        return '#00BFA5';
-      case 'pending':
-        return '#FDD835';
-      case 'cancelled':
-        return '#9E9E9E';
-      case 'rejected':
-        return '#E53935';
+      case "filled":
+        return "#00BFA5";
+      case "pending":
+        return "#FDD835";
+      case "cancelled":
+        return "#9E9E9E";
+      case "rejected":
+        return "#E53935";
       default:
-        return '#9E9E9E';
+        return "#9E9E9E";
     }
   };
 
   const getStatusLabel = (status: string): string => {
     switch (status) {
-      case 'filled':
-        return 'Filled';
-      case 'pending':
-        return 'Pending';
-      case 'cancelled':
-        return 'Cancelled';
-      case 'rejected':
-        return 'Rejected';
+      case "filled":
+        return "Filled";
+      case "pending":
+        return "Pending";
+      case "cancelled":
+        return "Cancelled";
+      case "rejected":
+        return "Rejected";
       default:
         return status;
     }
   };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(date).toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
-  const SortHeader = ({ label, sortKey }: { label: string; sortKey: OrderSortKey }) => {
+  const SortHeader = ({
+    label,
+    sortKey,
+  }: {
+    label: string;
+    sortKey: OrderSortKey;
+  }) => {
     const isActive = sortConfig.key === sortKey;
     return (
       <button
@@ -87,7 +93,7 @@ const DesktopOrderTable: React.FC<DesktopOrderTableProps> = ({
         {isActive && (
           <ChevronDown
             className={`h-3 w-3 transition-transform ${
-              sortConfig.direction === 'asc' ? 'rotate-180' : ''
+              sortConfig.direction === "asc" ? "rotate-180" : ""
             }`}
             aria-hidden="true"
           />
@@ -130,41 +136,52 @@ const DesktopOrderTable: React.FC<DesktopOrderTableProps> = ({
                   className="border-b border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
                   onClick={() => onExpandToggle(order.id)}
                 >
-                  <td className="py-4 px-4 text-xs">{formatDate(order.created_at)}</td>
+                  <td className="py-4 px-4 text-xs">
+                    {formatDate(order.created_at)}
+                  </td>
                   <td className="py-4 px-4 font-medium">{order.symbol}</td>
                   <td className="py-4 px-4 text-center">
                     <Badge variant="outline" className="text-xs">
-                      {order.type.replace('_', ' ').toUpperCase()}
+                      {order.type.replace("_", " ").toUpperCase()}
                     </Badge>
                   </td>
                   <td className="py-4 px-4">
                     <Badge
-                      variant={order.side === 'buy' ? 'default' : 'secondary'}
-                      className={order.side === 'buy' ? 'bg-buy text-foreground' : 'bg-sell text-foreground'}
+                      variant={order.side === "buy" ? "default" : "secondary"}
+                      className={
+                        order.side === "buy"
+                          ? "bg-buy text-foreground"
+                          : "bg-sell text-foreground"
+                      }
                     >
                       {order.side.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="py-4 px-4 text-right font-mono">{order.quantity.toFixed(2)}</td>
+                  <td className="py-4 px-4 text-right font-mono">
+                    {order.quantity.toFixed(2)}
+                  </td>
                   <td className="py-4 px-4 text-right font-mono">
                     {order.limit_price || order.price
                       ? `$${(order.limit_price || order.price || 0).toFixed(5)}`
-                      : '-'}
+                      : "-"}
                   </td>
                   <td className="py-4 px-4 text-center">
                     <Badge
                       style={{
                         backgroundColor: getStatusColor(order.status),
-                        color: 'white',
+                        color: "white",
                       }}
                       className="text-xs"
                     >
                       {getStatusLabel(order.status)}
                     </Badge>
                   </td>
-                  <td className="py-4 px-4 text-right font-mono">${(order.commission || 0).toFixed(2)}</td>
+                  <td className="py-4 px-4 text-right font-mono">
+                    ${(order.commission || 0).toFixed(2)}
+                  </td>
                   <td className="py-4 px-4 text-center">
-                    {order.status === 'cancelled' || order.status === 'rejected' ? (
+                    {order.status === "cancelled" ||
+                    order.status === "rejected" ? (
                       <Button
                         size="sm"
                         variant="outline"

@@ -1,7 +1,17 @@
-import React, { memo } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Clock, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
-import { classifyOrderStatus, calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
+import React, { memo } from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  XCircle,
+  TrendingUp,
+} from "lucide-react";
+import {
+  classifyOrderStatus,
+  calculateFillPercentage,
+  type OrderStatus,
+} from "@/lib/trading/orderUtils";
 
 interface OrderStatusBadgeProps {
   status: OrderStatus;
@@ -11,10 +21,10 @@ interface OrderStatusBadgeProps {
 
 /**
  * OrderStatusBadge Component
- * 
+ *
  * Displays order status with color coding and optional fill percentage.
  * Provides visual indicator for order state transitions.
- * 
+ *
  * @param status - Current order status
  * @param fillPercentage - Percentage of order filled (for partial fills)
  * @param timestamp - Time when status was last updated
@@ -25,59 +35,67 @@ export const OrderStatusBadge = ({
   timestamp,
 }: OrderStatusBadgeProps) => {
   const getStatusConfig = (
-    status: OrderStatus
+    status: OrderStatus,
   ): {
     label: string;
     className: string;
     Icon: React.ReactNode;
   } => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return {
-          label: 'Pending',
-          className: 'bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] border-[hsl(var(--status-warning-border))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))] dark:border-[hsl(var(--status-warning-dark-border))]',
+          label: "Pending",
+          className:
+            "bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] border-[hsl(var(--status-warning-border))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))] dark:border-[hsl(var(--status-warning-dark-border))]",
           Icon: <Clock className="w-3 h-3" />,
         };
-      case 'open':
+      case "open":
         return {
-          label: 'Open',
-          className: 'bg-[hsl(var(--status-info))] text-[hsl(var(--status-info-foreground))] border-[hsl(var(--status-info-border))] dark:bg-[hsl(var(--status-info-dark))] dark:text-[hsl(var(--status-info-dark-foreground))] dark:border-[hsl(var(--status-info-dark-border))]',
+          label: "Open",
+          className:
+            "bg-[hsl(var(--status-info))] text-[hsl(var(--status-info-foreground))] border-[hsl(var(--status-info-border))] dark:bg-[hsl(var(--status-info-dark))] dark:text-[hsl(var(--status-info-dark-foreground))] dark:border-[hsl(var(--status-info-dark-border))]",
           Icon: <TrendingUp className="w-3 h-3" />,
         };
-      case 'partially_filled':
+      case "partially_filled":
         return {
           label: `Partial (${fillPercentage}%)`,
-          className: 'bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] border-[hsl(var(--status-warning-border))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))] dark:border-[hsl(var(--status-warning-dark-border))]',
+          className:
+            "bg-[hsl(var(--status-warning))] text-[hsl(var(--status-warning-foreground))] border-[hsl(var(--status-warning-border))] dark:bg-[hsl(var(--status-warning-dark))] dark:text-[hsl(var(--status-warning-dark-foreground))] dark:border-[hsl(var(--status-warning-dark-border))]",
           Icon: <Clock className="w-3 h-3" />,
         };
-      case 'filled':
+      case "filled":
         return {
-          label: 'Filled',
-          className: 'bg-[hsl(var(--status-safe))] text-[hsl(var(--status-safe-foreground))] border-[hsl(var(--status-safe-border))] dark:bg-[hsl(var(--status-safe-dark))] dark:text-[hsl(var(--status-safe-dark-foreground))] dark:border-[hsl(var(--status-safe-dark-border))]',
+          label: "Filled",
+          className:
+            "bg-[hsl(var(--status-safe))] text-[hsl(var(--status-safe-foreground))] border-[hsl(var(--status-safe-border))] dark:bg-[hsl(var(--status-safe-dark))] dark:text-[hsl(var(--status-safe-dark-foreground))] dark:border-[hsl(var(--status-safe-dark-border))]",
           Icon: <CheckCircle className="w-3 h-3" />,
         };
-      case 'cancelled':
+      case "cancelled":
         return {
-          label: 'Cancelled',
-          className: 'bg-[hsl(var(--status-neutral))] text-[hsl(var(--status-neutral-foreground))] border-[hsl(var(--status-neutral-border))] dark:bg-[hsl(var(--status-neutral-dark))] dark:text-[hsl(var(--status-neutral-dark-foreground))] dark:border-[hsl(var(--status-neutral-dark-border))]',
+          label: "Cancelled",
+          className:
+            "bg-[hsl(var(--status-neutral))] text-[hsl(var(--status-neutral-foreground))] border-[hsl(var(--status-neutral-border))] dark:bg-[hsl(var(--status-neutral-dark))] dark:text-[hsl(var(--status-neutral-dark-foreground))] dark:border-[hsl(var(--status-neutral-dark-border))]",
           Icon: <XCircle className="w-3 h-3" />,
         };
-      case 'rejected':
+      case "rejected":
         return {
-          label: 'Rejected',
-          className: 'bg-[hsl(var(--status-error))] text-[hsl(var(--status-error-foreground))] border-[hsl(var(--status-error-border))] dark:bg-[hsl(var(--status-error-dark))] dark:text-[hsl(var(--status-error-dark-foreground))] dark:border-[hsl(var(--status-error-dark-border))]',
+          label: "Rejected",
+          className:
+            "bg-[hsl(var(--status-error))] text-[hsl(var(--status-error-foreground))] border-[hsl(var(--status-error-border))] dark:bg-[hsl(var(--status-error-dark))] dark:text-[hsl(var(--status-error-dark-foreground))] dark:border-[hsl(var(--status-error-dark-border))]",
           Icon: <AlertCircle className="w-3 h-3" />,
         };
-      case 'expired':
+      case "expired":
         return {
-          label: 'Expired',
-          className: 'bg-[hsl(var(--status-critical))] text-[hsl(var(--status-critical-foreground))] border-[hsl(var(--status-critical-border))] dark:bg-[hsl(var(--status-critical-dark))] dark:text-[hsl(var(--status-critical-dark-foreground))] dark:border-[hsl(var(--status-critical-dark-border))]',
+          label: "Expired",
+          className:
+            "bg-[hsl(var(--status-critical))] text-[hsl(var(--status-critical-foreground))] border-[hsl(var(--status-critical-border))] dark:bg-[hsl(var(--status-critical-dark))] dark:text-[hsl(var(--status-critical-dark-foreground))] dark:border-[hsl(var(--status-critical-dark-border))]",
           Icon: <AlertCircle className="w-3 h-3" />,
         };
       default:
         return {
-          label: 'Unknown',
-          className: 'bg-[hsl(var(--status-neutral))] text-[hsl(var(--status-neutral-foreground))] border-[hsl(var(--status-neutral-border))] dark:bg-[hsl(var(--status-neutral-dark))] dark:text-[hsl(var(--status-neutral-dark-foreground))] dark:border-[hsl(var(--status-neutral-dark-border))]',
+          label: "Unknown",
+          className:
+            "bg-[hsl(var(--status-neutral))] text-[hsl(var(--status-neutral-foreground))] border-[hsl(var(--status-neutral-border))] dark:bg-[hsl(var(--status-neutral-dark))] dark:text-[hsl(var(--status-neutral-dark-foreground))] dark:border-[hsl(var(--status-neutral-dark-border))]",
           Icon: <AlertCircle className="w-3 h-3" />,
         };
     }
@@ -98,7 +116,7 @@ export const OrderStatusBadge = ({
         {config.Icon}
         {config.label}
       </Badge>
-      {status === 'partially_filled' && fillPercentage > 0 && (
+      {status === "partially_filled" && fillPercentage > 0 && (
         <div
           className="h-1 bg-[hsl(var(--status-warning-foreground))] rounded-full"
           style={{ width: `${Math.min(fillPercentage, 100)}px` }}
@@ -110,7 +128,9 @@ export const OrderStatusBadge = ({
 
 export default memo(OrderStatusBadge, (prevProps, nextProps) => {
   // Only re-render if status, fillPercentage, or timestamp changed
-  return prevProps.status === nextProps.status &&
+  return (
+    prevProps.status === nextProps.status &&
     prevProps.fillPercentage === nextProps.fillPercentage &&
-    prevProps.timestamp === nextProps.timestamp;
+    prevProps.timestamp === nextProps.timestamp
+  );
 });

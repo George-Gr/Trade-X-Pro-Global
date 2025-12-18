@@ -108,7 +108,7 @@
     border-left-width: 4px;
     background-color: hsl(var(--primary) / 0.2);
   }
-  
+
   [data-sidebar="menu-button"]:focus-visible {
     outline-width: 3px;
   }

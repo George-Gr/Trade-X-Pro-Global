@@ -128,7 +128,7 @@ export function isLiquidationRisk(marginLevel: number): boolean {
  */
 export function calculateMarginLevel(
   accountEquity: number,
-  marginUsed: number
+  marginUsed: number,
 ): number {
   if (marginUsed <= 0) {
     // No margin used = infinite safety
@@ -144,7 +144,7 @@ export function calculateMarginLevel(
  */
 export function getMarginLevelInfo(
   accountEquity: number,
-  marginUsed: number
+  marginUsed: number,
 ): MarginLevel {
   const marginLevel = calculateMarginLevel(accountEquity, marginUsed);
   const status = getMarginStatus(marginLevel);
@@ -186,7 +186,9 @@ export function shouldEnforceCloseOnly(marginStatus: MarginStatus): boolean {
 /**
  * Get recommended actions based on margin status
  */
-export function getMarginActionRequired(marginStatus: MarginStatus): MarginAction[] {
+export function getMarginActionRequired(
+  marginStatus: MarginStatus,
+): MarginAction[] {
   switch (marginStatus) {
     case MarginStatus.SAFE:
       return [
@@ -230,7 +232,8 @@ export function getMarginActionRequired(marginStatus: MarginStatus): MarginActio
         {
           action: "order_restriction",
           urgency: "critical",
-          description: "New orders are restricted - close-only mode enabled for losing positions",
+          description:
+            "New orders are restricted - close-only mode enabled for losing positions",
           recommendation: "Can only close positions at this level",
         },
       ];
@@ -261,7 +264,7 @@ export function shouldCreateAlert(
   currentStatus: MarginStatus,
   previousStatus: MarginStatus | null,
   lastAlertTime: string | null,
-  minAlertIntervalMinutes = 5
+  minAlertIntervalMinutes = 5,
 ): boolean {
   // Always alert on status change
   if (!previousStatus || currentStatus !== previousStatus) {
@@ -272,7 +275,8 @@ export function shouldCreateAlert(
   if (lastAlertTime) {
     const lastAlert = new Date(lastAlertTime);
     const now = new Date();
-    const minutesSinceAlert = (now.getTime() - lastAlert.getTime()) / (1000 * 60);
+    const minutesSinceAlert =
+      (now.getTime() - lastAlert.getTime()) / (1000 * 60);
     return minutesSinceAlert >= minAlertIntervalMinutes;
   }
 
@@ -364,14 +368,16 @@ export function estimateTimeToLiquidation(marginLevel: number): number | null {
  */
 export function hasMarginThresholdCrossed(
   currentLevel: number,
-  previousLevel: number
+  previousLevel: number,
 ): boolean {
   const thresholds = [200, 100, 50];
 
   for (const threshold of thresholds) {
     // Check if crossed above or below threshold
-    if ((currentLevel > threshold && previousLevel <= threshold) ||
-        (currentLevel <= threshold && previousLevel > threshold)) {
+    if (
+      (currentLevel > threshold && previousLevel <= threshold) ||
+      (currentLevel <= threshold && previousLevel > threshold)
+    ) {
       return true;
     }
   }
@@ -388,7 +394,7 @@ export function hasMarginThresholdCrossed(
  */
 export function validateMarginInputs(
   accountEquity: number,
-  marginUsed: number
+  marginUsed: number,
 ): { valid: boolean; error?: string } {
   if (typeof accountEquity !== "number" || !isFinite(accountEquity)) {
     return { valid: false, error: "Invalid account equity" };
@@ -414,7 +420,7 @@ export function validateMarginInputs(
  */
 export function calculateFreeMargin(
   accountEquity: number,
-  marginUsed: number
+  marginUsed: number,
 ): number {
   return Math.max(0, accountEquity - marginUsed);
 }
@@ -435,7 +441,7 @@ export function calculateAvailableLeverage(marginLevel: number): number {
  */
 export function isAccountInDanger(
   accountEquity: number,
-  marginUsed: number
+  marginUsed: number,
 ): boolean {
   const marginLevel = calculateMarginLevel(accountEquity, marginUsed);
   return isLiquidationRisk(marginLevel) || isMarginCritical(marginLevel);

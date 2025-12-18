@@ -29,7 +29,7 @@ export const OptimizedHeroSection = ({
     const loadImage = async () => {
       setIsLoading(true);
       const imageConfig = HERO_IMAGES[imageKey];
-      
+
       if (!imageConfig) {
         console.error(`Image configuration not found for key: ${imageKey}`);
         setIsLoading(false);
@@ -38,14 +38,18 @@ export const OptimizedHeroSection = ({
 
       try {
         // Get the best variant based on current viewport
-        const bestVariant = imageConfig.variants[imageConfig.variants.length - 1]; // Use largest for now
-        
+        const bestVariant =
+          imageConfig.variants[imageConfig.variants.length - 1]; // Use largest for now
+
         // Determine if WebP is supported and set appropriate sources
-        const optimizedSrc = await getOptimizedImageSrc(bestVariant.src, bestVariant.webpSrc);
-        
+        const optimizedSrc = await getOptimizedImageSrc(
+          bestVariant.src,
+          bestVariant.webpSrc,
+        );
+
         setBackgroundImage(bestVariant.src);
         setWebpImage(bestVariant.webpSrc || "");
-        
+
         setIsLoading(false);
       } catch (error) {
         console.error("Failed to load hero image:", error);
@@ -59,7 +63,7 @@ export const OptimizedHeroSection = ({
   // Handle window resize for responsive images
   useEffect(() => {
     let resizeTimer: number;
-    
+
     const handleResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
@@ -68,8 +72,9 @@ export const OptimizedHeroSection = ({
           // Desktop
           const imageConfig = HERO_IMAGES[imageKey];
           if (imageConfig) {
-            const desktopVariant = imageConfig.variants.find(v => v.width >= 1920) || 
-                                  imageConfig.variants[imageConfig.variants.length - 1];
+            const desktopVariant =
+              imageConfig.variants.find((v) => v.width >= 1920) ||
+              imageConfig.variants[imageConfig.variants.length - 1];
             setBackgroundImage(desktopVariant.src);
             setWebpImage(desktopVariant.webpSrc || "");
           }
@@ -77,8 +82,9 @@ export const OptimizedHeroSection = ({
           // Tablet
           const imageConfig = HERO_IMAGES[imageKey];
           if (imageConfig) {
-            const tabletVariant = imageConfig.variants.find(v => v.width >= 1200) || 
-                                  imageConfig.variants[1];
+            const tabletVariant =
+              imageConfig.variants.find((v) => v.width >= 1200) ||
+              imageConfig.variants[1];
             setBackgroundImage(tabletVariant.src);
             setWebpImage(tabletVariant.webpSrc || "");
           }
@@ -102,11 +108,11 @@ export const OptimizedHeroSection = ({
   }, [imageKey]);
 
   return (
-    <section 
+    <section
       className={`relative overflow-hidden ${className}`}
-      style={{ 
+      style={{
         minHeight,
-        ...style 
+        ...style,
       }}
     >
       {/* Background Image */}
@@ -116,19 +122,17 @@ export const OptimizedHeroSection = ({
         alt=""
         className="absolute inset-0 z-0"
         style={{
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
         }}
         priority={priority}
-        loading={priority ? 'eager' : 'lazy'}
+        loading={priority ? "eager" : "lazy"}
       />
 
       {/* Overlay */}
-      {overlay && (
-        <div className="absolute inset-0 z-10 gradient-hero" />
-      )}
+      {overlay && <div className="absolute inset-0 z-10 gradient-hero" />}
 
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
@@ -139,7 +143,11 @@ export const OptimizedHeroSection = ({
 };
 
 // Specialized components for each hero section type
-export const HeroTradingSection = ({ children, className, ...props }: Omit<HeroSectionProps, 'imageKey'>) => (
+export const HeroTradingSection = ({
+  children,
+  className,
+  ...props
+}: Omit<HeroSectionProps, "imageKey">) => (
   <OptimizedHeroSection
     imageKey="heroTrading"
     className={`pt-24 pb-16 sm:pt-32 sm:pb-20 ${className}`}
@@ -150,7 +158,11 @@ export const HeroTradingSection = ({ children, className, ...props }: Omit<HeroS
   </OptimizedHeroSection>
 );
 
-export const GlobalMarketsSection = ({ children, className, ...props }: Omit<HeroSectionProps, 'imageKey'>) => (
+export const GlobalMarketsSection = ({
+  children,
+  className,
+  ...props
+}: Omit<HeroSectionProps, "imageKey">) => (
   <OptimizedHeroSection
     imageKey="globalMarketsMap"
     className={`py-16 sm:py-20 ${className}`}
@@ -158,13 +170,15 @@ export const GlobalMarketsSection = ({ children, className, ...props }: Omit<Her
     {...props}
   >
     <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
-    <div className="relative z-10">
-      {children}
-    </div>
+    <div className="relative z-10">{children}</div>
   </OptimizedHeroSection>
 );
 
-export const SecuritySection = ({ children, className, ...props }: Omit<HeroSectionProps, 'imageKey'>) => (
+export const SecuritySection = ({
+  children,
+  className,
+  ...props
+}: Omit<HeroSectionProps, "imageKey">) => (
   <OptimizedHeroSection
     imageKey="securityBg"
     className={`py-16 sm:py-20 bg-foreground ${className}`}
@@ -172,8 +186,6 @@ export const SecuritySection = ({ children, className, ...props }: Omit<HeroSect
     {...props}
   >
     <div className="absolute inset-0 bg-foreground/90 backdrop-blur-sm" />
-    <div className="relative z-10">
-      {children}
-    </div>
+    <div className="relative z-10">{children}</div>
   </OptimizedHeroSection>
 );

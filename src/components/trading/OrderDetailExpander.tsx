@@ -5,14 +5,16 @@
  * Shows entry/exit details, commission, and additional info
  */
 
-import React from 'react';
-import type { OrderTableItem } from '@/hooks/useOrdersTable';
+import React from "react";
+import type { OrderTableItem } from "@/hooks/useOrdersTable";
 
 interface OrderDetailExpanderProps {
   order: OrderTableItem;
 }
 
-export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({ order }) => {
+export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({
+  order,
+}) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
       <div>
@@ -29,33 +31,46 @@ export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({ order 
       </div>
       <div>
         <span className="text-muted-foreground text-xs">Quantity</span>
-        <div className="font-mono font-semibold">{order.quantity.toFixed(2)}</div>
+        <div className="font-mono font-semibold">
+          {order.quantity.toFixed(2)}
+        </div>
       </div>
       <div>
         <span className="text-muted-foreground text-xs">Price</span>
-        <div className="font-mono font-semibold">${(order.price || 0).toFixed(5)}</div>
+        <div className="font-mono font-semibold">
+          ${(order.price || 0).toFixed(5)}
+        </div>
       </div>
       <div>
         <span className="text-muted-foreground text-xs">Commission</span>
-        <div className="font-mono font-semibold">${(order.commission || 0).toFixed(2)}</div>
+        <div className="font-mono font-semibold">
+          ${(order.commission || 0).toFixed(2)}
+        </div>
       </div>
       {order.slippage !== undefined && (
         <div>
           <span className="text-muted-foreground text-xs">Slippage</span>
-          <div className="font-mono font-semibold">${(order.slippage || 0).toFixed(4)}</div>
+          <div className="font-mono font-semibold">
+            ${(order.slippage || 0).toFixed(4)}
+          </div>
         </div>
       )}
-    {order.realized_pnl !== undefined && (
-      <div>
-        <span className="text-muted-foreground text-xs">Realized P&L</span>
-        <div
-          className="font-mono font-semibold"
-          style={{ color: (order.realized_pnl ?? 0) >= 0 ? 'hsl(var(--buy))' : 'hsl(var(--destructive))' }}
-        >
-          ${order.realized_pnl?.toFixed(2) ?? '0.00'}
+      {order.realized_pnl !== undefined && (
+        <div>
+          <span className="text-muted-foreground text-xs">Realized P&L</span>
+          <div
+            className="font-mono font-semibold"
+            style={{
+              color:
+                (order.realized_pnl ?? 0) >= 0
+                  ? "hsl(var(--buy))"
+                  : "hsl(var(--destructive))",
+            }}
+          >
+            ${order.realized_pnl?.toFixed(2) ?? "0.00"}
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
   );
 };

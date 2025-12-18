@@ -1,4 +1,7 @@
-import { TradeFormSkeleton, ChartSkeleton } from "@/components/ui/LoadingSkeleton";
+import {
+  TradeFormSkeleton,
+  ChartSkeleton,
+} from "@/components/ui/LoadingSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -39,7 +42,10 @@ export function TradeLoading() {
               <CardContent>
                 <div className="space-y-3">
                   {Array.from({ length: 10 }).map((_, i) => (
-                    <div key={i} className="flex justify-between items-center p-2 bg-muted/50 rounded">
+                    <div
+                      key={i}
+                      className="flex justify-between items-center p-2 bg-muted/50 rounded"
+                    >
                       <div className="flex space-x-2">
                         <Skeleton variant="text" className="h-3 w-16" />
                         <Skeleton variant="text" className="h-3 w-12" />
@@ -84,24 +90,30 @@ export function TradeLoading() {
                   <div className="space-y-1">
                     <Skeleton variant="text" className="h-3 w-full" />
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <div key={i} className="flex justify-between p-1 bg-success-contrast/10 rounded">
+                      <div
+                        key={i}
+                        className="flex justify-between p-1 bg-success-contrast/10 rounded"
+                      >
                         <Skeleton variant="text" className="h-3 w-1/3" />
                         <Skeleton variant="text" className="h-3 w-1/3" />
                         <Skeleton variant="text" className="h-3 w-1/6" />
                       </div>
                     ))}
                   </div>
-                  
+
                   {/* Spread */}
                   <div className="p-2 bg-muted/50 rounded text-center">
                     <Skeleton variant="text" className="h-3 w-1/4" />
                   </div>
-                  
+
                   {/* Sell Orders */}
                   <div className="space-y-1">
                     <Skeleton variant="text" className="h-3 w-full" />
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <div key={i} className="flex justify-between p-1 bg-danger-contrast/10 rounded">
+                      <div
+                        key={i}
+                        className="flex justify-between p-1 bg-danger-contrast/10 rounded"
+                      >
                         <Skeleton variant="text" className="h-3 w-1/3" />
                         <Skeleton variant="text" className="h-3 w-1/3" />
                         <Skeleton variant="text" className="h-3 w-1/6" />
@@ -122,7 +134,10 @@ export function TradeLoading() {
               <CardContent>
                 <div className="space-y-2">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="flex justify-between items-center p-2 border-b border-border/50 last:border-0">
+                    <div
+                      key={i}
+                      className="flex justify-between items-center p-2 border-b border-border/50 last:border-0"
+                    >
                       <div className="flex items-center space-x-2">
                         <Skeleton variant="status" />
                         <div>

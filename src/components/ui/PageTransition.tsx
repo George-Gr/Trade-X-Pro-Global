@@ -8,7 +8,10 @@ interface PageTransitionProps {
   className?: string;
 }
 
-export const PageTransition: React.FC<PageTransitionProps> = ({ children, className }) => {
+export const PageTransition: React.FC<PageTransitionProps> = ({
+  children,
+  className,
+}) => {
   const location = useLocation();
 
   // Page transition variants
@@ -39,13 +42,13 @@ export const PageTransition: React.FC<PageTransitionProps> = ({ children, classN
   // Fallback transition for reduced motion
   const reducedMotionVariants: Variants = {
     initial: { opacity: 0 },
-    in: { 
+    in: {
       opacity: 1,
-      transition: { duration: 0.15 }
+      transition: { duration: 0.15 },
     },
-    out: { 
+    out: {
       opacity: 0,
-      transition: { duration: 0.15 }
+      transition: { duration: 0.15 },
     },
   };
 
@@ -66,7 +69,10 @@ export const PageTransition: React.FC<PageTransitionProps> = ({ children, classN
 };
 
 // Fallback component for when framer-motion is not available or reduced motion is preferred
-export const SimplePageTransition: React.FC<PageTransitionProps> = ({ children, className }) => {
+export const SimplePageTransition: React.FC<PageTransitionProps> = ({
+  children,
+  className,
+}) => {
   const location = useLocation();
 
   return (

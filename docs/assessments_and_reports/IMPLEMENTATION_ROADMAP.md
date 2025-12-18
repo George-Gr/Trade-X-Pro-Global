@@ -1,4 +1,5 @@
 # 🚀 TRADEX PRO IMPLEMENTATION ROADMAP
+
 **Current Status:** Phase 1 ✅ (100% Complete) → Phase 2 ✅ (100% COMPLETE - All Tasks Done!)
 **Last Updated:** November 16, 2025  
 **Document Version:** 2.1
@@ -8,6 +9,7 @@
 ## 📊 EXECUTIVE SUMMARY
 
 ### Current Codebase Status
+
 - **Overall Completion:** ~80% of PRD requirements implemented (Phase 1 ✅ + Phase 2 ✅)
 - **Phase 1 Tasks:** ✅ 19/19 COMPLETE (Order execution, positions, risk management, trading UI)
 - **Phase 2 TASK 2.1:** ✅ **COMPLETE** - 193 premium CFD assets, fixed leverage, search/filter, all tests passing
@@ -17,31 +19,35 @@
 - **Critical Issues:** 0 blocking issues
 
 ### Key Gaps vs. PRD Requirements
-| Feature Category | Current | Target | Gap | Priority |
-|------------------|---------|--------|-----|----------|
-| **Core Trading** | 75% | 100% | 25% | Critical |
-| **User Management & KYC** | 95% | 100% | 5% | High |
-| **Risk Management** | 80% | 100% | 20% | High |
-| **Payments Integration** | 20% | 100% | 80% | High |
-| **Social Trading** | 0% | 100% | 100% | Medium |
-| **AI Analytics** | 0% | 100% | 100% | Medium |
-| **Backtesting** | 0% | 100% | 100% | Medium |
-| **Educational Content** | 30% | 100% | 70% | Low |
-| **Admin Tools** | 50% | 100% | 50% | Medium |
+
+| Feature Category          | Current | Target | Gap  | Priority |
+| ------------------------- | ------- | ------ | ---- | -------- |
+| **Core Trading**          | 75%     | 100%   | 25%  | Critical |
+| **User Management & KYC** | 95%     | 100%   | 5%   | High     |
+| **Risk Management**       | 80%     | 100%   | 20%  | High     |
+| **Payments Integration**  | 20%     | 100%   | 80%  | High     |
+| **Social Trading**        | 0%      | 100%   | 100% | Medium   |
+| **AI Analytics**          | 0%      | 100%   | 100% | Medium   |
+| **Backtesting**           | 0%      | 100%   | 100% | Medium   |
+| **Educational Content**   | 30%     | 100%   | 70%  | Low      |
+| **Admin Tools**           | 50%     | 100%   | 50%  | Medium   |
 
 ### Estimated Effort Overview
+
 - **Phase 2 Remaining (Task 2.3):** 50 hours (~1.5 weeks)
 - **Phase 3 (Weeks 3-7):** Social, AI, Copy Trading = **180 hours**
 - **Phase 4 (Weeks 8-10):** Optimization, Polish, Testing = **100 hours**
 - **Total Remaining:** **~330 hours (~8 weeks)**
 
 ### Recent Completions
+
 1. ✅ **Phase 1 Complete** - All order/position/risk management working
 2. ✅ **TASK 2.1 Complete** - Asset specs (193 CFDs), fixed leverage, search dialog, all tests passing
 3. ✅ **TASK 2.2 Complete** - KYC workflow, document verification, admin dashboard, audit trail, 32 tests passing
 4. ✅ **TASK 2.3 Complete** - Crypto payments (deposits/withdrawals), 51+ tests passing, production ready
 
 ### Next Immediate Actions
+
 1. **Phase 3 Start:** Begin TASK 3.1 (Copy trading foundation - 60 hours, ~2 weeks)
 2. **Parallel:** TASK 3.2 (Leaderboards - 40 hours) and TASK 3.3 (Social feed - 50 hours)
 3. **Week 5:** Deploy Phase 2 to production (all tasks complete ✅)
@@ -51,11 +57,13 @@
 ## 🎯 DETAILED TASK BREAKDOWN
 
 ### PHASE 2: CORE COMPLETIONS & ACCOUNT FEATURES
+
 **Duration:** 3 weeks | **Effort:** 120 hours | **Status:** ✅ COMPLETE - All Tasks Done!
 
 **Summary:**
+
 - TASK 2.1: Asset Specs Population ✅ Complete
-- TASK 2.2: KYC Workflow & Verification ✅ Complete  
+- TASK 2.2: KYC Workflow & Verification ✅ Complete
 - TASK 2.3: Payment Integration & Crypto ✅ Complete
 
 All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
@@ -63,23 +71,26 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 #### **TASK 2.1: Asset Specs Population & Trading Expansion**
+
 - **Priority:** Critical
 - **Estimated Effort:** 40 hours
 - **Dependencies:** Phase 1 complete ✅
 - **Status:** ✅ **COMPLETE** - Production Ready
 - **Completed By:** November 20, 2025
 
-**Affected Components:** 
-  - ✅ `/supabase/migrations/20251120_final_curated_assets_200_premium.sql` (193 assets)
-  - ✅ `/src/components/trading/AssetSearchDialog.tsx` (search + filter)
-  - ✅ `/src/hooks/useAssetSpecs.tsx` (asset specs fetching)
-  - ✅ `/src/components/trading/OrderForm.tsx` (fixed leverage display)
-  - ✅ `/src/components/trading/OrderPreview.tsx` (asset leverage calculations)
-  - ✅ `/src/components/trading/TradingPanel.tsx` (integration)
-  - ✅ `supabase/functions/execute-order/index.ts` (Finnhub price provider)
-  - ✅ `src/lib/trading/orderValidation.ts` (fixed leverage enforcement)
+**Affected Components:**
+
+- ✅ `/supabase/migrations/20251120_final_curated_assets_200_premium.sql` (193 assets)
+- ✅ `/src/components/trading/AssetSearchDialog.tsx` (search + filter)
+- ✅ `/src/hooks/useAssetSpecs.tsx` (asset specs fetching)
+- ✅ `/src/components/trading/OrderForm.tsx` (fixed leverage display)
+- ✅ `/src/components/trading/OrderPreview.tsx` (asset leverage calculations)
+- ✅ `/src/components/trading/TradingPanel.tsx` (integration)
+- ✅ `supabase/functions/execute-order/index.ts` (Finnhub price provider)
+- ✅ `src/lib/trading/orderValidation.ts` (fixed leverage enforcement)
 
 **Acceptance Criteria - ALL MET ✅:**
+
 - [x] 150-200 premium CFD definitions in `asset_specs` table → **193 assets created**
 - [x] All leverage fixed per asset by broker (NOT user-customizable) → **Fixed unique 1:50-1:500**
 - [x] Spreads and commissions configured → **Per-asset in DB**
@@ -163,6 +174,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - ✅ Build: Successful (11.82s)
 
 **Testing Requirements - VERIFIED ✅:**
+
 - ✅ Unit tests: Asset validation, fixed leverage enforcement (11+ tests passing)
 - ✅ Integration tests: Order execution across asset classes (724+ tests passing)
 - ✅ E2E tests: User trading workflow per asset type (all passing)
@@ -171,6 +183,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - **Build Status:** ✅ Clean TypeScript, 0 errors
 
 **Deliverables Completed:**
+
 - ✅ Database migration: 193 premium assets with fixed unique leverage
 - ✅ AssetSearchDialog component: Full-text search + multi-filter
 - ✅ useAssetSpecs hook: Asset specs fetching from database
@@ -180,6 +193,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - ✅ Test updates: All tests passing with new model
 
 **Risks & Considerations - MITIGATED ✅:**
+
 - **Risk 1:** Finnhub API rate limits → Mitigated with cache + fallback
 - **Risk 2:** Data quality issues → Validated via migration verification
 - **Risk 3:** Asset name collisions → Standardized format (EURUSD, not EUR/USD)
@@ -190,6 +204,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 #### **TASK 2.2: Complete KYC Workflow & Document Verification**
+
 - **Priority:** High
 - **Estimated Effort:** 30 hours
 - **Status:** ✅ **COMPLETE** - Production Ready
@@ -205,6 +220,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
   - ✅ `src/components/kyc/__tests__/kyc-workflow.test.ts` (32 tests) - Full test coverage
 
 **Acceptance Criteria - ALL MET ✅:**
+
 - [x] Users can upload ID (front/back), proof of address, selfie with validation
 - [x] Admin dashboard shows KYC queue with filters (pending, approved, rejected, manual)
 - [x] Admins can approve/reject with detailed reasons and notes
@@ -255,6 +271,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - RLS policies: User/admin access control
 
 **Key Features Implemented:**
+
 - ✅ Multi-document upload with validation
 - ✅ Drag-and-drop interface
 - ✅ Progress tracking (0-100%)
@@ -281,7 +298,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - Progress tracking per upload
      - Error handling and retry logic
      - Upload status per document
-   
 2. **Server-Side Upload Processing** (Hours 7-10) ✅ COMPLETE
    - Implemented submit-kyc edge function:
      - KYC request creation/retrieval
@@ -330,6 +346,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - 7-year retention enforced
 
 **Testing Requirements - ALL MET ✅:**
+
 - Unit tests: 12 tests ✅ PASSING
   - File validation (size, type, document type)
   - Status transitions
@@ -361,6 +378,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 **Total Test Count:** 32 tests, 100% PASSING ✅
 
 **Deliverables Completed:**
+
 - ✅ KycUploader.tsx: Full-featured upload component (499 lines)
 - ✅ KycAdminDashboard.tsx: Complete admin interface (552 lines)
 - ✅ KYC.tsx: Integrated main page (200+ lines)
@@ -373,6 +391,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - ✅ RLS policies: User and admin access control
 
 **Risks & Considerations - MITIGATED ✅:**
+
 - **Risk 1:** Storage quota exceeded. Mitigation: Implemented file size limits (10MB), auto-cleanup after 7 years
 - **Risk 2:** Fraud detection false positives. Mitigation: Manual review required before rejection
 - **Risk 3:** Admin lag in reviewing. Mitigation: SLA tracking + escalation alerts (placeholder)
@@ -380,6 +399,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - **Risk 5:** File upload timeouts. Mitigation: 1-hour signed URL expiry, resume support (optional)
 
 **Deployment Status:**
+
 - ✅ All components tested and verified
 - ✅ Edge functions ready for deployment
 - ✅ Database migration applied
@@ -462,12 +482,14 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - Generate compliance report: KYC approval rate, avg review time, rejection reasons
 
 **Testing Requirements:**
+
 - Unit tests: File validation, approval workflow (12 tests)
 - Integration tests: Upload → Admin review → Notification (8 tests)
 - E2E tests: User KYC flow from submission to approval (5 tests)
 - Compliance tests: Audit trail correctness (5 tests)
 
 **Risks & Considerations:**
+
 - **Risk 1:** Storage quota exceeded. Mitigation: Implement file size limits, auto-delete after 7 years
 - **Risk 2:** Fraud detection false positives. Mitigation: Manual review required before rejection
 - **Risk 3:** Admin lag in reviewing. Mitigation: SLA tracking + escalation alerts
@@ -477,6 +499,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 #### **TASK 2.3: Payment Integration - Crypto Deposits & Withdrawals**
+
 - **Priority:** High
 - **Estimated Effort:** 50 hours
 - **Status:** ✅ **COMPLETE** - Production Ready
@@ -494,6 +517,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
   - ✅ `supabase/migrations/20251120_withdrawal_schema.sql` (new - withdrawal tables)
 
 **Acceptance Criteria - ALL MET ✅:**
+
 - [x] Users can request deposits in BTC, ETH, USDC, USDT, LTC, BNB
 - [x] Deposit page shows payment address + QR code
 - [x] Webhook listener processes confirmations automatically (NowPayments)
@@ -577,6 +601,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - ✅ Address masking in logs (first 6 + last 4 chars)
 
 **Testing Requirements - ALL MET ✅:**
+
 - ✅ Unit tests: 22 tests covering validations, calculations, limits
   - Address format validation for all 6 currencies
   - Fee calculations and limit enforcement
@@ -601,6 +626,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 **Total Test Count:** 51+ tests, 100% PASSING ✅
 
 **Deliverables Completed:**
+
 - ✅ WithdrawalForm.tsx: Complete withdrawal UI component (402 lines)
 - ✅ WithdrawalDialog.tsx: Modal wrapper for withdrawal form
 - ✅ initiate-withdrawal: Edge function for request creation (380+ lines)
@@ -613,6 +639,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - ✅ RLS policies: User and admin access control
 
 **Supported Cryptocurrencies:**
+
 - BTC (Bitcoin): 1:500 leverage, 0.0001 BTC network fee
 - ETH (Ethereum): 1:100 leverage, 0.005 ETH network fee
 - USDT (Tether): 1:200 leverage, 1 USDT network fee
@@ -621,11 +648,13 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - BNB (Binance Coin): 1:100 leverage, 0.005 BNB network fee
 
 **Withdrawal Limits by KYC Status:**
+
 - Unverified: $100 daily, $500 monthly, $50 per transaction
 - Verified: $10,000 daily, $50,000 monthly, $5,000 per transaction
 - Premium: Unlimited (future tier)
 
 **Safety Mechanisms:**
+
 - ✅ Address format validation per currency
 - ✅ Balance hold mechanism prevents double-spending
 - ✅ 2FA verification for all withdrawals
@@ -637,6 +666,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - ✅ Comprehensive audit trail
 
 **Risks & Considerations - MITIGATED ✅:**
+
 - **Risk 1:** Address validation bypass. Mitigation: Regex patterns per currency + format checks
 - **Risk 2:** Double-spending. Mitigation: Balance hold mechanism
 - **Risk 3:** 2FA code brute force. Mitigation: Rate limiting on edge function
@@ -645,6 +675,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 - **Risk 6:** Fee miscalculation. Mitigation: Validated in payment_fees table + calculation tests
 
 **Deployment Status:**
+
 - ✅ All components tested and verified
 - ✅ Edge functions ready for deployment
 - ✅ Database migration ready
@@ -656,6 +687,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 **PRD Reference:** Section 2.0.1 (Integrations - Payment & Crypto), Section 3.0.3 (Compliance)
 
 **Notes:**
+
 - NowPayments.io integration used for both deposits and withdrawals
 - Balance holds managed via held_balance field in profiles table
 - All withdrawal amounts in USD for limit calculations
@@ -666,11 +698,13 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 ### PHASE 3: SOCIAL FEATURES & ADVANCED CAPABILITIES
+
 **Duration:** 5 weeks | **Effort:** 180 hours | **Status:** Dependency on Phase 2
 
 ---
 
 #### **TASK 3.1: Copy Trading Foundation & Leader Network**
+
 - **Priority:** Medium
 - **Estimated Effort:** 60 hours
 - **Dependencies:** Phase 2 complete ✅
@@ -682,6 +716,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
   - `supabase/functions/copy-trade-sync/index.ts` (new)
 
 **Acceptance Criteria:**
+
 - [ ] Users can discover verified traders via leaderboard
 - [ ] Leaderboards sortable by return %, Sharpe, win rate, drawdown
 - [ ] Users can follow leaders and auto-copy their trades
@@ -696,23 +731,25 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 1. **Database Schema for Copy Trading** (Hours 1-4)
    - Create migration: `supabase/migrations/20251125_copy_trading.sql`
    - New tables:
+
      ```sql
      copy_trading_leaders (
        id, user_id, strategy_name, description, is_verified,
        verified_at, verified_by, min_followers, max_followers,
        created_at
      )
-     
+
      copy_trading_followers (
        id, follower_id, leader_id, copy_ratio, max_exposure,
        auto_close_drawdown, status, created_at, unfollowed_at
      )
-     
+
      copy_trading_syncs (
        id, follower_id, leader_id, leader_order_id, follower_order_id,
        status, sync_timestamp
      )
      ```
+
    - Add RLS policies: Users can only view/manage their own relationships
 
 2. **Leader Discovery & Leaderboard** (Hours 5-12)
@@ -725,7 +762,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - Search: Filter by name/username
      - Leader profile cards: Click to see full details
      - Action buttons: Follow, View strategy details
-   
    - Create leader performance calculation:
      - Total return: (Current equity - Starting equity) / Starting equity
      - Sharpe ratio: (Avg monthly return - Risk-free rate) / Std dev
@@ -740,7 +776,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - Admin verification: Click "Verify Leader" with badge
      - Verification badge: "Pro Trader" or "Verified Expert"
      - Reputation score: Based on performance consistency and follower rating
-   
    - Leader tier system:
      ```
      Tier 1 (Bronze): ROI > 10%, Followers: 10+
@@ -748,7 +783,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      Tier 3 (Gold):   ROI > 100%, Followers: 500+, Sharpe > 1.5
      Tier 4 (Platinum): ROI > 200%, Followers: 1000+, Sharpe > 2.0
      ```
-   
    - Incentive structure:
      - Leaders get 10% of follower profits (affiliate fee)
      - Platform keeps 10%, follower keeps 80%
@@ -768,7 +802,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
        - "Auto-stop at 20% loss"
      - Terms acceptance checkbox
      - Confirm button
-   
    - Create `supabase/functions/copy-follow-user/index.ts`:
      - Authenticate user
      - Validate leader exists and is verified
@@ -793,7 +826,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
        - Order is already closed: Don't copy
        - Order is OCO: Copy primary order only
      - Ensure atomicity: All followers get same execution price (use batch processing)
-   
    - Implement order delay:
      - If delay > 0: Queue order for later
      - Use pg_cron to trigger order at delayed time
@@ -818,7 +850,6 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - Sync history: Show all trade syncs with timestamps
      - Unfollow button: Stop copying a leader
      - Performance metrics: Follower's total return from copying
-   
    - Add tracking:
      - How many trades copied from each leader
      - Total copied position value
@@ -838,12 +869,14 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - Kill switch: Unfollow all leaders if account suspended
 
 **Testing Requirements:**
+
 - Unit tests: Calculations, validations (20 tests)
 - Integration tests: Copy sync workflow (25 tests)
 - E2E tests: Follower setup and copy execution (10 tests)
 - Stress tests: 1000 followers copying same leader (5 tests)
 
 **Risks & Considerations:**
+
 - **Risk 1:** Leader fraud (fake performance). Mitigation: Manual verification + audit trail
 - **Risk 2:** Copy lag causing slippage. Mitigation: Batch processing + delay parameter
 - **Risk 3:** Cascade failures (leader bankruptcy). Mitigation: Stop copying on large drawdown
@@ -854,6 +887,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 #### **TASK 3.2: Leaderboard System & Gamification**
+
 - **Priority:** Medium
 - **Estimated Effort:** 40 hours
 - **Dependencies:** Copy Trading ✅
@@ -864,6 +898,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
   - `src/components/badges/BadgeDisplay.tsx` (new)
 
 **Acceptance Criteria:**
+
 - [ ] Multiple leaderboards: Daily, weekly, monthly, all-time
 - [ ] Leaderboard sorted by return %, Sharpe, win rate, risk-adjusted return
 - [ ] Badges awarded for achievements (first 100 trades, 1000% return, etc.)
@@ -876,13 +911,14 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 
 1. **Leaderboard Database Schema** (Hours 1-3)
    - Create tables:
+
      ```sql
      leaderboards (
        id, user_id, period (daily/weekly/monthly/all-time),
        return_pct, sharpe_ratio, win_rate, max_drawdown,
        rank, previous_rank, ranking_date, created_at
      )
-     
+
      badges (
        id, user_id, badge_type, awarded_at, achievement_name
      )
@@ -978,11 +1014,13 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - Unlock features at higher levels
 
 **Testing Requirements:**
+
 - Unit tests: Calculation accuracy (15 tests)
 - Integration tests: Badge awarding (10 tests)
 - E2E tests: Leaderboard viewing and updating (5 tests)
 
 **Risks & Considerations:**
+
 - **Risk 1:** Calculation performance at 100K+ users. Mitigation: Batch processing + caching
 - **Risk 2:** Badge gaming (artificial trading). Mitigation: Flag unusual patterns, manual review
 
@@ -991,6 +1029,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 #### **TASK 3.3: Social Feed & Community Features**
+
 - **Priority:** Medium (Lower priority than trading features)
 - **Estimated Effort:** 50 hours
 - **Dependencies:** Phase 2 complete ✅
@@ -1001,6 +1040,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
   - `src/components/social/PostCard.tsx` (new)
 
 **Acceptance Criteria:**
+
 - [ ] Users can post trade updates, strategies, market ideas
 - [ ] Posts can include images, charts, trade screenshots
 - [ ] Users can comment on and like posts
@@ -1011,6 +1051,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 **Implementation Steps:**
 
 1. **Social Database Schema** (Hours 1-3)
+
    ```sql
    social_posts (
      id, user_id, content, post_type (trade, strategy, idea, news),
@@ -1018,16 +1059,16 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      like_count, comment_count, share_count,
      created_at, updated_at
    )
-   
+
    post_comments (
      id, post_id, user_id, content, like_count,
      created_at
    )
-   
+
    post_likes (
      id, post_id, user_id, created_at
    ) -- unique constraint on (post_id, user_id)
-   
+
    user_follows (
      id, follower_id, following_id, created_at
    ) -- unique constraint
@@ -1106,11 +1147,13 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - Image optimization: Compress, resize for different devices
 
 **Testing Requirements:**
+
 - Unit tests: Feed algorithm correctness (10 tests)
 - Integration tests: Post creation, engagement (15 tests)
 - E2E tests: User social interactions (5 tests)
 
 **Risks & Considerations:**
+
 - **Risk 1:** Spam/scam posts proliferation. Mitigation: Strong moderation + keyword filters
 - **Risk 2:** Performance with 1M+ posts. Mitigation: Proper indexing + caching + pagination
 
@@ -1119,6 +1162,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 #### **TASK 3.4: AI-Driven Analytics & Insights**
+
 - **Priority:** Medium
 - **Estimated Effort:** 30 hours
 - **Dependencies:** Phase 2 complete ✅, Analytics data population
@@ -1128,6 +1172,7 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
   - `src/components/ai/InsightCard.tsx` (new)
 
 **Acceptance Criteria:**
+
 - [ ] AI generates personalized trading insights
 - [ ] Risk profiling identifies trader style and risk tolerance
 - [ ] Trade analysis shows win/loss patterns and improvement areas
@@ -1217,10 +1262,12 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
      - If returns exceed 200% annualized: Congratulations email
 
 **Testing Requirements:**
+
 - Unit tests: Calculation accuracy (10 tests)
 - Integration tests: Insights generation (8 tests)
 
 **Risks & Considerations:**
+
 - **Risk 1:** ML model accuracy. Mitigation: Start simple (heuristics), add ML models later
 - **Risk 2:** Overfitting to historical data. Mitigation: Separate train/test periods
 
@@ -1229,16 +1276,19 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
 ---
 
 ### PHASE 4: OPTIMIZATION & PRODUCTION HARDENING
+
 **Duration:** 2 weeks | **Effort:** 100 hours | **Status:** Final phase
 
 ---
 
 #### **TASK 4.1: Performance Optimization**
+
 - **Priority:** High
 - **Estimated Effort:** 40 hours
 - **Dependencies:** All features implemented ✅
 
 **Acceptance Criteria:**
+
 - [ ] Page load time < 2 seconds (LCP < 1.5s)
 - [ ] Core Web Vitals: Green on Lighthouse
 - [ ] Real-time updates latency < 500ms
@@ -1291,17 +1341,20 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - Load balancing: Auto-scale backend functions
 
 **Testing Requirements:**
+
 - Performance tests: LCP, FID, CLS measurements (10 tests)
 - Load tests: Concurrent users, concurrent trades (5 tests)
 
 ---
 
 #### **TASK 4.2: Security Hardening & Compliance**
+
 - **Priority:** Critical
 - **Estimated Effort:** 30 hours
 - **Dependencies:** All features implemented ✅
 
 **Acceptance Criteria:**
+
 - [ ] All inputs validated and sanitized
 - [ ] No SQL injection vulnerabilities
 - [ ] OWASP Top 10 compliance
@@ -1337,17 +1390,20 @@ All Phase 2 requirements implemented, tested (836+ tests), and production-ready.
    - Regular security audits (monthly)
 
 **Testing Requirements:**
+
 - Security tests: Input validation (10 tests)
 - Compliance tests: GDPR, data protection (5 tests)
 
 ---
 
 #### **TASK 4.3: Testing & Quality Assurance**
+
 - **Priority:** High
 - **Estimated Effort:** 30 hours
 - **Dependencies:** All features implemented ✅
 
 **Acceptance Criteria:**
+
 - [ ] 1000+ test cases covering all features
 - [ ] Test coverage > 80%
 - [ ] 0 critical bugs in production
@@ -1433,29 +1489,33 @@ Critical Path:
 ### Parallel Workstreams
 
 **Workstream A (Core Features):**
+
 - Asset Specs → Copy Trading → Leaderboards → Performance
 
 **Workstream B (Account Features):**
+
 - KYC Polish → Payments → User Settings
 
 **Workstream C (Social/AI):**
+
 - Social Feed → AI Analytics (Dependent on Workstream A)
 
 **Workstream D (Infrastructure):**
+
 - Security hardening (Parallel to all)
 - Monitoring setup (Parallel to all)
 
 ### Milestone Markers
 
-| Milestone | Week | Deliverables | Status |
-|-----------|------|--------------|--------|
-| M1: Phase 1 Complete | 0 | Trading engine live ✅ | DONE |
-| M2: Asset Expansion | 1 | 193 CFDs tradable ✅ | DONE |
-| M3: KYC Complete | 2 | KYC workflow live ✅ | DONE |
-| M4: Payments Live | 3 | Crypto deposits/withdrawals ✅ | DONE |
-| M5: Copy Trading | 4 | Leader network active | Next |
-| M6: Social Features | 6 | Leaderboards + feed live | Next |
-| M7: Production Ready | 10 | Full platform hardened | Final
+| Milestone            | Week | Deliverables                   | Status |
+| -------------------- | ---- | ------------------------------ | ------ |
+| M1: Phase 1 Complete | 0    | Trading engine live ✅         | DONE   |
+| M2: Asset Expansion  | 1    | 193 CFDs tradable ✅           | DONE   |
+| M3: KYC Complete     | 2    | KYC workflow live ✅           | DONE   |
+| M4: Payments Live    | 3    | Crypto deposits/withdrawals ✅ | DONE   |
+| M5: Copy Trading     | 4    | Leader network active          | Next   |
+| M6: Social Features  | 6    | Leaderboards + feed live       | Next   |
+| M7: Production Ready | 10   | Full platform hardened         | Final  |
 
 ---
 
@@ -1464,6 +1524,7 @@ Critical Path:
 ### Architecture Improvements
 
 **1. Caching Strategy**
+
 - **Issue:** Database queries slow at scale (1M+ users)
 - **Recommendation:** Implement Redis cache layer
   - Cache user profiles: 5-min TTL
@@ -1473,6 +1534,7 @@ Critical Path:
 - **Expected Impact:** 90% reduction in database load
 
 **2. Real-Time Performance**
+
 - **Issue:** Supabase Realtime may lag with 1000+ subscribers per channel
 - **Recommendation:** Implement message batching + debouncing
   - Batch updates: Group 10 position updates into 1 broadcast
@@ -1481,8 +1543,9 @@ Critical Path:
 - **Expected Impact:** 70% reduction in WebSocket traffic
 
 **3. Database Optimization**
+
 - **Issue:** Complex joins slow at scale
-- **Recommendation:** 
+- **Recommendation:**
   - Denormalize frequently queried data (user equity, margin_level)
   - Add materialized views for leaderboards
   - Implement database read replicas for reporting
@@ -1491,6 +1554,7 @@ Critical Path:
 ### Refactoring Opportunities
 
 **1. Extract Trading Logic to Shared Library**
+
 - **Current:** Trading calculations scattered across multiple functions
 - **Recommendation:** Create `@tradepro/trading-engine` npm package
   - Consolidate: margin, P&L, slippage, commission calculations
@@ -1499,6 +1563,7 @@ Critical Path:
 - **Effort:** 20 hours
 
 **2. Component Composition Pattern**
+
 - **Current:** Some components are too large (200+ lines)
 - **Recommendation:** Break into smaller, reusable components
   - OrderForm → OrderTypeSelector + OrderPreview + SubmitButton
@@ -1506,6 +1571,7 @@ Critical Path:
 - **Effort:** 15 hours
 
 **3. State Management Centralization**
+
 - **Current:** Mix of useContext + custom hooks
 - **Recommendation:** Consider Zustand stores for complex state
   - Create `tradingStore`: Current instrument, last price, positions
@@ -1516,18 +1582,21 @@ Critical Path:
 ### Performance Optimizations
 
 **1. Virtualization for Large Lists**
+
 - **Current:** PositionsTable can render 1000+ rows
 - **Status:** ✅ Already implemented with react-window
 - **Next:** Apply to OrdersTable, transaction history
 
 **2. Image Optimization**
-- **Recommendation:** 
+
+- **Recommendation:**
   - Use WebP format with fallbacks
   - Compress profile pictures, charts
   - Implement lazy loading for dashboard charts
 - **Expected Impact:** 40% smaller images, 1s faster page load
 
 **3. CSS-in-JS Optimization**
+
 - **Current:** TailwindCSS + inline styles (good)
 - **Recommendation:** Keep as-is, ensure CSS is tree-shaken
 - **Action:** Verify Tailwind unused class removal
@@ -1535,6 +1604,7 @@ Critical Path:
 ### Security Enhancements
 
 **1. API Key Management**
+
 - **Recommendation:**
   - Rotate Finnhub API key every 90 days
   - Use separate keys for dev/staging/production
@@ -1542,12 +1612,14 @@ Critical Path:
   - Add API key rate limiting
 
 **2. Secrets Management**
+
 - **Recommendation:**
   - Use Supabase Vault for sensitive secrets
   - Or: GitHub Secrets for deployment env vars
   - Rotate database passwords every 6 months
 
 **3. DDoS Protection**
+
 - **Recommendation:**
   - Enable Cloudflare DDoS protection
   - Rate limit API endpoints: 100 req/min per user
@@ -1556,6 +1628,7 @@ Critical Path:
 ### Scalability Improvements
 
 **1. Database Scaling**
+
 - **Current:** Single Supabase database
 - **Recommendation (At 100K+ users):**
   - Implement read replicas for analytics
@@ -1563,14 +1636,16 @@ Critical Path:
   - Use connection pooling (PgBouncer)
 
 **2. Backend Scaling**
+
 - **Current:** Serverless Edge Functions (auto-scales)
 - **Recommendation:** Monitor invocation times
   - If avg > 1000ms: Consider pre-warming
   - If throughput > 1000 req/sec: Add queue system
 
 **3. Frontend CDN**
+
 - **Current:** Deployed on Vercel (global CDN ✅)
-- **Recommendation:** 
+- **Recommendation:**
   - Add Cloudflare Workers for edge caching
   - Geo-route to nearest regional servers
 
@@ -1579,61 +1654,64 @@ Critical Path:
 ## 📋 SUCCESS METRICS & KPIs
 
 ### Product Metrics
-| KPI | Target | Current | Status |
-|-----|--------|---------|--------|
-| **Daily Active Users** | 10,000 | N/A (pre-launch) | Tracking |
-| **Monthly Churn Rate** | <5% | N/A | Target |
-| **Average Session Duration** | >30 min | N/A | Target |
-| **Trades Per User (Daily)** | 5+ | N/A | Target |
+
+| KPI                          | Target  | Current          | Status   |
+| ---------------------------- | ------- | ---------------- | -------- |
+| **Daily Active Users**       | 10,000  | N/A (pre-launch) | Tracking |
+| **Monthly Churn Rate**       | <5%     | N/A              | Target   |
+| **Average Session Duration** | >30 min | N/A              | Target   |
+| **Trades Per User (Daily)**  | 5+      | N/A              | Target   |
 
 ### Quality Metrics
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| **Test Coverage** | >85% | 58% (Phase 1) | ✅ Excellent |
-| **Build Success Rate** | 100% | 100% | ✅ Perfect |
-| **Production Bugs (P1)** | <1 per month | 0 | ✅ Excellent |
-| **API Latency (p95)** | <500ms | 200ms (avg) | ✅ Excellent |
+
+| Metric                   | Target       | Current       | Status       |
+| ------------------------ | ------------ | ------------- | ------------ |
+| **Test Coverage**        | >85%         | 58% (Phase 1) | ✅ Excellent |
+| **Build Success Rate**   | 100%         | 100%          | ✅ Perfect   |
+| **Production Bugs (P1)** | <1 per month | 0             | ✅ Excellent |
+| **API Latency (p95)**    | <500ms       | 200ms (avg)   | ✅ Excellent |
 
 ### Business Metrics
-| Metric | Target | Current |
-|--------|--------|---------|
-| **Conversion Rate (Signup → KYC)** | 40% | TBD |
-| **KYC Approval Rate** | 85% | TBD |
-| **Average Account Balance** | $5,000 | TBD |
-| **Copy Trading Adoption** | 20% | TBD |
+
+| Metric                             | Target | Current |
+| ---------------------------------- | ------ | ------- |
+| **Conversion Rate (Signup → KYC)** | 40%    | TBD     |
+| **KYC Approval Rate**              | 85%    | TBD     |
+| **Average Account Balance**        | $5,000 | TBD     |
+| **Copy Trading Adoption**          | 20%    | TBD     |
 
 ---
 
 ## 📞 NEXT STEPS & IMMEDIATE ACTIONS
 
 ### This Week (Week 1)
+
 1. **Monday-Wednesday:** Complete Task 2.1 (Asset Specs)
    - Create migration with 10K+ assets
    - Seed Forex, stocks, crypto, indices
    - Test trading with each asset class
-   
 2. **Thursday:** Complete Task 2.2 (KYC Polish)
    - Fix document viewer UI
    - Add rejection reason flow
    - Test end-to-end KYC workflow
-   
 3. **Friday:** Review and QA
    - Test all new features
    - Update documentation
    - Prepare for Phase 3
 
 ### Next Week (Week 2-3)
+
 1. **Task 2.3 (Payments):** Begin implementation
    - Setup NowPayments.io account
    - Implement deposit flow
    - Test webhook processing
-   
 2. **Parallel:** Prepare Phase 3
    - Design copy trading UI
    - Define leaderboard schema
    - Plan social feed features
 
 ### Deployment Strategy
+
 - **Staging:** Deploy all Phase 2 to staging by end of Week 3
 - **Canary:** 10% of production traffic to Phase 2, 90% to Phase 1 for 1 week
 - **Full Release:** Roll out Phase 2 to 100% of users (Week 4)
@@ -1641,6 +1719,7 @@ Critical Path:
 ---
 
 ## 🔗 Related Documentation
+
 - **Phase 1 Summary:** `/docs/tasks_and_implementations/PHASE_1_FINAL_SUMMARY.md`
 - **Complete PRD:** `/PRD.md`
 - **Audit Report:** `/docs_project_resources/Project_Audit_Report_by_Lovable.md`

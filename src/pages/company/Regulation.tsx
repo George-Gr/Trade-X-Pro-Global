@@ -9,7 +9,7 @@ export default function Regulation() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      
+
       <main className="pt-24 pb-20">
         <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +21,8 @@ export default function Regulation() {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                TradeX Pro operates under strict regulatory compliance and industry standards
+                TradeX Pro operates under strict regulatory compliance and
+                industry standards
               </p>
             </div>
           </div>
@@ -45,7 +46,7 @@ export default function Regulation() {
                     "Anti-money laundering (AML) certified",
                     "Know Your Customer (KYC) verified",
                     "Data protection compliant",
-                    "Financial reporting transparent"
+                    "Financial reporting transparent",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -58,17 +59,30 @@ export default function Regulation() {
 
             <Card>
               <CardContent>
-                <h2 className="text-3xl font-bold mb-6">Licenses & Certifications</h2>
+                <h2 className="text-3xl font-bold mb-6">
+                  Licenses & Certifications
+                </h2>
                 <div className="space-y-4">
                   {[
-                    { license: "Financial Conduct Authority (FCA)", country: "UK" },
-                    { license: "Securities and Exchange Commission (SEC)", country: "USA" },
+                    {
+                      license: "Financial Conduct Authority (FCA)",
+                      country: "UK",
+                    },
+                    {
+                      license: "Securities and Exchange Commission (SEC)",
+                      country: "USA",
+                    },
                     { license: "Central Bank Approval", country: "EU" },
-                    { license: "ISO 27001 Certified", country: "Information Security" }
+                    {
+                      license: "ISO 27001 Certified",
+                      country: "Information Security",
+                    },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
                       <p className="font-semibold mb-2">{item.license}</p>
-                      <p className="text-xs text-muted-foreground">{item.country}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.country}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -78,10 +92,14 @@ export default function Regulation() {
 
           <Card className="mb-8">
             <CardContent>
-              <h2 className="text-3xl font-bold mb-8">Compliance Commitments</h2>
+              <h2 className="text-3xl font-bold mb-8">
+                Compliance Commitments
+              </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Anti-Money Laundering (AML)</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Anti-Money Laundering (AML)
+                  </h3>
                   <p className="text-muted-foreground mb-4">
                     We maintain strict AML procedures including:
                   </p>
@@ -94,7 +112,9 @@ export default function Regulation() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Know Your Customer (KYC)</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Know Your Customer (KYC)
+                  </h3>
                   <p className="text-muted-foreground mb-4">
                     Required for account opening:
                   </p>
@@ -114,12 +134,19 @@ export default function Regulation() {
               <div className="flex items-start gap-4">
                 <AlertCircle className="h-8 w-8 text-warning flex-shrink-0 mt-2.5" />
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-warning">Important Notice</h3>
+                  <h3 className="text-lg font-semibold mb-2 text-warning">
+                    Important Notice
+                  </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    TradeX Pro is an educational trading simulation platform. All trading is conducted with virtual capital provided for educational purposes only. No real money is involved in the trading process.
+                    TradeX Pro is an educational trading simulation platform.
+                    All trading is conducted with virtual capital provided for
+                    educational purposes only. No real money is involved in the
+                    trading process.
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Trading involves substantial risk of loss. Past performance is not indicative of future results. Always trade responsibly and within your risk tolerance.
+                    Trading involves substantial risk of loss. Past performance
+                    is not indicative of future results. Always trade
+                    responsibly and within your risk tolerance.
                   </p>
                 </div>
               </div>
@@ -129,13 +156,18 @@ export default function Regulation() {
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
               <CardContent className="p-8">
-                <h2 className="text-3xl font-bold mb-4">Learn More About Our Compliance</h2>
+                <h2 className="text-3xl font-bold mb-4">
+                  Learn More About Our Compliance
+                </h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   For detailed compliance information, contact our legal team
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/company/contact">
-                    <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-primary to-primary-glow transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95"
+                    >
                       Contact Us
                     </Button>
                   </Link>

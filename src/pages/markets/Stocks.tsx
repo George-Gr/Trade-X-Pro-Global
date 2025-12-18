@@ -9,7 +9,7 @@ export default function Stocks() {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      
+
       <main className="pt-24 pb-20">
         <section className="gradient-primary/10 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +21,8 @@ export default function Stocks() {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Access stocks from US, UK, and EU exchanges with leverage and no stamp duty
+                Access stocks from US, UK, and EU exchanges with leverage and no
+                stamp duty
               </p>
             </div>
           </div>
@@ -46,7 +47,7 @@ export default function Stocks() {
                     "Dividend adjustments on long positions",
                     "Access to US, UK, EU markets",
                     "Real-time execution",
-                    "Margin monitoring and alerts"
+                    "Margin monitoring and alerts",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -62,14 +63,30 @@ export default function Stocks() {
                 <h2 className="typography-h2 mb-6">Popular Stocks</h2>
                 <div className="space-y-4">
                   {[
-                    { market: "US Tech", stocks: "Apple, Microsoft, Tesla, Amazon, Google, Meta, Nvidia" },
-                    { market: "US Finance", stocks: "JPMorgan, Goldman Sachs, Bank of America, Morgan Stanley" },
-                    { market: "UK Stocks", stocks: "BP, HSBC, Vodafone, Lloyds, Barclays" },
-                    { market: "EU Stocks", stocks: "SAP, Siemens, BMW, Volkswagen, Total" }
+                    {
+                      market: "US Tech",
+                      stocks:
+                        "Apple, Microsoft, Tesla, Amazon, Google, Meta, Nvidia",
+                    },
+                    {
+                      market: "US Finance",
+                      stocks:
+                        "JPMorgan, Goldman Sachs, Bank of America, Morgan Stanley",
+                    },
+                    {
+                      market: "UK Stocks",
+                      stocks: "BP, HSBC, Vodafone, Lloyds, Barclays",
+                    },
+                    {
+                      market: "EU Stocks",
+                      stocks: "SAP, Siemens, BMW, Volkswagen, Total",
+                    },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
                       <p className="font-semibold mb-2">{item.market}</p>
-                      <p className="text-xs text-muted-foreground">{item.stocks}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.stocks}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -79,7 +96,9 @@ export default function Stocks() {
 
           <Card className="mb-8">
             <CardContent>
-              <h2 className="typography-h2 mb-8">Stock Trading Specifications</h2>
+              <h2 className="typography-h2 mb-8">
+                Stock Trading Specifications
+              </h2>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
@@ -92,17 +111,47 @@ export default function Stocks() {
                   </thead>
                   <tbody>
                     {[
-                      { stock: "Apple (AAPL)", commission: "$0.02/share", leverage: "1:20", hours: "14:30-21:00" },
-                      { stock: "Tesla (TSLA)", commission: "$0.02/share", leverage: "1:20", hours: "14:30-21:00" },
-                      { stock: "Microsoft (MSFT)", commission: "$0.02/share", leverage: "1:20", hours: "14:30-21:00" },
-                      { stock: "Amazon (AMZN)", commission: "$0.02/share", leverage: "1:20", hours: "14:30-21:00" },
-                      { stock: "HSBC (HSBA)", commission: "$0.02/share", leverage: "1:20", hours: "08:00-16:30" }
+                      {
+                        stock: "Apple (AAPL)",
+                        commission: "$0.02/share",
+                        leverage: "1:20",
+                        hours: "14:30-21:00",
+                      },
+                      {
+                        stock: "Tesla (TSLA)",
+                        commission: "$0.02/share",
+                        leverage: "1:20",
+                        hours: "14:30-21:00",
+                      },
+                      {
+                        stock: "Microsoft (MSFT)",
+                        commission: "$0.02/share",
+                        leverage: "1:20",
+                        hours: "14:30-21:00",
+                      },
+                      {
+                        stock: "Amazon (AMZN)",
+                        commission: "$0.02/share",
+                        leverage: "1:20",
+                        hours: "14:30-21:00",
+                      },
+                      {
+                        stock: "HSBC (HSBA)",
+                        commission: "$0.02/share",
+                        leverage: "1:20",
+                        hours: "08:00-16:30",
+                      },
                     ].map((row, i) => (
-                      <tr key={i} className="border-b border-border hover:bg-muted/50">
+                      <tr
+                        key={i}
+                        className="border-b border-border hover:bg-muted/50"
+                      >
                         <td className="p-4 font-medium">{row.stock}</td>
                         <td className="p-4 text-center">{row.commission}</td>
                         <td className="p-4 text-center">{row.leverage}</td>
-                        <td className="p-4 text-center text-muted-foreground">{row.hours}</td>
+                        <td className="p-4 text-center text-muted-foreground">
+                          {row.hours}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -114,13 +163,18 @@ export default function Stocks() {
           <div className="text-center">
             <Card className="gradient-primary/10 border-primary/20">
               <CardContent className="p-8">
-                <h2 className="typography-h2 mb-4">Start Trading Stocks Today</h2>
+                <h2 className="typography-h2 mb-4">
+                  Start Trading Stocks Today
+                </h2>
                 <p className="text-xl text-muted-foreground mb-8">
                   Access 200+ global stocks with professional conditions
                 </p>
                 <div className="flex gap-4 justify-center">
                   <Link to="/register">
-                    <Button size="lg" className="gradient-primary transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
+                    <Button
+                      size="lg"
+                      className="gradient-primary transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95"
+                    >
                       Open Account
                     </Button>
                   </Link>

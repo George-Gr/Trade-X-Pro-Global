@@ -1,4 +1,8 @@
-import { NotificationsSkeleton, ProfileSkeleton, KYCSkeleton } from "@/components/ui/LoadingSkeleton";
+import {
+  NotificationsSkeleton,
+  ProfileSkeleton,
+  KYCSkeleton,
+} from "@/components/ui/LoadingSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -41,7 +45,10 @@ export function SettingsLoading() {
                     <Skeleton variant="text" className="h-5 w-1/2" />
                     <div className="space-y-4">
                       {Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="flex items-center justify-between p-4 border border-border/50 rounded-lg">
+                        <div
+                          key={i}
+                          className="flex items-center justify-between p-4 border border-border/50 rounded-lg"
+                        >
                           <div className="space-y-1">
                             <Skeleton variant="text" className="h-4 w-2/3" />
                             <Skeleton variant="text" className="h-3 w-1/2" />
@@ -56,7 +63,10 @@ export function SettingsLoading() {
                   <div className="space-y-4">
                     <Skeleton variant="text" className="h-5 w-1/2" />
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="flex items-center justify-between">
+                      <div
+                        key={i}
+                        className="flex items-center justify-between"
+                      >
                         <div className="space-y-1">
                           <Skeleton variant="text" className="h-4 w-2/3" />
                           <Skeleton variant="text" className="h-3 w-1/2" />
@@ -73,7 +83,7 @@ export function SettingsLoading() {
           {/* Sidebar */}
           <div className="space-y-6">
             <ProfileSkeleton />
-            
+
             {/* Quick Actions */}
             <Card>
               <CardHeader>
@@ -84,7 +94,11 @@ export function SettingsLoading() {
               <CardContent>
                 <div className="space-y-3">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <Skeleton key={i} variant="button" className="w-full h-10" />
+                    <Skeleton
+                      key={i}
+                      variant="button"
+                      className="w-full h-10"
+                    />
                   ))}
                 </div>
               </CardContent>
@@ -149,7 +163,10 @@ export function NotificationsLoading() {
               <CardContent>
                 <div className="space-y-3">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="flex justify-between items-center p-3 bg-muted/50 rounded">
+                    <div
+                      key={i}
+                      className="flex justify-between items-center p-3 bg-muted/50 rounded"
+                    >
                       <Skeleton variant="text" className="h-4 w-2/3" />
                       <Skeleton variant="text" className="h-4 w-1/4" />
                     </div>
@@ -209,7 +226,10 @@ export function WalletLoading() {
               <CardContent>
                 <div className="space-y-3">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-muted/50 transition-colors">
+                    <div
+                      key={i}
+                      className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-muted/50 transition-colors"
+                    >
                       <div className="flex items-center space-x-3">
                         <Skeleton variant="avatarSm" />
                         <div>
@@ -219,7 +239,10 @@ export function WalletLoading() {
                       </div>
                       <div className="text-right">
                         <Skeleton variant="text" className="h-4 w-20" />
-                        <Skeleton variant="text" className="h-3 w-12 opacity-75" />
+                        <Skeleton
+                          variant="text"
+                          className="h-3 w-12 opacity-75"
+                        />
                       </div>
                     </div>
                   ))}
@@ -256,7 +279,11 @@ export function WalletLoading() {
               <CardContent>
                 <div className="space-y-3">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <Skeleton key={i} variant="button" className="w-full h-10" />
+                    <Skeleton
+                      key={i}
+                      variant="button"
+                      className="w-full h-10"
+                    />
                   ))}
                 </div>
               </CardContent>

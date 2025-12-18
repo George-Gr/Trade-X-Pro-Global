@@ -2,15 +2,34 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, FileText, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { validationRules } from "@/lib/validationRules";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 
 interface KYCSubmissionProps {
   onSuccess?: () => void;
@@ -33,7 +52,13 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     },
   });
 
-  const { register, handleSubmit, watch, reset, formState: { errors } } = form;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = form;
   const documentType = watch("documentType");
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +75,12 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       }
 
       // Validate file type
-      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "application/pdf",
+      ];
       if (!allowedTypes.includes(file.type)) {
         toast({
           title: "Invalid file type",
@@ -84,18 +114,23 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       formData.append("documentType", data.documentType);
 
       // Get auth token
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         throw new Error("Not authenticated");
       }
 
       // Call server-side validation function
-      const { data: fnData, error } = await supabase.functions.invoke("validate-kyc-upload", {
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
+      const { data: fnData, error } = await supabase.functions.invoke(
+        "validate-kyc-upload",
+        {
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
         },
-      });
+      );
 
       if (error) throw error;
       if (!fnData.success) throw new Error(fnData.error || "Upload failed");
@@ -142,7 +177,8 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
             <div>
               <h3 className="text-lg font-semibold mb-2">Document Submitted</h3>
               <p className="text-sm text-muted-foreground">
-                Your KYC document has been submitted successfully and is pending review.
+                Your KYC document has been submitted successfully and is pending
+                review.
               </p>
             </div>
             <Button
@@ -179,15 +215,26 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
                 <FormItem>
                   <FormLabel htmlFor="document-type">Document Type</FormLabel>
                   <FormControl>
-                    <Select {...register("documentType", validationRules.documentType)}>
+                    <Select
+                      {...register(
+                        "documentType",
+                        validationRules.documentType,
+                      )}
+                    >
                       <SelectTrigger id="document-type">
                         <SelectValue placeholder="Select document type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="passport">Passport</SelectItem>
-                        <SelectItem value="national_id">National ID Card</SelectItem>
-                        <SelectItem value="drivers_license">Driver's License</SelectItem>
-                        <SelectItem value="proof_of_address">Proof of Address</SelectItem>
+                        <SelectItem value="national_id">
+                          National ID Card
+                        </SelectItem>
+                        <SelectItem value="drivers_license">
+                          Driver's License
+                        </SelectItem>
+                        <SelectItem value="proof_of_address">
+                          Proof of Address
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -196,45 +243,47 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
               )}
             />
 
-          <div className="space-y-2">
-            <Label htmlFor="document-file">Document File</Label>
-            <div className="flex items-center gap-4">
-              <Input
-                id="document-file"
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                onChange={handleFileSelect}
-                className="cursor-pointer"
-              />
-              {selectedFile && (
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate max-w-[200px]">{selectedFile.name}</span>
-                </div>
-              )}
+            <div className="space-y-2">
+              <Label htmlFor="document-file">Document File</Label>
+              <div className="flex items-center gap-4">
+                <Input
+                  id="document-file"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  onChange={handleFileSelect}
+                  className="cursor-pointer"
+                />
+                {selectedFile && (
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <FileText className="h-4 w-4" />
+                    <span className="truncate max-w-[200px]">
+                      {selectedFile.name}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Accepted formats: JPG, PNG, PDF (max 5MB)
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Accepted formats: JPG, PNG, PDF (max 5MB)
-            </p>
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting || !selectedFile || !documentType}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              <>
-                <Upload className="h-4 w-4 mr-2" />
-                Submit Document
-              </>
-            )}
-          </Button>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting || !selectedFile || !documentType}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Submit Document
+                </>
+              )}
+            </Button>
           </form>
         </Form>
       </CardContent>

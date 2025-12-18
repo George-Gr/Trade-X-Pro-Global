@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 serve(async (req: Request) => {
@@ -17,10 +18,10 @@ serve(async (req: Request) => {
 
   if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
     console.error("Unauthorized access attempt to update-trailing-stops");
-    return new Response(
-      JSON.stringify({ error: "Unauthorized" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401 }
-    );
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 401,
+    });
   }
 
   try {
@@ -42,7 +43,10 @@ serve(async (req: Request) => {
     if (!positions || positions.length === 0) {
       return new Response(
         JSON.stringify({ message: "No positions with trailing stops" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        },
       );
     }
 
@@ -99,20 +103,23 @@ serve(async (req: Request) => {
       if (shouldClose) {
         // Close position via close-position function
         console.log(`Trailing stop triggered for position ${id}, closing...`);
-        
-        const { error: closeError } = await supabase.functions.invoke("close-position", {
-          body: {
-            position_id: id,
-            close_quantity: position.quantity,
-            idempotency_key: `trailing_stop_${id}_${Date.now()}`,
+
+        const { error: closeError } = await supabase.functions.invoke(
+          "close-position",
+          {
+            body: {
+              position_id: id,
+              close_quantity: position.quantity,
+              idempotency_key: `trailing_stop_${id}_${Date.now()}`,
+            },
           },
-        });
+        );
 
         if (closeError) {
           console.error(`Error closing position ${id}:`, closeError);
         } else {
           triggeredCount++;
-          
+
           // Send notification
           await supabase.functions.invoke("send-notification", {
             body: {
@@ -144,7 +151,9 @@ serve(async (req: Request) => {
           console.error(`Error updating trailing stop for ${id}:`, updateError);
         } else {
           updatedCount++;
-          console.log(`Updated trailing stop for ${symbol}: ${newTrailingStopPrice.toFixed(5)}`);
+          console.log(
+            `Updated trailing stop for ${symbol}: ${newTrailingStopPrice.toFixed(5)}`,
+          );
         }
       }
     }
@@ -156,14 +165,17 @@ serve(async (req: Request) => {
         stops_updated: updatedCount,
         positions_closed: triggeredCount,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      },
     );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Error in update-trailing-stops function:", err);
-    return new Response(
-      JSON.stringify({ error: message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-    );
+    return new Response(JSON.stringify({ error: message }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });

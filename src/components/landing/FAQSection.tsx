@@ -12,36 +12,44 @@ import { ScrollReveal, AnimatedSectionHeader } from "./ScrollReveal";
 const faqs = [
   {
     question: "Is TradeX Pro really free to use?",
-    answer: "Yes, TradeX Pro is completely free. You get $50,000 in virtual capital to practice trading across 500+ instruments. There are no hidden fees, no subscriptions, and no credit card required to start."
+    answer:
+      "Yes, TradeX Pro is completely free. You get $50,000 in virtual capital to practice trading across 500+ instruments. There are no hidden fees, no subscriptions, and no credit card required to start.",
   },
   {
     question: "What is virtual trading and how does it work?",
-    answer: "Virtual trading (also called paper trading or demo trading) lets you practice buying and selling financial instruments using simulated money. You experience real market conditions with live price data, but without risking actual capital. It's the perfect way to learn trading strategies and test ideas risk-free."
+    answer:
+      "Virtual trading (also called paper trading or demo trading) lets you practice buying and selling financial instruments using simulated money. You experience real market conditions with live price data, but without risking actual capital. It's the perfect way to learn trading strategies and test ideas risk-free.",
   },
   {
     question: "Can I lose real money on TradeX Pro?",
-    answer: "No. TradeX Pro is a virtual trading platform only. All trades are executed with simulated money. You cannot deposit, withdraw, or lose any real funds. This makes it ideal for learning and practicing without financial risk."
+    answer:
+      "No. TradeX Pro is a virtual trading platform only. All trades are executed with simulated money. You cannot deposit, withdraw, or lose any real funds. This makes it ideal for learning and practicing without financial risk.",
   },
   {
     question: "What instruments can I trade?",
-    answer: "TradeX Pro offers 500+ instruments across 5 asset classes: Forex (50+ currency pairs), Stocks (200+ global equities), Indices (20+ major indices), Commodities (30+ including gold, oil, and agricultural products), and Cryptocurrencies (50+ digital assets)."
+    answer:
+      "TradeX Pro offers 500+ instruments across 5 asset classes: Forex (50+ currency pairs), Stocks (200+ global equities), Indices (20+ major indices), Commodities (30+ including gold, oil, and agricultural products), and Cryptocurrencies (50+ digital assets).",
   },
   {
     question: "How realistic is the trading simulation?",
-    answer: "Our platform uses real-time market data from professional data providers. Price movements, spreads, and market conditions mirror actual markets. The main difference is that your trades don't impact real markets and you're using virtual capital."
+    answer:
+      "Our platform uses real-time market data from professional data providers. Price movements, spreads, and market conditions mirror actual markets. The main difference is that your trades don't impact real markets and you're using virtual capital.",
   },
   {
     question: "Why do I need to complete KYC verification?",
-    answer: "KYC (Know Your Customer) verification helps us maintain platform security and prevents abuse. Once verified, you instantly receive $50,000 in virtual capital. The process takes just 2 minutes and requires basic identity verification."
+    answer:
+      "KYC (Know Your Customer) verification helps us maintain platform security and prevents abuse. Once verified, you instantly receive $50,000 in virtual capital. The process takes just 2 minutes and requires basic identity verification.",
   },
   {
     question: "Can I practice CFD trading strategies?",
-    answer: "Absolutely! TradeX Pro is specifically designed for CFD trading practice. You can use leverage, set stop-loss and take-profit orders, practice margin trading, and test various strategies including day trading, swing trading, and position trading."
+    answer:
+      "Absolutely! TradeX Pro is specifically designed for CFD trading practice. You can use leverage, set stop-loss and take-profit orders, practice margin trading, and test various strategies including day trading, swing trading, and position trading.",
   },
   {
     question: "Is my personal data secure?",
-    answer: "Yes. We use bank-level SSL encryption to protect all data transmissions. Your personal information is stored securely and never shared with third parties. We comply with international data protection standards."
-  }
+    answer:
+      "Yes. We use bank-level SSL encryption to protect all data transmissions. Your personal information is stored securely and never shared with third parties. We comply with international data protection standards.",
+  },
 ];
 
 export function FAQSection() {
@@ -68,13 +76,13 @@ export function FAQSection() {
                   initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
-                  transition={{ 
-                    delay: index * 0.08, 
+                  transition={{
+                    delay: index * 0.08,
                     duration: 0.5,
-                    ease: [0.25, 0.1, 0.25, 1]
+                    ease: [0.25, 0.1, 0.25, 1],
                   }}
                 >
-                  <AccordionItem 
+                  <AccordionItem
                     value={`item-${index}`}
                     className="border border-border rounded-lg px-6 bg-card data-[state=open]:shadow-lg transition-all duration-300 data-[state=open]:border-primary/30"
                   >

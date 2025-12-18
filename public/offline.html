@@ -1,147 +1,156 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Offline - TradeX Pro</title>
     <style>
-        body {
-            font-family: 'Manrope', Arial, sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            padding: 2rem;
-        }
-        .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #3b82f6;
-        }
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        .status {
-            background: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        .retry-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .retry-btn:hover {
-            background: #2563eb;
-        }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        .feature {
-            background: #1f2937;
-            padding: 1rem;
-            border-radius: 6px;
-            border-left: 3px solid #3b82f6;
-        }
-        .feature h3 {
-            margin: 0 0 0.5rem 0;
-            color: #3b82f6;
-        }
-        .feature p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
+      body {
+        font-family: "Manrope", Arial, sans-serif;
+        background: #0a0a0a;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+      .container {
+        max-width: 600px;
+        padding: 2rem;
+      }
+      .icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #3b82f6;
+      }
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+      .status {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      .retry-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .retry-btn:hover {
+        background: #2563eb;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .feature {
+        background: #1f2937;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #3b82f6;
+      }
+      .feature h3 {
+        margin: 0 0 0.5rem 0;
+        color: #3b82f6;
+      }
+      .feature p {
+        margin: 0;
+        font-size: 0.9rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="icon">📡</div>
-        <h1>You're Offline</h1>
-        <p>TradeX Pro requires an internet connection for real-time trading data and order execution.</p>
-        
-        <div class="status">
-            <strong>Current Status:</strong> Offline<br>
-            <strong>Last Connected:</strong> <span id="lastConnected">Just now</span>
+      <div class="icon">📡</div>
+      <h1>You're Offline</h1>
+      <p>
+        TradeX Pro requires an internet connection for real-time trading data
+        and order execution.
+      </p>
+
+      <div class="status">
+        <strong>Current Status:</strong> Offline<br />
+        <strong>Last Connected:</strong>
+        <span id="lastConnected">Just now</span>
+      </div>
+
+      <button class="retry-btn" onclick="checkConnection()">
+        Check Connection
+      </button>
+
+      <div class="features">
+        <div class="feature">
+          <h3>📊</h3>
+          <p>Portfolio Data</p>
         </div>
-        
-        <button class="retry-btn" onclick="checkConnection()">Check Connection</button>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>📊</h3>
-                <p>Portfolio Data</p>
-            </div>
-            <div class="feature">
-                <h3>📈</h3>
-                <p>Live Charts</p>
-            </div>
-            <div class="feature">
-                <h3>⚡</h3>
-                <p>Order Execution</p>
-            </div>
-            <div class="feature">
-                <h3>🔔</h3>
-                <p>Market Alerts</p>
-            </div>
+        <div class="feature">
+          <h3>📈</h3>
+          <p>Live Charts</p>
         </div>
-        
-        <p style="margin-top: 2rem; font-size: 0.9rem; color: #9ca3af;">
-            Reconnect to access real-time trading features. Your data will sync automatically when connection is restored.
-        </p>
+        <div class="feature">
+          <h3>⚡</h3>
+          <p>Order Execution</p>
+        </div>
+        <div class="feature">
+          <h3>🔔</h3>
+          <p>Market Alerts</p>
+        </div>
+      </div>
+
+      <p style="margin-top: 2rem; font-size: 0.9rem; color: #9ca3af">
+        Reconnect to access real-time trading features. Your data will sync
+        automatically when connection is restored.
+      </p>
     </div>
-    
+
     <script>
-        // Update last connected time
-        const lastConnected = localStorage.getItem('lastConnected');
-        if (lastConnected) {
-            document.getElementById('lastConnected').textContent = new Date(lastConnected).toLocaleString();
-        } else {
-            document.getElementById('lastConnected').textContent = 'Unknown';
-        }
-        
-        function checkConnection() {
-            fetch('/', { method: 'HEAD' })
-                .then(() => {
-                    window.location.reload();
-                })
-                .catch(() => {
-                    alert('Still offline. Please check your internet connection.');
-                });
-        }
-        
-        // Listen for online/offline events
-        window.addEventListener('online', () => {
-            localStorage.setItem('lastConnected', new Date().toISOString());
+      // Update last connected time
+      const lastConnected = localStorage.getItem("lastConnected");
+      if (lastConnected) {
+        document.getElementById("lastConnected").textContent = new Date(
+          lastConnected,
+        ).toLocaleString();
+      } else {
+        document.getElementById("lastConnected").textContent = "Unknown";
+      }
+
+      function checkConnection() {
+        fetch("/", { method: "HEAD" })
+          .then(() => {
             window.location.reload();
-        });
-        
-        window.addEventListener('offline', () => {
-            localStorage.setItem('lastConnected', new Date().toISOString());
-        });
+          })
+          .catch(() => {
+            alert("Still offline. Please check your internet connection.");
+          });
+      }
+
+      // Listen for online/offline events
+      window.addEventListener("online", () => {
+        localStorage.setItem("lastConnected", new Date().toISOString());
+        window.location.reload();
+      });
+
+      window.addEventListener("offline", () => {
+        localStorage.setItem("lastConnected", new Date().toISOString());
+      });
     </script>
-</body>
+  </body>
 </html>

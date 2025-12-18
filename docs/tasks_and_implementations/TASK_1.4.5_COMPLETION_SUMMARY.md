@@ -24,13 +24,13 @@
 
 ### Components Created (5 files)
 
-| Component | Purpose | Status |
-|-----------|---------|--------|
-| `PositionsTable.tsx` | Main positions table with selection & bulk close | ✅ Complete |
-| `PositionRow.tsx` | Individual row with Close & Details buttons | ✅ Complete |
-| `PositionCloseDialog.tsx` | Confirmation dialog for closing positions | ✅ Complete |
-| `PositionDetailDialog.tsx` | SL/TP editor with DB save | ✅ Complete |
-| `PositionsTableVirtualized.tsx` | **NEW** Virtualized table for 1000+ positions | ✅ Complete |
+| Component                       | Purpose                                          | Status      |
+| ------------------------------- | ------------------------------------------------ | ----------- |
+| `PositionsTable.tsx`            | Main positions table with selection & bulk close | ✅ Complete |
+| `PositionRow.tsx`               | Individual row with Close & Details buttons      | ✅ Complete |
+| `PositionCloseDialog.tsx`       | Confirmation dialog for closing positions        | ✅ Complete |
+| `PositionDetailDialog.tsx`      | SL/TP editor with DB save                        | ✅ Complete |
+| `PositionsTableVirtualized.tsx` | **NEW** Virtualized table for 1000+ positions    | ✅ Complete |
 
 ### Hooks Integrated (2 existing)
 
@@ -39,9 +39,9 @@
 
 ### Test Files (2 files, 21 tests)
 
-| Test Suite | Tests | Coverage |
-|-----------|-------|----------|
-| `PositionsTable.test.tsx` | 9 tests | Rendering, close dialog, bulk close, selection |
+| Test Suite                           | Tests   | Coverage                                            |
+| ------------------------------------ | ------- | --------------------------------------------------- |
+| `PositionsTable.test.tsx`            | 9 tests | Rendering, close dialog, bulk close, selection      |
 | `PositionsTableVirtualized.test.tsx` | 6 tests | Virtualization, performance, header, position count |
 
 **Test Results:** 758 tests passing (100% success rate) across 21 test files
@@ -50,14 +50,15 @@
 
 ## Performance Metrics
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| Render 1000 positions | 55ms | <1000ms | ✅ Exceeds |
-| Header visibility | Always visible | Required | ✅ Met |
-| Memory usage | Efficient (virtual DOM) | Optimize | ✅ Optimized |
-| Scroll performance | Smooth | Required | ✅ Met |
+| Metric                | Value                   | Target   | Status       |
+| --------------------- | ----------------------- | -------- | ------------ |
+| Render 1000 positions | 55ms                    | <1000ms  | ✅ Exceeds   |
+| Header visibility     | Always visible          | Required | ✅ Met       |
+| Memory usage          | Efficient (virtual DOM) | Optimize | ✅ Optimized |
+| Scroll performance    | Smooth                  | Required | ✅ Met       |
 
 **Virtualization Details:**
+
 - Uses `react-window` FixedSizeList (1.8.10)
 - Row size: 60px each
 - Only visible rows rendered (typically 10-15 rows at a time)
@@ -68,26 +69,32 @@
 ## Key Features Implemented
 
 ### 1. Real-Time Position Monitoring
+
 - Live P&L updates every 1–5 seconds
 - Color-coded P&L (green = profit, red = loss)
 - Margin level calculations
 - Realtime subscription with auto-reconnection
 
 ### 2. Close Workflows
+
 **Single Position Close:**
+
 - Click "Close" button → Dialog appears
 - Enter quantity (optional, defaults to full close)
 - Confirm → Server call via `usePositionClose`
 - Toast notification with result (P&L displayed)
 
 **Bulk Close:**
+
 - Checkbox select multiple positions
 - Click "Close Selected" button
 - Confirms closure for all selected
 - Iterative server calls with error handling
 
 ### 3. Stop Loss / Take Profit Management
+
 **PositionDetailDialog component:**
+
 - Display current SL/TP values
 - Edit SL/TP via number inputs
 - Save button → Direct Supabase `positions.update()`
@@ -96,11 +103,13 @@
 **Note:** Can be migrated to dedicated Edge Function for validation if needed.
 
 ### 4. Selection & Bulk Actions
+
 - Checkbox per row for multi-select
 - "Close Selected" button (disabled if nothing selected)
 - Maintains selection state during scrolling (virtualization)
 
 ### 5. Accessibility & Responsive Design
+
 - ARIA labels on checkboxes (`select-${positionId}`)
 - Dialog role=dialog, aria-modal=true
 - Keyboard navigation support
@@ -111,12 +120,14 @@
 ## Integration Points
 
 ### With Existing Systems
+
 - **useRealtimePositions:** Provides live position data with automatic reconnection
 - **usePositionClose:** Calls `close-position` Edge Function
 - **PositionsGrid.tsx:** Reuses P&L calculation helpers
 - **Supabase:** Direct reads from `positions` table, updates for SL/TP
 
 ### API Endpoints Called
+
 - `POST /close-position` — Close single/partial position
 - `supabase.from('positions').update()` — Update SL/TP
 
@@ -142,6 +153,7 @@
 ## Test Coverage Summary
 
 ### Unit Tests (9 tests)
+
 ✅ PositionsTable renders with header and position rows  
 ✅ PositionRow displays symbol, side, quantity, entry, current, P&L  
 ✅ Close dialog opens on button click  
@@ -150,33 +162,35 @@
 ✅ Selection checkboxes toggle correctly  
 ✅ SL/TP edit dialog displays current values  
 ✅ SL/TP save persists to database  
-✅ Position detail dialog opens on Details click  
+✅ Position detail dialog opens on Details click
 
 ### Performance Tests (6 tests)
+
 ✅ Renders 1000 positions in 55ms (<1000ms target)  
 ✅ Header row renders correctly  
 ✅ Shows position count  
 ✅ Mounts without memory leaks  
 ✅ Displays "Close Selected" button  
-✅ Shows "Open Positions" title  
+✅ Shows "Open Positions" title
 
 ---
 
 ## Build & Deployment Status
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| TypeScript Compilation | ✅ 0 errors | All types properly inferred |
-| ESLint | ✅ 0 errors | Follows project conventions |
-| Build | ✅ 7.51s | Production build successful |
-| Tests | ✅ 758 passing | 100% pass rate |
-| Bundle Size | ✅ Optimized | react-window adds ~25KB gzipped |
+| Check                  | Status         | Notes                           |
+| ---------------------- | -------------- | ------------------------------- |
+| TypeScript Compilation | ✅ 0 errors    | All types properly inferred     |
+| ESLint                 | ✅ 0 errors    | Follows project conventions     |
+| Build                  | ✅ 7.51s       | Production build successful     |
+| Tests                  | ✅ 758 passing | 100% pass rate                  |
+| Bundle Size            | ✅ Optimized   | react-window adds ~25KB gzipped |
 
 ---
 
 ## File Manifest
 
 **Created Files:**
+
 1. `/src/components/trading/PositionsTable.tsx` (100 lines)
 2. `/src/components/trading/PositionRow.tsx` (50 lines)
 3. `/src/components/trading/PositionCloseDialog.tsx` (50 lines)
@@ -186,6 +200,7 @@
 7. `/src/components/trading/__tests__/PositionsTableVirtualized.test.tsx` (100 lines)
 
 **Modified Files:**
+
 - `package.json` — Added react-window dependencies
 - `IMPLEMENTATION_TASKS_DETAILED.md` — Updated TASK 1.4.5 status & TASK GROUP 4 summary
 
@@ -193,16 +208,16 @@
 
 ## Acceptance Criteria — All Met ✅
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
-| Real-time P&L (1–5s) | ✅ | useRealtimePositions hook with debouncing |
-| Partial/full close | ✅ | PositionCloseDialog + usePositionClose integration |
-| SL/TP set/update | ✅ | PositionDetailDialog with Supabase update |
-| Bulk close | ✅ | Selection + "Close Selected" button (9 tests) |
-| Sorting/filtering ready | ✅ | Component structure supports hooks addition |
-| Accessible views | ✅ | ARIA labels, keyboard navigation, responsive |
-| Performance tested | ✅ | 1000 positions in 55ms (6 performance tests) |
-| Comprehensive tests | ✅ | 15 tests + 6 performance tests (21 total) |
+| Criterion               | Status | Evidence                                           |
+| ----------------------- | ------ | -------------------------------------------------- |
+| Real-time P&L (1–5s)    | ✅     | useRealtimePositions hook with debouncing          |
+| Partial/full close      | ✅     | PositionCloseDialog + usePositionClose integration |
+| SL/TP set/update        | ✅     | PositionDetailDialog with Supabase update          |
+| Bulk close              | ✅     | Selection + "Close Selected" button (9 tests)      |
+| Sorting/filtering ready | ✅     | Component structure supports hooks addition        |
+| Accessible views        | ✅     | ARIA labels, keyboard navigation, responsive       |
+| Performance tested      | ✅     | 1000 positions in 55ms (6 performance tests)       |
+| Comprehensive tests     | ✅     | 15 tests + 6 performance tests (21 total)          |
 
 ---
 
@@ -236,27 +251,32 @@
 ## Quick Start Guide
 
 ### Run All Tests
+
 ```bash
 npm test -- --run
 ```
 
 ### Run Position Management Tests Only
+
 ```bash
 npm test -- --run PositionsTable
 npm test -- --run PositionsTableVirtualized
 ```
 
 ### Run with UI
+
 ```bash
 npm test:ui
 ```
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 ### Development Server
+
 ```bash
 npm run dev
 ```

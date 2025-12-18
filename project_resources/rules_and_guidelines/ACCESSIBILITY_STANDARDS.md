@@ -25,28 +25,36 @@
 ## 🎯 Accessibility Principles
 
 ### 1. Perceivable
+
 Information must be presented so all can perceive it.
+
 - Content is visible and readable
 - Colors are not the only indicator
 - Text alternatives for images
 - Sufficient contrast ratios
 
 ### 2. Operable
+
 All functionality must be keyboard accessible.
+
 - Keyboard navigation possible
 - Links, buttons, inputs all accessible
 - Focus indicators visible
 - No content requires timed interaction
 
 ### 3. Understandable
+
 Content must be clear and easy to comprehend.
+
 - Plain language (avoid jargon)
 - Consistent navigation
 - Clear labels and instructions
 - Predictable behavior
 
 ### 4. Robust
+
 Content works with assistive technologies.
+
 - Valid HTML semantics
 - Proper ARIA attributes
 - Compatible with screen readers
@@ -59,6 +67,7 @@ Content works with assistive technologies.
 ### Compliance Level: AA (Minimum Standard)
 
 **Level AA includes:**
+
 - ✅ All Level A requirements
 - ✅ Enhanced contrast (4.5:1 for normal, 3:1 for large)
 - ✅ Keyboard accessibility
@@ -70,18 +79,18 @@ Content works with assistive technologies.
 
 ### Our Standards
 
-| Criterion | Requirement | Status |
-|-----------|-------------|--------|
-| 1.4.3 Contrast (Minimum) | 4.5:1 for body text, 3:1 for large | ✅ Compliant |
-| 1.4.11 Non-text Contrast | 3:1 for UI components | ✅ Compliant |
-| 2.1.1 Keyboard | All functions keyboard accessible | ✅ Compliant |
-| 2.1.2 No Keyboard Trap | Keyboard can move away from elements | ✅ Compliant |
-| 2.4.3 Focus Order | Logical tab order | ✅ Compliant |
-| 2.4.7 Focus Visible | Visible focus indicator | ✅ Compliant |
-| 3.2.1 On Focus | No unexpected context changes | ✅ Compliant |
-| 3.2.2 On Input | Changes only after explicit request | ✅ Compliant |
-| 3.3.2 Labels or Instructions | All inputs have labels | ✅ Compliant |
-| 4.1.2 Name, Role, Value | All components have proper semantics | ✅ Compliant |
+| Criterion                    | Requirement                          | Status       |
+| ---------------------------- | ------------------------------------ | ------------ |
+| 1.4.3 Contrast (Minimum)     | 4.5:1 for body text, 3:1 for large   | ✅ Compliant |
+| 1.4.11 Non-text Contrast     | 3:1 for UI components                | ✅ Compliant |
+| 2.1.1 Keyboard               | All functions keyboard accessible    | ✅ Compliant |
+| 2.1.2 No Keyboard Trap       | Keyboard can move away from elements | ✅ Compliant |
+| 2.4.3 Focus Order            | Logical tab order                    | ✅ Compliant |
+| 2.4.7 Focus Visible          | Visible focus indicator              | ✅ Compliant |
+| 3.2.1 On Focus               | No unexpected context changes        | ✅ Compliant |
+| 3.2.2 On Input               | Changes only after explicit request  | ✅ Compliant |
+| 3.3.2 Labels or Instructions | All inputs have labels               | ✅ Compliant |
+| 4.1.2 Name, Role, Value      | All components have proper semantics | ✅ Compliant |
 
 ---
 
@@ -90,6 +99,7 @@ Content works with assistive technologies.
 ### Button
 
 **Requirements:**
+
 - ✅ Semantic `<button>` element
 - ✅ Text content or `aria-label` for icon buttons
 - ✅ Visible focus indicator
@@ -98,6 +108,7 @@ Content works with assistive technologies.
 - ✅ `aria-expanded` for menu buttons
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT - Text button
 <Button>Delete Account</Button>
@@ -108,7 +119,7 @@ Content works with assistive technologies.
 </Button>
 
 // ✅ CORRECT - Toggle button
-<Button 
+<Button
   aria-pressed={isPressed}
   onClick={() => setIsPressed(!isPressed)}
 >
@@ -124,6 +135,7 @@ Content works with assistive technologies.
 ### Input
 
 **Requirements:**
+
 - ✅ Associated `<label>` element
 - ✅ Unique `id` attribute
 - ✅ Correct `type` attribute
@@ -132,6 +144,7 @@ Content works with assistive technologies.
 - ✅ `required` prop for required fields
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT
 <div className="space-y-2">
@@ -172,6 +185,7 @@ Content works with assistive technologies.
 ### Form
 
 **Requirements:**
+
 - ✅ All inputs have `<label>` elements
 - ✅ Required fields marked with `required` prop
 - ✅ Error messages linked with `aria-describedby`
@@ -180,14 +194,15 @@ Content works with assistive technologies.
 - ✅ Form validation errors announced
 
 **Example:**
+
 ```tsx
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-})
+});
 
 export function Form() {
-  const form = useForm({ resolver: zodResolver(schema) })
+  const form = useForm({ resolver: zodResolver(schema) });
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -207,13 +222,14 @@ export function Form() {
 
       <Button type="submit">Submit</Button>
     </form>
-  )
+  );
 }
 ```
 
 ### Dialog
 
 **Requirements:**
+
 - ✅ Role `dialog` or use `<Dialog>` component
 - ✅ Focus trapped inside dialog
 - ✅ Escape key closes dialog
@@ -224,14 +240,13 @@ export function Form() {
 - ✅ `aria-describedby` points to description
 
 **Example:**
+
 ```tsx
 <Dialog open={open} onOpenChange={setOpen}>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Confirm Delete</DialogTitle>
-      <DialogDescription>
-        This action cannot be undone.
-      </DialogDescription>
+      <DialogDescription>This action cannot be undone.</DialogDescription>
     </DialogHeader>
     <DialogFooter>
       <Button onClick={() => setOpen(false)}>Cancel</Button>
@@ -246,6 +261,7 @@ export function Form() {
 ### Card
 
 **Requirements:**
+
 - ✅ Proper heading hierarchy if contains headings
 - ✅ Interactive cards have focus indicator
 - ✅ Text contrast 4.5:1 minimum
@@ -253,6 +269,7 @@ export function Form() {
 - ✅ No color-only information
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT
 <Card elevation="2" interactive onClick={selectCard}>
@@ -268,6 +285,7 @@ export function Form() {
 ### Alert
 
 **Requirements:**
+
 - ✅ Role `alert` for important messages
 - ✅ `aria-live="polite"` for dynamic content
 - ✅ Clear, descriptive message
@@ -275,6 +293,7 @@ export function Form() {
 - ✅ Text contrast 4.5:1
 
 **Example:**
+
 ```tsx
 <Alert>
   <AlertCircle className="h-4 w-4" />
@@ -297,12 +316,14 @@ export function Form() {
 ### Tab Order
 
 **Requirements:**
+
 - ✅ Logical tab order (left-to-right, top-to-bottom)
 - ✅ No skipped interactive elements
 - ✅ Tab order matches visual order
 - ✅ Use `tabIndex` only when necessary
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT - Natural tab order
 <form className="space-y-4">
@@ -322,6 +343,7 @@ export function Form() {
 ### Keyboard Shortcuts
 
 **Supported Keys:**
+
 - **Tab** - Move to next interactive element
 - **Shift+Tab** - Move to previous interactive element
 - **Enter/Space** - Activate buttons
@@ -329,6 +351,7 @@ export function Form() {
 - **Arrow Keys** - Navigate within components (select, menu, tabs)
 
 **Example:**
+
 ```tsx
 // ✅ Dialog closes on Escape
 <Dialog onOpenChange={setOpen}>
@@ -349,12 +372,14 @@ export function Form() {
 ### Focus Management
 
 **Requirements:**
+
 - ✅ Focus visible at all times
 - ✅ Focus indicator 2px+ width
 - ✅ Sufficient contrast against background
 - ✅ Not removed for styling
 
 **CSS Implementation:**
+
 ```css
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
@@ -369,6 +394,7 @@ export function Form() {
 ### Semantic HTML
 
 **Use semantic elements:**
+
 ```tsx
 // ✅ CORRECT
 <main>
@@ -393,19 +419,20 @@ export function Form() {
 
 **Essential ARIA Attributes:**
 
-| Attribute | Purpose | Example |
-|-----------|---------|---------|
-| `aria-label` | Label for icon buttons | `<Button aria-label="Close">×</Button>` |
-| `aria-labelledby` | Link to heading/title | `<div aria-labelledby="dialog-title">` |
-| `aria-describedby` | Link to description | `<Input aria-describedby="help-text">` |
-| `aria-invalid` | Mark errors | `<Input aria-invalid="true">` |
-| `aria-required` | Mark required | `<Input aria-required="true">` |
-| `aria-live` | Announce updates | `<div aria-live="polite">Status</div>` |
-| `aria-expanded` | Toggle state | `<Button aria-expanded={open}>Menu</Button>` |
-| `aria-pressed` | Button state | `<Button aria-pressed={active}>Bold</Button>` |
-| `aria-hidden` | Hide decorative | `<Icon aria-hidden="true" />` |
+| Attribute          | Purpose                | Example                                       |
+| ------------------ | ---------------------- | --------------------------------------------- |
+| `aria-label`       | Label for icon buttons | `<Button aria-label="Close">×</Button>`       |
+| `aria-labelledby`  | Link to heading/title  | `<div aria-labelledby="dialog-title">`        |
+| `aria-describedby` | Link to description    | `<Input aria-describedby="help-text">`        |
+| `aria-invalid`     | Mark errors            | `<Input aria-invalid="true">`                 |
+| `aria-required`    | Mark required          | `<Input aria-required="true">`                |
+| `aria-live`        | Announce updates       | `<div aria-live="polite">Status</div>`        |
+| `aria-expanded`    | Toggle state           | `<Button aria-expanded={open}>Menu</Button>`  |
+| `aria-pressed`     | Button state           | `<Button aria-pressed={active}>Bold</Button>` |
+| `aria-hidden`      | Hide decorative        | `<Icon aria-hidden="true" />`                 |
 
 **Examples:**
+
 ```tsx
 // Icon button
 <Button size="icon" aria-label="Settings">
@@ -418,7 +445,7 @@ export function Form() {
 </div>
 
 // Menu button
-<Button 
+<Button
   aria-expanded={isOpen}
   aria-haspopup="menu"
   onClick={toggleMenu}
@@ -437,17 +464,19 @@ export function Form() {
 ### Heading Hierarchy
 
 **Requirements:**
+
 - ✅ Exactly one `<h1>` per page
 - ✅ Sequential levels: H1 → H2 → H3 → H4
 - ✅ No skipped levels
 - ✅ Use for structure, not styling
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT
 <main>
   <h1>Dashboard</h1>
-  
+
   <section>
     <h2>Portfolio</h2>
     <h3>Holdings</h3>
@@ -469,12 +498,14 @@ export function Form() {
 ### Link Text
 
 **Requirements:**
+
 - ✅ Descriptive link text
 - ✅ Not "Click here" or "Read more"
 - ✅ Unique within page when possible
 - ✅ Clear destination
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT
 <a href="/docs/getting-started">Getting Started Guide</a>
@@ -499,6 +530,7 @@ export function Form() {
 | Disabled elements | No requirement | No requirement |
 
 **Current TradeX Pro Contrast:**
+
 ```
 Light Mode:
   Foreground on Background: 18:1 ✅
@@ -516,6 +548,7 @@ Dark Mode:
 **Forbidden:** Using color alone to convey meaning.
 
 **Example:**
+
 ```tsx
 // ❌ WRONG - Color only
 <div style={{ color: error ? 'red' : 'green' }}>
@@ -536,11 +569,13 @@ Dark Mode:
 ### Minimum Touch Target Size
 
 **Requirements:**
+
 - ✅ 44×44px minimum for all interactive elements
 - ✅ 8px gap between targets
 - ✅ For mobile devices especially
 
 **TradePro Standards:**
+
 ```
 Button sizes:
   xs: 32×32px   - Desktop only (not mobile)
@@ -557,6 +592,7 @@ Input heights:
 ```
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT - Touch-friendly
 <Button size="lg" className="w-full">
@@ -583,6 +619,7 @@ Input heights:
 All animations automatically respect `prefers-reduced-motion: reduce`.
 
 **Implementation:**
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -594,23 +631,23 @@ All animations automatically respect `prefers-reduced-motion: reduce`.
 ```
 
 **CSS Variables:**
+
 ```css
 /* Animations adjust automatically */
---duration-instant: 0ms;        /* Fast */
+--duration-instant: 0ms; /* Fast */
 --duration-fast: 150ms;
---duration-normal: 200ms;       /* Default */
+--duration-normal: 200ms; /* Default */
 --duration-slow: 300ms;
---duration-slower: 500ms;       /* Slow */
+--duration-slower: 500ms; /* Slow */
 
 /* All respect prefers-reduced-motion */
 ```
 
 **Example:**
+
 ```tsx
 // ✅ CORRECT - Animations work and respect preference
-<motion.div animate={{ opacity: 1 }}>
-  Content
-</motion.div>
+<motion.div animate={{ opacity: 1 }}>Content</motion.div>
 
 // ✅ NO SETUP NEEDED
 // Animations automatically respect user preference
@@ -619,11 +656,13 @@ All animations automatically respect `prefers-reduced-motion: reduce`.
 ### Vestibular & Kinetic
 
 **Forbidden:**
+
 - ❌ Parallax scrolling
 - ❌ Flashing content (>3 times/second)
 - ❌ Zooming on hover
 
 **Allowed:**
+
 - ✅ Fade transitions
 - ✅ Slide animations
 - ✅ Color changes
@@ -647,6 +686,7 @@ All animations automatically respect `prefers-reduced-motion: reduce`.
 ### Screen Reader Testing
 
 **With NVDA (Windows free):**
+
 ```
 1. Download NVDA: https://www.nvaccess.org/
 2. Enable NVDA + set to Scan mode
@@ -662,11 +702,13 @@ All animations automatically respect `prefers-reduced-motion: reduce`.
 ```
 
 **With JAWS (Windows paid):**
+
 ```
 Similar testing with JAWS screen reader
 ```
 
 **With VoiceOver (macOS/iOS):**
+
 ```
 1. Enable: System Preferences > Accessibility > VoiceOver
 2. Navigate with arrow keys
@@ -676,12 +718,14 @@ Similar testing with JAWS screen reader
 ### Color Contrast Testing
 
 **Tools:**
+
 - [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - [Color Contrast Analyzer](https://www.tpgi.com/color-contrast-checker/)
 - Chrome DevTools (Accessibility panel)
 - Firefox Accessibility Inspector
 
 **Process:**
+
 ```
 1. Open Web Accessibility Evaluator Toolbars (WAVE)
 2. Check each color combination
@@ -702,6 +746,7 @@ Similar testing with JAWS screen reader
 ### Component Testing
 
 **For Every Component:**
+
 - [ ] Semantic HTML used
 - [ ] Focus visible and logical
 - [ ] Labels connected to inputs
@@ -719,28 +764,29 @@ Similar testing with JAWS screen reader
 
 ### Testing Tools
 
-| Tool | Purpose | Cost |
-|------|---------|------|
-| [WAVE](https://wave.webaim.org/) | Visual accessibility checker | Free |
-| [Axe DevTools](https://www.deque.com/axe/devtools/) | Automated accessibility testing | Free |
-| [Lighthouse](https://developers.google.com/web/tools/lighthouse) | Google's performance/a11y tool | Free |
-| [NVDA](https://www.nvaccess.org/) | Free screen reader (Windows) | Free |
-| [JAWS](https://www.freedomscientific.com/products/software/jaws/) | Premium screen reader | Paid |
-| [Accessibility Insight](https://accessibilityinsights.io/) | Automated scanning + manual testing | Free |
+| Tool                                                              | Purpose                             | Cost |
+| ----------------------------------------------------------------- | ----------------------------------- | ---- |
+| [WAVE](https://wave.webaim.org/)                                  | Visual accessibility checker        | Free |
+| [Axe DevTools](https://www.deque.com/axe/devtools/)               | Automated accessibility testing     | Free |
+| [Lighthouse](https://developers.google.com/web/tools/lighthouse)  | Google's performance/a11y tool      | Free |
+| [NVDA](https://www.nvaccess.org/)                                 | Free screen reader (Windows)        | Free |
+| [JAWS](https://www.freedomscientific.com/products/software/jaws/) | Premium screen reader               | Paid |
+| [Accessibility Insight](https://accessibilityinsights.io/)        | Automated scanning + manual testing | Free |
 
 ### Learning Resources
 
-| Resource | Topic |
-|----------|-------|
-| [WebAIM](https://webaim.org/) | A11y best practices |
-| [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/) | Official guidelines |
+| Resource                                                               | Topic                   |
+| ---------------------------------------------------------------------- | ----------------------- |
+| [WebAIM](https://webaim.org/)                                          | A11y best practices     |
+| [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/)                    | Official guidelines     |
 | [MDN A11y](https://developer.mozilla.org/en-US/docs/Web/Accessibility) | MDN accessibility guide |
-| [Inclusive Components](https://inclusive-components.design/) | Component patterns |
-| [A11y Project](https://www.a11yproject.com/) | Community resources |
+| [Inclusive Components](https://inclusive-components.design/)           | Component patterns      |
+| [A11y Project](https://www.a11yproject.com/)                           | Community resources     |
 
 ### Quick Reference
 
 **A11y Testing Checklist:**
+
 1. Keyboard navigation (Tab through entire page)
 2. Screen reader (test with NVDA/VoiceOver)
 3. Contrast ratios (check with WebAIM)
@@ -778,6 +824,7 @@ Similar testing with JAWS screen reader
 ## 📞 Questions?
 
 For accessibility questions or issues:
+
 1. Check [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 2. Review [WebAIM](https://webaim.org/) articles
 3. Ask in #accessibility Slack channel

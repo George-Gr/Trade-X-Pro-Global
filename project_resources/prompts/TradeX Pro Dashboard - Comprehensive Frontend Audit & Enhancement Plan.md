@@ -1,11 +1,13 @@
 ---
 agent: Frontend Specialist
 ---
+
 # TradeX Pro Dashboard - Comprehensive Frontend Audit & Enhancement Plan
 
 ## 🔴 CRITICAL ISSUES
 
 ### 1. **Inconsistent Typography Hierarchy**
+
 - **Issue**: Dashboard title uses inconsistent sizing across screens. "Dashboard" appears larger in some views than others.
 - **Fix**: Establish fixed typography scale:
   - H1 (Page titles): 32px, font-weight: 700
@@ -15,14 +17,16 @@ agent: Frontend Specialist
   - Small text: 12px, font-weight: 400
 
 ### 2. **Poor Color Contrast & Accessibility**
+
 - **Issue**: Gray text on dark background fails WCAG AA standards. "Welcome back to your trading account" is barely readable.
-- **Fix**: 
+- **Fix**:
   - Primary text: #FFFFFF (pure white)
   - Secondary text: #A0AEC0 (minimum contrast ratio 4.5:1)
   - Tertiary text: #718096
   - Test all text with contrast checker tools
 
 ### 3. **Inconsistent Spacing System**
+
 - **Issue**: Random gaps between elements. No systematic padding/margin scale visible.
 - **Fix**: Implement 8px base grid system:
   - xs: 4px
@@ -34,6 +38,7 @@ agent: Frontend Specialist
   - Apply consistently to all cards, sections, and elements
 
 ### 4. **Card Design Lacks Visual Hierarchy**
+
 - **Issue**: All cards have identical visual weight. No differentiation between primary and secondary information.
 - **Fix**:
   - Add subtle elevation system using box-shadow
@@ -43,6 +48,7 @@ agent: Frontend Specialist
   - Use background opacity variations: Primary cards (#1A202C), Secondary cards (#2D3748)
 
 ### 5. **Missing Visual Feedback States**
+
 - **Issue**: No hover, active, focus, or disabled states visible on interactive elements.
 - **Fix**: Implement for ALL interactive elements:
   - **Hover**: Brightness +10%, cursor: pointer, transition: 200ms ease
@@ -57,22 +63,25 @@ agent: Frontend Specialist
 ### 6. **Navigation Sidebar Issues**
 
 #### 6a. Active State Indication
+
 - **Issue**: No clear indication of which page is currently active
-- **Fix**: 
+- **Fix**:
   - Add left border (4px) in accent color (#3B82F6)
   - Background highlight: rgba(59, 130, 246, 0.1)
   - Icon and text color: #3B82F6
 
 #### 6b. Icon Alignment
+
 - **Issue**: Icons appear misaligned with text labels
-- **Fix**: 
+- **Fix**:
   - Use flexbox: `display: flex; align-items: center; gap: 12px;`
   - Icon size: 20x20px consistently
   - Add consistent padding: 12px 16px
 
 #### 6c. Collapsed State Missing
+
 - **Issue**: No collapsed/mini sidebar option for screen space optimization
-- **Fix**: 
+- **Fix**:
   - Implement toggle button at top/bottom
   - Collapsed width: 64px
   - Show only icons with tooltips on hover
@@ -81,8 +90,10 @@ agent: Frontend Specialist
 ### 7. **Dashboard Grid Layout Problems**
 
 #### 7a. Unbalanced Card Sizes
+
 - **Issue**: Cards have irregular widths creating visual chaos
 - **Fix**: Implement CSS Grid:
+
 ```css
 .dashboard-grid {
   display: grid;
@@ -93,6 +104,7 @@ agent: Frontend Specialist
 ```
 
 #### 7b. Wasted Whitespace
+
 - **Issue**: Large empty areas in "Margin Level" and "Risk Alerts" cards
 - **Fix**:
   - Add visual elements (charts, progress indicators)
@@ -100,6 +112,7 @@ agent: Frontend Specialist
   - Add descriptive text explaining what will appear when active
 
 ### 8. **Data Visualization Missing**
+
 - **Issue**: "Profit/Loss" and "Margin Level" cards show no historical data
 - **Fix**:
   - Add sparkline mini-charts showing 7-day trend
@@ -107,6 +120,7 @@ agent: Frontend Specialist
   - Show percentage change with color-coded arrows (green up, red down)
 
 ### 9. **Stat Card Icon Treatment**
+
 - **Issue**: Icons in top-right of cards feel disconnected and purposeless
 - **Fix**:
   - Reduce icon opacity to 0.6
@@ -115,6 +129,7 @@ agent: Frontend Specialist
   - Position consistently: top-right with 16px padding
 
 ### 10. **Number Formatting Inconsistencies**
+
 - **Issue**: Currency values lack proper formatting
 - **Fix**:
   - Use consistent decimal places: $50,000.00 (always 2 decimals)
@@ -129,6 +144,7 @@ agent: Frontend Specialist
 ### 11. **Header Bar Design**
 
 #### 11a. Account Email Visibility
+
 - **Issue**: Email address too prominent, takes unnecessary space
 - **Fix**:
   - Move to dropdown menu triggered by user avatar
@@ -136,13 +152,15 @@ agent: Frontend Specialist
   - Username/email appears in dropdown
 
 #### 11b. Last Updated Time
+
 - **Issue**: Timestamp format could be more user-friendly
-- **Fix**: 
+- **Fix**:
   - Use relative time: "Updated 2 minutes ago"
   - Add auto-refresh indicator (spinning icon during update)
   - Tooltip shows exact timestamp on hover
 
 #### 11c. Header Actions Spacing
+
 - **Issue**: Icons cramped together without clear separation
 - **Fix**:
   - Minimum 16px gap between icons
@@ -152,6 +170,7 @@ agent: Frontend Specialist
 ### 12. **Market Watch Widget**
 
 #### 12a. Currency Flag Icons
+
 - **Issue**: Flags are too small and hard to distinguish
 - **Fix**:
   - Increase to 24x24px
@@ -159,6 +178,7 @@ agent: Frontend Specialist
   - Ensure high-quality SVG flags
 
 #### 12b. Value Change Indicators
+
 - **Issue**: Change values lack color coding and direction arrows
 - **Fix**:
   - Green text for positive: #10B981
@@ -167,6 +187,7 @@ agent: Frontend Specialist
   - Bold font weight for emphasis
 
 #### 12c. Missing Interaction
+
 - **Issue**: No click action on currency pairs
 - **Fix**:
   - Add hover effect (subtle background highlight)
@@ -176,6 +197,7 @@ agent: Frontend Specialist
 ### 13. **Quick Actions Section**
 
 #### 13a. Button Hierarchy
+
 - **Issue**: "Start Trading" and "View Portfolio" have equal visual weight
 - **Fix**:
   - "Start Trading" = Primary (solid background #3B82F6)
@@ -183,6 +205,7 @@ agent: Frontend Specialist
   - Primary button slightly larger (font-size: 16px vs 14px)
 
 #### 13b. Button Icons
+
 - **Issue**: Icons don't clearly represent actions
 - **Fix**:
   - Use universally recognized icons (Lucide or Heroicons)
@@ -192,6 +215,7 @@ agent: Frontend Specialist
 ### 14. **Onboarding Flow Presentation**
 
 #### 14a. Progress Indication Missing
+
 - **Issue**: Multi-step process lacks visual progress
 - **Fix**:
   - Add step indicators: ① → ② → ③
@@ -200,6 +224,7 @@ agent: Frontend Specialist
   - Gray out upcoming steps
 
 #### 14b. Step Cards Design
+
 - **Issue**: Arrow bullets feel dated, instructions cramped
 - **Fix**:
   - Use numbered circles (40px diameter)
@@ -210,6 +235,7 @@ agent: Frontend Specialist
 ### 15. **Recent Activity Timeline**
 
 #### 15a. Timestamp Formatting
+
 - **Issue**: "Today" is vague and unhelpful
 - **Fix**:
   - Show relative time: "2 hours ago"
@@ -218,6 +244,7 @@ agent: Frontend Specialist
   - Older: "Oct 23, 2024"
 
 #### 15b. Visual Timeline
+
 - **Issue**: Flat list lacks chronological context
 - **Fix**:
   - Add vertical line connecting items
@@ -230,12 +257,14 @@ agent: Frontend Specialist
 ## 🟢 MINOR POLISH IMPROVEMENTS
 
 ### 16. **Micro-interactions**
+
 - Add subtle scale animation on card hover (scale: 1.02)
 - Number count-up animation when values change
 - Smooth color transitions (300ms) on state changes
 - Loading skeleton screens instead of blank states
 
 ### 17. **Empty States Design**
+
 - **Issue**: "No active trades" message lacks personality
 - **Fix**:
   - Add illustration (trading chart icon, empty folder)
@@ -244,6 +273,7 @@ agent: Frontend Specialist
   - Light gray background to distinguish from regular content
 
 ### 18. **Responsive Breakpoints**
+
 - Mobile (< 640px): Single column, stacked cards
 - Tablet (640px - 1024px): 2-column grid
 - Desktop (> 1024px): 3-4 column grid
@@ -251,12 +281,14 @@ agent: Frontend Specialist
 - Header actions collapse to hamburger menu
 
 ### 19. **Loading States**
+
 - Shimmer effect for loading cards
 - Skeleton screens matching final layout
 - Progressive content loading (above-fold first)
 - Avoid jarring layout shifts (reserve space)
 
 ### 20. **Focus Management**
+
 - Logical tab order through interactive elements
 - Skip to main content link for keyboard users
 - Focus trap in modals
@@ -269,15 +301,17 @@ agent: Frontend Specialist
 ### 21. **Color Palette Refinement**
 
 #### Current Issues:
+
 - Inconsistent blues across interface
 - No defined brand color scale
 - Insufficient color for different states
 
 #### Recommended Palette:
+
 ```
 Primary (Blue):
 - 50: #EFF6FF
-- 100: #DBEAFE  
+- 100: #DBEAFE
 - 500: #3B82F6 (main brand)
 - 700: #1D4ED8
 - 900: #1E3A8A
@@ -303,6 +337,7 @@ Neutrals (Gray):
 ```
 
 ### 22. **Shadow System**
+
 ```css
 /* Elevation levels */
 --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
@@ -313,6 +348,7 @@ Neutrals (Gray):
 ```
 
 ### 23. **Border Radius Standards**
+
 - Small elements (badges, tags): 4px
 - Buttons, inputs: 6px
 - Cards, modals: 8px
@@ -320,6 +356,7 @@ Neutrals (Gray):
 - Pills/fully rounded: 9999px
 
 ### 24. **Animation Timing**
+
 ```css
 --transition-fast: 150ms ease-in-out;
 --transition-base: 250ms ease-in-out;
@@ -332,24 +369,28 @@ Neutrals (Gray):
 ## 🚀 ADVANCED ENHANCEMENTS
 
 ### 25. **Dashboard Customization**
+
 - Drag-and-drop card reordering
 - Show/hide widget toggles
 - Save layout preferences per user
 - Multiple dashboard layouts (beginner, advanced, minimal)
 
 ### 26. **Real-time Data Updates**
+
 - WebSocket connection indicator
 - Live price tickers with subtle animations
 - Notification badges for updates
 - Pulse animation on value changes
 
 ### 27. **Dark/Light Mode Toggle**
+
 - Smooth transition between modes
 - Remember user preference
 - System preference detection
 - Mode-specific optimized colors
 
 ### 28. **Accessibility Enhancements**
+
 - ARIA labels on all interactive elements
 - Screen reader announcements for updates
 - Reduced motion mode for animations
@@ -357,6 +398,7 @@ Neutrals (Gray):
 - Keyboard shortcut hints
 
 ### 29. **Performance Optimizations**
+
 - Lazy load below-fold content
 - Image optimization (WebP, proper sizing)
 - Code splitting by route
@@ -364,6 +406,7 @@ Neutrals (Gray):
 - Memoize expensive calculations
 
 ### 30. **Advanced Data Visualization**
+
 - Interactive charts with zoom/pan
 - Comparison overlays (current vs previous period)
 - Candlestick charts for trading pairs
@@ -375,6 +418,7 @@ Neutrals (Gray):
 ## 📋 IMPLEMENTATION PRIORITY
 
 ### Phase 1 (Critical - Week 1):
+
 - Fix typography hierarchy (#1)
 - Improve color contrast (#2)
 - Implement spacing system (#3)
@@ -382,6 +426,7 @@ Neutrals (Gray):
 - Fix navigation active states (#6a)
 
 ### Phase 2 (Major - Week 2):
+
 - Redesign dashboard grid (#7)
 - Enhance stat cards (#9, #10)
 - Improve header design (#11)
@@ -389,6 +434,7 @@ Neutrals (Gray):
 - Design empty states (#17)
 
 ### Phase 3 (Polish - Week 3):
+
 - Add micro-interactions (#16)
 - Implement loading states (#19)
 - Create design system documentation (#21-24)
@@ -396,6 +442,7 @@ Neutrals (Gray):
 - Accessibility improvements (#28)
 
 ### Phase 4 (Advanced - Week 4):
+
 - Dashboard customization (#25)
 - Real-time updates (#26)
 - Dark mode (#27)
@@ -409,6 +456,7 @@ Neutrals (Gray):
 ### Component-Level Changes:
 
 **Sidebar Component:**
+
 ```jsx
 - Add hover state with background: rgba(59, 130, 246, 0.05)
 - Active state: left-border 4px solid #3B82F6
@@ -419,6 +467,7 @@ Neutrals (Gray):
 ```
 
 **Stat Card Component:**
+
 ```jsx
 - Min-height: 140px
 - Padding: 24px
@@ -432,6 +481,7 @@ Neutrals (Gray):
 ```
 
 **Market Watch Row:**
+
 ```jsx
 - Padding: 12px 16px
 - Hover background: rgba(255,255,255,0.03)

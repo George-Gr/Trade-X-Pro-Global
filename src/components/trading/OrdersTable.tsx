@@ -1,6 +1,12 @@
-import { useState, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useState, useMemo } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,16 +16,21 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { OrderRow, type Order } from './OrderRow';
-import { OrdersTableHeader } from './OrdersTableHeader';
-import { OrdersTableMobile } from './OrdersTableMobile';
-import useOrdersTable from '@/hooks/useOrdersTable';
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Loader2, AlertCircle } from 'lucide-react';
+} from "@/components/ui/alert-dialog";
+import { OrderRow, type Order } from "./OrderRow";
+import { OrdersTableHeader } from "./OrdersTableHeader";
+import { OrdersTableMobile } from "./OrdersTableMobile";
+import useOrdersTable from "@/hooks/useOrdersTable";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Loader2, AlertCircle } from "lucide-react";
 
-type SortKey = 'created_at' | 'symbol' | 'quantity' | 'status' | 'realized_pnl';
-type SortOrder = 'asc' | 'desc';
+type SortKey = "created_at" | "symbol" | "quantity" | "status" | "realized_pnl";
+type SortOrder = "asc" | "desc";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -32,10 +43,10 @@ interface OrdersTableProps {
 
 /**
  * OrdersTable Component
- * 
+ *
  * Displays all orders (open, pending, filled, cancelled) with real-time status updates.
  * Includes sorting, filtering, and action buttons for order management.
- * 
+ *
  * Features:
  * - Real-time order status updates
  * - Sorting by symbol, quantity, status, date, P&L with visual h-5 w-5 arrows
@@ -55,12 +66,13 @@ export const OrdersTable = ({
   onCancel,
   onViewDetails,
 }: OrdersTableProps) => {
-  const [sortKey, setSortKey] = useState<SortKey>('created_at');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [symbolSearch, setSymbolSearch] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>("created_at");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [symbolSearch, setSymbolSearch] = useState("");
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const [selectedOrderToCancel, setSelectedOrderToCancel] = useState<Order | null>(null);
+  const [selectedOrderToCancel, setSelectedOrderToCancel] =
+    useState<Order | null>(null);
 
   const ordersHook = useOrdersTable();
   const sourceOrders = orders && orders.length > 0 ? orders : ordersHook.orders;
@@ -68,7 +80,8 @@ export const OrdersTable = ({
   // Filter orders
   const filteredOrders = useMemo(() => {
     return sourceOrders.filter((order) => {
-      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "all" || order.status === statusFilter;
       const matchesSymbol = order.symbol
         .toLowerCase()
         .includes(symbolSearch.toLowerCase());
@@ -83,7 +96,7 @@ export const OrdersTable = ({
       let bValue: string | number = b[sortKey] as string | number;
 
       // Handle different data types
-      if (sortKey === 'created_at') {
+      if (sortKey === "created_at") {
         aValue = new Date(a[sortKey] as string).getTime();
         bValue = new Date(b[sortKey] as string).getTime();
       }
@@ -91,8 +104,8 @@ export const OrdersTable = ({
       if (aValue === undefined || aValue === null) return 1;
       if (bValue === undefined || bValue === null) return -1;
 
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -101,10 +114,10 @@ export const OrdersTable = ({
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortKey(key);
-      setSortOrder('desc');
+      setSortOrder("desc");
     }
   };
 
@@ -125,10 +138,13 @@ export const OrdersTable = ({
 
   // Statistics
   const stats = useMemo(() => {
-    const filled = sourceOrders.filter((o) => o.status === 'filled').length;
-    const open = sourceOrders.filter((o) => ['open', 'partially_filled'].includes(o.status))
-      .length;
-    const cancelled = sourceOrders.filter((o) => o.status === 'cancelled').length;
+    const filled = sourceOrders.filter((o) => o.status === "filled").length;
+    const open = sourceOrders.filter((o) =>
+      ["open", "partially_filled"].includes(o.status),
+    ).length;
+    const cancelled = sourceOrders.filter(
+      (o) => o.status === "cancelled",
+    ).length;
     const totalPnL = sourceOrders
       .filter((o) => o.realized_pnl !== undefined)
       .reduce((sum, o) => sum + (o.realized_pnl || 0), 0);
@@ -146,7 +162,10 @@ export const OrdersTable = ({
         <CardContent>
           <div className="flex items-center gap-4 text-destructive bg-background p-4 rounded-lg">
             <AlertCircle className="w-5 h-5 shrink-0" />
-            <span>Error loading orders: {error instanceof Error ? error.message : 'Unknown error'}</span>
+            <span>
+              Error loading orders:{" "}
+              {error instanceof Error ? error.message : "Unknown error"}
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -167,7 +186,11 @@ export const OrdersTable = ({
         {error && (
           <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
             <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
-            <span className="text-sm text-destructive">Error loading orders: {(error as unknown as { message?: string })?.message || 'Unknown error'}</span>
+            <span className="text-sm text-destructive">
+              Error loading orders:{" "}
+              {(error as unknown as { message?: string })?.message ||
+                "Unknown error"}
+            </span>
           </div>
         )}
 
@@ -198,8 +221,8 @@ export const OrdersTable = ({
             <AlertCircle className="h-12 w-12 text-muted-foreground/50 mb-4 shrink-0" />
             <p className="text-muted-foreground">
               {orders.length === 0
-                ? 'No orders yet. Start trading to see orders here.'
-                : 'No orders match your filters.'}
+                ? "No orders yet. Start trading to see orders here."
+                : "No orders match your filters."}
             </p>
           </div>
         )}
@@ -211,7 +234,10 @@ export const OrdersTable = ({
               <table className="w-full text-sm">
                 <tbody>
                   {sortedOrders
-                    .filter((order): order is Order => 'status' in order && typeof order.status === 'string')
+                    .filter(
+                      (order): order is Order =>
+                        "status" in order && typeof order.status === "string",
+                    )
                     .map((order) => (
                       <OrderRow
                         key={order.id}
@@ -227,7 +253,10 @@ export const OrdersTable = ({
 
             {/* Mobile Card View */}
             <OrdersTableMobile
-              orders={sortedOrders.filter((order): order is Order => 'status' in order && typeof order.status === 'string')}
+              orders={sortedOrders.filter(
+                (order): order is Order =>
+                  "status" in order && typeof order.status === "string",
+              )}
               onModify={onModify}
               onCancel={handleCancelClick}
               onViewDetails={onViewDetails}
@@ -236,32 +265,48 @@ export const OrdersTable = ({
             {/* Summary Section */}
             <div className="pt-4 border-t border-border/50 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
               <div>
-                <span className="text-muted-foreground text-xs font-medium">Total Orders:</span>
-                <div className="font-bold text-foreground">{filteredOrders.length}</div>
-              </div>
-              <div>
-                <span className="text-muted-foreground text-xs font-medium">Open:</span>
-                <div className="font-bold text-primary">
-                  {filteredOrders.filter((o) => ['open', 'partially_filled'].includes(o.status))
-                    .length}
+                <span className="text-muted-foreground text-xs font-medium">
+                  Total Orders:
+                </span>
+                <div className="font-bold text-foreground">
+                  {filteredOrders.length}
                 </div>
               </div>
               <div>
-                <span className="text-muted-foreground text-xs font-medium">Filled:</span>
+                <span className="text-muted-foreground text-xs font-medium">
+                  Open:
+                </span>
+                <div className="font-bold text-primary">
+                  {
+                    filteredOrders.filter((o) =>
+                      ["open", "partially_filled"].includes(o.status),
+                    ).length
+                  }
+                </div>
+              </div>
+              <div>
+                <span className="text-muted-foreground text-xs font-medium">
+                  Filled:
+                </span>
                 <div className="font-bold text-buy">
-                  {filteredOrders.filter((o) => o.status === 'filled').length}
+                  {filteredOrders.filter((o) => o.status === "filled").length}
                 </div>
               </div>
               {stats.totalPnL !== 0 && (
                 <div>
-                  <span className="text-muted-foreground text-xs font-medium">Total P&L:</span>
+                  <span className="text-muted-foreground text-xs font-medium">
+                    Total P&L:
+                  </span>
                   <div
                     className="font-bold"
                     style={{
-                      color: stats.totalPnL > 0 ? 'hsl(var(--buy))' : 'hsl(var(--sell))',
+                      color:
+                        stats.totalPnL > 0
+                          ? "hsl(var(--buy))"
+                          : "hsl(var(--sell))",
                     }}
                   >
-                    {stats.totalPnL > 0 ? '+' : ''}${stats.totalPnL.toFixed(2)}
+                    {stats.totalPnL > 0 ? "+" : ""}${stats.totalPnL.toFixed(2)}
                   </div>
                 </div>
               )}
@@ -270,13 +315,18 @@ export const OrdersTable = ({
         )}
 
         {/* Cancel Confirmation Dialog */}
-        <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
+        <AlertDialog
+          open={showCancelConfirm}
+          onOpenChange={setShowCancelConfirm}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Cancel Order?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to cancel the {selectedOrderToCancel?.symbol}{' '}
-                {selectedOrderToCancel?.side.toUpperCase()} order? This action cannot be undone.
+                Are you sure you want to cancel the{" "}
+                {selectedOrderToCancel?.symbol}{" "}
+                {selectedOrderToCancel?.side.toUpperCase()} order? This action
+                cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

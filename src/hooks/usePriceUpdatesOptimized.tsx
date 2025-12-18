@@ -1,12 +1,12 @@
 /**
  * Optimized Price Updates Hook
- * 
+ *
  * Enhanced version with throttling, batching, and memory optimization
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { throttle } from '@/lib/performanceUtils';
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { supabase } from "@/lib/supabaseBrowserClient";
+import { throttle } from "@/lib/performanceUtils";
 
 export interface PriceData {
   symbol: string;
@@ -37,7 +37,7 @@ const CACHE_TTL_MS = 1000;
 
 // Symbol mapping for Finnhub
 const mapSymbolToFinnhub = (symbol: string): string => {
-  if (symbol.length === 6 && !symbol.includes(':')) {
+  if (symbol.length === 6 && !symbol.includes(":")) {
     const base = symbol.substring(0, 3);
     const quote = symbol.substring(3, 6);
     return `OANDA:${base}_${quote}`;
@@ -50,14 +50,14 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
   const now = Date.now();
   const cached = priceCache.get(symbol);
 
-  if (cached && (now - cached.timestamp) < CACHE_TTL_MS) {
+  if (cached && now - cached.timestamp < CACHE_TTL_MS) {
     return cached.data;
   }
 
   try {
     const finnhubSymbol = mapSymbolToFinnhub(symbol);
-    const { data, error } = await supabase.functions.invoke('get-stock-price', {
-      body: { symbol: finnhubSymbol }
+    const { data, error } = await supabase.functions.invoke("get-stock-price", {
+      body: { symbol: finnhubSymbol },
     });
 
     if (error || !data?.c || data.c <= 0) {
@@ -88,15 +88,15 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
 // Batch fetch with concurrency limit
 const fetchPricesBatched = async (
   symbols: string[],
-  maxConcurrent: number
+  maxConcurrent: number,
 ): Promise<Map<string, PriceData>> => {
   const results = new Map<string, PriceData>();
-  
+
   // Process in batches
   for (let i = 0; i < symbols.length; i += maxConcurrent) {
     const batch = symbols.slice(i, i + maxConcurrent);
     const batchResults = await Promise.all(batch.map(fetchPriceData));
-    
+
     batchResults.forEach((data, index) => {
       if (data) {
         results.set(batch[index], data);
@@ -117,14 +117,14 @@ export const usePriceUpdatesOptimized = ({
   const [prices, setPrices] = useState<Map<string, PriceData>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isMountedRef = useRef(true);
 
   // Memoize symbol list to prevent unnecessary re-renders
-  const symbolList = useMemo(() => 
-    [...new Set(symbols)].sort().join(','),
-    [symbols]
+  const symbolList = useMemo(
+    () => [...new Set(symbols)].sort().join(","),
+    [symbols],
   );
 
   // Throttled state update to prevent excessive re-renders
@@ -137,18 +137,21 @@ export const usePriceUpdatesOptimized = ({
 
     // The throttle utility expects a general function signature; cast to satisfy its typing,
     // then cast the returned throttled function back to the specific signature we expect.
-    const throttled = throttle(updater as unknown as (...args: unknown[]) => void, throttleMs) as unknown;
+    const throttled = throttle(
+      updater as unknown as (...args: unknown[]) => void,
+      throttleMs,
+    ) as unknown;
     return throttled as (p: Map<string, PriceData>) => void;
   }, [throttleMs]);
 
   const updatePrices = useCallback(async () => {
-    if (!enabled || symbolList === '') {
+    if (!enabled || symbolList === "") {
       setIsLoading(false);
       return;
     }
 
     try {
-      const symbolArray = symbolList.split(',').filter(Boolean);
+      const symbolArray = symbolList.split(",").filter(Boolean);
       if (symbolArray.length === 0) {
         setIsLoading(false);
         return;
@@ -159,7 +162,7 @@ export const usePriceUpdatesOptimized = ({
       setError(null);
       setIsLoading(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch prices');
+      setError(err instanceof Error ? err.message : "Failed to fetch prices");
       setIsLoading(false);
     }
   }, [symbolList, enabled, maxConcurrent, updatePricesThrottled]);
@@ -167,7 +170,7 @@ export const usePriceUpdatesOptimized = ({
   useEffect(() => {
     isMountedRef.current = true;
 
-    if (!enabled || symbolList === '') {
+    if (!enabled || symbolList === "") {
       setIsLoading(false);
       return;
     }
@@ -185,19 +188,22 @@ export const usePriceUpdatesOptimized = ({
       }
     };
   }, [symbolList, intervalMs, enabled, updatePrices]);
-  const getPrice = useCallback((symbol: string): PriceData | null => {
-    const priceData = prices.get(symbol);
-    if (priceData) {
-      const isStale = (Date.now() - priceData.timestamp) > (intervalMs + 500);
-      return { ...priceData, isStale };
-    }
-    return null;
-  }, [prices, intervalMs]);
+  const getPrice = useCallback(
+    (symbol: string): PriceData | null => {
+      const priceData = prices.get(symbol);
+      if (priceData) {
+        const isStale = Date.now() - priceData.timestamp > intervalMs + 500;
+        return { ...priceData, isStale };
+      }
+      return null;
+    },
+    [prices, intervalMs],
+  );
 
   const refreshPrice = useCallback(async (symbol: string) => {
     const priceData = await fetchPriceData(symbol);
     if (priceData && isMountedRef.current) {
-      setPrices(prev => new Map(prev).set(symbol, priceData));
+      setPrices((prev) => new Map(prev).set(symbol, priceData));
     }
   }, []);
 

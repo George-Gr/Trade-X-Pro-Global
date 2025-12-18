@@ -57,7 +57,7 @@
   }
 
   .form-control::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -227,13 +227,17 @@
   }
 
   .bottom-navigation-zone::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 28px;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 100%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
     pointer-events: none;
   }
 }

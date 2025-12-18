@@ -139,8 +139,8 @@
 <Card variant="tertiary">Background</Card>     {/* Gray tint */}
 
 // Interactive (clickable)
-<Card 
-  interactive 
+<Card
+  interactive
   onClick={() => navigate(`/item/${id}`)}
   role="button"
   tabIndex={0}
@@ -262,8 +262,14 @@ const schema = z.object({
 ## 🔍 More Components
 
 ### Dialog
+
 ```tsx
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 <Dialog open={open} onOpenChange={setOpen}>
   <DialogContent>
@@ -272,20 +278,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
     </DialogHeader>
     <p>Are you sure?</p>
   </DialogContent>
-</Dialog>
+</Dialog>;
 ```
 
 ### Alert
+
 ```tsx
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 <Alert variant="destructive">
   <AlertTitle>Error</AlertTitle>
   <AlertDescription>Something went wrong</AlertDescription>
-</Alert>
+</Alert>;
 ```
 
 ### Badge
+
 ```tsx
 import { Badge } from '@/components/ui/badge'
 
@@ -296,13 +304,14 @@ import { Badge } from '@/components/ui/badge'
 ```
 
 ### Checkbox
+
 ```tsx
-import { Checkbox } from '@/components/ui/checkbox'
+import { Checkbox } from "@/components/ui/checkbox";
 
 <div className="flex items-center gap-2">
   <Checkbox id="terms" />
   <Label htmlFor="terms">I agree to terms</Label>
-</div>
+</div>;
 ```
 
 ---
@@ -310,66 +319,78 @@ import { Checkbox } from '@/components/ui/checkbox'
 ## ✨ Common Patterns
 
 ### Login Form
+
 ```tsx
 const LoginForm = () => {
   const schema = z.object({
-    email: z.string().email('Invalid email'),
-    password: z.string().min(8, 'Too short'),
-  })
+    email: z.string().email("Invalid email"),
+    password: z.string().min(8, "Too short"),
+  });
 
-  const form = useForm({ resolver: zodResolver(schema) })
+  const form = useForm({ resolver: zodResolver(schema) });
 
   async function onSubmit(values: z.infer<typeof schema>) {
-    const response = await login(values)
+    const response = await login(values);
     if (response.ok) {
-      navigate('/dashboard')
+      navigate("/dashboard");
     }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField control={form.control} name="email" render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Email</FormLabel>
-            <FormControl>
-              <Input type="email" placeholder="you@example.com" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        
-        <FormField control={form.control} name="password" render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Password</FormLabel>
-            <FormControl>
-              <Input type="password" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        
-        <Button type="submit" className="w-full">Sign In</Button>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Password</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="w-full">
+          Sign In
+        </Button>
       </form>
     </Form>
-  )
-}
+  );
+};
 ```
 
 ### Item List with Selection
+
 ```tsx
 const ItemList = ({ items }: { items: Item[] }) => {
-  const [selected, setSelected] = React.useState<string | null>(null)
+  const [selected, setSelected] = React.useState<string | null>(null);
 
   return (
     <div className="space-y-2">
-      {items.map(item => (
+      {items.map((item) => (
         <Card
           key={item.id}
           interactive
           elevation="1"
           onClick={() => setSelected(item.id)}
-          className={selected === item.id ? 'ring-2 ring-primary' : ''}
+          className={selected === item.id ? "ring-2 ring-primary" : ""}
         >
           <div className="p-4">
             <h3 className="font-semibold">{item.name}</h3>
@@ -378,11 +399,12 @@ const ItemList = ({ items }: { items: Item[] }) => {
         </Card>
       ))}
     </div>
-  )
-}
+  );
+};
 ```
 
 ### Error State
+
 ```tsx
 <Card elevation="1" className="border-l-4 border-red-500">
   <CardHeader>
@@ -398,10 +420,11 @@ const ItemList = ({ items }: { items: Item[] }) => {
 ```
 
 ### Loading State
+
 ```tsx
 const [isLoading, setIsLoading] = React.useState(false)
 
-<Button 
+<Button
   disabled={isLoading}
   variant={isLoading ? "loading" : "default"}
   onClick={async () => {
@@ -426,11 +449,13 @@ const [isLoading, setIsLoading] = React.useState(false)
 ## 🎯 Size Reference
 
 ### Touch Targets (Mobile)
+
 - Minimum: 44×44px
 - Gap between: 8px
 - Use `size="lg"` or `mobileOptimized` prop
 
 ### Button Heights
+
 - xs: 32px
 - sm: 40px
 - default: 48px ✅ Touch-friendly
@@ -438,12 +463,14 @@ const [isLoading, setIsLoading] = React.useState(false)
 - xl: 64px ✅ Touch-friendly
 
 ### Input Heights
+
 - sm: 36px
 - default: 40px
 - lg: 44px ✅ Touch-friendly
 - mobile: 44px ✅ Touch-friendly
 
 ### Card Padding
+
 - Header: 24px
 - Content: 24px
 - Footer: 24px
@@ -473,7 +500,7 @@ All components automatically support dark mode.
 
 ```tsx
 // For mobile forms
-<Input 
+<Input
   mobileOptimized        // 44px height
   keyboardType="email"   // Proper keyboard
   size="lg"              // Larger touch target

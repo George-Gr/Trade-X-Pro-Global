@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Download, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { TradeHistoryItem, LedgerEntry, OrderHistoryItem } from "@/hooks/useTradingHistory";
+import type {
+  TradeHistoryItem,
+  LedgerEntry,
+  OrderHistoryItem,
+} from "@/hooks/useTradingHistory";
 
 interface ExportButtonsProps {
   trades: TradeHistoryItem[];
@@ -29,7 +33,9 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
       headers.join(","),
       ...data.map((row) => {
         const r = row as Record<string, unknown>;
-        return headers.map((header) => JSON.stringify(r[header] ?? "")).join(",");
+        return headers
+          .map((header) => JSON.stringify(r[header] ?? ""))
+          .join(",");
       }),
     ].join("\n");
 
@@ -37,7 +43,10 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `${filename}_${new Date().toISOString().split("T")[0]}.csv`);
+    link.setAttribute(
+      "download",
+      `${filename}_${new Date().toISOString().split("T")[0]}.csv`,
+    );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -110,7 +119,7 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
                     $${trade.realized_pnl.toFixed(2)}
                   </td>
                 </tr>
-              `
+              `,
                 )
                 .join("")}
             </tbody>
@@ -133,15 +142,24 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
 
   return (
     <div className="flex gap-4">
-      <Button variant="outline" onClick={() => exportToCSV(trades, "trades_history")}>
+      <Button
+        variant="outline"
+        onClick={() => exportToCSV(trades, "trades_history")}
+      >
         <Download className="h-4 w-4 mr-2" />
         Export Trades CSV
       </Button>
-      <Button variant="outline" onClick={() => exportToCSV(orders, "orders_history")}>
+      <Button
+        variant="outline"
+        onClick={() => exportToCSV(orders, "orders_history")}
+      >
         <Download className="h-4 w-4 mr-2" />
         Export Orders CSV
       </Button>
-      <Button variant="outline" onClick={() => exportToCSV(ledger, "ledger_history")}>
+      <Button
+        variant="outline"
+        onClick={() => exportToCSV(ledger, "ledger_history")}
+      >
         <Download className="h-4 w-4 mr-2" />
         Export Ledger CSV
       </Button>

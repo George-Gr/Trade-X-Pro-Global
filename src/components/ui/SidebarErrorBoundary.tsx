@@ -1,6 +1,6 @@
 /**
  * Sidebar Error Boundary Component
- * 
+ *
  * Provides error boundary protection for the sidebar navigation,
  * preventing navigation errors from crashing the entire application.
  * Implements graceful degradation and recovery mechanisms.
@@ -9,10 +9,16 @@
 import * as React from "react";
 import { AlertTriangle, RefreshCw, Home, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useToast, toast } from "@/hooks/use-toast";
 // Re-export navigation item helper boundary for compatibility with existing imports/tests
-export { NavigationItemErrorBoundary } from '@/lib/sidebarErrorHandling';
+export { NavigationItemErrorBoundary } from "@/lib/sidebarErrorHandling";
 
 interface SidebarErrorBoundaryState {
   hasError: boolean;
@@ -41,7 +47,9 @@ export class SidebarErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<SidebarErrorBoundaryState> {
+  static getDerivedStateFromError(
+    error: Error,
+  ): Partial<SidebarErrorBoundaryState> {
     return { hasError: true, error };
   }
 
@@ -61,12 +69,13 @@ export class SidebarErrorBoundary extends React.Component<
     }
 
     // Show toast notification for critical navigation errors (imperative toast for class components)
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // Use setTimeout to ensure toast is shown after re-render
       setTimeout(() => {
         toast({
           title: "Navigation Error",
-          description: "We're experiencing issues with the navigation menu. Please try refreshing the page.",
+          description:
+            "We're experiencing issues with the navigation menu. Please try refreshing the page.",
           variant: "destructive",
         });
       }, 100);
@@ -82,15 +91,16 @@ export class SidebarErrorBoundary extends React.Component<
       stack: error.stack,
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
-      url: typeof window !== 'undefined' ? window.location.href : 'server',
+      userAgent:
+        typeof window !== "undefined" ? window.navigator.userAgent : "server",
+      url: typeof window !== "undefined" ? window.location.href : "server",
       userId: this.getUserId(), // You could extract this from auth context
     };
 
     // Example: Send to console (replace with actual error tracking service)
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // In production, replace this with your error tracking service
-      console.error('🚨 Sidebar Error Report:', errorData);
+      console.error("🚨 Sidebar Error Report:", errorData);
     }
   };
 
@@ -109,7 +119,7 @@ export class SidebarErrorBoundary extends React.Component<
 
   handleReload = () => {
     // Force page reload to recover from error
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.location.reload();
       return;
     }
@@ -129,7 +139,12 @@ export class SidebarErrorBoundary extends React.Component<
       }
 
       // Default fallback UI
-      return <SidebarErrorFallback error={this.state.error} onRetry={this.handleRetry} />;
+      return (
+        <SidebarErrorFallback
+          error={this.state.error}
+          onRetry={this.handleRetry}
+        />
+      );
     }
 
     return this.props.children;
@@ -150,7 +165,8 @@ const SidebarErrorFallback: React.FC<{
       </div>
       <h3 className="font-semibold text-lg mb-1">Navigation Unavailable</h3>
       <p className="text-sm text-muted-foreground mb-4 max-w-sm">
-        We're experiencing issues with the navigation menu. This could be due to a temporary error or network issue.
+        We're experiencing issues with the navigation menu. This could be due to
+        a temporary error or network issue.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-2 w-full max-w-xs">
@@ -211,11 +227,7 @@ export const SidebarMinimalFallback: React.FC<{
         <p className="text-xs text-muted-foreground mb-3 text-center px-4">
           Navigation temporarily unavailable
         </p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onRetry}
-        >
+        <Button variant="outline" size="sm" onClick={onRetry}>
           Retry
         </Button>
       </div>

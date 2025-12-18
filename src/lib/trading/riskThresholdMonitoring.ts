@@ -1,13 +1,13 @@
 /**
  * Risk Threshold Monitoring Engine
- * 
+ *
  * Monitors portfolio-level risk metrics and triggers alerts when thresholds are exceeded:
  * - Daily P&L loss limits
  * - Drawdown thresholds (max loss from peak)
  * - Concentration risk (max position size per asset class)
  * - Correlation-based portfolio risk
  * - Value-at-Risk (VaR) calculations
- * 
+ *
  * 20+ functions for comprehensive portfolio risk monitoring
  */
 
@@ -15,21 +15,21 @@
  * Risk Status Enumeration
  */
 export enum RiskStatus {
-  SAFE = 'safe',           // All metrics within safe bounds
-  WARNING = 'warning',     // One or more metrics approaching threshold
-  CRITICAL = 'critical',  // One or more metrics exceeded threshold
-  MONITOR = 'monitor'     // Requires active monitoring
+  SAFE = "safe", // All metrics within safe bounds
+  WARNING = "warning", // One or more metrics approaching threshold
+  CRITICAL = "critical", // One or more metrics exceeded threshold
+  MONITOR = "monitor", // Requires active monitoring
 }
 
 /**
  * Risk Threshold Configuration
  */
 export enum RiskThresholdType {
-  DAILY_LOSS_LIMIT = 'daily_loss_limit',
-  DRAWDOWN_LIMIT = 'drawdown_limit',
-  CONCENTRATION_LIMIT = 'concentration_limit',
-  CORRELATION_LIMIT = 'correlation_limit',
-  VAR_LIMIT = 'var_limit'
+  DAILY_LOSS_LIMIT = "daily_loss_limit",
+  DRAWDOWN_LIMIT = "drawdown_limit",
+  CONCENTRATION_LIMIT = "concentration_limit",
+  CORRELATION_LIMIT = "correlation_limit",
+  VAR_LIMIT = "var_limit",
 }
 
 /**
@@ -38,7 +38,7 @@ export enum RiskThresholdType {
 export interface Position {
   id: string;
   symbol: string;
-  side: 'long' | 'short';
+  side: "long" | "short";
   quantity: number;
   entry_price: number;
   current_price: number;
@@ -100,38 +100,39 @@ export interface RiskAlert {
  * Default Risk Thresholds
  * Conservative defaults suitable for retail traders
  */
-export const DEFAULT_RISK_THRESHOLDS: Record<RiskThresholdType, RiskThreshold> = {
-  [RiskThresholdType.DAILY_LOSS_LIMIT]: {
-    type: RiskThresholdType.DAILY_LOSS_LIMIT,
-    value: 1000, // $1000 daily loss limit
-    alertLevel: RiskStatus.CRITICAL,
-    enabled: true
-  },
-  [RiskThresholdType.DRAWDOWN_LIMIT]: {
-    type: RiskThresholdType.DRAWDOWN_LIMIT,
-    value: 0.10, // 10% max drawdown from peak
-    alertLevel: RiskStatus.CRITICAL,
-    enabled: true
-  },
-  [RiskThresholdType.CONCENTRATION_LIMIT]: {
-    type: RiskThresholdType.CONCENTRATION_LIMIT,
-    value: 0.25, // Max 25% of portfolio in single asset class
-    alertLevel: RiskStatus.WARNING,
-    enabled: true
-  },
-  [RiskThresholdType.CORRELATION_LIMIT]: {
-    type: RiskThresholdType.CORRELATION_LIMIT,
-    value: 0.85, // Portfolio correlation > 0.85 = high risk
-    alertLevel: RiskStatus.WARNING,
-    enabled: true
-  },
-  [RiskThresholdType.VAR_LIMIT]: {
-    type: RiskThresholdType.VAR_LIMIT,
-    value: 0.05, // 5% Value-at-Risk (95% confidence)
-    alertLevel: RiskStatus.WARNING,
-    enabled: true
-  }
-};
+export const DEFAULT_RISK_THRESHOLDS: Record<RiskThresholdType, RiskThreshold> =
+  {
+    [RiskThresholdType.DAILY_LOSS_LIMIT]: {
+      type: RiskThresholdType.DAILY_LOSS_LIMIT,
+      value: 1000, // $1000 daily loss limit
+      alertLevel: RiskStatus.CRITICAL,
+      enabled: true,
+    },
+    [RiskThresholdType.DRAWDOWN_LIMIT]: {
+      type: RiskThresholdType.DRAWDOWN_LIMIT,
+      value: 0.1, // 10% max drawdown from peak
+      alertLevel: RiskStatus.CRITICAL,
+      enabled: true,
+    },
+    [RiskThresholdType.CONCENTRATION_LIMIT]: {
+      type: RiskThresholdType.CONCENTRATION_LIMIT,
+      value: 0.25, // Max 25% of portfolio in single asset class
+      alertLevel: RiskStatus.WARNING,
+      enabled: true,
+    },
+    [RiskThresholdType.CORRELATION_LIMIT]: {
+      type: RiskThresholdType.CORRELATION_LIMIT,
+      value: 0.85, // Portfolio correlation > 0.85 = high risk
+      alertLevel: RiskStatus.WARNING,
+      enabled: true,
+    },
+    [RiskThresholdType.VAR_LIMIT]: {
+      type: RiskThresholdType.VAR_LIMIT,
+      value: 0.05, // 5% Value-at-Risk (95% confidence)
+      alertLevel: RiskStatus.WARNING,
+      enabled: true,
+    },
+  };
 
 /**
  * Calculate total portfolio exposure across all open positions
@@ -142,7 +143,7 @@ export function calculateTotalExposure(positions: Position[]): number {
   if (!positions || positions.length === 0) {
     return 0;
   }
-  
+
   return positions.reduce((sum, pos) => {
     const notionalValue = Math.abs(pos.quantity * pos.current_price);
     return sum + notionalValue;
@@ -155,7 +156,7 @@ export function calculateTotalExposure(positions: Position[]): number {
  * @returns Record of asset class → concentration percentage
  */
 export function calculateConcentration(
-  positions: Position[]
+  positions: Position[],
 ): Record<string, number> {
   if (!positions || positions.length === 0) {
     return {};
@@ -168,14 +169,14 @@ export function calculateConcentration(
 
   const concentration: Record<string, number> = {};
 
-  positions.forEach(pos => {
+  positions.forEach((pos) => {
     const notionalValue = Math.abs(pos.quantity * pos.current_price);
     const assetClass = extractAssetClass(pos.symbol);
-    
+
     if (!concentration[assetClass]) {
       concentration[assetClass] = 0;
     }
-    
+
     concentration[assetClass] += notionalValue / totalExposure;
   });
 
@@ -190,9 +191,10 @@ export function calculateConcentration(
  */
 export function isConcentrationExceeded(
   concentration: Record<string, number>,
-  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.CONCENTRATION_LIMIT].value
+  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.CONCENTRATION_LIMIT]
+    .value,
 ): boolean {
-  return Object.values(concentration).some(c => c > limit);
+  return Object.values(concentration).some((c) => c > limit);
 }
 
 /**
@@ -203,12 +205,12 @@ export function isConcentrationExceeded(
  */
 export function calculateDrawdown(
   currentEquity: number,
-  peakEquity: number
+  peakEquity: number,
 ): number {
   if (peakEquity <= 0) {
     return 0;
   }
-  
+
   const drawdown = (peakEquity - currentEquity) / peakEquity;
   return Math.max(0, drawdown);
 }
@@ -221,7 +223,8 @@ export function calculateDrawdown(
  */
 export function isDrawdownExceeded(
   drawdown: number,
-  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DRAWDOWN_LIMIT].value
+  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DRAWDOWN_LIMIT]
+    .value,
 ): boolean {
   return drawdown > limit;
 }
@@ -234,7 +237,8 @@ export function isDrawdownExceeded(
  */
 export function isDailyLossLimitExceeded(
   dailyPnL: number,
-  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DAILY_LOSS_LIMIT].value
+  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DAILY_LOSS_LIMIT]
+    .value,
 ): boolean {
   const dailyLossLimit = -Math.abs(limit); // Ensure it's negative
   return dailyPnL < dailyLossLimit;
@@ -280,7 +284,8 @@ export function estimatePortfolioCorrelation(positions: Position[]): number {
  */
 export function isCorrelationRiskHigh(
   correlation: number,
-  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.CORRELATION_LIMIT].value
+  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.CORRELATION_LIMIT]
+    .value,
 ): boolean {
   return correlation > limit;
 }
@@ -297,15 +302,16 @@ export function estimateVaR(
   totalExposure: number,
   currentEquity: number,
   volatility: number = 0.15,
-  confidenceLevel: number = 0.95
+  confidenceLevel: number = 0.95,
 ): number {
   if (currentEquity <= 0) {
     return 0;
   }
 
   // Z-score for 95% confidence: 1.645
-  const zScore = confidenceLevel === 0.95 ? 1.645 : confidenceLevel === 0.99 ? 2.326 : 1.645;
-  
+  const zScore =
+    confidenceLevel === 0.95 ? 1.645 : confidenceLevel === 0.99 ? 2.326 : 1.645;
+
   const varDollar = totalExposure * volatility * zScore;
   const varPercentage = varDollar / currentEquity;
 
@@ -320,7 +326,7 @@ export function estimateVaR(
  */
 export function isVaRLimitExceeded(
   varEstimate: number,
-  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.VAR_LIMIT].value
+  limit: number = DEFAULT_RISK_THRESHOLDS[RiskThresholdType.VAR_LIMIT].value,
 ): boolean {
   return varEstimate > limit;
 }
@@ -330,19 +336,23 @@ export function isVaRLimitExceeded(
  * @param violations - Array of violated threshold types
  * @returns Risk status
  */
-export function classifyRiskStatus(violations: RiskThresholdType[]): RiskStatus {
+export function classifyRiskStatus(
+  violations: RiskThresholdType[],
+): RiskStatus {
   if (violations.length === 0) {
     return RiskStatus.SAFE;
   }
 
   // Check if any critical violations
   const hasCommon = (types: RiskThresholdType[]) =>
-    violations.some(v => types.includes(v));
+    violations.some((v) => types.includes(v));
 
-  if (hasCommon([
-    RiskThresholdType.DAILY_LOSS_LIMIT,
-    RiskThresholdType.DRAWDOWN_LIMIT
-  ])) {
+  if (
+    hasCommon([
+      RiskThresholdType.DAILY_LOSS_LIMIT,
+      RiskThresholdType.DRAWDOWN_LIMIT,
+    ])
+  ) {
     return RiskStatus.CRITICAL;
   }
 
@@ -367,7 +377,7 @@ export function calculatePortfolioRiskMetrics(
   equity: number,
   peakEquity: number,
   dailyPnL: number,
-  marginUsed: number
+  marginUsed: number,
 ): RiskMetrics {
   const totalExposure = calculateTotalExposure(positions);
   const concentration = calculateConcentration(positions);
@@ -407,18 +417,21 @@ export function calculatePortfolioRiskMetrics(
     freeMargin: Math.max(0, equity - marginUsed),
     marginLevel: marginUsed > 0 ? (equity / marginUsed) * 100 : 0,
     dailyPnL,
-    dailyLossLimit: -DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DAILY_LOSS_LIMIT].value,
+    dailyLossLimit:
+      -DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DAILY_LOSS_LIMIT].value,
     drawdownCurrent: drawdown,
-    drawdownLimit: DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DRAWDOWN_LIMIT].value,
+    drawdownLimit:
+      DEFAULT_RISK_THRESHOLDS[RiskThresholdType.DRAWDOWN_LIMIT].value,
     maxDrawdownToday: drawdown, // Simplified
     concentrationByAsset: concentration,
-    concentrationLimit: DEFAULT_RISK_THRESHOLDS[RiskThresholdType.CONCENTRATION_LIMIT].value,
+    concentrationLimit:
+      DEFAULT_RISK_THRESHOLDS[RiskThresholdType.CONCENTRATION_LIMIT].value,
     openPositionCount: positions.length,
     totalExposure,
     correlationRisk: correlation,
     varEstimate,
     riskStatus,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
   };
 }
 
@@ -427,45 +440,52 @@ export function calculatePortfolioRiskMetrics(
  * @param metrics - Risk metrics object
  * @returns Risk summary with actionable recommendations
  */
-export function generateRiskSummary(metrics: RiskMetrics): PortfolioRiskSummary {
+export function generateRiskSummary(
+  metrics: RiskMetrics,
+): PortfolioRiskSummary {
   const violations: string[] = [];
   const recommendations: string[] = [];
 
   if (metrics.dailyPnL < metrics.dailyLossLimit) {
-    violations.push('Daily loss limit exceeded');
-    recommendations.push('Consider closing losing positions or pausing new trades');
+    violations.push("Daily loss limit exceeded");
+    recommendations.push(
+      "Consider closing losing positions or pausing new trades",
+    );
   }
 
   if (metrics.drawdownCurrent > metrics.drawdownLimit) {
-    violations.push('Maximum drawdown limit exceeded');
-    recommendations.push('Review position sizing and stop-loss levels');
+    violations.push("Maximum drawdown limit exceeded");
+    recommendations.push("Review position sizing and stop-loss levels");
   }
 
-  const maxConcentration = Math.max(...Object.values(metrics.concentrationByAsset), 0);
+  const maxConcentration = Math.max(
+    ...Object.values(metrics.concentrationByAsset),
+    0,
+  );
   if (maxConcentration > metrics.concentrationLimit) {
-    violations.push('Concentration limit exceeded in one or more assets');
-    recommendations.push('Reduce position size in concentrated assets');
+    violations.push("Concentration limit exceeded in one or more assets");
+    recommendations.push("Reduce position size in concentrated assets");
   }
 
   if (metrics.correlationRisk > 0.85) {
-    violations.push('High portfolio correlation detected');
-    recommendations.push('Diversify positions across uncorrelated assets');
+    violations.push("High portfolio correlation detected");
+    recommendations.push("Diversify positions across uncorrelated assets");
   }
 
   if (metrics.varEstimate > 0.05) {
-    violations.push('Value-at-Risk limit exceeded');
-    recommendations.push('Reduce leverage or portfolio size');
+    violations.push("Value-at-Risk limit exceeded");
+    recommendations.push("Reduce leverage or portfolio size");
   }
 
   if (metrics.marginLevel < 150) {
-    recommendations.push('Margin level approaching warning threshold');
+    recommendations.push("Margin level approaching warning threshold");
   }
 
   return {
     metrics,
     violatedThresholds: violations,
     recommendations,
-    risklevel: metrics.riskStatus
+    risklevel: metrics.riskStatus,
   };
 }
 
@@ -476,33 +496,43 @@ export function generateRiskSummary(metrics: RiskMetrics): PortfolioRiskSummary 
  */
 function extractAssetClass(symbol: string): string {
   if (!symbol) {
-    return 'unknown';
+    return "unknown";
   }
 
   const upperSymbol = symbol.toUpperCase();
 
   // Forex majors
-  if (['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'USDCAD', 'NZDUSD'].includes(upperSymbol)) {
-    return 'forex_major';
+  if (
+    [
+      "EURUSD",
+      "GBPUSD",
+      "USDJPY",
+      "USDCHF",
+      "AUDUSD",
+      "USDCAD",
+      "NZDUSD",
+    ].includes(upperSymbol)
+  ) {
+    return "forex_major";
   }
 
   // Crypto
-  if (['BTCUSD', 'ETHUSD', 'LTCUSD', 'XRPUSD'].includes(upperSymbol)) {
-    return 'crypto';
+  if (["BTCUSD", "ETHUSD", "LTCUSD", "XRPUSD"].includes(upperSymbol)) {
+    return "crypto";
   }
 
   // Indices
-  if (['US500', 'US100', 'UK100', 'GER40', 'JPN225'].includes(upperSymbol)) {
-    return 'index';
+  if (["US500", "US100", "UK100", "GER40", "JPN225"].includes(upperSymbol)) {
+    return "index";
   }
 
   // Commodities
-  if (['XAUUSD', 'WTIUSD', 'BRENTUSD', 'NATGAS'].includes(upperSymbol)) {
-    return 'commodity';
+  if (["XAUUSD", "WTIUSD", "BRENTUSD", "NATGAS"].includes(upperSymbol)) {
+    return "commodity";
   }
 
   // Default to stock
-  return 'stock';
+  return "stock";
 }
 
 /**
@@ -517,10 +547,10 @@ export function createRiskAlert(
   userId: string,
   type: RiskThresholdType,
   currentValue: number,
-  threshold: number
+  threshold: number,
 ): RiskAlert {
   const exceedancePercentage = Math.abs(
-    ((currentValue - threshold) / threshold) * 100
+    ((currentValue - threshold) / threshold) * 100,
   );
 
   return {
@@ -530,8 +560,9 @@ export function createRiskAlert(
     currentValue,
     threshold,
     exceedancePercentage,
-    status: exceedancePercentage > 10 ? RiskStatus.CRITICAL : RiskStatus.WARNING,
-    createdAt: new Date().toISOString()
+    status:
+      exceedancePercentage > 10 ? RiskStatus.CRITICAL : RiskStatus.WARNING,
+    createdAt: new Date().toISOString(),
   };
 }
 
@@ -542,12 +573,12 @@ export function createRiskAlert(
  */
 export function formatRiskStatus(status: RiskStatus): string {
   const labels: Record<RiskStatus, string> = {
-    [RiskStatus.SAFE]: 'Safe',
-    [RiskStatus.WARNING]: 'Warning',
-    [RiskStatus.CRITICAL]: 'Critical',
-    [RiskStatus.MONITOR]: 'Monitor'
+    [RiskStatus.SAFE]: "Safe",
+    [RiskStatus.WARNING]: "Warning",
+    [RiskStatus.CRITICAL]: "Critical",
+    [RiskStatus.MONITOR]: "Monitor",
   };
-  return labels[status] || 'Unknown';
+  return labels[status] || "Unknown";
 }
 
 /**
@@ -555,14 +586,14 @@ export function formatRiskStatus(status: RiskStatus): string {
  * @param status - Risk status enum
  * @returns Hex color code
  */
-import { RISK_COLORS } from '@/lib/colors';
+import { RISK_COLORS } from "@/lib/colors";
 
 export function getRiskStatusColor(status: RiskStatus): string {
   const colors: Record<RiskStatus, string> = {
     [RiskStatus.SAFE]: RISK_COLORS.SAFE,
     [RiskStatus.WARNING]: RISK_COLORS.WARNING,
     [RiskStatus.CRITICAL]: RISK_COLORS.CRITICAL,
-    [RiskStatus.MONITOR]: RISK_COLORS.MONITOR
+    [RiskStatus.MONITOR]: RISK_COLORS.MONITOR,
   };
   return colors[status] || RISK_COLORS.DEFAULT;
 }

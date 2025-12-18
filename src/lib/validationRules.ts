@@ -15,7 +15,8 @@ export const validationRules = {
     },
     pattern: {
       value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      message: "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+      message:
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     },
   },
   confirmPassword: (getValues: () => Record<string, unknown>) => ({
@@ -50,14 +51,17 @@ export const validationRules = {
     required: "Address is required",
     validate: (value: string, currency: string) => {
       const patterns: Record<string, RegExp> = {
-        'BTC': /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,62}$/,
-        'ETH': /^0x[a-fA-F0-9]{40}$/,
-        'USDT': /^0x[a-fA-F0-9]{40}$/,
-        'USDC': /^0x[a-fA-F0-9]{40}$/,
-        'LTC': /^[LM3][a-km-zA-HJ-NP-Z1-9]{26,33}$/,
-        'BNB': /^0x[a-fA-F0-9]{40}$/,
+        BTC: /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,62}$/,
+        ETH: /^0x[a-fA-F0-9]{40}$/,
+        USDT: /^0x[a-fA-F0-9]{40}$/,
+        USDC: /^0x[a-fA-F0-9]{40}$/,
+        LTC: /^[LM3][a-km-zA-HJ-NP-Z1-9]{26,33}$/,
+        BNB: /^0x[a-fA-F0-9]{40}$/,
       };
-      return patterns[currency]?.test(value) || `Please enter a valid ${currency} address`;
+      return (
+        patterns[currency]?.test(value) ||
+        `Please enter a valid ${currency} address`
+      );
     },
   },
 };

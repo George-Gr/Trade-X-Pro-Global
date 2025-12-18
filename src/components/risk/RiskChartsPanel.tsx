@@ -8,7 +8,7 @@
  * - Diversification: Diversification score, stats, and top positions
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -23,12 +23,18 @@ import {
   PieChart,
   Pie,
   Cell,
-} from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { AlertCircle } from 'lucide-react';
-import { formatCurrency } from '@/lib/risk/riskMetrics';
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { AlertCircle } from "lucide-react";
+import { formatCurrency } from "@/lib/risk/riskMetrics";
 
 interface RiskChartsPanelProps {
   equityHistory: number[] | null;
@@ -84,7 +90,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
   riskMetrics,
   portfolioMetrics,
 }) => {
-  const [selectedTab, setSelectedTab] = useState('overview');
+  const [selectedTab, setSelectedTab] = useState("overview");
 
   // Prepare chart data
   const equityChartData = useMemo(() => {
@@ -103,16 +109,29 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
   }, [stressTests]);
 
   const assetClassChartData = useMemo(() => {
-    const COLORS = ['hsl(var(--secondary))', 'hsl(var(--destructive))', 'hsl(var(--buy))', 'hsl(var(--warning))', 'hsl(var(--sidebar-primary))', 'hsl(var(--accent))'];
-    return Object.entries(assetClassMetrics).map(([assetClass, metrics], index) => ({
-      name: assetClass,
-      value: metrics.percentageOfPortfolio,
-      color: COLORS[index % COLORS.length],
-    }));
+    const COLORS = [
+      "hsl(var(--secondary))",
+      "hsl(var(--destructive))",
+      "hsl(var(--buy))",
+      "hsl(var(--warning))",
+      "hsl(var(--sidebar-primary))",
+      "hsl(var(--accent))",
+    ];
+    return Object.entries(assetClassMetrics).map(
+      ([assetClass, metrics], index) => ({
+        name: assetClass,
+        value: metrics.percentageOfPortfolio,
+        color: COLORS[index % COLORS.length],
+      }),
+    );
   }, [assetClassMetrics]);
 
   return (
-    <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-4">
+    <Tabs
+      value={selectedTab}
+      onValueChange={setSelectedTab}
+      className="space-y-4"
+    >
       <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="charts">Charts</TabsTrigger>
@@ -131,13 +150,17 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
             <CardContent className="panel-content space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Free Margin</span>
+                  <span className="text-sm text-muted-foreground">
+                    Free Margin
+                  </span>
                   <span className="font-medium">
                     {formatCurrency(riskMetrics?.freeMargin || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Used Margin</span>
+                  <span className="text-sm text-muted-foreground">
+                    Used Margin
+                  </span>
                   <span className="font-medium">
                     {formatCurrency(riskMetrics?.usedMargin || 0)}
                   </span>
@@ -153,19 +176,25 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
             </CardHeader>
             <CardContent className="panel-content space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Largest Win</span>
+                <span className="text-sm text-muted-foreground">
+                  Largest Win
+                </span>
                 <span className="font-medium text-buy">
                   {formatCurrency(portfolioMetrics?.largestWin || 0)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Largest Loss</span>
+                <span className="text-sm text-muted-foreground">
+                  Largest Loss
+                </span>
                 <span className="font-medium text-sell">
                   {formatCurrency(portfolioMetrics?.largestLoss || 0)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Expectancy</span>
+                <span className="text-sm text-muted-foreground">
+                  Expectancy
+                </span>
                 <span className="font-medium">
                   {formatCurrency(portfolioMetrics?.expectancy || 0)}
                 </span>
@@ -250,7 +279,11 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="loss" fill="hsl(var(--destructive))" name="Est. Loss" />
+                  <Bar
+                    dataKey="loss"
+                    fill="hsl(var(--destructive))"
+                    name="Est. Loss"
+                  />
                 </BarChart>
               </ResponsiveContainer>
               {stressTests && (
@@ -268,7 +301,9 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
         ) : (
           <Card className="panel">
             <CardContent className="panel-content pt-6">
-              <p className="text-sm text-muted-foreground">No positions to stress test</p>
+              <p className="text-sm text-muted-foreground">
+                No positions to stress test
+              </p>
             </CardContent>
           </Card>
         )}
@@ -281,7 +316,9 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
             <>
               <Card className="panel">
                 <CardHeader className="panel-header">
-                  <CardTitle className="text-base">Diversification Score</CardTitle>
+                  <CardTitle className="text-base">
+                    Diversification Score
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="panel-content">
                   <div className="text-4xl font-bold text-blue-600">
@@ -297,33 +334,47 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
                     {diversification.isWellDiversified
-                      ? 'Portfolio is well diversified'
-                      : 'Consider diversifying further'}
+                      ? "Portfolio is well diversified"
+                      : "Consider diversifying further"}
                   </p>
                 </CardContent>
               </Card>
 
               <Card className="panel">
                 <CardHeader className="panel-header">
-                  <CardTitle className="text-base">Diversification Stats</CardTitle>
+                  <CardTitle className="text-base">
+                    Diversification Stats
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="panel-content space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Total Positions</span>
-                    <span className="font-medium">{diversification.numberOfSymbols}</span>
+                    <span className="text-sm text-muted-foreground">
+                      Total Positions
+                    </span>
+                    <span className="font-medium">
+                      {diversification.numberOfSymbols}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Asset Classes</span>
-                    <span className="font-medium">{diversification.numberOfAssetClasses}</span>
+                    <span className="text-sm text-muted-foreground">
+                      Asset Classes
+                    </span>
+                    <span className="font-medium">
+                      {diversification.numberOfAssetClasses}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Largest Position</span>
+                    <span className="text-sm text-muted-foreground">
+                      Largest Position
+                    </span>
                     <span className="font-medium">
                       {diversification.largestPosition.toFixed(2)}%
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Top 3 Positions</span>
+                    <span className="text-sm text-muted-foreground">
+                      Top 3 Positions
+                    </span>
                     <span className="font-medium">
                       {diversification.topThreePositions.toFixed(2)}%
                     </span>
@@ -349,13 +400,13 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                       <div className="w-full bg-border rounded-full h-2">
                         <div
                           className={`h-2 rounded-full ${
-                            pos.risk === 'critical'
-                              ? 'bg-sell'
-                              : pos.risk === 'high'
-                              ? 'bg-orange-600'
-                              : pos.risk === 'medium'
-                              ? 'bg-yellow-600'
-                              : 'bg-buy'
+                            pos.risk === "critical"
+                              ? "bg-sell"
+                              : pos.risk === "high"
+                                ? "bg-orange-600"
+                                : pos.risk === "medium"
+                                  ? "bg-yellow-600"
+                                  : "bg-buy"
                           }`}
                           style={{
                             width: `${Math.min(pos.percentageOfPortfolio, 100)}%`,

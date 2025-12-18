@@ -10,16 +10,24 @@ interface WatchlistItem {
 
 interface WatchlistItemsProps {
   items: WatchlistItem[];
-  getPrice: (symbol: string) => { currentPrice: number; change: number; changePercent: number } | undefined;
+  getPrice: (
+    symbol: string,
+  ) =>
+    | { currentPrice: number; change: number; changePercent: number }
+    | undefined;
   onSymbolClick: (symbol: string) => void;
-  onQuickTrade: (symbol: string, side: "buy" | "sell", e: React.MouseEvent) => void;
+  onQuickTrade: (
+    symbol: string,
+    side: "buy" | "sell",
+    e: React.MouseEvent,
+  ) => void;
   onRemoveSymbol: (itemId: string, e: React.MouseEvent) => void;
   onAddSymbolClick: () => void;
 }
 
 /**
  * WatchlistItems Component
- * 
+ *
  * Renders the list of symbols in a watchlist with memoized row items
  * to prevent unnecessary re-renders during price updates.
  */

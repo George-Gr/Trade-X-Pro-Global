@@ -47,7 +47,9 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{formatPercent(statistics.winRate)}</div>
+          <div className="text-2xl font-bold">
+            {formatPercent(statistics.winRate)}
+          </div>
           <p className="text-xs text-muted-foreground mt-2">Success rate</p>
         </CardContent>
       </Card>

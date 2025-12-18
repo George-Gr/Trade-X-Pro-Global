@@ -1,10 +1,10 @@
-import React from 'react';
-import AccountSummary from './AccountSummary';
-import EquityChart from './EquityChart';
-import AssetAllocation from './AssetAllocation';
-import PerformanceMetrics from './PerformanceMetrics';
-import RecentPnLChart from './RecentPnLChart';
-import ExportToolbar from './ExportToolbar';
+import React from "react";
+import AccountSummary from "./AccountSummary";
+import EquityChart from "./EquityChart";
+import AssetAllocation from "./AssetAllocation";
+import PerformanceMetrics from "./PerformanceMetrics";
+import RecentPnLChart from "./RecentPnLChart";
+import ExportToolbar from "./ExportToolbar";
 
 export const PortfolioDashboardSummary: React.FC = () => {
   return (

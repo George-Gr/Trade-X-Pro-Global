@@ -1,6 +1,6 @@
 /**
  * Accessibility Styles for TradeX Pro
- * 
+ *
  * Global CSS-in-JS styles for accessibility features including
  * high contrast, focus indicators, screen reader support, and more.
  */

@@ -36,6 +36,7 @@
 **Impact:** 10 utility classes reference undefined variables
 
 **Missing Definitions:**
+
 ```
 --primary-contrast-bg
 --primary-contrast-fg
@@ -50,6 +51,7 @@
 ```
 
 **Add to src/index.css @layer base:**
+
 ```css
 --primary-contrast-bg: 0 0% 100%;
 --primary-contrast-fg: 222 47% 11%;
@@ -77,6 +79,7 @@
 **Impact:** 2 instances of hardcoded easing instead of CSS variables
 
 **Location 1 - Line 33:**
+
 ```css
 // ❌ WRONG
 animation: ripple var(--duration-slow) ease-out forwards;
@@ -86,6 +89,7 @@ animation: ripple var(--duration-slow) var(--ease-out) forwards;
 ```
 
 **Location 2 - Line 187:**
+
 ```css
 // ❌ WRONG
 animation: scale-bounce var(--duration-normal) ease-in-out infinite;
@@ -106,19 +110,21 @@ animation: scale-bounce var(--duration-normal) var(--ease-in-out) infinite;
 **Impact:** 9 hex color values hardcoded instead of using CSS variables
 
 **Current State:**
+
 ```typescript
-primaryContrast: '#FFFFFF'        // ❌
-secondary: '#6B7280'              // ❌
-secondaryContrast: '#374151'      // ❌
-success: '#16A34A'                // ❌
-successContrast: '#FFFFFF'        // ❌
-warning: '#D97706'                // ❌
-warningContrast: '#FFFFFF'        // ❌
-danger: '#DC2626'                 // ❌
-dangerContrast: '#FFFFFF'         // ❌
+primaryContrast: "#FFFFFF"; // ❌
+secondary: "#6B7280"; // ❌
+secondaryContrast: "#374151"; // ❌
+success: "#16A34A"; // ❌
+successContrast: "#FFFFFF"; // ❌
+warning: "#D97706"; // ❌
+warningContrast: "#FFFFFF"; // ❌
+danger: "#DC2626"; // ❌
+dangerContrast: "#FFFFFF"; // ❌
 ```
 
 **Solution Options:**
+
 1. Create getter function from CSS variables
 2. Import from design system config
 3. Use color conversion utilities
@@ -135,6 +141,7 @@ dangerContrast: '#FFFFFF'         // ❌
 **Impact:** Documentation defines 3 breakpoints; implementation has 5
 
 **Documentation Claims:**
+
 ```
 Mobile:  320px - 639px
 Tablet:  640px - 1023px
@@ -142,6 +149,7 @@ Desktop: 1024px+
 ```
 
 **Actual Implementation (tailwind.config.ts):**
+
 ```
 sm: 640px
 md: 768px
@@ -162,6 +170,7 @@ xl: 1280px
 ### 6. Documentation Gaps for Custom Components
 
 **Affected Components:**
+
 - Dialog (partially documented)
 - Alert (sizes not specified)
 - Badge (interactive behavior unclear)
@@ -178,6 +187,7 @@ xl: 1280px
 **Issue:** shadcn-ui components well-documented, but custom components lack complete API specs
 
 **Files Affected:**
+
 - src/components/ui/dialog.tsx
 - src/components/ui/alert.tsx
 - src/components/ui/badge.tsx
@@ -191,38 +201,41 @@ xl: 1280px
 
 ## ✅ Verified Compliant Areas
 
-| Category | Status | Notes |
-|----------|--------|-------|
-| Typography | 100% ✅ | Perfect alignment across all specs |
-| Spacing Grid (4/8px) | ✅ | Core system excellent, legacy values need removal |
-| Primary Colors | ✅ | All using HSL CSS variables |
-| Semantic Colors | ✅ | Success, Warning, Destructive properly defined |
-| Animation Timings | ✅ | Duration system perfect (instant-slower) |
-| Easing Functions | ⚠️ | Defined well, but 2 hardcoded instances |
-| Touch Targets | ✅ | 44x44px minimum enforced |
-| Keyboard Navigation | ✅ | Full support implemented |
-| Screen Reader | ✅ | ARIA utilities available |
-| Reduced Motion | ✅ | Respects prefers-reduced-motion |
-| Dark Mode | ✅ | CSS variable system supports both |
-| Focus Indicators | ✅ | Focus-visible styling implemented |
+| Category             | Status  | Notes                                             |
+| -------------------- | ------- | ------------------------------------------------- |
+| Typography           | 100% ✅ | Perfect alignment across all specs                |
+| Spacing Grid (4/8px) | ✅      | Core system excellent, legacy values need removal |
+| Primary Colors       | ✅      | All using HSL CSS variables                       |
+| Semantic Colors      | ✅      | Success, Warning, Destructive properly defined    |
+| Animation Timings    | ✅      | Duration system perfect (instant-slower)          |
+| Easing Functions     | ⚠️      | Defined well, but 2 hardcoded instances           |
+| Touch Targets        | ✅      | 44x44px minimum enforced                          |
+| Keyboard Navigation  | ✅      | Full support implemented                          |
+| Screen Reader        | ✅      | ARIA utilities available                          |
+| Reduced Motion       | ✅      | Respects prefers-reduced-motion                   |
+| Dark Mode            | ✅      | CSS variable system supports both                 |
+| Focus Indicators     | ✅      | Focus-visible styling implemented                 |
 
 ---
 
 ## 🚀 Quick Fix Checklist
 
 ### Critical (Fix Today)
+
 - [ ] Remove 7 legacy spacing values from tailwind.config.ts
 - [ ] Define 10 missing contrast CSS variables
 - [ ] Search codebase for usage of legacy spacing values
 - [ ] Test build and run lint checks
 
 ### High Priority (This Week)
+
 - [ ] Replace 2 hardcoded easing functions with CSS variables
 - [ ] Convert 9 hardcoded colors in accessibility.tsx
 - [ ] Update DESIGN_SYSTEM.md breakpoint documentation
 - [ ] Run npm run lint, npm run test
 
 ### Medium Priority (Next Week)
+
 - [ ] Complete component API documentation
 - [ ] Create prop tables for Dialog, Alert, Badge
 - [ ] Team review and approval

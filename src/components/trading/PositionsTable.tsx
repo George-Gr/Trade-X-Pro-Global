@@ -1,16 +1,27 @@
-import React, { useMemo, useState } from 'react';
-import { PositionsGrid } from './PositionsGrid';
-import type { Position } from '@/types/position';
-import { calculateUnrealizedPnL } from '@/lib/trading/positionUtils';
-import { useRealtimePositions } from '@/hooks/useRealtimePositions';
-import { PositionRow } from './PositionRow';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { TrendingDown, AlertCircle } from 'lucide-react';
+import React, { useMemo, useState } from "react";
+import { PositionsGrid } from "./PositionsGrid";
+import type { Position } from "@/types/position";
+import { calculateUnrealizedPnL } from "@/lib/trading/positionUtils";
+import { useRealtimePositions } from "@/hooks/useRealtimePositions";
+import { PositionRow } from "./PositionRow";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { TrendingDown, AlertCircle } from "lucide-react";
 
-export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) => {
-  const { positions, isLoading } = useRealtimePositions(userId || null, { autoSubscribe: true });
+export const PositionsTable: React.FC<{ userId: string | null }> = ({
+  userId,
+}) => {
+  const { positions, isLoading } = useRealtimePositions(userId || null, {
+    autoSubscribe: true,
+  });
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -22,23 +33,28 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
   };
 
   const bulkClose = async () => {
-    const ids = Object.entries(selectedIds).filter(([_, v]) => v).map(([k]) => k);
+    const ids = Object.entries(selectedIds)
+      .filter(([_, v]) => v)
+      .map(([k]) => k);
     if (ids.length === 0) return;
 
     setShowConfirmDialog(true);
   };
 
   const confirmBulkClose = async () => {
-    const ids = Object.entries(selectedIds).filter(([_, v]) => v).map(([k]) => k);
+    const ids = Object.entries(selectedIds)
+      .filter(([_, v]) => v)
+      .map(([k]) => k);
     if (ids.length === 0) return;
 
     setShowConfirmDialog(false);
 
     // naive bulk close using usePositionClose - call one by one
-    const { closePosition } = await import('@/hooks/usePositionClose').then((m) => m.usePositionClose());
+    const { closePosition } = await import("@/hooks/usePositionClose").then(
+      (m) => m.usePositionClose(),
+    );
 
     for (const id of ids) {
-       
       await closePosition({ position_id: id });
     }
 
@@ -58,19 +74,23 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">
-            {isLoading ? 'Loading...' : `${rows.length} position${rows.length !== 1 ? 's' : ''}`}
+            {isLoading
+              ? "Loading..."
+              : `${rows.length} position${rows.length !== 1 ? "s" : ""}`}
           </span>
           {selectedCount > 0 && (
             <div className="flex items-center gap-2">
-              <Button 
-                onClick={bulkClose} 
+              <Button
+                onClick={bulkClose}
                 variant="destructive"
                 size="sm"
                 className="transition-all duration-200"
               >
                 Close Selected
               </Button>
-              <span className="text-sm text-muted-foreground">{selectedCount}</span>
+              <span className="text-sm text-muted-foreground">
+                {selectedCount}
+              </span>
             </div>
           )}
         </div>
@@ -98,18 +118,30 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
       {!isLoading && rows.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 bg-muted/30 rounded-lg border border-muted-foreground/10">
           <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
-          <h4 className="text-lg font-semibold text-foreground mb-2">No Open Positions</h4>
+          <h4 className="text-lg font-semibold text-foreground mb-2">
+            No Open Positions
+          </h4>
           <p className="text-sm text-muted-foreground text-center max-w-md">
-            You don't have any open positions yet. Start trading to open your first position.
+            You don't have any open positions yet. Start trading to open your
+            first position.
           </p>
         </div>
       )}
 
       {/* Positions Table */}
       {rows.length > 0 && (
-        <div role="table" className="w-full border border-muted-foreground/10 rounded-lg overflow-hidden">
-          <div role="rowgroup" className="bg-muted/50 border-b border-muted-foreground/10">
-            <div role="row" className="grid grid-cols-7 gap-4 font-semibold text-sm px-4 py-3">
+        <div
+          role="table"
+          className="w-full border border-muted-foreground/10 rounded-lg overflow-hidden"
+        >
+          <div
+            role="rowgroup"
+            className="bg-muted/50 border-b border-muted-foreground/10"
+          >
+            <div
+              role="row"
+              className="grid grid-cols-7 gap-4 font-semibold text-sm px-4 py-3"
+            >
               <div />
               <div>Symbol</div>
               <div>Side</div>
@@ -122,13 +154,13 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
 
           <div role="rowgroup">
             {rows.map((p: Position) => (
-              <PositionRow 
-                key={p.id} 
-                position={p} 
-                onView={() => setSelected(p.id)} 
-                selectable 
-                selected={!!selectedIds[p.id]} 
-                onSelect={toggleSelect} 
+              <PositionRow
+                key={p.id}
+                position={p}
+                onView={() => setSelected(p.id)}
+                selectable
+                selected={!!selectedIds[p.id]}
+                onSelect={toggleSelect}
               />
             ))}
           </div>
@@ -138,13 +170,19 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({ userId }) 
       {/* Confirmation Dialog */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
-          <AlertDialogTitle>Close {selectedCount} Position{selectedCount !== 1 ? 's' : ''}?</AlertDialogTitle>
+          <AlertDialogTitle>
+            Close {selectedCount} Position{selectedCount !== 1 ? "s" : ""}?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This action will close {selectedCount} selected position{selectedCount !== 1 ? 's' : ''}. This cannot be undone.
+            This action will close {selectedCount} selected position
+            {selectedCount !== 1 ? "s" : ""}. This cannot be undone.
           </AlertDialogDescription>
           <div className="flex gap-3 justify-end">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmBulkClose} className="bg-destructive hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmBulkClose}
+              className="bg-destructive hover:bg-destructive/90"
+            >
               Close Positions
             </AlertDialogAction>
           </div>

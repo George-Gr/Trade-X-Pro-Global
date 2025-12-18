@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 /**
  * Hook: usePriceStream
- * 
+ *
  * WebSocket-based real-time price streaming with automatic reconnection
  */
 
@@ -50,9 +50,11 @@ export const usePriceStream = ({
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
   const reconnectDelayMs = 3000;
@@ -64,7 +66,7 @@ export const usePriceStream = ({
     }
 
     try {
-      const projectRef = 'oaegicsinxhpilsihjxv';
+      const projectRef = "oaegicsinxhpilsihjxv";
       const wsUrl = `wss://${projectRef}.supabase.co/functions/v1/price-stream`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -74,23 +76,34 @@ export const usePriceStream = ({
         setIsLoading(false);
         setError(null);
         reconnectAttemptsRef.current = 0;
-        ws.send(JSON.stringify({
-          type: 'subscribe',
-          symbols,
-        }));
+        ws.send(
+          JSON.stringify({
+            type: "subscribe",
+            symbols,
+          }),
+        );
         onConnected?.();
       };
 
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          if (message.type === 'prices' && message.data) {
+          if (message.type === "prices" && message.data) {
             const newPrices = new Map<string, PriceData>();
             for (const [symbol, data] of Object.entries(message.data)) {
               // Supabase function returns Finnhub-like response
               const priceInfo = data as {
-                c: number; d: number; dp: number; h: number; l: number; o: number; pc: number; t: number;
-                provider?: string; cached?: boolean; error?: boolean;
+                c: number;
+                d: number;
+                dp: number;
+                h: number;
+                l: number;
+                o: number;
+                pc: number;
+                t: number;
+                provider?: string;
+                cached?: boolean;
+                error?: boolean;
               };
               if (priceInfo.error) {
                 continue;
@@ -119,8 +132,8 @@ export const usePriceStream = ({
       };
 
       ws.onerror = () => {
-        setError('Connection error');
-        onError?.(new Error('WebSocket connection error'));
+        setError("Connection error");
+        onError?.(new Error("WebSocket connection error"));
       };
 
       ws.onclose = () => {
@@ -129,16 +142,16 @@ export const usePriceStream = ({
         onDisconnected?.();
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
-          
+
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
           }, reconnectDelayMs);
         } else {
-          setError('Max reconnection attempts reached');
+          setError("Max reconnection attempts reached");
         }
       };
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Connection failed');
+      setError(err instanceof Error ? err.message : "Connection failed");
       setIsLoading(false);
     }
   }, [enabled, symbols, onConnected, onDisconnected, onError]);
@@ -148,13 +161,13 @@ export const usePriceStream = ({
       clearTimeout(reconnectTimeoutRef.current);
       reconnectTimeoutRef.current = null;
     }
-    
+
     if (wsRef.current) {
-      wsRef.current.send(JSON.stringify({ type: 'unsubscribe' }));
+      wsRef.current.send(JSON.stringify({ type: "unsubscribe" }));
       wsRef.current.close();
       wsRef.current = null;
     }
-    
+
     setIsConnected(false);
   }, []);
 
@@ -169,9 +182,12 @@ export const usePriceStream = ({
     return () => disconnect();
   }, [connect, disconnect]);
 
-  const getPrice = useCallback((symbol: string): PriceData | null => {
-    return prices.get(symbol) || null;
-  }, [prices]);
+  const getPrice = useCallback(
+    (symbol: string): PriceData | null => {
+      return prices.get(symbol) || null;
+    },
+    [prices],
+  );
 
   return {
     prices,

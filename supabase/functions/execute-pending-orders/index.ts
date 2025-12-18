@@ -1,17 +1,18 @@
-import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface PendingOrder {
   id: string;
   user_id: string;
   symbol: string;
-  order_type: 'limit' | 'stop' | 'stop_limit';
-  side: 'buy' | 'sell';
+  order_type: "limit" | "stop" | "stop_limit";
+  side: "buy" | "sell";
   quantity: number;
   price: number;
   stop_loss: number | null;
@@ -20,45 +21,45 @@ interface PendingOrder {
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     // Validate CRON_SECRET to prevent unauthorized access
-    const CRON_SECRET = Deno.env.get('CRON_SECRET');
-    const providedSecret = req.headers.get('X-Cron-Secret');
+    const CRON_SECRET = Deno.env.get("CRON_SECRET");
+    const providedSecret = req.headers.get("X-Cron-Secret");
 
     if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
-      console.error('Unauthorized access attempt to execute-pending-orders');
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      console.error("Unauthorized access attempt to execute-pending-orders");
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    console.log('Executing pending orders check...');
+    console.log("Executing pending orders check...");
 
     // Get all pending orders
     const { data: pendingOrders, error: ordersError } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('status', 'pending')
-      .order('created_at', { ascending: true });
+      .from("orders")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true });
 
     if (ordersError) {
-      console.error('Error fetching pending orders:', ordersError);
+      console.error("Error fetching pending orders:", ordersError);
       throw ordersError;
     }
 
     if (!pendingOrders || pendingOrders.length === 0) {
-      console.log('No pending orders to execute');
+      console.log("No pending orders to execute");
       return new Response(
-        JSON.stringify({ message: 'No pending orders', executed: 0 }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ message: "No pending orders", executed: 0 }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -71,10 +72,10 @@ serve(async (req) => {
     for (const order of pendingOrders as PendingOrder[]) {
       try {
         // Get current price for the symbol
-        const { data: priceData, error: priceError } = await supabase.functions.invoke(
-          'get-stock-price',
-          { body: { symbol: order.symbol } }
-        );
+        const { data: priceData, error: priceError } =
+          await supabase.functions.invoke("get-stock-price", {
+            body: { symbol: order.symbol },
+          });
 
         if (priceError || !priceData) {
           console.error(`Failed to get price for ${order.symbol}:`, priceError);
@@ -85,38 +86,40 @@ serve(async (req) => {
         let shouldExecute = false;
 
         // Check if order should be executed based on type and price
-        if (order.order_type === 'limit') {
-          if (order.side === 'buy' && currentPrice <= order.price) {
+        if (order.order_type === "limit") {
+          if (order.side === "buy" && currentPrice <= order.price) {
             shouldExecute = true;
-          } else if (order.side === 'sell' && currentPrice >= order.price) {
-            shouldExecute = true;
-          }
-        } else if (order.order_type === 'stop') {
-          if (order.side === 'buy' && currentPrice >= order.price) {
-            shouldExecute = true;
-          } else if (order.side === 'sell' && currentPrice <= order.price) {
+          } else if (order.side === "sell" && currentPrice >= order.price) {
             shouldExecute = true;
           }
-        } else if (order.order_type === 'stop_limit') {
+        } else if (order.order_type === "stop") {
+          if (order.side === "buy" && currentPrice >= order.price) {
+            shouldExecute = true;
+          } else if (order.side === "sell" && currentPrice <= order.price) {
+            shouldExecute = true;
+          }
+        } else if (order.order_type === "stop_limit") {
           // For stop_limit, trigger becomes a limit order when stop price is hit
           // We'll treat it like a limit order once triggered
-          if (order.side === 'buy' && currentPrice >= order.price) {
+          if (order.side === "buy" && currentPrice >= order.price) {
             shouldExecute = true;
-          } else if (order.side === 'sell' && currentPrice <= order.price) {
+          } else if (order.side === "sell" && currentPrice <= order.price) {
             shouldExecute = true;
           }
         }
 
         if (shouldExecute) {
-          console.log(`Executing pending order ${order.id} for ${order.symbol} at ${currentPrice}`);
+          console.log(
+            `Executing pending order ${order.id} for ${order.symbol} at ${currentPrice}`,
+          );
 
           // Execute the order using the atomic function
           const { data: result, error: execError } = await supabase.rpc(
-            'execute_order_atomic',
+            "execute_order_atomic",
             {
               p_user_id: order.user_id,
               p_symbol: order.symbol,
-              p_order_type: 'market', // Execute as market order
+              p_order_type: "market", // Execute as market order
               p_side: order.side,
               p_quantity: order.quantity,
               p_price: order.price,
@@ -124,41 +127,41 @@ serve(async (req) => {
               p_take_profit: order.take_profit || 0,
               p_idempotency_key: `pending_exec_${order.id}`,
               p_current_price: currentPrice,
-              p_slippage: 0.0005
-            }
+              p_slippage: 0.0005,
+            },
           );
 
           if (execError) {
             console.error(`Failed to execute order ${order.id}:`, execError);
             // Mark order as rejected
             await supabase
-              .from('orders')
-              .update({ status: 'rejected' })
-              .eq('id', order.id);
-            
+              .from("orders")
+              .update({ status: "rejected" })
+              .eq("id", order.id);
+
             executionResults.push({
               order_id: order.id,
-              status: 'rejected',
-              error: execError.message
+              status: "rejected",
+              error: execError.message,
             });
           } else {
             console.log(`Successfully executed order ${order.id}`);
             executedCount++;
-            
+
             // Send notification to user
-            await supabase.from('notifications').insert({
+            await supabase.from("notifications").insert({
               user_id: order.user_id,
-              type: 'order',
-              title: 'Order Executed',
+              type: "order",
+              title: "Order Executed",
               message: `Your ${order.order_type} ${order.side} order for ${order.symbol} has been executed at ${currentPrice}`,
-              data: { order_id: order.id, execution_price: currentPrice }
+              data: { order_id: order.id, execution_price: currentPrice },
             });
 
             executionResults.push({
               order_id: order.id,
-              status: 'executed',
+              status: "executed",
               execution_price: currentPrice,
-              result
+              result,
             });
           }
         }
@@ -166,30 +169,35 @@ serve(async (req) => {
         console.error(`Error processing order ${order.id}:`, error);
         executionResults.push({
           order_id: order.id,
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error'
+          status: "error",
+          error: error instanceof Error ? error.message : "Unknown error",
         });
       }
     }
 
-    console.log(`Executed ${executedCount} orders out of ${pendingOrders.length}`);
+    console.log(
+      `Executed ${executedCount} orders out of ${pendingOrders.length}`,
+    );
 
     return new Response(
       JSON.stringify({
-        message: 'Pending orders check complete',
+        message: "Pending orders check complete",
         total: pendingOrders.length,
         executed: executedCount,
-        results: executionResults
+        results: executionResults,
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
-    console.error('Error in execute-pending-orders:', error);
+    console.error("Error in execute-pending-orders:", error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : 'Internal server error'
+        error: error instanceof Error ? error.message : "Internal server error",
       }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
     );
   }
 });

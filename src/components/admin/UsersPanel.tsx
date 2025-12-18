@@ -23,7 +23,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { DollarSign, Eye, Loader2, Search, User, UserPlus, Filter } from "lucide-react";
+import {
+  DollarSign,
+  Eye,
+  Loader2,
+  Search,
+  User,
+  UserPlus,
+  Filter,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserAccount {
@@ -45,7 +53,12 @@ interface FundDialogProps {
   onSuccess: () => void;
 }
 
-const FundAccountDialog: React.FC<FundDialogProps> = ({ open, userId, onClose, onSuccess }) => {
+const FundAccountDialog: React.FC<FundDialogProps> = ({
+  open,
+  userId,
+  onClose,
+  onSuccess,
+}) => {
   const { toast } = useToast();
   const [amount, setAmount] = useState("");
   const [isFunding, setIsFunding] = useState(false);
@@ -84,13 +97,16 @@ const FundAccountDialog: React.FC<FundDialogProps> = ({ open, userId, onClose, o
       setIsFunding(true);
 
       // Call secure edge function instead of direct database access
-      const { data, error } = await supabase.functions.invoke('admin-fund-account', {
-        body: {
-          user_id: userId,
-          amount: fundAmount,
-          description: 'Admin manual funding'
-        }
-      });
+      const { data, error } = await supabase.functions.invoke(
+        "admin-fund-account",
+        {
+          body: {
+            user_id: userId,
+            amount: fundAmount,
+            description: "Admin manual funding",
+          },
+        },
+      );
 
       if (error) throw error;
 
@@ -174,7 +190,10 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
   const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  const [fundDialog, setFundDialog] = useState<{ open: boolean; userId: string | null }>({
+  const [fundDialog, setFundDialog] = useState<{
+    open: boolean;
+    userId: string | null;
+  }>({
     open: false,
     userId: null,
   });
@@ -210,284 +229,328 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
     }
   }, [isAdmin, sortBy, sortOrder, toast]);
 
-useEffect(() => {
-  fetchUserAccounts();
-}, [fetchUserAccounts, refreshTrigger]);
+  useEffect(() => {
+    fetchUserAccounts();
+  }, [fetchUserAccounts, refreshTrigger]);
 
-const handleLogoutAllDevices = async (userId: string) => {
-  try {
-    const { error } = await supabase.auth.admin.signOut(userId);
+  const handleLogoutAllDevices = async (userId: string) => {
+    try {
+      const { error } = await supabase.auth.admin.signOut(userId);
 
-    if (error) throw error;
+      if (error) throw error;
 
-    toast({
-      title: "Success",
-      description: "User logged out from all devices",
-    });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    toast({
-      title: "Error",
-      description: message,
-      variant: "destructive",
-    });
-  }
-};
+      toast({
+        title: "Success",
+        description: "User logged out from all devices",
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+    }
+  };
 
-const filteredUsers = userAccounts.filter(user => {
-  const matchesSearch = user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (user.full_name && user.full_name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredUsers = userAccounts.filter((user) => {
+    const matchesSearch =
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.full_name &&
+        user.full_name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const matchesStatus = statusFilter === "all" || user.account_status === statusFilter;
-  const matchesKyc = kycFilter === "all" || user.kyc_status === kycFilter;
+    const matchesStatus =
+      statusFilter === "all" || user.account_status === statusFilter;
+    const matchesKyc = kycFilter === "all" || user.kyc_status === kycFilter;
 
-  return matchesSearch && matchesStatus && matchesKyc;
-});
+    return matchesSearch && matchesStatus && matchesKyc;
+  });
 
-const sortedUsers = [...filteredUsers].sort((a, b) => {
-  if (sortBy === "balance") {
-    return sortOrder === "desc" ? b.balance - a.balance : a.balance - b.balance;
-  }
-  if (sortBy === "equity") {
-    return sortOrder === "desc" ? b.equity - a.equity : a.equity - b.equity;
-  }
-  return 0;
-});
+  const sortedUsers = [...filteredUsers].sort((a, b) => {
+    if (sortBy === "balance") {
+      return sortOrder === "desc"
+        ? b.balance - a.balance
+        : a.balance - b.balance;
+    }
+    if (sortBy === "equity") {
+      return sortOrder === "desc" ? b.equity - a.equity : a.equity - b.equity;
+    }
+    return 0;
+  });
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(amount);
-};
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "active": return "bg-green-500";
-    case "inactive": return "bg-gray-500";
-    case "suspended": return "bg-red-500";
-    default: return "bg-gray-500";
-  }
-};
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500";
+      case "inactive":
+        return "bg-gray-500";
+      case "suspended":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
 
-const getKycColor = (status: string) => {
-  switch (status) {
-    case "approved": return "bg-green-500";
-    case "rejected": return "bg-red-500";
-    case "pending": return "bg-yellow-500";
-    default: return "bg-gray-500";
-  }
-};
+  const getKycColor = (status: string) => {
+    switch (status) {
+      case "approved":
+        return "bg-green-500";
+      case "rejected":
+        return "bg-red-500";
+      case "pending":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
 
-return (
-  <div className="space-y-6">
-    {/* Header */}
-    <div className="flex items-center justify-between">
-      <div>
-        <h2 className="text-lg font-semibold">User Management</h2>
-        <p className="text-sm text-muted-foreground">
-          Manage user accounts and virtual funding
-        </p>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">
-          Total users: {userAccounts.length}
-        </span>
-      </div>
-    </div>
-
-    {/* Filters */}
-    <Card>
-      <div className="p-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search users..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-input bg-background rounded-md text-sm"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="suspended">Suspended</option>
-            </select>
-            <select
-              value={kycFilter}
-              onChange={(e) => setKycFilter(e.target.value)}
-              className="px-3 py-2 border border-input bg-background rounded-md text-sm"
-            >
-              <option value="all">All KYC</option>
-              <option value="approved">Approved</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-            </select>
-          </div>
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold">User Management</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage user accounts and virtual funding
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Total users: {userAccounts.length}
+          </span>
         </div>
       </div>
-    </Card>
 
-    {/* Users Table */}
-    <Card>
-      <div className="p-6">
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          </div>
-        ) : (
-          <>
-            <div className="mb-4">
-              <span className="text-sm text-muted-foreground">
-                Showing {sortedUsers.length} of {userAccounts.length} users
-              </span>
+      {/* Filters */}
+      <Card>
+        <div className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search users..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
+            <div className="flex gap-2">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-2 border border-input bg-background rounded-md text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="suspended">Suspended</option>
+              </select>
+              <select
+                value={kycFilter}
+                onChange={(e) => setKycFilter(e.target.value)}
+                className="px-3 py-2 border border-input bg-background rounded-md text-sm"
+              >
+                <option value="all">All KYC</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Card>
 
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => {
-                        setSortBy("full_name");
-                        setSortOrder(sortOrder === "desc" && sortBy === "full_name" ? "asc" : "desc");
-                      }}
-                    >
-                      Name
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => {
-                        setSortBy("email");
-                        setSortOrder(sortOrder === "desc" && sortBy === "email" ? "asc" : "desc");
-                      }}
-                    >
-                      Email
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer hover:bg-muted/50 text-right"
-                      onClick={() => {
-                        setSortBy("balance");
-                        setSortOrder(sortOrder === "desc" && sortBy === "balance" ? "asc" : "desc");
-                      }}
-                    >
-                      Balance
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer hover:bg-muted/50 text-right"
-                      onClick={() => {
-                        setSortBy("equity");
-                        setSortOrder(sortOrder === "desc" && sortBy === "equity" ? "asc" : "desc");
-                      }}
-                    >
-                      Equity
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => {
-                        setSortBy("created_at");
-                        setSortOrder(sortOrder === "desc" && sortBy === "created_at" ? "asc" : "desc");
-                      }}
-                    >
-                      Created
-                    </TableHead>
-                    <TableHead>KYC Status</TableHead>
-                    <TableHead>Account Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedUsers.map((account) => (
-                    <TableRow key={account.id} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">
-                        {account.full_name || "N/A"}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground font-mono">
-                        {account.email}
-                      </TableCell>
-                      <TableCell className="text-right font-mono font-medium">
-                        {formatCurrency(account.balance)}
-                      </TableCell>
-                      <TableCell className="text-right font-mono">
-                        {formatCurrency(account.equity)}
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        {new Date(account.created_at).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">
-                          <span className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(account.kyc_status)}`} />
-                          {account.kyc_status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">
-                          <span className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(account.account_status)}`} />
-                          {account.account_status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setFundDialog({ open: true, userId: account.id })}
-                            className="flex items-center gap-1"
-                          >
-                            <DollarSign className="h-3 w-3" />
-                            Fund
-                          </Button>
-                          {account.account_status === "active" && (
+      {/* Users Table */}
+      <Card>
+        <div className="p-6">
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <>
+              <div className="mb-4">
+                <span className="text-sm text-muted-foreground">
+                  Showing {sortedUsers.length} of {userAccounts.length} users
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => {
+                          setSortBy("full_name");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "full_name"
+                              ? "asc"
+                              : "desc",
+                          );
+                        }}
+                      >
+                        Name
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => {
+                          setSortBy("email");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "email"
+                              ? "asc"
+                              : "desc",
+                          );
+                        }}
+                      >
+                        Email
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50 text-right"
+                        onClick={() => {
+                          setSortBy("balance");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "balance"
+                              ? "asc"
+                              : "desc",
+                          );
+                        }}
+                      >
+                        Balance
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50 text-right"
+                        onClick={() => {
+                          setSortBy("equity");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "equity"
+                              ? "asc"
+                              : "desc",
+                          );
+                        }}
+                      >
+                        Equity
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => {
+                          setSortBy("created_at");
+                          setSortOrder(
+                            sortOrder === "desc" && sortBy === "created_at"
+                              ? "asc"
+                              : "desc",
+                          );
+                        }}
+                      >
+                        Created
+                      </TableHead>
+                      <TableHead>KYC Status</TableHead>
+                      <TableHead>Account Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedUsers.map((account) => (
+                      <TableRow key={account.id} className="hover:bg-muted/50">
+                        <TableCell className="font-medium">
+                          {account.full_name || "N/A"}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground font-mono">
+                          {account.email}
+                        </TableCell>
+                        <TableCell className="text-right font-mono font-medium">
+                          {formatCurrency(account.balance)}
+                        </TableCell>
+                        <TableCell className="text-right font-mono">
+                          {formatCurrency(account.equity)}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {new Date(account.created_at).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">
+                            <span
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(account.kyc_status)}`}
+                            />
+                            {account.kyc_status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">
+                            <span
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(account.account_status)}`}
+                            />
+                            {account.account_status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleLogoutAllDevices(account.id)}
+                              onClick={() =>
+                                setFundDialog({
+                                  open: true,
+                                  userId: account.id,
+                                })
+                              }
                               className="flex items-center gap-1"
                             >
-                              <User className="h-3 w-3" />
-                              Logout
+                              <DollarSign className="h-3 w-3" />
+                              Fund
                             </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-
-            {sortedUsers.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                No users found matching your criteria.
+                            {account.account_status === "active" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleLogoutAllDevices(account.id)
+                                }
+                                className="flex items-center gap-1"
+                              >
+                                <User className="h-3 w-3" />
+                                Logout
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            )}
-          </>
-        )}
-      </div>
-    </Card>
 
-    <FundAccountDialog
-      open={fundDialog.open}
-      userId={fundDialog.userId}
-      onClose={() => setFundDialog({ open: false, userId: null })}
-      onSuccess={() => {
-        setFundDialog({ open: false, userId: null });
-        fetchUserAccounts();
-      }}
-    />
-  </div>
-);
+              {sortedUsers.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  No users found matching your criteria.
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </Card>
+
+      <FundAccountDialog
+        open={fundDialog.open}
+        userId={fundDialog.userId}
+        onClose={() => setFundDialog({ open: false, userId: null })}
+        onSuccess={() => {
+          setFundDialog({ open: false, userId: null });
+          fetchUserAccounts();
+        }}
+      />
+    </div>
+  );
 };
 
 export default UsersPanel;

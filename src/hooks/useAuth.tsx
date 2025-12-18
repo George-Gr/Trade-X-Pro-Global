@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { User } from "@supabase/supabase-js";
 
 export const useAuth = () => {
@@ -43,16 +43,17 @@ export const useAuth = () => {
         .eq("user_id", userId);
 
       if (rolesError) {
-        console.error('Error fetching user roles:', rolesError);
+        console.error("Error fetching user roles:", rolesError);
         setIsAdmin(false);
         return;
       }
 
       // Check if user has admin role
-      const isAdminRole = rolesData?.some(role => role.role === 'admin') || false;
+      const isAdminRole =
+        rolesData?.some((role) => role.role === "admin") || false;
       setIsAdmin(isAdminRole);
     } catch (error) {
-      console.error('Error checking admin role:', error);
+      console.error("Error checking admin role:", error);
       setIsAdmin(false);
     } finally {
       setLoading(false);

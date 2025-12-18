@@ -1,7 +1,17 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useWatchlists } from "@/hooks/useWatchlists";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import WatchlistItems from "./WatchlistItems";
@@ -19,7 +29,7 @@ export const WatchlistTabs = ({
   onActiveWatchlistChange,
   onDeleteWatchlist,
   onSelectSymbol,
-  onQuickTrade
+  onQuickTrade,
 }: WatchlistTabsProps) => {
   const { watchlists, watchlistItems, isLoading } = useWatchlists();
 
@@ -37,7 +47,11 @@ export const WatchlistTabs = ({
         <ScrollArea className="flex-1">
           <TabsList className="w-full justify-start">
             {watchlists.map((list) => (
-              <TabsTrigger key={list.id} value={list.id} className="relative group">
+              <TabsTrigger
+                key={list.id}
+                value={list.id}
+                className="relative group"
+              >
                 {list.name}
                 {!list.is_default && (
                   <AlertDialog>
@@ -53,12 +67,15 @@ export const WatchlistTabs = ({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Delete Watchlist</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to delete "{list.name}"? This action cannot be undone.
+                          Are you sure you want to delete "{list.name}"? This
+                          action cannot be undone.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => onDeleteWatchlist(list.id)}>
+                        <AlertDialogAction
+                          onClick={() => onDeleteWatchlist(list.id)}
+                        >
                           Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>
@@ -73,16 +90,24 @@ export const WatchlistTabs = ({
 
       {watchlists.map((list) => {
         const listItems = Array.isArray(watchlistItems)
-          ? watchlistItems.filter(item => item.watchlist_id === list.id)
+          ? watchlistItems.filter((item) => item.watchlist_id === list.id)
           : [];
 
         return (
-          <TabsContent key={list.id} value={list.id} className="flex-1 overflow-hidden mt-2">
+          <TabsContent
+            key={list.id}
+            value={list.id}
+            className="flex-1 overflow-hidden mt-2"
+          >
             <WatchlistItems
               items={listItems}
               onSymbolClick={onSelectSymbol || (() => {})}
               onQuickTrade={onQuickTrade || (() => {})}
-              getPrice={() => ({ currentPrice: 0, change: 0, changePercent: 0 })}
+              getPrice={() => ({
+                currentPrice: 0,
+                change: 0,
+                changePercent: 0,
+              })}
               onRemoveSymbol={(_symbol: string) => {}}
               onAddSymbolClick={() => {}}
             />

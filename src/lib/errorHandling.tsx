@@ -1,5 +1,5 @@
-import React from 'react';
-import { ErrorMessage } from '@/components/ui/ErrorUI';
+import React from "react";
+import { ErrorMessage } from "@/components/ui/ErrorUI";
 
 /**
  * HOC to wrap components with error boundary and retry logic
@@ -10,9 +10,11 @@ export const withErrorHandling = <P extends {}>(
     title?: string;
     description?: string;
     showRetry?: boolean;
-  }
+  },
 ): React.ComponentType<P> => {
-  return function WithErrorHandling(props: P & { error?: string; onRetry?: () => void }) {
+  return function WithErrorHandling(
+    props: P & { error?: string; onRetry?: () => void },
+  ) {
     const { error, onRetry, ...componentProps } = props;
 
     if (error) {

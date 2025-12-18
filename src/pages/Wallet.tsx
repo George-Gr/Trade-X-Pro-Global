@@ -1,9 +1,23 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wallet as WalletIcon, TrendingUp, History, Plus, RefreshCw, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import {
+  Wallet as WalletIcon,
+  TrendingUp,
+  History,
+  Plus,
+  RefreshCw,
+  ArrowUpRight,
+  ArrowDownLeft,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import { DepositCryptoDialog } from "@/components/wallet/DepositCryptoDialog";
@@ -21,15 +35,19 @@ const Wallet = () => {
   const [activeTab, setActiveTab] = useState("deposits");
 
   // Fetch user profile
-  const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = useQuery({
-    queryKey: ['profile', user?.id],
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    refetch: refetchProfile,
+  } = useQuery({
+    queryKey: ["profile", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id!)
+        .from("profiles")
+        .select("*")
+        .eq("id", user?.id!)
         .single();
-      
+
       if (error) throw error;
       return data;
     },
@@ -37,15 +55,19 @@ const Wallet = () => {
   });
 
   // Fetch crypto transactions
-  const { data: transactions, isLoading: transactionsLoading, refetch: refetchTransactions } = useQuery({
-    queryKey: ['crypto_transactions', user?.id],
+  const {
+    data: transactions,
+    isLoading: transactionsLoading,
+    refetch: refetchTransactions,
+  } = useQuery({
+    queryKey: ["crypto_transactions", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('crypto_transactions')
-        .select('*')
-        .eq('user_id', user?.id!)
-        .order('created_at', { ascending: false });
-      
+        .from("crypto_transactions")
+        .select("*")
+        .eq("user_id", user?.id!)
+        .order("created_at", { ascending: false });
+
       if (error) throw error;
       return data;
     },
@@ -67,18 +89,18 @@ const Wallet = () => {
   //       .select('*')
   //       .eq('user_id', user?.id)
   //       .order('created_at', { ascending: false });
-  //     
+  //
   //     if (error) throw error;
   //     return data;
   //   },
   //   enabled: !!user?.id,
   // });
 
-  const pendingTransactions = transactions?.filter(t => 
-    ['pending', 'confirming'].includes(t.status)
-  ).length || 0;
+  const pendingTransactions =
+    transactions?.filter((t) => ["pending", "confirming"].includes(t.status))
+      .length || 0;
 
-  // const pendingWithdrawals = withdrawals?.filter((w: any) => 
+  // const pendingWithdrawals = withdrawals?.filter((w: any) =>
   //   ['pending', 'approved', 'processing'].includes(w.status)
   // ).length || 0;
 
@@ -94,18 +116,22 @@ const Wallet = () => {
         <div className="container mx-auto py-8 px-4 max-w-7xl">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="typography-h1 gradient-text mb-2">Crypto Wallet</h1>
-              <p className="text-muted-foreground">Manage your cryptocurrency deposits and withdrawals</p>
+              <h1 className="typography-h1 gradient-text mb-2">
+                Crypto Wallet
+              </h1>
+              <p className="text-muted-foreground">
+                Manage your cryptocurrency deposits and withdrawals
+              </p>
             </div>
             <div className="flex gap-4">
-              <Button 
+              <Button
                 variant="outline"
                 onClick={handleRefresh}
                 className="gap-4"
               >
                 <RefreshCw className="h-4 w-4" />
               </Button>
-              <Button 
+              <Button
                 onClick={() => setDepositDialogOpen(true)}
                 className="gap-4"
               >
@@ -129,7 +155,7 @@ const Wallet = () => {
                   <Skeleton className="h-10 w-48" />
                 ) : (
                   <div className="text-3xl font-bold gradient-text">
-                    ${profile?.balance?.toFixed(2) || '0.00'}
+                    ${profile?.balance?.toFixed(2) || "0.00"}
                   </div>
                 )}
               </CardContent>
@@ -150,7 +176,9 @@ const Wallet = () => {
                     ${(0).toFixed(2)}
                   </div>
                 )}
-                <p className="text-xs text-muted-foreground mt-1">In pending withdrawals (feature disabled)</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  In pending withdrawals (feature disabled)
+                </p>
               </CardContent>
             </Card>
 
@@ -164,18 +192,28 @@ const Wallet = () => {
               <CardContent>
                 <div className="flex gap-4">
                   <div>
-                    <Badge variant="secondary" className="flex items-center gap-4">
+                    <Badge
+                      variant="secondary"
+                      className="flex items-center gap-4"
+                    >
                       <ArrowDownLeft className="h-3 w-3" />
-                      {transactionsLoading ? '...' : pendingTransactions}
+                      {transactionsLoading ? "..." : pendingTransactions}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-2">Deposits</p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Deposits
+                    </p>
                   </div>
                   <div>
-                    <Badge variant="secondary" className="flex items-center gap-4">
+                    <Badge
+                      variant="secondary"
+                      className="flex items-center gap-4"
+                    >
                       <ArrowUpRight className="h-3 w-3" />
                       {0}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">Withdrawals (disabled)</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Withdrawals (disabled)
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -193,9 +231,11 @@ const Wallet = () => {
                       <ArrowDownLeft className="h-4 w-4 text-buy" />
                       Deposit Crypto
                     </CardTitle>
-                    <CardDescription>Add cryptocurrency to your account</CardDescription>
+                    <CardDescription>
+                      Add cryptocurrency to your account
+                    </CardDescription>
                   </div>
-                  <Button 
+                  <Button
                     onClick={() => setDepositDialogOpen(true)}
                     size="default"
                   >
@@ -228,9 +268,11 @@ const Wallet = () => {
                       <ArrowUpRight className="h-4 w-4 text-sell" />
                       Withdraw Crypto
                     </CardTitle>
-                    <CardDescription>Withdraw to external wallet</CardDescription>
+                    <CardDescription>
+                      Withdraw to external wallet
+                    </CardDescription>
                   </div>
-                  <Button 
+                  <Button
                     onClick={() => setWithdrawalDialogOpen(true)}
                     size="default"
                     variant="outline"
@@ -262,7 +304,11 @@ const Wallet = () => {
               <CardTitle>Manage Funds</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="deposits">Recent Deposits</TabsTrigger>
                   <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -270,27 +316,35 @@ const Wallet = () => {
                 </TabsList>
 
                 <TabsContent value="deposits" className="mt-6">
-                  <TransactionHistory 
-                    transactions={transactions?.filter(t => t.transaction_type === 'deposit').map(t => ({
-                      ...t,
-                      confirmations: t.confirmations ?? 0,
-                    })) || []} 
+                  <TransactionHistory
+                    transactions={
+                      transactions
+                        ?.filter((t) => t.transaction_type === "deposit")
+                        .map((t) => ({
+                          ...t,
+                          confirmations: t.confirmations ?? 0,
+                        })) || []
+                    }
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>
 
                 <TabsContent value="withdrawals" className="mt-6">
                   <div className="space-y-4">
-                    <p className="text-center text-muted-foreground py-8">Withdrawals feature temporarily disabled</p>
+                    <p className="text-center text-muted-foreground py-8">
+                      Withdrawals feature temporarily disabled
+                    </p>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="all" className="mt-6">
-                  <TransactionHistory 
-                    transactions={transactions?.map(t => ({
-                      ...t,
-                      confirmations: t.confirmations ?? 0,
-                    })) || []} 
+                  <TransactionHistory
+                    transactions={
+                      transactions?.map((t) => ({
+                        ...t,
+                        confirmations: t.confirmations ?? 0,
+                      })) || []
+                    }
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>
@@ -298,7 +352,7 @@ const Wallet = () => {
             </CardContent>
           </Card>
 
-          <DepositCryptoDialog 
+          <DepositCryptoDialog
             open={depositDialogOpen}
             onOpenChange={setDepositDialogOpen}
             onSuccess={() => refetchTransactions()}
@@ -307,7 +361,9 @@ const Wallet = () => {
           <WithdrawalDialog
             open={withdrawalDialogOpen}
             onOpenChange={setWithdrawalDialogOpen}
-            onSuccess={() => { /* Feature disabled */ }}
+            onSuccess={() => {
+              /* Feature disabled */
+            }}
             balance={profile?.balance || 0}
           />
         </div>

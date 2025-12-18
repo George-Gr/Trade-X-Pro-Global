@@ -84,41 +84,41 @@ Critical operations (trading, auth, payments) receive 3-5x higher sampling rates
 ### Basic Error Logging
 
 ```typescript
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 // Log information
-logger.info('User logged in', { userId: 'user123' });
+logger.info("User logged in", { userId: "user123" });
 
 // Log errors with context
-logger.error('Order failed', error, {
-  component: 'TradingEngine',
-  action: 'place_order',
-  metadata: { symbol: 'EURUSD', size: 10000 }
+logger.error("Order failed", error, {
+  component: "TradingEngine",
+  action: "place_order",
+  metadata: { symbol: "EURUSD", size: 10000 },
 });
 
 // Add breadcrumbs
-logger.addBreadcrumb('trading', 'Order placement started');
+logger.addBreadcrumb("trading", "Order placement started");
 ```
 
 ### Performance Monitoring
 
 ```typescript
 // Start transaction
-const transactionId = logger.startTransaction('order_execution', 'trading', {
-  metadata: { symbol: 'EURUSD' }
+const transactionId = logger.startTransaction("order_execution", "trading", {
+  metadata: { symbol: "EURUSD" },
 });
 
 try {
   // Execute trading operation
   const result = await executeOrder(order);
-  
+
   // Finish transaction
   logger.finishTransaction(transactionId, {
-    metadata: { success: true, orderId: result.id }
+    metadata: { success: true, orderId: result.id },
   });
 } catch (error) {
   logger.finishTransaction(transactionId, {
-    metadata: { success: false, error: error.message }
+    metadata: { success: false, error: error.message },
   });
   throw error;
 }
@@ -128,20 +128,20 @@ try {
 
 ```typescript
 // Automatic tracking with wrapped fetch
-const response = await fetch('/api/orders', {
-  method: 'POST',
-  body: JSON.stringify(orderData)
+const response = await fetch("/api/orders", {
+  method: "POST",
+  body: JSON.stringify(orderData),
 });
 
 // Manual API timing
-logger.timeApiCall('POST', '/api/orders', responseTime, 200);
+logger.timeApiCall("POST", "/api/orders", responseTime, 200);
 ```
 
 ### Custom Error Boundaries
 
 ```tsx
-import TradingErrorBoundary from '@/components/TradingErrorBoundary';
-import APIErrorBoundary from '@/components/APIErrorBoundary';
+import TradingErrorBoundary from "@/components/TradingErrorBoundary";
+import APIErrorBoundary from "@/components/APIErrorBoundary";
 
 function TradingPage() {
   return (
@@ -232,15 +232,15 @@ The system provides metrics that integrate with monitoring dashboards:
 ```typescript
 // Get API statistics
 const apiStats = apiInterceptor.getStats();
-console.log('API Performance:', apiStats);
+console.log("API Performance:", apiStats);
 
 // Get alert statistics
 const alertStats = alertManager.getAlertStats();
-console.log('Alert Status:', alertStats);
+console.log("Alert Status:", alertStats);
 
 // Get breadcrumb history
 const interactions = breadcrumbTracker.getInteractions();
-console.log('User Activity:', interactions);
+console.log("User Activity:", interactions);
 ```
 
 ## Testing
@@ -248,6 +248,7 @@ console.log('User Activity:', interactions);
 ### Unit Tests
 
 Comprehensive test suite covers:
+
 - Error logging and context tracking
 - Performance monitoring accuracy
 - Alert rule evaluation
@@ -257,12 +258,14 @@ Comprehensive test suite covers:
 ### Integration Tests
 
 Tests verify complete error flows:
+
 - End-to-end error tracking
 - Performance transaction lifecycle
 - Alert triggering and cooldowns
 - Memory leak prevention
 
 Run tests with:
+
 ```bash
 npm test
 npm run test:ui  # Interactive mode
@@ -283,6 +286,7 @@ npm run build:production
 ### Source Map Upload
 
 The build process automatically:
+
 1. Generates source maps
 2. Uploads to Sentry
 3. Associates with release
@@ -317,19 +321,21 @@ The build process automatically:
 ### Debug Mode
 
 Enable debug logging:
+
 ```typescript
 // In development
-localStorage.setItem('debug', 'sentry:*');
+localStorage.setItem("debug", "sentry:*");
 ```
 
 ### Health Checks
 
 The system provides health check endpoints:
+
 ```typescript
-import { healthCheck } from '@/lib/apiInterceptor';
+import { healthCheck } from "@/lib/apiInterceptor";
 
 const isHealthy = await healthCheck();
-console.log('API Health:', isHealthy);
+console.log("API Health:", isHealthy);
 ```
 
 ## Security Considerations

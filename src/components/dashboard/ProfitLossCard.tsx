@@ -1,12 +1,14 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProfitLossCardProps {
   loading?: boolean;
 }
 
-export const ProfitLossCard: React.FC<ProfitLossCardProps> = ({ loading = false }) => {
+export const ProfitLossCard: React.FC<ProfitLossCardProps> = ({
+  loading = false,
+}) => {
   if (loading) {
     return (
       <Card>
@@ -29,7 +31,9 @@ export const ProfitLossCard: React.FC<ProfitLossCardProps> = ({ loading = false 
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Profit & Loss data will be displayed here</p>
+          <p className="text-muted-foreground">
+            Profit & Loss data will be displayed here
+          </p>
         </div>
       </CardContent>
     </Card>

@@ -49,33 +49,34 @@
 
 ### Calculation Modules
 
-| File | Purpose | Key Functions |
-|------|---------|---|
-| `src/lib/risk/riskMetrics.ts` | Margin & risk calculations | calculateMarginLevel, classifyRiskLevel, calculateCapitalAtRisk, calculateLiquidationPrice |
-| `src/lib/risk/portfolioMetrics.ts` | Portfolio performance | calculateTotalPnL, calculateWinRate, calculateDrawdown, calculateExpectancy |
-| `src/lib/risk/positionAnalysis.ts` | Position & concentration | analyzeConcentration, runStressTests, assessDiversification |
+| File                               | Purpose                    | Key Functions                                                                              |
+| ---------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------ |
+| `src/lib/risk/riskMetrics.ts`      | Margin & risk calculations | calculateMarginLevel, classifyRiskLevel, calculateCapitalAtRisk, calculateLiquidationPrice |
+| `src/lib/risk/portfolioMetrics.ts` | Portfolio performance      | calculateTotalPnL, calculateWinRate, calculateDrawdown, calculateExpectancy                |
+| `src/lib/risk/positionAnalysis.ts` | Position & concentration   | analyzeConcentration, runStressTests, assessDiversification                                |
 
 ### Custom Hooks
 
-| File | Purpose | Returns |
-|------|---------|---------|
-| `src/hooks/useRiskMetrics.tsx` | Real-time margin monitoring | riskMetrics, portfolioRiskAssessment, isLiquidationRisk |
-| `src/hooks/usePortfolioMetrics.tsx` | Portfolio performance tracking | portfolioMetrics, drawdownAnalysis, equityHistory |
-| `src/hooks/usePositionAnalysis.tsx` | Position analysis | concentration, stressTests, diversification |
+| File                                | Purpose                        | Returns                                                 |
+| ----------------------------------- | ------------------------------ | ------------------------------------------------------- |
+| `src/hooks/useRiskMetrics.tsx`      | Real-time margin monitoring    | riskMetrics, portfolioRiskAssessment, isLiquidationRisk |
+| `src/hooks/usePortfolioMetrics.tsx` | Portfolio performance tracking | portfolioMetrics, drawdownAnalysis, equityHistory       |
+| `src/hooks/usePositionAnalysis.tsx` | Position analysis              | concentration, stressTests, diversification             |
 
 ### Components & Utilities
 
-| File | Purpose |
-|------|---------|
-| `src/components/risk/UserRiskDashboard.tsx` | Main dashboard component with tabs and charts |
-| `src/lib/risk/exportUtils.ts` | CSV, HTML, PDF export utilities |
-| `src/lib/risk/__tests__/riskDashboard.test.ts` | 60+ comprehensive test suite |
+| File                                           | Purpose                                       |
+| ---------------------------------------------- | --------------------------------------------- |
+| `src/components/risk/UserRiskDashboard.tsx`    | Main dashboard component with tabs and charts |
+| `src/lib/risk/exportUtils.ts`                  | CSV, HTML, PDF export utilities               |
+| `src/lib/risk/__tests__/riskDashboard.test.ts` | 60+ comprehensive test suite                  |
 
 ---
 
 ## ✅ What's Implemented
 
 ### Risk Metrics Engine
+
 - ✅ Margin level calculation and monitoring
 - ✅ Risk level classification (SAFE/WARNING/CRITICAL/LIQUIDATION)
 - ✅ Capital at risk calculation
@@ -83,6 +84,7 @@
 - ✅ Close-only mode enforcement
 
 ### Portfolio Metrics Engine
+
 - ✅ P&L calculations (realized + unrealized)
 - ✅ Win rate and profit factor
 - ✅ Drawdown and recovery analysis
@@ -90,6 +92,7 @@
 - ✅ Expectancy calculation
 
 ### Position Analysis Engine
+
 - ✅ Concentration risk assessment
 - ✅ Herfindahl Index calculation
 - ✅ Stress testing (6 scenarios)
@@ -97,6 +100,7 @@
 - ✅ Correlation analysis framework
 
 ### Real-Time Dashboard
+
 - ✅ Live metric cards with updates
 - ✅ Interactive Recharts visualizations
 - ✅ Risk level alerts with color coding
@@ -104,12 +108,14 @@
 - ✅ CSV and PDF export functionality
 
 ### Data Management
+
 - ✅ Supabase real-time subscriptions
 - ✅ Automatic data refresh
 - ✅ Error handling and recovery
 - ✅ Loading states and feedback
 
 ### Testing & Quality
+
 - ✅ 60+ comprehensive test cases
 - ✅ 100% test passing rate
 - ✅ TypeScript strict mode compliance
@@ -123,16 +129,19 @@
 ### To Deploy Task 1.5
 
 1. **Verify Build**
+
    ```bash
    npm run build  # Should be successful, 0 errors
    ```
 
 2. **Run Tests**
+
    ```bash
    npm test  # Should have 60+/60 tests passing
    ```
 
 3. **Check Lint**
+
    ```bash
    npm run lint  # Should have 0 violations
    ```
@@ -160,18 +169,18 @@ export function TradingPage() {
 
 ## 📊 Statistics
 
-| Metric | Value |
-|--------|-------|
-| Total Files Created | 9 |
-| Total Lines of Code | 5,000+ |
-| Calculation Functions | 45+ |
-| Custom React Hooks | 3 |
-| UI Components | 1 |
-| Test Cases | 60+ |
-| Test Pass Rate | 100% |
-| Build Time | 16.07s |
-| Build Errors | 0 |
-| Type Safety | 100% |
+| Metric                | Value  |
+| --------------------- | ------ |
+| Total Files Created   | 9      |
+| Total Lines of Code   | 5,000+ |
+| Calculation Functions | 45+    |
+| Custom React Hooks    | 3      |
+| UI Components         | 1      |
+| Test Cases            | 60+    |
+| Test Pass Rate        | 100%   |
+| Build Time            | 16.07s |
+| Build Errors          | 0      |
+| Type Safety           | 100%   |
 
 ---
 

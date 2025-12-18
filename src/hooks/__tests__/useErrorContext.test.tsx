@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
-import { ErrorContextProvider } from '@/components/ErrorContextProvider';
-import { useErrorContext } from '@/hooks/useErrorContext';
-import { logger } from '@/lib/logger';
+import { describe, it, expect, beforeAll } from "vitest";
+import { render, screen, act } from "@testing-library/react";
+import { ErrorContextProvider } from "@/components/ErrorContextProvider";
+import { useErrorContext } from "@/hooks/useErrorContext";
+import { logger } from "@/lib/logger";
 
 /**
  * Test suite for useErrorContext hook
@@ -18,7 +18,11 @@ function TestComponent() {
     <div>
       <button
         onClick={() =>
-          setContext({ userId: 'user-123', page: 'test', component: 'TestComponent' })
+          setContext({
+            userId: "user-123",
+            page: "test",
+            component: "TestComponent",
+          })
         }
       >
         Set Context
@@ -32,12 +36,12 @@ function TestComponent() {
         Get Context
       </button>
       <button
-        onClick={() => logError('Test error', new Error('Test error message'))}
+        onClick={() => logError("Test error", new Error("Test error message"))}
       >
         Log Error
       </button>
       <button
-        onClick={() => addBreadcrumb('test_action', 'Test action performed')}
+        onClick={() => addBreadcrumb("test_action", "Test action performed")}
       >
         Add Breadcrumb
       </button>
@@ -53,46 +57,46 @@ function TestComponent() {
   );
 }
 
-describe('useErrorContext', () => {
+describe("useErrorContext", () => {
   beforeEach(() => {
     logger.clearGlobalContext();
     logger.clearBreadcrumbs();
   });
 
-  it('should throw error when used outside provider', () => {
+  it("should throw error when used outside provider", () => {
     // Suppress console.error for this test
     const originalError = console.error;
     console.error = () => {};
 
     expect(() => {
       render(<TestComponent />);
-    }).toThrow(
-      'useErrorContext must be used within ErrorContextProvider'
-    );
+    }).toThrow("useErrorContext must be used within ErrorContextProvider");
 
     console.error = originalError;
   });
 
-  it('should provide context when wrapped in provider', () => {
+  it("should provide context when wrapped in provider", () => {
     expect(() => {
       render(
         <ErrorContextProvider>
           <TestComponent />
-        </ErrorContextProvider>
+        </ErrorContextProvider>,
       );
     }).not.toThrow();
   });
 
-  it('should set and retrieve context', async () => {
+  it("should set and retrieve context", async () => {
     const { container } = render(
       <ErrorContextProvider>
         <div>
           <TestComponent />
         </div>
-      </ErrorContextProvider>
+      </ErrorContextProvider>,
     );
 
-    const setContextBtn = container.querySelector('button:nth-child(1)') as HTMLButtonElement;
+    const setContextBtn = container.querySelector(
+      "button:nth-child(1)",
+    ) as HTMLButtonElement;
     if (setContextBtn) {
       await act(async () => {
         setContextBtn.click();
@@ -102,20 +106,22 @@ describe('useErrorContext', () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const context = logger.getGlobalContext();
-      expect(context.userId).toBe('user-123');
-      expect(context.page).toBe('test');
+      expect(context.userId).toBe("user-123");
+      expect(context.page).toBe("test");
     }
   });
 
-  it('should log errors with context', async () => {
+  it("should log errors with context", async () => {
     const { container } = render(
       <ErrorContextProvider>
         <TestComponent />
-      </ErrorContextProvider>
+      </ErrorContextProvider>,
     );
 
     // First set context
-    const setContextBtn = container.querySelector('button:nth-child(1)') as HTMLButtonElement;
+    const setContextBtn = container.querySelector(
+      "button:nth-child(1)",
+    ) as HTMLButtonElement;
     if (setContextBtn) {
       await act(async () => {
         setContextBtn.click();
@@ -123,7 +129,9 @@ describe('useErrorContext', () => {
     }
 
     // Then log error
-    const logErrorBtn = container.querySelector('button:nth-child(3)') as HTMLButtonElement;
+    const logErrorBtn = container.querySelector(
+      "button:nth-child(3)",
+    ) as HTMLButtonElement;
     if (logErrorBtn) {
       await act(async () => {
         logErrorBtn.click();
@@ -133,21 +141,23 @@ describe('useErrorContext', () => {
 
       // Error should be recorded
       const context = logger.getGlobalContext();
-      expect(context.userId).toBe('user-123');
+      expect(context.userId).toBe("user-123");
     }
   });
 
-  it('should add breadcrumbs', async () => {
+  it("should add breadcrumbs", async () => {
     // Clear breadcrumbs before this test
     logger.clearBreadcrumbs();
-    
+
     const { container } = render(
       <ErrorContextProvider>
         <TestComponent />
-      </ErrorContextProvider>
+      </ErrorContextProvider>,
     );
 
-    const addBreadcrumbBtn = container.querySelector('button:nth-child(4)') as HTMLButtonElement;
+    const addBreadcrumbBtn = container.querySelector(
+      "button:nth-child(4)",
+    ) as HTMLButtonElement;
     if (addBreadcrumbBtn) {
       await act(async () => {
         addBreadcrumbBtn.click();
@@ -157,23 +167,25 @@ describe('useErrorContext', () => {
 
       const breadcrumbs = logger.getBreadcrumbs();
       expect(breadcrumbs.length).toBeGreaterThan(0);
-      expect(breadcrumbs[0].category).toBe('test_action');
-      expect(breadcrumbs[0].message).toBe('Test action performed');
+      expect(breadcrumbs[0].category).toBe("test_action");
+      expect(breadcrumbs[0].message).toBe("Test action performed");
     }
   });
 
-  it('should retrieve breadcrumbs', async () => {
+  it("should retrieve breadcrumbs", async () => {
     // Clear breadcrumbs before this test
     logger.clearBreadcrumbs();
-    
+
     const { container } = render(
       <ErrorContextProvider>
         <TestComponent />
-      </ErrorContextProvider>
+      </ErrorContextProvider>,
     );
 
     // Add multiple breadcrumbs
-    const addBreadcrumbBtn = container.querySelector('button:nth-child(4)') as HTMLButtonElement;
+    const addBreadcrumbBtn = container.querySelector(
+      "button:nth-child(4)",
+    ) as HTMLButtonElement;
     if (addBreadcrumbBtn) {
       for (let i = 0; i < 3; i++) {
         await act(async () => {
@@ -188,14 +200,16 @@ describe('useErrorContext', () => {
     }
   });
 
-  it('should handle multiple context updates', async () => {
+  it("should handle multiple context updates", async () => {
     const { container } = render(
       <ErrorContextProvider>
         <TestComponent />
-      </ErrorContextProvider>
+      </ErrorContextProvider>,
     );
 
-    const setContextBtn = container.querySelector('button:nth-child(1)') as HTMLButtonElement;
+    const setContextBtn = container.querySelector(
+      "button:nth-child(1)",
+    ) as HTMLButtonElement;
     if (setContextBtn) {
       // First update
       await act(async () => {
@@ -205,16 +219,16 @@ describe('useErrorContext', () => {
       await new Promise((resolve) => setTimeout(resolve, 50));
 
       let context = logger.getGlobalContext();
-      expect(context.userId).toBe('user-123');
+      expect(context.userId).toBe("user-123");
 
       // Second update (additional context)
-      logger.setGlobalContext({ action: 'execute_order' });
+      logger.setGlobalContext({ action: "execute_order" });
 
       await new Promise((resolve) => setTimeout(resolve, 50));
 
       context = logger.getGlobalContext();
-      expect(context.userId).toBe('user-123');
-      expect(context.action).toBe('execute_order');
+      expect(context.userId).toBe("user-123");
+      expect(context.action).toBe("execute_order");
     }
   });
 });

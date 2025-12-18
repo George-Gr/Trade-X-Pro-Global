@@ -68,7 +68,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     // Add breadcrumb for error tracking
     logger.addBreadcrumb(
       "error",
-      `Component ${this.props.componentName || "Unknown"} threw error: ${error.message}`
+      `Component ${this.props.componentName || "Unknown"} threw error: ${error.message}`,
     );
 
     // Call optional error handler prop for custom logging (e.g., Sentry)
@@ -115,7 +115,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <p className="text-sm text-slate-600 dark:text-slate-300">
-                  An unexpected error occurred. Our team has been notified and is working to fix it.
+                  An unexpected error occurred. Our team has been notified and
+                  is working to fix it.
                 </p>
 
                 {/* Error tracking ID */}
@@ -154,7 +155,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                     Try Again
                   </Button>
                   <Button
-                    onClick={() => window.location.href = "/"}
+                    onClick={() => (window.location.href = "/")}
                     variant="outline"
                     className="flex-1"
                     size="sm"

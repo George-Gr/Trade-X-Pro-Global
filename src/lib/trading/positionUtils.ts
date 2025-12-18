@@ -1,8 +1,8 @@
-import type { Position } from '@/types/position';
+import type { Position } from "@/types/position";
 import {
   calculateUnrealizedPnL as calcUnrealizedPnL,
   getPositionColor as calcPositionColor,
-} from './positionCalculations';
+} from "./positionCalculations";
 
 /**
  * Wrapper utility to calculate unrealized PnL for a Position object.

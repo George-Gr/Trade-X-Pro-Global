@@ -37,6 +37,7 @@ npm update @sentry/react @tanstack/react-query @tailwindcss/postcss \
 ```
 
 **Expected Output:**
+
 ```
 npm notice: up to date, audited X packages in Xs
 ```
@@ -48,6 +49,7 @@ npm list @sentry/react @tanstack/react-query tailwindcss vite
 ```
 
 **Expected:**
+
 - @sentry/react: 10.30.0
 - @tanstack/react-query: 5.90.12
 - tailwindcss: 4.1.18
@@ -60,6 +62,7 @@ npm run build:production
 ```
 
 **Expected:**
+
 - ✅ Completes without errors
 - ✅ Bundle size < 450 MB gzip (current: 112 MB)
 - ✅ No warnings except Sentry auth token (acceptable)
@@ -97,6 +100,7 @@ See: docs/assessments_and_reports/DEPENDENCY_UPGRADE_PLAN.md"
 ### Step 6: If Phase 1 Fails ❌
 
 **Rollback:**
+
 ```bash
 git reset --hard HEAD~1
 npm install
@@ -130,6 +134,7 @@ npm update react-hook-form @types/node
 ```
 
 **Expected:**
+
 - react-hook-form: 7.68.0
 - @types/node: 24.10.3
 
@@ -154,6 +159,7 @@ npm run build
 Test the following forms in development mode (`npm run dev`):
 
 **Login Form:**
+
 ```
 1. Navigate to /login
 2. Try submitting with empty fields
@@ -163,6 +169,7 @@ Test the following forms in development mode (`npm run dev`):
 ```
 
 **Trading Order Form (if logged in):**
+
 ```
 1. Navigate to /trading
 2. Open order form
@@ -173,6 +180,7 @@ Test the following forms in development mode (`npm run dev`):
 ```
 
 **Any Dynamic Forms:**
+
 ```
 1. Test useFieldArray if used (dynamic field arrays)
 2. Test conditional fields
@@ -245,6 +253,7 @@ npm update @supabase/supabase-js
 ```
 
 **Expected:**
+
 - @supabase/supabase-js: 2.87.1
 
 ### Step 3: Regenerate Type Definitions
@@ -254,12 +263,14 @@ npm run supabase:pull
 ```
 
 **Expected Output:**
+
 ```
 Generating TypeScript definitions from Supabase schema...
 ✓ Generated types in src/integrations/supabase/types.ts
 ```
 
 **What this does:**
+
 - Re-reads your Supabase database schema
 - Regenerates auto-generated type definitions
 - Ensures types match current database state
@@ -283,6 +294,7 @@ npm run build
 ### Step 6: Comprehensive Database Testing
 
 **Start dev server:**
+
 ```bash
 npm run dev
 ```
@@ -290,6 +302,7 @@ npm run dev
 **Test Sequence:**
 
 #### A) Authentication Flow
+
 ```
 1. Clear browser cookies/local storage
 2. Navigate to /login
@@ -303,6 +316,7 @@ npm run dev
 ```
 
 #### B) User Profile Operations
+
 ```
 1. Log in
 2. Navigate to Profile/Settings
@@ -313,6 +327,7 @@ npm run dev
 ```
 
 #### C) Trading-Critical Operations
+
 ```
 1. Navigate to Trading page
 2. Verify positions load from database
@@ -323,6 +338,7 @@ npm run dev
 ```
 
 #### D) Realtime Subscriptions
+
 ```
 1. Open dev console (F12)
 2. Navigate to trading page
@@ -334,6 +350,7 @@ npm run dev
 ```
 
 #### E) Wallet/Balance Operations (if present)
+
 ```
 1. Check wallet balance displays
 2. Verify deposit/withdrawal history loads
@@ -341,6 +358,7 @@ npm run dev
 ```
 
 #### F) KYC Status (if present)
+
 ```
 1. Check KYC status displays correctly
 2. Verify KYC form loads properly
@@ -350,6 +368,7 @@ npm run dev
 ### Step 7: Console Error Check
 
 Open browser dev tools (F12) and check:
+
 ```
 ✅ No RLS policy errors (will show as 403)
 ✅ No "null" return errors
@@ -360,12 +379,12 @@ Open browser dev tools (F12) and check:
 
 **Common Issues to Watch For:**
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `ERROR: new row violates row level security policy` | RLS policy broken | Check Supabase migrations |
-| `Error: null` when fetching | Query failed silently | Check RLS, then check console |
-| Realtime not updating | Subscription issue | Check realtime subscription code |
-| Auth fails after logout | Token not cleared | Clear localStorage manually |
+| Error                                               | Cause                 | Solution                         |
+| --------------------------------------------------- | --------------------- | -------------------------------- |
+| `ERROR: new row violates row level security policy` | RLS policy broken     | Check Supabase migrations        |
+| `Error: null` when fetching                         | Query failed silently | Check RLS, then check console    |
+| Realtime not updating                               | Subscription issue    | Check realtime subscription code |
+| Auth fails after logout                             | Token not cleared     | Clear localStorage manually      |
 
 ### Step 8: Run Test Suite
 
@@ -386,6 +405,7 @@ npm run lint
 ### Step 10: Performance Check
 
 **Using Chrome DevTools:**
+
 1. Open DevTools (F12)
 2. Go to Network tab
 3. Refresh page
@@ -420,6 +440,7 @@ git push origin main
 ### If Phase 3 Fails
 
 **Quick Rollback:**
+
 ```bash
 # Revert just Supabase
 npm install @supabase/supabase-js@2.84.0
@@ -432,6 +453,7 @@ npm run build:production
 ```
 
 **Full Rollback:**
+
 ```bash
 git reset --hard HEAD~1
 npm install
@@ -445,17 +467,20 @@ npm run build:production
 After completing all applicable phases:
 
 ### Build Quality
+
 - [ ] `npm run build:production` succeeds in < 5 minutes
 - [ ] Bundle size gzip: 110-120 kB (within 10% of current)
 - [ ] No error logs
 - [ ] Sentry warning about auth token is expected (ignore)
 
 ### Code Quality
+
 - [ ] `npm run lint` shows 0 errors
 - [ ] `npm run test -- --run` shows all passing
 - [ ] `npm run build` (type check) shows 0 errors
 
 ### Application Functionality
+
 - [ ] Can log in
 - [ ] Can navigate all pages
 - [ ] Trading forms work
@@ -463,11 +488,13 @@ After completing all applicable phases:
 - [ ] No console errors
 
 ### Performance
+
 - [ ] Initial page load < 4 seconds
 - [ ] Form interactions < 100ms latency
 - [ ] Realtime updates < 2 seconds
 
 ### Database (Phase 3 only)
+
 - [ ] User sessions persist
 - [ ] Position data loads correctly
 - [ ] Realtime position updates work
@@ -478,17 +505,20 @@ After completing all applicable phases:
 ## Rollback Commands Quick Reference
 
 ### Undo Last Commit
+
 ```bash
 git reset --hard HEAD~1
 npm install
 ```
 
 ### Undo Specific Package Update
+
 ```bash
 npm install package-name@previous-version
 ```
 
 ### Full Environment Reset
+
 ```bash
 rm -rf node_modules/
 rm package-lock.json
@@ -497,6 +527,7 @@ npm run build:production
 ```
 
 ### Restore from Backup
+
 ```bash
 cp package-lock.json.backup package-lock.json
 npm install
@@ -584,6 +615,7 @@ npm run test -- --run --reporter=default
 ## Questions or Issues?
 
 Refer to:
+
 1. [DEPENDENCY_UPGRADE_PLAN.md](DEPENDENCY_UPGRADE_PLAN.md) - Full strategic plan
 2. [BREAKING_CHANGES_ANALYSIS.md](BREAKING_CHANGES_ANALYSIS.md) - Detailed breaking changes
 3. [DEPENDENCY_UPGRADE_QUICK_REFERENCE.md](DEPENDENCY_UPGRADE_QUICK_REFERENCE.md) - Quick summary

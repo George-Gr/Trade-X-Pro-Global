@@ -1,7 +1,14 @@
 import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
@@ -15,7 +22,9 @@ type FormFieldContextValue<
   name: TName;
 };
 
-const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
+const FormFieldContext = React.createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue,
+);
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -57,22 +66,27 @@ type FormItemContextValue = {
   id: string;
 };
 
-const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
-
-const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
-    const id = React.useId();
-
-    return (
-      <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn("space-y-2", className)} {...props} />
-      </FormItemContext.Provider>
-    );
-  },
+const FormItemContext = React.createContext<FormItemContextValue>(
+  {} as FormItemContextValue,
 );
+
+const FormItem = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const id = React.useId();
+
+  return (
+    <FormItemContext.Provider value={{ id }}>
+      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+    </FormItemContext.Provider>
+  );
+});
 FormItem.displayName = "FormItem";
 
-interface FormLabelProps extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+interface FormLabelProps extends React.ComponentPropsWithoutRef<
+  typeof LabelPrimitive.Root
+> {
   required?: boolean;
 }
 
@@ -83,90 +97,122 @@ const FormLabel = React.forwardRef<
   const { error, formItemId } = useFormField();
 
   return (
-    <Label 
-      ref={ref} 
+    <Label
+      ref={ref}
       className={cn(
         "text-sm font-medium",
         error ? "text-destructive font-semibold" : "text-foreground",
         "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-        className
-      )} 
+        className,
+      )}
       htmlFor={formItemId}
       {...props}
     >
       {children}
       {required && (
-        <span className="text-destructive ml-1" aria-label="required">*</span>
+        <span className="text-destructive ml-1" aria-label="required">
+          *
+        </span>
       )}
     </Label>
   );
 });
 FormLabel.displayName = "FormLabel";
 
-const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.ComponentPropsWithoutRef<typeof Slot>>(
-  ({ className, ...props }, ref) => {
-    const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+const FormControl = React.forwardRef<
+  React.ElementRef<typeof Slot>,
+  React.ComponentPropsWithoutRef<typeof Slot>
+>(({ className, ...props }, ref) => {
+  const { error, formItemId, formDescriptionId, formMessageId } =
+    useFormField();
 
-    return (
-      <Slot
-        ref={ref}
-        id={formItemId}
-        className={cn(
-          error && "form-field-error", // FE-012: Apply error state styling
-          className
-        )}
-        aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
-        aria-invalid={!!error}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <Slot
+      ref={ref}
+      id={formItemId}
+      className={cn(
+        error && "form-field-error", // FE-012: Apply error state styling
+        className,
+      )}
+      aria-describedby={
+        !error
+          ? `${formDescriptionId}`
+          : `${formDescriptionId} ${formMessageId}`
+      }
+      aria-invalid={!!error}
+      {...props}
+    />
+  );
+});
 FormControl.displayName = "FormControl";
 
-const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, ...props }, ref) => {
-    const { formDescriptionId } = useFormField();
+const FormDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
+  const { formDescriptionId } = useFormField();
 
-    return <p ref={ref} id={formDescriptionId} className={cn("text-sm text-secondary-contrast leading-relaxed", className)} {...props} />;
-  },
-);
+  return (
+    <p
+      ref={ref}
+      id={formDescriptionId}
+      className={cn(
+        "text-sm text-secondary-contrast leading-relaxed",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 FormDescription.displayName = "FormDescription";
 
-const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, children, ...props }, ref) => {
-    const { error, formMessageId } = useFormField();
-    const body = error ? String(error?.message) : children;
+const FormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
+  const { error, formMessageId } = useFormField();
+  const body = error ? String(error?.message) : children;
 
-    if (!body) {
-      return null;
-    }
+  if (!body) {
+    return null;
+  }
 
-    return (
-      <p 
-        ref={ref} 
-        id={formMessageId} 
-        className={cn(
-          "error-message", // FE-012: Use standardized error message styling
-          "text-sm font-medium",
-          className
-        )}
-        role="alert"
-        aria-live="polite"
-        {...props}
-      >
-        {error && (
-          <span className="error-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="h-full w-full">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-            </svg>
-          </span>
-        )}
-        <span className="error-message-text">{body}</span>
-      </p>
-    );
-  },
-);
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn(
+        "error-message", // FE-012: Use standardized error message styling
+        "text-sm font-medium",
+        className,
+      )}
+      role="alert"
+      aria-live="polite"
+      {...props}
+    >
+      {error && (
+        <span className="error-icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-full w-full"
+          >
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+          </svg>
+        </span>
+      )}
+      <span className="error-message-text">{body}</span>
+    </p>
+  );
+});
 FormMessage.displayName = "FormMessage";
 
-export { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+export {
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+};

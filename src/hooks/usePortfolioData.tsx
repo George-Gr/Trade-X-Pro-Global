@@ -11,7 +11,7 @@ interface ProfileData {
   margin_level: number | null;
 }
 
-interface PositionWithPnL extends Omit<Position, 'closed_at'> {
+interface PositionWithPnL extends Omit<Position, "closed_at"> {
   unrealized_pnl: number;
   closed_at: string | undefined; // Override Supabase's null to TypeScript's undefined
   asset_class?: string;
@@ -59,24 +59,28 @@ export const usePortfolioData = () => {
       if (positionsError) throw positionsError;
 
       setProfile(profileData);
-      setPositions(positionsData?.map(pos => ({
-        ...pos,
-        opened_at: (() => {
-          if (!pos.opened_at) {
-            console.warn(`Position ${pos.id} missing opened_at timestamp`);
-          }
-          return (pos.opened_at ?? new Date().toISOString()) as string;
-        })(),
-        closed_at: pos.closed_at ?? undefined,
-        status: (pos.status ?? 'open') as 'open' | 'closed',
-        current_price: pos.current_price ?? 0,
-        realized_pnl: pos.realized_pnl ?? 0,
-        unrealized_pnl: pos.unrealized_pnl ?? 0,
-      })) || []);
+      setPositions(
+        positionsData?.map((pos) => ({
+          ...pos,
+          opened_at: (() => {
+            if (!pos.opened_at) {
+              console.warn(`Position ${pos.id} missing opened_at timestamp`);
+            }
+            return (pos.opened_at ?? new Date().toISOString()) as string;
+          })(),
+          closed_at: pos.closed_at ?? undefined,
+          status: (pos.status ?? "open") as "open" | "closed",
+          current_price: pos.current_price ?? 0,
+          realized_pnl: pos.realized_pnl ?? 0,
+          unrealized_pnl: pos.unrealized_pnl ?? 0,
+        })) || [],
+      );
       setError(null);
     } catch (err: unknown) {
       // Error fetching portfolio data
-      setError(err instanceof Error ? err.message : "Failed to fetch portfolio data");
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch portfolio data",
+      );
     } finally {
       setLoading(false);
     }
@@ -98,9 +102,9 @@ export const usePortfolioData = () => {
         },
         () => {
           fetchPortfolioData();
-        }
+        },
       )
-  .subscribe();
+      .subscribe();
 
     // Set up real-time subscription for profile updates
     const profileChannel = supabase
@@ -115,9 +119,9 @@ export const usePortfolioData = () => {
         },
         () => {
           fetchPortfolioData();
-        }
+        },
       )
-  .subscribe();
+      .subscribe();
 
     return () => {
       // Properly unsubscribe from channels before removing to prevent memory leaks
@@ -128,27 +132,41 @@ export const usePortfolioData = () => {
     };
   }, [user, fetchPortfolioData]);
 
-  const calculateUnrealizedPnL = useCallback((position: Position, currentPrice: number): number => {
-    const contractSize = 100000;
-    const priceDiff = position.side === "buy"
-      ? currentPrice - position.entry_price
-      : position.entry_price - currentPrice;
+  const calculateUnrealizedPnL = useCallback(
+    (position: Position, currentPrice: number): number => {
+      const contractSize = 100000;
+      const priceDiff =
+        position.side === "buy"
+          ? currentPrice - position.entry_price
+          : position.entry_price - currentPrice;
 
-    return priceDiff * position.quantity * contractSize;
-  }, []);
+      return priceDiff * position.quantity * contractSize;
+    },
+    [],
+  );
 
-  const updatePositionPrices = useCallback((pricesMap: Map<string, { currentPrice: number }>) => {
-    setPositions((prevPositions) =>
-      prevPositions.map((position) => {
-        const priceData = pricesMap.get(position.symbol);
-        if (priceData) {
-          const unrealized_pnl = calculateUnrealizedPnL(position, priceData.currentPrice);
-          return { ...position, current_price: priceData.currentPrice, unrealized_pnl };
-        }
-        return position;
-      })
-    );
-  }, [calculateUnrealizedPnL]);
+  const updatePositionPrices = useCallback(
+    (pricesMap: Map<string, { currentPrice: number }>) => {
+      setPositions((prevPositions) =>
+        prevPositions.map((position) => {
+          const priceData = pricesMap.get(position.symbol);
+          if (priceData) {
+            const unrealized_pnl = calculateUnrealizedPnL(
+              position,
+              priceData.currentPrice,
+            );
+            return {
+              ...position,
+              current_price: priceData.currentPrice,
+              unrealized_pnl,
+            };
+          }
+          return position;
+        }),
+      );
+    },
+    [calculateUnrealizedPnL],
+  );
 
   const getTotalUnrealizedPnL = (): number => {
     return positions.reduce((sum, pos) => sum + (pos.unrealized_pnl || 0), 0);

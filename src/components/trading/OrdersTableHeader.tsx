@@ -1,17 +1,17 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React from "react";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
-type SortKey = 'created_at' | 'symbol' | 'quantity' | 'status' | 'realized_pnl';
-type SortOrder = 'asc' | 'desc';
+type SortKey = "created_at" | "symbol" | "quantity" | "status" | "realized_pnl";
+type SortOrder = "asc" | "desc";
 
 interface OrdersTableHeaderProps {
   symbolSearch: string;
@@ -40,13 +40,13 @@ const SortButton: React.FC<{
   <button
     onClick={() => onSort(sortKey)}
     className="flex items-center gap-2 hover:text-foreground transition-colors font-semibold text-muted-foreground"
-    aria-label={`Sort by ${label}, currently ${isActive ? direction === 'asc' ? 'ascending' : 'descending' : 'unsorted'}`}
+    aria-label={`Sort by ${label}, currently ${isActive ? (direction === "asc" ? "ascending" : "descending") : "unsorted"}`}
     aria-pressed={isActive}
   >
     {label}
     {isActive && (
       <ChevronDown
-        className={`h-5 w-5 transition-transform ${direction === 'asc' ? 'rotate-180' : ''}`}
+        className={`h-5 w-5 transition-transform ${direction === "asc" ? "rotate-180" : ""}`}
         aria-hidden="true"
       />
     )}
@@ -70,20 +70,28 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h3 className="font-semibold text-lg">Orders</h3>
-          <p className="text-sm text-muted-foreground">Manage and track your orders</p>
+          <p className="text-sm text-muted-foreground">
+            Manage and track your orders
+          </p>
         </div>
         {/* Stats Cards */}
         <div className="grid grid-cols-3 sm:flex sm:gap-3 gap-2">
           <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-lg border border-primary/20">
-            <span className="text-xs text-muted-foreground font-medium">Open:</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              Open:
+            </span>
             <strong className="text-primary">{stats.open}</strong>
           </div>
           <div className="flex items-center gap-2 px-3 py-2 bg-buy/10 rounded-lg border border-buy/20">
-            <span className="text-xs text-muted-foreground font-medium">Filled:</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              Filled:
+            </span>
             <strong className="text-buy">{stats.filled}</strong>
           </div>
           <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg border border-border/50">
-            <span className="text-xs text-muted-foreground font-medium">Cancelled:</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              Cancelled:
+            </span>
             <strong className="text-muted-foreground">{stats.cancelled}</strong>
           </div>
         </div>
@@ -114,7 +122,8 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
               <SelectItem value="all">All Statuses</SelectItem>
               {uniqueStatuses.map((status) => (
                 <SelectItem key={status} value={status}>
-                  {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+                  {status.charAt(0).toUpperCase() +
+                    status.slice(1).replace("_", " ")}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -128,43 +137,53 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
           <SortButton
             label="Symbol"
             sortKey="symbol"
-            isActive={sortKey === 'symbol'}
+            isActive={sortKey === "symbol"}
             direction={sortOrder}
             onSort={onSort}
           />
         </div>
-        <div className="col-span-1 text-muted-foreground font-semibold">Type</div>
-        <div className="col-span-1 text-muted-foreground font-semibold">Side</div>
+        <div className="col-span-1 text-muted-foreground font-semibold">
+          Type
+        </div>
+        <div className="col-span-1 text-muted-foreground font-semibold">
+          Side
+        </div>
         <div className="col-span-1">
           <SortButton
             label="Qty"
             sortKey="quantity"
-            isActive={sortKey === 'quantity'}
+            isActive={sortKey === "quantity"}
             direction={sortOrder}
             onSort={onSort}
           />
         </div>
-        <div className="col-span-1 text-muted-foreground font-semibold">Price</div>
+        <div className="col-span-1 text-muted-foreground font-semibold">
+          Price
+        </div>
         <div className="col-span-1">
           <SortButton
             label="Status"
             sortKey="status"
-            isActive={sortKey === 'status'}
+            isActive={sortKey === "status"}
             direction={sortOrder}
             onSort={onSort}
           />
         </div>
-        <div className="col-span-1 text-muted-foreground font-semibold">Commission</div>
+        <div className="col-span-1 text-muted-foreground font-semibold">
+          Commission
+        </div>
         <div className="col-span-1">
           <SortButton
             label="P&L"
             sortKey="realized_pnl"
-            isActive={sortKey === 'realized_pnl'}
+            isActive={sortKey === "realized_pnl"}
             direction={sortOrder}
             onSort={onSort}
           />
         </div>
-        <div className="col-span-2 text-muted-foreground font-semibold">Actions</div>
+        <div className="col-span-2 text-muted-foreground font-semibold">
+          Actions
+        </div>
       </div>
     </div>
   );

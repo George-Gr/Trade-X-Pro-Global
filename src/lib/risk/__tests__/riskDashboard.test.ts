@@ -187,9 +187,7 @@ describe("Risk Metrics Calculations", () => {
 
   describe("Comprehensive Risk Metrics", () => {
     it("should calculate complete risk metrics", () => {
-      const positions = [
-        { positionValue: 5000, marginRequired: 2500 },
-      ];
+      const positions = [{ positionValue: 5000, marginRequired: 2500 }];
       const metrics = calculateRiskMetrics(10000, 2500, positions);
 
       expect(metrics.currentMarginLevel).toBe(400);
@@ -310,8 +308,20 @@ describe("Portfolio Metrics Calculations", () => {
   describe("Asset Class Breakdown", () => {
     it("should breakdown portfolio by asset class", () => {
       const positions = [
-        { symbol: "EURUSD", assetClass: "Forex", quantity: 100, currentPrice: 1.1, unrealizedPnL: 50 },
-        { symbol: "AAPL", assetClass: "Stocks", quantity: 10, currentPrice: 150, unrealizedPnL: 100 },
+        {
+          symbol: "EURUSD",
+          assetClass: "Forex",
+          quantity: 100,
+          currentPrice: 1.1,
+          unrealizedPnL: 50,
+        },
+        {
+          symbol: "AAPL",
+          assetClass: "Stocks",
+          quantity: 10,
+          currentPrice: 150,
+          unrealizedPnL: 100,
+        },
       ];
       const breakdown = breakdownByAssetClass(positions, 2600);
 
@@ -337,7 +347,7 @@ describe("Portfolio Metrics Calculations", () => {
         500,
         200,
         trades,
-        equityHistory
+        equityHistory,
       );
 
       expect(metrics.totalRealizedPnL).toBe(500);
@@ -440,11 +450,36 @@ describe("Position Analysis Calculations", () => {
   describe("Diversification Assessment", () => {
     it("should assess reasonably diversified portfolio", () => {
       const positions = [
-        { symbol: "EUR", assetClass: "Forex", quantity: 100, currentPrice: 1.1 },
-        { symbol: "GBP", assetClass: "Forex", quantity: 100, currentPrice: 1.3 },
-        { symbol: "JPY", assetClass: "Forex", quantity: 1000, currentPrice: 0.01 },
-        { symbol: "AAPL", assetClass: "Stocks", quantity: 10, currentPrice: 150 },
-        { symbol: "MSFT", assetClass: "Stocks", quantity: 10, currentPrice: 300 },
+        {
+          symbol: "EUR",
+          assetClass: "Forex",
+          quantity: 100,
+          currentPrice: 1.1,
+        },
+        {
+          symbol: "GBP",
+          assetClass: "Forex",
+          quantity: 100,
+          currentPrice: 1.3,
+        },
+        {
+          symbol: "JPY",
+          assetClass: "Forex",
+          quantity: 1000,
+          currentPrice: 0.01,
+        },
+        {
+          symbol: "AAPL",
+          assetClass: "Stocks",
+          quantity: 10,
+          currentPrice: 150,
+        },
+        {
+          symbol: "MSFT",
+          assetClass: "Stocks",
+          quantity: 10,
+          currentPrice: 300,
+        },
       ];
       const diversification = assessDiversification(positions, 5000);
 
@@ -455,7 +490,12 @@ describe("Position Analysis Calculations", () => {
 
     it("should detect poorly diversified portfolio", () => {
       const positions = [
-        { symbol: "SINGLE", assetClass: "Stocks", quantity: 1000, currentPrice: 100 },
+        {
+          symbol: "SINGLE",
+          assetClass: "Stocks",
+          quantity: 1000,
+          currentPrice: 100,
+        },
       ];
       const diversification = assessDiversification(positions, 100000);
 
@@ -553,7 +593,7 @@ describe("Risk Dashboard Integration", () => {
     const riskMetrics = calculateRiskMetrics(
       profiles.equity,
       profiles.marginUsed,
-      positions
+      positions,
     );
 
     const portfolioMetrics = calculatePortfolioMetrics(
@@ -561,7 +601,7 @@ describe("Risk Dashboard Integration", () => {
       profiles.balance,
       profiles.realizedPnL,
       500,
-      trades
+      trades,
     );
 
     // Verify results make sense

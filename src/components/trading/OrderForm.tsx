@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 export interface OrderFormData {
   symbol: string;
-  side: 'buy' | 'sell';
+  side: "buy" | "sell";
   quantity: number;
   type: OrderType;
   limitPrice?: number;
@@ -29,14 +29,14 @@ export interface OrderFormData {
   trailingDistance?: number;
   takeProfitPrice?: number;
   stopLossPrice?: number;
-  timeInForce?: 'GTC' | 'GTD' | 'FOK' | 'IOC';
+  timeInForce?: "GTC" | "GTD" | "FOK" | "IOC";
 }
 
 interface OrderFormProps {
   symbol: string;
   orderType: OrderType;
   onOrderTypeChange: (type: OrderType) => void;
-  onSubmit: (formData: OrderFormData, side: 'buy' | 'sell') => Promise<void>;
+  onSubmit: (formData: OrderFormData, side: "buy" | "sell") => Promise<void>;
   isLoading?: boolean;
   error?: string | null;
   currentPrice: number;
@@ -57,7 +57,9 @@ export const OrderForm = ({
   const [trailingDistance, setTrailingDistance] = useState("");
   const [takeProfit, setTakeProfit] = useState("");
   const [stopLoss, setStopLoss] = useState("");
-  const [timeInForce, setTimeInForce] = useState<'GTC' | 'GTD' | 'FOK' | 'IOC'>('GTC');
+  const [timeInForce, setTimeInForce] = useState<"GTC" | "GTD" | "FOK" | "IOC">(
+    "GTC",
+  );
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const marginRequired = useMemo(() => {
@@ -93,7 +95,7 @@ export const OrderForm = ({
     setStopLoss((currentPrice - movement).toFixed(5));
   };
 
-  const handleSubmit = async (side: 'buy' | 'sell') => {
+  const handleSubmit = async (side: "buy" | "sell") => {
     const qty = parseFloat(volume);
     if (isNaN(qty) || qty <= 0) return;
 
@@ -104,7 +106,9 @@ export const OrderForm = ({
       type: orderType,
       limitPrice: limitPrice ? parseFloat(limitPrice) : undefined,
       stopPrice: stopPrice ? parseFloat(stopPrice) : undefined,
-      trailingDistance: trailingDistance ? parseFloat(trailingDistance) : undefined,
+      trailingDistance: trailingDistance
+        ? parseFloat(trailingDistance)
+        : undefined,
       takeProfitPrice: takeProfit ? parseFloat(takeProfit) : undefined,
       stopLossPrice: stopLoss ? parseFloat(stopLoss) : undefined,
       timeInForce,
@@ -133,7 +137,7 @@ export const OrderForm = ({
               </Tooltip>
             </TooltipProvider>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button
               type="button"
@@ -166,9 +170,12 @@ export const OrderForm = ({
               <Plus className="h-4 w-4" />
             </Button>
           </div>
-          
+
           <p className="text-xs text-muted-foreground">
-            Pip value: <span className="font-mono text-foreground">${pipValue.toFixed(2)}</span>
+            Pip value:{" "}
+            <span className="font-mono text-foreground">
+              ${pipValue.toFixed(2)}
+            </span>
           </p>
         </div>
 
@@ -180,16 +187,24 @@ export const OrderForm = ({
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Position Value</span>
-            <span className="font-mono font-medium">${positionValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span className="font-mono font-medium">
+              $
+              {positionValue.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </div>
           <div className="border-t border-border pt-2.5 flex justify-between text-sm">
             <span className="text-muted-foreground">Margin Required</span>
-            <span className="font-mono font-semibold text-primary">${marginRequired.toFixed(2)}</span>
+            <span className="font-mono font-semibold text-primary">
+              ${marginRequired.toFixed(2)}
+            </span>
           </div>
         </div>
 
         {/* Order Type Specific Fields */}
-        {(orderType === 'limit' || orderType === 'stop_limit') && (
+        {(orderType === "limit" || orderType === "stop_limit") && (
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Limit Price
@@ -206,7 +221,7 @@ export const OrderForm = ({
           </div>
         )}
 
-        {(orderType === 'stop' || orderType === 'stop_limit') && (
+        {(orderType === "stop" || orderType === "stop_limit") && (
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Stop Price
@@ -223,7 +238,7 @@ export const OrderForm = ({
           </div>
         )}
 
-        {orderType === 'trailing_stop' && (
+        {orderType === "trailing_stop" && (
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Trailing Distance (pips)
@@ -246,11 +261,13 @@ export const OrderForm = ({
           <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Risk Management
           </Label>
-          
+
           {/* Take Profit */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-profit font-medium">Take Profit</span>
+              <span className="text-xs text-profit font-medium">
+                Take Profit
+              </span>
               <div className="flex gap-1">
                 {[1, 2, 5].map((pct) => (
                   <button
@@ -312,7 +329,11 @@ export const OrderForm = ({
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-full"
         >
-          {showAdvanced ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+          {showAdvanced ? (
+            <ChevronUp className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5" />
+          )}
           <span>Advanced Options</span>
         </button>
 
@@ -323,7 +344,9 @@ export const OrderForm = ({
             </Label>
             <Select
               value={timeInForce}
-              onValueChange={(v) => setTimeInForce(v as 'GTC' | 'GTD' | 'FOK' | 'IOC')}
+              onValueChange={(v) =>
+                setTimeInForce(v as "GTC" | "GTD" | "FOK" | "IOC")
+              }
               disabled={isLoading}
             >
               <SelectTrigger className="h-9 bg-muted/30">
@@ -342,14 +365,14 @@ export const OrderForm = ({
       {/* Buy/Sell Buttons - Fixed at bottom */}
       <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border mt-auto">
         <Button
-          onClick={() => handleSubmit('buy')}
+          onClick={() => handleSubmit("buy")}
           disabled={isLoading}
           className="h-12 bg-profit hover:bg-profit/90 text-white font-bold text-base"
         >
           Buy
         </Button>
         <Button
-          onClick={() => handleSubmit('sell')}
+          onClick={() => handleSubmit("sell")}
           disabled={isLoading}
           className="h-12 bg-loss hover:bg-loss/90 text-white font-bold text-base"
         >

@@ -1,9 +1,21 @@
 import { useState, useEffect, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Save, Trash2, Bookmark } from "lucide-react";
 import { useOrderTemplates, OrderTemplate } from "@/hooks/useOrderTemplates";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +32,15 @@ interface OrderTemplatesDialogProps {
   };
 }
 
-export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTemplatesDialogProps) => {
+export const OrderTemplatesDialog = ({
+  onApplyTemplate,
+  currentValues,
+}: OrderTemplatesDialogProps) => {
   const [open, setOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [templateName, setTemplateName] = useState("");
-  const { templates, isLoading, createTemplate, deleteTemplate } = useOrderTemplates();
+  const { templates, isLoading, createTemplate, deleteTemplate } =
+    useOrderTemplates();
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
 
   const handleSaveTemplate = async () => {
@@ -33,11 +49,15 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
     await createTemplate({
       name: templateName,
       symbol: currentValues.symbol,
-  order_type: currentValues.order_type as OrderTemplate["order_type"],
+      order_type: currentValues.order_type as OrderTemplate["order_type"],
       volume: parseFloat(currentValues.volume),
       leverage: parseFloat(currentValues.leverage),
-      stop_loss: currentValues.stopLoss ? parseFloat(currentValues.stopLoss) : null,
-      take_profit: currentValues.takeProfit ? parseFloat(currentValues.takeProfit) : null,
+      stop_loss: currentValues.stopLoss
+        ? parseFloat(currentValues.stopLoss)
+        : null,
+      take_profit: currentValues.takeProfit
+        ? parseFloat(currentValues.takeProfit)
+        : null,
       is_default: false,
     });
 
@@ -82,9 +102,9 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
             <div className="border border-border rounded-lg p-4">
               <h3 className="font-semibold mb-4">Save Current Settings</h3>
               {!isCreating ? (
-                <Button 
-                  onClick={() => setIsCreating(true)} 
-                  variant="outline" 
+                <Button
+                  onClick={() => setIsCreating(true)}
+                  variant="outline"
                   className="w-full"
                   ref={firstFocusableRef}
                 >
@@ -102,10 +122,17 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
                     />
                   </div>
                   <div className="flex gap-4">
-                    <Button onClick={handleSaveTemplate} disabled={!templateName} className="flex-1">
+                    <Button
+                      onClick={handleSaveTemplate}
+                      disabled={!templateName}
+                      className="flex-1"
+                    >
                       Save Template
                     </Button>
-                    <Button onClick={() => setIsCreating(false)} variant="outline">
+                    <Button
+                      onClick={() => setIsCreating(false)}
+                      variant="outline"
+                    >
                       Cancel
                     </Button>
                   </div>
@@ -118,7 +145,9 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
           <div>
             <h3 className="font-semibold mb-4">Saved Templates</h3>
             {isLoading ? (
-              <div className="text-center py-8 text-muted-foreground">Loading...</div>
+              <div className="text-center py-8 text-muted-foreground">
+                Loading...
+              </div>
             ) : templates.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <Bookmark className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -134,15 +163,21 @@ export const OrderTemplatesDialog = ({ onApplyTemplate, currentValues }: OrderTe
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-2">
                         <span className="font-semibold">{template.name}</span>
-                        {template.is_default && <Badge variant="secondary">Default</Badge>}
+                        {template.is_default && (
+                          <Badge variant="secondary">Default</Badge>
+                        )}
                       </div>
                       <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
                         <div>Symbol: {template.symbol || "Any"}</div>
                         <div>Type: {template.order_type}</div>
                         <div>Volume: {template.volume} lots</div>
                         <div>Leverage: 1:{template.leverage}</div>
-                        {template.stop_loss && <div>SL: {template.stop_loss}</div>}
-                        {template.take_profit && <div>TP: {template.take_profit}</div>}
+                        {template.stop_loss && (
+                          <div>SL: {template.stop_loss}</div>
+                        )}
+                        {template.take_profit && (
+                          <div>TP: {template.take_profit}</div>
+                        )}
                       </div>
                     </div>
                     <div className="flex gap-4">

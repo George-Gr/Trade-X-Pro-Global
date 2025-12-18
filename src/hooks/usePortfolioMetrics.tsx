@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from "@/lib/supabaseBrowserClient";
 import { useAuth } from "./useAuth";
 import {
   calculatePortfolioMetrics,
@@ -42,9 +42,13 @@ interface UsePortfolioMetricsReturn {
 
 export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
   const { user } = useAuth();
-  const [portfolioMetrics, setPortfolioMetrics] = useState<PortfolioMetrics | null>(null);
-  const [drawdownAnalysis, setDrawdownAnalysis] = useState<DrawdownAnalysis | null>(null);
-  const [assetClassMetrics, setAssetClassMetrics] = useState<AssetClassMetrics>({});
+  const [portfolioMetrics, setPortfolioMetrics] =
+    useState<PortfolioMetrics | null>(null);
+  const [drawdownAnalysis, setDrawdownAnalysis] =
+    useState<DrawdownAnalysis | null>(null);
+  const [assetClassMetrics, setAssetClassMetrics] = useState<AssetClassMetrics>(
+    {},
+  );
   const [equityHistory, setEquityHistory] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,7 +109,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       if (portfolioHistory && Array.isArray(portfolioHistory)) {
         portfolioHistory.forEach((h: unknown) => {
           const historyObj = h as Record<string, unknown>;
-          if (historyObj && typeof historyObj.realized_pnl === 'number') {
+          if (historyObj && typeof historyObj.realized_pnl === "number") {
             history.push(historyObj.realized_pnl);
           }
         });
@@ -118,21 +122,25 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       const trades = (closedPositions || []).map((p: unknown) => {
         const posObj = p as Record<string, unknown>;
         return {
-          pnl: typeof posObj.realized_pnl === 'number' ? posObj.realized_pnl : 0,
-          isProfit: (typeof posObj.realized_pnl === 'number' ? posObj.realized_pnl : 0) > 0,
+          pnl:
+            typeof posObj.realized_pnl === "number" ? posObj.realized_pnl : 0,
+          isProfit:
+            (typeof posObj.realized_pnl === "number"
+              ? posObj.realized_pnl
+              : 0) > 0,
         };
       });
 
       // Calculate unrealized P&L from open positions
       const unrealizedPnL = (positionsData as Position[]).reduce(
         (sum, p) => sum + (p.unrealized_pnl || 0),
-        0
+        0,
       );
 
       // Calculate realized P&L from closed positions
       const realizedPnL = (closedPositions || []).reduce(
         (sum, p) => sum + (p.realized_pnl || 0),
-        0
+        0,
       );
 
       // Calculate metrics
@@ -142,7 +150,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
         realizedPnL,
         unrealizedPnL,
         trades,
-        history
+        history,
       );
 
       setPortfolioMetrics(metrics);
@@ -153,46 +161,51 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
         profileData.equity || 0,
         peakEquity,
         metrics.maxDrawdown,
-        history
+        history,
       );
       setDrawdownAnalysis(drawdown);
 
       // Calculate asset class metrics (using symbol-based classification)
       const positionValues = positionsData as Position[];
-      const totalPortfolioValue = positionValues.reduce(
-        (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
-        0
-      ) + profileData.equity;
+      const totalPortfolioValue =
+        positionValues.reduce(
+          (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
+          0,
+        ) + profileData.equity;
 
       // Map symbols to asset classes (basic classification)
       const symbolToAssetClass: Record<string, string> = {};
       const assetSpecs = await supabase
         .from("asset_specs")
         .select("symbol, asset_class")
-        .in("symbol", positionValues.map(p => p.symbol).filter(Boolean));
+        .in("symbol", positionValues.map((p) => p.symbol).filter(Boolean));
 
       if (assetSpecs.data) {
         assetSpecs.data.forEach((spec: unknown) => {
           const specObj = spec as Record<string, unknown>;
-          symbolToAssetClass[specObj.symbol as string] = (specObj.asset_class as string) || "Other";
+          symbolToAssetClass[specObj.symbol as string] =
+            (specObj.asset_class as string) || "Other";
         });
       }
 
       const assetMetrics = breakdownByAssetClass(
-        positionValues.map(p => ({
+        positionValues.map((p) => ({
           symbol: p.symbol || "",
           assetClass: symbolToAssetClass[p.symbol] || "Other",
           quantity: p.quantity || 0,
           currentPrice: p.current_price || 0,
           unrealizedPnL: p.unrealized_pnl || 0,
         })),
-        totalPortfolioValue
+        totalPortfolioValue,
       );
       setAssetClassMetrics(assetMetrics);
 
       setError(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to fetch portfolio metrics";
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Failed to fetch portfolio metrics";
       setError(message);
       console.error("Portfolio metrics error:", message);
     } finally {
@@ -219,7 +232,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
         },
         () => {
           fetchPortfolioMetrics();
-        }
+        },
       )
       .subscribe();
 
@@ -236,7 +249,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
         },
         () => {
           fetchPortfolioMetrics();
-        }
+        },
       )
       .subscribe();
 
@@ -263,7 +276,9 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
  */
 export const useDrawdownAnalysis = () => {
   const { user } = useAuth();
-  const [drawdownData, setDrawdownData] = useState<DrawdownAnalysis | null>(null);
+  const [drawdownData, setDrawdownData] = useState<DrawdownAnalysis | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -293,7 +308,7 @@ export const useDrawdownAnalysis = () => {
 
         const equityValues = (history || []).map((h: unknown) => {
           const hObj = h as Record<string, unknown>;
-          return 'equity' in hObj ? Number(hObj.equity) || 0 : 0;
+          return "equity" in hObj ? Number(hObj.equity) || 0 : 0;
         });
         const peakEquity = Math.max(...equityValues, profile?.equity || 0);
 
@@ -301,7 +316,7 @@ export const useDrawdownAnalysis = () => {
           profile?.equity || 0,
           peakEquity,
           peakEquity - Math.min(...equityValues, profile?.equity || 0),
-          equityValues
+          equityValues,
         );
 
         setDrawdownData(analysis);
@@ -322,7 +337,7 @@ export const useDrawdownAnalysis = () => {
           table: "profiles",
           filter: `id=eq.${user.id}`,
         },
-        fetchDrawdownData
+        fetchDrawdownData,
       )
       .subscribe();
 

@@ -11,9 +11,11 @@
 This comprehensive analysis has generated **4 detailed documents** to guide your dependency upgrade strategy:
 
 ### 1. 🚀 [DEPENDENCY_UPGRADE_QUICK_REFERENCE.md](DEPENDENCY_UPGRADE_QUICK_REFERENCE.md)
+
 **Best for:** Getting the executive summary in 5 minutes
 
 **Contains:**
+
 - TL;DR summary of all 35+ outdated packages
 - Decision matrix: What to upgrade, when, and why
 - Risk assessment overview
@@ -24,9 +26,11 @@ This comprehensive analysis has generated **4 detailed documents** to guide your
 ---
 
 ### 2. 📚 [DEPENDENCY_UPGRADE_PLAN.md](DEPENDENCY_UPGRADE_PLAN.md)
+
 **Best for:** Understanding the complete strategy and planning the rollout
 
 **Contains:**
+
 - Detailed analysis of all 35+ packages
 - 4-tier categorization by risk level
 - Breaking changes explanation for each tier
@@ -41,9 +45,11 @@ This comprehensive analysis has generated **4 detailed documents** to guide your
 ---
 
 ### 3. 🔍 [BREAKING_CHANGES_ANALYSIS.md](BREAKING_CHANGES_ANALYSIS.md)
+
 **Best for:** Deep technical understanding of what will break if upgraded
 
 **Contains:**
+
 - React 19 breaking changes (with code examples)
 - React Router v7 breaking changes (with code examples)
 - Zod v4 breaking changes (with migration guide)
@@ -57,9 +63,11 @@ This comprehensive analysis has generated **4 detailed documents** to guide your
 ---
 
 ### 4. ⚙️ [DEPENDENCY_UPGRADE_COMMANDS.md](DEPENDENCY_UPGRADE_COMMANDS.md)
+
 **Best for:** Step-by-step implementation with specific commands
 
 **Contains:**
+
 - Exact npm commands for each phase
 - Expected outputs for each step
 - Manual testing procedures with specific steps
@@ -80,7 +88,7 @@ DO NOW (Safe Updates)
 │  └─ Time: 30 minutes
 │  └─ Risk: Minimal ✅
 │
-├─ Phase 2: Minor updates (3 packages)  
+├─ Phase 2: Minor updates (3 packages)
 │  └─ Command: npm update react-hook-form @types/node
 │  └─ Time: 50 minutes
 │  └─ Risk: Low ✅
@@ -112,6 +120,7 @@ DO NOT UPGRADE NOW
 ## 📊 Key Metrics
 
 ### Current Application State
+
 ```
 ✅ Build time: 3 minutes
 ✅ Bundle size (gzip): 112 kB
@@ -120,6 +129,7 @@ DO NOT UPGRADE NOW
 ```
 
 ### Outdated Packages Breakdown
+
 ```
 Total dependencies: 728
 Outdated packages: 35+
@@ -135,6 +145,7 @@ By type:
 ```
 
 ### Risk Assessment
+
 ```
 PHASE 1 (Patches):    ✅ 0% risk - Safe to apply immediately
 PHASE 2 (Minor):      ✅ 5% risk - Low chance of issues
@@ -190,21 +201,25 @@ After completing all 3 recommended phases, verify:
 ## 🚨 Critical Decisions Made
 
 ### Decision 1: NOT upgrading to React 19 now
+
 **Reason:** Major ecosystem shift requires extensive testing. Current React 18 is stable and supported.  
 **Timeline:** Plan dedicated sprint for Q1 2025  
 **Impact:** Low - No business requirement for React 19 features identified
 
 ### Decision 2: NOT upgrading React Router to v7
+
 **Reason:** Fundamental routing rewrite (40-60 hours refactoring). Current v6 is mature.  
 **Timeline:** Only if building brand new project  
 **Impact:** Low - v6 has all features needed
 
 ### Decision 3: NOT upgrading form validation stack major versions
+
 **Reason:** Current stack (react-hook-form 7.66, zod 3.25, resolvers 3.10) is proven and works.  
 **Timeline:** Only if new features explicitly needed  
 **Impact:** Low - No validation issues identified
 
 ### Decision 4: Prioritize Supabase update
+
 **Reason:** Minor version bump with documented compatibility. Improves database layer stability.  
 **Timeline:** Execute after Phase 2 success  
 **Impact:** Medium - Requires database testing but important for long-term stability
@@ -213,26 +228,28 @@ After completing all 3 recommended phases, verify:
 
 ## 📞 Troubleshooting Quick Links
 
-| Problem | Solution |
-|---------|----------|
-| Build fails with module error | See DEPENDENCY_UPGRADE_COMMANDS.md → "Issue: Build fails" |
-| TypeScript errors after Supabase | Run `npm run supabase:pull` |
-| Tests failing | See DEPENDENCY_UPGRADE_COMMANDS.md → "Issue: Tests failing" |
-| Realtime not updating | Check WebSocket in DevTools, review RLS policies |
-| Need to rollback | See DEPENDENCY_UPGRADE_COMMANDS.md → "Rollback Commands" |
-| Want to understand React 19 | See BREAKING_CHANGES_ANALYSIS.md → "React 19" section |
-| Need exact commands | See DEPENDENCY_UPGRADE_COMMANDS.md → Your phase |
+| Problem                          | Solution                                                    |
+| -------------------------------- | ----------------------------------------------------------- |
+| Build fails with module error    | See DEPENDENCY_UPGRADE_COMMANDS.md → "Issue: Build fails"   |
+| TypeScript errors after Supabase | Run `npm run supabase:pull`                                 |
+| Tests failing                    | See DEPENDENCY_UPGRADE_COMMANDS.md → "Issue: Tests failing" |
+| Realtime not updating            | Check WebSocket in DevTools, review RLS policies            |
+| Need to rollback                 | See DEPENDENCY_UPGRADE_COMMANDS.md → "Rollback Commands"    |
+| Want to understand React 19      | See BREAKING_CHANGES_ANALYSIS.md → "React 19" section       |
+| Need exact commands              | See DEPENDENCY_UPGRADE_COMMANDS.md → Your phase             |
 
 ---
 
 ## 🔗 Related Resources
 
 ### Internal Project Resources
+
 - [PRD.md](../../../PRD.md) - Product requirements
 - [AGENT.md](../../../project_resources/rules_and_guidelines/AGENT.md) - Development guidelines
 - [.copilot-instructions.md](../../../.github/copilot-instructions.md) - AI assistant instructions
 
 ### External Resources
+
 - [React 19 Release Notes](https://react.dev/blog/2024/12/19/react-19)
 - [React Router v7 Migration Guide](https://reactrouter.com/migration/overview)
 - [Zod v4 Versioning](https://zod.dev/docs/versioning)
@@ -243,6 +260,7 @@ After completing all 3 recommended phases, verify:
 ## 📊 Document Quick Reference
 
 ### Need... | Read This
+
 ---|---
 Quick summary | DEPENDENCY_UPGRADE_QUICK_REFERENCE.md
 Full strategy | DEPENDENCY_UPGRADE_PLAN.md
@@ -325,6 +343,7 @@ This comprehensive plan was created using:
 ## 📞 Support
 
 **Questions about:**
+
 - **Quick summary?** → DEPENDENCY_UPGRADE_QUICK_REFERENCE.md
 - **Full planning?** → DEPENDENCY_UPGRADE_PLAN.md
 - **Technical details?** → BREAKING_CHANGES_ANALYSIS.md

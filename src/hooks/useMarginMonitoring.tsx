@@ -69,9 +69,7 @@ interface UseMarginMonitoringOptions {
   onLiquidationRisk?: () => void;
 }
 
-export function useMarginMonitoring(
-  options: UseMarginMonitoringOptions = {}
-) {
+export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
   const {
     refreshInterval = null,
     enabled = true,
@@ -119,14 +117,10 @@ export function useMarginMonitoring(
       if (data) {
         // Calculate current margin level if not in DB
         let currentMarginLevel = data.margin_level;
-        if (
-          currentMarginLevel === null &&
-          data.equity &&
-          data.margin_used
-        ) {
+        if (currentMarginLevel === null && data.equity && data.margin_used) {
           currentMarginLevel = calculateMarginLevel(
             data.equity,
-            data.margin_used
+            data.margin_used,
           );
         }
 
@@ -155,9 +149,7 @@ export function useMarginMonitoring(
           isWarning: isMarginWarning(currentMarginLevel ?? 0),
           isCritical: isMarginCritical(currentMarginLevel ?? 0),
           isLiquidationRisk: isLiquidationRisk(currentMarginLevel ?? 0),
-          timeToLiquidation: estimateTimeToLiquidation(
-            currentMarginLevel ?? 0
-          ),
+          timeToLiquidation: estimateTimeToLiquidation(currentMarginLevel ?? 0),
           recommendedActions: getMarginActionRequired(status),
           isLoading: false,
           error: null,
@@ -169,7 +161,10 @@ export function useMarginMonitoring(
       setState((prev) => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : "Failed to fetch margin data",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch margin data",
       }));
     }
   }, [user?.id, enabled, onStatusChange, onCritical, onLiquidationRisk]);
@@ -178,7 +173,7 @@ export function useMarginMonitoring(
    * Subscribe to real-time position updates
    * This triggers margin recalculation when positions change
    */
-  const { positions } = useRealtimePositions(user?.id || '');
+  const { positions } = useRealtimePositions(user?.id || "");
 
   // Recalculate margin when positions change
   useEffect(() => {
@@ -230,7 +225,7 @@ export function useMarginMonitoring(
             ) {
               currentMarginLevel = calculateMarginLevel(
                 Number(newData.equity),
-                Number(newData.margin_used)
+                Number(newData.margin_used),
               ) as number;
             }
 
@@ -256,9 +251,11 @@ export function useMarginMonitoring(
               marginUsed: Number(newData.margin_used),
               isWarning: isMarginWarning(Number(currentMarginLevel ?? 0)),
               isCritical: isMarginCritical(Number(currentMarginLevel ?? 0)),
-              isLiquidationRisk: isLiquidationRisk(Number(currentMarginLevel ?? 0)),
+              isLiquidationRisk: isLiquidationRisk(
+                Number(currentMarginLevel ?? 0),
+              ),
               timeToLiquidation: estimateTimeToLiquidation(
-                Number(currentMarginLevel ?? 0)
+                Number(currentMarginLevel ?? 0),
               ),
               recommendedActions: getMarginActionRequired(status),
               isLoading: false,
@@ -266,7 +263,7 @@ export function useMarginMonitoring(
               lastUpdated: new Date(),
             });
           }
-        }
+        },
       )
       .subscribe();
 
@@ -295,13 +292,10 @@ export function useMarginMonitoring(
    * Acknowledge a margin alert (mark as read)
    * Note: This will be implemented once margin_alerts table is added to Supabase types
    */
-  const acknowledgeAlert = useCallback(
-    async (alertId: string) => {
-      // Alert acknowledgment will be implemented after schema migration
-      // Feature flagged for future release
-    },
-    []
-  );
+  const acknowledgeAlert = useCallback(async (alertId: string) => {
+    // Alert acknowledgment will be implemented after schema migration
+    // Feature flagged for future release
+  }, []);
 
   return {
     marginLevel: state.marginLevel,

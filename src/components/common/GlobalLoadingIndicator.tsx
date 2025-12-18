@@ -1,8 +1,11 @@
-import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useLoadingContext } from '@/contexts/LoadingContext';
-import { LoadingIndicator, LoadingProgress } from '@/components/ui/loading-indicator';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLoadingContext } from "@/contexts/LoadingContext";
+import {
+  LoadingIndicator,
+  LoadingProgress,
+} from "@/components/ui/loading-indicator";
+import { cn } from "@/lib/utils";
 
 /**
  * FE-010: Global Loading Indicator
@@ -24,10 +27,10 @@ export function GlobalLoadingIndicator() {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          'fixed bottom-4 right-4 z-50',
-          'bg-card border border-border rounded-lg shadow-lg',
-          'backdrop-blur-sm bg-card/95',
-          'p-4 max-w-sm'
+          "fixed bottom-4 right-4 z-50",
+          "bg-card border border-border rounded-lg shadow-lg",
+          "backdrop-blur-sm bg-card/95",
+          "p-4 max-w-sm",
         )}
       >
         <div className="space-y-3">
@@ -35,15 +38,16 @@ export function GlobalLoadingIndicator() {
             <div key={op.id} className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-foreground">
-                  {op.message || 'Loading...'}
+                  {op.message || "Loading..."}
                 </span>
-                <LoadingIndicator size="sm" isLoading={true} variant="spinner" />
-              </div>
-              {typeof op.progress === 'number' && (
-                <LoadingProgress
-                  progress={op.progress}
-                  className="h-1.5"
+                <LoadingIndicator
+                  size="sm"
+                  isLoading={true}
+                  variant="spinner"
                 />
+              </div>
+              {typeof op.progress === "number" && (
+                <LoadingProgress progress={op.progress} className="h-1.5" />
               )}
             </div>
           ))}
@@ -74,7 +78,7 @@ export function CompactLoadingIndicator() {
     >
       <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
       {count === 1 ? (
-        <span>{firstOp?.message || 'Loading...'}</span>
+        <span>{firstOp?.message || "Loading..."}</span>
       ) : (
         <span>{count} operations in progress</span>
       )}
@@ -90,7 +94,10 @@ interface LoadingScreenProps {
   showSpinner?: boolean;
 }
 
-export function LoadingScreen({ message = 'Loading...', showSpinner = true }: LoadingScreenProps) {
+export function LoadingScreen({
+  message = "Loading...",
+  showSpinner = true,
+}: LoadingScreenProps) {
   const { isLoading } = useLoadingContext();
 
   if (!isLoading) return null;
@@ -107,7 +114,9 @@ export function LoadingScreen({ message = 'Loading...', showSpinner = true }: Lo
         {showSpinner && (
           <LoadingIndicator isLoading={true} size="lg" variant="spinner" />
         )}
-        <p className="text-sm font-medium text-foreground text-center">{message}</p>
+        <p className="text-sm font-medium text-foreground text-center">
+          {message}
+        </p>
       </div>
     </motion.div>
   );

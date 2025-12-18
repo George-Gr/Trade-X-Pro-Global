@@ -53,7 +53,7 @@ npm install
 ### Usage
 
 ```tsx
-import { AccessibilityTestingSuite } from './components/accessibility/AccessibilityTestingSuite';
+import { AccessibilityTestingSuite } from "./components/accessibility/AccessibilityTestingSuite";
 
 function App() {
   return <AccessibilityTestingSuite />;
@@ -196,19 +196,19 @@ VITE_KEYBOARD_NAVIGATION=true
 const accessibilityConfig = {
   colorContrast: {
     threshold: 4.5,
-    enhancedThreshold: 7.0
+    enhancedThreshold: 7.0,
   },
   keyboard: {
     shortcuts: {
-      'trade.buy': 'Ctrl+B',
-      'trade.sell': 'Ctrl+S',
-      'trade.close': 'Ctrl+C'
-    }
+      "trade.buy": "Ctrl+B",
+      "trade.sell": "Ctrl+S",
+      "trade.close": "Ctrl+C",
+    },
   },
   screenReader: {
     announcements: true,
-    liveRegions: true
-  }
+    liveRegions: true,
+  },
 };
 ```
 
@@ -226,7 +226,7 @@ const accessibilityConfig = {
 
 ```tsx
 // ✅ Good: Semantic button with ARIA label
-<button 
+<button
   onClick={handleTrade}
   aria-label="Buy 100 shares of AAPL at market price"
   className="btn-primary focus-visible:ring-2"
@@ -235,7 +235,7 @@ const accessibilityConfig = {
 </button>
 
 // ❌ Bad: Non-semantic clickable div
-<div 
+<div
   onClick={handleTrade}
   role="button"
   tabIndex={0}
@@ -279,7 +279,7 @@ const accessibilityMetrics = {
   compliance: getComplianceScore(),
   keyboardUsage: getKeyboardUsageStats(),
   screenReaderUsage: getScreenReaderStats(),
-  colorContrastIssues: getContrastIssues()
+  colorContrastIssues: getContrastIssues(),
 };
 ```
 

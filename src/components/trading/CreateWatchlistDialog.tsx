@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,11 +17,13 @@ interface CreateWatchlistDialogProps {
 
 /**
  * CreateWatchlistDialog Component
- * 
+ *
  * Dialog for creating a new watchlist.
  * Extracted to separate component to reduce main component size.
  */
-const CreateWatchlistDialog = ({ onCreateWatchlist }: CreateWatchlistDialogProps) => {
+const CreateWatchlistDialog = ({
+  onCreateWatchlist,
+}: CreateWatchlistDialogProps) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -56,8 +64,8 @@ const CreateWatchlistDialog = ({ onCreateWatchlist }: CreateWatchlistDialogProps
               disabled={isLoading}
             />
           </div>
-          <Button 
-            onClick={handleCreate} 
+          <Button
+            onClick={handleCreate}
             className="w-full"
             disabled={isLoading || !name.trim()}
           >

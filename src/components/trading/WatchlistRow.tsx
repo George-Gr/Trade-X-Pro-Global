@@ -13,13 +13,17 @@ interface WatchlistRowProps {
     changePercent: number;
   };
   onSymbolClick: (symbol: string) => void;
-  onQuickTrade: (symbol: string, side: "buy" | "sell", e: React.MouseEvent) => void;
+  onQuickTrade: (
+    symbol: string,
+    side: "buy" | "sell",
+    e: React.MouseEvent,
+  ) => void;
   onRemove: (e: React.MouseEvent) => void;
 }
 
 /**
  * WatchlistRow Component (Memoized)
- * 
+ *
  * Individual watchlist item row with price display and quick actions.
  * Wrapped with React.memo to prevent unnecessary re-renders when prices update
  * at parent level.
@@ -38,7 +42,11 @@ const WatchlistRow = React.memo(
 
     const formatPrice = (price: number) => {
       if (symbol.includes("JPY")) return price.toFixed(2);
-      if (symbol.includes("BTC") || symbol.includes("ETH") || symbol.includes("XAU"))
+      if (
+        symbol.includes("BTC") ||
+        symbol.includes("ETH") ||
+        symbol.includes("XAU")
+      )
         return price.toFixed(2);
       return price.toFixed(5);
     };
@@ -53,7 +61,10 @@ const WatchlistRow = React.memo(
           <div className="flex items-center gap-4">
             <span className="font-semibold text-sm">{symbol}</span>
             <TrendIcon
-              className={cn("h-3 w-3", isPositive ? "text-profit" : "text-loss")}
+              className={cn(
+                "h-3 w-3",
+                isPositive ? "text-profit" : "text-loss",
+              )}
             />
           </div>
         </div>
@@ -71,7 +82,7 @@ const WatchlistRow = React.memo(
             <div
               className={cn(
                 "text-xs font-medium",
-                isPositive ? "text-profit" : "text-loss"
+                isPositive ? "text-profit" : "text-loss",
               )}
             >
               {isPositive ? "+" : ""}
@@ -111,7 +122,10 @@ const WatchlistRow = React.memo(
             className="hover:bg-destructive/20 rounded p-4"
             aria-label={`Remove ${symbol} from watchlist`}
           >
-            <X className="h-4 w-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
+            <X
+              className="h-4 w-4 text-muted-foreground hover:text-destructive"
+              aria-hidden="true"
+            />
           </button>
         </div>
       </div>
@@ -125,7 +139,7 @@ const WatchlistRow = React.memo(
       prevProps.priceData?.currentPrice === nextProps.priceData?.currentPrice &&
       prevProps.priceData?.changePercent === nextProps.priceData?.changePercent
     );
-  }
+  },
 );
 
 WatchlistRow.displayName = "WatchlistRow";

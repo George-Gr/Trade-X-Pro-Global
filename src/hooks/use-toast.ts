@@ -15,10 +15,10 @@ type ToasterToast = ToastProps & {
 
 // Default durations based on toast variant
 const DEFAULT_DURATIONS = {
-  default: 4000,    // 4 seconds for normal toasts
-  destructive: 6000,  // 6 seconds for error toasts
-  success: 4000,     // 4 seconds for success toasts
-  warning: 5000,     // 5 seconds for warning toasts
+  default: 4000, // 4 seconds for normal toasts
+  destructive: 6000, // 6 seconds for error toasts
+  success: 4000, // 4 seconds for success toasts
+  warning: 5000, // 5 seconds for warning toasts
 };
 
 const actionTypes = {
@@ -88,7 +88,9 @@ export const reducer = (state: State, action: Action): State => {
     case "UPDATE_TOAST":
       return {
         ...state,
-        toasts: state.toasts.map((t) => (t.id === action.toast.id ? { ...t, ...action.toast } : t)),
+        toasts: state.toasts.map((t) =>
+          t.id === action.toast.id ? { ...t, ...action.toast } : t,
+        ),
       };
 
     case "DISMISS_TOAST": {
@@ -155,8 +157,9 @@ function triggerHapticFeedback(variant: string = "default") {
         success: [50, 30, 50], // Success pattern
         warning: [80, 40, 80], // Warning pattern
       };
-      
-      const pattern = patterns[variant as keyof typeof patterns] || patterns.default;
+
+      const pattern =
+        patterns[variant as keyof typeof patterns] || patterns.default;
       navigator.vibrate(pattern);
     } catch (error) {
       // Silently fail if vibration is not supported or blocked
@@ -176,10 +179,15 @@ function toast({ variant = "default", duration, ...props }: Toast) {
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
   // Use provided duration or fall back to default based on variant
-  const toastDuration = duration || DEFAULT_DURATIONS[(variant || 'default') as keyof typeof DEFAULT_DURATIONS] || DEFAULT_DURATIONS.default;
+  const toastDuration =
+    duration ||
+    DEFAULT_DURATIONS[
+      (variant || "default") as keyof typeof DEFAULT_DURATIONS
+    ] ||
+    DEFAULT_DURATIONS.default;
 
   // Trigger haptic feedback on mobile devices
-  triggerHapticFeedback(variant as 'default' | 'destructive' | undefined);
+  triggerHapticFeedback(variant as "default" | "destructive" | undefined);
 
   dispatch({
     type: "ADD_TOAST",

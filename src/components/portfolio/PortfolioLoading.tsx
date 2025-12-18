@@ -1,4 +1,7 @@
-import { PortfolioTableSkeleton, ChartSkeleton } from "@/components/ui/LoadingSkeleton";
+import {
+  PortfolioTableSkeleton,
+  ChartSkeleton,
+} from "@/components/ui/LoadingSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 

@@ -17,11 +17,12 @@ const textareaVariants = cva(
     defaultVariants: {
       size: "default",
     },
-  }
+  },
 );
 
 export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  extends
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     VariantProps<typeof textareaVariants> {
   mobileOptimized?: boolean;
   autoResize?: boolean;
@@ -30,16 +31,19 @@ export interface TextareaProps
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, size, mobileOptimized, autoResize, maxRows, error, ...props }, ref) => {
+  (
+    { className, size, mobileOptimized, autoResize, maxRows, error, ...props },
+    ref,
+  ) => {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-    
+
     // Auto-resize functionality for mobile
     React.useEffect(() => {
       if (autoResize && textareaRef.current) {
         const textarea = textareaRef.current;
-        textarea.style.height = 'auto';
+        textarea.style.height = "auto";
         const scrollHeight = textarea.scrollHeight;
-        
+
         if (maxRows) {
           const rowHeight = 24; // Approximate height per row
           const maxHeight = rowHeight * maxRows;
@@ -54,11 +58,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         ref={autoResize ? textareaRef : ref}
         className={cn(
-          textareaVariants({ size: mobileOptimized ? 'mobile' : size }),
+          textareaVariants({ size: mobileOptimized ? "mobile" : size }),
           error && "form-field-error", // FE-012: Apply error state styling
           className,
           mobileOptimized && "mobile-optimized-textarea",
-          autoResize && "auto-resize-textarea"
+          autoResize && "auto-resize-textarea",
         )}
         aria-invalid={!!error}
         aria-errormessage={error ? `${props.id}-error` : undefined}

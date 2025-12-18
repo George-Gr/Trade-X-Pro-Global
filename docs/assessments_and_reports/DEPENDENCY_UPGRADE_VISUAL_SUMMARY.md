@@ -16,7 +16,7 @@
           │         │  HIGH RISK          │
           │         │  Defer to Q1 2025   │
           │         └─────────────────────┘
-       75 │     
+       75 │
           │    ┌──────────────┐
        50 │    │ Router v7    │  ┌─────────────────┐
           │    │ High benefit │  │ Supabase minor  │
@@ -154,7 +154,7 @@ START: Review npm outdated
       │  └─ YES → Continue
       │
       ├─ ACTION: Execute Phase 1 ✅
-      │  ├─ Build passes? 
+      │  ├─ Build passes?
       │  │  ├─ NO  → ROLLBACK
       │  │  └─ YES → Continue
       │  └─ Tests pass?

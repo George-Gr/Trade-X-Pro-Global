@@ -8,7 +8,10 @@ interface ProtectedRouteProps {
   adminOnly?: boolean;
 }
 
-const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
+const ProtectedRoute = ({
+  children,
+  adminOnly = false,
+}: ProtectedRouteProps) => {
   const { user, loading, isAdmin } = useAuth();
 
   if (loading) {
@@ -27,11 +30,7 @@ const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) =>
     return <Navigate to="/dashboard" replace />;
   }
 
-  return (
-    <AuthenticatedLayoutProvider>
-      {children}
-    </AuthenticatedLayoutProvider>
-  );
+  return <AuthenticatedLayoutProvider>{children}</AuthenticatedLayoutProvider>;
 };
 
 export default ProtectedRoute;

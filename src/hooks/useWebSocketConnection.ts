@@ -1,15 +1,18 @@
 /**
  * Hook: useWebSocketConnection
- * 
+ *
  * React hook for managing WebSocket subscriptions with connection pooling
  */
 
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { getWebSocketManager, type ConnectionState } from '@/lib/websocketManager';
+import { useEffect, useRef, useCallback, useState } from "react";
+import {
+  getWebSocketManager,
+  type ConnectionState,
+} from "@/lib/websocketManager";
 
 interface UseWebSocketOptions {
   table: string;
-  event?: '*' | 'INSERT' | 'UPDATE' | 'DELETE';
+  event?: "*" | "INSERT" | "UPDATE" | "DELETE";
   filter?: string;
   onData: (payload: unknown) => void;
   enabled?: boolean;
@@ -21,11 +24,14 @@ interface UseWebSocketReturn {
   unsubscribe: () => void;
 }
 
-export function useWebSocketConnection(options: UseWebSocketOptions): UseWebSocketReturn {
-  const { table, event = '*', filter, onData, enabled = true } = options;
-  
+export function useWebSocketConnection(
+  options: UseWebSocketOptions,
+): UseWebSocketReturn {
+  const { table, event = "*", filter, onData, enabled = true } = options;
+
   const subscriptionIdRef = useRef<string | null>(null);
-  const [connectionState, setConnectionState] = useState<ConnectionState>('disconnected');
+  const [connectionState, setConnectionState] =
+    useState<ConnectionState>("disconnected");
   const [isConnected, setIsConnected] = useState(false);
 
   const unsubscribe = useCallback(() => {
@@ -43,22 +49,22 @@ export function useWebSocketConnection(options: UseWebSocketOptions): UseWebSock
     }
 
     const manager = getWebSocketManager();
-    
+
     // Set up state listener
     const removeStateListener = manager.onStateChange((state) => {
       setConnectionState(state);
-      setIsConnected(state === 'connected');
+      setIsConnected(state === "connected");
     });
 
     // Subscribe
     subscriptionIdRef.current = manager.subscribe(table, event, onData, filter);
-    
+
     // Check initial state
     const status = manager.getStatus();
     if (status.totalConnections > 0) {
-      const connected = status.connections.some(c => c.state === 'connected');
+      const connected = status.connections.some((c) => c.state === "connected");
       setIsConnected(connected);
-      setConnectionState(connected ? 'connected' : 'connecting');
+      setConnectionState(connected ? "connected" : "connecting");
     }
 
     return () => {
@@ -82,7 +88,7 @@ export function useWebSocketStatus() {
 
   useEffect(() => {
     const manager = getWebSocketManager();
-    
+
     const removeListener = manager.onStateChange(() => {
       setStatus(manager.getStatus());
     });

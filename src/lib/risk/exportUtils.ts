@@ -3,9 +3,19 @@
  * Export portfolio metrics and risk analysis data to CSV and PDF
  */
 
-import type { PortfolioMetrics, DrawdownAnalysis, AssetClassMetrics } from "@/lib/risk/portfolioMetrics";
-import type { RiskMetrics, PortfolioRiskAssessment } from "@/lib/risk/riskMetrics";
-import type { ConcentrationAnalysis, StressTestResults } from "@/lib/risk/positionAnalysis";
+import type {
+  PortfolioMetrics,
+  DrawdownAnalysis,
+  AssetClassMetrics,
+} from "@/lib/risk/portfolioMetrics";
+import type {
+  RiskMetrics,
+  PortfolioRiskAssessment,
+} from "@/lib/risk/riskMetrics";
+import type {
+  ConcentrationAnalysis,
+  StressTestResults,
+} from "@/lib/risk/positionAnalysis";
 
 /**
  * Export risk dashboard data to CSV format
@@ -17,7 +27,7 @@ export function exportRiskDashboardToCSV(
   assetClassMetrics: AssetClassMetrics,
   concentration: ConcentrationAnalysis | null,
   stressTests: StressTestResults | null,
-  fileName: string = "risk-dashboard.csv"
+  fileName: string = "risk-dashboard.csv",
 ): void {
   const rows: string[] = [];
   const timestamp = new Date().toISOString();
@@ -38,7 +48,9 @@ export function exportRiskDashboardToCSV(
     rows.push(`Liquidation Threshold,${riskMetrics.liquidationThreshold}%`);
     rows.push(`Risk Level,${riskMetrics.riskLevel.toUpperCase()}`);
     rows.push(`Capital at Risk,$${riskMetrics.capitalAtRisk.toFixed(2)}`);
-    rows.push(`Capital at Risk %,${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`);
+    rows.push(
+      `Capital at Risk %,${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`,
+    );
     rows.push("");
   }
 
@@ -48,8 +60,12 @@ export function exportRiskDashboardToCSV(
     rows.push("Metric,Value");
     rows.push(`Total Capital,$${portfolioMetrics.totalCapital.toFixed(2)}`);
     rows.push(`Current Equity,$${portfolioMetrics.currentEquity.toFixed(2)}`);
-    rows.push(`Total Realized P&L,$${portfolioMetrics.totalRealizedPnL.toFixed(2)}`);
-    rows.push(`Total Unrealized P&L,$${portfolioMetrics.totalUnrealizedPnL.toFixed(2)}`);
+    rows.push(
+      `Total Realized P&L,$${portfolioMetrics.totalRealizedPnL.toFixed(2)}`,
+    );
+    rows.push(
+      `Total Unrealized P&L,$${portfolioMetrics.totalUnrealizedPnL.toFixed(2)}`,
+    );
     rows.push(`Total P&L,$${portfolioMetrics.totalPnL.toFixed(2)}`);
     rows.push(`Total P&L %,${portfolioMetrics.totalPnLPercentage.toFixed(2)}%`);
     rows.push(`ROI,${portfolioMetrics.roi.toFixed(2)}%`);
@@ -74,10 +90,16 @@ export function exportRiskDashboardToCSV(
     if (drawdownAnalysis) {
       rows.push("DRAWDOWN ANALYSIS");
       rows.push("Metric,Value");
-      rows.push(`Current Drawdown,$${drawdownAnalysis.currentDrawdown.toFixed(2)}`);
-      rows.push(`Current Drawdown %,${drawdownAnalysis.drawdownPercentage.toFixed(2)}%`);
+      rows.push(
+        `Current Drawdown,$${drawdownAnalysis.currentDrawdown.toFixed(2)}`,
+      );
+      rows.push(
+        `Current Drawdown %,${drawdownAnalysis.drawdownPercentage.toFixed(2)}%`,
+      );
       rows.push(`Max Drawdown,$${drawdownAnalysis.maxDrawdown.toFixed(2)}`);
-      rows.push(`Max Drawdown %,${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%`);
+      rows.push(
+        `Max Drawdown %,${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%`,
+      );
       rows.push(`Peak Equity,$${drawdownAnalysis.peakEquity.toFixed(2)}`);
       rows.push(`Trough Equity,$${drawdownAnalysis.troughEquity.toFixed(2)}`);
       rows.push("");
@@ -87,10 +109,12 @@ export function exportRiskDashboardToCSV(
   // Asset Class Metrics Section
   if (Object.keys(assetClassMetrics).length > 0) {
     rows.push("ASSET CLASS BREAKDOWN");
-    rows.push("Asset Class,Positions,Total Value,Unrealized P&L,Portfolio %,P&L %");
+    rows.push(
+      "Asset Class,Positions,Total Value,Unrealized P&L,Portfolio %,P&L %",
+    );
     for (const [assetClass, metrics] of Object.entries(assetClassMetrics)) {
       rows.push(
-        `${assetClass},${metrics.positions},$${metrics.totalValue.toFixed(2)},$${metrics.unrealizedPnL.toFixed(2)},${metrics.percentageOfPortfolio.toFixed(2)}%,${metrics.pnlPercentage.toFixed(2)}%`
+        `${assetClass},${metrics.positions},$${metrics.totalValue.toFixed(2)},$${metrics.unrealizedPnL.toFixed(2)},${metrics.percentageOfPortfolio.toFixed(2)}%,${metrics.pnlPercentage.toFixed(2)}%`,
       );
     }
     rows.push("");
@@ -99,10 +123,12 @@ export function exportRiskDashboardToCSV(
   // Concentration Analysis Section
   if (concentration && concentration.totalPositions > 0) {
     rows.push("TOP POSITIONS BY CONCENTRATION");
-    rows.push("Symbol,Asset Class,Concentration %,Position Value,Unrealized P&L,Risk Level");
+    rows.push(
+      "Symbol,Asset Class,Concentration %,Position Value,Unrealized P&L,Risk Level",
+    );
     for (const position of concentration.topPositions) {
       rows.push(
-        `${position.symbol},${position.assetClass},${position.percentageOfPortfolio.toFixed(2)}%,$${position.positionValue.toFixed(2)},$${position.unrealizedPnL.toFixed(2)},${position.risk}`
+        `${position.symbol},${position.assetClass},${position.percentageOfPortfolio.toFixed(2)}%,$${position.positionValue.toFixed(2)},$${position.unrealizedPnL.toFixed(2)},${position.risk}`,
       );
     }
     rows.push("");
@@ -122,7 +148,7 @@ export function exportRiskDashboardToCSV(
     rows.push("Price Movement %,Estimated Loss,$,Margin Level,Risk Level");
     for (const scenario of stressTests.scenarios) {
       rows.push(
-        `${scenario.priceMovement}%,$${scenario.estimatedLoss.toFixed(2)},${scenario.marginLevel.toFixed(2)}%,${scenario.riskLevel}`
+        `${scenario.priceMovement}%,$${scenario.estimatedLoss.toFixed(2)},${scenario.marginLevel.toFixed(2)}%,${scenario.riskLevel}`,
       );
     }
     rows.push("");
@@ -150,7 +176,7 @@ export function exportRiskDashboardToPDF(
   assetClassMetrics: AssetClassMetrics,
   concentration: ConcentrationAnalysis | null,
   stressTests: StressTestResults | null,
-  fileName: string = "risk-dashboard.txt"
+  fileName: string = "risk-dashboard.txt",
 ): void {
   const lines: string[] = [];
   const timestamp = new Date().toISOString();
@@ -166,16 +192,17 @@ export function exportRiskDashboardToPDF(
   if (riskMetrics) {
     lines.push("RISK METRICS".padEnd(40) + "─".repeat(40));
     lines.push(
-      `  Margin Level: ${riskMetrics.currentMarginLevel.toFixed(2)}%`.padEnd(50) +
-      `Risk Level: ${riskMetrics.riskLevel.toUpperCase()}`
+      `  Margin Level: ${riskMetrics.currentMarginLevel.toFixed(2)}%`.padEnd(
+        50,
+      ) + `Risk Level: ${riskMetrics.riskLevel.toUpperCase()}`,
     );
     lines.push(
       `  Free Margin: $${riskMetrics.freeMargin.toFixed(2)}`.padEnd(50) +
-      `Capital at Risk: $${riskMetrics.capitalAtRisk.toFixed(2)}`
+        `Capital at Risk: $${riskMetrics.capitalAtRisk.toFixed(2)}`,
     );
     lines.push(
       `  Used Margin: $${riskMetrics.usedMargin.toFixed(2)}`.padEnd(50) +
-      `Capital at Risk %: ${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`
+        `Capital at Risk %: ${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`,
     );
     lines.push("");
   }
@@ -184,16 +211,17 @@ export function exportRiskDashboardToPDF(
   if (portfolioMetrics) {
     lines.push("PORTFOLIO PERFORMANCE".padEnd(40) + "─".repeat(40));
     lines.push(
-      `  Current Equity: $${portfolioMetrics.currentEquity.toFixed(2)}`.padEnd(50) +
-      `Total Capital: $${portfolioMetrics.totalCapital.toFixed(2)}`
+      `  Current Equity: $${portfolioMetrics.currentEquity.toFixed(2)}`.padEnd(
+        50,
+      ) + `Total Capital: $${portfolioMetrics.totalCapital.toFixed(2)}`,
     );
     lines.push(
       `  Total P&L: $${portfolioMetrics.totalPnL.toFixed(2)}`.padEnd(50) +
-      `P&L %: ${portfolioMetrics.totalPnLPercentage.toFixed(2)}%`
+        `P&L %: ${portfolioMetrics.totalPnLPercentage.toFixed(2)}%`,
     );
     lines.push(
       `  ROI: ${portfolioMetrics.roi.toFixed(2)}%`.padEnd(50) +
-      `Total Trades: ${portfolioMetrics.totalTrades}`
+        `Total Trades: ${portfolioMetrics.totalTrades}`,
     );
     lines.push("");
 
@@ -201,15 +229,15 @@ export function exportRiskDashboardToPDF(
     lines.push("TRADE STATISTICS".padEnd(40) + "─".repeat(40));
     lines.push(
       `  Win Rate: ${portfolioMetrics.winRate.toFixed(2)}%`.padEnd(50) +
-      `Profit Factor: ${portfolioMetrics.profitFactor.toFixed(2)}`
+        `Profit Factor: ${portfolioMetrics.profitFactor.toFixed(2)}`,
     );
     lines.push(
       `  Largest Win: $${portfolioMetrics.largestWin.toFixed(2)}`.padEnd(50) +
-      `Largest Loss: $${portfolioMetrics.largestLoss.toFixed(2)}`
+        `Largest Loss: $${portfolioMetrics.largestLoss.toFixed(2)}`,
     );
     lines.push(
       `  Average Win: $${portfolioMetrics.averageWin.toFixed(2)}`.padEnd(50) +
-      `Average Loss: $${portfolioMetrics.averageLoss.toFixed(2)}`
+        `Average Loss: $${portfolioMetrics.averageLoss.toFixed(2)}`,
     );
     lines.push("");
 
@@ -217,14 +245,14 @@ export function exportRiskDashboardToPDF(
     if (drawdownAnalysis) {
       lines.push("DRAWDOWN ANALYSIS".padEnd(40) + "─".repeat(40));
       lines.push(
-        `  Current Drawdown: $${drawdownAnalysis.currentDrawdown.toFixed(2)} (${drawdownAnalysis.drawdownPercentage.toFixed(2)}%)`
+        `  Current Drawdown: $${drawdownAnalysis.currentDrawdown.toFixed(2)} (${drawdownAnalysis.drawdownPercentage.toFixed(2)}%)`,
       );
       lines.push(
-        `  Max Drawdown: $${drawdownAnalysis.maxDrawdown.toFixed(2)} (${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%)`
+        `  Max Drawdown: $${drawdownAnalysis.maxDrawdown.toFixed(2)} (${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%)`,
       );
       lines.push(
         `  Peak Equity: $${drawdownAnalysis.peakEquity.toFixed(2)}`.padEnd(50) +
-        `Trough Equity: $${drawdownAnalysis.troughEquity.toFixed(2)}`
+          `Trough Equity: $${drawdownAnalysis.troughEquity.toFixed(2)}`,
       );
       lines.push("");
     }
@@ -236,7 +264,7 @@ export function exportRiskDashboardToPDF(
     for (const [assetClass, metrics] of Object.entries(assetClassMetrics)) {
       lines.push(
         `  ${assetClass}:`.padEnd(50) +
-        `${metrics.percentageOfPortfolio.toFixed(1)}% (${metrics.positions} position${metrics.positions > 1 ? "s" : ""})`
+          `${metrics.percentageOfPortfolio.toFixed(1)}% (${metrics.positions} position${metrics.positions > 1 ? "s" : ""})`,
       );
     }
     lines.push("");
@@ -246,12 +274,13 @@ export function exportRiskDashboardToPDF(
   if (concentration && concentration.totalPositions > 0) {
     lines.push("CONCENTRATION ANALYSIS".padEnd(40) + "─".repeat(40));
     lines.push(
-      `  Diversification Score: ${concentration.diversificationScore}%`.padEnd(50) +
-      `Concentration Level: ${concentration.concentrationLevel}`
+      `  Diversification Score: ${concentration.diversificationScore}%`.padEnd(
+        50,
+      ) + `Concentration Level: ${concentration.concentrationLevel}`,
     );
     lines.push(
       `  Total Positions: ${concentration.totalPositions}`.padEnd(50) +
-      `Herfindahl Index: ${concentration.herfindahlIndex.toFixed(2)}`
+        `Herfindahl Index: ${concentration.herfindahlIndex.toFixed(2)}`,
     );
     lines.push("");
 
@@ -259,7 +288,7 @@ export function exportRiskDashboardToPDF(
       lines.push("  Top Positions:");
       for (const position of concentration.topPositions.slice(0, 5)) {
         lines.push(
-          `    • ${position.symbol} (${position.assetClass}): ${position.percentageOfPortfolio.toFixed(2)}% - ${position.risk} risk`
+          `    • ${position.symbol} (${position.assetClass}): ${position.percentageOfPortfolio.toFixed(2)}% - ${position.risk} risk`,
         );
       }
     }
@@ -270,12 +299,15 @@ export function exportRiskDashboardToPDF(
   if (stressTests) {
     lines.push("STRESS TEST SUMMARY".padEnd(40) + "─".repeat(40));
     lines.push(
-      `  Max Possible Loss: $${stressTests.maxPossibleLoss.toFixed(2)}`.padEnd(50) +
-      `Survival Rate: ${stressTests.survivalRate.toFixed(2)}%`
+      `  Max Possible Loss: $${stressTests.maxPossibleLoss.toFixed(2)}`.padEnd(
+        50,
+      ) + `Survival Rate: ${stressTests.survivalRate.toFixed(2)}%`,
     );
     lines.push(
-      `  Most Severe Scenario: ${stressTests.mostSevereScenario.name}`.padEnd(50) +
-      `Est. Loss: $${stressTests.mostSevereScenario.estimatedLoss.toFixed(2)}`
+      `  Most Severe Scenario: ${stressTests.mostSevereScenario.name}`.padEnd(
+        50,
+      ) +
+        `Est. Loss: $${stressTests.mostSevereScenario.estimatedLoss.toFixed(2)}`,
     );
     lines.push("");
   }
@@ -299,7 +331,7 @@ export function generateRiskDashboardHTMLReport(
   drawdownAnalysis: DrawdownAnalysis | null,
   assetClassMetrics: AssetClassMetrics,
   concentration: ConcentrationAnalysis | null,
-  stressTests: StressTestResults | null
+  stressTests: StressTestResults | null,
 ): string {
   const timestamp = new Date().toISOString();
   const formattedDate = new Date().toLocaleDateString();
@@ -456,7 +488,7 @@ export function generateRiskDashboardHTMLReport(
             </div>
             <div class="metric-card">
                 <div class="metric-label">Total P&L</div>
-                <div class="metric-value" style="color: ${portfolioMetrics.totalPnL >= 0 ? '#28a745' : '#dc3545'}">
+                <div class="metric-value" style="color: ${portfolioMetrics.totalPnL >= 0 ? "#28a745" : "#dc3545"}">
                     $${portfolioMetrics.totalPnL.toFixed(2)}
                 </div>
             </div>
@@ -543,7 +575,7 @@ export function generateRiskDashboardHTMLReport(
             </div>
             <div class="metric-card">
                 <div class="metric-label">Recovery Status</div>
-                <div class="metric-value">${drawdownAnalysis.isRecovering ? 'Recovering' : 'Drawdown'}</div>
+                <div class="metric-value">${drawdownAnalysis.isRecovering ? "Recovering" : "Drawdown"}</div>
             </div>
         </div>
     </div>
@@ -573,7 +605,7 @@ export function generateRiskDashboardHTMLReport(
                 <td>$${metrics.totalValue.toFixed(2)}</td>
                 <td>${metrics.percentageOfPortfolio.toFixed(2)}%</td>
                 <td>$${metrics.unrealizedPnL.toFixed(2)}</td>
-                <td style="color: ${metrics.pnlPercentage >= 0 ? '#28a745' : '#dc3545'}">
+                <td style="color: ${metrics.pnlPercentage >= 0 ? "#28a745" : "#dc3545"}">
                     ${metrics.pnlPercentage.toFixed(2)}%
                 </td>
             </tr>
@@ -600,7 +632,11 @@ export function generateRiskDashboardHTMLReport(
 /**
  * Download file utility
  */
-function downloadFile(content: string, fileName: string, mimeType: string): void {
+function downloadFile(
+  content: string,
+  fileName: string,
+  mimeType: string,
+): void {
   const blob = new Blob([content], { type: mimeType });
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");

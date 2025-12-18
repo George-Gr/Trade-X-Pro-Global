@@ -2,11 +2,31 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { RegistrationFormData } from "./MultiStepRegistration";
-type StepTwoFormValues = Pick<RegistrationFormData, 'tradingExperience' | 'occupation' | 'financialCapability' | 'reasonForJoining' | 'tradingGoals'>;
+type StepTwoFormValues = Pick<
+  RegistrationFormData,
+  | "tradingExperience"
+  | "occupation"
+  | "financialCapability"
+  | "reasonForJoining"
+  | "tradingGoals"
+>;
 
 interface StepTwoProps {
   formData: RegistrationFormData;
@@ -16,7 +36,13 @@ interface StepTwoProps {
   isLoading: boolean;
 }
 
-const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onSubmit, isLoading }) => {
+const StepTwo: React.FC<StepTwoProps> = ({
+  formData,
+  updateFormData,
+  onBack,
+  onSubmit,
+  isLoading,
+}) => {
   const form = useForm<StepTwoFormValues>({
     defaultValues: {
       tradingExperience: formData.tradingExperience,
@@ -34,8 +60,10 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
     onSubmit();
   };
 
-  const selectClass = "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground";
-  const textareaClass = "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20 min-h-[80px]";
+  const selectClass =
+    "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground";
+  const textareaClass =
+    "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20 min-h-[80px]";
 
   return (
     <Form {...form}>
@@ -46,7 +74,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
           rules={{ required: "Please select your trading experience" }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-primary-foreground">Trading Experience</FormLabel>
+              <FormLabel className="text-primary-foreground">
+                Trading Experience
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className={selectClass}>
@@ -55,9 +85,15 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="none">No Experience</SelectItem>
-                  <SelectItem value="beginner">Beginner (Less than 1 year)</SelectItem>
-                  <SelectItem value="intermediate">Intermediate (1-3 years)</SelectItem>
-                  <SelectItem value="experienced">Experienced (3-5 years)</SelectItem>
+                  <SelectItem value="beginner">
+                    Beginner (Less than 1 year)
+                  </SelectItem>
+                  <SelectItem value="intermediate">
+                    Intermediate (1-3 years)
+                  </SelectItem>
+                  <SelectItem value="experienced">
+                    Experienced (3-5 years)
+                  </SelectItem>
                   <SelectItem value="expert">Expert (5+ years)</SelectItem>
                 </SelectContent>
               </Select>
@@ -72,7 +108,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
           rules={{ required: "Please select your occupation" }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-primary-foreground">What do you do?</FormLabel>
+              <FormLabel className="text-primary-foreground">
+                What do you do?
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className={selectClass}>
@@ -100,7 +138,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
           rules={{ required: "Please select your financial capability" }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-primary-foreground">Financial Capability</FormLabel>
+              <FormLabel className="text-primary-foreground">
+                Financial Capability
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className={selectClass}>
@@ -111,7 +151,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
                   <SelectItem value="under-1000">Under $1,000</SelectItem>
                   <SelectItem value="1000-5000">$1,000 - $5,000</SelectItem>
                   <SelectItem value="5000-25000">$5,000 - $25,000</SelectItem>
-                  <SelectItem value="25000-100000">$25,000 - $100,000</SelectItem>
+                  <SelectItem value="25000-100000">
+                    $25,000 - $100,000
+                  </SelectItem>
                   <SelectItem value="over-100000">Over $100,000</SelectItem>
                 </SelectContent>
               </Select>
@@ -126,7 +168,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
           rules={{ required: "Please tell us why you're joining" }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-primary-foreground">Reason for Joining Trade X Pro</FormLabel>
+              <FormLabel className="text-primary-foreground">
+                Reason for Joining Trade X Pro
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="What attracted you to our platform? What are you looking for in a trading platform?"
@@ -145,7 +189,9 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
           rules={{ required: "Please share your trading goals" }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-primary-foreground">Your Trading Goals</FormLabel>
+              <FormLabel className="text-primary-foreground">
+                Your Trading Goals
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="What do you hope to achieve with Trade X Pro? Short-term or long-term goals?"
@@ -159,8 +205,8 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
         />
 
         <div className="flex gap-4 pt-4">
-          <Button 
-            type="button" 
+          <Button
+            type="button"
             variant="outline"
             onClick={onBack}
             disabled={isLoading}
@@ -169,8 +215,8 @@ const StepTwo: React.FC<StepTwoProps> = ({ formData, updateFormData, onBack, onS
             <ArrowLeft className="mr-2 h-5 w-5" />
             Back
           </Button>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="flex-1 btn-glow bg-gold text-gold-foreground hover:bg-gold-hover py-6 text-lg font-bold shadow-lg hover:shadow-gold/25 transition-all duration-300 group"
             disabled={isLoading}
           >

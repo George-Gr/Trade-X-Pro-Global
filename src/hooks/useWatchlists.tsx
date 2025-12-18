@@ -18,14 +18,20 @@ interface WatchlistItem {
 
 export const useWatchlists = () => {
   const [watchlists, setWatchlists] = useState<Watchlist[]>([]);
-  const [watchlistItems, setWatchlistItems] = useState<Record<string, WatchlistItem[]>>({});
-  const [activeWatchlistId, setActiveWatchlistId] = useState<string | null>(null);
+  const [watchlistItems, setWatchlistItems] = useState<
+    Record<string, WatchlistItem[]>
+  >({});
+  const [activeWatchlistId, setActiveWatchlistId] = useState<string | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchWatchlists = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data: lists, error } = await supabase
@@ -65,33 +71,38 @@ export const useWatchlists = () => {
     }
   }, [toast]);
 
-  const fetchWatchlistItems = useCallback(async (watchlistId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("watchlist_items")
-        .select("*")
-        .eq("watchlist_id", watchlistId)
-        .order("order_index", { ascending: true });
+  const fetchWatchlistItems = useCallback(
+    async (watchlistId: string) => {
+      try {
+        const { data, error } = await supabase
+          .from("watchlist_items")
+          .select("*")
+          .eq("watchlist_id", watchlistId)
+          .order("order_index", { ascending: true });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      setWatchlistItems((prev) => ({
-        ...prev,
-        [watchlistId]: data || [],
-      }));
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      toast({
-        title: "Error loading watchlist items",
-        description: message,
-        variant: "destructive",
-      });
-    }
-  }, [toast]);
+        setWatchlistItems((prev) => ({
+          ...prev,
+          [watchlistId]: data || [],
+        }));
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        toast({
+          title: "Error loading watchlist items",
+          description: message,
+          variant: "destructive",
+        });
+      }
+    },
+    [toast],
+  );
 
   const createWatchlist = async (name: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       const { data, error } = await supabase
@@ -122,10 +133,7 @@ export const useWatchlists = () => {
 
   const deleteWatchlist = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("watchlists")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("watchlists").delete().eq("id", id);
 
       if (error) throw error;
 
@@ -194,7 +202,10 @@ export const useWatchlists = () => {
     }
   };
 
-  const removeSymbolFromWatchlist = async (watchlistId: string, itemId: string) => {
+  const removeSymbolFromWatchlist = async (
+    watchlistId: string,
+    itemId: string,
+  ) => {
     try {
       const { error } = await supabase
         .from("watchlist_items")
@@ -205,7 +216,9 @@ export const useWatchlists = () => {
 
       setWatchlistItems((prev) => ({
         ...prev,
-        [watchlistId]: (prev[watchlistId] || []).filter((item) => item.id !== itemId),
+        [watchlistId]: (prev[watchlistId] || []).filter(
+          (item) => item.id !== itemId,
+        ),
       }));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);

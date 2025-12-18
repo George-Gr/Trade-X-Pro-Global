@@ -36,9 +36,7 @@
 ### Pulse Animation
 
 ```html
-<div class="animate-pulse">
-  Loading...
-</div>
+<div class="animate-pulse">Loading...</div>
 ```
 
 ### Shimmer (Skeleton Loading)
@@ -62,9 +60,7 @@
 ### Bounce Animation
 
 ```html
-<div class="scale-bounce">
-  Bouncing content
-</div>
+<div class="scale-bounce">Bouncing content</div>
 ```
 
 ---
@@ -74,12 +70,11 @@
 ### Slide In (Left)
 
 ```html
-<div class="slide-in-left">
-  Sliding in from left
-</div>
+<div class="slide-in-left">Sliding in from left</div>
 ```
 
 Options:
+
 - `.slide-in-left` - From left (200ms)
 - `.slide-in-right` - From right (200ms)
 - `.slide-in-up` - From bottom (200ms)
@@ -87,57 +82,41 @@ Options:
 ### Fade In
 
 ```html
-<div class="fade-in">
-  Fading in
-</div>
+<div class="fade-in">Fading in</div>
 ```
 
 ### Scale In
 
 ```html
-<div class="scale-in">
-  Scaling in from 95%
-</div>
+<div class="scale-in">Scaling in from 95%</div>
 ```
 
 ### Dropdown Open/Close
 
 ```html
 <!-- Opening -->
-<div class="dropdown-open">
-  Dropdown content
-</div>
+<div class="dropdown-open">Dropdown content</div>
 
 <!-- Closing -->
-<div class="dropdown-close">
-  Dropdown content
-</div>
+<div class="dropdown-close">Dropdown content</div>
 ```
 
 ### Modal Animation
 
 ```html
-<div class="modal-appear">
-  Modal content
-</div>
+<div class="modal-appear">Modal content</div>
 
-<div class="backdrop-fade">
-  Backdrop
-</div>
+<div class="backdrop-fade">Backdrop</div>
 ```
 
 ### Toast Notification
 
 ```html
 <!-- Entering -->
-<div class="toast-enter">
-  Notification
-</div>
+<div class="toast-enter">Notification</div>
 
 <!-- Exiting -->
-<div class="toast-exit">
-  Notification
-</div>
+<div class="toast-exit">Notification</div>
 ```
 
 ---
@@ -147,12 +126,11 @@ Options:
 ### Button Interactive
 
 ```html
-<button class="button-interactive">
-  Interactive Button
-</button>
+<button class="button-interactive">Interactive Button</button>
 ```
 
 **Features:**
+
 - Hover: Lift effect + shadow
 - Active: Press effect
 - Smooth transitions
@@ -160,12 +138,11 @@ Options:
 ### Button Pulse (CTA Emphasis)
 
 ```html
-<button class="button-pulse">
-  Place Trade
-</button>
+<button class="button-pulse">Place Trade</button>
 ```
 
 **Features:**
+
 - Continuous pulse animation
 - Draws attention to important CTAs
 - 2s infinite animation
@@ -179,6 +156,7 @@ Options:
 ```
 
 **Features:**
+
 - Hover: Lift + shadow increase
 - Active: Press effect
 - Smooth transitions
@@ -190,6 +168,7 @@ Options:
 ```
 
 **Features:**
+
 - Hover: Background + border change
 - Focus: Shadow ring
 - Smooth transitions
@@ -201,21 +180,18 @@ Options:
 ### Touch-Aware Button
 
 ```html
-<button class="button-hover-effect">
-  Touch or Click
-</button>
+<button class="button-hover-effect">Touch or Click</button>
 ```
 
 **Behavior:**
+
 - Desktop (hover capable): Hover effect
 - Mobile (touch only): Press effect
 
 ### Gesture-Aware Hover
 
 ```html
-<div class="button-hover-effect">
-  Hover on desktop, tap on mobile
-</div>
+<div class="button-hover-effect">Hover on desktop, tap on mobile</div>
 ```
 
 Automatically adapts based on device capabilities.
@@ -245,6 +221,7 @@ Automatically adapts based on device capabilities.
 ```
 
 **Features:**
+
 - Smooth color transition on check
 - Accessible state change
 - Clear visual feedback
@@ -252,8 +229,9 @@ Automatically adapts based on device capabilities.
 ### Reduced Motion
 
 All animations automatically disable when user has:
+
 ```css
-@media (prefers-reduced-motion: reduce)
+@media (prefers-reduced-motion: reduce);
 ```
 
 No special code needed - it's automatic!
@@ -265,20 +243,20 @@ No special code needed - it's automatic!
 ### Duration Variables
 
 ```css
---duration-instant: 0ms;      /* No delay */
---duration-fast: 150ms;       /* Quick feedback */
---duration-normal: 200ms;     /* Standard transitions */
---duration-slow: 300ms;       /* Gradual animations */
---duration-slower: 500ms;     /* Slow animations */
+--duration-instant: 0ms; /* No delay */
+--duration-fast: 150ms; /* Quick feedback */
+--duration-normal: 200ms; /* Standard transitions */
+--duration-slow: 300ms; /* Gradual animations */
+--duration-slower: 500ms; /* Slow animations */
 ```
 
 ### Easing Functions
 
 ```css
---ease-in: cubic-bezier(0.4, 0, 1, 1);          /* Accelerating */
---ease-out: cubic-bezier(0, 0, 0.2, 1);         /* Decelerating */
---ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);    /* Both */
---ease-bounce: cubic-bezier(0.68, -0.55, ...);  /* Bouncy */
+--ease-in: cubic-bezier(0.4, 0, 1, 1); /* Accelerating */
+--ease-out: cubic-bezier(0, 0, 0.2, 1); /* Decelerating */
+--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* Both */
+--ease-bounce: cubic-bezier(0.68, -0.55, ...); /* Bouncy */
 ```
 
 ### Transition Variables
@@ -300,16 +278,11 @@ No special code needed - it's automatic!
 <form class="space-y-4">
   <input class="input-interactive" type="email" />
   <input class="input-interactive" type="password" />
-  
-  <button 
-    class="button-interactive w-full"
-    disabled={isLoading}
-  >
+
+  <button class="button-interactive w-full" disabled="{isLoading}">
     {isLoading ? (
-      <span class="animate-spin">●</span>
-    ) : (
-      'Sign In'
-    )}
+    <span class="animate-spin">●</span>
+    ) : ( 'Sign In' )}
   </button>
 </form>
 ```
@@ -322,7 +295,7 @@ No special code needed - it's automatic!
     <h3>Order #12345</h3>
     <p>Status: <span class="animate-pulse">Processing</span></p>
   </div>
-  
+
   <div class="flex gap-2">
     <button class="button-interactive">Edit</button>
     <button class="button-interactive">Cancel</button>
@@ -334,9 +307,7 @@ No special code needed - it's automatic!
 
 ```html
 <div class="space-y-2">
-  <div class="toast-enter">
-    ✓ Order placed successfully
-  </div>
+  <div class="toast-enter">✓ Order placed successfully</div>
   <div class="toast-enter" style="animation-delay: 100ms">
     📊 Portfolio updated
   </div>
@@ -399,14 +370,10 @@ All animations automatically respect `prefers-reduced-motion`. No additional cod
 
 ```html
 <!-- ✅ Good: Mix Tailwind with animation classes -->
-<div class="fade-in p-4 rounded-lg bg-primary/10">
-  Content
-</div>
+<div class="fade-in p-4 rounded-lg bg-primary/10">Content</div>
 
 <!-- ❌ Bad: Hard to scan -->
-<div class="fade-in" style="padding: 16px;">
-  Content
-</div>
+<div class="fade-in" style="padding: 16px;">Content</div>
 ```
 
 ### 4. Performance First
@@ -417,19 +384,14 @@ All animations automatically respect `prefers-reduced-motion`. No additional cod
 <div class="slide-in-left">Translate-based animation</div>
 
 <!-- ❌ Avoid: Layout-thrashing properties -->
-<div style="animation: width-change 200ms;">
-  Avoid width/height animations
-</div>
+<div style="animation: width-change 200ms;">Avoid width/height animations</div>
 ```
 
 ### 5. Accessibility Always
 
 ```html
 <!-- ✅ Good: ARIA attributes + animations -->
-<button 
-  aria-busy={isLoading}
-  class="button-interactive"
->
+<button aria-busy="{isLoading}" class="button-interactive">
   {isLoading ? <span class="animate-spin" /> : 'Submit'}
 </button>
 
@@ -445,9 +407,7 @@ All animations automatically respect `prefers-reduced-motion`. No additional cod
 
 ```html
 <!-- ❌ Bad: Too many animations at once -->
-<div class="fade-in slide-in-left scale-in">
-  Too much!
-</div>
+<div class="fade-in slide-in-left scale-in">Too much!</div>
 
 <!-- ✅ Good: One animation per element -->
 <div class="fade-in">Content</div>
@@ -470,23 +430,17 @@ All animations automatically respect `prefers-reduced-motion`. No additional cod
 
 ```html
 <!-- ❌ Bad: Will cause jank -->
-<div style="animation: left-change 200ms;">
-  Animating left property
-</div>
+<div style="animation: left-change 200ms;">Animating left property</div>
 
 <!-- ✅ Good: GPU-accelerated -->
-<div class="slide-in-left">
-  Using transform
-</div>
+<div class="slide-in-left">Using transform</div>
 ```
 
 ### Don't Skip Accessibility
 
 ```html
 <!-- ❌ Bad: Loading state not announced -->
-<button disabled class="animate-spin">
-  Loading
-</button>
+<button disabled class="animate-spin">Loading</button>
 
 <!-- ✅ Good: ARIA attribute added -->
 <button disabled aria-busy="true" class="animate-spin">
@@ -507,8 +461,12 @@ All animations automatically respect `prefers-reduced-motion`. No additional cod
 }
 
 @keyframes custom-animation {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Respect reduced motion */
@@ -562,4 +520,4 @@ Use these patterns to create a delightful, professional user experience!
 
 ---
 
-*Last updated: December 2024*
+_Last updated: December 2024_

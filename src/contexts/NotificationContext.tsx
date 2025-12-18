@@ -5,27 +5,36 @@ import { useAuth } from "@/hooks/useAuth";
 
 import { NotificationContext } from "./notificationContextHelpers";
 
-export function NotificationProvider({ children }: { children?: React.ReactNode } = {}) {
+export function NotificationProvider({
+  children,
+}: { children?: React.ReactNode } = {}) {
   const { toast } = useToast();
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
 
   // Memoize markAsRead to prevent recreating on every render
-  const markAsRead = useCallback(async (id: string) => {
-    if (!user) return;
+  const markAsRead = useCallback(
+    async (id: string) => {
+      if (!user) return;
 
-    const { data, error } = await supabase
-      .from("notifications")
-      .update({ read: true })
-      .eq("id", id)
-      .eq("user_id", user.id);
+      const { data, error } = await supabase
+        .from("notifications")
+        .update({ read: true })
+        .eq("id", id)
+        .eq("user_id", user.id);
 
-    if (error) {
-      console.error("Failed to mark notification as read", { id, userId: user.id, error });
-      // Optionally, surface user feedback here (e.g., toast({ ... }))
-      return;
-    }
-  }, [user]);
+      if (error) {
+        console.error("Failed to mark notification as read", {
+          id,
+          userId: user.id,
+          error,
+        });
+        // Optionally, surface user feedback here (e.g., toast({ ... }))
+        return;
+      }
+    },
+    [user],
+  );
 
   // Memoize markAllAsRead to prevent recreating on every render
   const markAllAsRead = useCallback(async () => {
@@ -120,7 +129,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
           });
 
           setUnreadCount((prev) => prev + 1);
-        }
+        },
       )
       .on(
         "postgres_changes",
@@ -135,7 +144,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
           if (notification.read) {
             setUnreadCount((prev) => Math.max(0, prev - 1));
           }
-        }
+        },
       )
       .subscribe();
 
@@ -169,7 +178,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
               },
             });
           }
-        }
+        },
       )
       .subscribe();
 
@@ -195,7 +204,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
                 user_id: user.id,
                 type: "position_update",
                 title: "Position Closed",
-                message: `Your ${position.side} position for ${position.symbol} has been closed with a ${(position.realized_pnl || 0) >= 0 ? 'profit' : 'loss'} of ${Math.abs(position.realized_pnl || 0).toFixed(2)}`,
+                message: `Your ${position.side} position for ${position.symbol} has been closed with a ${(position.realized_pnl || 0) >= 0 ? "profit" : "loss"} of ${Math.abs(position.realized_pnl || 0).toFixed(2)}`,
                 data: {
                   position_id: position.id,
                   symbol: position.symbol,
@@ -205,7 +214,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
               },
             });
           }
-        }
+        },
       )
       .subscribe();
 
@@ -240,7 +249,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
               },
             });
           }
-        }
+        },
       )
       .subscribe();
 
@@ -272,7 +281,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
               },
             },
           });
-        }
+        },
       )
       .subscribe();
 
@@ -297,7 +306,7 @@ export function NotificationProvider({ children }: { children?: React.ReactNode 
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo(
     () => ({ unreadCount, markAsRead, markAllAsRead }),
-    [unreadCount, markAsRead, markAllAsRead]
+    [unreadCount, markAsRead, markAllAsRead],
   );
 
   return (

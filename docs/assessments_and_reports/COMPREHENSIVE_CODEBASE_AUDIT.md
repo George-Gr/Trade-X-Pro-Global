@@ -36,16 +36,16 @@
 
 ### Audit Findings Summary
 
-| Category | Status | Details |
-|----------|--------|---------|
-| **Frontend Architecture** | 🟡 Good | Well-structured with feature-based organization; needs error boundaries & perf optimization |
-| **Backend/Supabase** | 🟡 Partial | Core schema complete; Edge Functions 60% done; RLS policies solid |
-| **Type Safety** | 🟢 Excellent | Strong TypeScript usage; minimal `any` types; proper interfaces throughout |
-| **Testing** | 🟡 Moderate | 12 test suites for trading logic; missing component tests & E2E coverage |
-| **Accessibility** | 🟡 Good | Partial ARIA labels; keyboard nav working; needs comprehensive audit |
-| **Performance** | 🟡 Good | Code-splitting implemented; lazy loading in place; large Admin page (643 lines) |
-| **Security** | 🟡 Good | No hardcoded secrets detected; proper auth flows; needs penetration review |
-| **Documentation** | 🟢 Excellent | Comprehensive inline docs; PRD well-detailed; architecture clear |
+| Category                  | Status       | Details                                                                                     |
+| ------------------------- | ------------ | ------------------------------------------------------------------------------------------- |
+| **Frontend Architecture** | 🟡 Good      | Well-structured with feature-based organization; needs error boundaries & perf optimization |
+| **Backend/Supabase**      | 🟡 Partial   | Core schema complete; Edge Functions 60% done; RLS policies solid                           |
+| **Type Safety**           | 🟢 Excellent | Strong TypeScript usage; minimal `any` types; proper interfaces throughout                  |
+| **Testing**               | 🟡 Moderate  | 12 test suites for trading logic; missing component tests & E2E coverage                    |
+| **Accessibility**         | 🟡 Good      | Partial ARIA labels; keyboard nav working; needs comprehensive audit                        |
+| **Performance**           | 🟡 Good      | Code-splitting implemented; lazy loading in place; large Admin page (643 lines)             |
+| **Security**              | 🟡 Good      | No hardcoded secrets detected; proper auth flows; needs penetration review                  |
+| **Documentation**         | 🟢 Excellent | Comprehensive inline docs; PRD well-detailed; architecture clear                            |
 
 **Overall Score: 72/100 (Production-Ready with Critical Issues)**
 
@@ -107,6 +107,7 @@ Low-Priority Issues:       🟢 8
 ### Critical Issues Requiring Immediate Attention 🚨
 
 #### 1. **Missing Error Boundaries** (P0 - Blocks Production)
+
 - **Issue:** No React error boundaries implemented across app
 - **Impact:** Single component crash takes down entire app
 - **Location:** `src/App.tsx`, major pages
@@ -114,6 +115,7 @@ Low-Priority Issues:       🟢 8
 - **Effort:** 4 hours
 
 #### 2. **Incomplete Order Execution** (P0 - Blocks Core Functionality)
+
 - **Issue:** Order placement form exists but backend execution incomplete
 - **Location:** `src/components/trading/OrderForm.tsx`, Edge Function `execute-order`
 - **Problem:** Form validates but orders aren't actually executed; no fills recorded
@@ -122,6 +124,7 @@ Low-Priority Issues:       🟢 8
 - **Effort:** 20-30 hours
 
 #### 3. **Broken Position P&L Calculations** (P0 - Blocks Portfolio)
+
 - **Issue:** Position P&L shows incorrect values; formula logic incomplete
 - **Location:** `src/lib/trading/pnlCalculation.ts`
 - **Problem:** Real-time updates not propagating; calculations use stale prices
@@ -130,6 +133,7 @@ Low-Priority Issues:       🟢 8
 - **Effort:** 15-20 hours
 
 #### 4. **Missing Margin Call System** (P0 - Risk Management Broken)
+
 - **Issue:** Margin monitoring implemented but liquidation engine incomplete
 - **Location:** `src/lib/trading/liquidationEngine.ts`
 - **Problem:** No automatic position closure when margin < threshold
@@ -138,6 +142,7 @@ Low-Priority Issues:       🟢 8
 - **Effort:** 25-30 hours
 
 #### 5. **Unsubscribed Realtime Channels** (P0 - Memory Leak)
+
 - **Issue:** Supabase Realtime subscriptions not properly cleaned up
 - **Location:** `src/hooks/usePositionUpdate.tsx`, `useOrderExecution.tsx`
 - **Problem:** Each component subscribes but doesn't unsubscribe on unmount
@@ -146,6 +151,7 @@ Low-Priority Issues:       🟢 8
 - **Effort:** 6-8 hours
 
 #### 6. **Console Logs in Production Code** (P0 - Security/Performance)
+
 - **Issue:** 30+ console.log/console.error statements left in source
 - **Location:** Scattered across hooks and components
 - **Problem:** Exposes internal logic; slows production app; should be removed
@@ -177,6 +183,7 @@ components/
 ```
 
 **Assessment:**
+
 - ✅ **Well-organized** by feature; easy to locate components
 - ✅ **Reusable UI library** using shadcn-ui (100+ components)
 - ⚠️ **Some components over-sized**: Admin.tsx (643 lines), Trade.tsx (104 lines)
@@ -184,6 +191,7 @@ components/
 - ❌ **No error boundaries**: Missing error boundary components
 
 **Recommendations:**
+
 1. Split `Admin.tsx` into smaller feature modules (KYC, Risk, Users)
 2. Add `React.memo()` to frequently re-rendering cells (prices, P&L)
 3. Implement error boundary HOC wrapper for all routes
@@ -192,6 +200,7 @@ components/
 ### 1.2 Prop Drilling & State Management
 
 **Analysis:**
+
 - ✅ Proper use of React Context for global state (NotificationContext)
 - ✅ React Query for server state management
 - ⚠️ Some prop drilling 3+ levels deep (observed in trading panel)
@@ -213,6 +222,7 @@ components/
 ### 1.3 TypeScript & Type Safety
 
 **Assessment:**
+
 - ✅ **Excellent typing** across components
 - ✅ **No explicit `any` in 95%** of codebase
 - ⚠️ **3 instances of `as any`** in trading components
@@ -229,9 +239,11 @@ components/
 ### 1.4 Accessibility (WCAG 2.1 Level AA)
 
 **Assessment:**
+
 - 🟡 **Partial implementation** of accessibility features
 
 **What's Present:**
+
 - ✅ Semantic HTML (nav, section, article tags used)
 - ✅ aria-label on nav, buttons, social links
 - ✅ aria-hidden on decorative icons
@@ -239,6 +251,7 @@ components/
 - ✅ Keyboard navigation in dropdowns/modals
 
 **What's Missing:**
+
 - ❌ No role attributes on custom components
 - ❌ Missing alt text on trading charts
 - ❌ No color contrast verification
@@ -246,12 +259,14 @@ components/
 - ❌ No loading state ARIA announcements
 
 **Critical Gaps:**
+
 1. TradingView chart component missing aria-label
 2. Position table cells not announced as table headers
 3. Order form inputs need associated labels + help text
 4. Real-time updates should announce via aria-live region
 
 **Recommendations:**
+
 1. Add `role="table"` to position/order tables
 2. Add `aria-live="polite"` to price update regions
 3. Add `aria-label` to all interactive elements
@@ -275,6 +290,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 ```
 
 **Assessment:**
+
 - ✅ Code-splitting configured for large libraries
 - ✅ All pages lazy-loaded (reduce initial JS)
 - ⚠️ No image optimization documented
@@ -282,11 +298,13 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 - ⚠️ Large `Admin.tsx` may not chunk efficiently
 
 **Metrics:**
+
 - **Initial Bundle:** ~250KB (estimated, to be verified)
 - **Lazy Routes:** ~8-12KB each
 - **Charts Chunk:** ~120KB (heavyweights: lightweight-charts, recharts)
 
 **Optimization Opportunities:**
+
 1. Run `npm run build && ANALYZE=true npm run build` to profile bundle
 2. Lazy-load chart component only when needed
 3. Tree-shake unused shadcn-ui components
@@ -296,6 +314,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 ### 1.6 UI/UX & TailwindCSS
 
 **Assessment:**
+
 - ✅ Consistent TailwindCSS utility usage
 - ✅ Dark mode support enabled (`darkMode: ["class"]`)
 - ✅ Proper responsive design (sm:, md:, lg: breakpoints)
@@ -314,6 +333,7 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
 ```
 
 **Recommendations:**
+
 1. Document component library in Storybook
 2. Create utility components for common patterns
 3. Audit color usage for WCAG AA contrast compliance
@@ -326,6 +346,7 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
 ### 2.1 Database Schema & Relationships
 
 **Assessment:**
+
 - ✅ 18+ core tables with proper design
 - ✅ Referential integrity enforced
 - ✅ Composite indexes for query performance
@@ -335,22 +356,23 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
 
 **Tables Overview:**
 
-| Table | Purpose | Status | Issues |
-|-------|---------|--------|--------|
-| profiles | User financials | ✅ Complete | Needs audit trigger |
-| orders | Trading orders | ✅ Complete | Status enum should have default |
-| positions | Open/closed trades | ✅ Complete | Missing index on (user_id, status, created_at) |
-| fills | Execution records | ✅ Complete | Good |
-| ledger | Transaction history | ✅ Complete | Consider partitioning for scale |
-| kyc_documents | Document uploads | ✅ Complete | Missing retention policy |
-| notifications | User alerts | ✅ Complete | Missing auto-cleanup for old records |
-| copy_relationships | Social trading | ⚠️ Partial | Logic incomplete |
-| margin_calls | Liquidation events | ⚠️ Partial | Missing event trigger |
-| audit_logs | Compliance trail | ⚠️ Partial | Not fully utilized |
+| Table              | Purpose             | Status      | Issues                                         |
+| ------------------ | ------------------- | ----------- | ---------------------------------------------- |
+| profiles           | User financials     | ✅ Complete | Needs audit trigger                            |
+| orders             | Trading orders      | ✅ Complete | Status enum should have default                |
+| positions          | Open/closed trades  | ✅ Complete | Missing index on (user_id, status, created_at) |
+| fills              | Execution records   | ✅ Complete | Good                                           |
+| ledger             | Transaction history | ✅ Complete | Consider partitioning for scale                |
+| kyc_documents      | Document uploads    | ✅ Complete | Missing retention policy                       |
+| notifications      | User alerts         | ✅ Complete | Missing auto-cleanup for old records           |
+| copy_relationships | Social trading      | ⚠️ Partial  | Logic incomplete                               |
+| margin_calls       | Liquidation events  | ⚠️ Partial  | Missing event trigger                          |
+| audit_logs         | Compliance trail    | ⚠️ Partial  | Not fully utilized                             |
 
 **Critical Schema Issues:**
 
 1. **Missing Composite Indexes:**
+
    ```sql
    -- MISSING: Will cause N+1 queries
    CREATE INDEX idx_positions_user_status ON positions(user_id, status, created_at DESC);
@@ -358,6 +380,7 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
    ```
 
 2. **No Soft Delete Pattern:**
+
    ```sql
    -- Consider adding deleted_at for compliance retention
    ALTER TABLE orders ADD COLUMN deleted_at TIMESTAMP DEFAULT NULL;
@@ -374,19 +397,20 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
 
 **Overview:** 10+ Edge Functions partially implemented
 
-| Function | Status | Completion | Issues |
-|----------|--------|------------|--------|
-| execute-order | 🟡 60% | Validation done, execution incomplete | Order not inserted; no fills created |
-| close-position | 🟡 50% | Logic started, integration missing | Position not closed atomically |
-| update-positions | 🟡 40% | Skeleton only | P&L not calculated |
-| market-data | ✅ 80% | Finnhub integration working | Caching needs improvement |
-| margin-call-check | ❌ 10% | Started, incomplete | No liquidation execution |
-| liquidate-position | ❌ 5% | Barely started | Critical blocker |
-| process-deposits | ⚠️ 30% | Payment provider logic missing | NowPayments.io integration incomplete |
+| Function           | Status | Completion                            | Issues                                |
+| ------------------ | ------ | ------------------------------------- | ------------------------------------- |
+| execute-order      | 🟡 60% | Validation done, execution incomplete | Order not inserted; no fills created  |
+| close-position     | 🟡 50% | Logic started, integration missing    | Position not closed atomically        |
+| update-positions   | 🟡 40% | Skeleton only                         | P&L not calculated                    |
+| market-data        | ✅ 80% | Finnhub integration working           | Caching needs improvement             |
+| margin-call-check  | ❌ 10% | Started, incomplete                   | No liquidation execution              |
+| liquidate-position | ❌ 5%  | Barely started                        | Critical blocker                      |
+| process-deposits   | ⚠️ 30% | Payment provider logic missing        | NowPayments.io integration incomplete |
 
 **Critical Edge Function Issues:**
 
 1. **execute-order incompleteness:**
+
    ```typescript
    // Missing atomic transaction wrapper
    // Should:
@@ -399,6 +423,7 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
    ```
 
 2. **No idempotency keys:**
+
    ```typescript
    // Duplicate request handling missing
    // Should check idempotency_key before inserting order
@@ -413,6 +438,7 @@ className="flex items-center justify-between px-4 py-2 rounded-lg border border-
 ### 2.3 Row-Level Security (RLS) Policies
 
 **Assessment:**
+
 - ✅ RLS enabled on all sensitive tables
 - ✅ User isolation policies in place
 - ✅ Admin role verification working
@@ -437,6 +463,7 @@ USING (auth.jwt() ->> 'role' = 'admin');
 ```
 
 **Recommendations:**
+
 1. Add role-based scoping (not just admin)
 2. Add audit log RLS for data lineage
 3. Add IP-based restrictions for sensitive ops
@@ -445,6 +472,7 @@ USING (auth.jwt() ->> 'role' = 'admin');
 ### 2.4 Realtime Subscriptions
 
 **Assessment:**
+
 - ✅ Realtime channels configured
 - ✅ Broadcasting to positions, orders, notifications
 - ⚠️ **CRITICAL:** Subscriptions not cleaned up on unmount
@@ -466,12 +494,13 @@ useEffect(() => {
 useEffect(() => {
   const channel = supabase.channel('positions');
   channel.on('postgres_changes', {...}).subscribe();
-  
+
   return () => channel.unsubscribe(); // Cleanup!
 }, []);
 ```
 
 **Affected Files:**
+
 - `src/hooks/usePositionUpdate.tsx` (line 228)
 - `src/hooks/useOrderExecution.tsx` (implicit subscription)
 - `src/contexts/NotificationContext.tsx` (line 125)
@@ -479,6 +508,7 @@ useEffect(() => {
 ### 2.5 API Layer & Error Handling
 
 **Assessment:**
+
 - ✅ REST API structure clear
 - ✅ Request validation via Zod
 - ⚠️ Inconsistent error response format
@@ -490,22 +520,23 @@ useEffect(() => {
 ```typescript
 // ❌ INCONSISTENT: Different error formats
 // In execute-order:
-return { error: 'Insufficient margin' };
+return { error: "Insufficient margin" };
 
 // In update-position:
-return { data: null, error: { message: 'Invalid position' } };
+return { data: null, error: { message: "Invalid position" } };
 
 // ✅ SHOULD BE:
-return { 
-  error: { 
-    code: 'INSUFFICIENT_MARGIN', 
-    message: 'Required margin exceeds free margin',
-    statusCode: 400 
-  } 
+return {
+  error: {
+    code: "INSUFFICIENT_MARGIN",
+    message: "Required margin exceeds free margin",
+    statusCode: 400,
+  },
 };
 ```
 
 **Recommendations:**
+
 1. Create standardized error response type
 2. Add centralized error logger (Sentry integration)
 3. Implement exponential backoff for retries
@@ -530,6 +561,7 @@ Examples:
 ```
 
 **Impact:**
+
 - 🔒 **Security:** Internal logic exposed to users (console inspection)
 - 📉 **Performance:** Console I/O can slow app (especially on low-end devices)
 - ⚠️ **Professionalism:** Indicates incomplete development
@@ -544,7 +576,9 @@ Audit found 0 error boundaries and sparse try-catch coverage:
 // ❌ MISSING: No error boundary
 const Trade = () => {
   return (
-    <TradingPanel>  // Crash here → entire app down
+    <TradingPanel>
+      {" "}
+      // Crash here → entire app down
       <OrderForm />
       <PositionTable />
     </TradingPanel>
@@ -567,6 +601,7 @@ const Trade = () => {
 **Problem 3: Unused Dependencies**
 
 Audit identified potential unused packages. Recommend:
+
 ```bash
 npm audit --audit-level=moderate
 npm dedupe  # Remove duplicate dependencies
@@ -575,6 +610,7 @@ npm dedupe  # Remove duplicate dependencies
 ### 3.2 Security Vulnerabilities
 
 **Assessment:**
+
 - 🟢 **No hardcoded secrets found**
 - 🟢 **Auth flows properly implemented**
 - 🟢 **XSS mitigation via React escaping**
@@ -585,6 +621,7 @@ npm dedupe  # Remove duplicate dependencies
 **Critical Security Review Findings:**
 
 1. **Insufficient Input Validation**
+
    ```typescript
    // ❌ WEAK: Trusts symbol without validation
    const executeOrder = async (symbol: string) => {
@@ -607,6 +644,7 @@ npm dedupe  # Remove duplicate dependencies
    - Should add audit trail for compliance
 
 **Recommendations:**
+
 1. Implement centralized request validator
 2. Add IP-based rate limiting (100 req/min per IP)
 3. Add auth-based rate limiting (1000 req/min per user)
@@ -624,6 +662,7 @@ npm dedupe  # Remove duplicate dependencies
 ```
 
 **Recommendation:** Break Admin.tsx into:
+
 - AdminUsersPanel (user management)
 - AdminKycPanel (KYC reviews)
 - AdminRiskPanel (risk monitoring)
@@ -635,13 +674,22 @@ Position price cells re-render on every parent update:
 ```tsx
 // ❌ BAD: Re-renders all rows on any parent state change
 const PositionRow = ({ position, price }) => {
-  return <tr><td>{price}</td></tr>;
+  return (
+    <tr>
+      <td>{price}</td>
+    </tr>
+  );
 };
 
 // ✅ GOOD: Only re-renders if position/price changes
 const PositionRow = React.memo(
-  ({ position, price }) => <tr><td>{price}</td></tr>,
-  (prev, next) => prev.price === next.price && prev.position.id === next.position.id
+  ({ position, price }) => (
+    <tr>
+      <td>{price}</td>
+    </tr>
+  ),
+  (prev, next) =>
+    prev.price === next.price && prev.position.id === next.position.id,
 );
 ```
 
@@ -654,9 +702,12 @@ const handleSubmit = (data) => {
 };
 
 // ✅ GOOD: Memoized function
-const handleSubmit = useCallback((data) => {
-  executeOrder(data);
-}, [executeOrder]);
+const handleSubmit = useCallback(
+  (data) => {
+    executeOrder(data);
+  },
+  [executeOrder],
+);
 ```
 
 ### 3.4 Testing Coverage
@@ -695,6 +746,7 @@ Integration Tests:      ⚠️ 2 test files
    - UI regressions not detected
 
 **Recommendations:**
+
 1. Add 50+ component tests (target 80% coverage)
 2. Add 10+ E2E tests for critical flows
 3. Add visual regression tests (Percy or Chromatic)
@@ -706,51 +758,52 @@ Integration Tests:      ⚠️ 2 test files
 
 ### 4.1 Requirements Mapping
 
-| Requirement | Component | Status | Notes |
-|-------------|-----------|--------|-------|
-| **Core Trading** | | | |
-| Multi-asset support (200 assets) | AssetList, orderMatching | ✅ 100% | All 200 assets configured |
-| Market orders | OrderForm, execute-order | ⚠️ 80% | Form ready, execution incomplete |
-| Limit orders | OrderForm, orderMatching | ⚠️ 60% | Form exists, matching logic partial |
-| Stop orders | OrderForm, orderMatching | ⚠️ 40% | Form partial, matching not done |
-| Stop-Limit orders | OrderForm, orderMatching | ❌ 0% | Not started |
-| OCO orders | OrderForm | ❌ 0% | Not started |
-| **Portfolio Management** | | | |
-| Real-time position tracking | usePositionUpdate | ⚠️ 70% | Subscriptions leak memory |
-| P&L calculations | pnlCalculation | ⚠️ 60% | Formula done, realtime broken |
-| Margin calculations | marginCalculations | ✅ 100% | Comprehensive implementation |
-| Liquidation engine | liquidationEngine | ⚠️ 30% | Detection done, execution missing |
-| **Risk Management** | | | |
-| Margin calls | marginCallDetection | ✅ 90% | Detection working, UI missing |
-| Stop loss execution | liquidationEngine | ⚠️ 50% | Logic present, execution incomplete |
-| Take profit execution | positionClosureEngine | ⚠️ 50% | Logic present, execution incomplete |
-| Risk dashboard | AdminRiskDashboard | ⚠️ 60% | UI present, realtime data missing |
-| **Social Trading** | | | |
-| Verified trader network | LeaderProfile | ❌ 0% | Not started |
-| Copy trading | CopyTradingPanel | ❌ 0% | Not started |
-| Leaderboard | Leaderboard | ⚠️ 30% | Static version only |
-| Performance tracking | PerformanceMetrics | ⚠️ 40% | Calculations done, UI partial |
-| **KYC/Compliance** | | | |
-| Document upload | KycForm | ✅ 85% | Upload working, validation partial |
-| Document review | KycAdminDashboard | ⚠️ 70% | UI done, approval flow incomplete |
-| Identity verification | KycForm | ⚠️ 50% | Manual only, no API integration |
-| AML screening | KycFlow | ❌ 0% | Not started |
-| GDPR compliance | DataExport | ⚠️ 50% | Partial implementation |
-| **Authentication** | | | |
-| Email/password signup | Register | ✅ 95% | Working, needs email verification |
-| Social login (Google/Apple/Microsoft) | Register, Login | ✅ 85% | Configured, not tested |
-| Session management | useAuth | ✅ 95% | JWT handling working |
-| 2FA / MFA | Auth | ❌ 0% | Not started (Phase 2) |
-| **UI/UX** | | | |
-| Real-time price updates | PriceDisplay | ⚠️ 70% | Updates working, stale data issues |
-| Order book display | OrderBook | ⚠️ 50% | Skeleton present, data missing |
-| Chart integration | TradingChart | ✅ 90% | TradingView integrated, needs data |
-| Mobile responsive | All | ✅ 85% | Mostly responsive, needs testing |
-| Dark mode | ThemeToggle | ✅ 100% | Fully implemented |
+| Requirement                           | Component                | Status  | Notes                               |
+| ------------------------------------- | ------------------------ | ------- | ----------------------------------- |
+| **Core Trading**                      |                          |         |                                     |
+| Multi-asset support (200 assets)      | AssetList, orderMatching | ✅ 100% | All 200 assets configured           |
+| Market orders                         | OrderForm, execute-order | ⚠️ 80%  | Form ready, execution incomplete    |
+| Limit orders                          | OrderForm, orderMatching | ⚠️ 60%  | Form exists, matching logic partial |
+| Stop orders                           | OrderForm, orderMatching | ⚠️ 40%  | Form partial, matching not done     |
+| Stop-Limit orders                     | OrderForm, orderMatching | ❌ 0%   | Not started                         |
+| OCO orders                            | OrderForm                | ❌ 0%   | Not started                         |
+| **Portfolio Management**              |                          |         |                                     |
+| Real-time position tracking           | usePositionUpdate        | ⚠️ 70%  | Subscriptions leak memory           |
+| P&L calculations                      | pnlCalculation           | ⚠️ 60%  | Formula done, realtime broken       |
+| Margin calculations                   | marginCalculations       | ✅ 100% | Comprehensive implementation        |
+| Liquidation engine                    | liquidationEngine        | ⚠️ 30%  | Detection done, execution missing   |
+| **Risk Management**                   |                          |         |                                     |
+| Margin calls                          | marginCallDetection      | ✅ 90%  | Detection working, UI missing       |
+| Stop loss execution                   | liquidationEngine        | ⚠️ 50%  | Logic present, execution incomplete |
+| Take profit execution                 | positionClosureEngine    | ⚠️ 50%  | Logic present, execution incomplete |
+| Risk dashboard                        | AdminRiskDashboard       | ⚠️ 60%  | UI present, realtime data missing   |
+| **Social Trading**                    |                          |         |                                     |
+| Verified trader network               | LeaderProfile            | ❌ 0%   | Not started                         |
+| Copy trading                          | CopyTradingPanel         | ❌ 0%   | Not started                         |
+| Leaderboard                           | Leaderboard              | ⚠️ 30%  | Static version only                 |
+| Performance tracking                  | PerformanceMetrics       | ⚠️ 40%  | Calculations done, UI partial       |
+| **KYC/Compliance**                    |                          |         |                                     |
+| Document upload                       | KycForm                  | ✅ 85%  | Upload working, validation partial  |
+| Document review                       | KycAdminDashboard        | ⚠️ 70%  | UI done, approval flow incomplete   |
+| Identity verification                 | KycForm                  | ⚠️ 50%  | Manual only, no API integration     |
+| AML screening                         | KycFlow                  | ❌ 0%   | Not started                         |
+| GDPR compliance                       | DataExport               | ⚠️ 50%  | Partial implementation              |
+| **Authentication**                    |                          |         |                                     |
+| Email/password signup                 | Register                 | ✅ 95%  | Working, needs email verification   |
+| Social login (Google/Apple/Microsoft) | Register, Login          | ✅ 85%  | Configured, not tested              |
+| Session management                    | useAuth                  | ✅ 95%  | JWT handling working                |
+| 2FA / MFA                             | Auth                     | ❌ 0%   | Not started (Phase 2)               |
+| **UI/UX**                             |                          |         |                                     |
+| Real-time price updates               | PriceDisplay             | ⚠️ 70%  | Updates working, stale data issues  |
+| Order book display                    | OrderBook                | ⚠️ 50%  | Skeleton present, data missing      |
+| Chart integration                     | TradingChart             | ✅ 90%  | TradingView integrated, needs data  |
+| Mobile responsive                     | All                      | ✅ 85%  | Mostly responsive, needs testing    |
+| Dark mode                             | ThemeToggle              | ✅ 100% | Fully implemented                   |
 
 ### 4.2 PRD Feature Coverage
 
 **Fully Implemented (✅ 90-100%):**
+
 1. Multi-asset CFD catalog (200 assets)
 2. Real-time price streaming (Finnhub integration)
 3. TradingView chart integration
@@ -763,6 +816,7 @@ Integration Tests:      ⚠️ 2 test files
 10. Slippage simulation
 
 **Partially Implemented (⚠️ 40-80%):**
+
 1. Order execution (form done, backend 60%)
 2. Position P&L tracking (calculations done, realtime 60%)
 3. Liquidation engine (detection 90%, execution 30%)
@@ -772,6 +826,7 @@ Integration Tests:      ⚠️ 2 test files
 7. Social trading basics (structure 40%, logic 0%)
 
 **Not Started (❌ <40%):**
+
 1. Verified trader network (0%)
 2. Copy trading execution (0%)
 3. AML/KYC screening (0%)
@@ -787,26 +842,26 @@ Integration Tests:      ⚠️ 2 test files
 
 ### 🚨 P0 - Deployment Blockers (Must Fix Before MVP)
 
-| Issue | Severity | Component | Impact | Fix Time |
-|-------|----------|-----------|--------|----------|
-| No error boundaries | 🚨 Critical | App.tsx, route pages | App crash → downtime | 4h |
-| Order execution broken | 🚨 Critical | execute-order Edge Function | Can't trade | 25h |
-| Position P&L incorrect | 🚨 Critical | pnlCalculation + realtime | Wrong portfolio value | 20h |
-| Memory leaks (Realtime) | 🚨 Critical | usePositionUpdate hook | Connection exhaustion | 8h |
-| Liquidation incomplete | 🚨 Critical | liquidationEngine | Account insolvency | 30h |
-| Console logs in prod | 🚨 Critical | Multiple files | Security leak | 4h |
-| **TOTAL** | | | **Block MVP** | **~91h** |
+| Issue                   | Severity    | Component                   | Impact                | Fix Time |
+| ----------------------- | ----------- | --------------------------- | --------------------- | -------- |
+| No error boundaries     | 🚨 Critical | App.tsx, route pages        | App crash → downtime  | 4h       |
+| Order execution broken  | 🚨 Critical | execute-order Edge Function | Can't trade           | 25h      |
+| Position P&L incorrect  | 🚨 Critical | pnlCalculation + realtime   | Wrong portfolio value | 20h      |
+| Memory leaks (Realtime) | 🚨 Critical | usePositionUpdate hook      | Connection exhaustion | 8h       |
+| Liquidation incomplete  | 🚨 Critical | liquidationEngine           | Account insolvency    | 30h      |
+| Console logs in prod    | 🚨 Critical | Multiple files              | Security leak         | 4h       |
+| **TOTAL**               |             |                             | **Block MVP**         | **~91h** |
 
 ### 🔴 P1 - High Priority (MVP Required)
 
-| Issue | Component | Impact | Fix Time |
-|-------|-----------|--------|----------|
-| Stop loss/take profit not executing | positionClosureEngine | Positions can't auto-close | 15h |
-| KYC approval workflow incomplete | KycAdminPanel | Can't approve users | 12h |
-| Margin call alerts missing | RiskAlert component | Users not warned | 8h |
-| Duplicate realtime subscriptions | usePositionUpdate | Stale/conflicting updates | 6h |
-| Order form validation incomplete | OrderForm | Invalid orders accepted | 8h |
-| **TOTAL** | | **MVP incomplete** | **~49h** |
+| Issue                               | Component             | Impact                     | Fix Time |
+| ----------------------------------- | --------------------- | -------------------------- | -------- |
+| Stop loss/take profit not executing | positionClosureEngine | Positions can't auto-close | 15h      |
+| KYC approval workflow incomplete    | KycAdminPanel         | Can't approve users        | 12h      |
+| Margin call alerts missing          | RiskAlert component   | Users not warned           | 8h       |
+| Duplicate realtime subscriptions    | usePositionUpdate     | Stale/conflicting updates  | 6h       |
+| Order form validation incomplete    | OrderForm             | Invalid orders accepted    | 8h       |
+| **TOTAL**                           |                       | **MVP incomplete**         | **~49h** |
 
 ---
 
@@ -891,6 +946,7 @@ Integration Tests:      ⚠️ 2 test files
 ### Immediate Actions (This Week)
 
 1. **Fix Critical Blockers (Priority Order)**
+
    ```
    1. Add error boundaries (4h)
    2. Remove console logs (4h)
@@ -898,6 +954,7 @@ Integration Tests:      ⚠️ 2 test files
    4. Complete order execution (25h)
    5. Fix P&L calculations (20h)
    ```
+
    **Total: 61 hours → 2 week sprint**
 
 2. **Set Up Monitoring**

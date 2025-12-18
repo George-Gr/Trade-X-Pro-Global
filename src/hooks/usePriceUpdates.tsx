@@ -21,7 +21,7 @@ interface UsePriceUpdatesOptions {
   enabled?: boolean;
 }
 
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from "@/lib/supabaseBrowserClient";
 
 const CACHE_DURATION_MS = 1000; // Cache prices for 1 second to avoid excessive API calls
 
@@ -30,13 +30,13 @@ const priceCache = new Map<string, { data: PriceData; timestamp: number }>();
 
 const mapSymbolToFinnhub = (symbol: string): string => {
   // Map common trading symbols to Finnhub format
-  if (symbol.length === 6 && !symbol.includes(':')) {
+  if (symbol.length === 6 && !symbol.includes(":")) {
     // Forex pair (e.g., EURUSD -> OANDA:EUR_USD)
     const base = symbol.substring(0, 3);
     const quote = symbol.substring(3, 6);
     return `OANDA:${base}_${quote}`;
   }
-  
+
   // For stocks, commodities, etc., pass through as-is
   // Finnhub expects format like "AAPL" for stocks, "BINANCE:BTCUSDT" for crypto
   return symbol;
@@ -45,16 +45,16 @@ const mapSymbolToFinnhub = (symbol: string): string => {
 const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
   const now = Date.now();
   const cached = priceCache.get(symbol);
-  
+
   // Return cached data if still valid
-  if (cached && (now - cached.timestamp) < CACHE_DURATION_MS) {
+  if (cached && now - cached.timestamp < CACHE_DURATION_MS) {
     return cached.data;
   }
 
   try {
     const finnhubSymbol = mapSymbolToFinnhub(symbol);
-    const { data, error } = await supabase.functions.invoke('get-stock-price', {
-      body: { symbol: finnhubSymbol }
+    const { data, error } = await supabase.functions.invoke("get-stock-price", {
+      body: { symbol: finnhubSymbol },
     });
 
     if (error || !data) {
@@ -110,7 +110,7 @@ export const usePriceUpdates = ({
 
     const updatePrices = async () => {
       try {
-        const pricePromises = symbols.map(symbol => fetchPriceData(symbol));
+        const pricePromises = symbols.map((symbol) => fetchPriceData(symbol));
         const results = await Promise.all(pricePromises);
 
         const newPrices = new Map<string, PriceData>();
@@ -125,7 +125,7 @@ export const usePriceUpdates = ({
         setIsLoading(false);
       } catch (err) {
         // Price update error - will retry next interval
-        setError(err instanceof Error ? err.message : 'Failed to fetch prices');
+        setError(err instanceof Error ? err.message : "Failed to fetch prices");
         setIsLoading(false);
       }
     };
@@ -148,7 +148,7 @@ export const usePriceUpdates = ({
     if (priceData) {
       const now = Date.now();
       // Mark as stale if price is older than intervalMs + 500ms
-      const isStale = (now - priceData.timestamp) > (intervalMs + 500);
+      const isStale = now - priceData.timestamp > intervalMs + 500;
       return { ...priceData, isStale };
     }
     return null;
@@ -157,7 +157,7 @@ export const usePriceUpdates = ({
   const refreshPrice = async (symbol: string) => {
     const priceData = await fetchPriceData(symbol);
     if (priceData) {
-      setPrices(prev => new Map(prev).set(symbol, priceData));
+      setPrices((prev) => new Map(prev).set(symbol, priceData));
     }
   };
 

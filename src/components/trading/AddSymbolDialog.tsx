@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +31,7 @@ interface AddSymbolDialogProps {
 
 /**
  * AddSymbolDialog Component
- * 
+ *
  * Dialog for adding a symbol to the active watchlist.
  * Extracted to reduce main component size and improve reusability.
  */
@@ -50,8 +56,8 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           aria-label="Add symbol to watchlist"
         >
@@ -75,7 +81,9 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-xs text-muted-foreground">Popular Symbols</Label>
+            <Label className="text-xs text-muted-foreground">
+              Popular Symbols
+            </Label>
             <div className="grid grid-cols-2 gap-4">
               {POPULAR_SYMBOLS.map((s) => (
                 <Button
@@ -85,7 +93,7 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
                   onClick={() => setSymbol(s.symbol)}
                   className={cn(
                     "justify-start text-xs",
-                    symbol === s.symbol && "border-primary"
+                    symbol === s.symbol && "border-primary",
                   )}
                 >
                   {s.symbol}
@@ -93,8 +101,8 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
               ))}
             </div>
           </div>
-          <Button 
-            onClick={handleAdd} 
+          <Button
+            onClick={handleAdd}
             className="w-full"
             disabled={isLoading || !symbol.trim()}
           >

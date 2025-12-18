@@ -13,24 +13,39 @@
     "vscode": {
       "extensions": [
         "GitHub.copilot",
+        "GitHub.copilot-chat",
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "dbaeumer.vscode-eslint",
         "Vue.volar"
       ],
       "settings": {
-        "typescript.tsserver.maxMemory": 4096,
+        "typescript.tsserver.maxTsServerMemory": 3072,
+        "typescript.tsserver.enableTracing": false,
+        "typescript.tsserver.logVerbosity": "off",
         "typescript.enablePromptUseWorkspaceTsdk": true,
-        // Enable Copilot Raptor mini (Preview) in Codespaces/devcontainer environment
-        "github.copilot.experimental.raptorMiniEnabled": true,
-        "github.copilot.experimental.raptorMiniForAllClients": true,
-        "github.copilot.model": "raptor-mini",
-        // Fix ESLint duplicate diagnostic collection
-        "eslint.lintTask.enable": true,
-        "eslint.onIgnoredFiles": "off",
-        // Fix chatParticipant error with claude-code
-        "github.copilot.chat.experimental.agents": false,
-        "github.copilot.experimental.restrictedAgent": false
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "typescript.preferGoToSourceDefinition": true,
+        "typescript.surveys.enabled": false,
+        "github.copilot.enable": {
+          "*": true,
+          "plaintext": false,
+          "markdown": false
+        },
+        "github.copilot.chat.agent": true,
+        "github.copilot.chat.codesearch": true,
+        "github.copilot.chat.languageContext.typescript": "smart",
+        "github.copilot.chat.languageContext.references": "smart",
+        "github.copilot.chat.monitoringLevel": "standard",
+        "github.copilot.chat.newWorkspace.useContext7": true,
+        "github.copilot.chat.tools.memory": true,
+        "github.copilot.chat.contextRelevancy": "medium",
+        "eslint.enable": true,
+        "eslint.run": "onSave",
+        "eslint.format.enable": true,
+        "eslint.codeActionsOnSave.mode": "all",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
       }
     }
   },

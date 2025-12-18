@@ -27,7 +27,10 @@ export function RiskManagementLoading() {
           <CardContent>
             <div className="space-y-4">
               {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="flex items-center space-x-3 p-4 border border-border/50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center space-x-3 p-4 border border-border/50 rounded-lg"
+                >
                   <Skeleton variant="avatarSm" />
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center space-x-2">

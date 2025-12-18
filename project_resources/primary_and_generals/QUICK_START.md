@@ -7,6 +7,7 @@
 ## 🎯 Goal
 
 By the end of this guide (30 minutes), you'll:
+
 - ✅ Understand the project structure
 - ✅ Have development environment running
 - ✅ Know where to find information
@@ -17,6 +18,7 @@ By the end of this guide (30 minutes), you'll:
 ## Part 1: Environment Setup (10 minutes)
 
 ### Prerequisites
+
 - Node.js 18+ (`node --version`)
 - npm 9+ (`npm --version`)
 - Git installed (`git --version`)
@@ -96,16 +98,19 @@ docs/
 ### Three Key Files to Know
 
 #### 1. **DESIGN_SYSTEM.md** - The Design Blueprint
+
 What: Colors, typography, spacing, component guidelines  
 When: Reference when styling components  
 Example: "What sizes are buttons?" → Check DESIGN_SYSTEM.md
 
 #### 2. **COMPONENT_API.md** - Component Reference
+
 What: Complete specifications for each component  
 When: Building UI with components  
 Example: "How do I make a button disabled?" → Check COMPONENT_API.md
 
 #### 3. **STYLE_GUIDE.md** - Code Standards
+
 What: TypeScript, React, Tailwind, naming conventions  
 When: Writing code that follows project standards  
 Example: "How should I name files?" → Check STYLE_GUIDE.md
@@ -113,6 +118,7 @@ Example: "How should I name files?" → Check STYLE_GUIDE.md
 ### Quick Design System Rules
 
 **Colors** - Use CSS variables (never hardcode)
+
 ```tsx
 // ❌ WRONG
 <div style={{ color: '#FF0000' }}>Error</div>
@@ -122,6 +128,7 @@ Example: "How should I name files?" → Check STYLE_GUIDE.md
 ```
 
 **Spacing** - Use 4px/8px grid (via Tailwind)
+
 ```tsx
 // ❌ WRONG
 <div style={{ padding: '15px' }}>Content</div>
@@ -131,6 +138,7 @@ Example: "How should I name files?" → Check STYLE_GUIDE.md
 ```
 
 **Typography** - Use predefined scale
+
 ```tsx
 // ❌ WRONG
 <h1 style={{ fontSize: '30px' }}>Title</h1>
@@ -150,8 +158,8 @@ Example: "How should I name files?" → Check STYLE_GUIDE.md
 
 Design Questions
 └─ DESIGN_SYSTEM.md (colors, typography, spacing)
-   
-Component Questions  
+
+Component Questions
 └─ COMPONENT_API.md (props, usage examples, do's/don'ts)
 
 Code Style Questions
@@ -209,6 +217,7 @@ npm run preview         # Preview production build
 ## 🚀 Your First Task Ideas
 
 ### Task 1: Explore the Codebase (15 minutes)
+
 ```
 1. Open src/pages/ - Look at a page component
 2. Find the components it uses in src/components/
@@ -217,6 +226,7 @@ npm run preview         # Preview production build
 ```
 
 ### Task 2: Make a Small Style Change (20 minutes)
+
 ```
 1. Find a button in the app
 2. Check COMPONENT_API.md for button variants
@@ -225,6 +235,7 @@ npm run preview         # Preview production build
 ```
 
 ### Task 3: Add Component to Page (30 minutes)
+
 ```
 1. Pick a page in src/pages/
 2. Find a component you want to add in COMPONENT_API.md

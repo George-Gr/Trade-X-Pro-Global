@@ -22,7 +22,9 @@ export const useOrderTemplates = () => {
 
   const fetchTemplates = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data, error } = await supabase
@@ -45,9 +47,13 @@ export const useOrderTemplates = () => {
     }
   }, [toast]);
 
-  const createTemplate = async (template: Omit<OrderTemplate, "id" | "created_at">) => {
+  const createTemplate = async (
+    template: Omit<OrderTemplate, "id" | "created_at">,
+  ) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       const { data, error } = await supabase
@@ -79,7 +85,10 @@ export const useOrderTemplates = () => {
     }
   };
 
-  const updateTemplate = async (id: string, updates: Partial<OrderTemplate>) => {
+  const updateTemplate = async (
+    id: string,
+    updates: Partial<OrderTemplate>,
+  ) => {
     try {
       const { error } = await supabase
         .from("order_templates")
@@ -89,7 +98,7 @@ export const useOrderTemplates = () => {
       if (error) throw error;
 
       setTemplates((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
+        prev.map((t) => (t.id === id ? { ...t, ...updates } : t)),
       );
 
       toast({

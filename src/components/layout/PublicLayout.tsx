@@ -6,7 +6,7 @@ import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 const PublicLayoutInner = React.lazy(() => import("./PublicLayoutInner"));
 
 const PublicLayout = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<div style={{ minHeight: "200px", width: "100%" }} />}> 
+  <Suspense fallback={<div style={{ minHeight: "200px", width: "100%" }} />}>
     <PublicLayoutInner>
       <AutoBreadcrumb className="mb-4" />
       {children}

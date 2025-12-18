@@ -1,12 +1,12 @@
 /**
  * Subscription Manager
- * 
+ *
  * Centralized management of Supabase real-time subscriptions
  * Prevents memory leaks and ensures proper cleanup
  */
 
-import type { RealtimeChannel } from '@supabase/supabase-js';
-import { logger } from './logger';
+import type { RealtimeChannel } from "@supabase/supabase-js";
+import { logger } from "./logger";
 
 interface SubscriptionConfig {
   id: string;
@@ -130,9 +130,9 @@ class SubscriptionManager {
     for (const id of this.subscriptions.keys()) {
       this.unsubscribe(id);
     }
-    
+
     if (this.options.debugMode) {
-      logger.info('All subscriptions removed');
+      logger.info("All subscriptions removed");
     }
   }
 
@@ -163,14 +163,14 @@ class SubscriptionManager {
    */
   private cleanupIdle(): void {
     const now = Date.now();
-    
+
     for (const [id, config] of this.subscriptions.entries()) {
       const idleTime = now - config.lastActivity.getTime();
       if (idleTime > this.options.maxIdleTime) {
         this.unsubscribe(id);
         if (this.options.debugMode) {
           logger.info(`Cleaned up idle subscription: ${id}`, {
-            metadata: { idleTime: Math.round(idleTime / 1000) + 's' },
+            metadata: { idleTime: Math.round(idleTime / 1000) + "s" },
           });
         }
       }
@@ -182,7 +182,7 @@ class SubscriptionManager {
    */
   private cleanupOldest(): void {
     let oldest: SubscriptionConfig | null = null;
-    
+
     for (const config of this.subscriptions.values()) {
       if (!oldest || config.createdAt < oldest.createdAt) {
         oldest = config;
@@ -223,12 +223,17 @@ class SubscriptionManager {
    */
   getStatus(): {
     activeCount: number;
-    subscriptions: Array<{ id: string; table: string; age: number; idleTime: number }>;
+    subscriptions: Array<{
+      id: string;
+      table: string;
+      age: number;
+      idleTime: number;
+    }>;
   } {
     const now = Date.now();
     return {
       activeCount: this.subscriptions.size,
-      subscriptions: Array.from(this.subscriptions.values()).map(s => ({
+      subscriptions: Array.from(this.subscriptions.values()).map((s) => ({
         id: s.id,
         table: s.table,
         age: Math.round((now - s.createdAt.getTime()) / 1000),

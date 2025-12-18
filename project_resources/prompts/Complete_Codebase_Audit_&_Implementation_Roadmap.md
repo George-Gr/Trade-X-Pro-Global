@@ -1,14 +1,17 @@
 ---
 agent: agent
 ---
+
 # Complete Codebase Audit & Implementation Roadmap
 
 ## Context
+
 You are auditing a full-stack web application. Analyze the entire project holistically, considering frontend (React/Next.js), backend (APIs, databases), styling (Tailwind CSS), state management, routing, and deployment configuration.
 
 ## Phase 1: Comprehensive Codebase Audit
 
 ### Frontend Analysis
+
 - **Component Architecture**
   - Review all React components for structure, reusability, and best practices
   - Check for prop drilling, unnecessary re-renders, and missing memoization
@@ -28,6 +31,7 @@ You are auditing a full-stack web application. Analyze the entire project holist
   - Identify race conditions or stale data issues
 
 ### Backend & Integration Analysis
+
 - **API Layer**
   - Review all API endpoints and their implementations
   - Check error handling, validation, and response formats
@@ -47,6 +51,7 @@ You are auditing a full-stack web application. Analyze the entire project holist
   - Identify hardcoded values that should be configurable
 
 ### Code Quality & Security
+
 - **Quality Issues**
   - Unused imports, variables, or dead code
   - Console logs or debug statements left in production code
@@ -69,6 +74,7 @@ You are auditing a full-stack web application. Analyze the entire project holist
   - Slow-loading pages or components
 
 ### Testing & Documentation
+
 - Check test coverage and missing test cases
 - Review inline documentation and comments
 - Identify complex logic needing better explanation
@@ -77,7 +83,9 @@ You are auditing a full-stack web application. Analyze the entire project holist
 ## Phase 2: PRD Alignment Analysis
 
 ### Requirements Extraction
+
 From **PRD.md**, extract and categorize:
+
 - **User Stories**: List all defined user flows and acceptance criteria
 - **Features**: Core functionality vs. nice-to-have features
 - **Technical Requirements**: Performance targets, browser support, scalability needs
@@ -85,7 +93,9 @@ From **PRD.md**, extract and categorize:
 - **Business Rules**: Logic constraints, data validation rules, workflow requirements
 
 ### Gap Identification
+
 For each PRD requirement, determine:
+
 - ✅ **Fully Implemented**: Working as specified
 - ⚠️ **Partially Implemented**: Started but incomplete or buggy
 - ❌ **Not Implemented**: Missing entirely
@@ -98,6 +108,7 @@ Create a matrix mapping requirements to implementation status.
 Provide a comprehensive summary:
 
 ### Project Health Dashboard
+
 ```
 Overall Completion: [X%]
 Frontend Status: [X%] - [Brief assessment]
@@ -107,14 +118,17 @@ Critical Blockers: [Number]
 ```
 
 ### What's Working Well
+
 - List successfully implemented features
 - Highlight solid architectural decisions
 - Note good code patterns to maintain
 
 ### Critical Issues Requiring Immediate Attention
+
 Priority-ranked list of blockers preventing deployment or core functionality
 
 ### Technical Debt Summary
+
 - Major refactoring needed
 - Performance bottlenecks
 - Security vulnerabilities
@@ -125,7 +139,9 @@ Priority-ranked list of blockers preventing deployment or core functionality
 Structure tasks in **deployment-ready phases**:
 
 ### 🚨-phase-0-critical-fixes Critical Fixes (Block Deployment)
+
 **Task 0.1: Issue Title**
+
 - **Location**: `path/to/file.tsx` (lines X-Y)
 - **Problem**: Clear description of what's wrong
 - **Impact**: Why this blocks progress
@@ -133,28 +149,35 @@ Structure tasks in **deployment-ready phases**:
   1. Specific code change needed
   2. Files to create/modify
   3. Dependencies to install (if any)
-- **Code Example**: 
+- **Code Example**:
+
 ```typescript
-  // Show before and after code
+// Show before and after code
 ```
+
 - **Verification**: How to test the fix works
 - **Estimated Time**: \[X hours\]
 
 ### 🔴 Phase 1: Core Features (MVP Requirements)
+
 Follow the same task structure for each feature
 
 ### 🟡 Phase 2: Enhanced Functionality
+
 [Secondary features from PRD]
 
 ### 🟢 Phase 3: Polish & Optimization
+
 Performance, UX improvements, nice-to-haves
 
 ### 🔵 Phase 4: Future Enhancements
+
 Post-launch considerations
 
 ## Task Template (Use for Every Item)
 
 **Task Phase.Number: Clear Action Title**
+
 - **Status**: ❌ Not Started | 🔄 In Progress | ✅ Complete
 - **Priority**: 🚨 Critical | 🔴 High | 🟡 Medium | 🟢 Low
 - **Component/Module**: Specific file paths
@@ -180,6 +203,7 @@ Post-launch considerations
 ## Workflow & Best Practices
 
 ### Development Workflow
+
 1. **Before starting any task**:
    - Review dependencies
    - Check for conflicting changes
@@ -198,6 +222,7 @@ Post-launch considerations
    - Update documentation if needed
 
 ### Coding Guidelines
+
 - Use functional components with hooks
 - Implement proper error boundaries
 - Follow Tailwind CSS utility-first approach
@@ -207,6 +232,7 @@ Post-launch considerations
 - Ensure all interactive elements are keyboard accessible
 
 ### Git Strategy
+
 - Branch naming: `feature/task-id-description`
 - Commit messages: Clear, descriptive, reference task IDs
 - PR checklist items for each phase
@@ -214,6 +240,7 @@ Post-launch considerations
 ## Visual Roadmap
 
 Provide a timeline view:
+
 ```
 Week 1-2: Phase 0 + Phase 1 (Tasks 0.1-1.5)
 Week 3-4: Phase 1 continued + Phase 2 start
@@ -228,6 +255,7 @@ Mark critical path dependencies with arrows/connections.
 [Secondary features from PRD]: #phase-2-enhanced-functionality
 
 ## Phase 2: Enhanced Functionality
+
 This section outlines secondary features from the PRD that enhance the application's functionality.
 
 - Single markdown file named: `IMPLEMENTATION_ROADMAP.md`
@@ -242,6 +270,7 @@ This section outlines secondary features from the PRD that enhance the applicati
 ## Success Metrics
 
 The roadmap should enable:
+
 - ✅ Any developer can pick up any task and complete it
 - ✅ Progress is measurable and trackable
 - ✅ Dependencies are clear to avoid blocking

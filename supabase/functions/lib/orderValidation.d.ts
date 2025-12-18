@@ -4,9 +4,17 @@ export class ValidationError extends Error {
   constructor(status: number, message: string, details?: string);
 }
 
-export function validateOrderInput(body: unknown): Promise<Record<string, unknown>>;
-export function validateAssetExists(supabase: unknown, symbol: string): Promise<Record<string, unknown>>;
-export function validateQuantity(orderRequest: unknown, assetSpec: unknown): void;
+export function validateOrderInput(
+  body: unknown,
+): Promise<Record<string, unknown>>;
+export function validateAssetExists(
+  supabase: unknown,
+  symbol: string,
+): Promise<Record<string, unknown>>;
+export function validateQuantity(
+  orderRequest: unknown,
+  assetSpec: unknown,
+): void;
 export function validateAccountStatus(profile: unknown): void;
 export function validateKYCStatus(profile: unknown): void;
 export function validateMarketHours(assetSpec: unknown, now?: Date): boolean;

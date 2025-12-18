@@ -4,10 +4,29 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabaseBrowserClient";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import KycUploader from "@/components/kyc/KycUploader";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Loader2,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  XCircle,
+} from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { KYCLoading } from "@/components/common/PageLoadingStates";
 import type { KYCDocument } from "@/integrations/supabase/types/tables";
@@ -18,7 +37,9 @@ const KYC = () => {
   const [kycStatus, setKycStatus] = useState<string>("pending");
   const [documents, setDocuments] = useState<KYCDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [resubmitCountdown, setResubmitCountdown] = useState<number | null>(null);
+  const [resubmitCountdown, setResubmitCountdown] = useState<number | null>(
+    null,
+  );
 
   const fetchKYCStatus = useCallback(async () => {
     if (!user) return;
@@ -30,7 +51,7 @@ const KYC = () => {
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status || 'pending');
+      setKycStatus(data.kyc_status || "pending");
     }
   }, [user]);
 
@@ -48,15 +69,16 @@ const KYC = () => {
       if (!error && data) {
         setDocuments(data as KYCDocument[]);
       } else if (error) {
-        console.error('Failed to fetch KYC documents:', error);
+        console.error("Failed to fetch KYC documents:", error);
         // Consider showing a toast notification to the user
       }
     } catch (err) {
-      console.error('Unexpected error fetching KYC documents:', err);
+      console.error("Unexpected error fetching KYC documents:", err);
       // Consider showing a toast notification to the user
     } finally {
       setIsLoading(false);
-    }  }, [user]);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -68,10 +90,18 @@ const KYC = () => {
         .channel(`kyc-status-${user.id}`)
         .on(
           "postgres_changes",
-          { event: "*", schema: "public", table: "profiles", filter: `id=eq.${user.id}` },
+          {
+            event: "*",
+            schema: "public",
+            table: "profiles",
+            filter: `id=eq.${user.id}`,
+          },
           (payload) => {
-            setKycStatus(((payload.new as unknown) as Record<string, unknown>).kyc_status as string);
-          }
+            setKycStatus(
+              (payload.new as unknown as Record<string, unknown>)
+                .kyc_status as string,
+            );
+          },
         )
         .subscribe();
 
@@ -84,12 +114,15 @@ const KYC = () => {
   // Calculate resubmit countdown if rejected
   useEffect(() => {
     if (kycStatus === "rejected" && documents.length > 0) {
-      const lastRejected = documents.find(d => d.status === "rejected");
+      const lastRejected = documents.find((d) => d.status === "rejected");
       if (lastRejected?.reviewed_at) {
         const rejectedDate = new Date(lastRejected.reviewed_at).getTime();
         const sevenDaysLater = rejectedDate + 7 * 24 * 60 * 60 * 1000;
         const now = Date.now();
-        const remaining = Math.max(0, Math.ceil((sevenDaysLater - now) / (1000 * 60 * 60 * 24)));
+        const remaining = Math.max(
+          0,
+          Math.ceil((sevenDaysLater - now) / (1000 * 60 * 60 * 24)),
+        );
         setResubmitCountdown(remaining);
       }
     }
@@ -132,7 +165,8 @@ const KYC = () => {
           <div>
             <h1 className="typography-h1 mb-2">KYC Verification</h1>
             <p className="text-muted-foreground">
-              Submit your identity documents for verification. This is required to start trading.
+              Submit your identity documents for verification. This is required
+              to start trading.
             </p>
           </div>
 
@@ -141,7 +175,8 @@ const KYC = () => {
             <Alert className="border-profit/20 bg-profit/5">
               <CheckCircle className="h-4 w-4 text-profit" />
               <AlertDescription>
-                ✅ Your identity has been verified. You have full access to all trading features and a $10,000 starting balance.
+                ✅ Your identity has been verified. You have full access to all
+                trading features and a $10,000 starting balance.
               </AlertDescription>
             </Alert>
           )}
@@ -150,9 +185,10 @@ const KYC = () => {
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Your KYC verification was rejected. {resubmitCountdown && resubmitCountdown > 0 
+                Your KYC verification was rejected.{" "}
+                {resubmitCountdown && resubmitCountdown > 0
                   ? `You can resubmit in ${resubmitCountdown} days.`
-                  : 'You can now resubmit new documents.'}
+                  : "You can now resubmit new documents."}
               </AlertDescription>
             </Alert>
           )}
@@ -161,7 +197,9 @@ const KYC = () => {
             <Alert className="border-amber-500/20 bg-amber-500/5">
               <Clock className="h-4 w-4 text-amber-500" />
               <AlertDescription>
-                Your documents are under review. This typically takes 1-2 business days. You'll receive an email when the review is complete.
+                Your documents are under review. This typically takes 1-2
+                business days. You'll receive an email when the review is
+                complete.
               </AlertDescription>
             </Alert>
           )}
@@ -170,17 +208,21 @@ const KYC = () => {
             <Alert className="border-amber-500/20 bg-amber-500/5">
               <Clock className="h-4 w-4 text-amber-500" />
               <AlertDescription>
-                Your documents are being processed. Please wait for review completion.
+                Your documents are being processed. Please wait for review
+                completion.
               </AlertDescription>
             </Alert>
           )}
 
           {/* KYC Upload Form */}
-          {(kycStatus === "pending" || (kycStatus === "rejected" && resubmitCountdown === 0)) && (
-            <KycUploader onSuccess={() => {
-              fetchKYCStatus();
-              fetchDocuments();
-            }} />
+          {(kycStatus === "pending" ||
+            (kycStatus === "rejected" && resubmitCountdown === 0)) && (
+            <KycUploader
+              onSuccess={() => {
+                fetchKYCStatus();
+                fetchDocuments();
+              }}
+            />
           )}
 
           {/* Submitted Documents */}
@@ -243,7 +285,9 @@ const KYC = () => {
           {/* Information Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">What documents do you need?</CardTitle>
+              <CardTitle className="text-base">
+                What documents do you need?
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-sm">
@@ -253,7 +297,10 @@ const KYC = () => {
                 </li>
                 <li className="flex gap-4">
                   <CheckCircle className="h-4 w-4 text-profit mt-2.5 shrink-0" />
-                  <span>Proof of address (utility bill or bank statement, less than 3 months old)</span>
+                  <span>
+                    Proof of address (utility bill or bank statement, less than
+                    3 months old)
+                  </span>
                 </li>
                 <li className="flex gap-4">
                   <CheckCircle className="h-4 w-4 text-profit mt-2.5 shrink-0" />

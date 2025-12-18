@@ -1,11 +1,14 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Edit, X, Copy } from 'lucide-react';
-import { OrderStatusBadge } from './OrderStatusBadge';
-import { calculateFillPercentage, type OrderStatus } from '@/lib/trading/orderUtils';
-import type { Order } from './OrderRow';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Edit, X, Copy } from "lucide-react";
+import { OrderStatusBadge } from "./OrderStatusBadge";
+import {
+  calculateFillPercentage,
+  type OrderStatus,
+} from "@/lib/trading/orderUtils";
+import type { Order } from "./OrderRow";
 
 interface OrdersTableMobileProps {
   orders: Order[];
@@ -20,27 +23,32 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
   onCancel,
   onViewDetails,
 }) => {
-  const canModify = (order: Order) => ['open', 'partially_filled'].includes(order.status);
-  const canCancel = (order: Order) => ['pending', 'open', 'partially_filled'].includes(order.status);
+  const canModify = (order: Order) =>
+    ["open", "partially_filled"].includes(order.status);
+  const canCancel = (order: Order) =>
+    ["pending", "open", "partially_filled"].includes(order.status);
 
   const copyOrderId = (orderId: string) => {
     navigator.clipboard.writeText(orderId);
   };
 
-  const getTypeLabel = (type: Order['type']) =>
+  const getTypeLabel = (type: Order["type"]) =>
     type
-      .replace('_', '-')
-      .split('-')
+      .replace("_", "-")
+      .split("-")
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ');
+      .join(" ");
 
-  const getSideBadgeColor = (side: 'buy' | 'sell') =>
-    side === 'buy' ? 'bg-buy text-foreground' : 'bg-sell text-foreground';
+  const getSideBadgeColor = (side: "buy" | "sell") =>
+    side === "buy" ? "bg-buy text-foreground" : "bg-sell text-foreground";
 
   return (
     <div className="lg:hidden space-y-3">
       {orders.map((order) => {
-        const fillPercentage = calculateFillPercentage(order.filled_quantity, order.quantity);
+        const fillPercentage = calculateFillPercentage(
+          order.filled_quantity,
+          order.quantity,
+        );
 
         return (
           <Card
@@ -66,7 +74,7 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
               </div>
               <div className="text-right">
                 <OrderStatusBadge status={order.status as OrderStatus} />
-                {order.status === 'partially_filled' && (
+                {order.status === "partially_filled" && (
                   <p className="text-xs text-muted-foreground mt-1">
                     {fillPercentage.toFixed(1)}% filled
                   </p>
@@ -77,21 +85,33 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
             {/* Order Details Grid */}
             <div className="grid grid-cols-2 gap-3 mb-3 border-t border-border/50 pt-3">
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Type</span>
-                <p className="text-sm font-semibold">{getTypeLabel(order.type)}</p>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Type
+                </span>
+                <p className="text-sm font-semibold">
+                  {getTypeLabel(order.type)}
+                </p>
               </div>
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Side</span>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Side
+                </span>
                 <Badge className={`mt-1 ${getSideBadgeColor(order.side)}`}>
                   {order.side.toUpperCase()}
                 </Badge>
               </div>
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Quantity</span>
-                <p className="text-sm font-mono font-semibold">{order.quantity.toFixed(2)}</p>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Quantity
+                </span>
+                <p className="text-sm font-mono font-semibold">
+                  {order.quantity.toFixed(2)}
+                </p>
               </div>
               <div>
-                <span className="text-xs text-muted-foreground font-medium">Price</span>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Price
+                </span>
                 <p className="text-sm font-mono font-semibold">
                   ${(order.price || order.limit_price || 0).toFixed(5)}
                 </p>
@@ -100,31 +120,45 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
               {/* Commission */}
               {order.commission && (
                 <div>
-                  <span className="text-xs text-muted-foreground font-medium">Commission</span>
-                  <p className="text-sm font-mono">${order.commission.toFixed(2)}</p>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    Commission
+                  </span>
+                  <p className="text-sm font-mono">
+                    ${order.commission.toFixed(2)}
+                  </p>
                 </div>
               )}
 
               {/* P&L */}
               {order.realized_pnl !== undefined && (
                 <div>
-                  <span className="text-xs text-muted-foreground font-medium">P&L</span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    P&L
+                  </span>
                   <p
                     className="text-sm font-mono font-bold"
                     style={{
-                      color: order.realized_pnl > 0 ? 'hsl(var(--buy))' : 'hsl(var(--sell))',
+                      color:
+                        order.realized_pnl > 0
+                          ? "hsl(var(--buy))"
+                          : "hsl(var(--sell))",
                     }}
                   >
-                    {order.realized_pnl > 0 ? '+' : ''}${order.realized_pnl.toFixed(2)}
+                    {order.realized_pnl > 0 ? "+" : ""}$
+                    {order.realized_pnl.toFixed(2)}
                   </p>
                 </div>
               )}
 
               {/* Fill Percentage for Partial Fills */}
-              {order.status === 'partially_filled' && (
+              {order.status === "partially_filled" && (
                 <div>
-                  <span className="text-xs text-muted-foreground font-medium">Filled</span>
-                  <p className="text-sm font-mono">{order.filled_quantity.toFixed(2)}</p>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    Filled
+                  </span>
+                  <p className="text-sm font-mono">
+                    {order.filled_quantity.toFixed(2)}
+                  </p>
                 </div>
               )}
             </div>

@@ -9,29 +9,54 @@ interface DashboardStatsSkeletonProps {
   animated?: boolean;
 }
 
-export function DashboardStatsSkeleton({ count = 4, className, animated = true }: DashboardStatsSkeletonProps) {
+export function DashboardStatsSkeleton({
+  count = 4,
+  className,
+  animated = true,
+}: DashboardStatsSkeletonProps) {
   return (
     <div className={cn("dashboard-grid mb-8", className)}>
       {Array.from({ length: count }).map((_, index) => (
-        <Card 
-          key={index} 
-          elevation="1" 
-          variant="primary" 
+        <Card
+          key={index}
+          elevation="1"
+          variant="primary"
           className={animated ? "animate-slide-in-up" : ""}
           style={{ animationDelay: `${index * 100}ms` }}
         >
           <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
             <div className="flex-1">
               <CardTitle className="typography-label text-primary-contrast tracking-wide">
-                <Skeleton variant="text" className={cn("w-3/4 h-4", animated && "animate-loading-pulse")} />
+                <Skeleton
+                  variant="text"
+                  className={cn(
+                    "w-3/4 h-4",
+                    animated && "animate-loading-pulse",
+                  )}
+                />
               </CardTitle>
-              <Skeleton variant="text" className={cn("w-1/2 h-3 mt-2", animated && "animate-loading-pulse")} />
+              <Skeleton
+                variant="text"
+                className={cn(
+                  "w-1/2 h-3 mt-2",
+                  animated && "animate-loading-pulse",
+                )}
+              />
             </div>
-            <Skeleton variant="avatar" className={cn("h-5 w-5", animated && "animate-loading-pulse")} />
+            <Skeleton
+              variant="avatar"
+              className={cn("h-5 w-5", animated && "animate-loading-pulse")}
+            />
           </CardHeader>
           <CardContent className="space-y-2">
-            <Skeleton variant="text" className={cn("w-1/2 h-8", animated && "animate-loading-pulse")} />
-            <Skeleton variant="text" className={cn("w-1/3 h-3", animated && "animate-loading-pulse")} />
+            <Skeleton
+              variant="text"
+              className={cn("w-1/2 h-8", animated && "animate-loading-pulse")}
+            />
+            <Skeleton
+              variant="text"
+              className={cn("w-1/3 h-3", animated && "animate-loading-pulse")}
+            />
           </CardContent>
         </Card>
       ))}
@@ -45,16 +70,27 @@ interface MarketWatchSkeletonProps {
   animated?: boolean;
 }
 
-export function MarketWatchSkeleton({ className, height = "h-[400px]", animated = true }: MarketWatchSkeletonProps) {
+export function MarketWatchSkeleton({
+  className,
+  height = "h-[400px]",
+  animated = true,
+}: MarketWatchSkeletonProps) {
   return (
-    <Card 
-      elevation="2" 
-      variant="primary" 
-      className={cn("border-border/70 mb-xl", animated && "animate-slide-in-up", className)}
+    <Card
+      elevation="2"
+      variant="primary"
+      className={cn(
+        "border-border/70 mb-xl",
+        animated && "animate-slide-in-up",
+        className,
+      )}
     >
       <CardHeader>
         <CardTitle className="text-base font-semibold text-primary-contrast">
-          <Skeleton variant="text" className={cn("w-1/3 h-5", animated && "animate-loading-pulse")} />
+          <Skeleton
+            variant="text"
+            className={cn("w-1/3 h-5", animated && "animate-loading-pulse")}
+          />
         </CardTitle>
       </CardHeader>
       <CardContent className={cn(height, "bg-muted/50 rounded-lg")}>
@@ -77,7 +113,10 @@ interface PortfolioTableSkeletonProps {
   className?: string;
 }
 
-export function PortfolioTableSkeleton({ rows = 5, className }: PortfolioTableSkeletonProps) {
+export function PortfolioTableSkeleton({
+  rows = 5,
+  className,
+}: PortfolioTableSkeletonProps) {
   return (
     <div className={cn("space-y-4", className)}>
       <div className="flex items-center justify-between">
@@ -99,7 +138,10 @@ export function PortfolioTableSkeleton({ rows = 5, className }: PortfolioTableSk
         </div>
         <div className="p-2 space-y-2">
           {Array.from({ length: rows }).map((_, index) => (
-            <div key={index} className="flex items-center gap-4 rounded p-4 hover:bg-muted/50 transition-colors">
+            <div
+              key={index}
+              className="flex items-center gap-4 rounded p-4 hover:bg-muted/50 transition-colors"
+            >
               <div className="grid grid-cols-8 gap-4 flex-1">
                 <div className="font-medium">
                   <Skeleton variant="text" className="h-5 w-12" />
@@ -146,9 +188,16 @@ interface RiskManagementSkeletonProps {
   className?: string;
 }
 
-export function RiskManagementSkeleton({ className }: RiskManagementSkeletonProps) {
+export function RiskManagementSkeleton({
+  className,
+}: RiskManagementSkeletonProps) {
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6",
+        className,
+      )}
+    >
       {Array.from({ length: 4 }).map((_, index) => (
         <Card key={index}>
           <CardHeader className="flex flex-row items-center justify-between space-y-2 pb-4">
@@ -225,14 +274,22 @@ interface ChartSkeletonProps {
   height?: string;
 }
 
-export function ChartSkeleton({ className, height = "h-[300px]" }: ChartSkeletonProps) {
+export function ChartSkeleton({
+  className,
+  height = "h-[300px]",
+}: ChartSkeletonProps) {
   return (
     <div className={cn("rounded-lg border bg-card p-6", className)}>
       <div className="flex items-center justify-between mb-4">
         <Skeleton variant="text" className="h-5 w-1/3" />
         <Skeleton variant="text" className="h-4 w-1/6" />
       </div>
-      <div className={cn(height, "bg-muted/50 rounded-lg flex items-center justify-center")}>
+      <div
+        className={cn(
+          height,
+          "bg-muted/50 rounded-lg flex items-center justify-center",
+        )}
+      >
         <div className="space-y-3 text-center">
           <Skeleton variant="avatar" className="h-16 w-16" />
           <Skeleton variant="text" className="h-4 w-1/2" />
@@ -257,7 +314,7 @@ export function ProfileSkeleton({ className }: ProfileSkeletonProps) {
           <Skeleton variant="text" className="h-4 w-1/3" />
         </div>
       </div>
-      
+
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-4">
           <Skeleton variant="text" className="h-5 w-1/2" />
@@ -276,7 +333,7 @@ export function ProfileSkeleton({ className }: ProfileSkeletonProps) {
             </div>
           </div>
         </div>
-        
+
         <div className="space-y-4">
           <Skeleton variant="text" className="h-5 w-2/3" />
           <div className="space-y-3">
@@ -300,11 +357,17 @@ interface NotificationsSkeletonProps {
   className?: string;
 }
 
-export function NotificationsSkeleton({ count = 5, className }: NotificationsSkeletonProps) {
+export function NotificationsSkeleton({
+  count = 5,
+  className,
+}: NotificationsSkeletonProps) {
   return (
     <div className={cn("space-y-4", className)}>
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="flex items-center space-x-3 p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+        <div
+          key={index}
+          className="flex items-center space-x-3 p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+        >
           <Skeleton variant="avatar" className="h-10 w-10" />
           <div className="flex-1 space-y-2">
             <Skeleton variant="text" className="h-4 w-3/4" />
@@ -330,10 +393,13 @@ export function KYCSkeleton({ className }: KYCSkeletonProps) {
         <Skeleton variant="text" className="h-6 w-1/3 mx-auto mb-2" />
         <Skeleton variant="text" className="h-4 w-1/2 mx-auto" />
       </div>
-      
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="space-y-3 p-4 border-2 border-dashed border-muted/50 rounded-lg hover:border-muted/70 transition-colors">
+          <div
+            key={index}
+            className="space-y-3 p-4 border-2 border-dashed border-muted/50 rounded-lg hover:border-muted/70 transition-colors"
+          >
             <Skeleton variant="text" className="h-4 w-2/3" />
             <Skeleton variant="text" className="h-3 w-1/2" />
             <Skeleton variant="button" className="h-10 w-full" />
@@ -372,22 +438,36 @@ interface LoadingWrapperProps {
   className?: string;
 }
 
-export function LoadingWrapper({ children, isLoading, fallback, className }: LoadingWrapperProps) {
+export function LoadingWrapper({
+  children,
+  isLoading,
+  fallback,
+  className,
+}: LoadingWrapperProps) {
   if (isLoading) {
     return (
-      <div className={cn("animate-pulse-slow", className)} role="status" aria-label="Loading">
+      <div
+        className={cn("animate-pulse-slow", className)}
+        role="status"
+        aria-label="Loading"
+      >
         {fallback}
       </div>
     );
   }
-  
+
   return <div className={className}>{children}</div>;
 }
 
 // Custom shimmer effect for better UX
 export const ShimmerEffect = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("relative overflow-hidden bg-gradient-to-r from-transparent via-white/20 to-transparent", className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden bg-gradient-to-r from-transparent via-white/20 to-transparent",
+        className,
+      )}
+    >
       <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/30 to-transparent" />
       <style>{`
         @keyframes shimmer {
@@ -408,51 +488,94 @@ export const ShimmerEffect = ({ className }: { className?: string }) => {
 
 // Enhanced Loading Spinner Component
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'dots' | 'spinner' | 'pulse' | 'bounce';
+  size?: "sm" | "md" | "lg" | "xl";
+  variant?: "dots" | "spinner" | "pulse" | "bounce";
   className?: string;
   text?: string;
 }
 
-export function LoadingSpinner({ 
-  size = 'md', 
-  variant = 'spinner', 
-  className, 
-  text 
+export function LoadingSpinner({
+  size = "md",
+  variant = "spinner",
+  className,
+  text,
 }: LoadingSpinnerProps) {
   const sizeClasses = {
-    sm: 'h-6 w-6',
-    md: 'h-8 w-8', 
-    lg: 'h-12 w-12',
-    xl: 'h-16 w-16',
+    sm: "h-6 w-6",
+    md: "h-8 w-8",
+    lg: "h-12 w-12",
+    xl: "h-16 w-16",
   };
 
   const spinnerContent = (
     <div className={cn("flex items-center justify-center", className)}>
-      {variant === 'spinner' && (
-        <div className={cn("animate-loading-spin rounded-full border-2 border-current border-t-transparent", sizeClasses[size])} />
+      {variant === "spinner" && (
+        <div
+          className={cn(
+            "animate-loading-spin rounded-full border-2 border-current border-t-transparent",
+            sizeClasses[size],
+          )}
+        />
       )}
-      
-      {variant === 'dots' && (
+
+      {variant === "dots" && (
         <div className="flex space-x-2">
-          <div className={cn("rounded-full bg-current animate-loading-bounce", sizeClasses[size])} style={{ animationDelay: '0s' }} />
-          <div className={cn("rounded-full bg-current animate-loading-bounce", sizeClasses[size])} style={{ animationDelay: '0.2s' }} />
-          <div className={cn("rounded-full bg-current animate-loading-bounce", sizeClasses[size])} style={{ animationDelay: '0.4s' }} />
+          <div
+            className={cn(
+              "rounded-full bg-current animate-loading-bounce",
+              sizeClasses[size],
+            )}
+            style={{ animationDelay: "0s" }}
+          />
+          <div
+            className={cn(
+              "rounded-full bg-current animate-loading-bounce",
+              sizeClasses[size],
+            )}
+            style={{ animationDelay: "0.2s" }}
+          />
+          <div
+            className={cn(
+              "rounded-full bg-current animate-loading-bounce",
+              sizeClasses[size],
+            )}
+            style={{ animationDelay: "0.4s" }}
+          />
         </div>
       )}
-      
-      {variant === 'pulse' && (
-        <div className={cn("rounded-full bg-current animate-loading-pulse", sizeClasses[size])} />
+
+      {variant === "pulse" && (
+        <div
+          className={cn(
+            "rounded-full bg-current animate-loading-pulse",
+            sizeClasses[size],
+          )}
+        />
       )}
-      
-      {variant === 'bounce' && (
+
+      {variant === "bounce" && (
         <div className="flex space-x-1">
-          <div className={cn("w-2 bg-current rounded-full animate-loading-bounce", size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6')} />
-          <div className={cn("w-2 bg-current rounded-full animate-loading-bounce", size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6')} />
-          <div className={cn("w-2 bg-current rounded-full animate-loading-bounce", size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6')} />
+          <div
+            className={cn(
+              "w-2 bg-current rounded-full animate-loading-bounce",
+              size === "sm" ? "h-4" : size === "lg" ? "h-8" : "h-6",
+            )}
+          />
+          <div
+            className={cn(
+              "w-2 bg-current rounded-full animate-loading-bounce",
+              size === "sm" ? "h-4" : size === "lg" ? "h-8" : "h-6",
+            )}
+          />
+          <div
+            className={cn(
+              "w-2 bg-current rounded-full animate-loading-bounce",
+              size === "sm" ? "h-4" : size === "lg" ? "h-8" : "h-6",
+            )}
+          />
         </div>
       )}
-      
+
       {text && (
         <span className="ml-3 text-sm text-foreground/70 animate-loading-pulse">
           {text}
@@ -474,7 +597,10 @@ interface PageLoadingOverlayProps {
   text?: string;
 }
 
-export function PageLoadingOverlay({ visible = false, text = "Loading..." }: PageLoadingOverlayProps) {
+export function PageLoadingOverlay({
+  visible = false,
+  text = "Loading...",
+}: PageLoadingOverlayProps) {
   if (!visible) return null;
 
   return (

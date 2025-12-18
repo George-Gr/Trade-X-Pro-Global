@@ -3,6 +3,7 @@
 ## TASK GROUP 5: KYC & COMPLIANCE (~85h)
 
 ### 2.1.1 Complete KYC Admin Review Workflow (35h)
+
 **Goal:** End-to-end KYC intake, automated checks, admin review UI, audit trail, and integration with account gating.
 
 - **Backend:** `/src/lib/kyc/kycService.ts`, `/supabase/functions/lib/kycService.ts`
@@ -20,6 +21,7 @@
 ---
 
 ### 2.1.2 User Account Settings & Preferences (20h)
+
 **Goal:** Robust account management: profile, security, sessions, API keys, notification preferences, privacy/export.
 
 - **Backend:** `/src/lib/account/accountService.ts`
@@ -34,6 +36,7 @@
 ---
 
 ### 2.1.3 Wallet & Deposit System (30h)
+
 **Goal:** Fiat & crypto deposit flows, reconciliation, on-chain confirmations, deposit limits, ledger accounting.
 
 - **Backend:** `/src/lib/wallet/walletService.ts`
@@ -53,6 +56,7 @@
 ## TASK GROUP 6: ANALYTICS & HISTORY (~100h)
 
 ### 2.2.1 Trading History & Performance Analytics (40h)
+
 **Goal:** Rich historical data, export, performance metrics, downloadable reports, interactive charts.
 
 - **API:** `/supabase/functions/history/orders`, `/supabase/functions/history/fills`, `/supabase/functions/history/ledger`, `/supabase/functions/history/export`
@@ -66,6 +70,7 @@
 ---
 
 ### 2.2.2 Risk Management Suite (35h)
+
 **Goal:** User-configurable risk thresholds, scenario simulation, scheduled risk reports, historical risk snapshots.
 
 - **Backend:** `/src/lib/risk/userRiskService.ts`
@@ -79,6 +84,7 @@
 ---
 
 ### 2.2.3 Price Alerts & Notifications (25h)
+
 **Goal:** Rule-based alerts (price, % change, indicator cross), real-time/scheduled evaluation, multi-channel delivery.
 
 - **Backend:** `/src/lib/alerts/alertService.ts`
@@ -92,6 +98,7 @@
 ---
 
 ## Non-Functional Requirements
+
 - RLS policies for all sensitive tables
 - PII minimization & encryption
 - Audit logs for KYC, wallet, admin actions
@@ -102,6 +109,7 @@
 - Data retention policies
 
 ## Estimates & Sprints
+
 - Total Phase 2: ~155–165h
 - Sprint A: KYC intake + admin review + provider integration
 - Sprint B: Wallet & Deposit core + ledger + fiat integration

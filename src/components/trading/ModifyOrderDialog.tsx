@@ -1,21 +1,21 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { AlertCircle, Loader2, X } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AlertCircle, Loader2, X } from "lucide-react";
 
 export interface Order {
   id: string;
   symbol: string;
-  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
-  side: 'buy' | 'sell';
+  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
+  side: "buy" | "sell";
   quantity: number;
   filled_quantity: number;
   price?: number;
@@ -64,16 +64,22 @@ export const ModifyOrderDialog = ({
   onClose,
   onSubmit,
 }: ModifyOrderDialogProps) => {
-  const [quantity, setQuantity] = useState('');
-  const [limitPrice, setLimitPrice] = useState('');
-  const [stopPrice, setStopPrice] = useState('');
+  const [quantity, setQuantity] = useState("");
+  const [limitPrice, setLimitPrice] = useState("");
+  const [stopPrice, setStopPrice] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const remainingQuantity = order?.quantity ? order.quantity - order.filled_quantity : 0;
+  const remainingQuantity = order?.quantity
+    ? order.quantity - order.filled_quantity
+    : 0;
   const maxQuantity = order?.quantity || 0;
 
-  const canModifyQuantity = order ? ['open', 'partially_filled'].includes(order.status) : false;
-  const canModifyPrice = order ? ['limit', 'stop', 'stop_limit', 'trailing_stop'].includes(order.type) : false;
+  const canModifyQuantity = order
+    ? ["open", "partially_filled"].includes(order.status)
+    : false;
+  const canModifyPrice = order
+    ? ["limit", "stop", "stop_limit", "trailing_stop"].includes(order.type)
+    : false;
 
   // Calculate if modifications are valid
   const validation = useMemo(() => {
@@ -83,9 +89,11 @@ export const ModifyOrderDialog = ({
     if (quantity) {
       const newQty = parseFloat(quantity);
       if (isNaN(newQty) || newQty <= 0) {
-        errors.push('Quantity must be a positive number');
+        errors.push("Quantity must be a positive number");
       } else if (newQty > maxQuantity) {
-        errors.push(`Quantity cannot exceed original order size (${maxQuantity})`);
+        errors.push(
+          `Quantity cannot exceed original order size (${maxQuantity})`,
+        );
       } else {
         updates.quantity = newQty;
       }
@@ -94,7 +102,7 @@ export const ModifyOrderDialog = ({
     if (limitPrice) {
       const newPrice = parseFloat(limitPrice);
       if (isNaN(newPrice) || newPrice <= 0) {
-        errors.push('Limit price must be a positive number');
+        errors.push("Limit price must be a positive number");
       } else {
         updates.limit_price = newPrice;
       }
@@ -103,7 +111,7 @@ export const ModifyOrderDialog = ({
     if (stopPrice) {
       const newPrice = parseFloat(stopPrice);
       if (isNaN(newPrice) || newPrice <= 0) {
-        errors.push('Stop price must be a positive number');
+        errors.push("Stop price must be a positive number");
       } else {
         updates.stop_price = newPrice;
       }
@@ -111,7 +119,7 @@ export const ModifyOrderDialog = ({
 
     // Check if at least one field is modified
     if (Object.keys(updates).length === 0) {
-      errors.push('Please modify at least one field');
+      errors.push("Please modify at least one field");
     }
 
     return { updates, errors, isValid: errors.length === 0 };
@@ -132,20 +140,20 @@ export const ModifyOrderDialog = ({
       const success = await onSubmit(validation.updates);
       if (success) {
         // Reset form
-        setQuantity('');
-        setLimitPrice('');
-        setStopPrice('');
+        setQuantity("");
+        setLimitPrice("");
+        setStopPrice("");
         onClose();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to modify order');
+      setError(err instanceof Error ? err.message : "Failed to modify order");
     }
   };
 
   const handleClose = () => {
-    setQuantity('');
-    setLimitPrice('');
-    setStopPrice('');
+    setQuantity("");
+    setLimitPrice("");
+    setStopPrice("");
     setError(null);
     onClose();
   };
@@ -186,8 +194,8 @@ export const ModifyOrderDialog = ({
                 Quantity
               </Label>
               <p className="text-xs text-muted-foreground mt-2">
-                Current: {order.quantity} | Filled: {order.filled_quantity} | Remaining:{' '}
-                {remainingQuantity}
+                Current: {order.quantity} | Filled: {order.filled_quantity} |
+                Remaining: {remainingQuantity}
               </p>
               <Input
                 id="quantity"
@@ -212,13 +220,15 @@ export const ModifyOrderDialog = ({
               <Label htmlFor="limitPrice" className="text-sm font-medium">
                 Limit Price
               </Label>
-              <p className="text-xs text-muted-foreground mt-2">Current: {order.limit_price?.toFixed(4)}</p>
+              <p className="text-xs text-muted-foreground mt-2">
+                Current: {order.limit_price?.toFixed(4)}
+              </p>
               <Input
                 id="limitPrice"
                 type="number"
                 min="0.0001"
                 step="0.0001"
-                placeholder={order.limit_price?.toFixed(4) || ''}
+                placeholder={order.limit_price?.toFixed(4) || ""}
                 value={limitPrice}
                 onChange={(e) => setLimitPrice(e.target.value)}
                 disabled={isLoading}
@@ -236,13 +246,15 @@ export const ModifyOrderDialog = ({
               <Label htmlFor="stopPrice" className="text-sm font-medium">
                 Stop Price
               </Label>
-              <p className="text-xs text-muted-foreground mt-2">Current: {order.stop_price?.toFixed(4)}</p>
+              <p className="text-xs text-muted-foreground mt-2">
+                Current: {order.stop_price?.toFixed(4)}
+              </p>
               <Input
                 id="stopPrice"
                 type="number"
                 min="0.0001"
                 step="0.0001"
-                placeholder={order.stop_price?.toFixed(4) || ''}
+                placeholder={order.stop_price?.toFixed(4) || ""}
                 value={stopPrice}
                 onChange={(e) => setStopPrice(e.target.value)}
                 disabled={isLoading}
@@ -257,14 +269,18 @@ export const ModifyOrderDialog = ({
           {/* Info Box */}
           <div className="bg-background border border-blue-200 rounded-lg p-4">
             <p className="text-xs text-blue-700">
-              <strong>Note:</strong> You can only modify open or partially filled orders. Market
-              orders cannot be modified.
+              <strong>Note:</strong> You can only modify open or partially
+              filled orders. Market orders cannot be modified.
             </p>
           </div>
 
           {/* Actions */}
           <div className="flex gap-4 justify-end pt-4">
-            <Button onClick={handleClose} variant="outline" disabled={isLoading}>
+            <Button
+              onClick={handleClose}
+              variant="outline"
+              disabled={isLoading}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading || !validation.isValid}>
@@ -274,7 +290,7 @@ export const ModifyOrderDialog = ({
                   Submitting...
                 </>
               ) : (
-                'Modify Order'
+                "Modify Order"
               )}
             </Button>
           </div>

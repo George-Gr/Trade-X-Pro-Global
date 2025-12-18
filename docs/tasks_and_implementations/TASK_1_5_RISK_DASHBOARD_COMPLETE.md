@@ -30,6 +30,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 **Exports:** 16 functions + 6 types
 
 **Core Calculations:**
+
 - `calculateMarginLevel()` - Real-time margin percentage
 - `calculateFreeMargin()` - Available margin for new positions
 - `calculateMarginUsagePercentage()` - Margin utilization ratio
@@ -43,6 +44,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - `assessPortfolioRisk()` - Overall risk assessment with recommendations
 
 **Key Features:**
+
 - Automatic risk level classification with color-coded indicators
 - Dynamic thresholds based on margin levels
 - Close-only mode enforcement at critical margin
@@ -52,6 +54,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Liquidation risk alerts
 
 **Risk Level Thresholds:**
+
 - SAFE: Margin ≥ 200%
 - WARNING: 100% - 199% margin
 - CRITICAL: 50% - 99% margin (close-only mode)
@@ -65,6 +68,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 **Exports:** 14 functions + 8 types
 
 **Performance Calculations:**
+
 - `calculateTotalPnL()` - Combined realized + unrealized P&L
 - `calculatePnLPercentage()` - P&L as % of capital
 - `calculateROI()` - Return on investment
@@ -76,6 +80,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - `calculateExpectancy()` - Expected value per trade
 
 **Drawdown Analysis:**
+
 - `calculateDrawdown()` - Current peak-to-trough decline
 - `calculateDrawdownPercentage()` - Drawdown as % of peak
 - `calculateMaxDrawdown()` - Largest historical drawdown
@@ -84,10 +89,12 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - `calculatePortfolioMetrics()` - Full portfolio snapshot
 
 **Asset Class Analysis:**
+
 - `breakdownByAssetClass()` - Portfolio allocation by asset type
 - `formatTradeStatistics()` - Human-readable trade stats
 
 **Key Features:**
+
 - Real-time equity tracking with historical analysis
 - Trade-by-trade performance statistics
 - Drawdown monitoring and recovery tracking
@@ -103,6 +110,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 **Exports:** 13 functions + 8 types
 
 **Concentration Analysis:**
+
 - `calculateConcentration()` - Position size as % of portfolio
 - `classifyConcentrationRisk()` - Risk level (low/medium/high/critical)
 - `calculateHerfindahlIndex()` - Portfolio concentration metric
@@ -110,17 +118,20 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - `analyzeConcentration()` - Complete concentration assessment
 
 **Correlation & Hedging:**
+
 - `calculateCorrelation()` - Price correlation between assets
 - `classifyHedgingPotential()` - Hedge effectiveness (high/moderate/low)
 - `buildCorrelationMatrix()` - Cross-asset correlations
 - `calculateEffectiveNumberOfPositions()` - Diversification equivalence
 
 **Diversification:**
+
 - `assessDiversification()` - Portfolio diversification metrics
 - `diversificationScore` - 0-100 score
 - `isWellDiversified` - Boolean classification
 
 **Stress Testing:**
+
 - `simulateStressScenario()` - Model single scenario
 - `runStressTests()` - Multi-scenario analysis (-20%, -10%, -5%, +5%, +10%, +20%)
 - Survival rate calculation
@@ -128,6 +139,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Margin impact modeling
 
 **Key Features:**
+
 - Herfindahl Index concentration measurement
 - Concentration risk color-coding
 - Correlation-based hedging analysis
@@ -140,7 +152,9 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 ### 4. CUSTOM HOOKS
 
 #### `useRiskMetrics.tsx` (160 lines)
+
 **Features:**
+
 - Real-time margin level monitoring
 - Risk level classification
 - Capital at risk calculation
@@ -149,6 +163,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Liquidation risk alerts
 
 **Returns:**
+
 ```typescript
 {
   riskMetrics: RiskMetrics | null,
@@ -162,7 +177,9 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 ```
 
 #### `usePortfolioMetrics.tsx` (220 lines)
+
 **Features:**
+
 - Portfolio performance tracking
 - Drawdown analysis
 - Asset class breakdown
@@ -171,6 +188,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Real-time P&L updates
 
 **Returns:**
+
 ```typescript
 {
   portfolioMetrics: PortfolioMetrics | null,
@@ -184,7 +202,9 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 ```
 
 #### `usePositionAnalysis.tsx` (180 lines)
+
 **Features:**
+
 - Position concentration analysis
 - Diversification scoring
 - Stress testing execution
@@ -192,6 +212,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Real-time concentration monitoring
 
 **Returns:**
+
 ```typescript
 {
   concentration: ConcentrationAnalysis | null,
@@ -205,7 +226,9 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 ```
 
 #### `useDrawdownAnalysis.tsx` (included in usePortfolioMetrics)
+
 **Features:**
+
 - Specialized drawdown monitoring
 - Historical peak tracking
 - Recovery time calculation
@@ -219,6 +242,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 **Features:**
 
 **Dashboard Sections:**
+
 1. **Risk Alert Banner** - Color-coded risk level with recommendations
 2. **Key Metrics Cards** (4-column grid)
    - Margin Level with progress bar
@@ -236,6 +260,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
    - Diversification: Concentration analysis, top positions
 
 **Visual Features:**
+
 - Real-time animated progress bars
 - Color-coded risk indicators (green/yellow/orange/red)
 - Responsive grid layouts (1-4 columns)
@@ -244,12 +269,14 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Loading skeleton with pulse animation
 
 **Data Visualization:**
+
 - Equity Curve (30-day historical)
 - Portfolio Allocation (pie chart by asset class)
 - Stress Test Impact (bar chart)
 - Position Concentration (horizontal bars)
 
 **Interactive Features:**
+
 - Refresh button for manual data updates
 - CSV export with full data dump
 - HTML report generation for printing
@@ -264,12 +291,14 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 **Export Formats:**
 
 #### CSV Export
+
 - Complete data dump with headers
 - Formatted currency and percentages
 - Organized by section (Risk Metrics, Portfolio, Trade Stats, etc.)
 - Importable into Excel/Google Sheets
 
 #### HTML Report
+
 - Professional formatted report
 - Print-optimized styling
 - Color-coded risk levels
@@ -278,12 +307,14 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Includes timestamp and metadata
 
 #### PDF (via HTML)
+
 - Browser native print dialog
 - Print to PDF functionality
 - Professional formatting
 - All metrics included
 
 **Features:**
+
 - `exportRiskDashboardToCSV()` - CSV generation with formatting
 - `exportRiskDashboardToPDF()` - Text format (can be printed to PDF)
 - `generateRiskDashboardHTMLReport()` - Professional HTML report
@@ -300,6 +331,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 **Test Coverage:**
 
 **Risk Metrics Tests (18 tests)**
+
 - Margin level calculations ✅
 - Risk level classification ✅
 - Free/used margin ✅
@@ -312,6 +344,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Comprehensive risk metrics ✅
 
 **Portfolio Metrics Tests (22 tests)**
+
 - P&L calculations ✅
 - P&L percentage ✅
 - ROI calculations ✅
@@ -328,6 +361,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Comprehensive portfolio metrics ✅
 
 **Position Analysis Tests (18 tests)**
+
 - Concentration calculations ✅
 - Concentration risk classification ✅
 - Herfindahl Index ✅
@@ -341,6 +375,7 @@ Task 1.5: Risk Dashboard has been **fully implemented** with comprehensive real-
 - Comprehensive concentration analysis ✅
 
 **Integration Tests (3 tests)**
+
 - Realistic portfolio scenario ✅
 - Edge case handling ✅
 - Zero positions ✅
@@ -384,11 +419,13 @@ Real-Time Data Sources
 ### Real-Time Subscriptions
 
 **Postgres Changes Subscriptions:**
+
 - Profile changes → Trigger risk metrics recalculation
 - Position changes → Trigger concentration and stress test recalculation
 - Portfolio history → Update equity curve and drawdown analysis
 
 **Subscription Cleanup:**
+
 - All subscriptions properly unsubscribed in useEffect cleanup
 - No memory leaks or dangling subscriptions
 - Automatic re-subscription on user change
@@ -398,6 +435,7 @@ Real-Time Data Sources
 ## PRODUCTION READINESS CHECKLIST
 
 ✅ **Code Quality**
+
 - Type-safe TypeScript with strict mode
 - No console.log statements in production code
 - Comprehensive error handling with try-catch blocks
@@ -406,6 +444,7 @@ Real-Time Data Sources
 - No memory leaks
 
 ✅ **Performance**
+
 - Memoized calculations with useMemo
 - Proper callback memoization with useCallback
 - Efficient re-render prevention
@@ -413,6 +452,7 @@ Real-Time Data Sources
 - Pagination-ready for large datasets
 
 ✅ **Testing**
+
 - 60+ test cases covering all functionality
 - Edge case handling (zero positions, high leverage, etc.)
 - Integration tests for realistic scenarios
@@ -420,6 +460,7 @@ Real-Time Data Sources
 - All tests passing ✅
 
 ✅ **Accessibility**
+
 - Semantic HTML structure
 - Color-coded but not color-only indicators
 - Responsive layout tested on mobile/tablet/desktop
@@ -427,6 +468,7 @@ Real-Time Data Sources
 - Screen reader friendly with ARIA labels
 
 ✅ **Build & Deployment**
+
 - Production build successful in 15.29s
 - No TypeScript errors or warnings
 - Zero ESLint violations
@@ -434,6 +476,7 @@ Real-Time Data Sources
 - Ready for immediate deployment
 
 ✅ **Documentation**
+
 - Clear function documentation
 - Type definitions well-documented
 - Risk thresholds clearly defined
@@ -445,15 +488,18 @@ Real-Time Data Sources
 ## KEY METRICS & CALCULATIONS
 
 ### Margin Level Formula
+
 ```
 Margin Level % = (Equity / Margin Used) × 100
 ```
+
 - Safe: ≥ 200%
 - Warning: 100-199%
 - Critical: 50-99% (close-only mode)
 - Liquidation: < 50%
 
 ### Risk Level Classification
+
 ```
 if marginLevel >= 200: "safe"
 elif marginLevel >= 100: "warning"
@@ -462,34 +508,40 @@ else: "liquidation"
 ```
 
 ### Capital at Risk
+
 ```
 Capital at Risk = Sum of (Position Quantity × Current Price)
 Capital at Risk % = (Capital at Risk / Total Equity) × 100
 ```
 
 ### Win Rate
+
 ```
 Win Rate % = (Number of Profitable Trades / Total Trades) × 100
 ```
 
 ### Profit Factor
+
 ```
 Profit Factor = Total Profits / |Total Losses|
 Good target: > 1.5
 ```
 
 ### Expectancy (Expected Value per Trade)
+
 ```
 Expectancy = (Win Rate × Avg Win) - ((1 - Win Rate) × Avg Loss)
 ```
 
 ### Drawdown
+
 ```
 Drawdown = Peak Equity - Current Equity
 Drawdown % = (Drawdown / Peak Equity) × 100
 ```
 
 ### Herfindahl Index (Concentration)
+
 ```
 HI = Sum of (Position Concentration %)²
 Well diversified: < 1500
@@ -501,6 +553,7 @@ Concentrated: > 2500
 ## FILES CREATED/MODIFIED
 
 ### New Files Created (8 files, 3,000+ lines)
+
 1. `src/lib/risk/riskMetrics.ts` - Risk metrics calculations
 2. `src/lib/risk/portfolioMetrics.ts` - Portfolio performance analytics
 3. `src/lib/risk/positionAnalysis.ts` - Position analysis and stress testing
@@ -512,6 +565,7 @@ Concentrated: > 2500
 9. `src/lib/risk/__tests__/riskDashboard.test.ts` - Comprehensive tests
 
 ### Files Modified (1 file)
+
 1. `src/lib/utils.ts` - Added getRiskLevelColors utility
 
 ---
@@ -519,17 +573,20 @@ Concentrated: > 2500
 ## DEPLOYMENT NOTES
 
 ### Prerequisites
+
 - Supabase tables: `profiles`, `positions`, `portfolio_history`
 - Row-level security policies configured
 - Real-time subscriptions enabled on all tables
 
 ### Configuration
+
 - No environment variables required
 - Uses existing Supabase client
 - Recharts library already in dependencies
 - No additional packages needed
 
 ### Performance Considerations
+
 - Load historical data asynchronously
 - Cache portfolio history for 30-day view
 - Limit stress test scenarios to 6 (predefined)
@@ -537,6 +594,7 @@ Concentrated: > 2500
 - Real-time updates throttled to 100ms minimum
 
 ### Monitoring & Maintenance
+
 - Check margin monitoring in production
 - Alert on liquidation risk detection
 - Monitor calculation performance
@@ -548,18 +606,21 @@ Concentrated: > 2500
 ## NEXT STEPS & RECOMMENDATIONS
 
 ### Short-term (Ready Now)
+
 ✅ Deploy UserRiskDashboard to production
 ✅ Enable CSV/PDF exports
 ✅ Monitor real-time calculations
 ✅ Gather user feedback
 
 ### Medium-term (1-2 weeks)
+
 - Add historical data storage for longer-term analysis
 - Implement custom stress test scenarios
 - Add more granular asset class breakdown
 - Implement correlation heatmap visualization
 
 ### Long-term (1-2 months)
+
 - Machine learning for drawdown prediction
 - Risk alert system with email notifications
 - Custom risk metrics configuration per user
@@ -582,6 +643,7 @@ Concentrated: > 2500
 Task 1.5: Risk Dashboard is **100% COMPLETE** and **PRODUCTION READY**.
 
 **Summary:**
+
 - ✅ 8 new files created (3,000+ lines of code)
 - ✅ 60+ comprehensive tests (100% passing)
 - ✅ Real-time dashboard with advanced analytics
@@ -591,6 +653,7 @@ Task 1.5: Risk Dashboard is **100% COMPLETE** and **PRODUCTION READY**.
 - ✅ Ready for immediate deployment
 
 **Phase 1 Completion:**
+
 - ✅ Task 1.1: Stop Loss & Take Profit (COMPLETE)
 - ✅ Task 1.2: Margin Call & Liquidation (COMPLETE)
 - ✅ Task 1.3: KYC Approval Workflow (COMPLETE)

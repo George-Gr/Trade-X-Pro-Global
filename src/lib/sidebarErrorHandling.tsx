@@ -1,23 +1,20 @@
-import React from 'react';
-import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
+import React from "react";
+import { SidebarErrorBoundary } from "@/components/ui/SidebarErrorBoundary";
 
 /**
  * HOC to wrap components with sidebar error boundary
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export const withSidebarErrorBoundary = <P extends {}>(
   Component: React.ComponentType<P>,
   options?: {
     enableLogging?: boolean;
     fallback?: React.ComponentType<{ error?: Error; onRetry?: () => void }>;
     onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  }
+  },
 ) => {
   return function WithSidebarErrorBoundary(props: P) {
     return (
-      <SidebarErrorBoundary
-        onError={options?.onError}
-      >
+      <SidebarErrorBoundary onError={options?.onError}>
         <Component {...props} />
       </SidebarErrorBoundary>
     );
@@ -36,10 +33,10 @@ export const NavigationItemErrorBoundary: React.FC<{
 
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     setHasError(true);
-    
+
     // Log the specific navigation item error
     console.error(`Navigation item "${itemName}" error:`, error, errorInfo);
-    
+
     if (onError) {
       onError(error, itemName);
     }
@@ -47,7 +44,7 @@ export const NavigationItemErrorBoundary: React.FC<{
 
   if (hasError) {
     return (
-      <div 
+      <div
         className="flex gap-3 px-4 py-2 text-muted-foreground text-sm cursor-not-allowed opacity-50"
         title={`"${itemName}" is temporarily unavailable due to an error`}
       >

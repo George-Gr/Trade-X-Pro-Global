@@ -18,6 +18,7 @@ TradePro is a **professional-grade CFD trading simulator** that lets traders pra
 - **Realtime data**: Live price feeds and technical analysis tools
 
 Perfect for:
+
 - New traders learning the markets
 - Experienced traders testing strategies
 - Trading educators teaching students
@@ -55,23 +56,27 @@ npm run dev
 ## 📚 Documentation Hub
 
 ### For Getting Started
+
 - **[README - Documentation Hub](docs/PRIMARY/README.md)** - Role-based navigation
 - **[QUICK_START - 30-Min Onboarding](docs/PRIMARY/QUICK_START.md)** - Setup & first trade
 - **[DOCUMENTATION_MAP - Find Anything](docs/PRIMARY/DOCUMENTATION_MAP.md)** - Complete index
 
 ### For Developers
+
 - **[DEVELOPMENT_SETUP.md](project_resources/development/DEVELOPMENT_SETUP.md)** - Full environment guide
 - **[ARCHITECTURE_DECISIONS.md](project_resources/rules_and_guidelines/ARCHITECTURE_DECISIONS.md)** - 9 key decisions explained
 - **[STYLE_GUIDE.md](project_resources/rules_and_guidelines/STYLE_GUIDE.md)** - Code conventions
 - **[TROUBLESHOOTING.md](project_resources/development/TROUBLESHOOTING.md)** - Problem-solving guide
 
 ### For Designers
+
 - **[DESIGN_SYSTEM.md](project_resources/design_system_and_typography/DESIGN_SYSTEM.md)** - Colors, typography, spacing
 - **[COMPONENT_API.md](project_resources/components/COMPONENT_API.md)** - Component specs & examples
 - **[QUALITY_GATES.md](project_resources/design_system_and_typography/QUALITY_GATES.md)** - Standards & validation
 - **[ACCESSIBILITY_STANDARDS.md](project_resources/rules_and_guidelines/ACCESSIBILITY_STANDARDS.md)** - WCAG 2.1 AA compliance
 
 ### For Architects
+
 - **[ARCHITECTURE_DECISIONS.md](project_resources/rules_and_guidelines/ARCHITECTURE_DECISIONS.md)** - Technical decisions & rationale
 - **[CONTRIBUTING_DESIGN_SYSTEM.md](project_resources/design_system_and_typography/CONTRIBUTING_DESIGN_SYSTEM.md)** - Governance & workflows
 - **[PRD.md](PRD.md)** - Product requirements & features
@@ -81,6 +86,7 @@ npm run dev
 ## 💻 Tech Stack
 
 ### Frontend
+
 - **React 18** - UI framework
 - **TypeScript** - Type safety
 - **Vite + SWC** - Fast build & development
@@ -88,22 +94,26 @@ npm run dev
 - **shadcn-ui** - Component library (Radix UI primitives)
 
 ### Backend & Data
+
 - **Supabase** - PostgreSQL, Auth, Realtime, Edge Functions
 - **React Query** - Server state management
 - **React Hook Form** - Form handling
 - **Zod** - Schema validation
 
 ### Charts & Visualization
+
 - **TradingView Lightweight Charts** - Professional trading charts
 - **Recharts** - Data visualization
 
 ### Testing & Quality
+
 - **Vitest** - Unit testing
 - **Playwright** - End-to-end testing
 - **ESLint** - Code quality
 - **TypeScript Strict Mode** - Type checking (loose mode by default, strict via tsconfig.strict.json)
 
 ### Routing
+
 - **React Router v6** - Client-side routing
 
 ---
@@ -228,15 +238,15 @@ Encountering issues? Check [TROUBLESHOOTING.md](project_resources/development/TR
 
 ## 📞 Getting Help
 
-| Question | Resource |
-|----------|----------|
-| How do I set up? | [QUICK_START.md](docs/PRIMARY/QUICK_START.md) |
-| How does design system work? | [DESIGN_SYSTEM.md](project_resources/design_system_and_typography/DESIGN_SYSTEM.md) |
-| How do I use components? | [COMPONENT_API.md](project_resources/components/COMPONENT_API.md) |
-| What are the design decisions? | [ARCHITECTURE_DECISIONS.md](project_resources/rules_and_guidelines/ARCHITECTURE_DECISIONS.md) |
-| Where do I find something? | [DOCUMENTATION_MAP.md](docs/PRIMARY/DOCUMENTATION_MAP.md) |
-| How do I fix an error? | [TROUBLESHOOTING.md](project_resources/development/TROUBLESHOOTING.md) |
-| What are the standards? | [STYLE_GUIDE.md](project_resources/rules_and_guidelines/STYLE_GUIDE.md) & [QUALITY_GATES.md](project_resources/design_system_and_typography/QUALITY_GATES.md) |
+| Question                       | Resource                                                                                                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| How do I set up?               | [QUICK_START.md](docs/PRIMARY/QUICK_START.md)                                                                                                                 |
+| How does design system work?   | [DESIGN_SYSTEM.md](project_resources/design_system_and_typography/DESIGN_SYSTEM.md)                                                                           |
+| How do I use components?       | [COMPONENT_API.md](project_resources/components/COMPONENT_API.md)                                                                                             |
+| What are the design decisions? | [ARCHITECTURE_DECISIONS.md](project_resources/rules_and_guidelines/ARCHITECTURE_DECISIONS.md)                                                                 |
+| Where do I find something?     | [DOCUMENTATION_MAP.md](docs/PRIMARY/DOCUMENTATION_MAP.md)                                                                                                     |
+| How do I fix an error?         | [TROUBLESHOOTING.md](project_resources/development/TROUBLESHOOTING.md)                                                                                        |
+| What are the standards?        | [STYLE_GUIDE.md](project_resources/rules_and_guidelines/STYLE_GUIDE.md) & [QUALITY_GATES.md](project_resources/design_system_and_typography/QUALITY_GATES.md) |
 
 ---
 
@@ -252,6 +262,7 @@ TradePro can be deployed to:
 Build configuration in `vite.config.ts` and `.netlify/functions/` for Edge Functions.
 
 For production deployment, ensure:
+
 1. `npm run build` completes without errors
 2. `npm run test` passes all tests
 3. `npm run lint` shows no issues
@@ -283,4 +294,3 @@ For production deployment, ensure:
 ---
 
 **Ready to start?** → [Open QUICK_START.md](docs/PRIMARY/QUICK_START.md) 🚀
-

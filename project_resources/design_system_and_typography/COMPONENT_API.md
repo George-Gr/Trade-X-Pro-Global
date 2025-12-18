@@ -20,35 +20,36 @@
 ## 🪟 Dialog Component
 
 ### Overview
+
 Modal dialogs for important user interactions, confirmations, and focused content.
 
 ### Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `open` | `boolean` | `false` | Controls dialog visibility | ✅ Yes |
-| `onOpenChange` | `(open: boolean) => void` | — | Callback when dialog state changes | ✅ Yes |
-| `title` | `string` | — | Dialog title text | ✅ Yes |
-| `description` | `string` | — | Dialog description/subtitle | No |
-| `children` | `ReactNode` | — | Dialog content | ✅ Yes |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Dialog width size | No |
-| `className` | `string` | — | Additional CSS classes | No |
-| `closeButton` | `boolean` | `true` | Show close (X) button | No |
-| `escapeToClose` | `boolean` | `true` | Close on Escape key | No |
-| `backdropClose` | `boolean` | `false` | Close when clicking backdrop | No |
+| Prop            | Type                      | Default | Description                        | Required |
+| --------------- | ------------------------- | ------- | ---------------------------------- | -------- |
+| `open`          | `boolean`                 | `false` | Controls dialog visibility         | ✅ Yes   |
+| `onOpenChange`  | `(open: boolean) => void` | —       | Callback when dialog state changes | ✅ Yes   |
+| `title`         | `string`                  | —       | Dialog title text                  | ✅ Yes   |
+| `description`   | `string`                  | —       | Dialog description/subtitle        | No       |
+| `children`      | `ReactNode`               | —       | Dialog content                     | ✅ Yes   |
+| `size`          | `'sm' \| 'md' \| 'lg'`    | `'md'`  | Dialog width size                  | No       |
+| `className`     | `string`                  | —       | Additional CSS classes             | No       |
+| `closeButton`   | `boolean`                 | `true`  | Show close (X) button              | No       |
+| `escapeToClose` | `boolean`                 | `true`  | Close on Escape key                | No       |
+| `backdropClose` | `boolean`                 | `false` | Close when clicking backdrop       | No       |
 
 ### Size Options
 
-| Size | Width | Use Case |
-|------|-------|----------|
-| `sm` | 400px | Simple confirmations |
+| Size | Width | Use Case                |
+| ---- | ----- | ----------------------- |
+| `sm` | 400px | Simple confirmations    |
 | `md` | 600px | Forms, detailed content |
-| `lg` | 800px | Complex forms, media |
+| `lg` | 800px | Complex forms, media    |
 
 ### Example
 
 ```tsx
-import { Dialog } from '@/components/ui/dialog';
+import { Dialog } from "@/components/ui/dialog";
 
 function DeleteConfirmation() {
   const [open, setOpen] = useState(false);
@@ -64,10 +65,11 @@ function DeleteConfirmation() {
           <DialogHeader>
             <DialogTitle>Confirm Account Deletion</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. All your data will be permanently removed.
+              This action cannot be undone. All your data will be permanently
+              removed.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Are you sure you want to delete your account? This includes:
@@ -83,8 +85,8 @@ function DeleteConfirmation() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={() => {
                 // Handle deletion
                 setOpen(false);
@@ -119,8 +121,8 @@ function DeleteConfirmation() {
 
 ```tsx
 // Custom styling
-<DialogContent 
-  size="lg" 
+<DialogContent
+  size="lg"
   className="bg-gradient-to-br from-primary/10 to-primary-glow/5"
 >
   {/* Content */}
@@ -152,49 +154,52 @@ function DeleteConfirmation() {
 ## ⚠️ Alert Component
 
 ### Overview
+
 Contextual feedback messages for user actions with automatic or manual dismissal.
 
 ### Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `variant` | `'default' \| 'success' \| 'warning' \| 'destructive'` | `'default'` | Alert style and semantics | No |
-| `title` | `string` | — | Alert title | ✅ Yes |
-| `message` | `string` | — | Alert message content | ✅ Yes |
-| `icon` | `ReactNode` | auto | Custom icon (or `null` to hide) | No |
-| `dismissible` | `boolean` | `false` | Show close button | No |
-| `onDismiss` | `() => void` | — | Called when dismissed | No |
-| `duration` | `number` | `0` | Auto-dismiss after ms (0 = manual only) | No |
-| `className` | `string` | — | Additional CSS classes | No |
+| Prop          | Type                                                   | Default     | Description                             | Required |
+| ------------- | ------------------------------------------------------ | ----------- | --------------------------------------- | -------- |
+| `variant`     | `'default' \| 'success' \| 'warning' \| 'destructive'` | `'default'` | Alert style and semantics               | No       |
+| `title`       | `string`                                               | —           | Alert title                             | ✅ Yes   |
+| `message`     | `string`                                               | —           | Alert message content                   | ✅ Yes   |
+| `icon`        | `ReactNode`                                            | auto        | Custom icon (or `null` to hide)         | No       |
+| `dismissible` | `boolean`                                              | `false`     | Show close button                       | No       |
+| `onDismiss`   | `() => void`                                           | —           | Called when dismissed                   | No       |
+| `duration`    | `number`                                               | `0`         | Auto-dismiss after ms (0 = manual only) | No       |
+| `className`   | `string`                                               | —           | Additional CSS classes                  | No       |
 
 ### Variant Options
 
-| Variant | Color | Use Case |
-|---------|-------|----------|
-| `default` | Blue | Informational messages |
-| `success` | Green | Actions completed successfully |
-| `warning` | Amber | Potential issues, warnings |
-| `destructive` | Red | Errors, critical issues |
+| Variant       | Color | Use Case                       |
+| ------------- | ----- | ------------------------------ |
+| `default`     | Blue  | Informational messages         |
+| `success`     | Green | Actions completed successfully |
+| `warning`     | Amber | Potential issues, warnings     |
+| `destructive` | Red   | Errors, critical issues        |
 
 ### Example
 
 ```tsx
-import { Alert } from '@/components/ui/alert';
+import { Alert } from "@/components/ui/alert";
 
 function TradingAlerts() {
-  const [alerts, setAlerts] = useState<Array<{
-    id: string;
-    variant: 'success' | 'warning' | 'destructive';
-    title: string;
-    message: string;
-  }>>([]);
+  const [alerts, setAlerts] = useState<
+    Array<{
+      id: string;
+      variant: "success" | "warning" | "destructive";
+      title: string;
+      message: string;
+    }>
+  >([]);
 
-  const addAlert = (alert: typeof alerts[0]) => {
-    setAlerts(prev => [...prev, alert]);
+  const addAlert = (alert: (typeof alerts)[0]) => {
+    setAlerts((prev) => [...prev, alert]);
   };
 
   const removeAlert = (id: string) => {
-    setAlerts(prev => prev.filter(alert => alert.id !== id));
+    setAlerts((prev) => prev.filter((alert) => alert.id !== id));
   };
 
   return (
@@ -205,7 +210,7 @@ function TradingAlerts() {
         title="Position Opened Successfully"
         message="Your long position in BTC/USD has been opened at $45,000"
         dismissible
-        onDismiss={() => removeAlert('success-1')}
+        onDismiss={() => removeAlert("success-1")}
       />
 
       {/* Warning Alert */}
@@ -295,39 +300,40 @@ function TradingAlerts() {
 ## 🏷️ Badge Component
 
 ### Overview
+
 Status indicators, labels, and small pieces of information with various styling options.
 
 ### Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `variant` | `'default' \| 'secondary' \| 'outline' \| 'destructive'` | `'default'` | Badge style | No |
-| `size` | `'sm' \| 'default'` | `'default'` | Badge size | No |
-| `interactive` | `boolean` | `false` | Clickable badge | No |
-| `onClick` | `() => void` | — | Click handler (if interactive) | No |
-| `className` | `string` | — | Additional CSS classes | No |
-| `children` | `ReactNode` | — | Badge content | ✅ Yes |
+| Prop          | Type                                                     | Default     | Description                    | Required |
+| ------------- | -------------------------------------------------------- | ----------- | ------------------------------ | -------- |
+| `variant`     | `'default' \| 'secondary' \| 'outline' \| 'destructive'` | `'default'` | Badge style                    | No       |
+| `size`        | `'sm' \| 'default'`                                      | `'default'` | Badge size                     | No       |
+| `interactive` | `boolean`                                                | `false`     | Clickable badge                | No       |
+| `onClick`     | `() => void`                                             | —           | Click handler (if interactive) | No       |
+| `className`   | `string`                                                 | —           | Additional CSS classes         | No       |
+| `children`    | `ReactNode`                                              | —           | Badge content                  | ✅ Yes   |
 
 ### Variant Options
 
-| Variant | Description | Use Case |
-|---------|-------------|----------|
-| `default` | Primary brand colors | Status indicators |
-| `secondary` | Subtle, muted colors | Secondary information |
-| `outline` | Border-focused design | Tags, categories |
-| `destructive` | Red/error colors | Error states, warnings |
+| Variant       | Description           | Use Case               |
+| ------------- | --------------------- | ---------------------- |
+| `default`     | Primary brand colors  | Status indicators      |
+| `secondary`   | Subtle, muted colors  | Secondary information  |
+| `outline`     | Border-focused design | Tags, categories       |
+| `destructive` | Red/error colors      | Error states, warnings |
 
 ### Size Options
 
-| Size | Height | Font Size | Use Case |
-|------|--------|-----------|----------|
-| `sm` | 20px | 11px | Compact spaces |
-| `default` | 24px | 12px | Standard usage |
+| Size      | Height | Font Size | Use Case       |
+| --------- | ------ | --------- | -------------- |
+| `sm`      | 20px   | 11px      | Compact spaces |
+| `default` | 24px   | 12px      | Standard usage |
 
 ### Example
 
 ```tsx
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
 
 function TradingBadges() {
   return (
@@ -341,18 +347,18 @@ function TradingBadges() {
 
       {/* Interactive Badges */}
       <div className="flex gap-2">
-        <Badge 
-          variant="outline" 
-          interactive 
-          onClick={() => console.log('Filter applied')}
+        <Badge
+          variant="outline"
+          interactive
+          onClick={() => console.log("Filter applied")}
         >
           Filter: BTC
         </Badge>
-        
-        <Badge 
-          variant="secondary" 
-          interactive 
-          onClick={() => console.log('Tag clicked')}
+
+        <Badge
+          variant="secondary"
+          interactive
+          onClick={() => console.log("Tag clicked")}
         >
           #Cryptocurrency
         </Badge>
@@ -373,7 +379,7 @@ function TradingBadges() {
             Up 2.5%
           </span>
         </Badge>
-        
+
         <Badge variant="outline">
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
@@ -405,7 +411,7 @@ function TradingBadges() {
 
 ```tsx
 // Custom styling
-<Badge 
+<Badge
   variant="default"
   className="bg-gradient-to-r from-primary to-primary/80"
 >
@@ -444,45 +450,46 @@ function TradingBadges() {
 ## 🎯 Button Component
 
 ### Overview
+
 Interactive buttons with multiple sizes, variants, and states for all user actions.
 
 ### Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `variant` | `'default' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive'` | `'default'` | Button style | No |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Button height | No |
-| `disabled` | `boolean` | `false` | Disable button | No |
-| `loading` | `boolean` | `false` | Show loading spinner | No |
-| `fullWidth` | `boolean` | `false` | Full width button | No |
-| `className` | `string` | — | Additional CSS classes | No |
-| `onClick` | `() => void` | — | Click handler | ✅ Yes (unless disabled) |
-| `children` | `ReactNode` | — | Button content | ✅ Yes |
+| Prop        | Type                                                                | Default     | Description            | Required                 |
+| ----------- | ------------------------------------------------------------------- | ----------- | ---------------------- | ------------------------ |
+| `variant`   | `'default' \| 'secondary' \| 'outline' \| 'ghost' \| 'destructive'` | `'default'` | Button style           | No                       |
+| `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`                              | `'md'`      | Button height          | No                       |
+| `disabled`  | `boolean`                                                           | `false`     | Disable button         | No                       |
+| `loading`   | `boolean`                                                           | `false`     | Show loading spinner   | No                       |
+| `fullWidth` | `boolean`                                                           | `false`     | Full width button      | No                       |
+| `className` | `string`                                                            | —           | Additional CSS classes | No                       |
+| `onClick`   | `() => void`                                                        | —           | Click handler          | ✅ Yes (unless disabled) |
+| `children`  | `ReactNode`                                                         | —           | Button content         | ✅ Yes                   |
 
 ### Size Options
 
-| Size | Height | Padding | Font Size | Use Case |
-|------|--------|---------|-----------|----------|
-| `xs` | 32px | 8px 12px | 12px | Compact interfaces |
-| `sm` | 40px | 12px 16px | 13px | Secondary actions |
-| `md` | 48px | 16px 20px | 14px | Primary actions (default) |
-| `lg` | 56px | 20px 24px | 16px | Prominent CTAs |
-| `xl` | 64px | 24px 32px | 18px | Hero sections |
+| Size | Height | Padding   | Font Size | Use Case                  |
+| ---- | ------ | --------- | --------- | ------------------------- |
+| `xs` | 32px   | 8px 12px  | 12px      | Compact interfaces        |
+| `sm` | 40px   | 12px 16px | 13px      | Secondary actions         |
+| `md` | 48px   | 16px 20px | 14px      | Primary actions (default) |
+| `lg` | 56px   | 20px 24px | 16px      | Prominent CTAs            |
+| `xl` | 64px   | 24px 32px | 18px      | Hero sections             |
 
 ### Variant Options
 
-| Variant | Description | Use Case |
-|---------|-------------|----------|
-| `default` | Primary brand styling | Main CTAs |
-| `secondary` | Subtle, less prominent | Secondary actions |
-| `outline` | Border-focused | Alternative styling |
-| `ghost` | Minimal styling | Toolbar actions |
-| `destructive` | Red/error styling | Dangerous actions |
+| Variant       | Description            | Use Case            |
+| ------------- | ---------------------- | ------------------- |
+| `default`     | Primary brand styling  | Main CTAs           |
+| `secondary`   | Subtle, less prominent | Secondary actions   |
+| `outline`     | Border-focused         | Alternative styling |
+| `ghost`       | Minimal styling        | Toolbar actions     |
+| `destructive` | Red/error styling      | Dangerous actions   |
 
 ### Example
 
 ```tsx
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 function TradingButtons() {
   return (
@@ -516,7 +523,7 @@ function TradingButtons() {
       <Button
         variant="default"
         size="lg"
-        onClick={() => console.log('Trade executed')}
+        onClick={() => console.log("Trade executed")}
         className="bg-gradient-to-r from-primary to-primary/80"
       >
         <span className="flex items-center gap-2">
@@ -574,38 +581,39 @@ function TradingButtons() {
 ## 🃏 Card Component
 
 ### Overview
+
 Flexible container component for grouping related content with elevation and styling options.
 
 ### Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `variant` | `'primary' \| 'secondary'` | `'primary'` | Card styling variant | No |
-| `elevation` | `1 \| 2 \| 3` | `1` | Shadow/elevation level | No |
-| `interactive` | `boolean` | `false` | Clickable card | No |
-| `onClick` | `() => void` | — | Click handler | No |
-| `className` | `string` | — | Additional CSS classes | No |
-| `children` | `ReactNode` | — | Card content | ✅ Yes |
+| Prop          | Type                       | Default     | Description            | Required |
+| ------------- | -------------------------- | ----------- | ---------------------- | -------- |
+| `variant`     | `'primary' \| 'secondary'` | `'primary'` | Card styling variant   | No       |
+| `elevation`   | `1 \| 2 \| 3`              | `1`         | Shadow/elevation level | No       |
+| `interactive` | `boolean`                  | `false`     | Clickable card         | No       |
+| `onClick`     | `() => void`               | —           | Click handler          | No       |
+| `className`   | `string`                   | —           | Additional CSS classes | No       |
+| `children`    | `ReactNode`                | —           | Card content           | ✅ Yes   |
 
 ### Elevation Options
 
-| Level | Shadow | Use Case |
-|-------|--------|----------|
-| `1` | Subtle | Base content, grouped information |
-| `2` | Medium | Featured content, sections |
-| `3` | Strong | Modals, overlays, floating elements |
+| Level | Shadow | Use Case                            |
+| ----- | ------ | ----------------------------------- |
+| `1`   | Subtle | Base content, grouped information   |
+| `2`   | Medium | Featured content, sections          |
+| `3`   | Strong | Modals, overlays, floating elements |
 
 ### Variant Options
 
-| Variant | Description | Use Case |
-|---------|-------------|----------|
-| `primary` | Standard card styling | Main content areas |
+| Variant     | Description           | Use Case           |
+| ----------- | --------------------- | ------------------ |
+| `primary`   | Standard card styling | Main content areas |
 | `secondary` | Subtle, muted styling | Supporting content |
 
 ### Example
 
 ```tsx
-import { Card } from '@/components/ui/card';
+import { Card } from "@/components/ui/card";
 
 function DashboardCards() {
   return (
@@ -628,11 +636,11 @@ function DashboardCards() {
       </Card>
 
       {/* Interactive Card */}
-      <Card 
-        variant="secondary" 
+      <Card
+        variant="secondary"
         elevation={2}
         interactive
-        onClick={() => console.log('Card clicked')}
+        onClick={() => console.log("Card clicked")}
       >
         <CardHeader>
           <CardTitle>Market News</CardTitle>
@@ -640,7 +648,8 @@ function DashboardCards() {
         </CardHeader>
         <CardContent>
           <p className="text-sm">
-            Stay updated with the latest market trends and news that could impact your portfolio.
+            Stay updated with the latest market trends and news that could
+            impact your portfolio.
           </p>
         </CardContent>
       </Card>
@@ -654,7 +663,9 @@ function DashboardCards() {
         <CardContent>
           <div className="space-y-2">
             <Badge variant="success">Pro</Badge>
-            <p className="text-sm">Access to premium trading tools and analytics.</p>
+            <p className="text-sm">
+              Access to premium trading tools and analytics.
+            </p>
           </div>
         </CardContent>
         <CardFooter>
@@ -712,34 +723,35 @@ function DashboardCards() {
 ## 📝 Form Components
 
 ### Overview
+
 Comprehensive form components with validation, accessibility, and responsive design.
 
 ### FormField Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `label` | `string` | — | Field label | ✅ Yes |
-| `required` | `boolean` | `false` | Mark as required | No |
-| `error` | `string` | — | Error message | No |
-| `helpText` | `string` | — | Helper text | No |
-| `className` | `string` | — | Additional CSS classes | No |
-| `children` | `ReactNode` | — | Field content | ✅ Yes |
+| Prop        | Type        | Default | Description            | Required |
+| ----------- | ----------- | ------- | ---------------------- | -------- |
+| `label`     | `string`    | —       | Field label            | ✅ Yes   |
+| `required`  | `boolean`   | `false` | Mark as required       | No       |
+| `error`     | `string`    | —       | Error message          | No       |
+| `helpText`  | `string`    | —       | Helper text            | No       |
+| `className` | `string`    | —       | Additional CSS classes | No       |
+| `children`  | `ReactNode` | —       | Field content          | ✅ Yes   |
 
 ### Input Props
 
-| Prop | Type | Default | Description | Required |
-|------|------|---------|-------------|----------|
-| `type` | `string` | `'text'` | Input type | No |
-| `placeholder` | `string` | — | Placeholder text | No |
-| `disabled` | `boolean` | `false` | Disable input | No |
-| `error` | `boolean` | `false` | Error state | No |
-| `className` | `string` | — | Additional CSS classes | No |
-| `onChange` | `(value: string) => void` | — | Change handler | No |
+| Prop          | Type                      | Default  | Description            | Required |
+| ------------- | ------------------------- | -------- | ---------------------- | -------- |
+| `type`        | `string`                  | `'text'` | Input type             | No       |
+| `placeholder` | `string`                  | —        | Placeholder text       | No       |
+| `disabled`    | `boolean`                 | `false`  | Disable input          | No       |
+| `error`       | `boolean`                 | `false`  | Error state            | No       |
+| `className`   | `string`                  | —        | Additional CSS classes | No       |
+| `onChange`    | `(value: string) => void` | —        | Change handler         | No       |
 
 ### Example
 
 ```tsx
-import { FormField, Input, Select, Textarea } from '@/components/ui/form';
+import { FormField, Input, Select, Textarea } from "@/components/ui/form";
 
 function TradingForm() {
   return (
@@ -757,14 +769,11 @@ function TradingForm() {
         />
       </FormField>
 
-      <FormField
-        label="Account Type"
-        required
-      >
+      <FormField label="Account Type" required>
         <Select
           options={[
-            { value: 'demo', label: 'Demo Account' },
-            { value: 'live', label: 'Live Account' },
+            { value: "demo", label: "Demo Account" },
+            { value: "live", label: "Live Account" },
           ]}
           onChange={(value) => console.log(value)}
         />
@@ -783,7 +792,9 @@ function TradingForm() {
 
       <div className="flex gap-2">
         <Button type="submit">Submit</Button>
-        <Button variant="outline" type="reset">Reset</Button>
+        <Button variant="outline" type="reset">
+          Reset
+        </Button>
       </div>
     </form>
   );
@@ -839,12 +850,12 @@ function TradingForm() {
 
 ```tsx
 // Named imports (recommended)
-import { Button, Card, Dialog } from '@/components/ui';
+import { Button, Card, Dialog } from "@/components/ui";
 
 // Or individual imports
-import Button from '@/components/ui/button';
-import Card from '@/components/ui/card';
-import Dialog from '@/components/ui/dialog';
+import Button from "@/components/ui/button";
+import Card from "@/components/ui/card";
+import Dialog from "@/components/ui/dialog";
 ```
 
 ### Styling Customization
@@ -900,11 +911,13 @@ import Dialog from '@/components/ui/dialog';
 ## 🚀 Getting Started
 
 1. **Import Components:**
+
    ```tsx
-   import { Button, Card, Dialog } from '@/components/ui';
+   import { Button, Card, Dialog } from "@/components/ui";
    ```
 
 2. **Use in Your Components:**
+
    ```tsx
    function MyComponent() {
      return (

@@ -50,10 +50,17 @@ export const useRiskEvents = (limit = 5) => {
       .channel(`risk-events:${user.id}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "risk_events", filter: `user_id=eq.${user.id}` },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "risk_events",
+          filter: `user_id=eq.${user.id}`,
+        },
         (payload) => {
-          setEvents((prev) => [payload.new as RiskEvent, ...prev].slice(0, limit));
-        }
+          setEvents((prev) =>
+            [payload.new as RiskEvent, ...prev].slice(0, limit),
+          );
+        },
       )
       .subscribe();
 

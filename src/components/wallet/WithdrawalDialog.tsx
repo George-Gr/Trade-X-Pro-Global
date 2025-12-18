@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { WithdrawalForm } from "./WithdrawalForm";
 
 interface WithdrawalDialogProps {
@@ -9,11 +15,11 @@ interface WithdrawalDialogProps {
   balance: number;
 }
 
-export function WithdrawalDialog({ 
-  open, 
-  onOpenChange, 
+export function WithdrawalDialog({
+  open,
+  onOpenChange,
   onSuccess,
-  balance 
+  balance,
 }: WithdrawalDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -21,7 +27,8 @@ export function WithdrawalDialog({
         <DialogHeader>
           <DialogTitle>Request Withdrawal</DialogTitle>
           <DialogDescription>
-            Withdraw cryptocurrency to your external wallet. Please ensure you use a valid address.
+            Withdraw cryptocurrency to your external wallet. Please ensure you
+            use a valid address.
           </DialogDescription>
         </DialogHeader>
 

@@ -47,14 +47,16 @@ interface UsePnLCalculationsReturn {
   // Convenience methods
   formatPnL: (value: number) => string;
   getPnLStatus: (pnl: number) => "profit" | "loss" | "breakeven";
-  getPnLColor: (pnl: number) => "text-buy" | "text-sell" | "text-muted-foreground";
+  getPnLColor: (
+    pnl: number,
+  ) => "text-buy" | "text-sell" | "text-muted-foreground";
 }
 
 export const usePnLCalculations = (
   positions: PnLPosition[],
   prices: Map<string, number>,
   profileData?: { realized_pnl?: number; margin_used?: number },
-  options: UsePnLCalculationsOptions = {}
+  options: UsePnLCalculationsOptions = {},
 ): UsePnLCalculationsReturn => {
   const { enabled = true, precision = 4 } = options;
 
@@ -72,10 +74,11 @@ export const usePnLCalculations = (
         position.entry_price || 0,
         currentPrice,
         position.quantity,
-        (position.side || 'long') as "long" | "short"
+        (position.side || "long") as "long" | "short",
       );
 
-      const positionValue = Math.round(currentPrice * position.quantity * 10000) / 10000;
+      const positionValue =
+        Math.round(currentPrice * position.quantity * 10000) / 10000;
       const marginRequired = position.margin_required || 0;
 
       // Calculate margin level
@@ -94,9 +97,7 @@ export const usePnLCalculations = (
 
       // Calculate ROI
       const roi =
-        marginRequired > 0
-          ? calculateROI(pnlResult.pnl, marginRequired)
-          : 0;
+        marginRequired > 0 ? calculateROI(pnlResult.pnl, marginRequired) : 0;
 
       map.set(position.id, {
         positionId: position.id,
@@ -110,9 +111,16 @@ export const usePnLCalculations = (
         positionValue,
         marginRequired,
         marginLevel,
-        liquidationPrice: liquidationPrice != null ? Math.round(liquidationPrice * 10000) / 10000 : null,
+        liquidationPrice:
+          liquidationPrice != null
+            ? Math.round(liquidationPrice * 10000) / 10000
+            : null,
         roi,
-        status: pnlResult.isProfit ? "profit" : pnlResult.isBreakeven ? "breakeven" : "loss",
+        status: pnlResult.isProfit
+          ? "profit"
+          : pnlResult.isBreakeven
+            ? "breakeven"
+            : "loss",
       });
     }
 
@@ -172,7 +180,7 @@ export const usePnLCalculations = (
 
     // Calculate portfolio metrics
     const totalCost = positions
-      .filter(p => p.entry_price != null)
+      .filter((p) => p.entry_price != null)
       .reduce((sum, p) => sum + p.entry_price! * p.quantity, 0);
     const pnlPercentage = totalCost > 0 ? (netPnL / totalCost) * 100 : 0;
 
@@ -200,7 +208,8 @@ export const usePnLCalculations = (
       breakevenPositions: breakevenCount,
       winRate:
         positions.length > 0
-          ? Math.round((profitableCount / positions.length) * 100 * 10000) / 10000
+          ? Math.round((profitableCount / positions.length) * 100 * 10000) /
+            10000
           : 0,
       profitFactor: Math.round(profitFactor * 10000) / 10000,
       largestWin: Math.round(largestWin * 10000) / 10000,
@@ -211,24 +220,21 @@ export const usePnLCalculations = (
   // Memoized totals
   const totalUnrealizedPnL = useMemo(
     () => portfolioPnL.totalUnrealizedPnL,
-    [portfolioPnL]
+    [portfolioPnL],
   );
 
   const totalRealizedPnL = useMemo(
     () => portfolioPnL.totalRealizedPnL,
-    [portfolioPnL]
+    [portfolioPnL],
   );
 
   const totalPnL = useMemo(() => portfolioPnL.netPnL, [portfolioPnL]);
 
   // Formatting utilities (memoized to prevent recreations)
-  const formatPnL = useCallback(
-    (value: number) => {
-      const sign = value > 0 ? "+" : "";
-      return `${sign}$${value.toFixed(2)}`;
-    },
-    []
-  );
+  const formatPnL = useCallback((value: number) => {
+    const sign = value > 0 ? "+" : "";
+    return `${sign}$${value.toFixed(2)}`;
+  }, []);
 
   const getPnLStatus = useCallback(
     (pnl: number): "profit" | "loss" | "breakeven" => {
@@ -236,7 +242,7 @@ export const usePnLCalculations = (
       if (pnl < 0) return "loss";
       return "breakeven";
     },
-    []
+    [],
   );
 
   const getPnLColor = useCallback(
@@ -245,7 +251,7 @@ export const usePnLCalculations = (
       if (pnl < 0) return "text-sell";
       return "text-muted-foreground";
     },
-    []
+    [],
   );
 
   // Callback to get P&L for a specific position
@@ -253,7 +259,7 @@ export const usePnLCalculations = (
     (position: PnLPosition) => {
       return positionPnLMap.get(position.id) || null;
     },
-    [positionPnLMap]
+    [positionPnLMap],
   );
 
   return {

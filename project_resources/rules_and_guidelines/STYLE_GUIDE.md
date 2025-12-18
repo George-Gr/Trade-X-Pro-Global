@@ -29,13 +29,13 @@ TradePro uses **intentionally loose TypeScript configuration** for incremental a
 // tsconfig.json
 {
   "compilerOptions": {
-    "noImplicitAny": false,           // Allow implicit any
-    "strictNullChecks": false,        // Allow null in unions
-    "noUnusedLocals": false,          // Don't warn on unused locals
-    "noUnusedParameters": false,      // Don't warn on unused params
-    "skipLibCheck": true,             // Skip type checking external libs
-    "allowJs": true                   // Allow JavaScript imports
-  }
+    "noImplicitAny": false, // Allow implicit any
+    "strictNullChecks": false, // Allow null in unions
+    "noUnusedLocals": false, // Don't warn on unused locals
+    "noUnusedParameters": false, // Don't warn on unused params
+    "skipLibCheck": true, // Skip type checking external libs
+    "allowJs": true, // Allow JavaScript imports
+  },
 }
 ```
 
@@ -44,29 +44,31 @@ TradePro uses **intentionally loose TypeScript configuration** for incremental a
 ### Type Guidelines
 
 - **Use `unknown` then narrow**: When dealing with uncertain types, use `unknown` and narrow the type scope:
+
   ```typescript
   const parseData = (data: unknown): User => {
-    if (typeof data === 'object' && data !== null && 'id' in data) {
+    if (typeof data === "object" && data !== null && "id" in data) {
       return data as User;
     }
-    throw new Error('Invalid user data');
+    throw new Error("Invalid user data");
   };
   ```
 
 - **Avoid `any` when possible**: ESLint warns on `@typescript-eslint/no-explicit-any` but doesn't block it. Prefer `unknown` or proper types.
 
 - **Import types from Supabase**: Never manually create database types—import auto-generated types:
+
   ```typescript
-  import type { Database } from '@/integrations/supabase/types';
-  
-  type User = Database['public']['Tables']['users']['Row'];
+  import type { Database } from "@/integrations/supabase/types";
+
+  type User = Database["public"]["Tables"]["users"]["Row"];
   ```
 
 - **Path Aliases**: Always use `@/` prefix (configured in `tsconfig.json`):
   ```typescript
-  import { Button } from '@/components/ui/button';
-  import { useAuth } from '@/hooks/useAuth';
-  import { supabase } from '@/integrations/supabase/client';
+  import { Button } from "@/components/ui/button";
+  import { useAuth } from "@/hooks/useAuth";
+  import { supabase } from "@/integrations/supabase/client";
   ```
 
 ### Type Assertions
@@ -82,7 +84,7 @@ const user = data as any;
 
 // ✅ Better: Use type guard
 function isUser(data: unknown): data is User {
-  return typeof data === 'object' && data !== null && 'id' in data;
+  return typeof data === "object" && data !== null && "id" in data;
 }
 ```
 
@@ -123,15 +125,15 @@ interface TradeFormProps {
 
 /**
  * TradeForm - Manages order creation and submission
- * 
+ *
  * @param symbol - The trading symbol (e.g., 'EURUSD')
  * @param onSubmit - Callback when order is submitted
  * @param isDisabled - Whether the form should be disabled
  */
-export const TradeForm: React.FC<TradeFormProps> = ({ 
-  symbol, 
-  onSubmit, 
-  isDisabled = false 
+export const TradeForm: React.FC<TradeFormProps> = ({
+  symbol,
+  onSubmit,
+  isDisabled = false
 }) => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -176,13 +178,13 @@ Always destructure props with TypeScript types:
 interface ButtonProps {
   label: string;
   onClick: () => void;
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
 }
 
-export const CustomButton: React.FC<ButtonProps> = ({ 
-  label, 
-  onClick, 
-  variant = 'primary' 
+export const CustomButton: React.FC<ButtonProps> = ({
+  label,
+  onClick,
+  variant = "primary",
 }) => {
   // ...
 };
@@ -200,13 +202,13 @@ Document components with JSDoc:
 ```typescript
 /**
  * OrderBook - Displays real-time order book for a symbol
- * 
+ *
  * Subscribes to Supabase Realtime for live updates.
- * 
+ *
  * @component
  * @example
  * return <OrderBook symbol="EURUSD" />
- * 
+ *
  * @param symbol - Trading symbol to display orders for
  * @returns React component showing bid/ask orders
  */
@@ -248,28 +250,28 @@ interface ButtonProps {
   // Content
   children: React.ReactNode;
   label?: string;
-  
+
   // Behavior
   onClick?: () => void;
   disabled?: boolean;
-  
+
   // Styling
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   className?: string;
-  
+
   // State
   isLoading?: boolean;
   isDanger?: boolean;
-  
+
   // ARIA
   ariaLabel?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   disabled = false,
   isLoading = false,
   ...props
@@ -297,26 +299,26 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   defaultValue?: string;
-  
+
   // Events
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onBlur?: () => void;
-  
+
   // Behavior
   disabled?: boolean;
   readOnly?: boolean;
   required?: boolean;
-  
+
   // Styling
-  variant?: 'default' | 'error' | 'success';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "default" | "error" | "success";
+  size?: "sm" | "md" | "lg";
   className?: string;
-  
+
   // State
   isLoading?: boolean;
   error?: string;
-  
+
   // Accessibility
   ariaLabel?: string;
   ariaErrorMessage?: string;
@@ -330,13 +332,13 @@ Always provide sensible defaults:
 ```typescript
 // ✅ Good: Explicit defaults
 interface CardProps {
-  variant?: 'default' | 'elevated' | 'outline';
-  padding?: 'sm' | 'md' | 'lg';
+  variant?: "default" | "elevated" | "outline";
+  padding?: "sm" | "md" | "lg";
 }
 
 export const Card: React.FC<CardProps> = ({
-  variant = 'default',     // Explicit default
-  padding = 'md',          // Explicit default
+  variant = "default", // Explicit default
+  padding = "md", // Explicit default
   children,
   className,
 }) => {
@@ -345,8 +347,8 @@ export const Card: React.FC<CardProps> = ({
 
 // ❌ Bad: No defaults, callers must specify everything
 interface CardProps {
-  variant: 'default' | 'elevated' | 'outline';
-  padding: 'sm' | 'md' | 'lg';
+  variant: "default" | "elevated" | "outline";
+  padding: "sm" | "md" | "lg";
 }
 ```
 
@@ -357,14 +359,14 @@ Use a consistent pattern for optional props:
 ```typescript
 // ✅ Good: Optional props clearly marked with ?
 interface ModalProps {
-  isOpen: boolean;                    // Required, controls visibility
-  onClose: () => void;                // Required, essential callback
-  title: string;                      // Required, main content
-  
-  subtitle?: string;                  // Optional enhancement
-  footer?: React.ReactNode;           // Optional, use rarely
-  onConfirm?: () => void;             // Optional callback
-  confirmText?: string;               // Optional label
+  isOpen: boolean; // Required, controls visibility
+  onClose: () => void; // Required, essential callback
+  title: string; // Required, main content
+
+  subtitle?: string; // Optional enhancement
+  footer?: React.ReactNode; // Optional, use rarely
+  onConfirm?: () => void; // Optional callback
+  confirmText?: string; // Optional label
 }
 
 // Rule: Only mark as required if absolutely needed for core functionality
@@ -391,9 +393,9 @@ interface SelectProps {
 
 // ❌ Bad: Inconsistent naming
 interface FormProps {
-  submit: (data: FormData) => void;      // Missing 'on'
-  handleCancel?: () => void;             // Use 'on', not 'handle'
-  onFormError?: (error: Error) => void;  // Too specific
+  submit: (data: FormData) => void; // Missing 'on'
+  handleCancel?: () => void; // Use 'on', not 'handle'
+  onFormError?: (error: Error) => void; // Too specific
 }
 ```
 
@@ -404,24 +406,24 @@ Use consistent boolean prop naming:
 ```typescript
 // ✅ Good: Consistent state naming
 interface ButtonProps {
-  isDisabled?: boolean;        // ✅ Use 'is' prefix
-  isLoading?: boolean;         // ✅ Consistent
-  isDanger?: boolean;          // ✅ Consistent
-  isActive?: boolean;          // ✅ Consistent
+  isDisabled?: boolean; // ✅ Use 'is' prefix
+  isLoading?: boolean; // ✅ Consistent
+  isDanger?: boolean; // ✅ Consistent
+  isActive?: boolean; // ✅ Consistent
 }
 
 interface InputProps {
-  isRequired?: boolean;        // ✅ Use 'is' prefix
-  isReadOnly?: boolean;        // ✅ Consistent
-  isError?: boolean;           // ✅ Consistent
+  isRequired?: boolean; // ✅ Use 'is' prefix
+  isReadOnly?: boolean; // ✅ Consistent
+  isError?: boolean; // ✅ Consistent
 }
 
 // ❌ Bad: Inconsistent naming
 interface ButtonProps {
-  disabled?: boolean;          // ❌ Missing 'is' prefix
-  loading?: boolean;           // ❌ Should be 'isLoading'
-  isDanger?: boolean;          // ✅ But conflicts with above
-  active?: boolean;            // ❌ Should be 'isActive'
+  disabled?: boolean; // ❌ Missing 'is' prefix
+  loading?: boolean; // ❌ Should be 'isLoading'
+  isDanger?: boolean; // ✅ But conflicts with above
+  active?: boolean; // ❌ Should be 'isActive'
 }
 ```
 
@@ -432,27 +434,27 @@ All styling props should follow a standard pattern:
 ```typescript
 // ✅ Good: Consistent styling props across all components
 interface BaseComponentProps {
-  variant?: 'default' | 'primary' | 'secondary';  // Predefined variants only
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';        // Consistent sizes
-  className?: string;                              // For overrides only
+  variant?: "default" | "primary" | "secondary"; // Predefined variants only
+  size?: "xs" | "sm" | "md" | "lg" | "xl"; // Consistent sizes
+  className?: string; // For overrides only
 }
 
 // ✅ Size standard (use consistently everywhere)
 const SIZES = {
-  xs: 'h-6 w-6',      // 24px - very small
-  sm: 'h-8 w-8',      // 32px - small
-  md: 'h-10 w-10',    // 40px - medium (default)
-  lg: 'h-12 w-12',    // 48px - large
-  xl: 'h-16 w-16',    // 64px - extra large
+  xs: "h-6 w-6", // 24px - very small
+  sm: "h-8 w-8", // 32px - small
+  md: "h-10 w-10", // 40px - medium (default)
+  lg: "h-12 w-12", // 48px - large
+  xl: "h-16 w-16", // 64px - extra large
 };
 
 // ✅ Variant standard (use consistently)
 interface VariantConfig {
-  primary: string;    // Primary action color
-  secondary: string;  // Secondary action color
-  ghost: string;      // Minimal style
-  outline: string;    // Border style
-  danger: string;     // Destructive action
+  primary: string; // Primary action color
+  secondary: string; // Secondary action color
+  ghost: string; // Minimal style
+  outline: string; // Border style
+  danger: string; // Destructive action
 }
 
 // ❌ Bad: Each component has different variants
@@ -524,9 +526,9 @@ interface LayoutProps {
 
 // ❌ Bad: Generic component prop names
 interface PageProps {
-  component1?: React.ComponentType;    // Unclear purpose
-  element2?: React.ReactNode;          // Vague naming
-  comp3?: React.ComponentType;         // Non-descriptive
+  component1?: React.ComponentType; // Unclear purpose
+  element2?: React.ReactNode; // Vague naming
+  comp3?: React.ComponentType; // Non-descriptive
 }
 ```
 
@@ -537,15 +539,15 @@ Consistent error handling across all components:
 ```typescript
 // ✅ Good: Standard error props
 interface FormFieldProps {
-  error?: string;              // Error message
-  errorDescription?: string;   // Additional context
-  ariaErrorMessage?: string;   // Accessibility
-  onErrorClear?: () => void;   // Clear error callback
+  error?: string; // Error message
+  errorDescription?: string; // Additional context
+  ariaErrorMessage?: string; // Accessibility
+  onErrorClear?: () => void; // Clear error callback
 }
 
 interface InputProps {
-  error?: string;              // Error message
-  isError?: boolean;           // Error state (optional visual indicator)
+  error?: string; // Error message
+  isError?: boolean; // Error state (optional visual indicator)
 }
 
 // All components use 'error' for string message, consistent pattern
@@ -558,10 +560,10 @@ Every component should include JSDoc with consistent format:
 ```typescript
 /**
  * Button - Interactive clickable element
- * 
+ *
  * Supports multiple variants and sizes. Can show loading state.
  * All styling options are predefined for consistency.
- * 
+ *
  * @component
  * @example
  * return (
@@ -569,7 +571,7 @@ Every component should include JSDoc with consistent format:
  *     Click Me
  *   </Button>
  * )
- * 
+ *
  * @param {ButtonProps} props - Component props
  * @param {React.ReactNode} props.children - Button text or content
  * @param {'primary'|'secondary'|'ghost'} [props.variant='primary'] - Visual style
@@ -578,7 +580,7 @@ Every component should include JSDoc with consistent format:
  * @param {boolean} [props.isLoading=false] - Show loading indicator
  * @param {() => void} [props.onClick] - Click handler
  * @param {string} [props.className] - Additional CSS classes
- * 
+ *
  * @returns {React.ReactElement} Button element
  */
 export const Button: React.FC<ButtonProps> = ({ ... }) => { };
@@ -712,9 +714,9 @@ Use `index.ts` to re-export related exports if the module is complex:
 
 ```typescript
 // components/trading/index.ts
-export { TradeForm } from './TradeForm';
-export { OrderBook } from './OrderBook';
-export { PositionList } from './PositionList';
+export { TradeForm } from "./TradeForm";
+export { OrderBook } from "./OrderBook";
+export { PositionList } from "./PositionList";
 ```
 
 ---
@@ -727,13 +729,13 @@ Use **PascalCase** for component file names and exports:
 
 ```typescript
 // ✅ Good
-export const TradeForm: React.FC = () => { };         // File: TradeForm.tsx
-export const OrderBook: React.FC = () => { };         // File: OrderBook.tsx
-export const PositionList: React.FC = () => { };      // File: PositionList.tsx
+export const TradeForm: React.FC = () => {}; // File: TradeForm.tsx
+export const OrderBook: React.FC = () => {}; // File: OrderBook.tsx
+export const PositionList: React.FC = () => {}; // File: PositionList.tsx
 
 // ❌ Bad
-export const tradeForm: React.FC = () => { };         // File: tradeForm.tsx
-export const trade_form: React.FC = () => { };        // File: trade_form.tsx
+export const tradeForm: React.FC = () => {}; // File: tradeForm.tsx
+export const trade_form: React.FC = () => {}; // File: trade_form.tsx
 ```
 
 ### Hooks
@@ -742,13 +744,13 @@ Use **camelCase** with `use` prefix for custom hooks:
 
 ```typescript
 // ✅ Good: Hooks use `use` prefix
-export const useAuth = () => { };                     // File: useAuth.ts
-export const usePriceStream = (symbols) => { };       // File: usePriceStream.ts
-export const useRealtimePositions = (userId) => { };  // File: useRealtimePositions.ts
+export const useAuth = () => {}; // File: useAuth.ts
+export const usePriceStream = (symbols) => {}; // File: usePriceStream.ts
+export const useRealtimePositions = (userId) => {}; // File: useRealtimePositions.ts
 
 // ❌ Bad
-export const auth = () => { };                        // Missing 'use' prefix
-export const getPriceStream = () => { };              // Should use 'use' prefix
+export const auth = () => {}; // Missing 'use' prefix
+export const getPriceStream = () => {}; // Should use 'use' prefix
 ```
 
 ### Utility Functions & Services
@@ -757,14 +759,14 @@ Use **camelCase** for utility functions and services:
 
 ```typescript
 // ✅ Good
-export const orderMatching = (orders) => { };         // File: orderMatching.ts
-export const calculateMargin = (leverage, equity) => { };
-export const validateKycDocument = (doc) => { };      // File: documentValidation.ts
-export const exportPortfolioToCSV = (positions) => { };
+export const orderMatching = (orders) => {}; // File: orderMatching.ts
+export const calculateMargin = (leverage, equity) => {};
+export const validateKycDocument = (doc) => {}; // File: documentValidation.ts
+export const exportPortfolioToCSV = (positions) => {};
 
 // ❌ Bad
-export const OrderMatching = () => { };               // Should be camelCase
-export const calculate_margin = () => { };            // Snake_case
+export const OrderMatching = () => {}; // Should be camelCase
+export const calculate_margin = () => {}; // Snake_case
 ```
 
 ### Constants
@@ -790,14 +792,14 @@ Use **PascalCase** for types and interfaces:
 
 ```typescript
 // ✅ Good
-interface User { }
-interface Order { }
-type OrderStatus = 'pending' | 'filled' | 'cancelled';
+interface User {}
+interface Order {}
+type OrderStatus = "pending" | "filled" | "cancelled";
 type PriceUpdate = { symbol: string; price: number };
 
 // ❌ Bad
-interface user { }
-type order_status = 'pending' | 'filled';
+interface user {}
+type order_status = "pending" | "filled";
 ```
 
 ### Event Handlers
@@ -806,15 +808,15 @@ Prefix event handlers with `handle`:
 
 ```typescript
 // ✅ Good
-const handleSubmit = (e: React.FormEvent) => { };
-const handleClick = () => { };
-const handlePriceUpdate = (price: number) => { };
-const handleError = (error: Error) => { };
+const handleSubmit = (e: React.FormEvent) => {};
+const handleClick = () => {};
+const handlePriceUpdate = (price: number) => {};
+const handleError = (error: Error) => {};
 
 // ❌ Bad
-const submit = () => { };
-const onClick = () => { };
-const onPriceUpdate = (price: number) => { };
+const submit = () => {};
+const onClick = () => {};
+const onPriceUpdate = (price: number) => {};
 ```
 
 ---
@@ -840,11 +842,11 @@ const config: Config = {
         loss: "hsl(var(--loss))",
       },
       spacing: {
-        xs: '4px',    // Minimal gaps
-        sm: '8px',    // Component gaps
-        md: '16px',   // Section gaps
-        lg: '24px',   // Major sections
-        xl: '32px',   // Page padding
+        xs: "4px", // Minimal gaps
+        sm: "8px", // Component gaps
+        md: "16px", // Section gaps
+        lg: "24px", // Major sections
+        xl: "32px", // Page padding
       },
     },
   },
@@ -896,15 +898,15 @@ interface ButtonProps {
   isActive?: boolean;
 }
 
-export const CustomButton: React.FC<ButtonProps> = ({ 
-  variant = 'primary', 
-  isActive = false 
+export const CustomButton: React.FC<ButtonProps> = ({
+  variant = 'primary',
+  isActive = false
 }) => (
-  <button 
+  <button
     className={cn(
       'px-4 py-2 rounded-md transition-colors',
-      variant === 'primary' 
-        ? 'bg-primary text-primary-foreground' 
+      variant === 'primary'
+        ? 'bg-primary text-primary-foreground'
         : 'bg-secondary text-secondary-foreground',
       isActive && 'ring-2 ring-offset-2 ring-primary'
     )}
@@ -1036,25 +1038,22 @@ const LoginForm: React.FC = () => {
 
 ```typescript
 // Email validation
-z.string().email('Invalid email address')
+z.string().email("Invalid email address");
 
 // Password strength
 z.string()
-  .min(8, 'Minimum 8 characters')
-  .regex(/[A-Z]/, 'Must include uppercase')
-  .regex(/[0-9]/, 'Must include numbers')
+  .min(8, "Minimum 8 characters")
+  .regex(/[A-Z]/, "Must include uppercase")
+  .regex(/[0-9]/, "Must include numbers");
 
 // Trading amounts
-z.number().positive('Must be positive').max(1000000, 'Exceeds limit')
+z.number().positive("Must be positive").max(1000000, "Exceeds limit");
 
 // Select fields
-z.enum(['BUY', 'SELL'], { errorMap: () => ({ message: 'Invalid action' }) })
+z.enum(["BUY", "SELL"], { errorMap: () => ({ message: "Invalid action" }) });
 
 // Custom validation
-z.string().refine(
-  (val) => !isReservedSymbol(val),
-  'This symbol is reserved'
-)
+z.string().refine((val) => !isReservedSymbol(val), "This symbol is reserved");
 ```
 
 ### Form Field Patterns
@@ -1104,11 +1103,11 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // ❌ Bad: Hardcoded secrets (NEVER do this!)
-const apiKey = 'sk_live_abc123...';  // EXPOSED IN CODE!
-const secret = 'super_secret_key';   // EXPOSED IN GITHUB!
+const apiKey = "sk_live_abc123..."; // EXPOSED IN CODE!
+const secret = "super_secret_key"; // EXPOSED IN GITHUB!
 
 // ❌ Bad: Secrets in localStorage
-localStorage.setItem('apiKey', 'sk_...');  // Accessible to XSS
+localStorage.setItem("apiKey", "sk_..."); // Accessible to XSS
 
 // ❌ Bad: Secrets in comments
 // Bearer token: eyJhbGc...  // EXPOSED IN HISTORY!
@@ -1117,13 +1116,13 @@ localStorage.setItem('apiKey', 'sk_...');  // Accessible to XSS
 ### Input Validation
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 // ✅ Good: Validate all user input
 const createOrderSchema = z.object({
   symbol: z.string().min(1).max(10),
-  quantity: z.number().positive('Must be positive'),
-  price: z.number().positive('Must be positive'),
+  quantity: z.number().positive("Must be positive"),
+  price: z.number().positive("Must be positive"),
   leverage: z.number().min(1).max(50),
 });
 
@@ -1131,9 +1130,9 @@ const handleSubmit = (data: unknown) => {
   const result = createOrderSchema.safeParse(data);
   if (!result.success) {
     toast({
-      title: 'Validation Error',
+      title: "Validation Error",
       description: result.error.errors[0].message,
-      variant: 'destructive',
+      variant: "destructive",
     });
     return;
   }
@@ -1142,7 +1141,7 @@ const handleSubmit = (data: unknown) => {
 
 // ❌ Bad: No validation
 const handleSubmit = (data: any) => {
-  createOrder(data.symbol, data.quantity, data.price);  // Untrusted!
+  createOrder(data.symbol, data.quantity, data.price); // Untrusted!
 };
 ```
 
@@ -1153,7 +1152,7 @@ const handleSubmit = (data: any) => {
 try {
   await processPayment(order);
 } catch (error) {
-  logger.error('Payment processing failed');
+  logger.error("Payment processing failed");
   // Generic message, no sensitive details
 }
 
@@ -1163,11 +1162,11 @@ if (loginAttempts > 5) {
 }
 
 // ❌ Bad: Logging sensitive data
-logger.error('Payment failed:', { cardNumber, cvv, expiryDate, error });
-logger.debug('User login:', { email, password, token });  // Exposed!
+logger.error("Payment failed:", { cardNumber, cvv, expiryDate, error });
+logger.debug("User login:", { email, password, token }); // Exposed!
 
 // ❌ Bad: PII in console
-console.log('User data:', { name, email, phoneNumber, ssn });
+console.log("User data:", { name, email, phoneNumber, ssn });
 ```
 
 ### XSS Prevention
@@ -1195,38 +1194,34 @@ const sanitized = DOMPurify.sanitize(userHTML);
 // - Admins can see everything
 // - No client-side workarounds
 
-const { data, error } = await supabase
-  .from('positions')
-  .select('*');  // RLS filters automatically
+const { data, error } = await supabase.from("positions").select("*"); // RLS filters automatically
 
 // ❌ Bad: Relying on client-side filtering only
-const allData = await supabase.from('positions').select('*');
-const userFilter = allData.filter(p => p.user_id === userId);  // Bypassed!
+const allData = await supabase.from("positions").select("*");
+const userFilter = allData.filter((p) => p.user_id === userId); // Bypassed!
 ```
 
 ### Webhook Verification
 
 ```typescript
 // ✅ Good: Always verify webhook signature
-import { createHmac } from 'crypto';
+import { createHmac } from "crypto";
 
 export const verifyWebhookSignature = (
   payload: string,
   signature: string,
-  secret: string
+  secret: string,
 ): boolean => {
-  const computed = createHmac('sha256', secret)
-    .update(payload)
-    .digest('hex');
+  const computed = createHmac("sha256", secret).update(payload).digest("hex");
   return computed === signature;
 };
 
 const handleWebhook = async (req: Request) => {
-  const signature = req.headers.get('x-signature');
+  const signature = req.headers.get("x-signature");
   const body = await req.text();
-  
+
   if (!verifyWebhookSignature(body, signature, process.env.WEBHOOK_SECRET)) {
-    return new Response('Unauthorized', { status: 401 });
+    return new Response("Unauthorized", { status: 401 });
   }
   // Safe to process
 };
@@ -1234,7 +1229,7 @@ const handleWebhook = async (req: Request) => {
 // ❌ Bad: No verification
 const handleWebhook = (req: Request) => {
   const data = await req.json();
-  processPayment(data);  // Unverified data!
+  processPayment(data); // Unverified data!
 };
 ```
 
@@ -1273,12 +1268,12 @@ localStorage.setItem('userId', user.id);  // Can be manipulated!
 
 ```typescript
 // ✅ Good
-import { supabase } from '@/integrations/supabase/client';
-import type { Tables } from '@/integrations/supabase/types';
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
 // ❌ Bad
-import { supabase } from '@/lib/supabaseClient';        // Wrong path!
-import type { Database } from '@supabase/supabase-js';  // Wrong import!
+import { supabase } from "@/lib/supabaseClient"; // Wrong path!
+import type { Database } from "@supabase/supabase-js"; // Wrong import!
 ```
 
 ### Type Safety
@@ -1286,18 +1281,18 @@ import type { Database } from '@supabase/supabase-js';  // Wrong import!
 Import auto-generated types from Supabase:
 
 ```typescript
-import type { Database } from '@/integrations/supabase/types';
+import type { Database } from "@/integrations/supabase/types";
 
 // Type a single table row
-type User = Database['public']['Tables']['users']['Row'];
-type Order = Database['public']['Tables']['orders']['Row'];
+type User = Database["public"]["Tables"]["users"]["Row"];
+type Order = Database["public"]["Tables"]["orders"]["Row"];
 
 // Type insertions
-type UserInsert = Database['public']['Tables']['users']['Insert'];
-type OrderInsert = Database['public']['Tables']['orders']['Insert'];
+type UserInsert = Database["public"]["Tables"]["users"]["Insert"];
+type OrderInsert = Database["public"]["Tables"]["orders"]["Insert"];
 
 // Type updates
-type UserUpdate = Database['public']['Tables']['users']['Update'];
+type UserUpdate = Database["public"]["Tables"]["users"]["Update"];
 ```
 
 ### Querying Data
@@ -1305,13 +1300,13 @@ type UserUpdate = Database['public']['Tables']['users']['Update'];
 ```typescript
 // ✅ Good: Type-safe query
 const { data: orders, error } = await supabase
-  .from('orders')
-  .select('*')
-  .eq('user_id', user.id)
-  .order('created_at', { ascending: false });
+  .from("orders")
+  .select("*")
+  .eq("user_id", user.id)
+  .order("created_at", { ascending: false });
 
 if (error) {
-  console.error('Failed to fetch orders:', error);
+  console.error("Failed to fetch orders:", error);
   return [];
 }
 
@@ -1319,8 +1314,8 @@ if (error) {
 return orders ?? [];
 
 // ❌ Bad: Unhandled error
-const { data } = await supabase.from('orders').select('*');
-console.log(data.map(order => order.id)); // Might crash if error!
+const { data } = await supabase.from("orders").select("*");
+console.log(data.map((order) => order.id)); // Might crash if error!
 ```
 
 ### Realtime Subscriptions
@@ -1334,21 +1329,28 @@ export const useRealtimePositions = (userId: string) => {
 
   useEffect(() => {
     const subscription = supabase
-      .channel('positions')
+      .channel("positions")
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'positions', filter: `user_id=eq.${userId}` },
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "positions",
+          filter: `user_id=eq.${userId}`,
+        },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setPositions(prev => [...prev, payload.new as Position]);
-          } else if (payload.eventType === 'UPDATE') {
-            setPositions(prev =>
-              prev.map(p => p.id === payload.new.id ? (payload.new as Position) : p)
+          if (payload.eventType === "INSERT") {
+            setPositions((prev) => [...prev, payload.new as Position]);
+          } else if (payload.eventType === "UPDATE") {
+            setPositions((prev) =>
+              prev.map((p) =>
+                p.id === payload.new.id ? (payload.new as Position) : p,
+              ),
             );
-          } else if (payload.eventType === 'DELETE') {
-            setPositions(prev => prev.filter(p => p.id !== payload.old.id));
+          } else if (payload.eventType === "DELETE") {
+            setPositions((prev) => prev.filter((p) => p.id !== payload.old.id));
           }
-        }
+        },
       )
       .subscribe();
 
@@ -1364,11 +1366,15 @@ export const useRealtimePositions = (userId: string) => {
   const [positions, setPositions] = useState<Position[]>([]);
 
   supabase
-    .channel('positions')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'positions' }, (payload) => {
-      setPositions(prev => [...prev, payload.new as Position]);
-    })
-    .subscribe();  // ❌ Never unsubscribed!
+    .channel("positions")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "positions" },
+      (payload) => {
+        setPositions((prev) => [...prev, payload.new as Position]);
+      },
+    )
+    .subscribe(); // ❌ Never unsubscribed!
 
   return positions;
 };
@@ -1438,12 +1444,12 @@ Always wrap async operations in try-catch:
 const handleSubmit = async (data: OrderInput) => {
   try {
     const order = await createOrder(data);
-    toast({ title: 'Success', description: 'Order created' });
+    toast({ title: "Success", description: "Order created" });
     return order;
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    toast({ title: 'Error', description: message });
-    logger.error('Order creation failed:', error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    toast({ title: "Error", description: message });
+    logger.error("Order creation failed:", error);
     throw error;
   }
 };
@@ -1486,20 +1492,20 @@ export const TradeForm: React.FC = () => {
 Use `console.error()` or Sentry via `logger`:
 
 ```typescript
-import { logger } from '@/lib/logger';
+import { logger } from "@/lib/logger";
 
 try {
-  await risky
-Operation();
+  await risky;
+  Operation();
 } catch (error) {
   // Log to console (always)
-  console.error('Operation failed:', error);
-  
+  console.error("Operation failed:", error);
+
   // Log to Sentry (if configured)
-  logger.error('Operation failed', { 
-    error, 
-    context: 'tradeForm',
-    userId: user.id 
+  logger.error("Operation failed", {
+    error,
+    context: "tradeForm",
+    userId: user.id,
   });
 }
 ```
@@ -1514,35 +1520,35 @@ Use **Vitest** for unit testing:
 
 ```typescript
 // src/lib/trading/__tests__/orderMatching.test.ts
-import { describe, it, expect, vi } from 'vitest';
-import { executeOrder } from '../orderMatching';
-import type { Order } from '@/types';
+import { describe, it, expect, vi } from "vitest";
+import { executeOrder } from "../orderMatching";
+import type { Order } from "@/types";
 
-describe('Order Matching', () => {
-  it('should execute market order immediately', () => {
+describe("Order Matching", () => {
+  it("should execute market order immediately", () => {
     const order: Order = {
-      id: '1',
-      symbol: 'EURUSD',
-      type: 'market',
+      id: "1",
+      symbol: "EURUSD",
+      type: "market",
       size: 1.0,
-      price: 1.0850,
+      price: 1.085,
     };
 
     const result = executeOrder(order);
-    expect(result.status).toBe('filled');
-    expect(result.executedPrice).toBe(1.0850);
+    expect(result.status).toBe("filled");
+    expect(result.executedPrice).toBe(1.085);
   });
 
-  it('should reject order exceeding max leverage', () => {
+  it("should reject order exceeding max leverage", () => {
     const order: Order = {
-      id: '2',
-      symbol: 'EURUSD',
-      type: 'limit',
+      id: "2",
+      symbol: "EURUSD",
+      type: "limit",
       leverage: 100, // Exceeds MAX_LEVERAGE
-      price: 1.0800,
+      price: 1.08,
     };
 
-    expect(() => executeOrder(order)).toThrow('Leverage exceeds limit');
+    expect(() => executeOrder(order)).toThrow("Leverage exceeds limit");
   });
 });
 ```
@@ -1550,14 +1556,14 @@ describe('Order Matching', () => {
 ### Mocking Supabase
 
 ```typescript
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { vi as vitestVi } from 'vitest';
-import * as supabase from '@/integrations/supabase/client';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { vi as vitestVi } from "vitest";
+import * as supabase from "@/integrations/supabase/client";
 
-describe('Auth Service', () => {
+describe("Auth Service", () => {
   beforeEach(() => {
     // Mock Supabase client
-    vi.mock('@/integrations/supabase/client', () => ({
+    vi.mock("@/integrations/supabase/client", () => ({
       supabase: {
         auth: {
           signInWithPassword: vi.fn(),
@@ -1567,11 +1573,11 @@ describe('Auth Service', () => {
     }));
   });
 
-  it('should handle login failure', async () => {
+  it("should handle login failure", async () => {
     const mockSupabase = vi.mocked(supabase);
     mockSupabase.supabase.auth.signInWithPassword.mockResolvedValue({
       data: { user: null },
-      error: new Error('Invalid credentials'),
+      error: new Error("Invalid credentials"),
     });
 
     // Test logic
@@ -1589,14 +1595,14 @@ import { TradeForm } from './TradeForm';
 describe('TradeForm', () => {
   it('renders form fields', () => {
     render(<TradeForm symbol="EURUSD" onSubmit={vi.fn()} />);
-    
+
     expect(screen.getByLabelText(/symbol/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/amount/i)).toBeInTheDocument();
   });
 
   it('shows validation errors', async () => {
     const { user } = render(<TradeForm symbol="EURUSD" onSubmit={vi.fn()} />);
-    
+
     await user.click(screen.getByText(/submit/i));
     expect(screen.getByText(/required/i)).toBeInTheDocument();
   });
@@ -1659,9 +1665,10 @@ const Admin = lazy(() => import('@/pages/Admin'));
 **For high-frequency price updates:**
 
 1. **Selective Subscriptions** — Only subscribe to displayed symbols:
+
 ```typescript
 // ✅ Good
-const symbols = positions.map(p => p.symbol);
+const symbols = positions.map((p) => p.symbol);
 const subscription = usePriceStream(symbols);
 
 // ❌ Bad: Subscribe to all symbols
@@ -1670,18 +1677,20 @@ usePriceStream(allSymbols);
 ```
 
 2. **Debounce State Updates** — Batch updates to prevent excessive re-renders:
+
 ```typescript
 const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-channel.on('broadcast', { event: 'price_update' }, ({ payload }) => {
+channel.on("broadcast", { event: "price_update" }, ({ payload }) => {
   if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
   updateTimeoutRef.current = setTimeout(() => {
-    setPrices(prev => ({ ...prev, [payload.symbol]: payload.price }));
-  }, 100);  // Batch every 100ms
+    setPrices((prev) => ({ ...prev, [payload.symbol]: payload.price }));
+  }, 100); // Batch every 100ms
 });
 ```
 
 3. **Memoized Price Cells** — Prevent individual rows from re-rendering:
+
 ```typescript
 const PriceCell = React.memo(
   ({ price }: Props) => <span>{price}</span>,
@@ -1690,6 +1699,7 @@ const PriceCell = React.memo(
 ```
 
 4. **Virtualized Lists** — For large order/position lists:
+
 ```typescript
 import { FixedSizeList } from 'react-window';
 
@@ -1795,7 +1805,7 @@ const API_URL = import.meta.env.VITE_SUPABASE_URL;
 const MAX_LEVERAGE = 50;
 
 // ❌ Bad
-const url = 'https://hardcoded-url.com';
+const url = "https://hardcoded-url.com";
 const maxLeverage = 50;
 ```
 
@@ -1820,12 +1830,12 @@ const { notifications } = useNotifications();
 
 ```typescript
 // ✅ Good
-import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 // ❌ Wrong paths
-import { supabase } from '@/lib/supabaseClient';           // Wrong!
-import type { Database } from '@supabase/supabase-js';     // Wrong!
+import { supabase } from "@/lib/supabaseClient"; // Wrong!
+import type { Database } from "@supabase/supabase-js"; // Wrong!
 ```
 
 ### 8. Manually Edited Supabase Types
@@ -1851,9 +1861,9 @@ useEffect(() => {
 }, []);
 
 const fetchData = async () => {
-  const data = await supabase.from('orders').select();
+  const data = await supabase.from("orders").select();
   if (isMountedRef.current) {
-    setOrders(data);  // Only update if still mounted
+    setOrders(data); // Only update if still mounted
   }
 };
 ```
@@ -1893,7 +1903,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 /**
  * OrderForm - Creates new trading orders
- * 
+ *
  * Validates order inputs using Zod schema and submits to Supabase.
  * Handles async operations with proper error handling and loading states.
  */
@@ -2025,8 +2035,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onSubmitSuccess }) => {
           )}
         />
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isSubmitting}
           className="w-full"
         >
@@ -2041,17 +2051,17 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onSubmitSuccess }) => {
 ### Custom Hook Example
 
 ```typescript
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import type { Tables } from '@/integrations/supabase/types';
+import { useEffect, useState, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
-type Position = Tables<'positions'>['Row'];
+type Position = Tables<"positions">["Row"];
 
 /**
  * useRealtimePositions - Subscribes to real-time position updates
- * 
+ *
  * Automatically unsubscribes on unmount to prevent memory leaks.
- * 
+ *
  * @param userId - The user ID to subscribe for
  * @returns Current positions and loading state
  */
@@ -2070,15 +2080,15 @@ export const useRealtimePositions = (userId: string | undefined) => {
     const fetchPositions = async () => {
       try {
         const { data, error: fetchError } = await supabase
-          .from('positions')
-          .select('*')
-          .eq('user_id', userId);
+          .from("positions")
+          .select("*")
+          .eq("user_id", userId);
 
         if (fetchError) throw fetchError;
         setPositions(data ?? []);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setError(err instanceof Error ? err : new Error("Unknown error"));
       } finally {
         setIsLoading(false);
       }
@@ -2090,24 +2100,26 @@ export const useRealtimePositions = (userId: string | undefined) => {
     const subscription = supabase
       .channel(`positions:${userId}`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'positions',
+          event: "*",
+          schema: "public",
+          table: "positions",
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setPositions(prev => [...prev, payload.new as Position]);
-          } else if (payload.eventType === 'UPDATE') {
-            setPositions(prev =>
-              prev.map(p => p.id === payload.new.id ? (payload.new as Position) : p)
+          if (payload.eventType === "INSERT") {
+            setPositions((prev) => [...prev, payload.new as Position]);
+          } else if (payload.eventType === "UPDATE") {
+            setPositions((prev) =>
+              prev.map((p) =>
+                p.id === payload.new.id ? (payload.new as Position) : p,
+              ),
             );
-          } else if (payload.eventType === 'DELETE') {
-            setPositions(prev => prev.filter(p => p.id !== payload.old.id));
+          } else if (payload.eventType === "DELETE") {
+            setPositions((prev) => prev.filter((p) => p.id !== payload.old.id));
           }
-        }
+        },
       )
       .subscribe();
 
@@ -2124,6 +2136,7 @@ export const useRealtimePositions = (userId: string | undefined) => {
 ## References & Related Documentation
 
 **TradePro Documentation (READ IN ORDER):**
+
 1. [SECURITY.md](SECURITY.md) - **START HERE** - Security standards & compliance
 2. [ARCHITECTURE_DECISIONS.md](ARCHITECTURE_DECISIONS.md) - Technical design decisions (9 ADRs)
 3. [AGENT.md](AGENT.md) - AI agent guidelines and best practices
@@ -2133,12 +2146,14 @@ export const useRealtimePositions = (userId: string | undefined) => {
 7. [CONTRIBUTING_DESIGN_SYSTEM.md](../design_system_and_typography/CONTRIBUTING_DESIGN_SYSTEM.md) - Contribution guidelines
 
 **Project Overview:**
+
 - [README.md](/README.md) - Project overview and quick links
 - [PRD.md](/PRD.md) - Product requirements and features
 - [QUICK_START.md](../../docs/PRIMARY/QUICK_START.md) - 30-minute onboarding
 - [DOCUMENTATION_MAP.md](../../docs/PRIMARY/DOCUMENTATION_MAP.md) - Find docs by topic
 
 **External Resources:**
+
 - [Tailwind CSS v4](https://tailwindcss.com/docs)
 - [React 18 Docs](https://react.dev/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
@@ -2149,6 +2164,7 @@ export const useRealtimePositions = (userId: string | undefined) => {
 - [OWASP Security](https://owasp.org/)
 
 **Configuration Files:**
+
 - `tsconfig.json` - TypeScript (intentionally loose)
 - `tailwind.config.ts` - Design system tokens
 - `vite.config.ts` - Build configuration

@@ -9,6 +9,7 @@
 ## 📋 Pre-Deployment Checklist
 
 ### ✅ Local Verification (Completed)
+
 - [x] All 3 upgrade phases completed
 - [x] Production build succeeds
 - [x] Bundle size stable (112 kB gzip)
@@ -18,6 +19,7 @@
 - [x] Git history clean with 3 commits
 
 ### ✅ Ready for Staging
+
 - [x] Code committed to main branch
 - [x] All commits merged successfully
 - [x] No merge conflicts
@@ -29,6 +31,7 @@
 ## 🔍 Final Verification Before Deployment
 
 ### Step 1: Verify Git Status
+
 ```bash
 cd /c/Users/Alpha/trade_x_pro_global/Trade-X-Pro-Global
 git status
@@ -39,6 +42,7 @@ git log --oneline | head -5
 ```
 
 ### Step 2: Verify Build Artifacts
+
 ```bash
 npm run build:production
 # Look for: "✓ built in 1m Xs"
@@ -46,6 +50,7 @@ npm run build:production
 ```
 
 ### Step 3: Verify Package Integrity
+
 ```bash
 npm list --depth=0 | grep -E "@sentry|@tanstack|react-hook-form|@supabase"
 # Should show updated versions:
@@ -60,6 +65,7 @@ npm list --depth=0 | grep -E "@sentry|@tanstack|react-hook-form|@supabase"
 ## 🧪 Staging Deployment
 
 ### Prerequisites
+
 - Git repository access
 - Staging environment credentials
 - Ability to deploy Node.js applications
@@ -68,6 +74,7 @@ npm list --depth=0 | grep -E "@sentry|@tanstack|react-hook-form|@supabase"
 ### Deployment Steps
 
 #### Option A: Direct Git-Based Deployment
+
 ```bash
 # 1. Pull latest changes on staging server
 cd /path/to/staging/Trade-X-Pro-Global
@@ -93,6 +100,7 @@ curl https://staging.yourapp.com/api/health
 ```
 
 #### Option B: Docker-Based Deployment
+
 ```dockerfile
 # Dockerfile for Trade-X-Pro
 FROM node:20-alpine
@@ -122,24 +130,28 @@ CMD ["serve", "-s", "dist", "-l", "3000"]
 ### Staging Verification Checklist
 
 #### 1. Application Loads
+
 ```bash
 curl -I https://staging.yourapp.com
 # Should return 200 OK
 ```
 
 #### 2. Critical Pages Load
+
 - [ ] Login page loads
 - [ ] Dashboard loads after login
 - [ ] Trading page loads
 - [ ] Settings page loads
 
 #### 3. Form Functionality
+
 - [ ] Login form validates
 - [ ] Registration form validates (if applicable)
 - [ ] Trading order form validates
 - [ ] All form errors display correctly
 
 #### 4. Database Connectivity
+
 ```bash
 # Test auth
 curl -X POST https://staging.yourapp.com/api/auth/login \
@@ -154,6 +166,7 @@ curl -X GET https://staging.yourapp.com/api/positions \
 ```
 
 #### 5. Realtime Functionality
+
 ```bash
 # Open browser dev tools (F12)
 # Navigate to /trading page
@@ -164,6 +177,7 @@ curl -X GET https://staging.yourapp.com/api/positions \
 ```
 
 #### 6. Performance Check
+
 ```bash
 # Browser DevTools > Performance tab
 # Measure:
@@ -173,6 +187,7 @@ curl -X GET https://staging.yourapp.com/api/positions \
 ```
 
 #### 7. Bundle Analysis
+
 ```bash
 # Check dist/ folder
 ls -lh dist/assets/
@@ -181,12 +196,14 @@ ls -lh dist/assets/
 ```
 
 #### 8. Browser Console
+
 - [ ] No JavaScript errors
 - [ ] No console.error() messages (except expected ones)
 - [ ] No warnings about deprecated APIs
 - [ ] No network 404 errors
 
 ### Staging Sign-Off
+
 ```bash
 ✅ Application loads without errors
 ✅ All critical pages accessible
@@ -205,6 +222,7 @@ ls -lh dist/assets/
 ## 🔴 Production Deployment
 
 ### Pre-Production Checklist
+
 - [ ] Staging sign-off complete
 - [ ] No critical issues found
 - [ ] Team approval received
@@ -218,6 +236,7 @@ ls -lh dist/assets/
 #### Low-Risk Deployment Strategy
 
 **Option 1: Blue-Green Deployment** (Recommended)
+
 ```bash
 # 1. Keep current production running (Blue)
 # 2. Deploy to separate environment (Green)
@@ -241,6 +260,7 @@ curl http://localhost:3001
 ```
 
 **Option 2: Rolling Deployment** (Zero-Downtime)
+
 ```bash
 # Deploy to rolling set of instances
 for instance in prod-01 prod-02 prod-03; do
@@ -252,6 +272,7 @@ done
 ```
 
 **Option 3: Canary Deployment** (Safest)
+
 ```bash
 # 1. Deploy to 1-2 instances (5% traffic)
 # 2. Monitor for 1-2 hours
@@ -263,6 +284,7 @@ done
 ### Production Verification
 
 #### Immediate Checks (First 5 minutes)
+
 ```bash
 # 1. Application responding
 curl -I https://yourapp.com
@@ -282,6 +304,7 @@ curl -s https://yourapp.com | grep -o "index-.*\.js"
 ```
 
 #### Ongoing Monitoring (First 24 hours)
+
 ```bash
 # Monitor these metrics:
 ✓ Error rate (should remain < 0.1%)
@@ -293,6 +316,7 @@ curl -s https://yourapp.com | grep -o "index-.*\.js"
 ```
 
 #### Specific Feature Testing
+
 - [ ] User login works
 - [ ] Trading orders place successfully
 - [ ] Positions update in realtime
@@ -305,6 +329,7 @@ curl -s https://yourapp.com | grep -o "index-.*\.js"
 ### Production Dashboard Monitoring
 
 **Key Metrics to Watch:**
+
 ```
 Application Health:
 ├─ Uptime: Should be 99.9%+
@@ -333,6 +358,7 @@ User Experience:
 If critical issues occur in production:
 
 ### Immediate Rollback (Option 1: Git Revert)
+
 ```bash
 git revert ba36886  # Supabase update
 git revert 1859f0b  # Minor updates
@@ -343,6 +369,7 @@ npm run build:production
 ```
 
 ### Emergency Rollback (Option 2: Restore Previous Build)
+
 ```bash
 # If previous deployment is still available
 # Redeploy from backup or previous container image
@@ -351,6 +378,7 @@ docker run -d --name tradexpro yourregistry/tradexpro:v1.2.3
 ```
 
 ### Rollback Verification
+
 ```bash
 ✅ Application loads
 ✅ No JavaScript errors
@@ -367,12 +395,14 @@ docker run -d --name tradexpro yourregistry/tradexpro:v1.2.3
 ### If Issues Occur
 
 #### Issue: Build Fails
+
 ```bash
 npm ci --force  # Clear cache and reinstall
 npm run build:production
 ```
 
 #### Issue: Database Errors
+
 ```bash
 # Check Supabase status
 # Verify connection strings in .env
@@ -380,6 +410,7 @@ npm run build:production
 ```
 
 #### Issue: Forms Not Working
+
 ```bash
 # Verify react-hook-form still resolves Zod schemas
 npm run test
@@ -387,6 +418,7 @@ npm run test
 ```
 
 #### Issue: Realtime Not Updating
+
 ```bash
 # Open DevTools > Network > WS filter
 # Check WebSocket connection to Supabase
@@ -445,6 +477,7 @@ After successful production deployment:
 ## 🎯 Next Milestones
 
 ### After Production Deployment
+
 1. **Week 1:** Monitor for issues, gather user feedback
 2. **Week 2:** Analyze metrics, document lessons learned
 3. **Week 3:** Plan next upgrade cycle (React 19 in Q1)
@@ -462,7 +495,8 @@ After successful production deployment:
 
 **Deployment Ready:** ✅ YES
 
-**Estimated Duration:** 
+**Estimated Duration:**
+
 - Staging: 1-2 hours
 - Production: 1-2 hours
 - Total: 2-4 hours
@@ -473,4 +507,4 @@ After successful production deployment:
 
 **Next Action:** Deploy to staging environment
 
-*For questions or issues during deployment, refer to the comprehensive documentation suite in docs/assessments_and_reports/*
+_For questions or issues during deployment, refer to the comprehensive documentation suite in docs/assessments_and_reports/_

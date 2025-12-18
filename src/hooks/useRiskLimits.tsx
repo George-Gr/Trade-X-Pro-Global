@@ -87,7 +87,7 @@ export const useRiskLimits = () => {
     // Check max position size
     if (quantity > riskSettings.max_position_size) {
       violations.push(
-        `Position size ${quantity} exceeds maximum allowed ${riskSettings.max_position_size} lots`
+        `Position size ${quantity} exceeds maximum allowed ${riskSettings.max_position_size} lots`,
       );
     }
 
@@ -95,21 +95,21 @@ export const useRiskLimits = () => {
     const currentCount = currentPositions?.length || 0;
     if (currentCount >= riskSettings.max_positions) {
       violations.push(
-        `Maximum number of open positions (${riskSettings.max_positions}) reached`
+        `Maximum number of open positions (${riskSettings.max_positions}) reached`,
       );
     }
 
     // Check daily loss limit
     if (dailyPnL && dailyPnL.breached_daily_limit) {
       violations.push(
-        `Daily loss limit of $${riskSettings.daily_loss_limit} has been reached`
+        `Daily loss limit of $${riskSettings.daily_loss_limit} has been reached`,
       );
     }
 
     // Check daily trade limit
     if (dailyPnL && dailyPnL.trade_count >= riskSettings.daily_trade_limit) {
       violations.push(
-        `Daily trade limit of ${riskSettings.daily_trade_limit} trades has been reached`
+        `Daily trade limit of ${riskSettings.daily_trade_limit} trades has been reached`,
       );
     }
 
@@ -122,7 +122,7 @@ export const useRiskLimits = () => {
 
   const checkStopLoss = (
     stopLoss: number | null,
-    entryPrice: number
+    entryPrice: number,
   ): RiskCheckResult => {
     const violations: string[] = [];
 
@@ -141,8 +141,8 @@ export const useRiskLimits = () => {
       if (distance < minDistance) {
         violations.push(
           `Stop loss distance ${(distance / 0.0001).toFixed(
-            1
-          )} pips is below minimum ${riskSettings.min_stop_loss_distance} pips`
+            1,
+          )} pips is below minimum ${riskSettings.min_stop_loss_distance} pips`,
         );
       }
     }
@@ -157,12 +157,15 @@ export const useRiskLimits = () => {
   const checkOrderRisk = (
     quantity: number,
     stopLoss: number | null,
-    entryPrice: number
+    entryPrice: number,
   ): RiskCheckResult => {
     const positionCheck = checkPositionLimit(quantity);
     const stopLossCheck = checkStopLoss(stopLoss, entryPrice);
 
-    const allViolations = [...positionCheck.violations, ...stopLossCheck.violations];
+    const allViolations = [
+      ...positionCheck.violations,
+      ...stopLossCheck.violations,
+    ];
 
     return {
       allowed: allViolations.length === 0,

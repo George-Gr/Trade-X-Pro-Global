@@ -1,6 +1,11 @@
 import { cn } from "@/lib/utils";
 
-export type OrderType = 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
+export type OrderType =
+  | "market"
+  | "limit"
+  | "stop"
+  | "stop_limit"
+  | "trailing_stop";
 
 interface OrderTypeSelectorProps {
   value: OrderType;
@@ -9,11 +14,11 @@ interface OrderTypeSelectorProps {
 }
 
 const orderTypes: { value: OrderType; label: string; shortLabel: string }[] = [
-  { value: 'market', label: 'Market', shortLabel: 'Market' },
-  { value: 'limit', label: 'Limit', shortLabel: 'Limit' },
-  { value: 'stop', label: 'Stop', shortLabel: 'Stop' },
-  { value: 'stop_limit', label: 'Stop-Limit', shortLabel: 'S-Limit' },
-  { value: 'trailing_stop', label: 'Trailing', shortLabel: 'Trail' },
+  { value: "market", label: "Market", shortLabel: "Market" },
+  { value: "limit", label: "Limit", shortLabel: "Limit" },
+  { value: "stop", label: "Stop", shortLabel: "Stop" },
+  { value: "stop_limit", label: "Stop-Limit", shortLabel: "S-Limit" },
+  { value: "trailing_stop", label: "Trailing", shortLabel: "Trail" },
 ];
 
 export const OrderTypeSelector = ({
@@ -38,7 +43,7 @@ export const OrderTypeSelector = ({
               value === type.value
                 ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted",
-              disabled && "opacity-50 cursor-not-allowed"
+              disabled && "opacity-50 cursor-not-allowed",
             )}
           >
             <span className="hidden sm:inline">{type.label}</span>

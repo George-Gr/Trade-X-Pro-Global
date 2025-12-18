@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { BarChart3, TrendingUp, TrendingDown } from "lucide-react";
 import { usePriceUpdates } from "@/hooks/usePriceUpdates";
@@ -10,7 +16,9 @@ interface CompareSymbolsDialogProps {
   symbols: string[];
 }
 
-export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => {
+export const CompareSymbolsDialog = ({
+  symbols,
+}: CompareSymbolsDialogProps) => {
   const [open, setOpen] = useState(false);
   const { prices, getPrice } = usePriceUpdates({
     symbols,
@@ -19,8 +27,10 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
   });
 
   // Convert prices Map to array and sort by change percent
-  const priceArray = symbols.map(symbol => getPrice(symbol)).filter(Boolean);
-  const sortedByChange = priceArray.sort((a, b) => (b?.changePercent || 0) - (a?.changePercent || 0));
+  const priceArray = symbols.map((symbol) => getPrice(symbol)).filter(Boolean);
+  const sortedByChange = priceArray.sort(
+    (a, b) => (b?.changePercent || 0) - (a?.changePercent || 0),
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -46,55 +56,95 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-lg">{price.symbol}</span>
+                      <span className="font-semibold text-lg">
+                        {price.symbol}
+                      </span>
                       {isPositive ? (
                         <TrendingUp className="h-4 w-4 text-profit" />
                       ) : (
                         <TrendingDown className="h-4 w-4 text-loss" />
                       )}
                     </div>
-                    <div className={cn("text-lg font-semibold font-mono", isPositive ? "text-profit" : "text-loss")}>
-                      {isPositive ? "+" : ""}{price.changePercent.toFixed(2)}%
+                    <div
+                      className={cn(
+                        "text-lg font-semibold font-mono",
+                        isPositive ? "text-profit" : "text-loss",
+                      )}
+                    >
+                      {isPositive ? "+" : ""}
+                      {price.changePercent.toFixed(2)}%
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-4 gap-4 text-sm">
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Current</div>
-                      <div className="font-mono font-semibold">{price.currentPrice.toFixed(5)}</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Current
+                      </div>
+                      <div className="font-mono font-semibold">
+                        {price.currentPrice.toFixed(5)}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Bid</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Bid
+                      </div>
                       <div className="font-mono">{price.bid.toFixed(5)}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Ask</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Ask
+                      </div>
                       <div className="font-mono">{price.ask.toFixed(5)}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Change</div>
-                      <div className={cn("font-mono font-medium", isPositive ? "text-profit" : "text-loss")}>
-                        {isPositive ? "+" : ""}{price.change.toFixed(5)}
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Change
+                      </div>
+                      <div
+                        className={cn(
+                          "font-mono font-medium",
+                          isPositive ? "text-profit" : "text-loss",
+                        )}
+                      >
+                        {isPositive ? "+" : ""}
+                        {price.change.toFixed(5)}
                       </div>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-4 gap-4 text-sm mt-4 pt-4 border-t border-border">
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Open</div>
-                      <div className="font-mono text-xs">{price.open?.toFixed(5) || "N/A"}</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Open
+                      </div>
+                      <div className="font-mono text-xs">
+                        {price.open?.toFixed(5) || "N/A"}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">High</div>
-                      <div className="font-mono text-xs text-profit">{price.high?.toFixed(5) || "N/A"}</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        High
+                      </div>
+                      <div className="font-mono text-xs text-profit">
+                        {price.high?.toFixed(5) || "N/A"}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Low</div>
-                      <div className="font-mono text-xs text-loss">{price.low?.toFixed(5) || "N/A"}</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Low
+                      </div>
+                      <div className="font-mono text-xs text-loss">
+                        {price.low?.toFixed(5) || "N/A"}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-xs mb-2">Prev Close</div>
-                      <div className="font-mono text-xs">{price.previousClose?.toFixed(5) || "N/A"}</div>
+                      <div className="text-muted-foreground text-xs mb-2">
+                        Prev Close
+                      </div>
+                      <div className="font-mono text-xs">
+                        {price.previousClose?.toFixed(5) || "N/A"}
+                      </div>
                     </div>
                   </div>
 
@@ -102,7 +152,10 @@ export const CompareSymbolsDialog = ({ symbols }: CompareSymbolsDialogProps) => 
                   <div className="mt-4">
                     <div className="h-2 bg-secondary rounded-full overflow-hidden">
                       <div
-                        className={cn("h-full transition-all", isPositive ? "bg-profit" : "bg-loss")}
+                        className={cn(
+                          "h-full transition-all",
+                          isPositive ? "bg-profit" : "bg-loss",
+                        )}
                         style={{
                           width: `${Math.min(Math.abs(price.changePercent) * 10, 100)}%`,
                         }}

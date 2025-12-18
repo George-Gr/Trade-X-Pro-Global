@@ -8,12 +8,12 @@
 
 ## Quick Reference
 
-| Severity | Response Time | Action | Owner |
-|----------|---------------|--------|-------|
-| Critical (Errors > 50/min) | 5 min | Page on-call → Check release → Rollback if needed | On-Call |
-| High (Errors > 10/min, Production) | 15 min | Investigate root cause → Create ticket → Plan fix | Team Lead |
-| Medium (New issue type, Production) | 1 hour | Log issue → Add to backlog → Assign | Engineer |
-| Low (Issues in staging/dev) | Next sprint | Document → Reference in future PRs | QA Lead |
+| Severity                            | Response Time | Action                                            | Owner     |
+| ----------------------------------- | ------------- | ------------------------------------------------- | --------- |
+| Critical (Errors > 50/min)          | 5 min         | Page on-call → Check release → Rollback if needed | On-Call   |
+| High (Errors > 10/min, Production)  | 15 min        | Investigate root cause → Create ticket → Plan fix | Team Lead |
+| Medium (New issue type, Production) | 1 hour        | Log issue → Add to backlog → Assign               | Engineer  |
+| Low (Issues in staging/dev)         | Next sprint   | Document → Reference in future PRs                | QA Lead   |
 
 ---
 
@@ -22,6 +22,7 @@
 ### 1️⃣ **Alert Triggers (You receive Slack/Email notification)**
 
 **Check immediately:**
+
 - What triggered the alert? (URL provided in notification)
 - What's the error type? (e.g., ReferenceError, Network error, etc.)
 - How many errors in the last 5 minutes?
@@ -109,22 +110,24 @@ Timeline: 15 minutes
 4. Create a ticket in your issue tracker:
    Title: "[Sentry] Error Type in Feature Name (v0.0.2)"
    Description:
-   ```
-   Error: TypeError: Cannot read property 'x' of undefined
-   Release: v0.0.2 (2025-11-16)
-   Affected users: ~50
-   Stack trace: [Paste from Sentry]
-   Breadcrumbs: [List steps that led to error]
-   
-   Root cause: [Your hypothesis]
-   Fix: [Proposed solution]
-   ```
+```
+
+Error: TypeError: Cannot read property 'x' of undefined
+Release: v0.0.2 (2025-11-16)
+Affected users: ~50
+Stack trace: [Paste from Sentry]
+Breadcrumbs: [List steps that led to error]
+
+Root cause: [Your hypothesis]
+Fix: [Proposed solution]
+
+```
 
 5. Assign to appropriate engineer & prioritize
 
 6. Update Sentry comment:
-   - Go to issue → Resolve as "Fixed in <branch>"
-   - Add comment: "Ticket #123 created, fix in progress"
+- Go to issue → Resolve as "Fixed in <branch>"
+- Add comment: "Ticket #123 created, fix in progress"
 ```
 
 #### 4️⃣C: **MEDIUM** (New error type, not urgent)
@@ -176,30 +179,36 @@ Timeline: Next sprint
 
 When investigating an error, fill this out:
 
-```markdown
+````markdown
 ## Error: [Error Type]
+
 - **When**: [Timestamp]
 - **Where**: [File/Function]
 - **Stack Trace**: [Paste top 5 frames]
 
 ## Why It Happened
+
 1. [First contributing factor]
 2. [Second contributing factor]
 3. [Third contributing factor]
 
 ## How to Fix
+
 ```bash
 # Code change:
 - File: src/components/Component.tsx
 - Change: [Description]
 - Test: [How to verify fix]
 ```
+````
 
 ## How to Prevent
+
 - [ ] Add unit test for this code path
 - [ ] Add error boundary in parent component
 - [ ] Add input validation
 - [ ] Document expected behavior
+
 ```
 
 ---
@@ -208,30 +217,38 @@ When investigating an error, fill this out:
 
 ### Pattern 1: "Cannot read property of undefined"
 ```
+
 Cause: Code accessing property on null/undefined value
-Fix:   Add null check or optional chaining (?.)
-Test:  Create test case for when value is undefined
+Fix: Add null check or optional chaining (?.)
+Test: Create test case for when value is undefined
+
 ```
 
 ### Pattern 2: "Network error" or "Failed to fetch"
 ```
+
 Cause: Third-party API down or request timeout
-Fix:   Add retry logic, fallback, or graceful degradation
-Test:  Mock API error and verify fallback behavior
+Fix: Add retry logic, fallback, or graceful degradation
+Test: Mock API error and verify fallback behavior
+
 ```
 
 ### Pattern 3: "Maximum call stack exceeded"
 ```
+
 Cause: Infinite loop or circular dependency
-Fix:   Review recursive function or dependency chain
-Test:  Add guard condition to break recursion
+Fix: Review recursive function or dependency chain
+Test: Add guard condition to break recursion
+
 ```
 
 ### Pattern 4: "ReferenceError: X is not defined"
 ```
+
 Cause: Variable/function used before definition
-Fix:   Move definition before usage or import it
-Test:  Ensure proper import order in tests
+Fix: Move definition before usage or import it
+Test: Ensure proper import order in tests
+
 ```
 
 ---
@@ -246,16 +263,18 @@ Test:  Ensure proper import order in tests
 
 ### Create a custom view:
 ```
+
 Sentry > Saved Searches > New Search
 
 Conditions:
-  is:unresolved
-  environment:production
-  error.type:[TypeError, ReferenceError]
-  last_seen:-24h
-  
+is:unresolved
+environment:production
+error.type:[TypeError, ReferenceError]
+last_seen:-24h
+
 Sort by: Users affected (descending)
-```
+
+````
 
 ---
 
@@ -300,13 +319,14 @@ After critical incidents, schedule a 30-minute retrospective:
 - [ ] Ticket #123 (Fix) - Due: [Date]
 - [ ] Ticket #124 (Test) - Due: [Date]
 - [ ] Ticket #125 (Monitoring) - Due: [Date]
-```
+````
 
 ---
 
 ## Useful Commands
 
 ### Check error status locally:
+
 ```bash
 # Start dev server
 npm run dev
@@ -318,6 +338,7 @@ npm run dev
 ```
 
 ### Deploy a hotfix:
+
 ```bash
 # Create hotfix branch
 git checkout -b hotfix/error-type-fix
@@ -334,6 +355,7 @@ git push origin hotfix/error-type-fix
 ```
 
 ### Mark issue resolved in Sentry:
+
 1. Go to Sentry issue
 2. Click "Resolve" → "Fixed in v0.0.3" (select your release)
 3. Add comment: "Fixed in PR #456"

@@ -1,11 +1,15 @@
 import * as React from "react";
-import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
+import {
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from "react-router-dom";
 import { cn } from "@/lib/utils";
 import buttonVariants from "./buttonVariants";
 import { VariantProps } from "class-variance-authority";
 
 export interface LinkProps
-  extends Omit<RouterLinkProps, "to">,
+  extends
+    Omit<RouterLinkProps, "to">,
     Omit<VariantProps<typeof buttonVariants>, "variant"> {
   to: string;
   external?: boolean;
@@ -15,7 +19,7 @@ export interface LinkProps
 /**
  * Consistent Link component with button-like styling
  * Uses button variant="link" for consistent styling across the app
- * 
+ *
  * Usage:
  * <Link to="/path">Internal Link</Link>
  * <Link to="https://example.com" external>External Link</Link>
@@ -47,7 +51,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
         {children}
       </RouterLink>
     );
-  }
+  },
 );
 
 Link.displayName = "Link";
