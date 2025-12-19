@@ -1,8 +1,8 @@
 /// <reference types="vitest/globals" />
-import "@testing-library/jest-dom/vitest";
+import '@testing-library/jest-dom/vitest';
 
 // Polyfill for matchMedia in jsdom test environment
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
     matches: false,

@@ -7,13 +7,13 @@
     <script>
       // Only load manifest if not being redirected for auth
       if (
-        !window.location.href.includes("pf-signin") &&
-        !window.location.href.includes("auth/postback")
+        !window.location.href.includes('pf-signin') &&
+        !window.location.href.includes('auth/postback')
       ) {
-        var link = document.createElement("link");
-        link.rel = "manifest";
-        link.href = "/manifest.json";
-        link.crossOrigin = "use-credentials";
+        var link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = '/manifest.json';
+        link.crossOrigin = 'use-credentials';
         document.head.appendChild(link);
       }
     </script>
