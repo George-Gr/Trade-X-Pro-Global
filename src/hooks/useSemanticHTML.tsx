@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   SemanticHTMLManager,
   CreateContentSectionOptions,
   type ContentSection,
-} from "../components/accessibility/SemanticHTMLEnhancer";
+} from '../components/accessibility/SemanticHTMLEnhancer';
 
 /**
  * Hook for semantic HTML management
@@ -26,7 +26,7 @@ export function useSemanticHTML() {
   const createSection = (
     title: string,
     content: React.ReactNode,
-    options?: CreateContentSectionOptions,
+    options?: CreateContentSectionOptions
   ) => {
     return manager.createContentSection(title, content, 2, options);
   };

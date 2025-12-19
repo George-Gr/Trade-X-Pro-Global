@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Users, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Users, CheckCircle2 } from 'lucide-react';
 
 export default function Mentorship() {
   return (
@@ -40,13 +40,13 @@ export default function Mentorship() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "One-on-one guidance from experienced traders",
-                    "Personalized trading strategy development",
-                    "Real-time feedback on your trades",
-                    "Custom learning plans tailored to your goals",
-                    "Regular progress check-ins",
-                    "Exclusive trading insights and tips",
-                    "Priority email and chat support",
+                    'One-on-one guidance from experienced traders',
+                    'Personalized trading strategy development',
+                    'Real-time feedback on your trades',
+                    'Custom learning plans tailored to your goals',
+                    'Regular progress check-ins',
+                    'Exclusive trading insights and tips',
+                    'Priority email and chat support',
                     "Access to mentor's trading journal",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
@@ -65,10 +65,10 @@ export default function Mentorship() {
                 <h2 className="text-3xl font-bold mb-6">Mentorship Packages</h2>
                 <div className="space-y-4">
                   {[
-                    { package: "Starter", sessions: "2/month", price: "$99" },
-                    { package: "Standard", sessions: "4/month", price: "$199" },
-                    { package: "Premium", sessions: "8/month", price: "$349" },
-                    { package: "Elite", sessions: "Unlimited", price: "$599" },
+                    { package: 'Starter', sessions: '2/month', price: '$99' },
+                    { package: 'Standard', sessions: '4/month', price: '$199' },
+                    { package: 'Premium', sessions: '8/month', price: '$349' },
+                    { package: 'Elite', sessions: 'Unlimited', price: '$599' },
                   ].map((pkg, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
@@ -93,22 +93,22 @@ export default function Mentorship() {
               <div className="grid md:grid-cols-3 gap-6">
                 {[
                   {
-                    name: "John Smith",
-                    specialty: "Forex Trading",
-                    experience: "15 years",
-                    students: "200+",
+                    name: 'John Smith',
+                    specialty: 'Forex Trading',
+                    experience: '15 years',
+                    students: '200+',
                   },
                   {
-                    name: "Sarah Johnson",
-                    specialty: "Technical Analysis",
-                    experience: "12 years",
-                    students: "150+",
+                    name: 'Sarah Johnson',
+                    specialty: 'Technical Analysis',
+                    experience: '12 years',
+                    students: '150+',
                   },
                   {
-                    name: "Mike Chen",
-                    specialty: "Risk Management",
-                    experience: "18 years",
-                    students: "180+",
+                    name: 'Mike Chen',
+                    specialty: 'Risk Management',
+                    experience: '18 years',
+                    students: '180+',
                   },
                 ].map((mentor, i) => (
                   <Card
@@ -143,24 +143,24 @@ export default function Mentorship() {
               <div className="grid md:grid-cols-4 gap-6">
                 {[
                   {
-                    step: "1",
-                    title: "Choose Mentor",
-                    description: "Select a mentor based on your goals",
+                    step: '1',
+                    title: 'Choose Mentor',
+                    description: 'Select a mentor based on your goals',
                   },
                   {
-                    step: "2",
-                    title: "Schedule Session",
-                    description: "Book your first mentoring session",
+                    step: '2',
+                    title: 'Schedule Session',
+                    description: 'Book your first mentoring session',
                   },
                   {
-                    step: "3",
-                    title: "Learn & Practice",
-                    description: "Get personalized guidance and feedback",
+                    step: '3',
+                    title: 'Learn & Practice',
+                    description: 'Get personalized guidance and feedback',
                   },
                   {
-                    step: "4",
-                    title: "Track Progress",
-                    description: "Monitor your growth with monthly reports",
+                    step: '4',
+                    title: 'Track Progress',
+                    description: 'Monitor your growth with monthly reports',
                   },
                 ].map((item, i) => (
                   <div key={i} className="text-center">

@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Wallet as WalletIcon,
   TrendingUp,
@@ -17,22 +17,22 @@ import {
   RefreshCw,
   ArrowUpRight,
   ArrowDownLeft,
-} from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { DepositCryptoDialog } from "@/components/wallet/DepositCryptoDialog";
-import { WithdrawalDialog } from "@/components/wallet/WithdrawalDialog";
-import { TransactionHistory } from "@/components/wallet/TransactionHistory";
-import { Skeleton } from "@/components/ui/skeleton";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { useAuth } from "@/hooks/useAuth";
-import { WalletLoading } from "@/components/common/PageLoadingStates";
+} from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { DepositCryptoDialog } from '@/components/wallet/DepositCryptoDialog';
+import { WithdrawalDialog } from '@/components/wallet/WithdrawalDialog';
+import { TransactionHistory } from '@/components/wallet/TransactionHistory';
+import { Skeleton } from '@/components/ui/skeleton';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { useAuth } from '@/hooks/useAuth';
+import { WalletLoading } from '@/components/common/PageLoadingStates';
 
 const Wallet = () => {
   const { user } = useAuth();
   const [depositDialogOpen, setDepositDialogOpen] = useState(false);
   const [withdrawalDialogOpen, setWithdrawalDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("deposits");
+  const [activeTab, setActiveTab] = useState('deposits');
 
   // Fetch user profile
   const {
@@ -40,12 +40,12 @@ const Wallet = () => {
     isLoading: profileLoading,
     refetch: refetchProfile,
   } = useQuery({
-    queryKey: ["profile", user?.id],
+    queryKey: ['profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user?.id!)
+        .from('profiles')
+        .select('*')
+        .eq('id', user?.id!)
         .single();
 
       if (error) throw error;
@@ -60,13 +60,13 @@ const Wallet = () => {
     isLoading: transactionsLoading,
     refetch: refetchTransactions,
   } = useQuery({
-    queryKey: ["crypto_transactions", user?.id],
+    queryKey: ['crypto_transactions', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("crypto_transactions")
-        .select("*")
-        .eq("user_id", user?.id!)
-        .order("created_at", { ascending: false });
+        .from('crypto_transactions')
+        .select('*')
+        .eq('user_id', user?.id!)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data;
@@ -97,7 +97,7 @@ const Wallet = () => {
   // });
 
   const pendingTransactions =
-    transactions?.filter((t) => ["pending", "confirming"].includes(t.status))
+    transactions?.filter((t) => ['pending', 'confirming'].includes(t.status))
       .length || 0;
 
   // const pendingWithdrawals = withdrawals?.filter((w: any) =>
@@ -155,7 +155,7 @@ const Wallet = () => {
                   <Skeleton className="h-10 w-48" />
                 ) : (
                   <div className="text-3xl font-bold gradient-text">
-                    ${profile?.balance?.toFixed(2) || "0.00"}
+                    ${profile?.balance?.toFixed(2) || '0.00'}
                   </div>
                 )}
               </CardContent>
@@ -197,7 +197,7 @@ const Wallet = () => {
                       className="flex items-center gap-4"
                     >
                       <ArrowDownLeft className="h-3 w-3" />
-                      {transactionsLoading ? "..." : pendingTransactions}
+                      {transactionsLoading ? '...' : pendingTransactions}
                     </Badge>
                     <p className="text-xs text-muted-foreground mt-2">
                       Deposits
@@ -319,7 +319,7 @@ const Wallet = () => {
                   <TransactionHistory
                     transactions={
                       transactions
-                        ?.filter((t) => t.transaction_type === "deposit")
+                        ?.filter((t) => t.transaction_type === 'deposit')
                         .map((t) => ({
                           ...t,
                           confirmations: t.confirmations ?? 0,

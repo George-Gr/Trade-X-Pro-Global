@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Award, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Award, CheckCircle2 } from 'lucide-react';
 
 export default function Certifications() {
   return (
@@ -32,40 +32,40 @@ export default function Certifications() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {[
               {
-                title: "Trading Fundamentals",
-                level: "Beginner",
-                duration: "4 weeks",
-                description: "Learn the basics of trading",
+                title: 'Trading Fundamentals',
+                level: 'Beginner',
+                duration: '4 weeks',
+                description: 'Learn the basics of trading',
               },
               {
-                title: "Technical Analysis Pro",
-                level: "Intermediate",
-                duration: "6 weeks",
-                description: "Master chart patterns and indicators",
+                title: 'Technical Analysis Pro',
+                level: 'Intermediate',
+                duration: '6 weeks',
+                description: 'Master chart patterns and indicators',
               },
               {
-                title: "Risk Management Expert",
-                level: "Advanced",
-                duration: "8 weeks",
-                description: "Advanced portfolio management",
+                title: 'Risk Management Expert',
+                level: 'Advanced',
+                duration: '8 weeks',
+                description: 'Advanced portfolio management',
               },
               {
-                title: "Forex Trading Master",
-                level: "Intermediate",
-                duration: "5 weeks",
-                description: "Specialize in forex markets",
+                title: 'Forex Trading Master',
+                level: 'Intermediate',
+                duration: '5 weeks',
+                description: 'Specialize in forex markets',
               },
               {
-                title: "Options & Derivatives",
-                level: "Advanced",
-                duration: "7 weeks",
-                description: "Options strategies and pricing",
+                title: 'Options & Derivatives',
+                level: 'Advanced',
+                duration: '7 weeks',
+                description: 'Options strategies and pricing',
               },
               {
-                title: "Algorithmic Trading",
-                level: "Advanced",
-                duration: "10 weeks",
-                description: "Automated trading systems",
+                title: 'Algorithmic Trading',
+                level: 'Advanced',
+                duration: '10 weeks',
+                description: 'Automated trading systems',
               },
             ].map((cert, i) => (
               <Card
@@ -85,7 +85,7 @@ export default function Certifications() {
                       Level: <span className="font-semibold">{cert.level}</span>
                     </p>
                     <p>
-                      Duration:{" "}
+                      Duration:{' '}
                       <span className="font-semibold">{cert.duration}</span>
                     </p>
                   </div>
@@ -109,12 +109,12 @@ export default function Certifications() {
                   </h3>
                   <ul className="space-y-2">
                     {[
-                      "Core trading concepts",
-                      "Technical and fundamental analysis",
-                      "Risk management strategies",
-                      "Portfolio optimization",
-                      "Trading psychology",
-                      "Market regulations and compliance",
+                      'Core trading concepts',
+                      'Technical and fundamental analysis',
+                      'Risk management strategies',
+                      'Portfolio optimization',
+                      'Trading psychology',
+                      'Market regulations and compliance',
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-4">
                         <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -130,12 +130,12 @@ export default function Certifications() {
                   </h3>
                   <ul className="space-y-2">
                     {[
-                      "Industry-recognized credential",
-                      "Lifetime certificate",
-                      "Premium member status",
-                      "Exclusive trading strategies access",
-                      "Networking with professionals",
-                      "Job board access",
+                      'Industry-recognized credential',
+                      'Lifetime certificate',
+                      'Premium member status',
+                      'Exclusive trading strategies access',
+                      'Networking with professionals',
+                      'Job board access',
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-4">
                         <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
 
 export interface PendingOrder {
   id: string;
@@ -30,16 +30,16 @@ export const usePendingOrders = () => {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        throw new Error("User not authenticated");
+        throw new Error('User not authenticated');
       }
 
       const { data, error: fetchError } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "pending")
-        .in("order_type", ["limit", "stop", "stop_limit"])
-        .order("created_at", { ascending: false });
+        .from('orders')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'pending')
+        .in('order_type', ['limit', 'stop', 'stop_limit'])
+        .order('created_at', { ascending: false });
 
       if (fetchError) throw fetchError;
 
@@ -47,7 +47,7 @@ export const usePendingOrders = () => {
     } catch (err: unknown) {
       // Error fetching pending orders
       setError(
-        err instanceof Error ? err.message : "Failed to fetch pending orders",
+        err instanceof Error ? err.message : 'Failed to fetch pending orders'
       );
     } finally {
       setLoading(false);
@@ -56,7 +56,7 @@ export const usePendingOrders = () => {
 
   const cancelOrder = async (orderId: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke("cancel-order", {
+      const { data, error } = await supabase.functions.invoke('cancel-order', {
         body: { order_id: orderId },
       });
 
@@ -64,8 +64,8 @@ export const usePendingOrders = () => {
       if (data.error) throw new Error(data.error);
 
       toast({
-        title: "Order Cancelled",
-        description: "Your order has been cancelled successfully",
+        title: 'Order Cancelled',
+        description: 'Your order has been cancelled successfully',
       });
 
       await fetchPendingOrders();
@@ -73,10 +73,10 @@ export const usePendingOrders = () => {
     } catch (err) {
       // Error cancelling order
       toast({
-        title: "Cancellation Failed",
+        title: 'Cancellation Failed',
         description:
-          err instanceof Error ? err.message : "Failed to cancel order",
-        variant: "destructive",
+          err instanceof Error ? err.message : 'Failed to cancel order',
+        variant: 'destructive',
       });
       return false;
     }
@@ -89,10 +89,10 @@ export const usePendingOrders = () => {
       price?: number;
       stop_loss?: number;
       take_profit?: number;
-    },
+    }
   ) => {
     try {
-      const { data, error } = await supabase.functions.invoke("modify-order", {
+      const { data, error } = await supabase.functions.invoke('modify-order', {
         body: { order_id: orderId, ...updates },
       });
 
@@ -100,8 +100,8 @@ export const usePendingOrders = () => {
       if (data.error) throw new Error(data.error);
 
       toast({
-        title: "Order Modified",
-        description: "Your order has been updated successfully",
+        title: 'Order Modified',
+        description: 'Your order has been updated successfully',
       });
 
       await fetchPendingOrders();
@@ -109,10 +109,10 @@ export const usePendingOrders = () => {
     } catch (err) {
       // Error modifying order
       toast({
-        title: "Modification Failed",
+        title: 'Modification Failed',
         description:
-          err instanceof Error ? err.message : "Failed to modify order",
-        variant: "destructive",
+          err instanceof Error ? err.message : 'Failed to modify order',
+        variant: 'destructive',
       });
       return false;
     }
@@ -123,17 +123,17 @@ export const usePendingOrders = () => {
 
     // Subscribe to real-time updates
     const channel = supabase
-      .channel("pending-orders-changes")
+      .channel('pending-orders-changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "orders",
+          event: '*',
+          schema: 'public',
+          table: 'orders',
         },
         () => {
           fetchPendingOrders();
-        },
+        }
       )
       .subscribe();
 

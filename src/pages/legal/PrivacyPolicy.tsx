@@ -1,7 +1,7 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { AutoBreadcrumb } from '@/components/ui/breadcrumb';
 
 export default function PrivacyPolicy() {
   return (
@@ -124,7 +124,7 @@ export default function PrivacyPolicy() {
                   We use cookies and similar tracking technologies to enhance
                   your experience, analyze site usage, and deliver personalized
                   content. You can control cookie preferences through your
-                  browser settings. For more information, see our{" "}
+                  browser settings. For more information, see our{' '}
                   <a
                     href="/legal/cookie-policy"
                     className="text-primary hover:underline"

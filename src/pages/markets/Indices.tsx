@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { BarChart3, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { BarChart3, CheckCircle2 } from 'lucide-react';
 
 export default function Indices() {
   return (
@@ -40,14 +40,14 @@ export default function Indices() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "Tight spreads from 0.4 points",
-                    "Leverage up to 1:500",
-                    "Trade 24/5 on major indices",
-                    "No expiry dates on CFDs",
-                    "Diversified market exposure",
-                    "Lower volatility than individual stocks",
-                    "Track economic performance",
-                    "Hedge portfolio exposure",
+                    'Tight spreads from 0.4 points',
+                    'Leverage up to 1:500',
+                    'Trade 24/5 on major indices',
+                    'No expiry dates on CFDs',
+                    'Diversified market exposure',
+                    'Lower volatility than individual stocks',
+                    'Track economic performance',
+                    'Hedge portfolio exposure',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -64,22 +64,22 @@ export default function Indices() {
                 <div className="space-y-4">
                   {[
                     {
-                      region: "US Indices",
+                      region: 'US Indices',
                       indices:
-                        "S&P 500, Nasdaq 100, Dow Jones 30, Russell 2000",
+                        'S&P 500, Nasdaq 100, Dow Jones 30, Russell 2000',
                     },
                     {
-                      region: "European",
-                      indices: "FTSE 100, DAX 40, CAC 40, Euro Stoxx 50",
+                      region: 'European',
+                      indices: 'FTSE 100, DAX 40, CAC 40, Euro Stoxx 50',
                     },
                     {
-                      region: "Asian",
+                      region: 'Asian',
                       indices:
-                        "Nikkei 225, Hang Seng, ASX 200, Shanghai Composite",
+                        'Nikkei 225, Hang Seng, ASX 200, Shanghai Composite',
                     },
                     {
-                      region: "Other",
-                      indices: "TSX (Canada), SGX (Singapore), Kospi (Korea)",
+                      region: 'Other',
+                      indices: 'TSX (Canada), SGX (Singapore), Kospi (Korea)',
                     },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
@@ -112,34 +112,34 @@ export default function Indices() {
                   <tbody>
                     {[
                       {
-                        index: "S&P 500",
-                        spread: "0.4 points",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        index: 'S&P 500',
+                        spread: '0.4 points',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        index: "Nasdaq 100",
-                        spread: "0.8 points",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        index: 'Nasdaq 100',
+                        spread: '0.8 points',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        index: "Dow Jones 30",
-                        spread: "1.0 point",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        index: 'Dow Jones 30',
+                        spread: '1.0 point',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        index: "DAX 40",
-                        spread: "1.0 points",
-                        leverage: "1:500",
-                        hours: "07:00-21:00",
+                        index: 'DAX 40',
+                        spread: '1.0 points',
+                        leverage: '1:500',
+                        hours: '07:00-21:00',
                       },
                       {
-                        index: "FTSE 100",
-                        spread: "1.0 points",
-                        leverage: "1:500",
-                        hours: "07:00-21:00",
+                        index: 'FTSE 100',
+                        spread: '1.0 points',
+                        leverage: '1:500',
+                        hours: '07:00-21:00',
                       },
                     ].map((row, i) => (
                       <tr

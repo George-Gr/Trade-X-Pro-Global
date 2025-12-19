@@ -1,10 +1,10 @@
-import { useState, useCallback, useRef } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useState, useCallback, useRef } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 /**
  * Represents the trigger type for SL/TP execution
  */
-export type TriggerType = "stop_loss" | "take_profit";
+export type TriggerType = 'stop_loss' | 'take_profit';
 
 /**
  * Options for executing a stop loss or take profit closure
@@ -23,7 +23,7 @@ export interface ClosureResponse {
   closure_id: string;
   position_id: string;
   reason: TriggerType;
-  status: "partial" | "completed";
+  status: 'partial' | 'completed';
   entry_price: number;
   exit_price: number;
   quantity_closed: number;
@@ -85,7 +85,7 @@ export const useSlTpExecution = () => {
       // Prevent duplicate execution for same position/trigger
       if (executingRef.current.has(options.positionId)) {
         throw new Error(
-          `${options.triggerType} already executing for position ${options.positionId}`,
+          `${options.triggerType} already executing for position ${options.positionId}`
         );
       }
 
@@ -101,7 +101,7 @@ export const useSlTpExecution = () => {
         const errorMsg =
           error instanceof Error
             ? error.message
-            : "Unknown error occurred during SL/TP execution";
+            : 'Unknown error occurred during SL/TP execution';
         setState((prev) => ({ ...prev, error: errorMsg }));
         throw error;
       } finally {
@@ -109,7 +109,7 @@ export const useSlTpExecution = () => {
         executingRef.current.delete(options.positionId);
       }
     },
-    [],
+    []
   );
 
   return {
@@ -131,7 +131,7 @@ export const useSlTpExecution = () => {
 async function executeWithRetry(
   options: SLTPExecutionOptions,
   idempotencyKey: string,
-  maxRetries = 3,
+  maxRetries = 3
 ): Promise<ClosureResponse> {
   let lastError: Error | null = null;
 
@@ -154,7 +154,7 @@ async function executeWithRetry(
     }
   }
 
-  throw lastError || new Error("Failed to execute SL/TP closure");
+  throw lastError || new Error('Failed to execute SL/TP closure');
 }
 
 /**
@@ -164,15 +164,15 @@ function isTransientError(error: unknown): boolean {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
     return (
-      message.includes("econnrefused") ||
-      message.includes("timeout") ||
-      message.includes("econnreset") ||
-      message.includes("network")
+      message.includes('econnrefused') ||
+      message.includes('timeout') ||
+      message.includes('econnreset') ||
+      message.includes('network')
     );
   }
 
   // Check for HTTP status codes that indicate transient errors
-  if (typeof error === "object" && error !== null && "status" in error) {
+  if (typeof error === 'object' && error !== null && 'status' in error) {
     const status = (error as { status?: number }).status;
     return status === 429 || status === 503 || status === 504;
   }
@@ -188,9 +188,9 @@ function isTransientError(error: unknown): boolean {
  */
 async function executeClosureViaEdgeFunction(
   options: SLTPExecutionOptions,
-  idempotencyKey: string,
+  idempotencyKey: string
 ): Promise<ClosureResponse> {
-  const { data, error } = await supabase.functions.invoke("close-position", {
+  const { data, error } = await supabase.functions.invoke('close-position', {
     body: {
       position_id: options.positionId,
       reason: options.triggerType,
@@ -204,14 +204,14 @@ async function executeClosureViaEdgeFunction(
   }
 
   if (!data || !data.data) {
-    throw new Error("Invalid response from close-position function");
+    throw new Error('Invalid response from close-position function');
   }
 
   // Extract and validate closure response
   const closure = data.data as ClosureResponse;
 
   if (!closure.closure_id || !closure.position_id) {
-    throw new Error("Incomplete closure response from edge function");
+    throw new Error('Incomplete closure response from edge function');
   }
 
   return closure;

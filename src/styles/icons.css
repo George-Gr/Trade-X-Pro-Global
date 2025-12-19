@@ -71,14 +71,14 @@
 
 /* Icons within buttons - match button size */
 .button-xs .icon,
-button[class*="h-8"] .icon,
+button[class*='h-8'] .icon,
 button.h-8 > svg {
   width: 12px;
   height: 12px;
 }
 
 .button-sm .icon,
-button[class*="h-10"] .icon,
+button[class*='h-10'] .icon,
 button.h-10 > svg {
   width: 16px;
   height: 16px;
@@ -86,29 +86,29 @@ button.h-10 > svg {
 
 .button-default .icon,
 .button-md .icon,
-button[class*="h-12"] .icon,
+button[class*='h-12'] .icon,
 button.h-12 > svg {
   width: 20px;
   height: 20px;
 }
 
 .button-lg .icon,
-button[class*="h-14"] .icon,
+button[class*='h-14'] .icon,
 button.h-14 > svg {
   width: 24px;
   height: 24px;
 }
 
 .button-xl .icon,
-button[class*="h-16"] .icon,
+button[class*='h-16'] .icon,
 button.h-16 > svg {
   width: 28px;
   height: 28px;
 }
 
 /* Icon-only buttons should have larger icons */
-button[class*="icon"] .icon,
-button[class*="icon"] > svg {
+button[class*='icon'] .icon,
+button[class*='icon'] > svg {
   width: 24px;
   height: 24px;
 }
@@ -225,8 +225,8 @@ input + .icon,
    ============================================ */
 
 /* Ensure icons don't interfere with screen readers */
-.icon[aria-hidden="true"],
-svg[aria-hidden="true"] {
+.icon[aria-hidden='true'],
+svg[aria-hidden='true'] {
   pointer-events: none;
 }
 

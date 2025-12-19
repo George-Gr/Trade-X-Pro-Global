@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Handshake, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Handshake, CheckCircle2 } from 'lucide-react';
 
 export default function Partners() {
   return (
@@ -36,14 +36,14 @@ export default function Partners() {
             <div className="grid md:grid-cols-2 gap-6">
               {[
                 {
-                  partner: "MetaTrader 5",
+                  partner: 'MetaTrader 5',
                   description:
-                    "Professional trading platform with advanced charting and analysis tools",
+                    'Professional trading platform with advanced charting and analysis tools',
                 },
                 {
-                  partner: "TradingView",
+                  partner: 'TradingView',
                   description:
-                    "Advanced charting platform with 100+ technical indicators",
+                    'Advanced charting platform with 100+ technical indicators',
                 },
               ].map((item, i) => (
                 <Card
@@ -70,15 +70,15 @@ export default function Partners() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                "Visa & Mastercard",
-                "Google Pay",
-                "Apple Pay",
-                "PhonePe",
-                "UPI",
-                "Bank Transfers",
-                "Cryptocurrencies",
-                "NowPayments",
-                "Crypto Payment Gateways",
+                'Visa & Mastercard',
+                'Google Pay',
+                'Apple Pay',
+                'PhonePe',
+                'UPI',
+                'Bank Transfers',
+                'Cryptocurrencies',
+                'NowPayments',
+                'Crypto Payment Gateways',
               ].map((partner, i) => (
                 <Card
                   key={i}
@@ -97,12 +97,12 @@ export default function Partners() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { name: "AWS", service: "Cloud Infrastructure" },
-                { name: "Cloudflare", service: "CDN & Security" },
-                { name: "Auth0", service: "Authentication" },
-                { name: "Twilio", service: "Communication" },
-                { name: "SendGrid", service: "Email Services" },
-                { name: "DataDog", service: "Monitoring" },
+                { name: 'AWS', service: 'Cloud Infrastructure' },
+                { name: 'Cloudflare', service: 'CDN & Security' },
+                { name: 'Auth0', service: 'Authentication' },
+                { name: 'Twilio', service: 'Communication' },
+                { name: 'SendGrid', service: 'Email Services' },
+                { name: 'DataDog', service: 'Monitoring' },
               ].map((tech, i) => (
                 <Card
                   key={i}
@@ -122,13 +122,13 @@ export default function Partners() {
               <h2 className="text-3xl font-bold mb-8">Partnership Benefits</h2>
               <div className="space-y-4">
                 {[
-                  "Best-in-class trading tools and technology",
-                  "Multiple payment options for convenience",
-                  "Reliable infrastructure and uptime",
-                  "Advanced security and compliance",
-                  "Seamless integrations and APIs",
-                  "Global reach and support",
-                  "Continuous innovation and updates",
+                  'Best-in-class trading tools and technology',
+                  'Multiple payment options for convenience',
+                  'Reliable infrastructure and uptime',
+                  'Advanced security and compliance',
+                  'Seamless integrations and APIs',
+                  'Global reach and support',
+                  'Continuous innovation and updates',
                 ].map((benefit, i) => (
                   <div
                     key={i}

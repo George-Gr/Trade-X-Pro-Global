@@ -1,5 +1,5 @@
-import { createContext, ReactNode } from "react";
-import { logger, LogContext } from "@/lib/logger";
+import { createContext, ReactNode } from 'react';
+import { logger, LogContext } from '@/lib/logger';
 
 /**
  * Error context for tracking error information across the application
@@ -51,5 +51,5 @@ export interface ErrorContextType {
  * Create the error context
  */
 export const ErrorContext = createContext<ErrorContextType | undefined>(
-  undefined,
+  undefined
 );

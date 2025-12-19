@@ -11,10 +11,10 @@
  * Total: 15 tests
  */
 
-import { describe, it, expect } from "vitest";
-import { renderHook } from "@testing-library/react";
-import { usePnLCalculations } from "../usePnLCalculations";
-import type { Position } from "@/types/position";
+import { describe, it, expect } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { usePnLCalculations } from '../usePnLCalculations';
+import type { Position } from '@/types/position';
 
 // ============================================================================
 // TEST DATA GENERATORS
@@ -23,7 +23,7 @@ import type { Position } from "@/types/position";
 interface MockPosition {
   id: string;
   symbol: string;
-  side: "long" | "short";
+  side: 'long' | 'short';
   quantity: number;
   entryPrice: number;
   currentPrice: number;
@@ -38,12 +38,12 @@ interface MockPnLPosition extends MockPosition {
 
 // Return type changed to proper typing for test compatibility
 function createMockPosition(
-  overrides?: Partial<MockPosition>,
+  overrides?: Partial<MockPosition>
 ): MockPnLPosition {
   const mockPosition: MockPosition = {
-    id: "pos-1",
-    symbol: "EURUSD",
-    side: "long", // Default to 'long'
+    id: 'pos-1',
+    symbol: 'EURUSD',
+    side: 'long', // Default to 'long'
     quantity: 1.0,
     entryPrice: 1.09,
     currentPrice: 1.09,
@@ -64,8 +64,8 @@ function createMockPosition(
 // TEST SUITE: HOOK INITIALIZATION & BASIC FUNCTIONALITY
 // ============================================================================
 
-describe("usePnLCalculations Hook: Initialization", () => {
-  it("should initialize hook with correct default values", () => {
+describe('usePnLCalculations Hook: Initialization', () => {
+  it('should initialize hook with correct default values', () => {
     const { result } = renderHook(() => usePnLCalculations([], new Map(), {}));
 
     expect(result.current.totalUnrealizedPnL).toBe(0);
@@ -74,7 +74,7 @@ describe("usePnLCalculations Hook: Initialization", () => {
     expect(result.current.positionPnLMap.size).toBe(0);
   });
 
-  it("should handle single position with profitable state", () => {
+  it('should handle single position with profitable state', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.09,
@@ -82,20 +82,20 @@ describe("usePnLCalculations Hook: Initialization", () => {
       }),
     ];
 
-    const prices = new Map([["EURUSD", 1.1]]);
+    const prices = new Map([['EURUSD', 1.1]]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     expect(result.current.portfolioPnL.positionCount).toBe(1);
     expect(result.current.totalUnrealizedPnL).toBeGreaterThan(0);
     expect(result.current.getPnLStatus(result.current.totalUnrealizedPnL)).toBe(
-      "profit",
+      'profit'
     );
   });
 
-  it("should handle single position with loss state", () => {
+  it('should handle single position with loss state', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.09,
@@ -103,16 +103,16 @@ describe("usePnLCalculations Hook: Initialization", () => {
       }),
     ];
 
-    const prices = new Map([["EURUSD", 1.08]]);
+    const prices = new Map([['EURUSD', 1.08]]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     expect(result.current.portfolioPnL.positionCount).toBe(1);
     expect(result.current.totalUnrealizedPnL).toBeLessThan(0);
     expect(result.current.getPnLStatus(result.current.totalUnrealizedPnL)).toBe(
-      "loss",
+      'loss'
     );
   });
 });
@@ -121,50 +121,50 @@ describe("usePnLCalculations Hook: Initialization", () => {
 // TEST SUITE: MULTIPLE POSITIONS AGGREGATION
 // ============================================================================
 
-describe("usePnLCalculations Hook: Multiple Positions", () => {
-  it("should aggregate P&L from multiple positions", () => {
+describe('usePnLCalculations Hook: Multiple Positions', () => {
+  it('should aggregate P&L from multiple positions', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
-        id: "pos-1",
-        symbol: "EURUSD",
+        id: 'pos-1',
+        symbol: 'EURUSD',
         entryPrice: 1.09,
         currentPrice: 1.09,
       }),
       createMockPosition({
-        id: "pos-2",
-        symbol: "GBPUSD",
+        id: 'pos-2',
+        symbol: 'GBPUSD',
         entryPrice: 1.27,
         currentPrice: 1.27,
       }),
     ];
 
     const prices = new Map([
-      ["EURUSD", 1.1],
-      ["GBPUSD", 1.27],
+      ['EURUSD', 1.1],
+      ['GBPUSD', 1.27],
     ]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     expect(result.current.portfolioPnL.positionCount).toBe(2);
     expect(result.current.positionPnLMap.size).toBe(2);
   });
 
-  it("should track win rate from multiple positions", () => {
+  it('should track win rate from multiple positions', () => {
     const positions: MockPnLPosition[] = [
-      createMockPosition({ id: "pos-1", currentPrice: 1.1 }), // profit if price is 1.1000
-      createMockPosition({ id: "pos-2", currentPrice: 1.08 }), // loss
+      createMockPosition({ id: 'pos-1', currentPrice: 1.1 }), // profit if price is 1.1000
+      createMockPosition({ id: 'pos-2', currentPrice: 1.08 }), // loss
     ];
 
     // Use the current price from positions (1.1000 from first, 1.0800 from second)
     // Since both have same symbol, Map will use last value (1.0800)
     const prices = new Map([
-      ["EURUSD", 1.08], // This will be used for both positions
+      ['EURUSD', 1.08], // This will be used for both positions
     ]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     expect(result.current.portfolioPnL.positionCount).toBe(2);
@@ -178,8 +178,8 @@ describe("usePnLCalculations Hook: Multiple Positions", () => {
 // TEST SUITE: MEMOIZATION & CACHING
 // ============================================================================
 
-describe("usePnLCalculations Hook: Memoization", () => {
-  it("should memoize position P&L map", () => {
+describe('usePnLCalculations Hook: Memoization', () => {
+  it('should memoize position P&L map', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.09,
@@ -187,13 +187,13 @@ describe("usePnLCalculations Hook: Memoization", () => {
       }),
     ];
 
-    const prices = new Map([["EURUSD", 1.1]]);
+    const prices = new Map([['EURUSD', 1.1]]);
 
     const { result, rerender } = renderHook(
       ({ pos, pr }) => usePnLCalculations(pos, pr, {}),
       {
         initialProps: { pos: positions, pr: prices },
-      },
+      }
     );
 
     const firstMap = result.current.positionPnLMap;
@@ -205,7 +205,7 @@ describe("usePnLCalculations Hook: Memoization", () => {
     expect(result.current.positionPnLMap).toBe(firstMap);
   });
 
-  it("should recalculate when price changes", () => {
+  it('should recalculate when price changes', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.09,
@@ -213,14 +213,14 @@ describe("usePnLCalculations Hook: Memoization", () => {
       }),
     ];
 
-    const prices1 = new Map([["EURUSD", 1.1]]);
-    const prices2 = new Map([["EURUSD", 1.11]]);
+    const prices1 = new Map([['EURUSD', 1.1]]);
+    const prices2 = new Map([['EURUSD', 1.11]]);
 
     const { result, rerender } = renderHook(
       ({ pos, pr }) => usePnLCalculations(pos, pr, {}),
       {
         initialProps: { pos: positions, pr: prices1 },
-      },
+      }
     );
 
     const pnl1 = result.current.totalUnrealizedPnL;
@@ -238,8 +238,8 @@ describe("usePnLCalculations Hook: Memoization", () => {
 // TEST SUITE: REAL-TIME UPDATES
 // ============================================================================
 
-describe("usePnLCalculations Hook: Real-Time Updates", () => {
-  it("should handle rapid price updates", () => {
+describe('usePnLCalculations Hook: Real-Time Updates', () => {
+  it('should handle rapid price updates', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
         entryPrice: 1.09,
@@ -247,20 +247,20 @@ describe("usePnLCalculations Hook: Real-Time Updates", () => {
       }),
     ];
 
-    let prices = new Map([["EURUSD", 1.1]]);
+    let prices = new Map([['EURUSD', 1.1]]);
 
     const { result, rerender } = renderHook(
       ({ pos, pr }) => usePnLCalculations(pos, pr, {}),
       {
         initialProps: { pos: positions, pr: prices },
-      },
+      }
     );
 
     // Simulate 5 rapid price updates
     const priceUpdates = [1.11, 1.105, 1.12, 1.115, 1.125];
 
     priceUpdates.forEach((newPrice) => {
-      prices = new Map([["EURUSD", newPrice]]);
+      prices = new Map([['EURUSD', newPrice]]);
       rerender({ pos: positions, pr: prices });
     });
 
@@ -269,12 +269,12 @@ describe("usePnLCalculations Hook: Real-Time Updates", () => {
     expect(positionPnL?.currentPrice).toBe(1.125);
   });
 
-  it("should format P&L correctly", () => {
+  it('should format P&L correctly', () => {
     const { result } = renderHook(() => usePnLCalculations([], new Map(), {}));
 
     const formatted = result.current.formatPnL(0.01);
-    expect(formatted).toContain("$");
-    expect(formatted).toContain("0.01");
+    expect(formatted).toContain('$');
+    expect(formatted).toContain('0.01');
   });
 });
 
@@ -282,53 +282,53 @@ describe("usePnLCalculations Hook: Real-Time Updates", () => {
 // TEST SUITE: UTILITY FUNCTIONS
 // ============================================================================
 
-describe("usePnLCalculations Hook: Utility Functions", () => {
-  it("should return correct P&L status for values", () => {
+describe('usePnLCalculations Hook: Utility Functions', () => {
+  it('should return correct P&L status for values', () => {
     const { result } = renderHook(() => usePnLCalculations([], new Map(), {}));
 
-    expect(result.current.getPnLStatus(100)).toBe("profit");
-    expect(result.current.getPnLStatus(-100)).toBe("loss");
-    expect(result.current.getPnLStatus(0)).toBe("breakeven");
+    expect(result.current.getPnLStatus(100)).toBe('profit');
+    expect(result.current.getPnLStatus(-100)).toBe('loss');
+    expect(result.current.getPnLStatus(0)).toBe('breakeven');
   });
 
-  it("should return correct P&L colors", () => {
+  it('should return correct P&L colors', () => {
     const { result } = renderHook(() => usePnLCalculations([], new Map(), {}));
 
-    expect(result.current.getPnLColor(100)).toBe("text-buy");
-    expect(result.current.getPnLColor(-100)).toBe("text-sell");
-    expect(result.current.getPnLColor(0)).toBe("text-muted-foreground");
+    expect(result.current.getPnLColor(100)).toBe('text-buy');
+    expect(result.current.getPnLColor(-100)).toBe('text-sell');
+    expect(result.current.getPnLColor(0)).toBe('text-muted-foreground');
   });
 
-  it("should get position P&L by position", () => {
+  it('should get position P&L by position', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
-        id: "pos-1",
+        id: 'pos-1',
         entryPrice: 1.09,
         currentPrice: 1.09,
       }),
     ];
 
-    const prices = new Map([["EURUSD", 1.1]]);
+    const prices = new Map([['EURUSD', 1.1]]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     const positionPnL = result.current.getPositionPnL(positions[0]);
     expect(positionPnL).not.toBeNull();
-    expect(positionPnL?.symbol).toBe("EURUSD");
+    expect(positionPnL?.symbol).toBe('EURUSD');
     expect(positionPnL?.currentPrice).toBe(1.1);
   });
 
-  it("should handle missing price gracefully", () => {
+  it('should handle missing price gracefully', () => {
     const positions: MockPnLPosition[] = [
-      createMockPosition({ symbol: "EURUSD" }),
+      createMockPosition({ symbol: 'EURUSD' }),
     ];
 
     const prices = new Map<string, number>([]); // Empty prices
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     expect(result.current.portfolioPnL.positionCount).toBe(1);
@@ -339,8 +339,8 @@ describe("usePnLCalculations Hook: Utility Functions", () => {
 // TEST SUITE: EDGE CASES
 // ============================================================================
 
-describe("usePnLCalculations Hook: Edge Cases", () => {
-  it("should handle very large position quantities", () => {
+describe('usePnLCalculations Hook: Edge Cases', () => {
+  it('should handle very large position quantities', () => {
     const positions: MockPnLPosition[] = [
       createMockPosition({
         quantity: 1000000,
@@ -349,10 +349,10 @@ describe("usePnLCalculations Hook: Edge Cases", () => {
       }),
     ];
 
-    const prices = new Map([["EURUSD", 1.1]]);
+    const prices = new Map([['EURUSD', 1.1]]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     // With very large quantities and price difference, result should not be NaN
@@ -361,7 +361,7 @@ describe("usePnLCalculations Hook: Edge Cases", () => {
     expect(result.current.portfolioPnL.totalUnrealizedPnL).toBeDefined();
   });
 
-  it("should handle very small price differences", () => {
+  it('should handle very small price differences', () => {
     const position = createMockPosition({
       entryPrice: 1.09,
       currentPrice: 1.0901, // Use the updated currentPrice in prices map
@@ -369,10 +369,10 @@ describe("usePnLCalculations Hook: Edge Cases", () => {
 
     const positions: MockPnLPosition[] = [position];
     // Provide a price that matches the position's symbol
-    const prices = new Map([["EURUSD", 1.0901]]);
+    const prices = new Map([['EURUSD', 1.0901]]);
 
     const { result } = renderHook(() =>
-      usePnLCalculations(positions, prices, {}),
+      usePnLCalculations(positions, prices, {})
     );
 
     // Just verify hook completes without crashing

@@ -1,5 +1,5 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 
 // Deno type declarations are now in types/deno.d.ts
 
@@ -11,38 +11,38 @@ import {
   validateKYCStatus,
   validateMarketHours,
   ValidationError,
-} from "../lib/orderValidation.ts";
+} from '../lib/orderValidation.ts';
 import {
   calculateMarginRequired,
   calculateFreeMargin,
   calculateMarginLevel,
   MarginCalculationError,
-} from "../lib/marginCalculations.ts";
+} from '../lib/marginCalculations.ts';
 import {
   calculateSlippage,
   getExecutionPrice,
   SlippageCalculationError,
   SlippageResult,
-} from "../lib/slippageCalculation.ts";
+} from '../lib/slippageCalculation.ts';
 import {
   calculateCommission,
   CommissionCalculationError,
   CommissionResult,
   AssetClass,
   AccountTier,
-} from "../lib/commissionCalculation.ts";
+} from '../lib/commissionCalculation.ts';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 // Type definition for order request
 interface OrderRequest {
   symbol: string;
-  order_type: "market" | "limit" | "stop" | "stop_limit";
-  side: "buy" | "sell";
+  order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
+  side: 'buy' | 'sell';
   quantity: number;
   price?: number;
   stop_loss?: number;
@@ -70,33 +70,33 @@ interface AssetSpec {
 
 serve(async (req: unknown) => {
   // Handle CORS preflight requests
-  if ((req as Request).method === "OPTIONS") {
+  if ((req as Request).method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     // Initialize Supabase client
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey); // Get user from JWT
-    const authHeader = (req as Request).headers.get("Authorization");
+    const authHeader = (req as Request).headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const token = authHeader.replace("Bearer ", "");
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -105,28 +105,28 @@ serve(async (req: unknown) => {
     // Restore proper rate limit check (100/min)
     // @ts-expect-error - Supabase type casting
     const { data: rateLimitOk } = await (supabase as unknown).rpc(
-      "check_rate_limit",
+      'check_rate_limit',
       {
         p_user_id: user.id,
-        p_endpoint: "execute-order",
+        p_endpoint: 'execute-order',
         p_max_requests: 100,
         p_window_seconds: 60,
-      },
+      }
     );
 
     if (!rateLimitOk) {
       return new Response(
         JSON.stringify({
-          error: "Too many requests. Rate limit exceeded (100/min).",
+          error: 'Too many requests. Rate limit exceeded (100/min).',
         }),
         {
           status: 429,
           headers: {
             ...corsHeaders,
-            "Content-Type": "application/json",
-            "Retry-After": "60",
+            'Content-Type': 'application/json',
+            'Retry-After': '60',
           },
-        },
+        }
       );
     }
 
@@ -141,8 +141,8 @@ serve(async (req: unknown) => {
           JSON.stringify({ error: err.message, details: err.details }),
           {
             status: err.status,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
       throw err;
@@ -152,15 +152,15 @@ serve(async (req: unknown) => {
     // VALIDATION STEP 1: Check user profile and KYC status
     // =========================================
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("kyc_status, account_status, balance, equity, margin_used")
-      .eq("id", user.id)
+      .from('profiles')
+      .select('kyc_status, account_status, balance, equity, margin_used')
+      .eq('id', user.id)
       .single();
 
     if (profileError || !profile) {
-      return new Response(JSON.stringify({ error: "User profile not found" }), {
+      return new Response(JSON.stringify({ error: 'User profile not found' }), {
         status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -175,8 +175,8 @@ serve(async (req: unknown) => {
           JSON.stringify({ error: ve.message, details: ve.details }),
           {
             status: ve.status,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
       // Re-throw non-validation errors to outer handler
@@ -187,23 +187,23 @@ serve(async (req: unknown) => {
     // VALIDATION STEP 2: Check idempotency
     // =========================================
     const { data: existingOrder } = await supabase
-      .from("orders")
-      .select("id, status")
-      .eq("user_id", user.id)
-      .eq("idempotency_key", orderRequest.idempotency_key)
+      .from('orders')
+      .select('id, status')
+      .eq('user_id', user.id)
+      .eq('idempotency_key', orderRequest.idempotency_key)
       .maybeSingle();
 
     if (existingOrder) {
       return new Response(
         JSON.stringify({
-          error: "Duplicate order",
+          error: 'Duplicate order',
           order_id: existingOrder.id,
           status: existingOrder.status,
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -214,14 +214,14 @@ serve(async (req: unknown) => {
     try {
       // Fetch asset directly from asset_specs
       const { data: asset, error: assetError } = await supabase
-        .from("asset_specs")
-        .select("*")
-        .eq("symbol", orderRequest.symbol)
-        .eq("is_tradable", true)
+        .from('asset_specs')
+        .select('*')
+        .eq('symbol', orderRequest.symbol)
+        .eq('is_tradable', true)
         .maybeSingle();
 
       if (assetError || !asset) {
-        throw new Error("Invalid or untradable symbol");
+        throw new Error('Invalid or untradable symbol');
       }
 
       assetSpec = asset as AssetSpec;
@@ -236,8 +236,8 @@ serve(async (req: unknown) => {
           JSON.stringify({ error: ve.message, details: ve.details }),
           {
             status: ve.status,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
       throw err;
@@ -247,9 +247,9 @@ serve(async (req: unknown) => {
     // VALIDATION STEP 5: Check Risk Limits
     // =========================================
     const { data: riskSettings } = await supabase
-      .from("risk_settings")
-      .select("*")
-      .eq("user_id", user.id)
+      .from('risk_settings')
+      .select('*')
+      .eq('user_id', user.id)
       .single();
 
     if (riskSettings) {
@@ -257,24 +257,24 @@ serve(async (req: unknown) => {
       if (orderRequest.quantity > riskSettings.max_position_size) {
         return new Response(
           JSON.stringify({
-            error: "Position size exceeds risk limit",
+            error: 'Position size exceeds risk limit',
             max_allowed: riskSettings.max_position_size,
             requested: orderRequest.quantity,
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       // Check max open positions
       // @ts-expect-error - Supabase type casting
       const { count: openPositionsCount } = await (supabase as unknown)
-        .from("positions")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("status", "open");
+        .from('positions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'open');
 
       if (
         openPositionsCount !== null &&
@@ -282,47 +282,47 @@ serve(async (req: unknown) => {
       ) {
         return new Response(
           JSON.stringify({
-            error: "Maximum number of open positions reached",
+            error: 'Maximum number of open positions reached',
             max_positions: riskSettings.max_positions,
             current: openPositionsCount,
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       // Check daily trade limit
       const { data: dailyPnl } = await supabase
-        .from("daily_pnl_tracking")
-        .select("trade_count, breached_daily_limit")
-        .eq("user_id", user.id)
-        .eq("trading_date", new Date().toISOString().split("T")[0])
+        .from('daily_pnl_tracking')
+        .select('trade_count, breached_daily_limit')
+        .eq('user_id', user.id)
+        .eq('trading_date', new Date().toISOString().split('T')[0])
         .single();
 
       if (dailyPnl?.breached_daily_limit) {
         return new Response(
           JSON.stringify({
-            error: "Daily loss limit breached. Trading suspended for today.",
+            error: 'Daily loss limit breached. Trading suspended for today.',
           }),
           {
             status: 403,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       if (dailyPnl && dailyPnl.trade_count >= riskSettings.daily_trade_limit) {
         return new Response(
           JSON.stringify({
-            error: "Daily trade limit reached",
+            error: 'Daily trade limit reached',
             max_trades: riskSettings.daily_trade_limit,
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
     }
@@ -338,13 +338,13 @@ serve(async (req: unknown) => {
 
       // For forex/commodities/crypto, use OANDA format (e.g., EURUSD -> OANDA:EUR_USD)
       if (
-        assetSpec.asset_class === "forex" ||
-        assetSpec.asset_class === "commodity" ||
-        assetSpec.asset_class === "crypto"
+        assetSpec.asset_class === 'forex' ||
+        assetSpec.asset_class === 'commodity' ||
+        assetSpec.asset_class === 'crypto'
       ) {
         if (
           orderRequest.symbol.length === 6 &&
-          !orderRequest.symbol.includes(":")
+          !orderRequest.symbol.includes(':')
         ) {
           const base = orderRequest.symbol.substring(0, 3);
           const quote = orderRequest.symbol.substring(3, 6);
@@ -353,28 +353,28 @@ serve(async (req: unknown) => {
       }
 
       // Call our get-stock-price edge function which handles forex simulation
-      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
       const priceResponse = await fetch(
         `${supabaseUrl}/functions/v1/get-stock-price`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${supabaseAnonKey}`,
             apikey: supabaseAnonKey,
           },
           body: JSON.stringify({ symbol: priceSymbol }),
-        },
+        }
       );
 
       if (!priceResponse.ok) {
         const errorBody = await priceResponse.text();
         console.error(
-          `Price fetch failed: ${priceResponse.status} - ${errorBody}`,
+          `Price fetch failed: ${priceResponse.status} - ${errorBody}`
         );
-        throw new Error("Failed to fetch market price");
+        throw new Error('Failed to fetch market price');
       }
 
       const priceData: PriceData = await priceResponse.json();
@@ -383,21 +383,21 @@ serve(async (req: unknown) => {
       currentPrice = priceData.c || priceData.pc || 0;
 
       if (!currentPrice || currentPrice === 0) {
-        throw new Error("Invalid price data received");
+        throw new Error('Invalid price data received');
       }
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error("Market data error:", errorMessage);
+      console.error('Market data error:', errorMessage);
       return new Response(
         JSON.stringify({
-          error: "Market data unavailable",
+          error: 'Market data unavailable',
           details: errorMessage,
         }),
         {
           status: 503,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -409,44 +409,44 @@ serve(async (req: unknown) => {
       const marginRequired = calculateMarginRequired(
         orderRequest.quantity,
         currentPrice,
-        assetSpec.leverage || 1,
+        assetSpec.leverage || 1
       );
 
       const freeMargin = calculateFreeMargin(
         profile.equity,
-        profile.margin_used,
+        profile.margin_used
       );
 
       const marginLevel = calculateMarginLevel(
         profile.equity,
-        profile.margin_used,
+        profile.margin_used
       );
 
       if (freeMargin < marginRequired) {
         return new Response(
           JSON.stringify({
-            error: "Insufficient margin",
+            error: 'Insufficient margin',
             required: marginRequired.toFixed(2),
             available: freeMargin.toFixed(2),
             margin_level: marginLevel.toFixed(2),
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
     } catch (err) {
       if (err instanceof MarginCalculationError) {
         return new Response(
           JSON.stringify({
-            error: "Margin calculation failed",
+            error: 'Margin calculation failed',
             details: err.details,
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
       throw err;
@@ -477,13 +477,13 @@ serve(async (req: unknown) => {
       if (err instanceof SlippageCalculationError) {
         return new Response(
           JSON.stringify({
-            error: "Slippage calculation failed",
+            error: 'Slippage calculation failed',
             details: err.details,
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
       throw err;
@@ -493,7 +493,7 @@ serve(async (req: unknown) => {
     // STEP 8: Calculate execution price with slippage
     // =========================================
     const executionPrice =
-      orderRequest.side === "buy"
+      orderRequest.side === 'buy'
         ? currentPrice * (1 + slippageResult.totalSlippage)
         : currentPrice * (1 - slippageResult.totalSlippage);
 
@@ -529,13 +529,13 @@ serve(async (req: unknown) => {
       if (err instanceof CommissionCalculationError) {
         return new Response(
           JSON.stringify({
-            error: "Commission calculation failed",
+            error: 'Commission calculation failed',
             details: err.details,
           }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
       throw err;
@@ -546,34 +546,34 @@ serve(async (req: unknown) => {
     // =========================================
     const orderValue = orderRequest.quantity * executionPrice;
     const totalOrderCost =
-      orderRequest.side === "buy"
+      orderRequest.side === 'buy'
         ? orderValue + commissionResult.totalCommission
         : orderValue - commissionResult.totalCommission;
 
     // Verify sufficient balance for buy orders
-    if (orderRequest.side === "buy" && profile.balance < totalOrderCost) {
+    if (orderRequest.side === 'buy' && profile.balance < totalOrderCost) {
       return new Response(
         JSON.stringify({
-          error: "Insufficient balance",
+          error: 'Insufficient balance',
           required: totalOrderCost.toFixed(2),
           available: profile.balance.toFixed(2),
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
     // =========================================
     // STEP 10.5: Handle pending orders (limit, stop, stop_limit)
     // =========================================
-    if (orderRequest.order_type !== "market") {
+    if (orderRequest.order_type !== 'market') {
       // @ts-expect-error - Supabase type casting
       const { data: pendingOrder, error: pendingError } = await (
         supabase as unknown
       )
-        .from("orders")
+        .from('orders')
         .insert({
           user_id: user.id,
           symbol: orderRequest.symbol,
@@ -583,7 +583,7 @@ serve(async (req: unknown) => {
           price: orderRequest.price || currentPrice,
           stop_loss: orderRequest.stop_loss || null,
           take_profit: orderRequest.take_profit || null,
-          status: "pending",
+          status: 'pending',
           idempotency_key: orderRequest.idempotency_key,
           commission: commissionResult.totalCommission,
         })
@@ -593,21 +593,21 @@ serve(async (req: unknown) => {
       if (pendingError) {
         return new Response(
           JSON.stringify({
-            error: "Failed to create pending order",
+            error: 'Failed to create pending order',
             details: pendingError,
           }),
           {
             status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       // Create notification
-      await supabase.from("notifications").insert({
+      await supabase.from('notifications').insert({
         user_id: user.id,
-        type: "order",
-        title: "Order Placed",
+        type: 'order',
+        title: 'Order Placed',
         message: `Your ${orderRequest.order_type} ${orderRequest.side} order for ${orderRequest.symbol} has been placed and is pending execution at ${orderRequest.price || currentPrice}`,
         data: {
           order_id: pendingOrder.id,
@@ -621,14 +621,14 @@ serve(async (req: unknown) => {
       return new Response(
         JSON.stringify({
           success: true,
-          message: "Pending order created",
+          message: 'Pending order created',
           order: pendingOrder,
           execution_details: {
             estimated_execution_price: orderRequest.price || currentPrice,
             estimated_commission: commissionResult.totalCommission.toFixed(2),
           },
         }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -638,7 +638,7 @@ serve(async (req: unknown) => {
 
     // @ts-expect-error - Supabase type casting
     const { data: result, error: execError } = await (supabase as unknown).rpc(
-      "execute_order_atomic",
+      'execute_order_atomic',
       {
         p_user_id: user.id,
         p_symbol: orderRequest.symbol,
@@ -653,13 +653,13 @@ serve(async (req: unknown) => {
         p_execution_price: executionPrice,
         p_slippage: slippageResult.totalSlippage,
         p_commission: commissionResult.totalCommission,
-      },
+      }
     );
 
     if (execError) {
       return new Response(JSON.stringify({ error: execError.message }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -679,21 +679,21 @@ serve(async (req: unknown) => {
       }),
       {
         status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   } catch (error) {
     const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
+      error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({
-        error: "Internal server error",
+        error: 'Internal server error',
         details: errorMessage,
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

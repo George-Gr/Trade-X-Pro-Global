@@ -6,10 +6,10 @@
 interface ChartCalculationRequest {
   id: string;
   type:
-    | "calculateTrend"
-    | "normalizeData"
-    | "generateSparkline"
-    | "optimizeData";
+    | 'calculateTrend'
+    | 'normalizeData'
+    | 'generateSparkline'
+    | 'optimizeData';
   data: Record<string, unknown>;
 }
 
@@ -22,13 +22,13 @@ interface ChartCalculationResponse {
 
 // Chart calculation functions that can run in worker
 const calculateTrend = (
-  values: number[],
+  values: number[]
 ): { changePercentage: number; direction: string; color: string } => {
   if (!values || values.length < 2) {
     return {
       changePercentage: 0,
-      direction: "neutral",
-      color: "hsl(var(--foreground-tertiary))",
+      direction: 'neutral',
+      color: 'hsl(var(--foreground-tertiary))',
     };
   }
 
@@ -36,15 +36,15 @@ const calculateTrend = (
   const lastValue = values[values.length - 1];
   const change = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
 
-  let direction = "neutral";
-  let color = "hsl(var(--foreground-tertiary))";
+  let direction = 'neutral';
+  let color = 'hsl(var(--foreground-tertiary))';
 
   if (change > 0.1) {
-    direction = "up";
-    color = "hsl(var(--buy))"; // Green
+    direction = 'up';
+    color = 'hsl(var(--buy))'; // Green
   } else if (change < -0.1) {
-    direction = "down";
-    color = "hsl(var(--destructive))"; // Red
+    direction = 'down';
+    color = 'hsl(var(--destructive))'; // Red
   }
 
   return { changePercentage: change, direction, color };
@@ -70,14 +70,14 @@ const normalizeData = (data: { value: number }[]): { value: number }[] => {
 
 const generateSparkline = (
   values: number[],
-  labels?: string[],
+  labels?: string[]
 ): Array<{ date: string; value: number; label?: string }> => {
   return values.map((value, index) => ({
     date:
       labels?.[index] ||
       new Date(
-        Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000,
-      ).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }),
+        Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000
+      ).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }),
     value,
     label: labels?.[index],
   }));
@@ -85,7 +85,7 @@ const generateSparkline = (
 
 const optimizeLargeDataset = (
   data: unknown | unknown[],
-  maxPoints: number = 1000,
+  maxPoints: number = 1000
 ): unknown[] => {
   const arr = Array.isArray(data) ? data : [];
   if (arr.length <= maxPoints) return arr;
@@ -101,30 +101,30 @@ const optimizeLargeDataset = (
 };
 
 const performCalculation = (
-  request: ChartCalculationRequest,
+  request: ChartCalculationRequest
 ): ChartCalculationResponse => {
   try {
     let result: Record<string, unknown> | Record<string, unknown>[] | unknown[];
 
     switch (request.type) {
-      case "calculateTrend":
+      case 'calculateTrend':
         result = calculateTrend((request.data.values as number[]) || []);
         break;
-      case "normalizeData":
+      case 'normalizeData':
         result = normalizeData(
-          (request.data.data as Array<{ value: number }>) || [],
+          (request.data.data as Array<{ value: number }>) || []
         );
         break;
-      case "generateSparkline":
+      case 'generateSparkline':
         result = generateSparkline(
           (request.data.values as number[]) || [],
-          request.data.labels as string[] | undefined,
+          request.data.labels as string[] | undefined
         );
         break;
-      case "optimizeData":
+      case 'optimizeData':
         result = optimizeLargeDataset(
           request.data.data,
-          (request.data.maxPoints as number) || 1000,
+          (request.data.maxPoints as number) || 1000
         );
         break;
       default:
@@ -140,7 +140,7 @@ const performCalculation = (
     return {
       id: request.id,
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 };

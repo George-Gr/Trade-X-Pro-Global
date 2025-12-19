@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext } from 'react';
 
 export interface NotificationContextType {
   unreadCount: number;
@@ -14,7 +14,7 @@ export function useNotifications() {
   const context = useContext(NotificationContext);
   if (context === undefined) {
     throw new Error(
-      "useNotifications must be used within a NotificationProvider",
+      'useNotifications must be used within a NotificationProvider'
     );
   }
   return context;

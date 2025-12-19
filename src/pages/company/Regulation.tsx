@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Shield, CheckCircle2, AlertCircle } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Shield, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function Regulation() {
   return (
@@ -40,13 +40,13 @@ export default function Regulation() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "Fully licensed and regulated",
-                    "Compliant with international standards",
-                    "Regular audits and inspections",
-                    "Anti-money laundering (AML) certified",
-                    "Know Your Customer (KYC) verified",
-                    "Data protection compliant",
-                    "Financial reporting transparent",
+                    'Fully licensed and regulated',
+                    'Compliant with international standards',
+                    'Regular audits and inspections',
+                    'Anti-money laundering (AML) certified',
+                    'Know Your Customer (KYC) verified',
+                    'Data protection compliant',
+                    'Financial reporting transparent',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -65,17 +65,17 @@ export default function Regulation() {
                 <div className="space-y-4">
                   {[
                     {
-                      license: "Financial Conduct Authority (FCA)",
-                      country: "UK",
+                      license: 'Financial Conduct Authority (FCA)',
+                      country: 'UK',
                     },
                     {
-                      license: "Securities and Exchange Commission (SEC)",
-                      country: "USA",
+                      license: 'Securities and Exchange Commission (SEC)',
+                      country: 'USA',
                     },
-                    { license: "Central Bank Approval", country: "EU" },
+                    { license: 'Central Bank Approval', country: 'EU' },
                     {
-                      license: "ISO 27001 Certified",
-                      country: "Information Security",
+                      license: 'ISO 27001 Certified',
+                      country: 'Information Security',
                     },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">

@@ -1,8 +1,8 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 export default function RiskDisclosure() {
   return (
@@ -20,10 +20,10 @@ export default function RiskDisclosure() {
               complex instruments and come with a high risk of losing money
               rapidly due to leverage.
               <strong>
-                {" "}
+                {' '}
                 75% of retail investor accounts lose money when trading CFDs
                 with this provider.
-              </strong>{" "}
+              </strong>{' '}
               You should consider whether you understand how CFDs work and
               whether you can afford to take the high risk of losing your money.
             </AlertDescription>

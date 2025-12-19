@@ -1,106 +1,98 @@
-import React, { Suspense, lazy, useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import ErrorBoundary from "@/components/ErrorBoundary";
-import { ErrorContextProvider } from "@/components/ErrorContextProvider";
-import { NotificationProvider } from "@/contexts/NotificationContext";
-import { AuthenticatedLayoutProvider } from "@/contexts/AuthenticatedLayoutProvider";
-import { ViewModeProvider } from "@/contexts/ViewModeContext";
-import { LoadingProvider } from "@/contexts/LoadingContext";
-import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
-import { logger, initializeSentry } from "@/lib/logger";
-import { breadcrumbTracker } from "@/lib/breadcrumbTracker";
-import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
-import { Skeleton } from "@/components/ui/skeleton";
-import { GlobalLoadingIndicator } from "@/components/common/GlobalLoadingIndicator";
-import { accessibilityStyles } from "@/styles/accessibilityStyles";
-const Index = lazy(() => import("./pages/Index"));
-const Register = lazy(() => import("./pages/Register"));
-const Login = lazy(() => import("./pages/Login"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Trade = lazy(() => import("./pages/Trade"));
-const Portfolio = lazy(() => import("./pages/Portfolio"));
-const History = lazy(() => import("./pages/History"));
-const PendingOrders = lazy(() => import("./pages/PendingOrders"));
-const Settings = lazy(() => import("./pages/Settings"));
-const KYC = lazy(() => import("./pages/KYC"));
-const Admin = lazy(() => import("./pages/Admin"));
-const RiskManagement = lazy(() => import("./pages/RiskManagement"));
-const AdminRiskDashboard = lazy(() => import("./pages/AdminRiskDashboard"));
-const Notifications = lazy(() => import("./pages/Notifications"));
-const Wallet = lazy(() => import("./pages/Wallet"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const DevSentryTest = lazy(() => import("./pages/DevSentryTest"));
-const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
+import { GlobalLoadingIndicator } from '@/components/common/GlobalLoadingIndicator';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { ErrorContextProvider } from '@/components/ErrorContextProvider';
+import { ShimmerEffect } from '@/components/ui/LoadingSkeleton';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { AuthenticatedLayoutProvider } from '@/contexts/AuthenticatedLayoutProvider';
+import { LoadingProvider } from '@/contexts/LoadingContext';
+import { NotificationProvider } from '@/contexts/NotificationContext';
+import { ViewModeProvider } from '@/contexts/ViewModeContext';
+import { initializeSentry, logger } from '@/lib/logger';
+import { accessibilityStyles } from '@/styles/accessibilityStyles';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+const Index = lazy(() => import('./pages/Index'));
+const Register = lazy(() => import('./pages/Register'));
+const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Trade = lazy(() => import('./pages/Trade'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const History = lazy(() => import('./pages/History'));
+const PendingOrders = lazy(() => import('./pages/PendingOrders'));
+const Settings = lazy(() => import('./pages/Settings'));
+const KYC = lazy(() => import('./pages/KYC'));
+const Admin = lazy(() => import('./pages/Admin'));
+const RiskManagement = lazy(() => import('./pages/RiskManagement'));
+const AdminRiskDashboard = lazy(() => import('./pages/AdminRiskDashboard'));
+const Notifications = lazy(() => import('./pages/Notifications'));
+const Wallet = lazy(() => import('./pages/Wallet'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const DevSentryTest = lazy(() => import('./pages/DevSentryTest'));
+const ProtectedRoute = lazy(() => import('./components/auth/ProtectedRoute'));
 
 // Legal Pages
-import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
-import Terms from "./pages/legal/Terms";
-import RiskDisclosure from "./pages/legal/RiskDisclosure";
-import CookiePolicy from "./pages/legal/CookiePolicy";
-import AMLPolicy from "./pages/legal/AMLPolicy";
+import AMLPolicy from './pages/legal/AMLPolicy';
+import CookiePolicy from './pages/legal/CookiePolicy';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import RiskDisclosure from './pages/legal/RiskDisclosure';
+import Terms from './pages/legal/Terms';
 
 // Accessibility Components
-import { AccessibilityTestingSuite } from "./components/accessibility/AccessibilityTestingSuite";
-import { AdvancedAccessibilityDashboard } from "./components/accessibility/AdvancedAccessibilityDashboard";
+import { AccessibilityTestingSuite } from './components/accessibility/AccessibilityTestingSuite';
+import { AdvancedAccessibilityDashboard } from './components/accessibility/AdvancedAccessibilityDashboard';
 
 // Trading Pages
-import TradingInstruments from "./pages/trading/TradingInstruments";
+import TradingInstruments from './pages/trading/TradingInstruments';
 // Trading Pages (Additional)
-import TradingPlatforms from "./pages/trading/TradingPlatforms";
-import AccountTypes from "./pages/trading/AccountTypes";
-import TradingConditions from "./pages/trading/TradingConditions";
-import TradingTools from "./pages/trading/TradingTools";
+import AccountTypes from './pages/trading/AccountTypes';
+import TradingConditions from './pages/trading/TradingConditions';
+import TradingPlatforms from './pages/trading/TradingPlatforms';
+import TradingTools from './pages/trading/TradingTools';
 
 // Markets Pages
-import Forex from "./pages/markets/Forex";
-import Stocks from "./pages/markets/Stocks";
-import Indices from "./pages/markets/Indices";
-import Commodities from "./pages/markets/Commodities";
-import Cryptocurrencies from "./pages/markets/Cryptocurrencies";
+import Commodities from './pages/markets/Commodities';
+import Cryptocurrencies from './pages/markets/Cryptocurrencies';
+import Forex from './pages/markets/Forex';
+import Indices from './pages/markets/Indices';
+import Stocks from './pages/markets/Stocks';
 
 // Education Pages
-import Webinar from "./pages/education/Webinar";
-import Certifications from "./pages/education/Certifications";
-import Tutorials from "./pages/education/Tutorials";
-import Mentorship from "./pages/education/Mentorship";
-import Glossary from "./pages/education/Glossary";
+import Certifications from './pages/education/Certifications';
+import Glossary from './pages/education/Glossary';
+import Mentorship from './pages/education/Mentorship';
+import Tutorials from './pages/education/Tutorials';
+import Webinar from './pages/education/Webinar';
 
 // Company Pages
-import AboutUs from "./pages/company/AboutUs";
-import Regulation from "./pages/company/Regulation";
-import Security from "./pages/company/Security";
-import Partners from "./pages/company/Partners";
-import ContactUs from "./pages/company/ContactUs";
+import AboutUs from './pages/company/AboutUs';
+import ContactUs from './pages/company/ContactUs';
+import Partners from './pages/company/Partners';
+import Regulation from './pages/company/Regulation';
+import Security from './pages/company/Security';
 
 const queryClient = new QueryClient();
 
 // Layout Components
 const MobileBottomNavigation = lazy(() =>
-  import("./components/layout/MobileBottomNavigation").then((module) => ({
+  import('./components/layout/MobileBottomNavigation').then((module) => ({
     default: module.MobileBottomNavigation,
-  })),
+  }))
 );
 
 const App = () => {
   // Initialize Sentry and monitoring on app load (production only)
   useEffect(() => {
     initializeSentry();
-    logger.info("App initialized", { action: "app_startup" });
+    logger.info('App initialized', { action: 'app_startup' });
 
     // Initialize breadcrumb tracking
-    logger.info("Breadcrumb tracker initialized", {
-      action: "breadcrumb_tracker_init",
+    logger.info('Breadcrumb tracker initialized', {
+      action: 'breadcrumb_tracker_init',
     });
   }, []);
 
@@ -116,11 +108,11 @@ const App = () => {
                 <GlobalLoadingIndicator />
                 <ErrorBoundary
                   componentName="App"
-                  onError={(error, errorInfo) => {
+                  onError={(error: Error, errorInfo: React.ErrorInfo) => {
                     // Log to logger with context
-                    logger.error("Root app error boundary caught", error, {
-                      action: "app_error_boundary",
-                      component: "App",
+                    logger.error('Root app error boundary caught', error, {
+                      action: 'app_error_boundary',
+                      component: 'App',
                       metadata: {
                         componentStack: errorInfo?.componentStack,
                       },

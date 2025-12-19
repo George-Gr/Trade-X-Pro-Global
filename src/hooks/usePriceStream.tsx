@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
  * Hook: usePriceStream
@@ -53,7 +53,7 @@ export const usePriceStream = ({
 
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
+    null
   );
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
@@ -66,7 +66,7 @@ export const usePriceStream = ({
     }
 
     try {
-      const projectRef = "oaegicsinxhpilsihjxv";
+      const projectRef = 'oaegicsinxhpilsihjxv';
       const wsUrl = `wss://${projectRef}.supabase.co/functions/v1/price-stream`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -78,9 +78,9 @@ export const usePriceStream = ({
         reconnectAttemptsRef.current = 0;
         ws.send(
           JSON.stringify({
-            type: "subscribe",
+            type: 'subscribe',
             symbols,
-          }),
+          })
         );
         onConnected?.();
       };
@@ -88,7 +88,7 @@ export const usePriceStream = ({
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          if (message.type === "prices" && message.data) {
+          if (message.type === 'prices' && message.data) {
             const newPrices = new Map<string, PriceData>();
             for (const [symbol, data] of Object.entries(message.data)) {
               // Supabase function returns Finnhub-like response
@@ -132,8 +132,8 @@ export const usePriceStream = ({
       };
 
       ws.onerror = () => {
-        setError("Connection error");
-        onError?.(new Error("WebSocket connection error"));
+        setError('Connection error');
+        onError?.(new Error('WebSocket connection error'));
       };
 
       ws.onclose = () => {
@@ -147,11 +147,11 @@ export const usePriceStream = ({
             connect();
           }, reconnectDelayMs);
         } else {
-          setError("Max reconnection attempts reached");
+          setError('Max reconnection attempts reached');
         }
       };
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Connection failed");
+      setError(err instanceof Error ? err.message : 'Connection failed');
       setIsLoading(false);
     }
   }, [enabled, symbols, onConnected, onDisconnected, onError]);
@@ -163,7 +163,7 @@ export const usePriceStream = ({
     }
 
     if (wsRef.current) {
-      wsRef.current.send(JSON.stringify({ type: "unsubscribe" }));
+      wsRef.current.send(JSON.stringify({ type: 'unsubscribe' }));
       wsRef.current.close();
       wsRef.current = null;
     }
@@ -186,7 +186,7 @@ export const usePriceStream = ({
     (symbol: string): PriceData | null => {
       return prices.get(symbol) || null;
     },
-    [prices],
+    [prices]
   );
 
   return {

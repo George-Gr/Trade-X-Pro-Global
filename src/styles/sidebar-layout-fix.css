@@ -6,7 +6,7 @@
 /* Ensure sidebar background and foreground use design tokens */
 .sidebar,
 .app-sidebar,
-[data-sidebar="sidebar"] {
+[data-sidebar='sidebar'] {
   background-color: hsl(var(--sidebar));
   color: hsl(var(--sidebar-foreground));
   border-color: hsl(var(--sidebar-border));
@@ -39,13 +39,13 @@
   .sidebar {
     backface-visibility: hidden;
   }
-  [data-sidebar="sidebar"] {
+  [data-sidebar='sidebar'] {
     backface-visibility: hidden;
   }
 }
 
 /* Ensure header stays above sidebar with proper z-index */
-header[class*="sticky"] {
+header[class*='sticky'] {
   z-index: 40;
 }
 
@@ -57,17 +57,17 @@ header[class*="sticky"] {
   }
 
   /* Sidebar peer selector for state-based transitions - expanded state */
-  .group.peer[data-state="expanded"] ~ .flex.flex-col.min-h-screen {
+  .group.peer[data-state='expanded'] ~ .flex.flex-col.min-h-screen {
     margin-left: var(--sidebar-width, 16rem);
   }
 
   /* When sidebar is collapsed with icon variant, reduce margin */
-  .group.peer[data-state="collapsed"] ~ .flex.flex-col.min-h-screen {
+  .group.peer[data-state='collapsed'] ~ .flex.flex-col.min-h-screen {
     margin-left: var(--sidebar-width-icon, 4rem);
   }
 
   /* Ensure proper spacing for offcanvas collapsible variant */
-  .group.peer[data-state="collapsed"][data-collapsible="offcanvas"]
+  .group.peer[data-state='collapsed'][data-collapsible='offcanvas']
     ~ .flex.flex-col.min-h-screen {
     margin-left: 0;
   }

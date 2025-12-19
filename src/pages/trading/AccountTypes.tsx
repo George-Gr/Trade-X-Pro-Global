@@ -1,8 +1,8 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import {
   Zap,
   TrendingUp,
@@ -10,7 +10,7 @@ import {
   Award,
   CheckCircle2,
   DollarSign,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function AccountTypes() {
   return (
@@ -41,78 +41,78 @@ export default function AccountTypes() {
             {[
               {
                 icon: Zap,
-                name: "Standard",
-                description: "Perfect for beginners",
-                minDeposit: "$1",
-                leverage: "1:500",
-                spread: "From 1.0 pips",
+                name: 'Standard',
+                description: 'Perfect for beginners',
+                minDeposit: '$1',
+                leverage: '1:500',
+                spread: 'From 1.0 pips',
                 features: [
-                  "No commission fees",
-                  "Flexible leverage",
-                  "All trading hours",
-                  "24/5 support",
-                  "Copy trading enabled",
+                  'No commission fees',
+                  'Flexible leverage',
+                  'All trading hours',
+                  '24/5 support',
+                  'Copy trading enabled',
                 ],
               },
               {
                 icon: TrendingUp,
-                name: "Premium",
-                description: "For active traders",
-                minDeposit: "$100",
-                leverage: "1:500",
-                spread: "From 0.5 pips",
+                name: 'Premium',
+                description: 'For active traders',
+                minDeposit: '$100',
+                leverage: '1:500',
+                spread: 'From 0.5 pips',
                 features: [
-                  "Reduced spreads",
-                  "Priority support",
-                  "Expert advisors",
-                  "Risk management tools",
-                  "Trading signals included",
+                  'Reduced spreads',
+                  'Priority support',
+                  'Expert advisors',
+                  'Risk management tools',
+                  'Trading signals included',
                 ],
                 highlighted: true,
               },
               {
                 icon: Zap,
-                name: "ECN",
-                description: "Professional traders",
-                minDeposit: "$500",
-                leverage: "1:500",
-                spread: "From 0.0 pips",
+                name: 'ECN',
+                description: 'Professional traders',
+                minDeposit: '$500',
+                leverage: '1:500',
+                spread: 'From 0.0 pips',
                 features: [
-                  "Tight ECN spreads",
-                  "Commission-based",
-                  "Direct market access",
-                  "Raw data feeds",
-                  "Advanced algorithms",
+                  'Tight ECN spreads',
+                  'Commission-based',
+                  'Direct market access',
+                  'Raw data feeds',
+                  'Advanced algorithms',
                 ],
               },
               {
                 icon: Users,
-                name: "Islamic",
-                description: "Sharia-compliant",
-                minDeposit: "$1",
-                leverage: "1:500",
-                spread: "From 1.0 pips",
+                name: 'Islamic',
+                description: 'Sharia-compliant',
+                minDeposit: '$1',
+                leverage: '1:500',
+                spread: 'From 1.0 pips',
                 features: [
-                  "No overnight fees",
-                  "Halal trading",
-                  "Swap-free",
-                  "Religious compliance",
-                  "Special hours support",
+                  'No overnight fees',
+                  'Halal trading',
+                  'Swap-free',
+                  'Religious compliance',
+                  'Special hours support',
                 ],
               },
               {
                 icon: Award,
-                name: "Corporate",
-                description: "Business accounts",
-                minDeposit: "$5,000",
-                leverage: "1:500",
-                spread: "From 0.1 pips",
+                name: 'Corporate',
+                description: 'Business accounts',
+                minDeposit: '$5,000',
+                leverage: '1:500',
+                spread: 'From 0.1 pips',
                 features: [
-                  "Dedicated manager",
-                  "Custom solutions",
-                  "Volume discounts",
-                  "API access",
-                  "White-label options",
+                  'Dedicated manager',
+                  'Custom solutions',
+                  'Volume discounts',
+                  'API access',
+                  'White-label options',
                 ],
               },
             ].map((account, index) => (
@@ -120,8 +120,8 @@ export default function AccountTypes() {
                 key={index}
                 className={`hover:shadow-lg transition-all duration-150 hover:-translate-y-1 ${
                   account.highlighted
-                    ? "ring-2 ring-primary md:col-span-2 lg:col-span-1"
-                    : ""
+                    ? 'ring-2 ring-primary md:col-span-2 lg:col-span-1'
+                    : ''
                 }`}
               >
                 <CardContent className="p-6">
@@ -168,7 +168,7 @@ export default function AccountTypes() {
                   </ul>
 
                   <Button className="w-full bg-gradient-to-r from-primary to-primary-glow text-sm transition-all hover:from-primary/90 hover:to-primary-glow/90 active:from-primary/80 active:to-primary-glow/80 active:scale-95">
-                    {account.highlighted ? "Get Premium" : "Open Account"}
+                    {account.highlighted ? 'Get Premium' : 'Open Account'}
                   </Button>
                 </CardContent>
               </Card>
@@ -194,31 +194,31 @@ export default function AccountTypes() {
                   <tbody>
                     {[
                       {
-                        feature: "Maximum Leverage",
-                        standard: "1:500",
-                        premium: "1:500",
-                        ecn: "1:500",
-                        islamic: "1:500",
-                        corporate: "1:500",
+                        feature: 'Maximum Leverage',
+                        standard: '1:500',
+                        premium: '1:500',
+                        ecn: '1:500',
+                        islamic: '1:500',
+                        corporate: '1:500',
                       },
                       {
-                        feature: "Minimum Spread",
-                        standard: "1.0",
-                        premium: "0.5",
-                        ecn: "0.0",
-                        islamic: "1.0",
-                        corporate: "0.1",
+                        feature: 'Minimum Spread',
+                        standard: '1.0',
+                        premium: '0.5',
+                        ecn: '0.0',
+                        islamic: '1.0',
+                        corporate: '0.1',
                       },
                       {
-                        feature: "Commission per lot",
-                        standard: "0%",
-                        premium: "0%",
-                        ecn: "0.1%",
-                        islamic: "0%",
-                        corporate: "0.05%",
+                        feature: 'Commission per lot',
+                        standard: '0%',
+                        premium: '0%',
+                        ecn: '0.1%',
+                        islamic: '0%',
+                        corporate: '0.05%',
                       },
                       {
-                        feature: "24/5 Support",
+                        feature: '24/5 Support',
                         standard: true,
                         premium: true,
                         ecn: true,
@@ -226,7 +226,7 @@ export default function AccountTypes() {
                         corporate: true,
                       },
                       {
-                        feature: "Trading Signals",
+                        feature: 'Trading Signals',
                         standard: false,
                         premium: true,
                         ecn: true,
@@ -234,7 +234,7 @@ export default function AccountTypes() {
                         corporate: true,
                       },
                       {
-                        feature: "Copy Trading",
+                        feature: 'Copy Trading',
                         standard: true,
                         premium: true,
                         ecn: false,
@@ -242,7 +242,7 @@ export default function AccountTypes() {
                         corporate: false,
                       },
                       {
-                        feature: "API Access",
+                        feature: 'API Access',
                         standard: false,
                         premium: false,
                         ecn: true,
@@ -256,7 +256,7 @@ export default function AccountTypes() {
                       >
                         <td className="p-4 font-medium">{row.feature}</td>
                         <td className="p-4 text-center">
-                          {typeof row.standard === "boolean" ? (
+                          {typeof row.standard === 'boolean' ? (
                             row.standard ? (
                               <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                             ) : (
@@ -267,7 +267,7 @@ export default function AccountTypes() {
                           )}
                         </td>
                         <td className="p-4 text-center">
-                          {typeof row.premium === "boolean" ? (
+                          {typeof row.premium === 'boolean' ? (
                             row.premium ? (
                               <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                             ) : (
@@ -278,7 +278,7 @@ export default function AccountTypes() {
                           )}
                         </td>
                         <td className="p-4 text-center">
-                          {typeof row.ecn === "boolean" ? (
+                          {typeof row.ecn === 'boolean' ? (
                             row.ecn ? (
                               <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                             ) : (
@@ -289,7 +289,7 @@ export default function AccountTypes() {
                           )}
                         </td>
                         <td className="p-4 text-center">
-                          {typeof row.islamic === "boolean" ? (
+                          {typeof row.islamic === 'boolean' ? (
                             row.islamic ? (
                               <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                             ) : (
@@ -300,7 +300,7 @@ export default function AccountTypes() {
                           )}
                         </td>
                         <td className="p-4 text-center">
-                          {typeof row.corporate === "boolean" ? (
+                          {typeof row.corporate === 'boolean' ? (
                             row.corporate ? (
                               <CheckCircle2 className="h-4 w-4 text-accent mx-auto" />
                             ) : (

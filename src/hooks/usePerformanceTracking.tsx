@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { performanceMonitoring } from "../lib/performance/performanceMonitoring";
+import { useEffect } from 'react';
+import { performanceMonitoring } from '../lib/performance/performanceMonitoring';
 
 /**
  * Hook that tracks component mount and unmount performance events.
@@ -17,7 +17,7 @@ export function usePerformanceTracking(componentName: string) {
     return () => {
       // Track component unmount
       performanceMonitoring.markUserAction(
-        `component-unmount-${componentName}`,
+        `component-unmount-${componentName}`
       );
     };
   }, [componentName]);

@@ -144,10 +144,10 @@
      * Mono: JetBrains Mono - Optimized for numbers and code
      */
     --font-family-base:
-      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-family-display:
-      "Sora", -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-family-mono: "JetBrains Mono", "Menlo", "Courier New", monospace;
+      'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
 
     /* Transitions */
     --transition-typography: font-size 300ms ease-in-out;

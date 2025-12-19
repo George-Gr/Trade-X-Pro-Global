@@ -3,13 +3,13 @@
  * Works in conjunction with server-side RLS policies
  */
 
-import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { logger } from "@/lib/logger";
-import { toast } from "sonner";
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
-type AppRole = "admin" | "user";
+type AppRole = 'admin' | 'user';
 
 interface RoleGuardState {
   isLoading: boolean;
@@ -28,12 +28,12 @@ interface UseRoleGuardOptions {
  * Hook to check if user has required role
  */
 export function useRoleGuard(
-  options: UseRoleGuardOptions = {},
+  options: UseRoleGuardOptions = {}
 ): RoleGuardState & {
   checkRole: (role: AppRole) => boolean;
   refreshRoles: () => Promise<void>;
 } {
-  const { requiredRole, redirectTo = "/dashboard", showToast = true } = options;
+  const { requiredRole, redirectTo = '/dashboard', showToast = true } = options;
   const navigate = useNavigate();
 
   const [state, setState] = useState<RoleGuardState>({
@@ -56,19 +56,19 @@ export function useRoleGuard(
           isLoading: false,
           hasRole: false,
           userRoles: [],
-          error: "Not authenticated",
+          error: 'Not authenticated',
         });
         return;
       }
 
       // Fetch roles from user_roles table (RLS protects this)
       const { data: roles, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id);
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id);
 
       if (error) {
-        logger.error("Failed to fetch user roles", error);
+        logger.error('Failed to fetch user roles', error);
         setState({
           isLoading: false,
           hasRole: false,
@@ -92,7 +92,7 @@ export function useRoleGuard(
 
       // Handle unauthorized access
       if (requiredRole && !hasRequiredRole) {
-        logger.warn("Unauthorized access attempt", {
+        logger.warn('Unauthorized access attempt', {
           userId: user.id,
           metadata: {
             requiredRole,
@@ -101,8 +101,8 @@ export function useRoleGuard(
         });
 
         if (showToast) {
-          toast.error("Access Denied", {
-            description: "You do not have permission to access this page.",
+          toast.error('Access Denied', {
+            description: 'You do not have permission to access this page.',
           });
         }
 
@@ -110,8 +110,8 @@ export function useRoleGuard(
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      logger.error("Role guard error", error);
+        error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Role guard error', error);
       setState({
         isLoading: false,
         hasRole: false,
@@ -129,7 +129,7 @@ export function useRoleGuard(
     (role: AppRole): boolean => {
       return state.userRoles.includes(role);
     },
-    [state.userRoles],
+    [state.userRoles]
   );
 
   return {
@@ -142,9 +142,9 @@ export function useRoleGuard(
 /**
  * Hook specifically for admin access
  */
-export function useAdminGuard(redirectTo = "/dashboard") {
+export function useAdminGuard(redirectTo = '/dashboard') {
   return useRoleGuard({
-    requiredRole: "admin",
+    requiredRole: 'admin',
     redirectTo,
     showToast: true,
   });
@@ -171,15 +171,15 @@ export function useIsAdmin(): { isAdmin: boolean; isLoading: boolean } {
         }
 
         const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", user.id)
-          .eq("role", "admin")
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
           .maybeSingle();
 
         setIsAdmin(!!roles);
       } catch (error) {
-        logger.error("Admin check failed", error);
+        logger.error('Admin check failed', error);
         setIsAdmin(false);
       } finally {
         setIsLoading(false);

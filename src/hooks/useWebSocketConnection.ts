@@ -4,15 +4,15 @@
  * React hook for managing WebSocket subscriptions with connection pooling
  */
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState } from 'react';
 import {
   getWebSocketManager,
   type ConnectionState,
-} from "@/lib/websocketManager";
+} from '@/lib/websocketManager';
 
 interface UseWebSocketOptions {
   table: string;
-  event?: "*" | "INSERT" | "UPDATE" | "DELETE";
+  event?: '*' | 'INSERT' | 'UPDATE' | 'DELETE';
   filter?: string;
   onData: (payload: unknown) => void;
   enabled?: boolean;
@@ -25,13 +25,13 @@ interface UseWebSocketReturn {
 }
 
 export function useWebSocketConnection(
-  options: UseWebSocketOptions,
+  options: UseWebSocketOptions
 ): UseWebSocketReturn {
-  const { table, event = "*", filter, onData, enabled = true } = options;
+  const { table, event = '*', filter, onData, enabled = true } = options;
 
   const subscriptionIdRef = useRef<string | null>(null);
   const [connectionState, setConnectionState] =
-    useState<ConnectionState>("disconnected");
+    useState<ConnectionState>('disconnected');
   const [isConnected, setIsConnected] = useState(false);
 
   const unsubscribe = useCallback(() => {
@@ -53,7 +53,7 @@ export function useWebSocketConnection(
     // Set up state listener
     const removeStateListener = manager.onStateChange((state) => {
       setConnectionState(state);
-      setIsConnected(state === "connected");
+      setIsConnected(state === 'connected');
     });
 
     // Subscribe
@@ -62,9 +62,9 @@ export function useWebSocketConnection(
     // Check initial state
     const status = manager.getStatus();
     if (status.totalConnections > 0) {
-      const connected = status.connections.some((c) => c.state === "connected");
+      const connected = status.connections.some((c) => c.state === 'connected');
       setIsConnected(connected);
-      setConnectionState(connected ? "connected" : "connecting");
+      setConnectionState(connected ? 'connected' : 'connecting');
     }
 
     return () => {

@@ -30,19 +30,19 @@
 
 /* Level 1: Base Elevation - Subtle depth for primary content cards */
 .card-elevation-1,
-.card[data-elevation="1"] {
+.card[data-elevation='1'] {
   box-shadow: var(--shadow-sm);
 }
 
 /* Level 2: Mid Elevation - Medium depth for featured/section cards */
 .card-elevation-2,
-.card[data-elevation="2"] {
+.card[data-elevation='2'] {
   box-shadow: var(--shadow-md);
 }
 
 /* Level 3: High Elevation - Strong depth for modals/floating elements */
 .card-elevation-3,
-.card[data-elevation="3"] {
+.card[data-elevation='3'] {
   box-shadow: var(--shadow-lg);
 }
 
@@ -68,21 +68,21 @@
 
 /* Primary Cards - Solid background for main content */
 .card-primary,
-.card[data-variant="primary"] {
+.card[data-variant='primary'] {
   background: hsl(var(--card));
   /* Light mode: #FFFFFF (solid white) */
 }
 
 /* Secondary Cards - Slightly muted for supporting content */
 .card-secondary,
-.card[data-variant="secondary"] {
+.card[data-variant='secondary'] {
   background: hsl(var(--secondary));
   /* Light mode: Subtle gray background */
 }
 
 /* Tertiary Cards - Most muted for background elements */
 .card-tertiary,
-.card[data-variant="tertiary"] {
+.card[data-variant='tertiary'] {
   background: hsl(var(--muted));
   /* Light mode: Very light gray */
 }
@@ -103,7 +103,7 @@
 
 /* Disabled card state */
 .card-disabled,
-.card[data-disabled="true"] {
+.card[data-disabled='true'] {
   opacity: 0.6;
   pointer-events: none;
   cursor: not-allowed;

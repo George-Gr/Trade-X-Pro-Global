@@ -12,29 +12,29 @@
  * - IMPLEMENTATION_TASKS_DETAILED.md TASK 1.1.5
  */
 
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 /**
  * Asset class types for commission calculation
  */
 export enum AssetClass {
-  Forex = "forex",
-  Stock = "stock",
-  Index = "index",
-  Commodity = "commodity",
-  Crypto = "crypto",
-  ETF = "etf",
-  Bond = "bond",
+  Forex = 'forex',
+  Stock = 'stock',
+  Index = 'index',
+  Commodity = 'commodity',
+  Crypto = 'crypto',
+  ETF = 'etf',
+  Bond = 'bond',
 }
 
 /**
  * Account tier for potential tiered commissions
  */
 export enum AccountTier {
-  Standard = "standard",
-  Silver = "silver",
-  Gold = "gold",
-  Platinum = "platinum",
+  Standard = 'standard',
+  Silver = 'silver',
+  Gold = 'gold',
+  Platinum = 'platinum',
 }
 
 /**
@@ -44,11 +44,11 @@ interface CommissionConfig {
   assetClass: AssetClass;
   hasCommission: boolean; // Whether this asset class charges commissions
   commissionType:
-    | "per_share"
-    | "per_contract"
-    | "percentage"
-    | "fixed"
-    | "none";
+    | 'per_share'
+    | 'per_contract'
+    | 'percentage'
+    | 'fixed'
+    | 'none';
   baseCommission: number; // Base commission amount
   minCommission?: number; // Minimum commission per order
   maxCommission?: number; // Maximum commission per order
@@ -63,14 +63,14 @@ export const COMMISSION_CONFIG: Record<AssetClass, CommissionConfig> = {
   [AssetClass.Forex]: {
     assetClass: AssetClass.Forex,
     hasCommission: false,
-    commissionType: "none",
+    commissionType: 'none',
     baseCommission: 0,
   },
 
   [AssetClass.Stock]: {
     assetClass: AssetClass.Stock,
     hasCommission: true,
-    commissionType: "per_share",
+    commissionType: 'per_share',
     baseCommission: 0.02, // $0.02 per share (average: $0.01-$0.05)
     minCommission: 1, // Minimum $1 per order
     maxCommission: 50, // Maximum $50 per order
@@ -85,7 +85,7 @@ export const COMMISSION_CONFIG: Record<AssetClass, CommissionConfig> = {
   [AssetClass.ETF]: {
     assetClass: AssetClass.ETF,
     hasCommission: true,
-    commissionType: "per_share",
+    commissionType: 'per_share',
     baseCommission: 0.02, // Same as stocks
     minCommission: 1,
     maxCommission: 50,
@@ -100,28 +100,28 @@ export const COMMISSION_CONFIG: Record<AssetClass, CommissionConfig> = {
   [AssetClass.Bond]: {
     assetClass: AssetClass.Bond,
     hasCommission: false,
-    commissionType: "none",
+    commissionType: 'none',
     baseCommission: 0,
   },
 
   [AssetClass.Index]: {
     assetClass: AssetClass.Index,
     hasCommission: false,
-    commissionType: "none",
+    commissionType: 'none',
     baseCommission: 0,
   },
 
   [AssetClass.Commodity]: {
     assetClass: AssetClass.Commodity,
     hasCommission: false,
-    commissionType: "none",
+    commissionType: 'none',
     baseCommission: 0,
   },
 
   [AssetClass.Crypto]: {
     assetClass: AssetClass.Crypto,
     hasCommission: false,
-    commissionType: "none",
+    commissionType: 'none',
     baseCommission: 0,
   },
 };
@@ -130,11 +130,11 @@ export const COMMISSION_CONFIG: Record<AssetClass, CommissionConfig> = {
  * Commission calculation input
  */
 export const CommissionCalculationSchema = z.object({
-  symbol: z.string().min(1, "Symbol required"),
+  symbol: z.string().min(1, 'Symbol required'),
   assetClass: z.nativeEnum(AssetClass),
-  side: z.enum(["buy", "sell"]),
-  quantity: z.number().positive("Quantity must be positive"),
-  executionPrice: z.number().positive("Execution price must be positive"),
+  side: z.enum(['buy', 'sell']),
+  quantity: z.number().positive('Quantity must be positive'),
+  executionPrice: z.number().positive('Execution price must be positive'),
   accountTier: z.nativeEnum(AccountTier).default(AccountTier.Standard),
 });
 
@@ -164,10 +164,10 @@ export class CommissionCalculationError extends Error {
   constructor(
     public status: number,
     public details: string,
-    message?: string,
+    message?: string
   ) {
     super(message || details);
-    this.name = "CommissionCalculationError";
+    this.name = 'CommissionCalculationError';
   }
 }
 
@@ -182,7 +182,7 @@ export function getCommissionConfig(assetClass: AssetClass): CommissionConfig {
   if (!config) {
     throw new CommissionCalculationError(
       400,
-      `Unknown asset class: ${assetClass}`,
+      `Unknown asset class: ${assetClass}`
     );
   }
   return config;
@@ -199,7 +199,7 @@ export function getCommissionConfig(assetClass: AssetClass): CommissionConfig {
 export function calculateBaseCommission(
   quantity: number,
   executionPrice: number,
-  config: CommissionConfig,
+  config: CommissionConfig
 ): number {
   if (!config.hasCommission) {
     return 0;
@@ -208,27 +208,27 @@ export function calculateBaseCommission(
   let commission = 0;
 
   switch (config.commissionType) {
-    case "per_share":
+    case 'per_share':
       // For stocks/ETFs: commission per share
       commission = quantity * config.baseCommission;
       break;
 
-    case "per_contract":
+    case 'per_contract':
       // For futures: commission per contract
       commission = quantity * config.baseCommission;
       break;
 
-    case "percentage":
+    case 'percentage':
       // For assets charged as percentage of order value
       commission = (quantity * executionPrice * config.baseCommission) / 100;
       break;
 
-    case "fixed":
+    case 'fixed':
       // Fixed commission per order
       commission = config.baseCommission;
       break;
 
-    case "none":
+    case 'none':
     default:
       commission = 0;
   }
@@ -246,7 +246,7 @@ export function calculateBaseCommission(
  */
 export function getTierMultiplier(
   accountTier: AccountTier,
-  config: CommissionConfig,
+  config: CommissionConfig
 ): number {
   if (!config.tierMultipliers) {
     return 1.0;
@@ -264,7 +264,7 @@ export function getTierMultiplier(
  */
 export function applyCommissionBounds(
   commission: number,
-  config: CommissionConfig,
+  config: CommissionConfig
 ): number {
   if (config.minCommission && commission < config.minCommission) {
     commission = config.minCommission;
@@ -290,11 +290,11 @@ export function calculateOrderCostWithCommission(
   quantity: number,
   executionPrice: number,
   commission: number,
-  side: "buy" | "sell",
+  side: 'buy' | 'sell'
 ): number {
   const orderValue = quantity * executionPrice;
 
-  if (side === "buy") {
+  if (side === 'buy') {
     return orderValue + commission;
   } else {
     return orderValue - commission;
@@ -319,18 +319,18 @@ export function calculateOrderCostWithCommission(
  * // Returns: { totalCommission: 2.40, ... }
  */
 export function calculateCommission(
-  input: CommissionCalculationInput,
+  input: CommissionCalculationInput
 ): CommissionResult {
   // Validate input
   const validation = CommissionCalculationSchema.safeParse(input);
   if (!validation.success) {
     const details = validation.error.issues
-      .map((i: z.ZodIssue) => `${i.path.join(".")}: ${i.message}`)
-      .join(", ");
+      .map((i: z.ZodIssue) => `${i.path.join('.')}: ${i.message}`)
+      .join(', ');
     throw new CommissionCalculationError(
       400,
-      "Invalid commission input",
-      details,
+      'Invalid commission input',
+      details
     );
   }
 
@@ -344,7 +344,7 @@ export function calculateCommission(
   const baseCommission = calculateBaseCommission(
     quantity,
     executionPrice,
-    config,
+    config
   );
 
   // Get tier multiplier
@@ -379,7 +379,7 @@ export function calculateCommission(
  * @returns Array of commission results
  */
 export function calculateCommissionBatch(
-  orders: CommissionCalculationInput[],
+  orders: CommissionCalculationInput[]
 ): CommissionResult[] {
   return orders.map((order) => calculateCommission(order));
 }
@@ -391,7 +391,7 @@ export function calculateCommissionBatch(
  * @returns Total commission across all orders
  */
 export function calculateTotalCommission(
-  orders: CommissionCalculationInput[],
+  orders: CommissionCalculationInput[]
 ): number {
   return orders
     .map((order) => calculateCommission(order).totalCommission)
@@ -425,7 +425,7 @@ export function getAvailableAccountTiers(): AccountTier[] {
  */
 export function formatCommission(
   commission: number,
-  currency: string = "$",
+  currency: string = '$'
 ): string {
   return `${currency}${commission.toFixed(2)}`;
 }

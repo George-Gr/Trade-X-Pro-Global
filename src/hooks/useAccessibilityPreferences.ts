@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import {
   wcagAAAEnhancer,
   type AccessibilityPreferences,
-} from "../components/accessibility/WCAGAAAEnhancer";
+} from '../components/accessibility/WCAGAAAEnhancer';
 
 export function useAccessibilityPreferences() {
   const [preferences, setPreferences] = useState<AccessibilityPreferences>(
-    wcagAAAEnhancer.getPreferences(),
+    wcagAAAEnhancer.getPreferences()
   );
 
   useEffect(() => {
@@ -15,14 +15,14 @@ export function useAccessibilityPreferences() {
     };
 
     document.addEventListener(
-      "accessibilityPreferenceChanged",
-      handlePreferenceChange as EventListener,
+      'accessibilityPreferenceChanged',
+      handlePreferenceChange as EventListener
     );
 
     return () => {
       document.removeEventListener(
-        "accessibilityPreferenceChanged",
-        handlePreferenceChange as EventListener,
+        'accessibilityPreferenceChanged',
+        handlePreferenceChange as EventListener
       );
     };
   }, []);
@@ -30,7 +30,7 @@ export function useAccessibilityPreferences() {
   const updatePreference = useCallback(
     <K extends keyof AccessibilityPreferences>(
       key: K,
-      value: AccessibilityPreferences[K],
+      value: AccessibilityPreferences[K]
     ) => {
       wcagAAAEnhancer.updatePreference(key, value);
       setPreferences((prev: AccessibilityPreferences) => ({
@@ -38,7 +38,7 @@ export function useAccessibilityPreferences() {
         [key]: value,
       }));
     },
-    [],
+    []
   );
 
   return {

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useCallback } from "react";
-import { logger } from "@/lib/logger";
+import { useEffect, useRef, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 
 /**
  * Performance monitoring hook to prevent extension host unresponsiveness
@@ -15,21 +15,21 @@ export const usePerformanceMonitoring = () => {
     const current = listenersRef.current.get(type) || 0;
     listenersRef.current.set(
       type,
-      add ? current + 1 : Math.max(0, current - 1),
+      add ? current + 1 : Math.max(0, current - 1)
     );
 
     const totalListeners = Array.from(listenersRef.current.values()).reduce(
       (sum, count) => sum + count,
-      0,
+      0
     );
 
     if (totalListeners > 100) {
       logger.warn(
-        `High listener count detected: ${totalListeners}. This may cause performance issues.`,
+        `High listener count detected: ${totalListeners}. This may cause performance issues.`
       );
 
       // Log listener breakdown
-      logger.debug("Listener breakdown", {
+      logger.debug('Listener breakdown', {
         metadata: Object.fromEntries(listenersRef.current),
       });
     }
@@ -42,19 +42,19 @@ export const usePerformanceMonitoring = () => {
 
     const totalTimers = Array.from(timersRef.current.values()).reduce(
       (sum, count) => sum + count,
-      0,
+      0
     );
 
     if (totalTimers > 50) {
       logger.warn(
-        `High timer count detected: ${totalTimers}. This may cause performance issues.`,
+        `High timer count detected: ${totalTimers}. This may cause performance issues.`
       );
     }
   }, []);
 
   // Monitor memory usage
   const monitorMemory = useCallback(() => {
-    if (typeof performance !== "undefined" && "memory" in performance) {
+    if (typeof performance !== 'undefined' && 'memory' in performance) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const memory = (performance as any).memory;
       const usedMB = memory.usedJSHeapSize / 1024 / 1024;
@@ -63,7 +63,7 @@ export const usePerformanceMonitoring = () => {
 
       if (percentage > 80) {
         logger.warn(
-          `High memory usage detected: ${percentage.toFixed(1)}% (${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB)`,
+          `High memory usage detected: ${percentage.toFixed(1)}% (${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB)`
         );
       }
     }
@@ -102,12 +102,12 @@ export const usePerformanceMonitoring = () => {
     getListenerCount: () =>
       Array.from(listenersRef.current.values()).reduce(
         (sum, count) => sum + count,
-        0,
+        0
       ),
     getTimerCount: () =>
       Array.from(timersRef.current.values()).reduce(
         (sum, count) => sum + count,
-        0,
+        0
       ),
   };
 };
@@ -119,7 +119,7 @@ export const useSafeEventListener = (
   target: EventTarget | null,
   eventType: string,
   handler: EventListenerOrEventListenerObject,
-  options?: AddEventListenerOptions | boolean,
+  options?: AddEventListenerOptions | boolean
 ) => {
   const { trackListener } = usePerformanceMonitoring();
 
@@ -145,45 +145,45 @@ export const useSafeTimer = () => {
 
   const safeSetTimeout = useCallback(
     (callback: () => void, delay: number) => {
-      trackTimer("setTimeout", true);
+      trackTimer('setTimeout', true);
       const id = window.setTimeout(() => {
         timers.current.delete(id);
-        trackTimer("setTimeout", false);
+        trackTimer('setTimeout', false);
         callback();
       }, delay);
 
       timers.current.add(id);
       return id;
     },
-    [trackTimer],
+    [trackTimer]
   );
 
   const safeSetInterval = useCallback(
     (callback: () => void, delay: number) => {
-      trackTimer("setInterval", true);
+      trackTimer('setInterval', true);
       const id = window.setInterval(callback, delay);
       timers.current.add(id);
       return id;
     },
-    [trackTimer],
+    [trackTimer]
   );
 
   const safeClearTimeout = useCallback(
     (id: number) => {
       window.clearTimeout(id);
       timers.current.delete(id);
-      trackTimer("setTimeout", false);
+      trackTimer('setTimeout', false);
     },
-    [trackTimer],
+    [trackTimer]
   );
 
   const safeClearInterval = useCallback(
     (id: number) => {
       window.clearInterval(id);
       timers.current.delete(id);
-      trackTimer("setInterval", false);
+      trackTimer('setInterval', false);
     },
-    [trackTimer],
+    [trackTimer]
   );
 
   useEffect(() => {

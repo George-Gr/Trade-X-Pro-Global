@@ -1,8 +1,8 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import {
   Monitor,
   Smartphone,
@@ -10,7 +10,7 @@ import {
   TrendingUp,
   BarChart3,
   CheckCircle2,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function TradingPlatforms() {
   return (
@@ -41,43 +41,43 @@ export default function TradingPlatforms() {
             {[
               {
                 icon: Monitor,
-                title: "Desktop Platform",
+                title: 'Desktop Platform',
                 description:
-                  "Professional trading terminal for in-depth analysis and execution",
+                  'Professional trading terminal for in-depth analysis and execution',
                 features: [
-                  "Advanced charting with 100+ indicators",
-                  "Multi-window trading layout",
-                  "Custom watchlists and alerts",
-                  "One-click order execution",
-                  "Portfolio analytics dashboard",
+                  'Advanced charting with 100+ indicators',
+                  'Multi-window trading layout',
+                  'Custom watchlists and alerts',
+                  'One-click order execution',
+                  'Portfolio analytics dashboard',
                 ],
-                download: "Download MetaTrader 5",
+                download: 'Download MetaTrader 5',
               },
               {
                 icon: Smartphone,
-                title: "Mobile App",
-                description: "Trade on the go with full platform functionality",
+                title: 'Mobile App',
+                description: 'Trade on the go with full platform functionality',
                 features: [
-                  "Native iOS & Android apps",
-                  "Real-time push notifications",
-                  "Touch-optimized interface",
-                  "Biometric authentication",
-                  "Offline order placement",
+                  'Native iOS & Android apps',
+                  'Real-time push notifications',
+                  'Touch-optimized interface',
+                  'Biometric authentication',
+                  'Offline order placement',
                 ],
-                download: "Download Mobile App",
+                download: 'Download Mobile App',
               },
               {
                 icon: Zap,
-                title: "Web Trader",
-                description: "Browser-based trading without installation",
+                title: 'Web Trader',
+                description: 'Browser-based trading without installation',
                 features: [
-                  "No installation required",
-                  "Cross-platform compatible",
-                  "TradingView integration",
-                  "Responsive design",
-                  "Instant access from anywhere",
+                  'No installation required',
+                  'Cross-platform compatible',
+                  'TradingView integration',
+                  'Responsive design',
+                  'Instant access from anywhere',
                 ],
-                download: "Launch Web Platform",
+                download: 'Launch Web Platform',
               },
             ].map((platform, index) => (
               <Card
@@ -129,49 +129,49 @@ export default function TradingPlatforms() {
                   <tbody>
                     {[
                       {
-                        feature: "Real-Time Charts",
+                        feature: 'Real-Time Charts',
                         desktop: true,
                         web: true,
                         mobile: true,
                       },
                       {
-                        feature: "Advanced Indicators",
+                        feature: 'Advanced Indicators',
                         desktop: true,
                         web: true,
                         mobile: true,
                       },
                       {
-                        feature: "One-Click Trading",
+                        feature: 'One-Click Trading',
                         desktop: true,
                         web: true,
                         mobile: true,
                       },
                       {
-                        feature: "Custom Alerts",
+                        feature: 'Custom Alerts',
                         desktop: true,
                         web: true,
                         mobile: true,
                       },
                       {
-                        feature: "Portfolio Analytics",
+                        feature: 'Portfolio Analytics',
                         desktop: true,
                         web: true,
                         mobile: true,
                       },
                       {
-                        feature: "Order Templates",
+                        feature: 'Order Templates',
                         desktop: true,
                         web: false,
                         mobile: false,
                       },
                       {
-                        feature: "Offline Access",
+                        feature: 'Offline Access',
                         desktop: true,
                         web: false,
                         mobile: true,
                       },
                       {
-                        feature: "Multi-Monitor",
+                        feature: 'Multi-Monitor',
                         desktop: true,
                         web: false,
                         mobile: false,

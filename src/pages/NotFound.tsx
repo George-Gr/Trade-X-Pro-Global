@@ -1,16 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Home } from 'lucide-react';
 
 const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    document.title = "404 - Page Not Found | TradeX Pro";
+    document.title = '404 - Page Not Found | TradeX Pro';
     console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname,
+      '404 Error: User attempted to access non-existent route:',
+      location.pathname
     );
   }, [location.pathname]);
 

@@ -1,8 +1,8 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import {
   TrendingUp,
   BarChart3,
@@ -11,7 +11,7 @@ import {
   Bell,
   Zap,
   CheckCircle2,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function TradingTools() {
   return (
@@ -42,80 +42,80 @@ export default function TradingTools() {
             {[
               {
                 icon: BarChart3,
-                title: "Technical Analysis",
-                description: "Comprehensive charting with 100+ indicators",
+                title: 'Technical Analysis',
+                description: 'Comprehensive charting with 100+ indicators',
                 features: [
-                  "TradingView advanced charts",
-                  "100+ technical indicators",
-                  "Multi-timeframe analysis",
-                  "Drawing tools and patterns",
-                  "Custom chart templates",
-                  "Historical data access",
+                  'TradingView advanced charts',
+                  '100+ technical indicators',
+                  'Multi-timeframe analysis',
+                  'Drawing tools and patterns',
+                  'Custom chart templates',
+                  'Historical data access',
                 ],
               },
               {
                 icon: TrendingUp,
-                title: "Trading Signals",
-                description: "AI-powered trading signals from expert analysts",
+                title: 'Trading Signals',
+                description: 'AI-powered trading signals from expert analysts',
                 features: [
-                  "Real-time market signals",
-                  "Professional recommendations",
-                  "Signal strength indicators",
-                  "Entry/Exit points",
-                  "Risk level indicators",
-                  "Performance tracking",
+                  'Real-time market signals',
+                  'Professional recommendations',
+                  'Signal strength indicators',
+                  'Entry/Exit points',
+                  'Risk level indicators',
+                  'Performance tracking',
                 ],
               },
               {
                 icon: Calculator,
-                title: "Trading Calculators",
-                description: "Essential calculators for position sizing",
+                title: 'Trading Calculators',
+                description: 'Essential calculators for position sizing',
                 features: [
-                  "Pip value calculator",
-                  "Position size calculator",
-                  "Margin calculator",
-                  "Profit/Loss calculator",
-                  "Leverage calculator",
-                  "Swap calculator",
+                  'Pip value calculator',
+                  'Position size calculator',
+                  'Margin calculator',
+                  'Profit/Loss calculator',
+                  'Leverage calculator',
+                  'Swap calculator',
                 ],
               },
               {
                 icon: Bell,
-                title: "Price Alerts",
-                description: "Customizable alerts for trading opportunities",
+                title: 'Price Alerts',
+                description: 'Customizable alerts for trading opportunities',
                 features: [
-                  "Price level alerts",
-                  "Technical indicator alerts",
-                  "News event alerts",
-                  "Email notifications",
-                  "SMS notifications",
-                  "Push notifications",
+                  'Price level alerts',
+                  'Technical indicator alerts',
+                  'News event alerts',
+                  'Email notifications',
+                  'SMS notifications',
+                  'Push notifications',
                 ],
               },
               {
                 icon: AlertCircle,
-                title: "Risk Management",
-                description: "Tools to protect and manage your capital",
+                title: 'Risk Management',
+                description: 'Tools to protect and manage your capital',
                 features: [
-                  "Stop-loss automation",
-                  "Take-profit orders",
-                  "Trailing stops",
-                  "Breakeven stops",
-                  "Risk/reward calculators",
-                  "Margin alerts",
+                  'Stop-loss automation',
+                  'Take-profit orders',
+                  'Trailing stops',
+                  'Breakeven stops',
+                  'Risk/reward calculators',
+                  'Margin alerts',
                 ],
               },
               {
                 icon: Zap,
-                title: "One-Click Trading",
-                description: "Fast execution with predefined order templates",
+                title: 'One-Click Trading',
+                description: 'Fast execution with predefined order templates',
                 features: [
-                  "Preset order sizes",
-                  "Quick entry/exit",
-                  "Order templates",
-                  "Hot keys support",
-                  "Instant execution",
-                  "Order history",
+                  'Preset order sizes',
+                  'Quick entry/exit',
+                  'Order templates',
+                  'Hot keys support',
+                  'Instant execution',
+                  'Order history',
                 ],
               },
             ].map((tool, index) => (
@@ -162,18 +162,18 @@ export default function TradingTools() {
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       {[
-                        "Moving Averages",
-                        "RSI",
-                        "MACD",
-                        "Bollinger Bands",
-                        "Stochastic",
-                        "ATR",
-                        "CCI",
-                        "ADX",
-                        "Ichimoku",
-                        "Fibonacci",
-                        "Pivot Points",
-                        "Volume Profile",
+                        'Moving Averages',
+                        'RSI',
+                        'MACD',
+                        'Bollinger Bands',
+                        'Stochastic',
+                        'ATR',
+                        'CCI',
+                        'ADX',
+                        'Ichimoku',
+                        'Fibonacci',
+                        'Pivot Points',
+                        'Volume Profile',
                       ].map((indicator, i) => (
                         <div
                           key={i}
@@ -191,9 +191,9 @@ export default function TradingTools() {
                     </h3>
                     <div className="space-y-4">
                       {[
-                        { tf: "1M, 5M, 15M, 30M", type: "Scalping" },
-                        { tf: "1H, 4H", type: "Day Trading" },
-                        { tf: "1D, 1W, 1M", type: "Swing Trading" },
+                        { tf: '1M, 5M, 15M, 30M', type: 'Scalping' },
+                        { tf: '1H, 4H', type: 'Day Trading' },
+                        { tf: '1D, 1W, 1M', type: 'Swing Trading' },
                       ].map((item, i) => (
                         <div key={i} className="p-4 bg-muted/50 rounded">
                           <p className="text-sm font-semibold">{item.type}</p>
@@ -217,31 +217,31 @@ export default function TradingTools() {
                 <div className="grid md:grid-cols-3 gap-6">
                   {[
                     {
-                      level: "Strong Buy",
-                      strength: "90-100",
+                      level: 'Strong Buy',
+                      strength: '90-100',
                       description:
-                        "Highly confident buy signal from multiple indicators",
+                        'Highly confident buy signal from multiple indicators',
                     },
                     {
-                      level: "Buy",
-                      strength: "70-89",
-                      description: "Good buy signal with positive indicators",
+                      level: 'Buy',
+                      strength: '70-89',
+                      description: 'Good buy signal with positive indicators',
                     },
                     {
-                      level: "Neutral",
-                      strength: "40-69",
-                      description: "Mixed signals, wait for confirmation",
+                      level: 'Neutral',
+                      strength: '40-69',
+                      description: 'Mixed signals, wait for confirmation',
                     },
                     {
-                      level: "Sell",
-                      strength: "11-39",
-                      description: "Good sell signal with negative indicators",
+                      level: 'Sell',
+                      strength: '11-39',
+                      description: 'Good sell signal with negative indicators',
                     },
                     {
-                      level: "Strong Sell",
-                      strength: "0-10",
+                      level: 'Strong Sell',
+                      strength: '0-10',
                       description:
-                        "Highly confident sell signal from multiple indicators",
+                        'Highly confident sell signal from multiple indicators',
                     },
                   ].map((signal, i) => (
                     <Card key={i} className="bg-muted/50 border-border">

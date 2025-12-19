@@ -1,43 +1,43 @@
 /* stylelint-disable at-rule-no-unknown */
 /* Tailwind directives — processed by PostCSS/Tailwind (v4) */
-@import "tailwindcss";
+@import 'tailwindcss';
 /* stylelint-enable at-rule-no-unknown */
 
 /* Import typography system */
-@import "./styles/typography.css";
+@import './styles/typography.css';
 
 /* Import spacing system */
-@import "./styles/spacing.css";
+@import './styles/spacing.css';
 
 /* Import sidebar enhancements */
-@import "./styles/sidebar.css";
+@import './styles/sidebar.css';
 
 /* Import sidebar layout fixes (z-index, transitions, background) */
-@import "./styles/sidebar-layout-fix.css";
+@import './styles/sidebar-layout-fix.css';
 
 /* Import card elevation system */
-@import "./styles/cards.css";
+@import './styles/cards.css';
 
 /* Import icon size system (FE-011) */
-@import "./styles/icons.css";
+@import './styles/icons.css';
 
 /* Import form error states (FE-012) */
-@import "./styles/form-errors.css";
+@import './styles/form-errors.css';
 
 /* Import visual feedback states */
-@import "./styles/states.css";
+@import './styles/states.css';
 
 /* Import loading states system (FE-010) */
-@import "./styles/loading-states.css";
+@import './styles/loading-states.css';
 
 /* Import micro-interactions system (Phase 4) */
-@import "./styles/micro-interactions.css";
+@import './styles/micro-interactions.css';
 
 /* Import advanced accessibility features (Phase 4) */
-@import "./styles/advanced-accessibility.css";
+@import './styles/advanced-accessibility.css';
 
 /* Import onboarding tour styles */
-@import "./styles/onboarding.css";
+@import './styles/onboarding.css';
 
 /* ============================================
    TRADEX PRO DESIGN SYSTEM
@@ -53,10 +53,10 @@
   :root {
     /* === NEO-DIGITAL PREMIUM TYPOGRAPHY === */
     --font-family-display:
-      "Sora", -apple-system, BlinkMacSystemFont, sans-serif;
+      'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-family-base:
-      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-family-mono: "JetBrains Mono", "Fira Code", monospace;
+      'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
     /* Smooth theme transitions */
     background-color: hsl(var(--background));
@@ -350,9 +350,9 @@
   }
 
   /* Apply transitions to common theme-related properties */
-  [class*="bg-"],
-  [class*="text-"],
-  [class*="border-"] {
+  [class*='bg-'],
+  [class*='text-'],
+  [class*='border-'] {
     transition:
       background-color var(--transition-duration, 300ms) ease-in-out,
       color var(--transition-duration, 300ms) ease-in-out,
@@ -395,10 +395,10 @@
   select,
   textarea,
   button,
-  [role="button"],
-  [role="link"],
+  [role='button'],
+  [role='link'],
   a,
-  [tabindex="0"] {
+  [tabindex='0'] {
     outline: none;
     outline-offset: 0;
   }
@@ -408,10 +408,10 @@
   select:focus-visible,
   textarea:focus-visible,
   button:focus-visible,
-  [role="button"]:focus-visible,
-  [role="link"]:focus-visible,
+  [role='button']:focus-visible,
+  [role='link']:focus-visible,
   a:focus-visible,
-  [tabindex="0"]:focus-visible {
+  [tabindex='0']:focus-visible {
     outline: 3px solid hsl(var(--focus-color));
     outline-offset: 2px;
     box-shadow:
@@ -425,10 +425,10 @@
     select:focus,
     textarea:focus,
     button:focus,
-    [role="button"]:focus,
-    [role="link"]:focus,
+    [role='button']:focus,
+    [role='link']:focus,
     a:focus,
-    [tabindex="0"]:focus {
+    [tabindex='0']:focus {
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
       box-shadow:
@@ -481,10 +481,10 @@
     select:focus-visible,
     textarea:focus-visible,
     button:focus-visible,
-    [role="button"]:focus-visible,
-    [role="link"]:focus-visible,
+    [role='button']:focus-visible,
+    [role='link']:focus-visible,
     a:focus-visible,
-    [tabindex="0"]:focus-visible {
+    [tabindex='0']:focus-visible {
       outline: 4px solid hsl(var(--primary-contrast));
       outline-offset: 2px;
       box-shadow:
@@ -572,8 +572,8 @@
     select:focus-visible,
     textarea:focus-visible,
     button:focus-visible,
-    [role="button"]:focus-visible,
-    [role="link"]:focus-visible {
+    [role='button']:focus-visible,
+    [role='link']:focus-visible {
       /* Firefox uses the same focus ring styles defined above */
       outline: 3px solid hsl(var(--focus-color));
       outline-offset: 2px;
@@ -599,7 +599,7 @@
     }
 
     /* Reduce modal/dialog heights */
-    [role="dialog"] {
+    [role='dialog'] {
       max-height: 90vh;
     }
   }
@@ -610,7 +610,7 @@
     .animate-fade-in,
     .animate-scale-in,
     .animate-slide-in-right,
-    [class*="animate-"] {
+    [class*='animate-'] {
       transform: translateZ(0);
       backface-visibility: hidden;
       perspective: 1000px;
@@ -639,9 +639,9 @@
       --destructive: 350 100% 50%;
     }
 
-    input[aria-invalid="true"],
-    select[aria-invalid="true"],
-    textarea[aria-invalid="true"] {
+    input[aria-invalid='true'],
+    select[aria-invalid='true'],
+    textarea[aria-invalid='true'] {
       border-width: 2px;
     }
 
@@ -667,8 +667,8 @@
   }
 
   /* Link hover states */
-  a:not([aria-disabled="true"]):hover,
-  [role="link"]:not([aria-disabled="true"]):hover {
+  a:not([aria-disabled='true']):hover,
+  [role='link']:not([aria-disabled='true']):hover {
     text-decoration: underline;
     text-decoration-color: hsl(var(--primary));
     transition: var(--transition-normal);

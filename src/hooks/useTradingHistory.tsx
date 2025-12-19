@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuth } from "./useAuth";
+import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from './useAuth';
 
 /**
  * Represents a closed trade with P&L information
@@ -12,7 +12,7 @@ export interface TradeHistoryItem {
   /** Trading symbol (e.g., 'EURUSD') */
   symbol: string;
   /** Trade direction */
-  side: "buy" | "sell";
+  side: 'buy' | 'sell';
   /** Position size in lots */
   quantity: number;
   /** Entry price when position was opened */
@@ -66,7 +66,7 @@ export interface OrderHistoryItem {
   /** Order type (market, limit, stop, stop_limit) */
   order_type: string;
   /** Order direction */
-  side: "buy" | "sell";
+  side: 'buy' | 'sell';
   /** Order quantity in lots */
   quantity: number;
   /** Requested price (for limit/stop orders) */
@@ -156,7 +156,7 @@ export interface TradeStatistics {
 export const useTradingHistory = () => {
   const { user } = useAuth();
   const [closedPositions, setClosedPositions] = useState<TradeHistoryItem[]>(
-    [],
+    []
   );
   const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
   const [ledger, setLedger] = useState<LedgerEntry[]>([]);
@@ -176,29 +176,29 @@ export const useTradingHistory = () => {
     try {
       // Fetch closed positions
       const { data: positionsData, error: positionsError } = await supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "closed")
-        .order("closed_at", { ascending: false });
+        .from('positions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'closed')
+        .order('closed_at', { ascending: false });
 
       if (positionsError) throw positionsError;
 
       // Fetch all orders
       const { data: ordersData, error: ordersError } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+        .from('orders')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
       if (ordersError) throw ordersError;
 
       // Fetch ledger entries
       const { data: ledgerData, error: ledgerError } = await supabase
-        .from("ledger")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+        .from('ledger')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
       if (ledgerError) throw ledgerError;
 
@@ -206,7 +206,7 @@ export const useTradingHistory = () => {
       const trades: TradeHistoryItem[] = (positionsData || []).map((pos) => ({
         id: pos.id,
         symbol: pos.symbol,
-        side: pos.side === "buy" || pos.side === "sell" ? pos.side : "buy",
+        side: pos.side === 'buy' || pos.side === 'sell' ? pos.side : 'buy',
         quantity: pos.quantity,
         entry_price: pos.entry_price,
         exit_price: (pos.current_price ?? pos.entry_price) as number,
@@ -227,11 +227,11 @@ export const useTradingHistory = () => {
         ...o,
         price: o.fill_price ?? o.price,
         commission: o.commission ?? 0,
-        side: o.side === "buy" || o.side === "sell" ? o.side : "buy",
+        side: o.side === 'buy' || o.side === 'sell' ? o.side : 'buy',
       })) as OrderHistoryItem[];
       const typedLedger = (ledgerData || []).map((l) => ({
         ...l,
-        description: l.description ?? "",
+        description: l.description ?? '',
       })) as LedgerEntry[];
       setOrders(typedOrders);
       setLedger(typedLedger);
@@ -239,7 +239,7 @@ export const useTradingHistory = () => {
       setError(null);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to fetch trading history",
+        err instanceof Error ? err.message : 'Failed to fetch trading history'
       );
     } finally {
       setLoading(false);
@@ -296,34 +296,34 @@ export const useTradingHistory = () => {
 
     // Set up real-time subscriptions
     const positionsChannel = supabase
-      .channel("closed-positions-changes")
+      .channel('closed-positions-changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "positions",
+          event: '*',
+          schema: 'public',
+          table: 'positions',
           filter: `user_id=eq.${user?.id}`,
         },
         () => {
           fetchTradingHistory();
-        },
+        }
       )
       .subscribe();
 
     const ordersChannel = supabase
-      .channel("orders-changes")
+      .channel('orders-changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "orders",
+          event: '*',
+          schema: 'public',
+          table: 'orders',
           filter: `user_id=eq.${user?.id}`,
         },
         () => {
           fetchTradingHistory();
-        },
+        }
       )
       .subscribe();
 

@@ -9,32 +9,32 @@ import {
   ArrowRight,
   Wallet,
   Zap,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import TradingViewWatchlist from "@/components/trading/TradingViewWatchlist";
-import MarginLevelCard from "@/components/dashboard/MarginLevelCard";
-import RiskAlertsCard from "@/components/dashboard/RiskAlertsCard";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import TradingViewWatchlist from '@/components/trading/TradingViewWatchlist';
+import MarginLevelCard from '@/components/dashboard/MarginLevelCard';
+import RiskAlertsCard from '@/components/dashboard/RiskAlertsCard';
 // removed incorrect RiskAlert import — use events returned from useRiskEvents instead
-import ProfitLossCard from "@/components/dashboard/ProfitLossCard";
-import { ErrorMessage, RealtimeErrorAlert } from "@/components/ui/ErrorUI";
-import { useRiskMetrics } from "@/hooks/useRiskMetrics";
-import useRiskEvents from "@/hooks/useRiskEvents";
-import { useProfitLossData } from "@/hooks/useProfitLossData";
-import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
-import { DashboardLoading } from "@/components/dashboard/DashboardLoading";
+import ProfitLossCard from '@/components/dashboard/ProfitLossCard';
+import { ErrorMessage, RealtimeErrorAlert } from '@/components/ui/ErrorUI';
+import { useRiskMetrics } from '@/hooks/useRiskMetrics';
+import useRiskEvents from '@/hooks/useRiskEvents';
+import { useProfitLossData } from '@/hooks/useProfitLossData';
+import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
+import { DashboardLoading } from '@/components/dashboard/DashboardLoading';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const currentTime = new Date().toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
+  const currentTime = new Date().toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: true,
   });
 
-  type StatTrend = "up" | "down" | "neutral";
+  type StatTrend = 'up' | 'down' | 'neutral';
 
   // Fixed: Removed redundant Account Balance duplicate
   // Fixed: Standardized icon usage across all cards
@@ -42,43 +42,43 @@ const Dashboard = () => {
   // Fixed: Clarified metric labels and removed redundant subtitles
   const stats = [
     {
-      title: "Total Equity",
-      value: "$50,000.00",
-      change: "0%",
-      timeContext: "Current Balance",
+      title: 'Total Equity',
+      value: '$50,000.00',
+      change: '0%',
+      timeContext: 'Current Balance',
       icon: Wallet,
-      trend: "neutral" as StatTrend,
+      trend: 'neutral' as StatTrend,
     },
     {
-      title: "Profit/Loss",
-      value: "$0.00",
-      change: "0%",
-      timeContext: "All-time",
+      title: 'Profit/Loss',
+      value: '$0.00',
+      change: '0%',
+      timeContext: 'All-time',
       icon: TrendingDown,
-      trend: "neutral" as StatTrend,
+      trend: 'neutral' as StatTrend,
     },
     {
-      title: "Available Margin",
-      value: "$50,000.00",
-      change: "100% Used",
-      timeContext: "Ready to Trade",
+      title: 'Available Margin',
+      value: '$50,000.00',
+      change: '100% Used',
+      timeContext: 'Ready to Trade',
       icon: Zap,
-      trend: "neutral" as StatTrend,
+      trend: 'neutral' as StatTrend,
     },
     {
-      title: "Open Positions",
-      value: "0",
-      change: "No active trades",
+      title: 'Open Positions',
+      value: '0',
+      change: 'No active trades',
       icon: Activity,
-      trend: "neutral" as StatTrend,
+      trend: 'neutral' as StatTrend,
       empty: true,
     },
   ];
 
   const recentActivity = [
-    { time: "Today", action: "Account Created", status: "Approved" },
-    { time: "Today", action: "KYC Submitted", status: "Approved" },
-    { time: "Today", action: "Virtual Balance Assigned", status: "$50,000" },
+    { time: 'Today', action: 'Account Created', status: 'Approved' },
+    { time: 'Today', action: 'KYC Submitted', status: 'Approved' },
+    { time: 'Today', action: 'Virtual Balance Assigned', status: '$50,000' },
   ];
 
   // Use real backend hooks for risk metrics & events (includes realtime subscriptions)
@@ -98,7 +98,7 @@ const Dashboard = () => {
     loading: profitLossLoading,
     error: profitLossError,
     refetch: refetchProfitLoss,
-  } = useProfitLossData("7d");
+  } = useProfitLossData('7d');
 
   // Show loading skeleton while data is being fetched
   if (riskLoading || alertsLoading || profitLossLoading) {
@@ -121,11 +121,11 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 mb-8">
         {stats.map((stat) => {
           const Icon = stat.icon;
-          const isEmptyState = "empty" in stat && stat.empty;
+          const isEmptyState = 'empty' in stat && stat.empty;
           const isNeutral =
-            stat.trend === "neutral" &&
-            !stat.change.includes("+") &&
-            !stat.change.includes("-");
+            stat.trend === 'neutral' &&
+            !stat.change.includes('+') &&
+            !stat.change.includes('-');
 
           return (
             <Card
@@ -170,15 +170,15 @@ const Dashboard = () => {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 mt-1">
-                    {stat.change.includes("+") ? (
+                    {stat.change.includes('+') ? (
                       <>
                         <TrendingUp className="h-4 w-4 text-success-contrast flex-shrink-0" />
                         <p className="text-xs font-medium text-success-contrast">
                           {stat.change}
                         </p>
                       </>
-                    ) : stat.change.includes("-") &&
-                      !stat.change.includes("0%") ? (
+                    ) : stat.change.includes('-') &&
+                      !stat.change.includes('0%') ? (
                       <>
                         <TrendingDown className="h-4 w-4 text-danger-contrast flex-shrink-0" />
                         <p className="text-xs font-medium text-danger-contrast">
@@ -244,14 +244,14 @@ const Dashboard = () => {
               alerts={alertsData?.map((e) => ({
                 id: e.id,
                 level:
-                  e.severity === "critical" || e.severity === "danger"
-                    ? "critical"
-                    : e.severity === "warning"
-                      ? "warning"
-                      : "info",
+                  e.severity === 'critical' || e.severity === 'danger'
+                    ? 'critical'
+                    : e.severity === 'warning'
+                      ? 'warning'
+                      : 'info',
                 title: e.event_type
-                  ? String(e.event_type).replace(/_/g, " ")
-                  : e.description || "Risk event",
+                  ? String(e.event_type).replace(/_/g, ' ')
+                  : e.description || 'Risk event',
                 details: e.description,
               }))}
             />
@@ -292,7 +292,7 @@ const Dashboard = () => {
             </h3>
             <div className="flex gap-md flex-wrap">
               <Button
-                onClick={() => navigate("/trade")}
+                onClick={() => navigate('/trade')}
                 className="gap-md h-12 px-lg font-medium text-base hover:scale-105 active:scale-95 bg-primary hover:bg-primary/90 transition-all duration-200"
               >
                 <TrendingUp className="h-5 w-5" />
@@ -300,7 +300,7 @@ const Dashboard = () => {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => navigate("/portfolio")}
+                onClick={() => navigate('/portfolio')}
                 className="gap-md h-12 px-lg font-medium text-base hover:scale-105 active:scale-95 hover:border-primary/50 transition-all duration-200"
               >
                 <Activity className="h-5 w-5" />
@@ -356,7 +356,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <Button
-                onClick={() => navigate("/trade")}
+                onClick={() => navigate('/trade')}
                 className="w-full gap-md font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
                 size="lg"
                 aria-label="Open your first trading position"

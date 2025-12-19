@@ -13,7 +13,7 @@
  * - API usage analytics
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
 
 declare const Deno: {
   env: {
@@ -23,13 +23,13 @@ declare const Deno: {
 
 interface MonitoringRequest {
   type:
-    | "performance"
-    | "errors"
-    | "user_activity"
-    | "risk_events"
-    | "database_metrics"
-    | "api_analytics";
-  time_range?: "1h" | "24h" | "7d" | "30d";
+    | 'performance'
+    | 'errors'
+    | 'user_activity'
+    | 'risk_events'
+    | 'database_metrics'
+    | 'api_analytics';
+  time_range?: '1h' | '24h' | '7d' | '30d';
   filters?: {
     user_id?: string;
     severity?: string;
@@ -87,23 +87,23 @@ interface ApiResponse {
 export default async function (req: Request) {
   try {
     // Get Supabase client
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Get service role key for admin operations
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     if (!serviceRoleKey) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "Service role key not configured",
+          error: 'Service role key not configured',
           timestamp: new Date().toISOString(),
         }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -113,41 +113,41 @@ export default async function (req: Request) {
     const url = new URL(req.url);
 
     // Handle CORS
-    if (req.method === "OPTIONS") {
-      return new Response("ok", {
+    if (req.method === 'OPTIONS') {
+      return new Response('ok', {
         headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       });
     }
 
     // Parse request
     let requestData: MonitoringRequest;
-    if (req.method === "POST") {
+    if (req.method === 'POST') {
       requestData = await req.json();
     } else {
       // Default request for GET
       requestData = {
         type:
-          (url.searchParams.get("type") as
-            | "performance"
-            | "errors"
-            | "user_activity"
-            | "risk_events"
-            | "database_metrics"
-            | "api_analytics") || "performance",
+          (url.searchParams.get('type') as
+            | 'performance'
+            | 'errors'
+            | 'user_activity'
+            | 'risk_events'
+            | 'database_metrics'
+            | 'api_analytics') || 'performance',
         time_range:
-          (url.searchParams.get("time_range") as "1h" | "24h" | "7d" | "30d") ||
-          "24h",
+          (url.searchParams.get('time_range') as '1h' | '24h' | '7d' | '30d') ||
+          '24h',
         filters: {},
       };
     }
 
     const { data, error } = await processMonitoringRequest(
       adminSupabase,
-      requestData,
+      requestData
     );
 
     if (error) {
@@ -160,10 +160,10 @@ export default async function (req: Request) {
         {
           status: 500,
           headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
           },
-        },
+        }
       );
     }
 
@@ -175,71 +175,71 @@ export default async function (req: Request) {
       }),
       {
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
-      },
+      }
     );
   } catch (error) {
-    console.error("Monitoring function error:", error);
+    console.error('Monitoring function error:', error);
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: "Internal server error",
+        error: 'Internal server error',
         timestamp: new Date().toISOString(),
       }),
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
-      },
+      }
     );
   }
 }
 
 async function processMonitoringRequest(
   supabase: unknown,
-  request: MonitoringRequest,
+  request: MonitoringRequest
 ): Promise<{ data?: unknown; error?: string }> {
   try {
-    const timeRange = getTimeRange(request.time_range || "24h");
+    const timeRange = getTimeRange(request.time_range || '24h');
 
     switch (request.type) {
-      case "performance":
+      case 'performance':
         return await getPerformanceMetrics(
           supabase,
           timeRange,
-          request.filters,
+          request.filters
         );
 
-      case "errors":
+      case 'errors':
         return await getErrorMetrics(supabase, timeRange, request.filters);
 
-      case "user_activity":
+      case 'user_activity':
         return await getUserActivityMetrics(
           supabase,
           timeRange,
-          request.filters,
+          request.filters
         );
 
-      case "risk_events":
+      case 'risk_events':
         return await getRiskEventMetrics(supabase, timeRange, request.filters);
 
-      case "database_metrics":
+      case 'database_metrics':
         return await getDatabaseMetrics(supabase, timeRange, request.filters);
 
-      case "api_analytics":
+      case 'api_analytics':
         return await getApiAnalytics(supabase, timeRange, request.filters);
 
       default:
-        return { error: "Invalid monitoring type" };
+        return { error: 'Invalid monitoring type' };
     }
   } catch (error) {
-    console.error("Error processing monitoring request:", error);
-    return { error: "Failed to process monitoring request" };
+    console.error('Error processing monitoring request:', error);
+    return { error: 'Failed to process monitoring request' };
   }
 }
 
@@ -248,16 +248,16 @@ function getTimeRange(timeRange: string): { start: string; end: string } {
   const start = new Date(now);
 
   switch (timeRange) {
-    case "1h":
+    case '1h':
       start.setHours(start.getHours() - 1);
       break;
-    case "24h":
+    case '24h':
       start.setDate(start.getDate() - 1);
       break;
-    case "7d":
+    case '7d':
       start.setDate(start.getDate() - 7);
       break;
-    case "30d":
+    case '30d':
       start.setDate(start.getDate() - 30);
       break;
     default:
@@ -274,7 +274,7 @@ async function getPerformanceMetrics(
   supabase: unknown,
   timeRange: { start: string; end: string },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filters?: any,
+  filters?: any
 ): Promise<{ data: PerformanceMetrics }> {
   // This would typically query performance logs
   // For now, return mock data structure
@@ -294,19 +294,19 @@ async function getPerformanceMetrics(
 async function getErrorMetrics(
   supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: Record<string, unknown>,
+  filters?: Record<string, unknown>
 ): Promise<{ data: ErrorMetrics }> {
   // Query error logs from logging system
   const supabaseClient = supabase as { from: (name: string) => unknown };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabaseClient.from("error_logs") as any)
-    .select("*")
-    .gte("created_at", timeRange.start)
-    .lte("created_at", timeRange.end)
+  const { data, error } = await (supabaseClient.from('error_logs') as any)
+    .select('*')
+    .gte('created_at', timeRange.start)
+    .lte('created_at', timeRange.end)
     .match(filters || {});
 
   if (error) {
-    console.error("Error querying error logs:", error);
+    console.error('Error querying error logs:', error);
     return {
       data: {
         total_errors: 0,
@@ -323,11 +323,11 @@ async function getErrorMetrics(
   const errorCounts = errors.reduce(
     (acc: Record<string, number>, error: any) => {
       const errorObj = error as { message?: string };
-      const key = errorObj.message || "Unknown Error";
+      const key = errorObj.message || 'Unknown Error';
       acc[key] = (acc[key] || 0) + 1;
       return acc;
     },
-    {},
+    {}
   );
 
   const topErrors = Object.entries(errorCounts)
@@ -362,21 +362,21 @@ async function getErrorMetrics(
 async function getUserActivityMetrics(
   supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: Record<string, unknown>,
+  filters?: Record<string, unknown>
 ): Promise<{ data: Record<string, unknown> }> {
   // Query user activity logs
   const supabaseClient = supabase as { from: (name: string) => unknown };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (
-    supabaseClient.from("user_activity_logs") as any
+    supabaseClient.from('user_activity_logs') as any
   )
-    .select("*")
-    .gte("created_at", timeRange.start)
-    .lte("created_at", timeRange.end)
+    .select('*')
+    .gte('created_at', timeRange.start)
+    .lte('created_at', timeRange.end)
     .match(filters || {});
 
   if (error) {
-    console.error("Error querying user activity logs:", error);
+    console.error('Error querying user activity logs:', error);
     return { data: { active_users: 0, session_data: [] } };
   }
 
@@ -386,7 +386,7 @@ async function getUserActivityMetrics(
     activities.map((a: unknown) => {
       const activity = a as Record<string, unknown>;
       return activity.user_id;
-    }),
+    })
   );
 
   return {
@@ -403,19 +403,19 @@ async function getUserActivityMetrics(
 async function getRiskEventMetrics(
   supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: Record<string, unknown>,
+  filters?: Record<string, unknown>
 ): Promise<{ data: Record<string, unknown> }> {
   // Query risk event logs
   const supabaseClient = supabase as { from: (name: string) => unknown };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabaseClient.from("risk_events") as any)
-    .select("*")
-    .gte("created_at", timeRange.start)
-    .lte("created_at", timeRange.end)
+  const { data, error } = await (supabaseClient.from('risk_events') as any)
+    .select('*')
+    .gte('created_at', timeRange.start)
+    .lte('created_at', timeRange.end)
     .match(filters || {});
 
   if (error) {
-    console.error("Error querying risk events:", error);
+    console.error('Error querying risk events:', error);
     return { data: { total_events: 0, severity_breakdown: {}, top_risks: [] } };
   }
 
@@ -425,22 +425,22 @@ async function getRiskEventMetrics(
   const severityCounts = events.reduce(
     (acc: Record<string, number>, event: unknown) => {
       const eventObj = event as Record<string, unknown>;
-      const severity = (eventObj.severity as string) || "unknown";
+      const severity = (eventObj.severity as string) || 'unknown';
       acc[severity] = (acc[severity] || 0) + 1;
       return acc;
     },
-    {},
+    {}
   );
 
   // Top risk types
   const riskTypeCounts = events.reduce(
     (acc: Record<string, number>, event: unknown) => {
       const eventObj = event as Record<string, unknown>;
-      const type = (eventObj.type as string) || "unknown";
+      const type = (eventObj.type as string) || 'unknown';
       acc[type] = (acc[type] || 0) + 1;
       return acc;
     },
-    {},
+    {}
   );
 
   const topRisks = Object.entries(riskTypeCounts)
@@ -455,7 +455,7 @@ async function getRiskEventMetrics(
       top_risks: topRisks,
       critical_events: events.filter((e: unknown) => {
         const event = e as Record<string, unknown>;
-        return event.severity === "critical";
+        return event.severity === 'critical';
       }).length,
     },
   };
@@ -465,7 +465,7 @@ async function getDatabaseMetrics(
   supabase: unknown,
   timeRange: { start: string; end: string },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filters?: any,
+  filters?: any
 ): Promise<{ data: DatabaseMetrics }> {
   // This would typically query database performance metrics
   // For now, return mock data structure
@@ -474,9 +474,9 @@ async function getDatabaseMetrics(
     slow_queries_count: 12,
     total_queries: 8456,
     top_slow_tables: [
-      { table: "positions", avg_time: 120.5, query_count: 156 },
-      { table: "orders", avg_time: 89.3, query_count: 234 },
-      { table: "trading_history", avg_time: 76.8, query_count: 98 },
+      { table: 'positions', avg_time: 120.5, query_count: 156 },
+      { table: 'orders', avg_time: 89.3, query_count: 234 },
+      { table: 'trading_history', avg_time: 76.8, query_count: 98 },
     ],
     connection_pool: {
       active: 8,
@@ -491,19 +491,19 @@ async function getDatabaseMetrics(
 async function getApiAnalytics(
   supabase: unknown,
   timeRange: { start: string; end: string },
-  filters?: Record<string, unknown>,
+  filters?: Record<string, unknown>
 ): Promise<{ data: Record<string, unknown> }> {
   // Query API usage logs
   const supabaseClient = supabase as { from: (name: string) => unknown };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabaseClient.from("api_usage_logs") as any)
-    .select("*")
-    .gte("created_at", timeRange.start)
-    .lte("created_at", timeRange.end)
+  const { data, error } = await (supabaseClient.from('api_usage_logs') as any)
+    .select('*')
+    .gte('created_at', timeRange.start)
+    .lte('created_at', timeRange.end)
     .match(filters || {});
 
   if (error) {
-    console.error("Error querying API usage logs:", error);
+    console.error('Error querying API usage logs:', error);
     return { data: { total_requests: 0, endpoints: [], response_times: {} } };
   }
 
@@ -514,11 +514,11 @@ async function getApiAnalytics(
   const endpointCounts = requests.reduce(
     (acc: Record<string, number>, req: any) => {
       const reqObj = req as Record<string, unknown>;
-      const endpoint = (reqObj.endpoint as string) || "unknown";
+      const endpoint = (reqObj.endpoint as string) || 'unknown';
       acc[endpoint] = (acc[endpoint] || 0) + 1;
       return acc;
     },
-    {},
+    {}
   );
 
   // Response time analysis
@@ -540,9 +540,9 @@ async function getApiAnalytics(
         count: count as number,
       })),
       status_codes: {
-        "200": Math.floor(requests.length * 0.85),
-        "400": Math.floor(requests.length * 0.1),
-        "500": Math.floor(requests.length * 0.05),
+        '200': Math.floor(requests.length * 0.85),
+        '400': Math.floor(requests.length * 0.1),
+        '500': Math.floor(requests.length * 0.05),
       },
     },
   };

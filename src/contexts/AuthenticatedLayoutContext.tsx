@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
-import { useAuth } from "@/hooks/useAuth";
-import { useNotifications } from "@/contexts/notificationContextHelpers";
-import { useToast } from "@/hooks/use-toast";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { User } from '@supabase/supabase-js';
+import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/contexts/notificationContextHelpers';
+import { useToast } from '@/hooks/use-toast';
 
 // Types for the context
 export interface AuthenticatedLayoutContextType {
@@ -34,7 +34,7 @@ export function useAuthenticatedLayout() {
   const context = useContext(AuthenticatedLayoutContext);
   if (context === undefined) {
     throw new Error(
-      "useAuthenticatedLayout must be used within an AuthenticatedLayoutProvider",
+      'useAuthenticatedLayout must be used within an AuthenticatedLayoutProvider'
     );
   }
   return context;

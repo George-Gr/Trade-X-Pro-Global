@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useCallback } from "react";
+import { logger } from '@/lib/logger';
+import { useCallback, useMemo, useState } from 'react';
 
 /**
  * Haptic Feedback Hook for Mobile Interactions
@@ -8,13 +9,13 @@ import React, { useState, useMemo, useCallback } from "react";
 export interface HapticFeedbackConfig {
   enabled?: boolean;
   pattern?:
-    | "light"
-    | "medium"
-    | "heavy"
-    | "success"
-    | "warning"
-    | "error"
-    | "impact";
+    | 'light'
+    | 'medium'
+    | 'heavy'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'impact';
   duration?: number;
 }
 
@@ -42,21 +43,21 @@ export const HAPTIC_PATTERNS = {
 } as const;
 
 export const useHapticFeedback = (
-  defaultEnabled = true,
+  defaultEnabled = true
 ): HapticFeedbackReturn => {
   const [isEnabled, setIsEnabled] = useState(defaultEnabled);
 
   const isSupported = useMemo(() => {
     // Check if we're in a browser environment with navigator
-    if (typeof window === "undefined" || typeof navigator === "undefined") {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
       return false;
     }
 
     return (
-      "vibrate" in navigator ||
-      "vibration" in navigator ||
-      Object.prototype.hasOwnProperty.call(window, "TapticEngine") ||
-      Object.prototype.hasOwnProperty.call(window, "HapticFeedback")
+      'vibrate' in navigator ||
+      'vibration' in navigator ||
+      Object.prototype.hasOwnProperty.call(window, 'TapticEngine') ||
+      Object.prototype.hasOwnProperty.call(window, 'HapticFeedback')
     );
   }, []);
 
@@ -64,7 +65,7 @@ export const useHapticFeedback = (
     (config: HapticFeedbackConfig = {}) => {
       if (!isEnabled || !isSupported) return;
 
-      const { pattern = "light", duration, enabled = true } = config;
+      const { pattern = 'light', duration, enabled = true } = config;
 
       if (!enabled) return;
 
@@ -75,25 +76,25 @@ export const useHapticFeedback = (
           patternArray = [duration];
         } else {
           switch (pattern) {
-            case "light":
+            case 'light':
               patternArray = HAPTIC_PATTERNS.LIGHT;
               break;
-            case "medium":
+            case 'medium':
               patternArray = HAPTIC_PATTERNS.MEDIUM;
               break;
-            case "heavy":
+            case 'heavy':
               patternArray = HAPTIC_PATTERNS.HEAVY;
               break;
-            case "success":
+            case 'success':
               patternArray = HAPTIC_PATTERNS.SUCCESS;
               break;
-            case "warning":
+            case 'warning':
               patternArray = HAPTIC_PATTERNS.WARNING;
               break;
-            case "error":
+            case 'error':
               patternArray = HAPTIC_PATTERNS.ERROR;
               break;
-            case "impact":
+            case 'impact':
               patternArray = HAPTIC_PATTERNS.IMPACT;
               break;
             default:
@@ -101,10 +102,10 @@ export const useHapticFeedback = (
           }
         }
 
-        if ("vibrate" in navigator) {
+        if ('vibrate' in navigator) {
           navigator.vibrate(patternArray);
         } else if (
-          Object.prototype.hasOwnProperty.call(window, "TapticEngine")
+          Object.prototype.hasOwnProperty.call(window, 'TapticEngine')
         ) {
           const taptic = (window as unknown as Record<string, unknown>)
             .TapticEngine as Record<string, unknown>;
@@ -113,11 +114,11 @@ export const useHapticFeedback = (
             (taptic as { notification: (p: unknown) => void }).notification
           ) {
             (taptic as { notification: (p: unknown) => void }).notification(
-              pattern,
+              pattern
             );
           }
         } else if (
-          Object.prototype.hasOwnProperty.call(window, "HapticFeedback")
+          Object.prototype.hasOwnProperty.call(window, 'HapticFeedback')
         ) {
           const haptic = (window as unknown as Record<string, unknown>)
             .HapticFeedback as Record<string, unknown>;
@@ -126,10 +127,10 @@ export const useHapticFeedback = (
           }
         }
       } catch (error) {
-        console.warn("Haptic feedback failed:", error);
+        logger.warn('Haptic feedback failed', error);
       }
     },
-    [isEnabled, isSupported],
+    [isEnabled, isSupported]
   );
 
   return {

@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 export interface AssetSpec {
   symbol: string;
@@ -9,7 +9,7 @@ export interface AssetSpec {
   leverage: number; // Fixed broker-set leverage
   pip_size: number;
   base_commission: number;
-  commission_type: "per_lot" | "percentage";
+  commission_type: 'per_lot' | 'percentage';
   is_tradable: boolean;
   created_at: string;
 }
@@ -20,15 +20,15 @@ export interface AssetSpec {
  */
 export const useAssetSpecs = (symbol?: string) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["asset-specs", symbol],
+    queryKey: ['asset-specs', symbol],
     queryFn: async () => {
       if (!symbol) return null;
 
       const { data: asset, error: err } = await supabase
-        .from("asset_specs")
-        .select("*")
-        .eq("symbol", symbol)
-        .eq("is_tradable", true)
+        .from('asset_specs')
+        .select('*')
+        .eq('symbol', symbol)
+        .eq('is_tradable', true)
         .maybeSingle();
 
       if (err) throw err;

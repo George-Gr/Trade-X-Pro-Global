@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { BookOpen, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { BookOpen, CheckCircle2 } from 'lucide-react';
 
 export default function Tutorials() {
   return (
@@ -40,12 +40,12 @@ export default function Tutorials() {
                 </div>
                 <div className="space-y-4">
                   {[
-                    { resource: "Video Tutorials", count: "100+" },
-                    { resource: "E-Books", count: "25+" },
-                    { resource: "Strategy Guides", count: "50+" },
-                    { resource: "Market Analysis Reports", count: "Weekly" },
-                    { resource: "Case Studies", count: "40+" },
-                    { resource: "Template Collections", count: "15+" },
+                    { resource: 'Video Tutorials', count: '100+' },
+                    { resource: 'E-Books', count: '25+' },
+                    { resource: 'Strategy Guides', count: '50+' },
+                    { resource: 'Market Analysis Reports', count: 'Weekly' },
+                    { resource: 'Case Studies', count: '40+' },
+                    { resource: 'Template Collections', count: '15+' },
                   ].map((item, i) => (
                     <div
                       key={i}
@@ -66,12 +66,12 @@ export default function Tutorials() {
                 <h2 className="text-3xl font-bold mb-6">Featured E-Books</h2>
                 <div className="space-y-4">
                   {[
-                    "The Complete Forex Trading Guide",
-                    "Technical Analysis Masterclass",
-                    "Risk Management Strategies",
-                    "Trading Psychology Guide",
-                    "Market Structure & Trends",
-                    "Day Trading Handbook",
+                    'The Complete Forex Trading Guide',
+                    'Technical Analysis Masterclass',
+                    'Risk Management Strategies',
+                    'Trading Psychology Guide',
+                    'Market Structure & Trends',
+                    'Day Trading Handbook',
                   ].map((book, i) => (
                     <div
                       key={i}
@@ -94,34 +94,34 @@ export default function Tutorials() {
               <div className="grid md:grid-cols-3 gap-6">
                 {[
                   {
-                    title: "Beginner to Pro",
-                    lessons: "15 lessons",
-                    duration: "8 hours",
+                    title: 'Beginner to Pro',
+                    lessons: '15 lessons',
+                    duration: '8 hours',
                   },
                   {
-                    title: "Advanced Strategies",
-                    lessons: "12 lessons",
-                    duration: "10 hours",
+                    title: 'Advanced Strategies',
+                    lessons: '12 lessons',
+                    duration: '10 hours',
                   },
                   {
-                    title: "Platform Mastery",
-                    lessons: "20 lessons",
-                    duration: "12 hours",
+                    title: 'Platform Mastery',
+                    lessons: '20 lessons',
+                    duration: '12 hours',
                   },
                   {
-                    title: "Technical Analysis Deep Dive",
-                    lessons: "18 lessons",
-                    duration: "14 hours",
+                    title: 'Technical Analysis Deep Dive',
+                    lessons: '18 lessons',
+                    duration: '14 hours',
                   },
                   {
-                    title: "Risk Management Pro",
-                    lessons: "10 lessons",
-                    duration: "9 hours",
+                    title: 'Risk Management Pro',
+                    lessons: '10 lessons',
+                    duration: '9 hours',
                   },
                   {
-                    title: "Psychology & Discipline",
-                    lessons: "8 lessons",
-                    duration: "6 hours",
+                    title: 'Psychology & Discipline',
+                    lessons: '8 lessons',
+                    duration: '6 hours',
                   },
                 ].map((series, i) => (
                   <Card
@@ -155,23 +155,23 @@ export default function Tutorials() {
               <div className="grid md:grid-cols-3 gap-6">
                 {[
                   {
-                    path: "Complete Beginner",
-                    description: "Start from zero to trading confidently",
-                    modules: ["Basics", "Charts", "Orders", "Risk"],
+                    path: 'Complete Beginner',
+                    description: 'Start from zero to trading confidently',
+                    modules: ['Basics', 'Charts', 'Orders', 'Risk'],
                   },
                   {
-                    path: "Intermediate Trader",
-                    description: "Enhance your existing trading skills",
-                    modules: ["Strategy", "Analysis", "Psychology", "Advanced"],
+                    path: 'Intermediate Trader',
+                    description: 'Enhance your existing trading skills',
+                    modules: ['Strategy', 'Analysis', 'Psychology', 'Advanced'],
                   },
                   {
-                    path: "Professional Trader",
-                    description: "Master institutional-level trading",
+                    path: 'Professional Trader',
+                    description: 'Master institutional-level trading',
                     modules: [
-                      "Algorithms",
-                      "Systems",
-                      "Management",
-                      "Specialization",
+                      'Algorithms',
+                      'Systems',
+                      'Management',
+                      'Specialization',
                     ],
                   },
                 ].map((path, i) => (

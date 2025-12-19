@@ -1,6 +1,6 @@
 // useKyc: Hook for KYC status and actions
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 export interface KycRequestData {
   id: string;
@@ -24,7 +24,7 @@ export interface KycDocumentData {
 }
 
 export function useKyc(userId?: string) {
-  const [kycStatus, setKycStatus] = useState<string>("pending");
+  const [kycStatus, setKycStatus] = useState<string>('pending');
   const [kycRequest, setKycRequest] = useState<KycRequestData | null>(null);
   const [documents, setDocuments] = useState<KycDocumentData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,10 +38,10 @@ export function useKyc(userId?: string) {
     try {
       // Fetch documents from kyc_documents table
       const { data: docs, error: docsErr } = await supabase
-        .from("kyc_documents")
-        .select("*")
-        .eq("user_id", uid)
-        .order("created_at", { ascending: false });
+        .from('kyc_documents')
+        .select('*')
+        .eq('user_id', uid)
+        .order('created_at', { ascending: false });
 
       if (docsErr) throw docsErr;
 
@@ -61,14 +61,14 @@ export function useKyc(userId?: string) {
       // Set status based on documents
       if (docs && docs.length > 0) {
         const latestDoc = docs[0] as { status?: string };
-        setKycStatus(latestDoc.status || "pending");
+        setKycStatus(latestDoc.status || 'pending');
       } else {
-        setKycStatus("pending");
+        setKycStatus('pending');
       }
     } catch (err: unknown) {
       // Failed to fetch KYC status
       setError(
-        err instanceof Error ? err.message : "Failed to fetch KYC status",
+        err instanceof Error ? err.message : 'Failed to fetch KYC status'
       );
     } finally {
       setLoading(false);
@@ -86,33 +86,33 @@ export function useKyc(userId?: string) {
     async (documentType: string) => {
       setError(null);
       try {
-        if (!userId) throw new Error("No user context");
+        if (!userId) throw new Error('No user context');
 
-        const resp = await fetch("/supabase/functions/submit-kyc", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const resp = await fetch('/supabase/functions/submit-kyc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ documentType }),
-          credentials: "include",
+          credentials: 'include',
         });
 
         if (!resp.ok) {
           const body = await resp.json().catch(() => ({}));
-          throw new Error(body?.error || "Failed to submit KYC request");
+          throw new Error(body?.error || 'Failed to submit KYC request');
         }
 
         const result = await resp.json();
         setKycRequest(result.kycRequest);
-        setKycStatus("submitted");
+        setKycStatus('submitted');
         return result;
       } catch (err: unknown) {
         // Submit KYC error
         setError(
-          err instanceof Error ? err.message : "Failed to submit KYC request",
+          err instanceof Error ? err.message : 'Failed to submit KYC request'
         );
         throw err;
       }
     },
-    [userId],
+    [userId]
   );
 
   // Upload a document (after receiving signed URL from submit-kyc)
@@ -120,20 +120,20 @@ export function useKyc(userId?: string) {
     setError(null);
     try {
       const resp = await fetch(signedUrl, {
-        method: "PUT",
-        headers: { "Content-Type": file.type || "application/octet-stream" },
+        method: 'PUT',
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
         body: file,
       });
 
       if (!resp.ok) {
-        throw new Error("Failed to upload file");
+        throw new Error('Failed to upload file');
       }
 
       return { success: true };
     } catch (err: unknown) {
       // Upload document error
       setError(
-        err instanceof Error ? err.message : "Failed to upload document",
+        err instanceof Error ? err.message : 'Failed to upload document'
       );
       throw err;
     }
@@ -144,16 +144,16 @@ export function useKyc(userId?: string) {
     async (filePath: string) => {
       setError(null);
       try {
-        const resp = await fetch("/supabase/functions/validate-kyc-upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const resp = await fetch('/supabase/functions/validate-kyc-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ filePath }),
-          credentials: "include",
+          credentials: 'include',
         });
 
         if (!resp.ok) {
           const body = await resp.json().catch(() => ({}));
-          throw new Error(body?.error || "Validation failed");
+          throw new Error(body?.error || 'Validation failed');
         }
 
         // Refresh KYC status after validation
@@ -165,12 +165,12 @@ export function useKyc(userId?: string) {
       } catch (err: unknown) {
         // Validate document error
         setError(
-          err instanceof Error ? err.message : "Failed to validate document",
+          err instanceof Error ? err.message : 'Failed to validate document'
         );
         throw err;
       }
     },
-    [userId, fetchKycStatus],
+    [userId, fetchKycStatus]
   );
 
   return {

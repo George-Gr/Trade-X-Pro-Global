@@ -1,28 +1,28 @@
-import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useAccessibility } from "@/contexts/AccessibilityContext";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+} from '@/components/ui/select';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import {
   CheckCircle2,
   Clock,
@@ -34,8 +34,8 @@ import {
   Palette,
   Volume2,
   Keyboard,
-} from "lucide-react";
-import { SettingsLoading } from "@/components/common/PageLoadingStates";
+} from 'lucide-react';
+import { SettingsLoading } from '@/components/common/PageLoadingStates';
 
 const Settings = () => {
   const { user } = useAuth();
@@ -50,23 +50,23 @@ const Settings = () => {
     toggleReduceMotion,
     toggleColorBlindMode,
   } = useAccessibility();
-  const [kycStatus, setKycStatus] = useState<string>("pending");
+  const [kycStatus, setKycStatus] = useState<string>('pending');
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchKYCStatus = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from("profiles")
-      .select("kyc_status")
-      .eq("id", user.id)
+      .from('profiles')
+      .select('kyc_status')
+      .eq('id', user.id)
       .single();
 
     if (error) {
       // Handle error - consider showing a toast or setting error state
-      setKycStatus("pending");
+      setKycStatus('pending');
     } else if (data) {
-      setKycStatus(data.kyc_status || "pending");
+      setKycStatus(data.kyc_status || 'pending');
     }
   }, [user]);
   useEffect(() => {
@@ -112,8 +112,8 @@ const Settings = () => {
                       checked={visualPreferences.preferences.highContrast}
                       onCheckedChange={(checked) =>
                         visualPreferences.updatePreference(
-                          "highContrast",
-                          checked,
+                          'highContrast',
+                          checked
                         )
                       }
                     />
@@ -131,8 +131,8 @@ const Settings = () => {
                       checked={visualPreferences.preferences.reduceMotion}
                       onCheckedChange={(checked) =>
                         visualPreferences.updatePreference(
-                          "reduceMotion",
-                          checked,
+                          'reduceMotion',
+                          checked
                         )
                       }
                     />
@@ -150,8 +150,8 @@ const Settings = () => {
                       checked={visualPreferences.preferences.largerText}
                       onCheckedChange={(checked) =>
                         visualPreferences.updatePreference(
-                          "largerText",
-                          checked,
+                          'largerText',
+                          checked
                         )
                       }
                     />
@@ -171,8 +171,8 @@ const Settings = () => {
                       checked={visualPreferences.preferences.focusIndicator}
                       onCheckedChange={(checked) =>
                         visualPreferences.updatePreference(
-                          "focusIndicator",
-                          checked,
+                          'focusIndicator',
+                          checked
                         )
                       }
                     />
@@ -199,8 +199,8 @@ const Settings = () => {
                         onClick={() => toggleColorBlindMode(mode.type)}
                         variant={
                           colorBlindMode.colorBlindMode.type === mode.type
-                            ? "default"
-                            : "outline"
+                            ? 'default'
+                            : 'outline'
                         }
                         className="w-full justify-start"
                       >
@@ -288,14 +288,14 @@ const Settings = () => {
                   <div className="text-center">
                     <div className="text-4xl font-bold text-blue-600">
                       {Math.round(
-                        visualPreferences.preferences.highContrast ? 95 : 85,
+                        visualPreferences.preferences.highContrast ? 95 : 85
                       )}
                       %
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">
                       {visualPreferences.preferences.highContrast
-                        ? "Excellent"
-                        : "Good"}{" "}
+                        ? 'Excellent'
+                        : 'Good'}{' '}
                       compliance
                     </p>
                   </div>
@@ -324,7 +324,7 @@ const Settings = () => {
                   <Button
                     onClick={() => {
                       setScreenReaderEnabled(true);
-                      visualPreferences.updatePreference("largerText", true);
+                      visualPreferences.updatePreference('largerText', true);
                     }}
                     className="w-full bg-green-500 hover:bg-green-600"
                   >
@@ -333,7 +333,7 @@ const Settings = () => {
 
                   <Button
                     onClick={() => {
-                      toggleColorBlindMode("deuteranopia");
+                      toggleColorBlindMode('deuteranopia');
                     }}
                     className="w-full bg-purple-500 hover:bg-purple-600"
                   >
@@ -343,15 +343,15 @@ const Settings = () => {
                   <Button
                     onClick={() => {
                       // Reset all accessibility settings
-                      visualPreferences.updatePreference("highContrast", false);
-                      visualPreferences.updatePreference("reduceMotion", false);
-                      visualPreferences.updatePreference("largerText", false);
+                      visualPreferences.updatePreference('highContrast', false);
+                      visualPreferences.updatePreference('reduceMotion', false);
+                      visualPreferences.updatePreference('largerText', false);
                       visualPreferences.updatePreference(
-                        "focusIndicator",
-                        false,
+                        'focusIndicator',
+                        false
                       );
                       colorBlindMode.applyColorBlindSimulation({
-                        type: "none",
+                        type: 'none',
                         intensity: 0,
                       });
                       setScreenReaderEnabled(false);
@@ -429,7 +429,7 @@ const Settings = () => {
                       <p className="text-sm text-muted-foreground">
                         Email Address
                       </p>
-                      <p className="font-medium">{user?.email || "N/A"}</p>
+                      <p className="font-medium">{user?.email || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">
@@ -473,7 +473,7 @@ const Settings = () => {
                     <>
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                          {kycStatus === "approved" ? (
+                          {kycStatus === 'approved' ? (
                             <>
                               <CheckCircle2 className="h-4 w-4 text-profit" />
                               <div>
@@ -483,7 +483,7 @@ const Settings = () => {
                                 </p>
                               </div>
                             </>
-                          ) : kycStatus === "rejected" ? (
+                          ) : kycStatus === 'rejected' ? (
                             <>
                               <XCircle className="h-4 w-4 text-loss" />
                               <div>
@@ -507,11 +507,11 @@ const Settings = () => {
                             </>
                           )}
                         </div>
-                        {kycStatus !== "approved" && (
-                          <Button onClick={() => navigate("/kyc")}>
-                            {kycStatus === "rejected"
-                              ? "Resubmit"
-                              : "Submit Documents"}
+                        {kycStatus !== 'approved' && (
+                          <Button onClick={() => navigate('/kyc')}>
+                            {kycStatus === 'rejected'
+                              ? 'Resubmit'
+                              : 'Submit Documents'}
                           </Button>
                         )}
                       </div>
@@ -590,7 +590,7 @@ const Settings = () => {
                       </p>
                     </div>
                     <Button
-                      onClick={() => navigate("/risk-management")}
+                      onClick={() => navigate('/risk-management')}
                       variant="outline"
                     >
                       Manage
@@ -621,7 +621,7 @@ const Settings = () => {
                       </p>
                     </div>
                     <Button
-                      onClick={() => navigate("/notifications")}
+                      onClick={() => navigate('/notifications')}
                       variant="outline"
                     >
                       Configure

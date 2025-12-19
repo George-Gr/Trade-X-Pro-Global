@@ -11,7 +11,7 @@
  * - Realtime subscriptions for UI broadcast
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 // Deno global declaration for TypeScript support
 declare const Deno: {
@@ -28,7 +28,7 @@ declare const Deno: {
 interface PositionMetrics {
   position_id: string;
   symbol: string;
-  side: "long" | "short";
+  side: 'long' | 'short';
   quantity: number;
   entry_price: number;
   current_price: number;
@@ -66,20 +66,20 @@ Deno.serve(async (req: Request) => {
   // CORS & METHOD CHECK
   // =========================================================================
 
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
     });
   }
 
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 
@@ -98,9 +98,9 @@ Deno.serve(async (req: Request) => {
     } = requestBody;
 
     if (!user_id) {
-      return new Response(JSON.stringify({ error: "user_id is required" }), {
+      return new Response(JSON.stringify({ error: 'user_id is required' }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
@@ -108,13 +108,13 @@ Deno.serve(async (req: Request) => {
     // AUTHENTICATE USER
     // =====================================================================
 
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.replace('Bearer ', '');
 
     if (!token) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
@@ -122,11 +122,11 @@ Deno.serve(async (req: Request) => {
     // INITIALIZE SUPABASE CLIENT
     // =====================================================================
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error("Missing Supabase configuration");
+      throw new Error('Missing Supabase configuration');
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -138,9 +138,9 @@ Deno.serve(async (req: Request) => {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user || user.id !== user_id) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 403,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
@@ -153,21 +153,21 @@ Deno.serve(async (req: Request) => {
     if (position_ids && position_ids.length > 0) {
       // Fetch specific positions
       const { data, error } = await supabase
-        .from("positions")
-        .select("*")
-        .in("id", position_ids)
-        .eq("user_id", user_id)
-        .eq("status", "open");
+        .from('positions')
+        .select('*')
+        .in('id', position_ids)
+        .eq('user_id', user_id)
+        .eq('status', 'open');
 
       if (error) throw error;
       positions = data || [];
     } else {
       // Fetch all open positions
       const { data, error } = await supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", user_id)
-        .eq("status", "open");
+        .from('positions')
+        .select('*')
+        .eq('user_id', user_id)
+        .eq('status', 'open');
 
       if (error) throw error;
       positions = data || [];
@@ -183,8 +183,8 @@ Deno.serve(async (req: Request) => {
         } as UpdatePositionsResponse),
         {
           status: 200,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -204,10 +204,10 @@ Deno.serve(async (req: Request) => {
     if (symbolsToFetch.length > 0) {
       // Try to fetch from price_cache table
       const { data: cachedPrices, error: cacheError } = await supabase
-        .from("price_cache")
-        .select("symbol, current_price")
-        .in("symbol", symbolsToFetch)
-        .order("updated_at", { ascending: false });
+        .from('price_cache')
+        .select('symbol, current_price')
+        .in('symbol', symbolsToFetch)
+        .order('updated_at', { ascending: false });
 
       if (!cacheError && cachedPrices) {
         for (const price of cachedPrices) {
@@ -238,7 +238,7 @@ Deno.serve(async (req: Request) => {
           priceMap[position.symbol] || position.current_price;
 
         // Call stored procedure
-        const { data, error } = await supabase.rpc("update_position_atomic", {
+        const { data, error } = await supabase.rpc('update_position_atomic', {
           p_position_id: position.id,
           p_current_price: currentPrice,
           p_user_id: user_id,
@@ -270,14 +270,14 @@ Deno.serve(async (req: Request) => {
           errors.push({
             position_id: position.id,
             symbol: position.symbol,
-            error: data?.error_message || "Unknown error",
+            error: data?.error_message || 'Unknown error',
           });
         }
       } catch (err) {
         errors.push({
           position_id: position.id,
           symbol: position.symbol,
-          error: err instanceof Error ? err.message : "Unknown error",
+          error: err instanceof Error ? err.message : 'Unknown error',
         });
       }
     }
@@ -290,8 +290,8 @@ Deno.serve(async (req: Request) => {
       // Broadcast to Realtime subscribers
       const channel = supabase.channel(`positions:${user_id}`);
       await channel.send({
-        type: "broadcast",
-        event: "position:updated",
+        type: 'broadcast',
+        event: 'position:updated',
         payload: {
           id: metric.position_id,
           symbol: metric.symbol,
@@ -317,19 +317,19 @@ Deno.serve(async (req: Request) => {
 
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    console.error("Error updating positions:", err);
+    console.error('Error updating positions:', err);
 
     return new Response(
       JSON.stringify({
-        error: err instanceof Error ? err.message : "Internal server error",
+        error: err instanceof Error ? err.message : 'Internal server error',
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
+        headers: { 'Content-Type': 'application/json' },
+      }
     );
   }
 });

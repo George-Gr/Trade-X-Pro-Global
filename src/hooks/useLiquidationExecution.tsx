@@ -22,10 +22,10 @@
  * }
  */
 
-import { useCallback, useState, useRef } from "react";
-import { useAuth } from "./useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import type { LiquidationExecutionResult } from "@/lib/trading/liquidationEngine";
+import { useCallback, useState, useRef } from 'react';
+import { useAuth } from './useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import type { LiquidationExecutionResult } from '@/lib/trading/liquidationEngine';
 
 interface LiquidationExecutionParams {
   positionIds: string[];
@@ -47,7 +47,7 @@ interface ExecutionState {
  */
 function generateIdempotencyKey(positionIds: string[], reason: string): string {
   const timestamp = Date.now();
-  const positionHash = positionIds.sort().join("-");
+  const positionHash = positionIds.sort().join('-');
   return `liq-${positionHash}-${reason}-${timestamp}`;
 }
 
@@ -61,13 +61,13 @@ async function executeLiquidationViaEdgeFunction(
   currentPrices: Record<string, number>,
   idempotencyKey: string,
   maxRetries: number = 3,
-  retryDelayMs: number = 200,
+  retryDelayMs: number = 200
 ): Promise<LiquidationExecutionResult> {
   let lastError: Error | null = null;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await supabase.functions.invoke("execute-liquidation", {
+      const response = await supabase.functions.invoke('execute-liquidation', {
         body: {
           user_id: userId,
           position_ids: positionIds,
@@ -79,19 +79,19 @@ async function executeLiquidationViaEdgeFunction(
 
       if (response.error) {
         throw new Error(
-          `Edge function error: ${JSON.stringify(response.error)}`,
+          `Edge function error: ${JSON.stringify(response.error)}`
         );
       }
 
       if (!response.data) {
-        throw new Error("No data returned from edge function");
+        throw new Error('No data returned from edge function');
       }
 
       // Validate response structure
       const result = response.data as LiquidationExecutionResult;
       if (!result.success || !result.liquidationEventId) {
         throw new Error(
-          `Liquidation failed: ${result.message || "Unknown error"}`,
+          `Liquidation failed: ${result.message || 'Unknown error'}`
         );
       }
 
@@ -102,9 +102,9 @@ async function executeLiquidationViaEdgeFunction(
       // Don't retry on validation errors
       const errorMessage = lastError.message.toLowerCase();
       if (
-        errorMessage.includes("validation") ||
-        errorMessage.includes("not found") ||
-        errorMessage.includes("unauthorized")
+        errorMessage.includes('validation') ||
+        errorMessage.includes('not found') ||
+        errorMessage.includes('unauthorized')
       ) {
         throw lastError;
       }
@@ -119,7 +119,7 @@ async function executeLiquidationViaEdgeFunction(
   }
 
   throw new Error(
-    `Liquidation failed after ${maxRetries} attempts: ${lastError?.message || "Unknown error"}`,
+    `Liquidation failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`
   );
 }
 
@@ -146,10 +146,10 @@ export function useLiquidationExecution() {
    */
   const executeLiquidation = useCallback(
     async (
-      params: LiquidationExecutionParams,
+      params: LiquidationExecutionParams
     ): Promise<LiquidationExecutionResult> => {
       if (!user?.id) {
-        throw new Error("User not authenticated");
+        throw new Error('User not authenticated');
       }
 
       const {
@@ -162,11 +162,11 @@ export function useLiquidationExecution() {
 
       // Validate inputs
       if (!positionIds || positionIds.length === 0) {
-        throw new Error("No positions specified for liquidation");
+        throw new Error('No positions specified for liquidation');
       }
 
       if (!currentPrices || Object.keys(currentPrices).length === 0) {
-        throw new Error("No market prices provided");
+        throw new Error('No market prices provided');
       }
 
       setState({
@@ -193,7 +193,7 @@ export function useLiquidationExecution() {
           currentPrices,
           idempotencyKey,
           maxRetries,
-          retryDelayMs,
+          retryDelayMs
         );
 
         // Update progress
@@ -211,7 +211,7 @@ export function useLiquidationExecution() {
         return result;
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
+          error instanceof Error ? error.message : 'Unknown error';
 
         setState((prev) => ({
           ...prev,
@@ -223,7 +223,7 @@ export function useLiquidationExecution() {
         throw error;
       }
     },
-    [user?.id],
+    [user?.id]
   );
 
   /**

@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   AlertTriangle,
   TrendingDown,
@@ -25,13 +25,13 @@ import {
   CheckCircle,
   XCircle,
   Activity,
-} from "lucide-react";
-import { toast } from "sonner";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+} from 'lucide-react';
+import { toast } from 'sonner';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 
-import type { Database } from "@/integrations/supabase/types";
+import type { Database } from '@/integrations/supabase/types';
 type MarginCallEventWithProfiles =
-  Database["public"]["Tables"]["margin_call_events"]["Row"] & {
+  Database['public']['Tables']['margin_call_events']['Row'] & {
     profiles?: {
       email: string;
       full_name: string | null;
@@ -44,13 +44,13 @@ const AdminRiskDashboard = () => {
   const queryClient = useQueryClient();
 
   const { data: marginCalls, isLoading } = useQuery({
-    queryKey: ["admin-margin-calls"],
+    queryKey: ['admin-margin-calls'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("margin_call_events")
+        .from('margin_call_events')
         .select(`*, profiles(email, full_name, equity, margin_used)`)
-        .in("status", ["pending", "notified", "escalated"])
-        .order("triggered_at", { ascending: false });
+        .in('status', ['pending', 'notified', 'escalated'])
+        .order('triggered_at', { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -60,7 +60,7 @@ const AdminRiskDashboard = () => {
   const criticalCount =
     marginCalls?.filter(
       (mc) =>
-        mc.severity === "CRITICAL" || mc.severity === "LIQUIDATION_TRIGGER",
+        mc.severity === 'CRITICAL' || mc.severity === 'LIQUIDATION_TRIGGER'
     ).length || 0;
 
   return (
@@ -141,7 +141,7 @@ const AdminRiskDashboard = () => {
                     <TableRow key={call.id}>
                       <TableCell>
                         <div className="font-medium">
-                          {call.profiles?.full_name || "Unknown"}
+                          {call.profiles?.full_name || 'Unknown'}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -150,9 +150,9 @@ const AdminRiskDashboard = () => {
                       <TableCell>
                         <Badge
                           variant={
-                            call.severity === "CRITICAL"
-                              ? "destructive"
-                              : "outline"
+                            call.severity === 'CRITICAL'
+                              ? 'destructive'
+                              : 'outline'
                           }
                         >
                           {call.severity}

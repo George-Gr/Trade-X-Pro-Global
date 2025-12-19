@@ -347,7 +347,7 @@
 
   /* Aria hidden */
   .loading-aria-hidden {
-    aria-hidden: "true";
+    aria-hidden: 'true';
   }
 
   /* Respect prefers-reduced-motion */

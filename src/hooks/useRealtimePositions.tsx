@@ -5,13 +5,13 @@
  * Provides live position updates as prices and P&L change in real-time.
  */
 
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useAuth } from "./useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import type { Position } from "@/types/position";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useAuth } from './useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import type { Position } from '@/types/position';
 
 export interface RealtimePositionUpdate {
-  type: "INSERT" | "UPDATE" | "DELETE";
+  type: 'INSERT' | 'UPDATE' | 'DELETE';
   new: Position | null;
   old: Position | null;
   eventId?: string;
@@ -32,7 +32,7 @@ export interface UseRealtimePositionsReturn {
   isLoading: boolean;
   error: Error | null;
   isSubscribed: boolean;
-  connectionStatus: "connected" | "connecting" | "disconnected" | "error";
+  connectionStatus: 'connected' | 'connecting' | 'disconnected' | 'error';
   subscribe: (filter?: string) => Promise<void>;
   unsubscribe: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -40,7 +40,7 @@ export interface UseRealtimePositionsReturn {
 
 export function useRealtimePositions(
   userId: string | null,
-  options: RealtimeOptions = {},
+  options: RealtimeOptions = {}
 ): UseRealtimePositionsReturn {
   const {
     debounceMs = 100,
@@ -57,14 +57,14 @@ export function useRealtimePositions(
   const [error, setError] = useState<Error | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<
-    "connected" | "connecting" | "disconnected" | "error"
-  >("disconnected");
+    'connected' | 'connecting' | 'disconnected' | 'error'
+  >('disconnected');
 
   const subscriptionRef = useRef<unknown>(null);
   // Mutable ref to hold a reference to the subscribe function. This
   // helps break circular dependencies when other callbacks need to call subscribe
   const subscribeRef = useRef<((filter?: string) => Promise<void>) | null>(
-    null,
+    null
   );
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptsRef = useRef(0);
@@ -75,17 +75,17 @@ export function useRealtimePositions(
 
     try {
       setIsLoading(true);
-      setConnectionStatus("connecting");
+      setConnectionStatus('connecting');
 
       let query = supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("status", "open")
-        .order("opened_at", { ascending: false });
+        .from('positions')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('status', 'open')
+        .order('opened_at', { ascending: false });
 
       if (filterSymbol) {
-        query = query.eq("symbol", filterSymbol);
+        query = query.eq('symbol', filterSymbol);
       }
 
       const { data, error: queryError } = await query;
@@ -98,18 +98,18 @@ export function useRealtimePositions(
           id: r.id as string,
           user_id: r.user_id as string,
           symbol: r.symbol as string,
-          side: (r.side as string) === "buy" ? "long" : "short",
+          side: (r.side as string) === 'buy' ? 'long' : 'short',
           quantity: r.quantity as number,
           entry_price: r.entry_price as number,
           current_price: r.current_price as number,
           unrealized_pnl: (r.unrealized_pnl as number) || 0,
           margin_used: (r.margin_used as number) || 0,
           margin_level: (r.margin_level as number) || 0,
-          status: (r.status as "open" | "closed" | "closing") || "open",
+          status: (r.status as 'open' | 'closed' | 'closing') || 'open',
           opened_at: r.opened_at
             ? new Date(r.opened_at as string)
             : new Date((r.created_at as string) || Date.now()),
-          leverage: typeof r.leverage === "number" ? (r.leverage as number) : 1,
+          leverage: typeof r.leverage === 'number' ? (r.leverage as number) : 1,
           created_at:
             (r.created_at as string) ||
             (r.opened_at as string) ||
@@ -120,7 +120,7 @@ export function useRealtimePositions(
 
       setPositions(loadedPositions);
       positionsRef.current = loadedPositions;
-      setConnectionStatus("connected");
+      setConnectionStatus('connected');
       setError(null);
       setIsLoading(false);
 
@@ -132,7 +132,7 @@ export function useRealtimePositions(
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setError(error);
-      setConnectionStatus("error");
+      setConnectionStatus('error');
       setIsLoading(false);
 
       if (onError) {
@@ -167,7 +167,7 @@ export function useRealtimePositions(
       };
 
       // Debounce rapid updates for UPDATE events
-      if (type === "UPDATE" && newRecord) {
+      if (type === 'UPDATE' && newRecord) {
         const delta = calculateDelta(oldRecord, newRecord);
 
         // Only process significant updates (> 0.01% PnL change or > 0.1% price change)
@@ -210,7 +210,7 @@ export function useRealtimePositions(
         let updated = [...prev];
 
         switch (type) {
-          case "INSERT":
+          case 'INSERT':
             if (newRecord && (!filter || newRecord.symbol === filter)) {
               const exists = updated.some((p) => p.id === newRecord.id);
               if (!exists) {
@@ -219,7 +219,7 @@ export function useRealtimePositions(
             }
             break;
 
-          case "DELETE":
+          case 'DELETE':
             if (newRecord && (!filter || newRecord.symbol === filter)) {
               updated = updated.filter((p) => p.id !== newRecord.id);
             }
@@ -234,7 +234,7 @@ export function useRealtimePositions(
         onUpdate(positionsRef.current);
       }
     },
-    [onUpdate, debounceMs],
+    [onUpdate, debounceMs]
   );
 
   const handleSubscriptionError = useCallback(() => {
@@ -251,26 +251,26 @@ export function useRealtimePositions(
         if (fn) {
           fn().catch((err: Error) => {
             // Reconnection failed
-            setConnectionStatus("error");
+            setConnectionStatus('error');
           });
         } else {
           // If subscribe is not initialized yet, try again after a short delay.
           setTimeout(() => {
             const fn2 = subscribeRef.current;
             if (fn2) {
-              fn2().catch(() => setConnectionStatus("error"));
+              fn2().catch(() => setConnectionStatus('error'));
             } else {
-              setConnectionStatus("error");
+              setConnectionStatus('error');
             }
           }, 500);
         }
       }, backoffMs);
     } else {
       const error = new Error(
-        "Max reconnection attempts exceeded. Check your connection and try again.",
+        'Max reconnection attempts exceeded. Check your connection and try again.'
       );
       setError(error);
-      setConnectionStatus("error");
+      setConnectionStatus('error');
 
       if (onError) {
         onError(error);
@@ -281,27 +281,27 @@ export function useRealtimePositions(
   const subscribe = useCallback(
     async (filter?: string) => {
       if (!userId) {
-        throw new Error("User ID required for subscription");
+        throw new Error('User ID required for subscription');
       }
 
       try {
         if (subscriptionRef.current) {
           await supabase.removeChannel(
-            subscriptionRef.current as import("@supabase/supabase-js").RealtimeChannel,
+            subscriptionRef.current as import('@supabase/supabase-js').RealtimeChannel
           );
         }
 
-        setConnectionStatus("connecting");
+        setConnectionStatus('connecting');
         reconnectAttemptsRef.current = 0;
 
         const channel = supabase
           .channel(`positions:${userId}`)
           .on(
-            "postgres_changes" as const,
+            'postgres_changes' as const,
             {
-              event: "*",
-              schema: "public",
-              table: "positions",
+              event: '*',
+              schema: 'public',
+              table: 'positions',
               filter: `user_id=eq.${userId}`,
             },
             (payload: unknown) => {
@@ -311,15 +311,15 @@ export function useRealtimePositions(
               debounceTimerRef.current = setTimeout(() => {
                 handlePositionUpdate(payload as RealtimePositionUpdate, filter);
               }, debounceMs);
-            },
+            }
           )
           .subscribe((status) => {
-            if (status === "SUBSCRIBED") {
+            if (status === 'SUBSCRIBED') {
               // Position realtime subscription established
-              setConnectionStatus("connected");
+              setConnectionStatus('connected');
               setIsSubscribed(true);
               setError(null);
-            } else if (status === "CHANNEL_ERROR") {
+            } else if (status === 'CHANNEL_ERROR') {
               handleSubscriptionError();
             }
           });
@@ -328,7 +328,7 @@ export function useRealtimePositions(
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
-        setConnectionStatus("error");
+        setConnectionStatus('error');
 
         if (onError) {
           onError(error);
@@ -337,13 +337,7 @@ export function useRealtimePositions(
         throw error;
       }
     },
-    [
-      userId,
-      debounceMs,
-      onError,
-      handlePositionUpdate,
-      handleSubscriptionError,
-    ],
+    [userId, debounceMs, onError, handlePositionUpdate, handleSubscriptionError]
   );
 
   // Assign the concrete `subscribe` function to the ref so it can be referenced
@@ -354,13 +348,13 @@ export function useRealtimePositions(
     if (subscriptionRef.current) {
       try {
         await supabase.removeChannel(
-          subscriptionRef.current as ReturnType<typeof supabase.channel>,
+          subscriptionRef.current as ReturnType<typeof supabase.channel>
         );
         subscriptionRef.current = null;
         setIsSubscribed(false);
-        setConnectionStatus("disconnected");
+        setConnectionStatus('disconnected');
       } catch (err) {
-        console.error("Error unsubscribing:", err);
+        console.error('Error unsubscribing:', err);
       }
     }
 

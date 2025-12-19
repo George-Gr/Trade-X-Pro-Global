@@ -1,17 +1,17 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
 import {
   detectMarginCall,
   classifyMarginCallSeverity,
   shouldEscalateToLiquidation,
   MarginCallStatus,
-} from "../lib/marginCallDetection.ts";
-import { calculateMarginLevel } from "../lib/marginCalculations.ts";
+} from '../lib/marginCallDetection.ts';
+import { calculateMarginLevel } from '../lib/marginCalculations.ts';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 /**
@@ -42,19 +42,19 @@ interface RiskCheckResult {
 }
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   // Validate CRON_SECRET for security
-  const CRON_SECRET = Deno.env.get("CRON_SECRET");
-  const providedSecret = req.headers.get("X-Cron-Secret");
+  const CRON_SECRET = Deno.env.get('CRON_SECRET');
+  const providedSecret = req.headers.get('X-Cron-Secret');
 
   if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
-    console.error("Unauthorized access attempt to check-risk-levels");
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    console.error('Unauthorized access attempt to check-risk-levels');
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -62,26 +62,26 @@ serve(async (req) => {
 
   try {
     const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    console.log("Starting margin call detection check...");
+    console.log('Starting margin call detection check...');
 
     // Get all active users with open positions
     const { data: accounts, error: accountsError } = await supabaseClient
-      .from("accounts")
-      .select("id, user_id, equity, margin_used, account_status")
-      .eq("account_status", "active")
-      .gt("margin_used", 0);
+      .from('accounts')
+      .select('id, user_id, equity, margin_used, account_status')
+      .eq('account_status', 'active')
+      .gt('margin_used', 0);
 
     if (accountsError) {
-      console.error("Error fetching accounts:", accountsError);
+      console.error('Error fetching accounts:', accountsError);
       throw accountsError;
     }
 
     console.log(
-      `Checking ${accounts?.length || 0} users with active positions`,
+      `Checking ${accounts?.length || 0} users with active positions`
     );
 
     const results: UserRiskCheckResult[] = [];
@@ -101,11 +101,11 @@ serve(async (req) => {
 
         // Check if user already has an active margin call
         const { data: existingCalls } = await supabaseClient
-          .from("margin_call_events")
-          .select("id, status, triggered_at")
-          .eq("user_id", user_id)
-          .in("status", ["pending", "notified", "escalated"])
-          .order("triggered_at", { ascending: false })
+          .from('margin_call_events')
+          .select('id, status, triggered_at')
+          .eq('user_id', user_id)
+          .in('status', ['pending', 'notified', 'escalated'])
+          .order('triggered_at', { ascending: false })
           .limit(1);
 
         const activeCall = existingCalls?.[0];
@@ -117,14 +117,14 @@ serve(async (req) => {
         if (!detection.isTriggered) {
           if (activeCall && activeCall.status !== MarginCallStatus.RESOLVED) {
             await supabaseClient
-              .from("margin_call_events")
+              .from('margin_call_events')
               .update({
                 status: MarginCallStatus.RESOLVED,
                 resolved_at: new Date().toISOString(),
-                resolution_type: "manual_deposit",
+                resolution_type: 'manual_deposit',
                 updated_at: new Date().toISOString(),
               })
-              .eq("id", activeCall.id);
+              .eq('id', activeCall.id);
           }
         } else {
           // Margin call IS triggered
@@ -133,7 +133,7 @@ serve(async (req) => {
             const severity = classifyMarginCallSeverity(marginLevel);
 
             const { error: insertError } = await supabaseClient
-              .from("margin_call_events")
+              .from('margin_call_events')
               .insert({
                 user_id,
                 triggered_at: new Date().toISOString(),
@@ -151,15 +151,15 @@ serve(async (req) => {
               newMarginCalls++;
 
               // Send notification via insert
-              await supabaseClient.from("notifications").insert({
+              await supabaseClient.from('notifications').insert({
                 user_id,
-                type: "MARGIN_CALL",
-                title: "Margin Call Alert",
+                type: 'MARGIN_CALL',
+                title: 'Margin Call Alert',
                 message: `Your account margin level is ${marginLevel.toFixed(2)}%. Add funds or close positions immediately.`,
                 data: {
                   marginLevel,
                   severity,
-                  priority: severity === "critical" ? "CRITICAL" : "HIGH",
+                  priority: severity === 'critical' ? 'CRITICAL' : 'HIGH',
                 },
                 read: false,
               });
@@ -170,30 +170,30 @@ serve(async (req) => {
           if (detection.shouldEscalate && activeCall) {
             const timeSinceCreation = Math.floor(
               (Date.now() - new Date(activeCall.triggered_at).getTime()) /
-                (1000 * 60),
+                (1000 * 60)
             );
 
             if (shouldEscalateToLiquidation(marginLevel, timeSinceCreation)) {
               // Mark as escalated
               await supabaseClient
-                .from("margin_call_events")
+                .from('margin_call_events')
                 .update({
                   status: MarginCallStatus.ESCALATED,
                   escalated_to_liquidation_at: new Date().toISOString(),
                   updated_at: new Date().toISOString(),
                 })
-                .eq("id", activeCall.id);
+                .eq('id', activeCall.id);
 
               shouldEscalate = true;
               escalations++;
 
               // Send escalation notification
-              await supabaseClient.from("notifications").insert({
+              await supabaseClient.from('notifications').insert({
                 user_id,
-                type: "LIQUIDATION_WARNING",
-                title: "Critical Liquidation Warning",
+                type: 'LIQUIDATION_WARNING',
+                title: 'Critical Liquidation Warning',
                 message: `CRITICAL: Account margin level at ${marginLevel.toFixed(2)}%. Liquidation will begin immediately.`,
-                data: { marginLevel, priority: "CRITICAL" },
+                data: { marginLevel, priority: 'CRITICAL' },
                 read: false,
               });
             }
@@ -219,7 +219,7 @@ serve(async (req) => {
           severity: null,
           marginCallCreated: false,
           escalatedToLiquidation: false,
-          error: error instanceof Error ? error.message : "Unknown error",
+          error: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     }
@@ -237,22 +237,22 @@ serve(async (req) => {
       message: `Risk check completed in ${duration}ms. Checked ${results.length} users, created ${newMarginCalls} new margin calls, escalated ${escalations} to liquidation.`,
     };
 
-    console.log("Risk check complete:", summary);
+    console.log('Risk check complete:', summary);
 
     return new Response(JSON.stringify(summary), {
       status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Risk check error:", error);
+    console.error('Risk check error:', error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

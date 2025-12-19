@@ -2,13 +2,13 @@
  * Hook for monitoring rate limit status with UI feedback
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import {
   rateLimiter,
   RateLimitStatus,
   checkRateLimit,
-} from "@/lib/rateLimiter";
-import { toast } from "sonner";
+} from '@/lib/rateLimiter';
+import { toast } from 'sonner';
 
 interface UseRateLimitStatusOptions {
   endpoint?: string;
@@ -20,7 +20,7 @@ export function useRateLimitStatus(options: UseRateLimitStatusOptions = {}) {
   const { endpoint, warnThreshold = 20, showWarnings = true } = options;
 
   const [status, setStatus] = useState<RateLimitStatus>(
-    rateLimiter.getStatus(),
+    rateLimiter.getStatus()
   );
   const [hasWarned, setHasWarned] = useState(false);
 
@@ -35,7 +35,7 @@ export function useRateLimitStatus(options: UseRateLimitStatusOptions = {}) {
           const percentRemaining = (endpointStatus.remaining / 10) * 100; // Assuming max 10 for orders
 
           if (percentRemaining <= warnThreshold && percentRemaining > 0) {
-            toast.warning("Rate limit warning", {
+            toast.warning('Rate limit warning', {
               description: `You have ${endpointStatus.remaining} requests remaining. Slow down to avoid being blocked.`,
             });
             setHasWarned(true);
@@ -52,26 +52,26 @@ export function useRateLimitStatus(options: UseRateLimitStatusOptions = {}) {
 
   const canMakeRequest = useCallback(
     (ep?: string): boolean => {
-      const targetEndpoint = ep || endpoint || "default";
+      const targetEndpoint = ep || endpoint || 'default';
       return checkRateLimit(targetEndpoint).allowed;
     },
-    [endpoint],
+    [endpoint]
   );
 
   const getRemainingRequests = useCallback(
     (ep?: string): number => {
-      const targetEndpoint = ep || endpoint || "default";
+      const targetEndpoint = ep || endpoint || 'default';
       return checkRateLimit(targetEndpoint).remaining;
     },
-    [endpoint],
+    [endpoint]
   );
 
   const getResetTime = useCallback(
     (ep?: string): number => {
-      const targetEndpoint = ep || endpoint || "default";
+      const targetEndpoint = ep || endpoint || 'default';
       return checkRateLimit(targetEndpoint).resetIn;
     },
-    [endpoint],
+    [endpoint]
   );
 
   return {

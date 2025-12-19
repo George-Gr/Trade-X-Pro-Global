@@ -376,7 +376,7 @@ label {
   /* Hide decorative elements */
   .sr-only,
   .sr-skip-link,
-  [aria-hidden="true"] {
+  [aria-hidden='true'] {
     display: none !important;
   }
 }
@@ -427,8 +427,8 @@ button.touch-target,
 
   /* Disable infinite animations */
   .animate-infinite,
-  [class*="animate-pulse"],
-  [class*="animate-spin"] {
+  [class*='animate-pulse'],
+  [class*='animate-spin'] {
     animation: none;
   }
 }
@@ -447,7 +447,7 @@ button.touch-target,
 
   /* Remove subtle gradients and shadows */
   .no-gradient,
-  [class*="gradient"] {
+  [class*='gradient'] {
     background-image: none !important;
     background-color: hsl(var(--contrast-auto-bg-high)) !important;
   }
@@ -525,21 +525,21 @@ button.touch-target,
  */
 
 .loading-text::after {
-  content: "...";
+  content: '...';
   animation: loading-dots 1.5s infinite;
 }
 
 @keyframes loading-dots {
   0%,
   20% {
-    content: ".";
+    content: '.';
   }
   40% {
-    content: "..";
+    content: '..';
   }
   60%,
   100% {
-    content: "...";
+    content: '...';
   }
 }
 

@@ -2,11 +2,11 @@
  * Unit tests for useOrderExecution hook
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook, act, waitFor } from '@testing-library/react';
 
 // Mock dependencies
-vi.mock("@/lib/supabaseBrowserClient", () => ({
+vi.mock('@/lib/supabaseBrowserClient', () => ({
   supabase: {
     auth: {
       getSession: vi.fn(),
@@ -17,24 +17,24 @@ vi.mock("@/lib/supabaseBrowserClient", () => ({
   },
 }));
 
-vi.mock("@/hooks/use-toast", () => ({
+vi.mock('@/hooks/use-toast', () => ({
   useToast: () => ({
     toast: vi.fn(),
   }),
 }));
 
-vi.mock("@/lib/rateLimiter", () => ({
+vi.mock('@/lib/rateLimiter', () => ({
   checkRateLimit: vi.fn(() => ({ allowed: true, remaining: 10, resetIn: 0 })),
 }));
 
-vi.mock("@/lib/idempotency", () => ({
-  generateIdempotencyKey: vi.fn(() => "test-idempotency-key"),
+vi.mock('@/lib/idempotency', () => ({
+  generateIdempotencyKey: vi.fn(() => 'test-idempotency-key'),
   executeWithIdempotency: vi.fn((_: unknown, __: unknown, fn: unknown) => {
-    if (typeof fn === "function") return fn();
+    if (typeof fn === 'function') return fn();
   }),
 }));
 
-vi.mock("@/lib/logger", () => ({
+vi.mock('@/lib/logger', () => ({
   logger: {
     info: vi.fn(),
     warn: vi.fn(),
@@ -42,36 +42,36 @@ vi.mock("@/lib/logger", () => ({
   },
 }));
 
-import { useOrderExecution, OrderRequest } from "@/hooks/useOrderExecution";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { checkRateLimit } from "@/lib/rateLimiter";
+import { useOrderExecution, OrderRequest } from '@/hooks/useOrderExecution';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { checkRateLimit } from '@/lib/rateLimiter';
 
-describe("useOrderExecution", () => {
+describe('useOrderExecution', () => {
   const mockSession = {
-    user: { id: "test-user-id", email: "test@example.com" },
-    access_token: "test-token",
+    user: { id: 'test-user-id', email: 'test@example.com' },
+    access_token: 'test-token',
   };
 
   const mockOrderRequest: OrderRequest = {
-    symbol: "EURUSD",
-    order_type: "market",
-    side: "buy",
+    symbol: 'EURUSD',
+    order_type: 'market',
+    side: 'buy',
     quantity: 1.0,
   };
 
   const mockOrderResponse = {
     success: true,
-    order_id: "order-123",
-    symbol: "EURUSD",
-    side: "buy",
+    order_id: 'order-123',
+    symbol: 'EURUSD',
+    side: 'buy',
     quantity: 1.0,
-    execution_price: "1.0850",
-    fill_price: "1.0850",
-    commission: "0.50",
-    margin_required: "100.00",
-    status: "filled",
-    new_balance: "9900.00",
-    new_margin_level: "99.00",
+    execution_price: '1.0850',
+    fill_price: '1.0850',
+    commission: '0.50',
+    margin_required: '100.00',
+    status: 'filled',
+    new_balance: '9900.00',
+    new_margin_level: '99.00',
   };
 
   beforeEach(() => {
@@ -86,12 +86,12 @@ describe("useOrderExecution", () => {
     vi.resetAllMocks();
   });
 
-  it("should initialize with isExecuting as false", () => {
+  it('should initialize with isExecuting as false', () => {
     const { result } = renderHook(() => useOrderExecution());
     expect(result.current.isExecuting).toBe(false);
   });
 
-  it("should return null when rate limit is exceeded", async () => {
+  it('should return null when rate limit is exceeded', async () => {
     vi.mocked(checkRateLimit).mockResolvedValue({
       allowed: false,
       remaining: 0,
@@ -108,7 +108,7 @@ describe("useOrderExecution", () => {
     expect(orderResult).toBeNull();
   });
 
-  it("should return null when user is not authenticated", async () => {
+  it('should return null when user is not authenticated', async () => {
     vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: { session: null },
       error: null,
@@ -130,7 +130,7 @@ describe("useOrderExecution", () => {
     expect(orderResult).toBeNull();
   });
 
-  it("should execute order successfully", async () => {
+  it('should execute order successfully', async () => {
     vi.mocked(checkRateLimit).mockReturnValue({
       allowed: true,
       remaining: 10,
@@ -150,14 +150,14 @@ describe("useOrderExecution", () => {
     });
 
     expect(orderResult).toMatchObject({
-      order_id: "order-123",
-      symbol: "EURUSD",
-      side: "buy",
+      order_id: 'order-123',
+      symbol: 'EURUSD',
+      side: 'buy',
       quantity: 1.0,
     });
   });
 
-  it("should handle order execution errors", async () => {
+  it('should handle order execution errors', async () => {
     vi.mocked(checkRateLimit).mockReturnValue({
       allowed: true,
       remaining: 10,
@@ -165,7 +165,7 @@ describe("useOrderExecution", () => {
     });
 
     vi.mocked(supabase.functions.invoke).mockResolvedValue({
-      data: { error: "Insufficient margin" },
+      data: { error: 'Insufficient margin' },
       error: null,
     } as never);
 
@@ -179,7 +179,7 @@ describe("useOrderExecution", () => {
     expect(orderResult).toBeNull();
   });
 
-  it("should set isExecuting during order execution", async () => {
+  it('should set isExecuting during order execution', async () => {
     vi.mocked(checkRateLimit).mockReturnValue({
       allowed: true,
       remaining: 10,
@@ -192,7 +192,7 @@ describe("useOrderExecution", () => {
     });
 
     vi.mocked(supabase.functions.invoke).mockReturnValue(
-      invokePromise as never,
+      invokePromise as never
     );
 
     const { result } = renderHook(() => useOrderExecution());
@@ -216,7 +216,7 @@ describe("useOrderExecution", () => {
     expect(result.current.isExecuting).toBe(false);
   });
 
-  it("should provide rate limit status", () => {
+  it('should provide rate limit status', () => {
     vi.mocked(checkRateLimit).mockReturnValue({
       allowed: true,
       remaining: 5,
@@ -233,7 +233,7 @@ describe("useOrderExecution", () => {
     });
   });
 
-  it("should sanitize order inputs", async () => {
+  it('should sanitize order inputs', async () => {
     vi.mocked(checkRateLimit).mockReturnValue({
       allowed: true,
       remaining: 10,
@@ -249,8 +249,8 @@ describe("useOrderExecution", () => {
 
     const maliciousRequest: OrderRequest = {
       symbol: '<script>alert("xss")</script>EURUSD',
-      order_type: "market",
-      side: "buy",
+      order_type: 'market',
+      side: 'buy',
       quantity: 1.0,
     };
 

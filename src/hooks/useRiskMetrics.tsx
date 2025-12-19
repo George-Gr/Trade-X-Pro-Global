@@ -5,20 +5,20 @@
  * Provides margin level, capital at risk, risk classification, and alerts
  */
 
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { useAuth } from "./useAuth";
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useAuth } from './useAuth';
 import {
   calculateRiskMetrics,
   assessPortfolioRisk,
   classifyRiskLevel,
   RiskMetrics,
   PortfolioRiskAssessment,
-} from "@/lib/risk/riskMetrics";
-import type { Position } from "@/integrations/supabase/types/tables";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+} from '@/lib/risk/riskMetrics';
+import type { Position } from '@/integrations/supabase/types/tables';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import("@/lib/supabaseBrowserClient");
+  const { supabase } = await import('@/lib/supabaseBrowserClient');
   return supabase;
 };
 
@@ -62,19 +62,19 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       // Fetch profile data
       const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("equity, margin_used, balance")
-        .eq("id", user.id)
+        .from('profiles')
+        .select('equity, margin_used, balance')
+        .eq('id', user.id)
         .single();
 
       if (profileError) throw profileError;
 
       // Fetch open positions
       const { data: positionsData, error: positionsError } = await supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "open");
+        .from('positions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'open');
 
       if (positionsError) throw positionsError;
 
@@ -83,22 +83,22 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
 
       try {
         const { data: callEventsData, error: callEventsError } = await supabase
-          .from("margin_call_events")
-          .select("margin_level, triggered_at")
-          .eq("user_id", user.id)
+          .from('margin_call_events')
+          .select('margin_level, triggered_at')
+          .eq('user_id', user.id)
           .gt(
-            "triggered_at",
-            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+            'triggered_at',
+            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
           )
-          .order("triggered_at", { ascending: true });
+          .order('triggered_at', { ascending: true });
 
         if (callEventsError) {
-          console.warn("Failed to fetch margin call events:", callEventsError);
+          console.warn('Failed to fetch margin call events:', callEventsError);
         } else {
           marginHistoryData = callEventsData || [];
         }
       } catch (err) {
-        console.warn("Error fetching margin history:", err);
+        console.warn('Error fetching margin history:', err);
       }
 
       // Convert positions to format needed for calculations
@@ -111,7 +111,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       const metrics = calculateRiskMetrics(
         profileData.equity || 0,
         profileData.margin_used || 0,
-        positions,
+        positions
       );
 
       setRiskMetrics(metrics);
@@ -121,7 +121,7 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
         const trend = marginHistoryData
           .map((d: unknown) => {
             const dObj = d as Record<string, unknown>;
-            return typeof dObj.margin_level === "number"
+            return typeof dObj.margin_level === 'number'
               ? dObj.margin_level
               : 0;
           })
@@ -147,11 +147,11 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
               const pObj = p as Record<string, unknown>;
               return {
                 symbol:
-                  typeof pObj.symbol === "string"
+                  typeof pObj.symbol === 'string'
                     ? pObj.symbol
-                    : String(pObj.symbol ?? ""),
+                    : String(pObj.symbol ?? ''),
                 quantity:
-                  typeof pObj.quantity === "number"
+                  typeof pObj.quantity === 'number'
                     ? pObj.quantity
                     : Number(pObj.quantity ?? 0),
                 positionValue:
@@ -159,16 +159,16 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
               };
             })
           : [],
-        concentration,
+        concentration
       );
       setPortfolioRiskAssessment(assessment);
 
       setError(null);
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Failed to fetch risk metrics";
+        err instanceof Error ? err.message : 'Failed to fetch risk metrics';
       setError(message);
-      console.error("Risk metrics error:", message);
+      console.error('Risk metrics error:', message);
     } finally {
       setLoading(false);
     }
@@ -192,16 +192,16 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
         profileChannel = supabase
           .channel(`risk-profile-${user.id}`)
           .on(
-            "postgres_changes",
+            'postgres_changes',
             {
-              event: "UPDATE",
-              schema: "public",
-              table: "profiles",
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'profiles',
               filter: `id=eq.${user.id}`,
             },
             () => {
               fetchRiskData();
-            },
+            }
           )
           .subscribe();
 
@@ -209,20 +209,20 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
         positionsChannel = supabase
           .channel(`risk-positions-${user.id}`)
           .on(
-            "postgres_changes",
+            'postgres_changes',
             {
-              event: "*",
-              schema: "public",
-              table: "positions",
+              event: '*',
+              schema: 'public',
+              table: 'positions',
               filter: `user_id=eq.${user.id}`,
             },
             () => {
               fetchRiskData();
-            },
+            }
           )
           .subscribe();
       } catch (error) {
-        console.error("Failed to set up risk metrics subscriptions", error);
+        console.error('Failed to set up risk metrics subscriptions', error);
       }
     };
 
@@ -266,14 +266,14 @@ function calculateConcentration(positions: Position[]): number {
 
   const totalValue = positions.reduce(
     (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
-    0,
+    0
   );
 
   if (totalValue === 0) return 0;
 
   // Find largest position concentration
   const largestValue = Math.max(
-    ...positions.map((p) => (p.quantity || 0) * (p.current_price || 0)),
+    ...positions.map((p) => (p.quantity || 0) * (p.current_price || 0))
   );
 
   return (largestValue / totalValue) * 100;

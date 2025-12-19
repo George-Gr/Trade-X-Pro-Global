@@ -7,33 +7,33 @@
  */
 
 // Only apply polyfills in browser environment (not during build)
-if (typeof window !== "undefined" && typeof globalThis !== "undefined") {
+if (typeof window !== 'undefined' && typeof globalThis !== 'undefined') {
   // Ensure navigator is properly defined for web libraries
   if ((globalThis as Record<string, unknown>).navigator === undefined) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).navigator = {
-      userAgent: "Node.js",
-      platform: "Node.js",
-      language: "en-US",
-      languages: ["en-US", "en"],
+      userAgent: 'Node.js',
+      platform: 'Node.js',
+      language: 'en-US',
+      languages: ['en-US', 'en'],
       onLine: true,
       cookieEnabled: false,
-      product: "Node.js",
-      productSub: "unknown",
-      vendor: "Node.js",
-      vendorSub: "",
-      appName: "Node.js",
-      appCodeName: "Node.js",
-      appVersion: "0.0.0",
+      product: 'Node.js',
+      productSub: 'unknown',
+      vendor: 'Node.js',
+      vendorSub: '',
+      appName: 'Node.js',
+      appCodeName: 'Node.js',
+      appVersion: '0.0.0',
       hardwareConcurrency:
         (navigator as Navigator | undefined)?.hardwareConcurrency || 1,
       maxTouchPoints: 0,
       clipboard: {
-        readText: async () => "",
+        readText: async () => '',
         writeText: async () => {},
       },
       permissions: {
-        query: async () => ({ state: "denied" as const }),
+        query: async () => ({ state: 'denied' as const }),
       },
       geolocation: {
         getCurrentPosition: () => {},
@@ -42,14 +42,14 @@ if (typeof window !== "undefined" && typeof globalThis !== "undefined") {
       },
       mediaDevices: {
         getUserMedia: async () =>
-          Promise.reject(new Error("Not supported in Node.js")),
+          Promise.reject(new Error('Not supported in Node.js')),
         enumerateDevices: async () => [],
         getDisplayMedia: async () =>
-          Promise.reject(new Error("Not supported in Node.js")),
+          Promise.reject(new Error('Not supported in Node.js')),
       },
       serviceWorker: {
         register: async () =>
-          Promise.reject(new Error("Not supported in Node.js")),
+          Promise.reject(new Error('Not supported in Node.js')),
         getRegistrations: async () => [],
         getRegistration: async () => null,
       },
@@ -63,14 +63,14 @@ if (typeof window !== "undefined" && typeof globalThis !== "undefined") {
 
   // Ensure window is properly defined for web libraries
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).window === "undefined") {
+  if (typeof (globalThis as any).window === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).window = globalThis;
   }
 
   // Ensure document is properly defined for web libraries
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).document === "undefined") {
+  if (typeof (globalThis as any).document === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).document = {
       createElement: () => ({
@@ -100,28 +100,28 @@ if (typeof window !== "undefined" && typeof globalThis !== "undefined") {
         style: {},
       },
       location: {
-        href: "",
-        protocol: "http:",
-        host: "",
-        hostname: "",
-        port: "",
-        pathname: "",
-        search: "",
-        hash: "",
-        origin: "",
+        href: '',
+        protocol: 'http:',
+        host: '',
+        hostname: '',
+        port: '',
+        pathname: '',
+        search: '',
+        hash: '',
+        origin: '',
       },
-      cookie: "",
-      referrer: "",
-      title: "",
-      readyState: "complete",
-      visibilityState: "hidden",
+      cookie: '',
+      referrer: '',
+      title: '',
+      readyState: 'complete',
+      visibilityState: 'hidden',
       hidden: true,
     };
   }
 
   // Ensure location is properly defined
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).location === "undefined") {
+  if (typeof (globalThis as any).location === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).location = (globalThis as any).document.location;
   }
@@ -131,7 +131,7 @@ if (typeof window !== "undefined" && typeof globalThis !== "undefined") {
 
   // Fix console for Node.js (ensure all methods exist)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).console === "undefined") {
+  if (typeof (globalThis as any).console === 'undefined') {
     const noop = () => {};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).console = {

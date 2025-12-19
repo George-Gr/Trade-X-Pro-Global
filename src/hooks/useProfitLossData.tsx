@@ -5,18 +5,18 @@
  * Provides real-time P&L updates and historical data for charts
  */
 
-import * as React from "react";
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { useAuth } from "./useAuth";
+import * as React from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useAuth } from './useAuth';
 import type {
   Position,
   Order,
   Fill,
-} from "@/integrations/supabase/types/tables";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+} from '@/integrations/supabase/types/tables';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import("@/lib/supabaseBrowserClient");
+  const { supabase } = await import('@/lib/supabaseBrowserClient');
   return supabase;
 };
 
@@ -52,7 +52,7 @@ interface UseProfitLossDataReturn {
   refetch: () => Promise<void>;
 }
 
-export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
+export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
   const { user } = useAuth();
   const [metrics, setMetrics] = useState<ProfitLossMetrics | null>(null);
   const [dailyData, setDailyData] = useState<DailyPnLData[]>([]);
@@ -62,11 +62,11 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
   // Calculate the number of days based on time range
   const daysCount = useMemo(() => {
     switch (timeRange) {
-      case "7d":
+      case '7d':
         return 7;
-      case "30d":
+      case '30d':
         return 30;
-      case "90d":
+      case '90d':
         return 90;
       default:
         return 7;
@@ -81,24 +81,24 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
       profile: unknown,
       positions: Position[],
       fills: unknown[],
-      dailyData: DailyPnLData[],
+      dailyData: DailyPnLData[]
     ): ProfitLossMetrics => {
       // Current equity
       const profileObj = profile as Record<string, unknown>;
       const currentEquity =
-        typeof profileObj.equity === "number" ? profileObj.equity : 50000;
+        typeof profileObj.equity === 'number' ? profileObj.equity : 50000;
 
       // Total realized P&L
       const totalRealizedPnL = fills.reduce((sum: number, fill) => {
         const fillObj = fill as Record<string, unknown>;
-        const pnl = typeof fillObj.pnl === "number" ? fillObj.pnl : 0;
+        const pnl = typeof fillObj.pnl === 'number' ? fillObj.pnl : 0;
         return sum + pnl;
       }, 0) as number;
 
       // Total unrealized P&L
       const totalUnrealizedPnL = positions.reduce(
         (sum: number, pos) => sum + (pos.unrealized_pnl || 0),
-        0,
+        0
       );
 
       // Total P&L
@@ -166,7 +166,7 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
         maxProfit,
       };
     },
-    [daysCount],
+    [daysCount]
   );
 
   // Calculate daily P&L data
@@ -175,29 +175,29 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
       startDate: Date,
       daysCount: number,
       fills: unknown[],
-      positions: Position[],
+      positions: Position[]
     ): DailyPnLData[] => {
       const dailyData: DailyPnLData[] = [];
 
       for (let i = 0; i < daysCount; i++) {
         const date = new Date(startDate);
         date.setDate(date.getDate() + i);
-        const dateStr = date.toISOString().split("T")[0];
+        const dateStr = date.toISOString().split('T')[0];
 
         // Calculate realized P&L for this day
         const dailyFills = fills.filter((f) => {
           const fillObj = f as Record<string, unknown>;
           const executedAt = fillObj.executed_at;
           return (
-            typeof executedAt === "string" &&
-            executedAt.split("T")[0] === dateStr
+            typeof executedAt === 'string' &&
+            executedAt.split('T')[0] === dateStr
           );
         });
 
         const realizedPnL = dailyFills.reduce((sum: number, fill) => {
           // Calculate P&L for this fill
           const fillObj = fill as Record<string, unknown>;
-          const pnl = typeof fillObj.pnl === "number" ? fillObj.pnl : 0;
+          const pnl = typeof fillObj.pnl === 'number' ? fillObj.pnl : 0;
           return sum + pnl;
         }, 0) as number;
 
@@ -212,9 +212,9 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
         const equity = baseEquity + realizedPnL + unrealizedPnLValue;
 
         dailyData.push({
-          date: date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
+          date: date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
           }),
           realizedPnL,
           unrealizedPnL: unrealizedPnLValue,
@@ -225,7 +225,7 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
 
       return dailyData;
     },
-    [],
+    []
   );
 
   // Fetch profit/loss data
@@ -242,24 +242,24 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
 
       // Fetch current profile data
       const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("balance, equity, margin_used")
-        .eq("id", user.id)
+        .from('profiles')
+        .select('balance, equity, margin_used')
+        .eq('id', user.id)
         .single();
 
       if (profileError) throw profileError;
 
       // Validate profile data
       if (!profileData) {
-        throw new Error("Profile data not found for user");
+        throw new Error('Profile data not found for user');
       }
 
       // Fetch open positions for unrealized P&L
       const { data: positionsData, error: positionsError } = await supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "open");
+        .from('positions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'open');
 
       if (positionsError) throw positionsError;
 
@@ -268,11 +268,11 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
       startDate.setDate(startDate.getDate() - daysCount);
 
       const { data: fillsData, error: fillsError } = await supabase
-        .from("fills" as const)
-        .select("*")
-        .eq("user_id", user.id)
-        .gte("executed_at", startDate.toISOString())
-        .order("executed_at", { ascending: true });
+        .from('fills' as const)
+        .select('*')
+        .eq('user_id', user.id)
+        .gte('executed_at', startDate.toISOString())
+        .order('executed_at', { ascending: true });
 
       if (fillsError) throw fillsError;
 
@@ -288,8 +288,8 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
           current_price: p.current_price ?? 0,
           realized_pnl: p.realized_pnl ?? 0,
           unrealized_pnl: p.unrealized_pnl ?? 0,
-          status: (p.status ?? "open") as "open" | "closed",
-        })) || [],
+          status: (p.status ?? 'open') as 'open' | 'closed',
+        })) || []
       );
       setDailyData(calculatedDailyData);
 
@@ -306,25 +306,25 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
           current_price: p.current_price ?? 0,
           realized_pnl: p.realized_pnl ?? 0,
           unrealized_pnl: p.unrealized_pnl ?? 0,
-          status: (p.status ?? "open") as "open" | "closed",
+          status: (p.status ?? 'open') as 'open' | 'closed',
         })) || [],
         fillsData || [],
-        calculatedDailyData,
+        calculatedDailyData
       );
 
       setMetrics(calculatedMetrics);
     } catch (err) {
-      let message = "Failed to fetch profit/loss data";
+      let message = 'Failed to fetch profit/loss data';
       const detailedError = err;
 
-      if (err && typeof err === "object" && "message" in err) {
+      if (err && typeof err === 'object' && 'message' in err) {
         message = err.message as string;
-      } else if (typeof err === "string") {
+      } else if (typeof err === 'string') {
         message = err;
       }
 
       setError(message);
-      console.error("Profit/loss data error:", {
+      console.error('Profit/loss data error:', {
         message,
         error: detailedError,
         userId: user?.id,
@@ -358,16 +358,16 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
         profileChannel = supabase
           .channel(`pnl-profile-${user.id}`)
           .on(
-            "postgres_changes",
+            'postgres_changes',
             {
-              event: "UPDATE",
-              schema: "public",
-              table: "profiles",
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'profiles',
               filter: `id=eq.${user.id}`,
             },
             () => {
               fetchProfitLossData();
-            },
+            }
           )
           .subscribe();
 
@@ -375,16 +375,16 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
         positionsChannel = supabase
           .channel(`pnl-positions-${user.id}`)
           .on(
-            "postgres_changes",
+            'postgres_changes',
             {
-              event: "*",
-              schema: "public",
-              table: "positions",
+              event: '*',
+              schema: 'public',
+              table: 'positions',
               filter: `user_id=eq.${user.id}`,
             },
             () => {
               fetchProfitLossData();
-            },
+            }
           )
           .subscribe();
 
@@ -392,20 +392,20 @@ export const useProfitLossData = (timeRange: "7d" | "30d" | "90d" = "7d") => {
         fillsChannel = supabase
           .channel(`pnl-fills-${user.id}`)
           .on(
-            "postgres_changes",
+            'postgres_changes',
             {
-              event: "INSERT",
-              schema: "public",
-              table: "fills",
+              event: 'INSERT',
+              schema: 'public',
+              table: 'fills',
               filter: `user_id=eq.${user.id}`,
             },
             () => {
               fetchProfitLossData();
-            },
+            }
           )
           .subscribe();
       } catch (error) {
-        console.error("Failed to set up profit/loss subscriptions", error);
+        console.error('Failed to set up profit/loss subscriptions', error);
       }
     };
 

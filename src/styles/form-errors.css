@@ -20,9 +20,9 @@
 input.error,
 select.error,
 textarea.error,
-input[aria-invalid="true"],
-select[aria-invalid="true"],
-textarea[aria-invalid="true"] {
+input[aria-invalid='true'],
+select[aria-invalid='true'],
+textarea[aria-invalid='true'] {
   border-color: hsl(var(--destructive));
   box-shadow: 0 0 0 1px hsl(var(--destructive));
   background-color: hsl(var(--destructive) / 0.05);
@@ -33,9 +33,9 @@ textarea[aria-invalid="true"] {
 input.error:focus,
 select.error:focus,
 textarea.error:focus,
-input[aria-invalid="true"]:focus,
-select[aria-invalid="true"]:focus,
-textarea[aria-invalid="true"]:focus {
+input[aria-invalid='true']:focus,
+select[aria-invalid='true']:focus,
+textarea[aria-invalid='true']:focus {
   outline: none;
   border-color: hsl(var(--destructive));
   box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
@@ -57,7 +57,7 @@ textarea.error:hover {
 /* Base error message styling */
 .error-message,
 .form-error,
-[role="alert"].error {
+[role='alert'].error {
   color: hsl(var(--destructive));
   font-size: 0.875rem;
   line-height: 1.5;
@@ -92,9 +92,9 @@ textarea.error:hover {
 input.success,
 select.success,
 textarea.success,
-input[aria-invalid="false"][data-validated="true"],
-select[aria-invalid="false"][data-validated="true"],
-textarea[aria-invalid="false"][data-validated="true"] {
+input[aria-invalid='false'][data-validated='true'],
+select[aria-invalid='false'][data-validated='true'],
+textarea[aria-invalid='false'][data-validated='true'] {
   border-color: hsl(var(--success));
   box-shadow: 0 0 0 1px hsl(var(--success) / 0.3);
   background-color: hsl(var(--success) / 0.05);
@@ -238,7 +238,7 @@ textarea.warning {
 }
 
 .validation-errors li::before {
-  content: "•";
+  content: '•';
   flex-shrink: 0;
   font-weight: 700;
 }
@@ -285,7 +285,7 @@ textarea.warning {
 }
 
 .error-summary-list li::before {
-  content: "→";
+  content: '→';
   position: absolute;
   left: 0;
   font-weight: 700;
@@ -330,7 +330,7 @@ input.error.shake {
    ============================================ */
 
 /* Ensure error messages are announced by screen readers */
-[role="alert"] {
+[role='alert'] {
   /* aria-live is implicit for role="alert" */
   position: relative;
 }

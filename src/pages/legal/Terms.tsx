@@ -1,6 +1,6 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Terms() {
   return (
@@ -150,13 +150,13 @@ export default function Terms() {
                   Trading CFDs carries substantial risk and is not suitable for
                   all investors. You may lose more than your initial investment.
                   Before trading, carefully consider your investment objectives,
-                  experience level, and risk tolerance. See our full{" "}
+                  experience level, and risk tolerance. See our full{' '}
                   <a
                     href="/legal/risk-disclosure"
                     className="text-primary hover:underline"
                   >
                     Risk Disclosure
-                  </a>{" "}
+                  </a>{' '}
                   for more information.
                 </p>
               </section>

@@ -1,13 +1,13 @@
 /* Navigation Sidebar Styles */
 
 /* Base sidebar styling */
-[data-sidebar="sidebar"] {
+[data-sidebar='sidebar'] {
   background-color: hsl(var(--sidebar));
   color: hsl(var(--sidebar-foreground));
 }
 
 /* Menu item base styles */
-[data-sidebar="menu-button"] {
+[data-sidebar='menu-button'] {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -20,45 +20,45 @@
 }
 
 /* Hover state */
-[data-sidebar="menu-button"]:not([data-active="true"]):hover {
+[data-sidebar='menu-button']:not([data-active='true']):hover {
   background-color: hsl(var(--sidebar-accent) / 0.5);
   border-left-color: hsl(var(--primary) / 0.3);
 }
 
 /* Active state - Enhanced visibility */
-[data-sidebar="menu-button"][data-active="true"] {
+[data-sidebar='menu-button'][data-active='true'] {
   background-color: hsl(var(--primary) / 0.1);
   border-left-color: hsl(var(--primary));
   color: hsl(var(--primary));
   font-weight: 500;
 }
 
-[data-sidebar="menu-button"][data-active="true"] svg {
+[data-sidebar='menu-button'][data-active='true'] svg {
   color: hsl(var(--primary));
 }
 
-[data-sidebar="menu-button"][data-active="true"] span {
+[data-sidebar='menu-button'][data-active='true'] span {
   color: hsl(var(--primary));
   font-weight: 500;
 }
 
 /* Focus state for keyboard navigation */
-[data-sidebar="menu-button"]:focus-visible {
+[data-sidebar='menu-button']:focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
   background-color: hsl(var(--sidebar-accent) / 0.3);
 }
 
 /* Disabled state */
-[data-sidebar="menu-button"][aria-disabled="true"],
-[data-sidebar="menu-button"]:disabled {
+[data-sidebar='menu-button'][aria-disabled='true'],
+[data-sidebar='menu-button']:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
 /* Group labels */
-[data-sidebar="group-label"] {
+[data-sidebar='group-label'] {
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -69,12 +69,12 @@
 }
 
 /* Collapsed state - hide text, center icons */
-[data-state="collapsed"] [data-sidebar="menu-button"] {
+[data-state='collapsed'] [data-sidebar='menu-button'] {
   justify-content: center;
   padding: 0.625rem;
 }
 
-[data-state="collapsed"] [data-sidebar="group-label"] {
+[data-state='collapsed'] [data-sidebar='group-label'] {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -87,45 +87,45 @@
 }
 
 /* Smooth transitions */
-[data-sidebar="content"],
-[data-sidebar="menu-button"],
-[data-sidebar="group-label"] {
+[data-sidebar='content'],
+[data-sidebar='menu-button'],
+[data-sidebar='group-label'] {
   transition: all 0.2s ease-in-out;
 }
 
 /* Dark mode adjustments */
-.dark [data-sidebar="menu-button"][data-active="true"] {
+.dark [data-sidebar='menu-button'][data-active='true'] {
   background-color: hsl(var(--primary) / 0.15);
 }
 
-.dark [data-sidebar="menu-button"]:not([data-active="true"]):hover {
+.dark [data-sidebar='menu-button']:not([data-active='true']):hover {
   background-color: hsl(var(--sidebar-accent) / 0.4);
 }
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-  [data-sidebar="menu-button"][data-active="true"] {
+  [data-sidebar='menu-button'][data-active='true'] {
     border-left-width: 4px;
     background-color: hsl(var(--primary) / 0.2);
   }
 
-  [data-sidebar="menu-button"]:focus-visible {
+  [data-sidebar='menu-button']:focus-visible {
     outline-width: 3px;
   }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  [data-sidebar="content"],
-  [data-sidebar="menu-button"],
-  [data-sidebar="group-label"] {
+  [data-sidebar='content'],
+  [data-sidebar='menu-button'],
+  [data-sidebar='group-label'] {
     transition: none;
   }
 }
 
 /* Touch optimization for mobile */
 @media (max-width: 768px) {
-  [data-sidebar="menu-button"] {
+  [data-sidebar='menu-button'] {
     min-height: 48px;
     padding: 0.75rem 1rem;
   }

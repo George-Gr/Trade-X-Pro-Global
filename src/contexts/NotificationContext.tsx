@@ -1,13 +1,19 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 
-import { NotificationContext } from "./notificationContextHelpers";
+import { NotificationContext } from './notificationContextHelpers';
 
 export function NotificationProvider({
   children,
-}: { children?: React.ReactNode } = {}) {
+}: { children?: ReactNode } = {}) {
   const { toast } = useToast();
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
@@ -18,13 +24,13 @@ export function NotificationProvider({
       if (!user) return;
 
       const { data, error } = await supabase
-        .from("notifications")
+        .from('notifications')
         .update({ read: true })
-        .eq("id", id)
-        .eq("user_id", user.id);
+        .eq('id', id)
+        .eq('user_id', user.id);
 
       if (error) {
-        console.error("Failed to mark notification as read", {
+        console.error('Failed to mark notification as read', {
           id,
           userId: user.id,
           error,
@@ -33,7 +39,7 @@ export function NotificationProvider({
         return;
       }
     },
-    [user],
+    [user]
   );
 
   // Memoize markAllAsRead to prevent recreating on every render
@@ -41,10 +47,10 @@ export function NotificationProvider({
     if (!user) return;
 
     await supabase
-      .from("notifications")
+      .from('notifications')
       .update({ read: true })
-      .eq("user_id", user.id)
-      .eq("read", false);
+      .eq('user_id', user.id)
+      .eq('read', false);
 
     setUnreadCount(0);
   }, [user]);
@@ -56,10 +62,10 @@ export function NotificationProvider({
     // Fetch initial unread count
     const fetchUnreadCount = async () => {
       const { count } = await supabase
-        .from("notifications")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("read", false);
+        .from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('read', false);
 
       setUnreadCount(count || 0);
     };
@@ -110,13 +116,13 @@ export function NotificationProvider({
 
     // Subscribe to new notifications
     const channel = supabase
-      .channel("notifications-channel")
+      .channel('notifications-channel')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "INSERT",
-          schema: "public",
-          table: "notifications",
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
@@ -129,14 +135,14 @@ export function NotificationProvider({
           });
 
           setUnreadCount((prev) => prev + 1);
-        },
+        }
       )
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "notifications",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
@@ -144,29 +150,29 @@ export function NotificationProvider({
           if (notification.read) {
             setUnreadCount((prev) => Math.max(0, prev - 1));
           }
-        },
+        }
       )
       .subscribe();
 
     // Listen to orders being filled
     const ordersChannel = supabase
-      .channel("orders-notifications")
+      .channel('orders-notifications')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "orders",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'orders',
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
           const order = payload.new as SupabaseOrder;
-          if (order.status === "filled") {
-            await supabase.functions.invoke("send-notification", {
+          if (order.status === 'filled') {
+            await supabase.functions.invoke('send-notification', {
               body: {
                 user_id: user.id,
-                type: "order_filled",
-                title: "Order Filled",
+                type: 'order_filled',
+                title: 'Order Filled',
                 message: `Your ${order.side} order for ${order.quantity} ${order.symbol} has been filled at ${order.fill_price}`,
                 data: {
                   order_id: order.id,
@@ -178,19 +184,19 @@ export function NotificationProvider({
               },
             });
           }
-        },
+        }
       )
       .subscribe();
 
     // Listen to position updates
     const positionsChannel = supabase
-      .channel("positions-notifications")
+      .channel('positions-notifications')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "positions",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'positions',
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
@@ -198,13 +204,17 @@ export function NotificationProvider({
           const oldPosition = payload.old as SupabasePosition;
 
           // Notify on position close
-          if (oldPosition.status === "open" && position.status === "closed") {
-            await supabase.functions.invoke("send-notification", {
+          if (oldPosition.status === 'open' && position.status === 'closed') {
+            await supabase.functions.invoke('send-notification', {
               body: {
                 user_id: user.id,
-                type: "position_update",
-                title: "Position Closed",
-                message: `Your ${position.side} position for ${position.symbol} has been closed with a ${(position.realized_pnl || 0) >= 0 ? "profit" : "loss"} of ${Math.abs(position.realized_pnl || 0).toFixed(2)}`,
+                type: 'position_update',
+                title: 'Position Closed',
+                message: `Your ${position.side} position for ${
+                  position.symbol
+                } has been closed with a ${
+                  (position.realized_pnl || 0) >= 0 ? 'profit' : 'loss'
+                } of ${Math.abs(position.realized_pnl || 0).toFixed(2)}`,
                 data: {
                   position_id: position.id,
                   symbol: position.symbol,
@@ -214,19 +224,19 @@ export function NotificationProvider({
               },
             });
           }
-        },
+        }
       )
       .subscribe();
 
     // Listen to KYC status changes
     const kycChannel = supabase
-      .channel("kyc-notifications")
+      .channel('kyc-notifications')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "kyc_documents",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'kyc_documents',
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
@@ -234,11 +244,11 @@ export function NotificationProvider({
           const oldDoc = payload.old as SupabaseKycDoc;
 
           if (oldDoc.status !== doc.status) {
-            await supabase.functions.invoke("send-notification", {
+            await supabase.functions.invoke('send-notification', {
               body: {
                 user_id: user.id,
-                type: "kyc_update",
-                title: "KYC Status Update",
+                type: 'kyc_update',
+                title: 'KYC Status Update',
                 message: `Your ${doc.document_type} document status has been updated to: ${doc.status}`,
                 data: {
                   document_id: doc.id,
@@ -249,28 +259,28 @@ export function NotificationProvider({
               },
             });
           }
-        },
+        }
       )
       .subscribe();
 
     // Listen to risk events
     const riskChannel = supabase
-      .channel("risk-notifications")
+      .channel('risk-notifications')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "INSERT",
-          schema: "public",
-          table: "risk_events",
+          event: 'INSERT',
+          schema: 'public',
+          table: 'risk_events',
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
           const event = payload.new as SupabaseRiskEvent;
 
-          await supabase.functions.invoke("send-notification", {
+          await supabase.functions.invoke('send-notification', {
             body: {
               user_id: user.id,
-              type: "risk_event",
+              type: 'risk_event',
               title: `Risk Alert: ${event.event_type}`,
               message: event.description,
               data: {
@@ -281,7 +291,7 @@ export function NotificationProvider({
               },
             },
           });
-        },
+        }
       )
       .subscribe();
 
@@ -306,7 +316,7 @@ export function NotificationProvider({
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo(
     () => ({ unreadCount, markAsRead, markAllAsRead }),
-    [unreadCount, markAsRead, markAllAsRead],
+    [unreadCount, markAsRead, markAllAsRead]
   );
 
   return (

@@ -1,4 +1,4 @@
-declare module "vitest" {
+declare module 'vitest' {
   import type {
     Suite,
     Test,
@@ -6,7 +6,7 @@ declare module "vitest" {
     Assertion,
     AsymmetricMatchersContaining,
     Vi,
-  } from "vitest";
+  } from 'vitest';
 
   export const describe: typeof Suite;
   export const it: typeof Test;

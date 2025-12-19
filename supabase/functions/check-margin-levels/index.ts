@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 /**
  * Edge Function: check-margin-levels
@@ -77,11 +77,11 @@ interface CheckResponse {
  * LIQUIDATION: < 50%
  */
 function getMarginStatus(marginLevel: number | null): string {
-  if (marginLevel === null || marginLevel === Infinity) return "SAFE";
-  if (marginLevel >= 200) return "SAFE";
-  if (marginLevel >= 100) return "WARNING";
-  if (marginLevel >= 50) return "CRITICAL";
-  return "LIQUIDATION";
+  if (marginLevel === null || marginLevel === Infinity) return 'SAFE';
+  if (marginLevel >= 200) return 'SAFE';
+  if (marginLevel >= 100) return 'WARNING';
+  if (marginLevel >= 50) return 'CRITICAL';
+  return 'LIQUIDATION';
 }
 
 /**
@@ -90,7 +90,7 @@ function getMarginStatus(marginLevel: number | null): string {
  */
 function calculateMarginLevel(
   equity: number,
-  marginUsed: number,
+  marginUsed: number
 ): number | null {
   if (marginUsed === 0) return Infinity;
   if (marginUsed < 0) return null;
@@ -103,7 +103,7 @@ function calculateMarginLevel(
 function shouldCreateAlert(
   currentStatus: string,
   previousStatus: string | null,
-  minAlertWindowMinutes: number = 5,
+  minAlertWindowMinutes: number = 5
 ): boolean {
   // Always alert on status change
   return currentStatus !== previousStatus;
@@ -114,16 +114,16 @@ function shouldCreateAlert(
  */
 function getActionRequired(status: string): string[] {
   switch (status) {
-    case "SAFE":
-      return ["monitor"];
-    case "WARNING":
-      return ["reduce_size", "add_funds"];
-    case "CRITICAL":
-      return ["close_positions", "add_funds_urgent", "order_restriction"];
-    case "LIQUIDATION":
-      return ["force_liquidation", "emergency_deposit"];
+    case 'SAFE':
+      return ['monitor'];
+    case 'WARNING':
+      return ['reduce_size', 'add_funds'];
+    case 'CRITICAL':
+      return ['close_positions', 'add_funds_urgent', 'order_restriction'];
+    case 'LIQUIDATION':
+      return ['force_liquidation', 'emergency_deposit'];
     default:
-      return ["monitor"];
+      return ['monitor'];
   }
 }
 
@@ -139,7 +139,7 @@ function estimateTimeToLiquidation(marginLevel: number): number | null {
 
 async function checkMarginLevels(req: Request): Promise<CheckResponse> {
   const startTime = Date.now();
-  const errors: CheckResponse["errors"] = [];
+  const errors: CheckResponse['errors'] = [];
   const statusChanges = {
     to_warning: 0,
     to_critical: 0,
@@ -152,22 +152,22 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
 
   try {
     // Initialize Supabase client
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error("Missing Supabase configuration");
+      throw new Error('Missing Supabase configuration');
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Fetch all users with active positions and margin data
     const { data: users, error: fetchError } = await supabase
-      .from("profiles")
-      .select("id, email, equity, margin_used, margin_level")
-      .neq("equity", null)
-      .neq("margin_used", null)
-      .gt("equity", 0);
+      .from('profiles')
+      .select('id, email, equity, margin_used, margin_level')
+      .neq('equity', null)
+      .neq('margin_used', null)
+      .gt('equity', 0);
 
     if (fetchError) {
       throw new Error(`Failed to fetch users: ${fetchError.message}`);
@@ -194,7 +194,7 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
 
         const currentMarginLevel = calculateMarginLevel(
           user.equity,
-          user.margin_used,
+          user.margin_used
         );
 
         if (currentMarginLevel === null) {
@@ -222,12 +222,12 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
 
           // Update user's margin level in profiles table
           const { error: updateError } = await supabase
-            .from("profiles")
+            .from('profiles')
             .update({
               margin_level: currentMarginLevel,
               updated_at: new Date().toISOString(),
             })
-            .eq("id", user.id);
+            .eq('id', user.id);
 
           if (updateError) {
             errors.push({
@@ -239,7 +239,7 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
 
           // Call create_margin_alert via direct insert (RLS enforced)
           const { data: alert, error: alertError } = await supabase
-            .from("margin_alerts")
+            .from('margin_alerts')
             .insert({
               user_id: user.id,
               current_status: currentStatus,
@@ -247,25 +247,25 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
               margin_level: currentMarginLevel,
               equity: user.equity,
               margin_used: user.margin_used,
-              alert_type: "status_change",
+              alert_type: 'status_change',
               severity:
-                currentStatus === "SAFE"
-                  ? "info"
-                  : currentStatus === "WARNING"
-                    ? "warning"
-                    : currentStatus === "CRITICAL"
-                      ? "critical"
-                      : "emergency",
+                currentStatus === 'SAFE'
+                  ? 'info'
+                  : currentStatus === 'WARNING'
+                    ? 'warning'
+                    : currentStatus === 'CRITICAL'
+                      ? 'critical'
+                      : 'emergency',
               action_required: actionRequired,
               recommended_urgency:
-                currentStatus === "SAFE"
-                  ? "info"
-                  : currentStatus === "WARNING"
-                    ? "warning"
-                    : currentStatus === "CRITICAL"
-                      ? "critical"
-                      : "emergency",
-              status: "pending",
+                currentStatus === 'SAFE'
+                  ? 'info'
+                  : currentStatus === 'WARNING'
+                    ? 'warning'
+                    : currentStatus === 'CRITICAL'
+                      ? 'critical'
+                      : 'emergency',
+              status: 'pending',
             })
             .select()
             .single();
@@ -280,54 +280,54 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
 
           // Track status change
           alertsCreated++;
-          if (previousStatus === "SAFE" && currentStatus === "WARNING") {
+          if (previousStatus === 'SAFE' && currentStatus === 'WARNING') {
             statusChanges.to_warning++;
           } else if (
-            previousStatus === "WARNING" &&
-            currentStatus === "CRITICAL"
+            previousStatus === 'WARNING' &&
+            currentStatus === 'CRITICAL'
           ) {
             statusChanges.to_critical++;
-          } else if (currentStatus === "LIQUIDATION") {
+          } else if (currentStatus === 'LIQUIDATION') {
             statusChanges.to_liquidation++;
           } else if (
-            (previousStatus === "CRITICAL" ||
-              previousStatus === "WARNING" ||
-              previousStatus === "LIQUIDATION") &&
-            currentStatus === "SAFE"
+            (previousStatus === 'CRITICAL' ||
+              previousStatus === 'WARNING' ||
+              previousStatus === 'LIQUIDATION') &&
+            currentStatus === 'SAFE'
           ) {
             statusChanges.recovered++;
           }
 
           // Create notification for critical alerts
-          if (currentStatus === "CRITICAL" || currentStatus === "LIQUIDATION") {
-            await supabase.from("notifications").insert({
+          if (currentStatus === 'CRITICAL' || currentStatus === 'LIQUIDATION') {
+            await supabase.from('notifications').insert({
               user_id: user.id,
-              type: "margin_alert",
+              type: 'margin_alert',
               title:
-                currentStatus === "LIQUIDATION"
-                  ? "Account in Liquidation Risk"
-                  : "Margin Level Critical",
+                currentStatus === 'LIQUIDATION'
+                  ? 'Account in Liquidation Risk'
+                  : 'Margin Level Critical',
               message:
-                currentStatus === "LIQUIDATION"
+                currentStatus === 'LIQUIDATION'
                   ? `Your margin level is ${currentMarginLevel}%. Liquidation risk detected. Take immediate action.`
                   : `Your margin level is ${currentMarginLevel}%. Please reduce positions or add funds.`,
               severity:
-                currentStatus === "LIQUIDATION" ? "emergency" : "critical",
-              action_url: "/risk-management",
+                currentStatus === 'LIQUIDATION' ? 'emergency' : 'critical',
+              action_url: '/risk-management',
               read: false,
             });
 
             // Send critical email notification
             try {
-              await supabase.functions.invoke("send-critical-email", {
+              await supabase.functions.invoke('send-critical-email', {
                 body: {
                   to: user.email,
                   type:
-                    currentStatus === "LIQUIDATION"
-                      ? "liquidation"
-                      : "margin_critical",
+                    currentStatus === 'LIQUIDATION'
+                      ? 'liquidation'
+                      : 'margin_critical',
                   data: {
-                    user_name: user.email.split("@")[0],
+                    user_name: user.email.split('@')[0],
                     margin_level: currentMarginLevel,
                     equity: user.equity,
                     margin_used: user.margin_used,
@@ -337,22 +337,22 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
                 },
               });
               console.log(
-                `Critical email sent to ${user.email} for ${currentStatus}`,
+                `Critical email sent to ${user.email} for ${currentStatus}`
               );
             } catch (emailError) {
-              console.error("Failed to send critical email:", emailError);
+              console.error('Failed to send critical email:', emailError);
             }
           }
 
           // Send warning email for WARNING status on first trigger
-          if (currentStatus === "WARNING" && previousStatus === "SAFE") {
+          if (currentStatus === 'WARNING' && previousStatus === 'SAFE') {
             try {
-              await supabase.functions.invoke("send-critical-email", {
+              await supabase.functions.invoke('send-critical-email', {
                 body: {
                   to: user.email,
-                  type: "margin_warning",
+                  type: 'margin_warning',
                   data: {
-                    user_name: user.email.split("@")[0],
+                    user_name: user.email.split('@')[0],
                     margin_level: currentMarginLevel,
                     equity: user.equity,
                     margin_used: user.margin_used,
@@ -362,7 +362,7 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
               });
               console.log(`Warning email sent to ${user.email}`);
             } catch (emailError) {
-              console.error("Failed to send warning email:", emailError);
+              console.error('Failed to send warning email:', emailError);
             }
           }
         }
@@ -384,7 +384,7 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
       duration_ms: Date.now() - startTime,
     };
   } catch (error) {
-    console.error("Error in check-margin-levels:", error);
+    console.error('Error in check-margin-levels:', error);
 
     return {
       success: false,
@@ -404,20 +404,20 @@ async function checkMarginLevels(req: Request): Promise<CheckResponse> {
 
 serve(async (req) => {
   // Validate CRON_SECRET to prevent unauthorized access
-  const CRON_SECRET = Deno.env.get("CRON_SECRET");
-  const providedSecret = req.headers.get("X-Cron-Secret");
+  const CRON_SECRET = Deno.env.get('CRON_SECRET');
+  const providedSecret = req.headers.get('X-Cron-Secret');
 
   if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
-    console.error("Unauthorized access attempt to check-margin-levels");
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    console.error('Unauthorized access attempt to check-margin-levels');
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 
   const result = await checkMarginLevels(req);
   return new Response(JSON.stringify(result), {
-    headers: { "Content-Type": "application/json" },
+    headers: { 'Content-Type': 'application/json' },
     status: result.success ? 200 : 500,
   });
 });

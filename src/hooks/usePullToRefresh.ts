@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from "react";
+import { useCallback, useRef, useState, useEffect } from 'react';
 
 export interface PullToRefreshConfig {
   onRefresh: () => Promise<void> | void;
@@ -22,14 +22,14 @@ export interface PullToRefreshReturn {
 }
 
 export const usePullToRefresh = (
-  config: PullToRefreshConfig,
+  config: PullToRefreshConfig
 ): PullToRefreshReturn => {
   const {
     onRefresh,
     threshold = 80,
     resistance = 0.5,
     disabled = false,
-    className = "",
+    className = '',
   } = config;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,9 +43,9 @@ export const usePullToRefresh = (
     setPullDistance(0);
     setCanRefresh(false);
     if (containerRef.current) {
-      containerRef.current.style.transform = "translateY(0px)";
+      containerRef.current.style.transform = 'translateY(0px)';
       containerRef.current.style.transition =
-        "transform 0.3s cubic-bezier(0.33, 0.66, 0.66, 1)";
+        'transform 0.3s cubic-bezier(0.33, 0.66, 0.66, 1)';
     }
   }, []);
 
@@ -58,13 +58,13 @@ export const usePullToRefresh = (
     if (containerRef.current) {
       containerRef.current.style.transform = `translateY(${threshold}px)`;
       containerRef.current.style.transition =
-        "transform 0.3s cubic-bezier(0.33, 0.66, 0.66, 1)";
+        'transform 0.3s cubic-bezier(0.33, 0.66, 0.66, 1)';
     }
 
     try {
       await onRefresh();
     } catch (error) {
-      console.error("Pull to refresh failed:", error);
+      console.error('Pull to refresh failed:', error);
     } finally {
       // Wait a bit before resetting to show refresh complete
       setTimeout(() => {
@@ -85,7 +85,7 @@ export const usePullToRefresh = (
       startYRef.current = e.touches[0].pageY;
       currentYRef.current = e.touches[0].pageY;
     },
-    [disabled, isRefreshing],
+    [disabled, isRefreshing]
   );
 
   const onTouchMove = useCallback<React.TouchEventHandler<HTMLDivElement>>(
@@ -110,22 +110,22 @@ export const usePullToRefresh = (
       setCanRefresh(adjustedDeltaY > threshold);
 
       containerRef.current.style.transform = `translateY(${adjustedDeltaY}px)`;
-      containerRef.current.style.transition = "none";
+      containerRef.current.style.transition = 'none';
 
       // Visual feedback for pull progress
       if (
         containerRef.current.firstChild &&
-        typeof containerRef.current.firstChild === "object" &&
-        "style" in containerRef.current.firstChild
+        typeof containerRef.current.firstChild === 'object' &&
+        'style' in containerRef.current.firstChild
       ) {
         const firstChild = containerRef.current.firstChild as HTMLElement;
         const progress = Math.min(adjustedDeltaY / threshold, 1.5);
         firstChild.style.opacity = String(
-          Math.max(0.3, 1 - (progress - 1) * 2),
+          Math.max(0.3, 1 - (progress - 1) * 2)
         );
       }
     },
-    [disabled, isRefreshing, resistance, threshold],
+    [disabled, isRefreshing, resistance, threshold]
   );
 
   const onTouchEnd = useCallback<React.TouchEventHandler<HTMLDivElement>>(
@@ -144,7 +144,7 @@ export const usePullToRefresh = (
         resetState();
       }
     },
-    [disabled, isRefreshing, resistance, threshold, startRefresh, resetState],
+    [disabled, isRefreshing, resistance, threshold, startRefresh, resetState]
   );
 
   // Apply styles for the refresh indicator
@@ -155,19 +155,19 @@ export const usePullToRefresh = (
 
     // Add refresh indicator element if it doesn't exist
     let indicator = container.querySelector(
-      ".pull-to-refresh-indicator",
+      '.pull-to-refresh-indicator'
     ) as HTMLElement;
     if (!indicator) {
-      indicator = document.createElement("div");
-      indicator.className = "pull-to-refresh-indicator";
+      indicator = document.createElement('div');
+      indicator.className = 'pull-to-refresh-indicator';
 
       // Build spinner using DOM methods instead of innerHTML for security
-      const spinner = document.createElement("div");
-      spinner.className = "refresh-spinner";
-      const spinnerRing = document.createElement("div");
-      spinnerRing.className = "spinner-ring";
+      const spinner = document.createElement('div');
+      spinner.className = 'refresh-spinner';
+      const spinnerRing = document.createElement('div');
+      spinnerRing.className = 'spinner-ring';
       for (let i = 0; i < 4; i++) {
-        spinnerRing.appendChild(document.createElement("div"));
+        spinnerRing.appendChild(document.createElement('div'));
       }
       spinner.appendChild(spinnerRing);
       indicator.appendChild(spinner);
@@ -176,9 +176,9 @@ export const usePullToRefresh = (
     }
 
     // Update indicator styles
-    indicator.style.position = "relative";
-    indicator.style.transform = "translateY(0)";
-    indicator.style.transition = "transform 0.3s ease";
+    indicator.style.position = 'relative';
+    indicator.style.transform = 'translateY(0)';
+    indicator.style.transition = 'transform 0.3s ease';
 
     if (isRefreshing) {
       indicator.style.transform = `translateY(${threshold}px)`;
@@ -187,20 +187,20 @@ export const usePullToRefresh = (
     }
 
     // Show/hide spinner
-    const spinner = indicator.querySelector(".refresh-spinner");
+    const spinner = indicator.querySelector('.refresh-spinner');
     if (spinner) {
-      (spinner as HTMLElement).style.display = isRefreshing ? "block" : "none";
+      (spinner as HTMLElement).style.display = isRefreshing ? 'block' : 'none';
     }
   }, [isRefreshing, pullDistance, threshold]);
 
   const containerClassName = [
-    "pull-to-refresh-container",
-    isRefreshing ? "is-refreshing" : "",
-    canRefresh ? "can-refresh" : "",
+    'pull-to-refresh-container',
+    isRefreshing ? 'is-refreshing' : '',
+    canRefresh ? 'can-refresh' : '',
     className,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return {
     containerProps: {
@@ -218,7 +218,7 @@ export const usePullToRefresh = (
 
 // Hook for easy integration into specific screens
 export const useDashboardPullToRefresh = (
-  onRefresh: () => Promise<void> | void,
+  onRefresh: () => Promise<void> | void
 ) => {
   return usePullToRefresh({
     onRefresh,
@@ -229,7 +229,7 @@ export const useDashboardPullToRefresh = (
 };
 
 export const usePortfolioPullToRefresh = (
-  onRefresh: () => Promise<void> | void,
+  onRefresh: () => Promise<void> | void
 ) => {
   return usePullToRefresh({
     onRefresh,
@@ -240,7 +240,7 @@ export const usePortfolioPullToRefresh = (
 };
 
 export const useTradePullToRefresh = (
-  onRefresh: () => Promise<void> | void,
+  onRefresh: () => Promise<void> | void
 ) => {
   return usePullToRefresh({
     onRefresh,

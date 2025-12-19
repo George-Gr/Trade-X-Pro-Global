@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { LineChart, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { LineChart, CheckCircle2 } from 'lucide-react';
 
 export default function Commodities() {
   return (
@@ -40,14 +40,14 @@ export default function Commodities() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "Competitive spreads on gold and oil",
-                    "Leverage up to 1:500",
-                    "24/5 trading on major commodities",
-                    "Portfolio diversification",
-                    "Hedge against inflation",
-                    "No physical delivery required",
-                    "Spot and futures available",
-                    "Access global commodity markets",
+                    'Competitive spreads on gold and oil',
+                    'Leverage up to 1:500',
+                    '24/5 trading on major commodities',
+                    'Portfolio diversification',
+                    'Hedge against inflation',
+                    'No physical delivery required',
+                    'Spot and futures available',
+                    'Access global commodity markets',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -66,20 +66,20 @@ export default function Commodities() {
                 <div className="space-y-4">
                   {[
                     {
-                      category: "Precious Metals",
-                      items: "Gold, Silver, Platinum, Palladium",
+                      category: 'Precious Metals',
+                      items: 'Gold, Silver, Platinum, Palladium',
                     },
                     {
-                      category: "Energy",
-                      items: "WTI Crude Oil, Brent Crude, Natural Gas",
+                      category: 'Energy',
+                      items: 'WTI Crude Oil, Brent Crude, Natural Gas',
                     },
                     {
-                      category: "Agricultural",
-                      items: "Coffee, Sugar, Wheat, Corn, Soybeans",
+                      category: 'Agricultural',
+                      items: 'Coffee, Sugar, Wheat, Corn, Soybeans',
                     },
                     {
-                      category: "Industrial",
-                      items: "Copper, Aluminium, Zinc, Nickel",
+                      category: 'Industrial',
+                      items: 'Copper, Aluminium, Zinc, Nickel',
                     },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
@@ -112,34 +112,34 @@ export default function Commodities() {
                   <tbody>
                     {[
                       {
-                        commodity: "Gold (XAU/USD)",
-                        spread: "$0.10",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        commodity: 'Gold (XAU/USD)',
+                        spread: '$0.10',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        commodity: "Silver (XAG/USD)",
-                        spread: "$0.02",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        commodity: 'Silver (XAG/USD)',
+                        spread: '$0.02',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        commodity: "WTI Crude Oil",
-                        spread: "$0.03",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        commodity: 'WTI Crude Oil',
+                        spread: '$0.03',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        commodity: "Brent Crude",
-                        spread: "$0.03",
-                        leverage: "1:500",
-                        hours: "24/5",
+                        commodity: 'Brent Crude',
+                        spread: '$0.03',
+                        leverage: '1:500',
+                        hours: '24/5',
                       },
                       {
-                        commodity: "Natural Gas",
-                        spread: "$0.01",
-                        leverage: "1:100",
-                        hours: "24/5",
+                        commodity: 'Natural Gas',
+                        spread: '$0.01',
+                        leverage: '1:100',
+                        hours: '24/5',
                       },
                     ].map((row, i) => (
                       <tr

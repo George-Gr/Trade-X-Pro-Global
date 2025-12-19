@@ -1,10 +1,10 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Globe, TrendingUp, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { AutoBreadcrumb } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Globe, TrendingUp, CheckCircle2 } from 'lucide-react';
 
 export default function Forex() {
   return (
@@ -48,14 +48,14 @@ export default function Forex() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "Highest liquidity - $6 trillion daily volume",
-                    "Tight spreads from 0.0 pips on ECN accounts",
-                    "Leverage up to 1:500",
-                    "24 hours, 5 days per week trading",
-                    "No commission on Standard accounts",
-                    "Access to major, minor, and exotic pairs",
-                    "Instant execution with no requotes",
-                    "Deep liquidity from tier-1 providers",
+                    'Highest liquidity - $6 trillion daily volume',
+                    'Tight spreads from 0.0 pips on ECN accounts',
+                    'Leverage up to 1:500',
+                    '24 hours, 5 days per week trading',
+                    'No commission on Standard accounts',
+                    'Access to major, minor, and exotic pairs',
+                    'Instant execution with no requotes',
+                    'Deep liquidity from tier-1 providers',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -71,10 +71,10 @@ export default function Forex() {
                 <h2 className="text-3xl font-bold mb-6">Forex Trading Hours</h2>
                 <div className="space-y-4">
                   {[
-                    { session: "Sydney", time: "22:00-07:00 GMT" },
-                    { session: "Tokyo", time: "23:00-08:00 GMT" },
-                    { session: "London", time: "08:00-17:00 GMT" },
-                    { session: "New York", time: "13:00-22:00 GMT" },
+                    { session: 'Sydney', time: '22:00-07:00 GMT' },
+                    { session: 'Tokyo', time: '23:00-08:00 GMT' },
+                    { session: 'London', time: '08:00-17:00 GMT' },
+                    { session: 'New York', time: '13:00-22:00 GMT' },
                   ].map((item, i) => (
                     <div
                       key={i}
@@ -107,13 +107,13 @@ export default function Forex() {
                   </p>
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      "EUR/USD",
-                      "GBP/USD",
-                      "USD/JPY",
-                      "USD/CHF",
-                      "AUD/USD",
-                      "USD/CAD",
-                      "NZD/USD",
+                      'EUR/USD',
+                      'GBP/USD',
+                      'USD/JPY',
+                      'USD/CHF',
+                      'AUD/USD',
+                      'USD/CAD',
+                      'NZD/USD',
                     ].map((pair, i) => (
                       <div
                         key={i}
@@ -134,14 +134,14 @@ export default function Forex() {
                   </p>
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      "EUR/GBP",
-                      "EUR/AUD",
-                      "GBP/JPY",
-                      "EUR/JPY",
-                      "GBP/CAD",
-                      "AUD/CAD",
-                      "NZD/JPY",
-                      "CAD/JPY",
+                      'EUR/GBP',
+                      'EUR/AUD',
+                      'GBP/JPY',
+                      'EUR/JPY',
+                      'GBP/CAD',
+                      'AUD/CAD',
+                      'NZD/JPY',
+                      'CAD/JPY',
                     ].map((pair, i) => (
                       <div
                         key={i}
@@ -162,15 +162,15 @@ export default function Forex() {
                   </p>
                   <div className="grid grid-cols-3 gap-4">
                     {[
-                      "USD/TRY",
-                      "EUR/TRY",
-                      "USD/ZAR",
-                      "USD/MXN",
-                      "USD/SGD",
-                      "USD/HKD",
-                      "USD/INR",
-                      "USD/RUB",
-                      "USD/SEK",
+                      'USD/TRY',
+                      'EUR/TRY',
+                      'USD/ZAR',
+                      'USD/MXN',
+                      'USD/SGD',
+                      'USD/HKD',
+                      'USD/INR',
+                      'USD/RUB',
+                      'USD/SEK',
                     ].map((pair, i) => (
                       <div
                         key={i}
@@ -205,39 +205,39 @@ export default function Forex() {
                   <tbody>
                     {[
                       {
-                        pair: "EUR/USD",
-                        spread: "0.1",
-                        leverage: "1:500",
-                        lot: "0.01",
-                        hours: "24/5",
+                        pair: 'EUR/USD',
+                        spread: '0.1',
+                        leverage: '1:500',
+                        lot: '0.01',
+                        hours: '24/5',
                       },
                       {
-                        pair: "GBP/USD",
-                        spread: "0.2",
-                        leverage: "1:500",
-                        lot: "0.01",
-                        hours: "24/5",
+                        pair: 'GBP/USD',
+                        spread: '0.2',
+                        leverage: '1:500',
+                        lot: '0.01',
+                        hours: '24/5',
                       },
                       {
-                        pair: "USD/JPY",
-                        spread: "0.1",
-                        leverage: "1:500",
-                        lot: "0.01",
-                        hours: "24/5",
+                        pair: 'USD/JPY',
+                        spread: '0.1',
+                        leverage: '1:500',
+                        lot: '0.01',
+                        hours: '24/5',
                       },
                       {
-                        pair: "USD/CHF",
-                        spread: "0.3",
-                        leverage: "1:500",
-                        lot: "0.01",
-                        hours: "24/5",
+                        pair: 'USD/CHF',
+                        spread: '0.3',
+                        leverage: '1:500',
+                        lot: '0.01',
+                        hours: '24/5',
                       },
                       {
-                        pair: "AUD/USD",
-                        spread: "0.2",
-                        leverage: "1:500",
-                        lot: "0.01",
-                        hours: "24/5",
+                        pair: 'AUD/USD',
+                        spread: '0.2',
+                        leverage: '1:500',
+                        lot: '0.01',
+                        hours: '24/5',
                       },
                     ].map((row, i) => (
                       <tr

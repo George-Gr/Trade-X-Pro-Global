@@ -1,17 +1,17 @@
-import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import KycUploader from "@/components/kyc/KycUploader";
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import KycUploader from '@/components/kyc/KycUploader';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -19,39 +19,39 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Loader2,
   AlertCircle,
   CheckCircle,
   Clock,
   XCircle,
-} from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { KYCLoading } from "@/components/common/PageLoadingStates";
-import type { KYCDocument } from "@/integrations/supabase/types/tables";
+} from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { KYCLoading } from '@/components/common/PageLoadingStates';
+import type { KYCDocument } from '@/integrations/supabase/types/tables';
 
 const KYC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [kycStatus, setKycStatus] = useState<string>("pending");
+  const [kycStatus, setKycStatus] = useState<string>('pending');
   const [documents, setDocuments] = useState<KYCDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [resubmitCountdown, setResubmitCountdown] = useState<number | null>(
-    null,
+    null
   );
 
   const fetchKYCStatus = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from("profiles")
-      .select("kyc_status")
-      .eq("id", user.id)
+      .from('profiles')
+      .select('kyc_status')
+      .eq('id', user.id)
       .single();
 
     if (data && !error) {
-      setKycStatus(data.kyc_status || "pending");
+      setKycStatus(data.kyc_status || 'pending');
     }
   }, [user]);
 
@@ -61,19 +61,19 @@ const KYC = () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
-        .from("kyc_documents")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+        .from('kyc_documents')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
       if (!error && data) {
         setDocuments(data as KYCDocument[]);
       } else if (error) {
-        console.error("Failed to fetch KYC documents:", error);
+        console.error('Failed to fetch KYC documents:', error);
         // Consider showing a toast notification to the user
       }
     } catch (err) {
-      console.error("Unexpected error fetching KYC documents:", err);
+      console.error('Unexpected error fetching KYC documents:', err);
       // Consider showing a toast notification to the user
     } finally {
       setIsLoading(false);
@@ -89,19 +89,19 @@ const KYC = () => {
       const subscription = supabase
         .channel(`kyc-status-${user.id}`)
         .on(
-          "postgres_changes",
+          'postgres_changes',
           {
-            event: "*",
-            schema: "public",
-            table: "profiles",
+            event: '*',
+            schema: 'public',
+            table: 'profiles',
             filter: `id=eq.${user.id}`,
           },
           (payload) => {
             setKycStatus(
               (payload.new as unknown as Record<string, unknown>)
-                .kyc_status as string,
+                .kyc_status as string
             );
-          },
+          }
         )
         .subscribe();
 
@@ -113,15 +113,15 @@ const KYC = () => {
 
   // Calculate resubmit countdown if rejected
   useEffect(() => {
-    if (kycStatus === "rejected" && documents.length > 0) {
-      const lastRejected = documents.find((d) => d.status === "rejected");
+    if (kycStatus === 'rejected' && documents.length > 0) {
+      const lastRejected = documents.find((d) => d.status === 'rejected');
       if (lastRejected?.reviewed_at) {
         const rejectedDate = new Date(lastRejected.reviewed_at).getTime();
         const sevenDaysLater = rejectedDate + 7 * 24 * 60 * 60 * 1000;
         const now = Date.now();
         const remaining = Math.max(
           0,
-          Math.ceil((sevenDaysLater - now) / (1000 * 60 * 60 * 24)),
+          Math.ceil((sevenDaysLater - now) / (1000 * 60 * 60 * 24))
         );
         setResubmitCountdown(remaining);
       }
@@ -130,9 +130,9 @@ const KYC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "approved":
+      case 'approved':
         return <CheckCircle className="h-4 w-4 text-profit" />;
-      case "rejected":
+      case 'rejected':
         return <XCircle className="h-4 w-4 text-loss" />;
       default:
         return <Clock className="h-4 w-4 text-amber-500" />;
@@ -141,12 +141,12 @@ const KYC = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "approved":
+      case 'approved':
         return <Badge className="bg-profit">Approved</Badge>;
-      case "rejected":
+      case 'rejected':
         return <Badge variant="destructive">Rejected</Badge>;
-      case "validated":
-      case "submitted":
+      case 'validated':
+      case 'submitted':
         return <Badge variant="outline">Under Review</Badge>;
       default:
         return <Badge variant="outline">Pending</Badge>;
@@ -171,7 +171,7 @@ const KYC = () => {
           </div>
 
           {/* Status Alerts */}
-          {kycStatus === "approved" && (
+          {kycStatus === 'approved' && (
             <Alert className="border-profit/20 bg-profit/5">
               <CheckCircle className="h-4 w-4 text-profit" />
               <AlertDescription>
@@ -181,19 +181,19 @@ const KYC = () => {
             </Alert>
           )}
 
-          {kycStatus === "rejected" && (
+          {kycStatus === 'rejected' && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Your KYC verification was rejected.{" "}
+                Your KYC verification was rejected.{' '}
                 {resubmitCountdown && resubmitCountdown > 0
                   ? `You can resubmit in ${resubmitCountdown} days.`
-                  : "You can now resubmit new documents."}
+                  : 'You can now resubmit new documents.'}
               </AlertDescription>
             </Alert>
           )}
 
-          {kycStatus === "submitted" && (
+          {kycStatus === 'submitted' && (
             <Alert className="border-amber-500/20 bg-amber-500/5">
               <Clock className="h-4 w-4 text-amber-500" />
               <AlertDescription>
@@ -204,7 +204,7 @@ const KYC = () => {
             </Alert>
           )}
 
-          {kycStatus === "pending" && documents.length > 0 && (
+          {kycStatus === 'pending' && documents.length > 0 && (
             <Alert className="border-amber-500/20 bg-amber-500/5">
               <Clock className="h-4 w-4 text-amber-500" />
               <AlertDescription>
@@ -215,8 +215,8 @@ const KYC = () => {
           )}
 
           {/* KYC Upload Form */}
-          {(kycStatus === "pending" ||
-            (kycStatus === "rejected" && resubmitCountdown === 0)) && (
+          {(kycStatus === 'pending' ||
+            (kycStatus === 'rejected' && resubmitCountdown === 0)) && (
             <KycUploader
               onSuccess={() => {
                 fetchKYCStatus();
@@ -254,7 +254,7 @@ const KYC = () => {
                       {documents.map((doc) => (
                         <TableRow key={doc.id}>
                           <TableCell className="font-medium capitalize">
-                            {doc.document_type.replace(/_/g, " ")}
+                            {doc.document_type.replace(/_/g, ' ')}
                           </TableCell>
                           <TableCell className="text-sm">
                             {new Date(doc.created_at).toLocaleString()}
@@ -268,10 +268,10 @@ const KYC = () => {
                           <TableCell className="text-sm">
                             {doc.reviewed_at
                               ? new Date(doc.reviewed_at).toLocaleString()
-                              : "-"}
+                              : '-'}
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground">
-                            {doc.rejection_reason || "-"}
+                            {doc.rejection_reason || '-'}
                           </TableCell>
                         </TableRow>
                       ))}

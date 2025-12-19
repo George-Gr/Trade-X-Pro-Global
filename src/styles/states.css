@@ -21,8 +21,8 @@ a,
 input,
 textarea,
 select,
-[role="button"],
-[role="link"],
+[role='button'],
+[role='link'],
 .interactive {
   transition: var(--transition-normal);
   outline: none;
@@ -34,7 +34,7 @@ select,
 
 /* Buttons - Brightness +10%, cursor pointer */
 button:not(:disabled):hover,
-[role="button"]:not([aria-disabled="true"]):hover,
+[role='button']:not([aria-disabled='true']):hover,
 .btn:not(.btn-disabled):hover {
   filter: brightness(1.1);
   cursor: pointer;
@@ -43,7 +43,7 @@ button:not(:disabled):hover,
 
 /* Links - Brightness +10%, cursor pointer */
 a:hover,
-[role="link"]:hover {
+[role='link']:hover {
   filter: brightness(1.1);
   cursor: pointer;
   transition: var(--transition-normal);
@@ -59,7 +59,7 @@ a:hover,
 /* Navigation Items */
 nav a:hover,
 nav button:hover,
-[data-sidebar="menu-button"]:not([data-active="true"]):hover {
+[data-sidebar='menu-button']:not([data-active='true']):hover {
   filter: brightness(1.1);
   cursor: pointer;
   transition: var(--transition-normal);
@@ -75,8 +75,8 @@ select:not(:disabled):hover {
 }
 
 /* Checkboxes and Radio Buttons */
-input[type="checkbox"]:not(:disabled):hover,
-input[type="radio"]:not(:disabled):hover {
+input[type='checkbox']:not(:disabled):hover,
+input[type='radio']:not(:disabled):hover {
   filter: brightness(1.1);
   cursor: pointer;
   transition: var(--transition-normal);
@@ -88,7 +88,7 @@ input[type="radio"]:not(:disabled):hover {
 
 /* Buttons - Brightness -5%, scale 0.98 */
 button:not(:disabled):active,
-[role="button"]:not([aria-disabled="true"]):active,
+[role='button']:not([aria-disabled='true']):active,
 .btn:not(.btn-disabled):active {
   filter: brightness(0.95);
   transform: scale(0.98);
@@ -97,7 +97,7 @@ button:not(:disabled):active,
 
 /* Links - Brightness -5%, scale 0.98 */
 a:active,
-[role="link"]:active {
+[role='link']:active {
   filter: brightness(0.95);
   transform: scale(0.98);
   transition: var(--transition-normal);
@@ -136,8 +136,8 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
-[role="button"]:focus-visible,
-[role="link"]:focus-visible,
+[role='button']:focus-visible,
+[role='link']:focus-visible,
 .interactive:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
@@ -148,7 +148,7 @@ select:focus-visible,
 /* Navigation Focus States */
 nav a:focus-visible,
 nav button:focus-visible,
-[data-sidebar="menu-button"]:focus-visible {
+[data-sidebar='menu-button']:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
@@ -193,7 +193,7 @@ select:focus {
 /* Buttons - opacity 0.5, cursor not-allowed */
 button:disabled,
 button[disabled],
-[role="button"][aria-disabled="true"],
+[role='button'][aria-disabled='true'],
 .btn-disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -204,7 +204,7 @@ button[disabled],
 }
 
 /* Links - disabled state */
-a[aria-disabled="true"],
+a[aria-disabled='true'],
 .link-disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -229,7 +229,7 @@ textarea[readonly] {
 
 /* Cards - disabled state */
 .card-disabled,
-.card[data-disabled="true"] {
+.card[data-disabled='true'] {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
@@ -299,13 +299,13 @@ button[aria-label]:not(:disabled):active,
 }
 
 /* Navigation Active States (preserve existing active styles) */
-[data-sidebar="menu-button"][data-active="true"]:hover {
+[data-sidebar='menu-button'][data-active='true']:hover {
   /* Active items don't need brightness change */
   filter: none;
 }
 
 /* Dropdown Items */
-[role="menuitem"]:hover,
+[role='menuitem']:hover,
 .dropdown-item:hover {
   filter: brightness(1.1);
   background-color: hsl(var(--accent) / 0.1);
@@ -313,7 +313,7 @@ button[aria-label]:not(:disabled):active,
   transition: var(--transition-normal);
 }
 
-[role="menuitem"]:active,
+[role='menuitem']:active,
 .dropdown-item:active {
   filter: brightness(0.95);
   transform: scale(0.98);
@@ -321,26 +321,26 @@ button[aria-label]:not(:disabled):active,
 }
 
 /* Tab Components */
-[role="tab"]:hover {
+[role='tab']:hover {
   filter: brightness(1.1);
   cursor: pointer;
   transition: var(--transition-normal);
 }
 
-[role="tab"]:active {
+[role='tab']:active {
   filter: brightness(0.95);
   transform: scale(0.98);
   transition: var(--transition-normal);
 }
 
-[role="tab"]:focus-visible {
+[role='tab']:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
 }
 
 /* Table Row Interactions */
-tr[role="button"]:hover,
+tr[role='button']:hover,
 tr.clickable:hover {
   filter: brightness(1.05);
   cursor: pointer;
@@ -348,7 +348,7 @@ tr.clickable:hover {
   transition: var(--transition-normal);
 }
 
-tr[role="button"]:active,
+tr[role='button']:active,
 tr.clickable:active {
   filter: brightness(0.98);
   transform: scale(0.995);
@@ -386,8 +386,8 @@ tr.clickable:active {
   input,
   textarea,
   select,
-  [role="button"],
-  [role="link"],
+  [role='button'],
+  [role='link'],
   .interactive {
     transition: none !important;
     transform: none !important;
@@ -405,7 +405,7 @@ tr.clickable:active {
    ============================================ */
 
 /* Loading Button State */
-button[data-loading="true"],
+button[data-loading='true'],
 .btn-loading {
   opacity: 0.7;
   cursor: wait;
@@ -413,9 +413,9 @@ button[data-loading="true"],
   position: relative;
 }
 
-button[data-loading="true"]::after,
+button[data-loading='true']::after,
 .btn-loading::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 16px;
   height: 16px;
@@ -443,13 +443,13 @@ button[data-loading="true"]::after,
    ============================================ */
 
 /* Ensure focus stays within modal */
-[role="dialog"]:focus,
-[role="alertdialog"]:focus {
+[role='dialog']:focus,
+[role='alertdialog']:focus {
   outline: none;
 }
 
-[role="dialog"] button:focus-visible,
-[role="alertdialog"] button:focus-visible {
+[role='dialog'] button:focus-visible,
+[role='alertdialog'] button:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
   box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);

@@ -1,23 +1,23 @@
-import * as React from "react";
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import * as React from 'react';
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
 import {
   BookOpen,
   Search,
   ChevronDown,
   ChevronUp,
   HelpCircle,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
 
 interface GlossaryTerm {
   term: string;
@@ -28,287 +28,287 @@ interface GlossaryTerm {
 const glossaryTerms: GlossaryTerm[] = [
   // Trading Basics
   {
-    term: "CFD",
+    term: 'CFD',
     definition:
-      "Contract for Difference - A financial derivative that allows you to speculate on price movements without owning the underlying asset. You profit or lose based on the difference between opening and closing prices.",
-    category: "Trading Basics",
+      'Contract for Difference - A financial derivative that allows you to speculate on price movements without owning the underlying asset. You profit or lose based on the difference between opening and closing prices.',
+    category: 'Trading Basics',
   },
   {
-    term: "Leverage",
+    term: 'Leverage',
     definition:
-      "The ability to control a larger position with a smaller amount of capital. For example, 1:100 leverage means you can control $100,000 with just $1,000 of your own funds. Leverage amplifies both profits and losses.",
-    category: "Trading Basics",
+      'The ability to control a larger position with a smaller amount of capital. For example, 1:100 leverage means you can control $100,000 with just $1,000 of your own funds. Leverage amplifies both profits and losses.',
+    category: 'Trading Basics',
   },
   {
-    term: "Margin",
+    term: 'Margin',
     definition:
-      "The amount of money required to open and maintain a leveraged position. It acts as collateral for your trades.",
-    category: "Trading Basics",
+      'The amount of money required to open and maintain a leveraged position. It acts as collateral for your trades.',
+    category: 'Trading Basics',
   },
   {
-    term: "Spread",
+    term: 'Spread',
     definition:
-      "The difference between the buy (ask) and sell (bid) price of an asset. This is one way brokers earn revenue and represents a cost to traders.",
-    category: "Trading Basics",
+      'The difference between the buy (ask) and sell (bid) price of an asset. This is one way brokers earn revenue and represents a cost to traders.',
+    category: 'Trading Basics',
   },
   {
-    term: "Pip",
+    term: 'Pip',
     definition:
-      "Percentage in Point - The smallest price movement in a currency pair. For most pairs, 1 pip equals 0.0001 (fourth decimal place).",
-    category: "Trading Basics",
+      'Percentage in Point - The smallest price movement in a currency pair. For most pairs, 1 pip equals 0.0001 (fourth decimal place).',
+    category: 'Trading Basics',
   },
   {
-    term: "Lot",
+    term: 'Lot',
     definition:
-      "A standardized unit of measurement for trade size. A standard lot is 100,000 units, a mini lot is 10,000 units, and a micro lot is 1,000 units.",
-    category: "Trading Basics",
+      'A standardized unit of measurement for trade size. A standard lot is 100,000 units, a mini lot is 10,000 units, and a micro lot is 1,000 units.',
+    category: 'Trading Basics',
   },
   {
-    term: "Bid Price",
+    term: 'Bid Price',
     definition:
-      "The price at which you can sell an asset. It is always lower than the ask price.",
-    category: "Trading Basics",
+      'The price at which you can sell an asset. It is always lower than the ask price.',
+    category: 'Trading Basics',
   },
   {
-    term: "Ask Price",
+    term: 'Ask Price',
     definition:
-      "The price at which you can buy an asset. It is always higher than the bid price.",
-    category: "Trading Basics",
+      'The price at which you can buy an asset. It is always higher than the bid price.',
+    category: 'Trading Basics',
   },
 
   // Order Types
   {
-    term: "Market Order",
+    term: 'Market Order',
     definition:
-      "An order to buy or sell immediately at the best available current price. Guarantees execution but not price.",
-    category: "Order Types",
+      'An order to buy or sell immediately at the best available current price. Guarantees execution but not price.',
+    category: 'Order Types',
   },
   {
-    term: "Limit Order",
+    term: 'Limit Order',
     definition:
-      "An order to buy or sell at a specific price or better. Only executes when the market reaches your specified price.",
-    category: "Order Types",
+      'An order to buy or sell at a specific price or better. Only executes when the market reaches your specified price.',
+    category: 'Order Types',
   },
   {
-    term: "Stop Order",
+    term: 'Stop Order',
     definition:
-      "An order that becomes a market order once a specified price level is reached. Used to limit losses or enter trades at breakout points.",
-    category: "Order Types",
+      'An order that becomes a market order once a specified price level is reached. Used to limit losses or enter trades at breakout points.',
+    category: 'Order Types',
   },
   {
-    term: "Stop-Loss",
+    term: 'Stop-Loss',
     definition:
-      "An order placed to automatically close a position at a predetermined price to limit potential losses.",
-    category: "Order Types",
+      'An order placed to automatically close a position at a predetermined price to limit potential losses.',
+    category: 'Order Types',
   },
   {
-    term: "Take-Profit",
+    term: 'Take-Profit',
     definition:
-      "An order placed to automatically close a position when it reaches a specified profit level, locking in gains.",
-    category: "Order Types",
+      'An order placed to automatically close a position when it reaches a specified profit level, locking in gains.',
+    category: 'Order Types',
   },
   {
-    term: "Trailing Stop",
+    term: 'Trailing Stop',
     definition:
-      "A dynamic stop-loss that moves with the market price, maintaining a set distance. It locks in profits as the trade moves favorably while still protecting against reversals.",
-    category: "Order Types",
+      'A dynamic stop-loss that moves with the market price, maintaining a set distance. It locks in profits as the trade moves favorably while still protecting against reversals.',
+    category: 'Order Types',
   },
   {
-    term: "Pending Order",
+    term: 'Pending Order',
     definition:
-      "An order to open a position at a future price level. Includes limit and stop orders that wait to be triggered.",
-    category: "Order Types",
+      'An order to open a position at a future price level. Includes limit and stop orders that wait to be triggered.',
+    category: 'Order Types',
   },
 
   // Position Management
   {
-    term: "Long Position",
+    term: 'Long Position',
     definition:
-      "Buying an asset with the expectation that its price will rise. You profit when the price goes up.",
-    category: "Position Management",
+      'Buying an asset with the expectation that its price will rise. You profit when the price goes up.',
+    category: 'Position Management',
   },
   {
-    term: "Short Position",
+    term: 'Short Position',
     definition:
       "Selling an asset you don't own with the expectation that its price will fall. You profit when the price goes down.",
-    category: "Position Management",
+    category: 'Position Management',
   },
   {
-    term: "Open Position",
+    term: 'Open Position',
     definition:
-      "A trade that has been entered but not yet closed. It represents your current exposure to market movements.",
-    category: "Position Management",
+      'A trade that has been entered but not yet closed. It represents your current exposure to market movements.',
+    category: 'Position Management',
   },
   {
-    term: "Closed Position",
+    term: 'Closed Position',
     definition:
-      "A trade that has been exited. The profit or loss is realized and added to your account balance.",
-    category: "Position Management",
+      'A trade that has been exited. The profit or loss is realized and added to your account balance.',
+    category: 'Position Management',
   },
   {
-    term: "Position Size",
+    term: 'Position Size',
     definition:
-      "The number of units or lots in a trade. Proper position sizing is crucial for risk management.",
-    category: "Position Management",
+      'The number of units or lots in a trade. Proper position sizing is crucial for risk management.',
+    category: 'Position Management',
   },
 
   // Risk Management
   {
-    term: "Margin Call",
+    term: 'Margin Call',
     definition:
-      "A warning that occurs when your account equity falls below the required margin level. You must deposit more funds or close positions to avoid automatic liquidation.",
-    category: "Risk Management",
+      'A warning that occurs when your account equity falls below the required margin level. You must deposit more funds or close positions to avoid automatic liquidation.',
+    category: 'Risk Management',
   },
   {
-    term: "Stop-Out",
+    term: 'Stop-Out',
     definition:
-      "Automatic closure of positions when margin level falls below a critical threshold to prevent further losses and negative balance.",
-    category: "Risk Management",
+      'Automatic closure of positions when margin level falls below a critical threshold to prevent further losses and negative balance.',
+    category: 'Risk Management',
   },
   {
-    term: "Margin Level",
+    term: 'Margin Level',
     definition:
-      "The ratio of your equity to used margin, expressed as a percentage. A key indicator of account health. Formula: (Equity / Used Margin) × 100%.",
-    category: "Risk Management",
+      'The ratio of your equity to used margin, expressed as a percentage. A key indicator of account health. Formula: (Equity / Used Margin) × 100%.',
+    category: 'Risk Management',
   },
   {
-    term: "Free Margin",
+    term: 'Free Margin',
     definition:
-      "The amount of equity available to open new positions. Calculated as Equity minus Used Margin.",
-    category: "Risk Management",
+      'The amount of equity available to open new positions. Calculated as Equity minus Used Margin.',
+    category: 'Risk Management',
   },
   {
-    term: "Equity",
+    term: 'Equity',
     definition:
-      "The total value of your account including unrealized profits and losses. Formula: Balance + Unrealized P&L.",
-    category: "Risk Management",
+      'The total value of your account including unrealized profits and losses. Formula: Balance + Unrealized P&L.',
+    category: 'Risk Management',
   },
   {
-    term: "Drawdown",
+    term: 'Drawdown',
     definition:
-      "The peak-to-trough decline in account equity. Measures the largest loss from a high point before recovery.",
-    category: "Risk Management",
+      'The peak-to-trough decline in account equity. Measures the largest loss from a high point before recovery.',
+    category: 'Risk Management',
   },
   {
-    term: "Risk/Reward Ratio",
+    term: 'Risk/Reward Ratio',
     definition:
-      "The ratio of potential loss to potential gain on a trade. A 1:3 ratio means risking $1 to potentially gain $3.",
-    category: "Risk Management",
+      'The ratio of potential loss to potential gain on a trade. A 1:3 ratio means risking $1 to potentially gain $3.',
+    category: 'Risk Management',
   },
 
   // Financial Terms
   {
-    term: "P&L (Profit & Loss)",
+    term: 'P&L (Profit & Loss)',
     definition:
-      "The financial gain or loss from your trading activity. Unrealized P&L is from open positions; Realized P&L is from closed positions.",
-    category: "Financial Terms",
+      'The financial gain or loss from your trading activity. Unrealized P&L is from open positions; Realized P&L is from closed positions.',
+    category: 'Financial Terms',
   },
   {
-    term: "Commission",
+    term: 'Commission',
     definition:
-      "A fee charged by the broker for executing trades. May be per-trade or per-lot.",
-    category: "Financial Terms",
+      'A fee charged by the broker for executing trades. May be per-trade or per-lot.',
+    category: 'Financial Terms',
   },
   {
-    term: "Swap",
+    term: 'Swap',
     definition:
-      "An overnight interest charge or credit for holding positions past the daily rollover time. Also called rollover or overnight financing.",
-    category: "Financial Terms",
+      'An overnight interest charge or credit for holding positions past the daily rollover time. Also called rollover or overnight financing.',
+    category: 'Financial Terms',
   },
   {
-    term: "Slippage",
+    term: 'Slippage',
     definition:
-      "The difference between the expected price of a trade and the actual execution price. Common during high volatility or low liquidity.",
-    category: "Financial Terms",
+      'The difference between the expected price of a trade and the actual execution price. Common during high volatility or low liquidity.',
+    category: 'Financial Terms',
   },
   {
-    term: "Balance",
+    term: 'Balance',
     definition:
-      "The total amount of money in your trading account, not including unrealized profits or losses from open positions.",
-    category: "Financial Terms",
+      'The total amount of money in your trading account, not including unrealized profits or losses from open positions.',
+    category: 'Financial Terms',
   },
 
   // Technical Analysis
   {
-    term: "Technical Analysis",
+    term: 'Technical Analysis',
     definition:
-      "Analysis of price charts and statistical indicators to predict future price movements based on historical patterns.",
-    category: "Technical Analysis",
+      'Analysis of price charts and statistical indicators to predict future price movements based on historical patterns.',
+    category: 'Technical Analysis',
   },
   {
-    term: "Fundamental Analysis",
+    term: 'Fundamental Analysis',
     definition:
       "Analysis of economic, financial, and other qualitative/quantitative factors to determine an asset's intrinsic value.",
-    category: "Technical Analysis",
+    category: 'Technical Analysis',
   },
   {
-    term: "Support Level",
+    term: 'Support Level',
     definition:
-      "A price level where buying pressure is expected to prevent further decline. Prices tend to bounce off support.",
-    category: "Technical Analysis",
+      'A price level where buying pressure is expected to prevent further decline. Prices tend to bounce off support.',
+    category: 'Technical Analysis',
   },
   {
-    term: "Resistance Level",
+    term: 'Resistance Level',
     definition:
-      "A price level where selling pressure is expected to prevent further rise. Prices tend to reverse at resistance.",
-    category: "Technical Analysis",
+      'A price level where selling pressure is expected to prevent further rise. Prices tend to reverse at resistance.',
+    category: 'Technical Analysis',
   },
   {
-    term: "Volatility",
+    term: 'Volatility',
     definition:
-      "A measure of how much and how quickly prices move. High volatility means larger price swings and potentially higher risk/reward.",
-    category: "Technical Analysis",
+      'A measure of how much and how quickly prices move. High volatility means larger price swings and potentially higher risk/reward.',
+    category: 'Technical Analysis',
   },
   {
-    term: "Trend",
+    term: 'Trend',
     definition:
-      "The general direction of price movement over time. Can be uptrend (higher highs), downtrend (lower lows), or sideways.",
-    category: "Technical Analysis",
+      'The general direction of price movement over time. Can be uptrend (higher highs), downtrend (lower lows), or sideways.',
+    category: 'Technical Analysis',
   },
   {
-    term: "Moving Average",
+    term: 'Moving Average',
     definition:
-      "A technical indicator that smooths price data by calculating the average price over a specific period.",
-    category: "Technical Analysis",
+      'A technical indicator that smooths price data by calculating the average price over a specific period.',
+    category: 'Technical Analysis',
   },
   {
-    term: "RSI",
+    term: 'RSI',
     definition:
-      "Relative Strength Index - A momentum oscillator measuring speed and change of price movements on a scale of 0-100.",
-    category: "Technical Analysis",
+      'Relative Strength Index - A momentum oscillator measuring speed and change of price movements on a scale of 0-100.',
+    category: 'Technical Analysis',
   },
   {
-    term: "MACD",
+    term: 'MACD',
     definition:
-      "Moving Average Convergence Divergence - A trend-following indicator showing the relationship between two moving averages.",
-    category: "Technical Analysis",
+      'Moving Average Convergence Divergence - A trend-following indicator showing the relationship between two moving averages.',
+    category: 'Technical Analysis',
   },
 
   // Account Types
   {
-    term: "Demo Account",
+    term: 'Demo Account',
     definition:
-      "A practice account with virtual funds that simulates real trading conditions. Perfect for learning without risking real money.",
-    category: "Account Types",
+      'A practice account with virtual funds that simulates real trading conditions. Perfect for learning without risking real money.',
+    category: 'Account Types',
   },
   {
-    term: "Live Account",
+    term: 'Live Account',
     definition:
-      "A real trading account with actual funds where profits and losses are real.",
-    category: "Account Types",
+      'A real trading account with actual funds where profits and losses are real.',
+    category: 'Account Types',
   },
   {
-    term: "ECN Account",
+    term: 'ECN Account',
     definition:
-      "Electronic Communication Network account that provides direct access to liquidity providers with tighter spreads and commission-based pricing.",
-    category: "Account Types",
+      'Electronic Communication Network account that provides direct access to liquidity providers with tighter spreads and commission-based pricing.',
+    category: 'Account Types',
   },
 ];
 
 const categories = [...new Set(glossaryTerms.map((t) => t.category))];
 
 export default function Glossary() {
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
   const [expandedCategories, setExpandedCategories] = React.useState<
     Set<string>
   >(new Set(categories));
@@ -316,7 +316,7 @@ export default function Glossary() {
   const filteredTerms = glossaryTerms.filter(
     (term) =>
       term.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      term.definition.toLowerCase().includes(searchQuery.toLowerCase()),
+      term.definition.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const toggleCategory = (category: string) => {
@@ -336,7 +336,7 @@ export default function Glossary() {
       acc[category] = filteredTerms.filter((t) => t.category === category);
       return acc;
     },
-    {} as Record<string, GlossaryTerm[]>,
+    {} as Record<string, GlossaryTerm[]>
   );
 
   return (
@@ -420,8 +420,8 @@ export default function Glossary() {
                       <div
                         key={item.term}
                         className={cn(
-                          "p-4 bg-card/50 border border-border/50 rounded-lg",
-                          "hover:bg-card hover:border-border transition-colors",
+                          'p-4 bg-card/50 border border-border/50 rounded-lg',
+                          'hover:bg-card hover:border-border transition-colors'
                         )}
                       >
                         <div className="flex items-start gap-2">

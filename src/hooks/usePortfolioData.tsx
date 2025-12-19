@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuth } from "./useAuth";
-import type { Position } from "@/integrations/supabase/types/tables";
+import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from './useAuth';
+import type { Position } from '@/integrations/supabase/types/tables';
 
 interface ProfileData {
   balance: number;
@@ -11,7 +11,7 @@ interface ProfileData {
   margin_level: number | null;
 }
 
-interface PositionWithPnL extends Omit<Position, "closed_at"> {
+interface PositionWithPnL extends Omit<Position, 'closed_at'> {
   unrealized_pnl: number;
   closed_at: string | undefined; // Override Supabase's null to TypeScript's undefined
   asset_class?: string;
@@ -41,20 +41,20 @@ export const usePortfolioData = () => {
     try {
       // Fetch profile data
       const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("balance, equity, margin_used, free_margin, margin_level")
-        .eq("id", user.id)
+        .from('profiles')
+        .select('balance, equity, margin_used, free_margin, margin_level')
+        .eq('id', user.id)
         .single();
 
       if (profileError) throw profileError;
 
       // Fetch open positions
       const { data: positionsData, error: positionsError } = await supabase
-        .from("positions")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "open")
-        .order("opened_at", { ascending: false });
+        .from('positions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'open')
+        .order('opened_at', { ascending: false });
 
       if (positionsError) throw positionsError;
 
@@ -69,17 +69,17 @@ export const usePortfolioData = () => {
             return (pos.opened_at ?? new Date().toISOString()) as string;
           })(),
           closed_at: pos.closed_at ?? undefined,
-          status: (pos.status ?? "open") as "open" | "closed",
+          status: (pos.status ?? 'open') as 'open' | 'closed',
           current_price: pos.current_price ?? 0,
           realized_pnl: pos.realized_pnl ?? 0,
           unrealized_pnl: pos.unrealized_pnl ?? 0,
-        })) || [],
+        })) || []
       );
       setError(null);
     } catch (err: unknown) {
       // Error fetching portfolio data
       setError(
-        err instanceof Error ? err.message : "Failed to fetch portfolio data",
+        err instanceof Error ? err.message : 'Failed to fetch portfolio data'
       );
     } finally {
       setLoading(false);
@@ -91,35 +91,35 @@ export const usePortfolioData = () => {
 
     // Set up real-time subscription for positions
     const positionsChannel = supabase
-      .channel("positions-changes")
+      .channel('positions-changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "positions",
+          event: '*',
+          schema: 'public',
+          table: 'positions',
           filter: `user_id=eq.${user?.id}`,
         },
         () => {
           fetchPortfolioData();
-        },
+        }
       )
       .subscribe();
 
     // Set up real-time subscription for profile updates
     const profileChannel = supabase
-      .channel("profile-changes")
+      .channel('profile-changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
           filter: `id=eq.${user?.id}`,
         },
         () => {
           fetchPortfolioData();
-        },
+        }
       )
       .subscribe();
 
@@ -136,13 +136,13 @@ export const usePortfolioData = () => {
     (position: Position, currentPrice: number): number => {
       const contractSize = 100000;
       const priceDiff =
-        position.side === "buy"
+        position.side === 'buy'
           ? currentPrice - position.entry_price
           : position.entry_price - currentPrice;
 
       return priceDiff * position.quantity * contractSize;
     },
-    [],
+    []
   );
 
   const updatePositionPrices = useCallback(
@@ -153,7 +153,7 @@ export const usePortfolioData = () => {
           if (priceData) {
             const unrealized_pnl = calculateUnrealizedPnL(
               position,
-              priceData.currentPrice,
+              priceData.currentPrice
             );
             return {
               ...position,
@@ -162,10 +162,10 @@ export const usePortfolioData = () => {
             };
           }
           return position;
-        }),
+        })
       );
     },
-    [calculateUnrealizedPnL],
+    [calculateUnrealizedPnL]
   );
 
   const getTotalUnrealizedPnL = (): number => {

@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import type { Database } from "@/integrations/supabase/types";
-import { useToast } from "./use-toast";
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import type { Database } from '@/integrations/supabase/types';
+import { useToast } from './use-toast';
 
 export type OrderType =
-  | "market"
-  | "limit"
-  | "stop"
-  | "stop_limit"
-  | "trailing_stop";
-export type OrderSide = "buy" | "sell";
+  | 'market'
+  | 'limit'
+  | 'stop'
+  | 'stop_limit'
+  | 'trailing_stop';
+export type OrderSide = 'buy' | 'sell';
 
 export interface OrderTableItem {
   id: string;
@@ -52,7 +52,7 @@ interface DatabaseOrder {
 }
 
 export interface UseOrdersTableOptions {
-  initialStatus?: string | "all";
+  initialStatus?: string | 'all';
 }
 
 export const useOrdersTable = (options?: UseOrdersTableOptions) => {
@@ -69,76 +69,76 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      if (!user) throw new Error('Not authenticated');
 
       const { data, error: fetchError } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+        .from('orders')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
       if (fetchError) throw fetchError;
 
       // Map database orders to OrderTableItem format
       const mappedOrders: OrderTableItem[] = (data || []).map(
-        (order: Database["public"]["Tables"]["orders"]["Row"]) => ({
-          id: typeof order.id === "string" ? order.id : String(order.id ?? ""),
+        (order: Database['public']['Tables']['orders']['Row']) => ({
+          id: typeof order.id === 'string' ? order.id : String(order.id ?? ''),
           user_id:
-            typeof order.user_id === "string"
+            typeof order.user_id === 'string'
               ? order.user_id
-              : String(order.user_id ?? ""),
+              : String(order.user_id ?? ''),
           symbol:
-            typeof order.symbol === "string"
+            typeof order.symbol === 'string'
               ? order.symbol
-              : String(order.symbol ?? ""),
+              : String(order.symbol ?? ''),
           type: order.order_type as OrderType,
           side: order.side as OrderSide,
           quantity:
-            typeof order.quantity === "number"
+            typeof order.quantity === 'number'
               ? order.quantity
               : Number(order.quantity ?? 0),
           filled_quantity:
-            typeof order.filled_quantity === "number"
+            typeof order.filled_quantity === 'number'
               ? order.filled_quantity
               : Number(order.filled_quantity ?? 0),
-          price: typeof order.price === "number" ? order.price : null,
+          price: typeof order.price === 'number' ? order.price : null,
           limit_price:
-            order.order_type === "limit" || order.order_type === "stop_limit"
-              ? typeof order.price === "number"
+            order.order_type === 'limit' || order.order_type === 'stop_limit'
+              ? typeof order.price === 'number'
                 ? order.price
                 : null
               : null,
           stop_price:
-            order.order_type === "stop" || order.order_type === "stop_limit"
-              ? typeof order.stop_loss === "number"
+            order.order_type === 'stop' || order.order_type === 'stop_limit'
+              ? typeof order.stop_loss === 'number'
                 ? order.stop_loss
                 : null
               : null,
           status:
-            typeof order.status === "string"
+            typeof order.status === 'string'
               ? order.status
-              : String(order.status ?? ""),
+              : String(order.status ?? ''),
           created_at:
-            typeof order.created_at === "string"
+            typeof order.created_at === 'string'
               ? order.created_at
-              : String(order.created_at ?? ""),
+              : String(order.created_at ?? ''),
           updated_at:
-            typeof order.created_at === "string"
+            typeof order.created_at === 'string'
               ? order.created_at
-              : String(order.created_at ?? ""),
+              : String(order.created_at ?? ''),
           average_fill_price:
-            typeof order.fill_price === "number" ? order.fill_price : null,
+            typeof order.fill_price === 'number' ? order.fill_price : null,
           commission:
-            typeof order.commission === "number" ? order.commission : null,
+            typeof order.commission === 'number' ? order.commission : null,
           slippage: null,
           realized_pnl: null,
-        }),
+        })
       );
 
       setOrders(mappedOrders);
     } catch (err) {
       setError(
-        err instanceof Error ? err : new Error("Failed to fetch orders"),
+        err instanceof Error ? err : new Error('Failed to fetch orders')
       );
     } finally {
       setLoading(false);
@@ -148,79 +148,79 @@ export const useOrdersTable = (options?: UseOrdersTableOptions) => {
     async (orderId: string) => {
       try {
         const { data, error } = await supabase.functions.invoke(
-          "cancel-order",
+          'cancel-order',
           {
             body: { order_id: orderId },
-          },
+          }
         );
 
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
 
         toast({
-          title: "Order cancelled",
-          description: "Order cancelled successfully",
+          title: 'Order cancelled',
+          description: 'Order cancelled successfully',
         });
         await fetchOrders();
         return true;
       } catch (err) {
         // Cancel error silently handled
         toast({
-          title: "Cancellation failed",
+          title: 'Cancellation failed',
           description:
-            err instanceof Error ? err.message : "Failed to cancel order",
-          variant: "destructive",
+            err instanceof Error ? err.message : 'Failed to cancel order',
+          variant: 'destructive',
         });
         return false;
       }
     },
-    [fetchOrders, toast],
+    [fetchOrders, toast]
   );
   const modifyOrder = useCallback(
     async (orderId: string, updates: Record<string, unknown>) => {
       try {
         const { data, error } = await supabase.functions.invoke(
-          "modify-order",
+          'modify-order',
           {
             body: { order_id: orderId, ...updates },
-          },
+          }
         );
 
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
 
         toast({
-          title: "Order modified",
-          description: "Order updated successfully",
+          title: 'Order modified',
+          description: 'Order updated successfully',
         });
         await fetchOrders();
         return true;
       } catch (err) {
         // Modify error silently handled
         toast({
-          title: "Modification failed",
+          title: 'Modification failed',
           description:
-            err instanceof Error ? err.message : "Failed to modify order",
-          variant: "destructive",
+            err instanceof Error ? err.message : 'Failed to modify order',
+          variant: 'destructive',
         });
         return false;
       }
     },
-    [fetchOrders, toast],
+    [fetchOrders, toast]
   );
   useEffect(() => {
     fetchOrders();
 
     // subscribe to real-time changes on orders for current user
     const channel = supabase
-      .channel("orders-table-updates")
+      .channel('orders-table-updates')
       .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "orders" },
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
         (payload: { event: string; new: unknown; old: unknown }) => {
           // simple approach: refetch on any change
           void fetchOrders();
-        },
+        }
       )
       .subscribe();
 

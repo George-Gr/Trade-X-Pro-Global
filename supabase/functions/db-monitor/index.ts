@@ -8,7 +8,7 @@
  * Response: Performance metrics and optimization recommendations
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
 
 declare const Deno: {
   env: {
@@ -50,8 +50,8 @@ interface TableStatistics {
 }
 
 interface PerformanceRecommendation {
-  type: "index" | "maintenance" | "configuration" | "query_optimization";
-  priority: "high" | "medium" | "low";
+  type: 'index' | 'maintenance' | 'configuration' | 'query_optimization';
+  priority: 'high' | 'medium' | 'low';
   title: string;
   description: string;
   estimated_impact: string;
@@ -60,7 +60,7 @@ interface PerformanceRecommendation {
 
 interface DatabaseHealth {
   overall_score: number;
-  status: "excellent" | "good" | "warning" | "critical";
+  status: 'excellent' | 'good' | 'warning' | 'critical';
   issues_count: { high: number; medium: number; low: number };
   last_updated: string;
 }
@@ -128,33 +128,33 @@ interface SupabaseClient {
   from: (table: string) => unknown;
   rpc: (
     name: string,
-    params?: unknown,
+    params?: unknown
   ) => Promise<{ data: unknown; error: unknown }>;
 }
 
 export default async function (req: Request) {
   try {
     // Get Supabase client
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabase = createClient(
       supabaseUrl,
-      supabaseKey,
+      supabaseKey
     ) as unknown as SupabaseClient;
 
     // Get service role key for admin operations
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     if (!serviceRoleKey) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "Service role key not configured",
+          error: 'Service role key not configured',
           timestamp: new Date().toISOString(),
         }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -162,12 +162,12 @@ export default async function (req: Request) {
     const adminSupabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Handle CORS
-    if (req.method === "OPTIONS") {
-      return new Response("ok", {
+    if (req.method === 'OPTIONS') {
+      return new Response('ok', {
         headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       });
     }
@@ -183,27 +183,27 @@ export default async function (req: Request) {
       }),
       {
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
-      },
+      }
     );
   } catch (error) {
-    console.error("Database monitoring function error:", error);
+    console.error('Database monitoring function error:', error);
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: "Internal server error",
+        error: 'Internal server error',
         timestamp: new Date().toISOString(),
       }),
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
-      },
+      }
     );
   }
 }
@@ -221,7 +221,7 @@ async function getDatabaseMetrics(supabase: unknown): Promise<DatabaseMetrics> {
     queryPerformance,
     indexUsage,
     tableStats,
-    recommendations,
+    recommendations
   );
 
   return {
@@ -234,14 +234,14 @@ async function getDatabaseMetrics(supabase: unknown): Promise<DatabaseMetrics> {
 }
 
 async function getQueryPerformanceMetrics(
-  supabase: unknown,
+  supabase: unknown
 ): Promise<QueryPerformanceMetrics> {
   // Check if pg_stat_statements is available
   // @ts-expect-error - Supabase from() method chain is complex
   const { data: extCheck } = await supabase
-    .from("pg_extension")
-    .select("extname")
-    .eq("extname", "pg_stat_statements");
+    .from('pg_extension')
+    .select('extname')
+    .eq('extname', 'pg_stat_statements');
 
   if (!extCheck || extCheck.length === 0) {
     return {
@@ -254,25 +254,25 @@ async function getQueryPerformanceMetrics(
 
   // Get slow queries
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: slowQueries } = await supabase.rpc("get_slow_queries", {
+  const { data: slowQueries } = await supabase.rpc('get_slow_queries', {
     limit_count: 10,
   });
 
   // Get frequent queries
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: frequentQueries } = await supabase.rpc("get_frequent_queries", {
+  const { data: frequentQueries } = await supabase.rpc('get_frequent_queries', {
     limit_count: 10,
   });
 
   // Get I/O intensive queries
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: ioQueries } = await supabase.rpc("get_io_intensive_queries", {
+  const { data: ioQueries } = await supabase.rpc('get_io_intensive_queries', {
     limit_count: 10,
   });
 
   // Count total monitored queries
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: totalQueryCount } = await supabase.rpc("get_total_query_count");
+  const { data: totalQueryCount } = await supabase.rpc('get_total_query_count');
 
   return {
     top_slow_queries: slowQueries || [],
@@ -283,20 +283,20 @@ async function getQueryPerformanceMetrics(
 }
 
 async function getIndexUsageMetrics(
-  supabase: unknown,
+  supabase: unknown
 ): Promise<IndexUsageMetrics> {
   // Get unused indexes
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: unusedIndexData } = await supabase.rpc("get_unused_indexes");
+  const { data: unusedIndexData } = await supabase.rpc('get_unused_indexes');
 
   // Get index hit ratios
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: hitRatios } = await supabase.rpc("get_index_hit_ratios");
+  const { data: hitRatios } = await supabase.rpc('get_index_hit_ratios');
 
   // Get recommended indexes based on missing statistics
   // @ts-expect-error - Supabase RPC calls are handled at runtime
   const { data: recommendations } = await supabase.rpc(
-    "get_index_recommendations",
+    'get_index_recommendations'
   );
 
   return {
@@ -307,10 +307,10 @@ async function getIndexUsageMetrics(
 }
 
 async function getTableStatistics(
-  supabase: unknown,
+  supabase: unknown
 ): Promise<TableStatistics[]> {
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data } = await supabase.rpc("get_table_statistics");
+  const { data } = await supabase.rpc('get_table_statistics');
 
   return (data || []).map((table: TableStats) => ({
     table_name: table.tablename,
@@ -326,13 +326,13 @@ async function getTableStatistics(
 }
 
 async function getPerformanceRecommendations(
-  supabase: unknown,
+  supabase: unknown
 ): Promise<PerformanceRecommendation[]> {
   const recommendations: PerformanceRecommendation[] = [];
 
   // Get table statistics to identify issues
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const { data: tableStats } = await supabase.rpc("get_table_statistics");
+  const { data: tableStats } = await supabase.rpc('get_table_statistics');
 
   // Check for tables with high sequential scan ratios
   const highSeqScanTables = (tableStats || []).filter((table: TableStats) => {
@@ -342,44 +342,44 @@ async function getPerformanceRecommendations(
 
   highSeqScanTables.forEach((table: TableStats) => {
     recommendations.push({
-      type: "index",
-      priority: "high",
+      type: 'index',
+      priority: 'high',
       title: `Add indexes for ${table.tablename}`,
       description: `Table ${table.tablename} has ${table.seq_scan} sequential scans vs ${table.idx_scan} index scans. Consider adding indexes for frequently queried columns.`,
-      estimated_impact: "High - Could reduce query time by 50-90%",
+      estimated_impact: 'High - Could reduce query time by 50-90%',
       sql_command: `-- Consider indexes for table ${table.tablename}\n-- Analyze query patterns and add appropriate indexes`,
     });
   });
 
   // Check for unused indexes
   // @ts-expect-error - Supabase RPC calls are handled at runtime
-  const unusedIndexResult = await supabase.rpc("get_unused_indexes");
+  const unusedIndexResult = await supabase.rpc('get_unused_indexes');
   const unusedIndexCheck: UnusedIndexResult[] = unusedIndexResult?.data || [];
 
   unusedIndexCheck.forEach((index: UnusedIndexResult) => {
     recommendations.push({
-      type: "maintenance",
-      priority: "medium",
+      type: 'maintenance',
+      priority: 'medium',
       title: `Remove unused index ${index.index_name}`,
       description: `Index ${index.index_name} on table ${index.table_name} has never been used but consumes ${index.size_mb}MB of space.`,
-      estimated_impact: "Medium - Frees up space and reduces write overhead",
+      estimated_impact: 'Medium - Frees up space and reduces write overhead',
       sql_command: `DROP INDEX CONCURRENTLY ${index.index_name};`,
     });
   });
 
   // Check for tables with high bloat
   const highBloatTables = (tableStats || []).filter(
-    (table: TableStats) => table.bloat_ratio_percent > 20,
+    (table: TableStats) => table.bloat_ratio_percent > 20
   );
 
   highBloatTables.forEach((table: TableStats) => {
     recommendations.push({
-      type: "maintenance",
-      priority: "medium",
+      type: 'maintenance',
+      priority: 'medium',
       title: `Vacuum table ${table.tablename}`,
       description: `Table ${table.tablename} has ${table.bloat_ratio_percent.toFixed(1)}% bloat ratio. Consider VACUUM FULL or reindexing.`,
       estimated_impact:
-        "Medium - Improves query performance and reduces space usage",
+        'Medium - Improves query performance and reduces space usage',
       sql_command: `VACUUM FULL ${table.tablename};`,
     });
   });
@@ -391,7 +391,7 @@ function calculateDatabaseHealth(
   queryPerf: QueryPerformanceMetrics,
   indexUsage: IndexUsageMetrics,
   tableStats: TableStatistics[],
-  recommendations: PerformanceRecommendation[],
+  recommendations: PerformanceRecommendation[]
 ): DatabaseHealth {
   let score = 100;
   let highIssues = 0;
@@ -424,7 +424,7 @@ function calculateDatabaseHealth(
 
   // Deduct points for high bloat
   const highBloatCount = tableStats.filter(
-    (t) => t.bloat_percentage > 20,
+    (t) => t.bloat_percentage > 20
   ).length;
   if (highBloatCount > 3) {
     score -= 15;
@@ -435,17 +435,17 @@ function calculateDatabaseHealth(
   }
 
   // Deduct points for recommendations
-  highIssues += recommendations.filter((r) => r.priority === "high").length;
-  mediumIssues += recommendations.filter((r) => r.priority === "medium").length;
-  lowIssues += recommendations.filter((r) => r.priority === "low").length;
+  highIssues += recommendations.filter((r) => r.priority === 'high').length;
+  mediumIssues += recommendations.filter((r) => r.priority === 'medium').length;
+  lowIssues += recommendations.filter((r) => r.priority === 'low').length;
 
   score = Math.max(0, Math.min(100, score));
 
-  let status: "excellent" | "good" | "warning" | "critical";
-  if (score >= 90) status = "excellent";
-  else if (score >= 75) status = "good";
-  else if (score >= 50) status = "warning";
-  else status = "critical";
+  let status: 'excellent' | 'good' | 'warning' | 'critical';
+  if (score >= 90) status = 'excellent';
+  else if (score >= 75) status = 'good';
+  else if (score >= 50) status = 'warning';
+  else status = 'critical';
 
   return {
     overall_score: score,

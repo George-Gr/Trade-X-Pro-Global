@@ -1,32 +1,4 @@
-import { useState } from "react";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,10 +8,38 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { usePendingOrders, PendingOrder } from "@/hooks/usePendingOrders";
-import { RefreshCw, X, Edit, Clock } from "lucide-react";
-import { format } from "date-fns";
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { PendingOrder, usePendingOrders } from '@/hooks/usePendingOrders';
+import { format } from 'date-fns';
+import { Clock, Edit, RefreshCw, X } from 'lucide-react';
+import { useState } from 'react';
 
 const PendingOrders = () => {
   const { orders, loading, refresh, cancelOrder, modifyOrder } =
@@ -50,17 +50,17 @@ const PendingOrders = () => {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
   // Modify form state
-  const [modifyQuantity, setModifyQuantity] = useState("");
-  const [modifyPrice, setModifyPrice] = useState("");
-  const [modifyStopLoss, setModifyStopLoss] = useState("");
-  const [modifyTakeProfit, setModifyTakeProfit] = useState("");
+  const [modifyQuantity, setModifyQuantity] = useState('');
+  const [modifyPrice, setModifyPrice] = useState('');
+  const [modifyStopLoss, setModifyStopLoss] = useState('');
+  const [modifyTakeProfit, setModifyTakeProfit] = useState('');
 
   const handleModifyClick = (order: PendingOrder) => {
     setSelectedOrder(order);
     setModifyQuantity(order.quantity.toString());
-    setModifyPrice(order.price?.toString() || "");
-    setModifyStopLoss(order.stop_loss?.toString() || "");
-    setModifyTakeProfit(order.take_profit?.toString() || "");
+    setModifyPrice(order.price?.toString() || '');
+    setModifyStopLoss(order.stop_loss?.toString() || '');
+    setModifyTakeProfit(order.take_profit?.toString() || '');
     setModifyDialogOpen(true);
   };
 
@@ -68,21 +68,21 @@ const PendingOrders = () => {
     if (!selectedOrder) return;
 
     const updates: {
-      quantity?: number;
-      price?: number;
+      quantity?: number | null;
+      price?: number | null;
       stop_loss?: number | null;
       take_profit?: number | null;
     } = {};
     if (modifyQuantity !== selectedOrder.quantity.toString()) {
       updates.quantity = parseFloat(modifyQuantity);
     }
-    if (modifyPrice !== (selectedOrder.price?.toString() || "")) {
+    if (modifyPrice !== (selectedOrder.price?.toString() || '')) {
       updates.price = parseFloat(modifyPrice);
     }
-    if (modifyStopLoss !== (selectedOrder.stop_loss?.toString() || "")) {
+    if (modifyStopLoss !== (selectedOrder.stop_loss?.toString() || '')) {
       updates.stop_loss = modifyStopLoss ? parseFloat(modifyStopLoss) : null;
     }
-    if (modifyTakeProfit !== (selectedOrder.take_profit?.toString() || "")) {
+    if (modifyTakeProfit !== (selectedOrder.take_profit?.toString() || '')) {
       updates.take_profit = modifyTakeProfit
         ? parseFloat(modifyTakeProfit)
         : null;
@@ -90,7 +90,7 @@ const PendingOrders = () => {
 
     const success = await modifyOrder(
       selectedOrder.id,
-      updates as Record<string, number | null | undefined>,
+      updates as Record<string, number | null | undefined>
     );
     if (success) {
       setModifyDialogOpen(false);
@@ -114,21 +114,21 @@ const PendingOrders = () => {
   };
 
   const getOrderTypeBadge = (type: string) => {
-    const variants: Record<string, "default" | "secondary" | "outline"> = {
-      limit: "default",
-      stop: "secondary",
-      stop_limit: "outline",
+    const variants: Record<string, 'default' | 'secondary' | 'outline'> = {
+      limit: 'default',
+      stop: 'secondary',
+      stop_limit: 'outline',
     };
     return (
-      <Badge variant={variants[type] || "default"}>
-        {type.replace("_", " ").toUpperCase()}
+      <Badge variant={variants[type] || 'default'}>
+        {type.replace('_', ' ').toUpperCase()}
       </Badge>
     );
   };
 
   const getSideBadge = (side: string) => {
     return (
-      <Badge variant={side === "buy" ? "default" : "destructive"}>
+      <Badge variant={side === 'buy' ? 'default' : 'destructive'}>
         {side.toUpperCase()}
       </Badge>
     );
@@ -207,25 +207,25 @@ const PendingOrders = () => {
                               {order.quantity.toFixed(2)}
                             </TableCell>
                             <TableCell className="text-right">
-                              {order.price ? `$${order.price.toFixed(5)}` : "-"}
+                              {order.price ? `$${order.price.toFixed(5)}` : '-'}
                             </TableCell>
                             <TableCell className="text-right">
                               {order.stop_loss
                                 ? `$${order.stop_loss.toFixed(5)}`
-                                : "-"}
+                                : '-'}
                             </TableCell>
                             <TableCell className="text-right">
                               {order.take_profit
                                 ? `$${order.take_profit.toFixed(5)}`
-                                : "-"}
+                                : '-'}
                             </TableCell>
                             <TableCell>
                               {order.created_at
                                 ? format(
                                     new Date(order.created_at),
-                                    "MMM dd, HH:mm",
+                                    'MMM dd, HH:mm'
                                   )
-                                : "N/A"}
+                                : 'N/A'}
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-4">
@@ -270,9 +270,9 @@ const PendingOrders = () => {
                                 {order.created_at
                                   ? format(
                                       new Date(order.created_at),
-                                      "MMM dd, HH:mm",
+                                      'MMM dd, HH:mm'
                                     )
-                                  : ""}
+                                  : ''}
                               </p>
                             </div>
                             <div className="flex flex-col gap-2">
@@ -298,7 +298,7 @@ const PendingOrders = () => {
                               <p className="font-mono font-semibold">
                                 {order.price
                                   ? `$${order.price.toFixed(5)}`
-                                  : "-"}
+                                  : '-'}
                               </p>
                             </div>
                             <div>
@@ -308,7 +308,7 @@ const PendingOrders = () => {
                               <p className="font-mono font-semibold">
                                 {order.stop_loss
                                   ? `$${order.stop_loss.toFixed(5)}`
-                                  : "-"}
+                                  : '-'}
                               </p>
                             </div>
                             <div>
@@ -318,7 +318,7 @@ const PendingOrders = () => {
                               <p className="font-mono font-semibold">
                                 {order.take_profit
                                   ? `$${order.take_profit.toFixed(5)}`
-                                  : "-"}
+                                  : '-'}
                               </p>
                             </div>
                           </div>
@@ -359,7 +359,7 @@ const PendingOrders = () => {
               <DialogHeader>
                 <DialogTitle>Modify Order</DialogTitle>
                 <DialogDescription>
-                  Update the parameters of your pending order for{" "}
+                  Update the parameters of your pending order for{' '}
                   {selectedOrder?.symbol}
                 </DialogDescription>
               </DialogHeader>
@@ -374,7 +374,7 @@ const PendingOrders = () => {
                     onChange={(e) => setModifyQuantity(e.target.value)}
                   />
                 </div>
-                {selectedOrder?.order_type !== "stop" && (
+                {selectedOrder?.order_type !== 'stop' && (
                   <div>
                     <Label htmlFor="price">Price</Label>
                     <Input

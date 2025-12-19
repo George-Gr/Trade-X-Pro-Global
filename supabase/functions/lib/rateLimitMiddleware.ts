@@ -8,17 +8,17 @@ export async function checkRateLimit(
   userId: string,
   endpoint: string,
   maxRequests: number = 100,
-  windowSeconds: number = 60,
+  windowSeconds: number = 60
 ): Promise<boolean> {
   try {
     const { data, error } = await (
       supabase as {
         rpc: (
           name: string,
-          params: Record<string, unknown>,
+          params: Record<string, unknown>
         ) => Promise<{ data: unknown; error: unknown }>;
       }
-    ).rpc("check_rate_limit", {
+    ).rpc('check_rate_limit', {
       p_user_id: userId,
       p_endpoint: endpoint,
       p_max_requests: maxRequests,

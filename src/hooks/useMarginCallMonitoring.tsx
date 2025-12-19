@@ -25,11 +25,11 @@
  * }
  */
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useAuth } from "./useAuth";
-import { useMarginMonitoring } from "./useMarginMonitoring";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useAuth } from './useAuth';
+import { useMarginMonitoring } from './useMarginMonitoring';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import {
   detectMarginCall,
   shouldEscalateToLiquidation,
@@ -42,7 +42,7 @@ import {
   MarginCallStatus,
   MarginCallSeverity,
   type MarginCallAction,
-} from "@/lib/trading/marginCallDetection";
+} from '@/lib/trading/marginCallDetection';
 
 interface MarginCallState {
   marginStatus: MarginCallStatus;
@@ -65,14 +65,14 @@ interface UseMarginCallMonitoringOptions {
   escalationCheckInterval?: number; // ms between escalation checks (default 30000 = 30 sec)
   onStatusChange?: (
     newStatus: MarginCallStatus,
-    oldStatus: MarginCallStatus,
+    oldStatus: MarginCallStatus
   ) => void;
   onEscalation?: (severity: MarginCallSeverity) => void;
   onLiquidationRisk?: () => void;
 }
 
 export function useMarginCallMonitoring(
-  options: UseMarginCallMonitoringOptions = {},
+  options: UseMarginCallMonitoringOptions = {}
 ) {
   const {
     enabled = true,
@@ -100,13 +100,13 @@ export function useMarginCallMonitoring(
   // Map MarginStatus to MarginCallStatus for initial state
   function mapMarginStatusToCallStatus(status: unknown): MarginCallStatus {
     switch (status) {
-      case "SAFE":
+      case 'SAFE':
         return MarginCallStatus.PENDING;
-      case "WARNING":
+      case 'WARNING':
         return MarginCallStatus.NOTIFIED;
-      case "CRITICAL":
+      case 'CRITICAL':
         return MarginCallStatus.ESCALATED;
-      case "LIQUIDATION":
+      case 'LIQUIDATION':
         return MarginCallStatus.RESOLVED;
       default:
         return MarginCallStatus.PENDING;
@@ -134,7 +134,7 @@ export function useMarginCallMonitoring(
 
   const marginCallStartTimeRef = useRef<number | null>(null);
   const notificationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
+    null
   );
   const escalationCheckTimeoutRef = useRef<ReturnType<
     typeof setInterval
@@ -154,12 +154,12 @@ export function useMarginCallMonitoring(
   const detectMarginCallEvent = useCallback((): MarginCallEvent => {
     const detection = detectMarginCall(
       state.marginLevel > 0 ? 1000 * (100 / state.marginLevel) : 0, // Assume $1000 equity per margin %
-      1000 * (100 / Math.max(state.marginLevel, 1)), // Estimate margin used
+      1000 * (100 / Math.max(state.marginLevel, 1)) // Estimate margin used
     );
 
     return {
       id: `margin-call-${Date.now()}`,
-      userId: user?.id || "",
+      userId: user?.id || '',
       triggeredAt: new Date(),
       marginLevelAtTrigger: state.marginLevel,
       status: MarginCallStatus.NOTIFIED,
@@ -210,10 +210,10 @@ export function useMarginCallMonitoring(
           marginStatus: MarginCallStatus.NOTIFIED,
           severity,
           shouldRestrictOrders: shouldRestrictNewTrading(
-            MarginCallStatus.NOTIFIED,
+            MarginCallStatus.NOTIFIED
           ),
           shouldEnforceCloseOnly: shouldEnforceCloseOnly(
-            MarginCallStatus.NOTIFIED,
+            MarginCallStatus.NOTIFIED
           ),
           recommendedActions: newActions,
         };
@@ -261,7 +261,7 @@ export function useMarginCallMonitoring(
         // Check if should escalate
         const shouldEscalateNow = shouldEscalateToLiquidation(
           marginLevel ?? 0,
-          timeInCallMinutes ?? 0,
+          timeInCallMinutes ?? 0
         );
 
         if (shouldEscalateNow && !prev.shouldEscalate) {
@@ -270,10 +270,10 @@ export function useMarginCallMonitoring(
 
           // Show critical notification
           toast({
-            title: "⚠️ Liquidation Risk",
+            title: '⚠️ Liquidation Risk',
             description:
-              "Your account is in critical margin condition. Liquidation may be forced automatically. Close positions or deposit funds immediately.",
-            variant: "destructive",
+              'Your account is in critical margin condition. Liquidation may be forced automatically. Close positions or deposit funds immediately.',
+            variant: 'destructive',
           });
 
           return {
@@ -295,7 +295,7 @@ export function useMarginCallMonitoring(
 
     escalationCheckTimeoutRef.current = setInterval(
       checkEscalation,
-      escalationCheckInterval,
+      escalationCheckInterval
     );
 
     return () => {
@@ -329,14 +329,14 @@ export function useMarginCallMonitoring(
 
     if (now - lastNotifTime > notificationInterval) {
       const notification = generateMarginCallNotification(
-        detectMarginCallEvent(),
+        detectMarginCallEvent()
       );
 
       toast({
-        title: String(notification.title || ""),
-        description: String(notification.message || ""),
+        title: String(notification.title || ''),
+        description: String(notification.message || ''),
         variant:
-          notification.priority === "CRITICAL" ? "destructive" : "default",
+          notification.priority === 'CRITICAL' ? 'destructive' : 'default',
       });
 
       setState((prev) => ({

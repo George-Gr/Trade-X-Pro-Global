@@ -3,7 +3,7 @@
  * Provides debounced updates for chart data to improve performance
  */
 
-import { useCallback, useRef, useEffect, useState } from "react";
+import { useCallback, useRef, useEffect, useState } from 'react';
 
 interface DebounceConfig {
   delay: number;
@@ -14,7 +14,7 @@ interface DebounceConfig {
 
 export const useDebouncedChartUpdate = <T>(
   callback: (...args: T[]) => void,
-  config: DebounceConfig = { delay: 300 },
+  config: DebounceConfig = { delay: 300 }
 ) => {
   const { delay, maxWait = 0, leading = false, trailing = true } = config;
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>();
@@ -36,7 +36,7 @@ export const useDebouncedChartUpdate = <T>(
         (maxWait > 0 && timeSinceLastInvoke >= maxWait)
       );
     },
-    [delay, maxWait],
+    [delay, maxWait]
   );
 
   const invokeFunc = useCallback(
@@ -45,7 +45,7 @@ export const useDebouncedChartUpdate = <T>(
       lastInvokeTimeRef.current = time;
       return callback(...args);
     },
-    [callback],
+    [callback]
   );
 
   const getRemainingWait = useCallback(
@@ -60,7 +60,7 @@ export const useDebouncedChartUpdate = <T>(
 
       return Math.max(timeWaiting, 0);
     },
-    [maxWait, delay],
+    [maxWait, delay]
   );
 
   // Declare functions after their dependencies
@@ -75,7 +75,7 @@ export const useDebouncedChartUpdate = <T>(
       lastThisRef.current = undefined;
       return undefined;
     },
-    [trailing, invokeFunc],
+    [trailing, invokeFunc]
   );
 
   const timerExpired = useCallback(
@@ -86,7 +86,7 @@ export const useDebouncedChartUpdate = <T>(
       }
       // Recompute after shouldInvoke check
     },
-    [shouldInvoke, trailingEdge],
+    [shouldInvoke, trailingEdge]
   );
 
   const startTimer = useCallback(
@@ -98,7 +98,7 @@ export const useDebouncedChartUpdate = <T>(
         }
       }, wait);
     },
-    [shouldInvoke, trailingEdge],
+    [shouldInvoke, trailingEdge]
   );
 
   const leadingEdge = useCallback(
@@ -107,7 +107,7 @@ export const useDebouncedChartUpdate = <T>(
       timeoutRef.current = setTimeout(() => trailingEdge(...args), delay);
       return leading ? invokeFunc(...args) : undefined;
     },
-    [delay, leading, invokeFunc, trailingEdge],
+    [delay, leading, invokeFunc, trailingEdge]
   );
 
   const debouncedCallback = useCallback(
@@ -154,7 +154,7 @@ export const useDebouncedChartUpdate = <T>(
       maxWait,
       invokeFunc,
       trailingEdge,
-    ],
+    ]
   );
 
   const cancel = useCallback(() => {
@@ -227,7 +227,7 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
         timeoutRef.current = setTimeout(flushUpdates, 16);
       }
     },
-    [batchSize, flushUpdates],
+    [batchSize, flushUpdates]
   );
 
   const clear = useCallback(() => {
@@ -247,7 +247,7 @@ export const useChartUpdateBatcher = (batchSize: number = 10) => {
 export const useProgressiveChartLoading = (
   data: unknown[],
   chunkSize: number = 50,
-  onLoadProgress?: (progress: number, loadedData: unknown[]) => void,
+  onLoadProgress?: (progress: number, loadedData: unknown[]) => void
 ) => {
   const [loadedData, setLoadedData] = useState<unknown[]>([]);
   const [progress, setProgress] = useState(0);

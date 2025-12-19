@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Zap, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Zap, CheckCircle2 } from 'lucide-react';
 
 export default function Cryptocurrencies() {
   return (
@@ -40,14 +40,14 @@ export default function Cryptocurrencies() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "24/7 trading including weekends",
-                    "Leverage up to 1:100",
-                    "No crypto wallet required",
-                    "Go long or short on volatility",
-                    "Competitive spreads on majors",
-                    "No exchange or custody fees",
-                    "Real-time execution",
-                    "Advanced order types",
+                    '24/7 trading including weekends',
+                    'Leverage up to 1:100',
+                    'No crypto wallet required',
+                    'Go long or short on volatility',
+                    'Competitive spreads on majors',
+                    'No exchange or custody fees',
+                    'Real-time execution',
+                    'Advanced order types',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -66,21 +66,21 @@ export default function Cryptocurrencies() {
                 <div className="space-y-4">
                   {[
                     {
-                      category: "Major Crypto",
+                      category: 'Major Crypto',
                       items:
-                        "Bitcoin, Ethereum, Litecoin, Ripple, Bitcoin Cash",
+                        'Bitcoin, Ethereum, Litecoin, Ripple, Bitcoin Cash',
                     },
                     {
-                      category: "Altcoins",
-                      items: "Cardano, Polkadot, Chainlink, Solana, Avalanche",
+                      category: 'Altcoins',
+                      items: 'Cardano, Polkadot, Chainlink, Solana, Avalanche',
                     },
                     {
-                      category: "DeFi Tokens",
-                      items: "Uniswap, Aave, Compound, Curve, Balancer",
+                      category: 'DeFi Tokens',
+                      items: 'Uniswap, Aave, Compound, Curve, Balancer',
                     },
                     {
-                      category: "Others",
-                      items: "Dogecoin, Shiba Inu, Polygon, Arbitrum, Optimism",
+                      category: 'Others',
+                      items: 'Dogecoin, Shiba Inu, Polygon, Arbitrum, Optimism',
                     },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
@@ -113,34 +113,34 @@ export default function Cryptocurrencies() {
                   <tbody>
                     {[
                       {
-                        crypto: "BTC/USD",
-                        spread: "$10",
-                        leverage: "1:100",
-                        hours: "24/7",
+                        crypto: 'BTC/USD',
+                        spread: '$10',
+                        leverage: '1:100',
+                        hours: '24/7',
                       },
                       {
-                        crypto: "ETH/USD",
-                        spread: "$2",
-                        leverage: "1:100",
-                        hours: "24/7",
+                        crypto: 'ETH/USD',
+                        spread: '$2',
+                        leverage: '1:100',
+                        hours: '24/7',
                       },
                       {
-                        crypto: "XRP/USD",
-                        spread: "$0.002",
-                        leverage: "1:50",
-                        hours: "24/7",
+                        crypto: 'XRP/USD',
+                        spread: '$0.002',
+                        leverage: '1:50',
+                        hours: '24/7',
                       },
                       {
-                        crypto: "LTC/USD",
-                        spread: "$0.50",
-                        leverage: "1:50",
-                        hours: "24/7",
+                        crypto: 'LTC/USD',
+                        spread: '$0.50',
+                        leverage: '1:50',
+                        hours: '24/7',
                       },
                       {
-                        crypto: "ADA/USD",
-                        spread: "$0.0005",
-                        leverage: "1:50",
-                        hours: "24/7",
+                        crypto: 'ADA/USD',
+                        spread: '$0.0005',
+                        leverage: '1:50',
+                        hours: '24/7',
                       },
                     ].map((row, i) => (
                       <tr
@@ -163,7 +163,7 @@ export default function Cryptocurrencies() {
 
           <div className="mb-8 p-6 bg-warning/10 border border-warning/20 rounded-lg">
             <p className="text-sm text-muted-foreground">
-              <strong className="text-warning">Crypto Risk Warning:</strong>{" "}
+              <strong className="text-warning">Crypto Risk Warning:</strong>{' '}
               Cryptocurrencies are extremely volatile and carry substantial
               risk. Prices can fluctuate dramatically in short periods. Only
               trade with funds you can afford to lose. Past performance is not

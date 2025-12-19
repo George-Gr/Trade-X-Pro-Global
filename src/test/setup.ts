@@ -4,7 +4,7 @@
  * Global test configuration and mocks
  */
 
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 
 // Use globalThis for browser/Node compatibility
 const globalObj = globalThis as typeof globalThis & {
@@ -16,7 +16,7 @@ const globalObj = globalThis as typeof globalThis & {
 };
 
 // Mock matchMedia for responsive tests
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -44,7 +44,7 @@ globalObj.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
   disconnect() {}
   root = null;
-  rootMargin = "";
+  rootMargin = '';
   thresholds: number[] = [];
   takeRecords(): IntersectionObserverEntry[] {
     return [];
@@ -68,7 +68,7 @@ globalObj.requestIdleCallback = (callback: IdleRequestCallback): number => {
         didTimeout: false,
         timeRemaining: () => 50,
       }),
-    0,
+    0
   );
 };
 
@@ -76,8 +76,8 @@ globalObj.requestIdleCallback = (callback: IdleRequestCallback): number => {
 const originalError = console.error;
 console.error = (...args: unknown[]) => {
   if (
-    typeof args[0] === "string" &&
-    (args[0].includes("Warning:") || args[0].includes("act("))
+    typeof args[0] === 'string' &&
+    (args[0].includes('Warning:') || args[0].includes('act('))
   ) {
     return;
   }

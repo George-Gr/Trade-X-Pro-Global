@@ -6,7 +6,7 @@
  * All calculations use 4 decimal precision to match trading system accuracy.
  */
 
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 // ============================================================================
 // TYPE DEFINITIONS & SCHEMAS
@@ -28,7 +28,7 @@ export interface PnLResult {
 export interface PositionPnLDetails {
   positionId: string;
   symbol: string;
-  side: "long" | "short";
+  side: 'long' | 'short';
   quantity: number;
   entryPrice: number;
   currentPrice: number;
@@ -39,7 +39,7 @@ export interface PositionPnLDetails {
   marginLevel: number;
   liquidationPrice: number;
   roi: number;
-  status: "profit" | "loss" | "breakeven";
+  status: 'profit' | 'loss' | 'breakeven';
 }
 
 /**
@@ -125,7 +125,7 @@ export interface WinLossStats {
 export interface Position {
   id: string;
   symbol: string;
-  side: "long" | "short";
+  side: 'long' | 'short';
   quantity: number;
   entryPrice: number;
   currentPrice: number;
@@ -139,7 +139,7 @@ export interface Position {
 export interface OrderFill {
   id: string;
   symbol: string;
-  side: "buy" | "sell";
+  side: 'buy' | 'sell';
   quantity: number;
   executionPrice: number;
   commission?: number;
@@ -167,7 +167,7 @@ export function calculateUnrealizedPnL(
   entry: number,
   current: number,
   qty: number,
-  side: "long" | "short",
+  side: 'long' | 'short'
 ): PnLResult {
   if (qty === 0) {
     return {
@@ -180,7 +180,7 @@ export function calculateUnrealizedPnL(
 
   let pnl: number;
 
-  if (side === "long") {
+  if (side === 'long') {
     // Long: profit when price goes up
     pnl = (current - entry) * qty;
   } else {
@@ -219,7 +219,7 @@ export function calculateRealizedPnL(
   entry: number,
   exit: number,
   qty: number,
-  side: "long" | "short",
+  side: 'long' | 'short'
 ): PnLResult {
   if (qty === 0) {
     return {
@@ -232,7 +232,7 @@ export function calculateRealizedPnL(
 
   let pnl: number;
 
-  if (side === "long") {
+  if (side === 'long') {
     // Long: profit when exit > entry
     pnl = (exit - entry) * qty;
   } else {
@@ -303,13 +303,13 @@ export function calculatePositionPnL(
   currentPrice: number,
   commission: number = 0,
   slippage: number = 0,
-  marginRequired: number = 0,
+  marginRequired: number = 0
 ): PositionPnLDetails {
   const unrealizedResult = calculateUnrealizedPnL(
     position.entryPrice,
     currentPrice,
     position.quantity,
-    position.side as "long" | "short",
+    position.side as 'long' | 'short'
   );
 
   // Calculate net P&L after costs
@@ -323,14 +323,14 @@ export function calculatePositionPnL(
   // LP = Entry Price ± (Entry Price × Leverage × (1 - Maintenance Margin Ratio))
   // For now, using a simple calculation
   const liquidationPrice =
-    position.side === "long"
+    position.side === 'long'
       ? position.entryPrice * 0.5 // Simplified: 50% drop
       : position.entryPrice * 1.5; // Simplified: 50% rise
 
   return {
     positionId: position.id,
     symbol: position.symbol,
-    side: position.side as "long" | "short",
+    side: position.side as 'long' | 'short',
     quantity: position.quantity,
     entryPrice: position.entryPrice,
     currentPrice,
@@ -345,10 +345,10 @@ export function calculatePositionPnL(
     liquidationPrice: Math.round(liquidationPrice * 10000) / 10000,
     roi,
     status: unrealizedResult.isProfit
-      ? "profit"
+      ? 'profit'
       : unrealizedResult.isBreakeven
-        ? "breakeven"
-        : "loss",
+        ? 'breakeven'
+        : 'loss',
   };
 }
 
@@ -368,7 +368,7 @@ export function calculatePositionPnL(
 export function calculatePortfolioPnL(
   positions: Position[],
   prices: Map<string, number>,
-  closedTrades: OrderFill[] = [],
+  closedTrades: OrderFill[] = []
 ): PortfolioPnLSummary {
   let totalUnrealizedPnL = 0;
   let profitableCount = 0;
@@ -383,7 +383,7 @@ export function calculatePortfolioPnL(
       position.entryPrice,
       currentPrice,
       position.quantity,
-      position.side as "long" | "short",
+      position.side as 'long' | 'short'
     );
 
     totalUnrealizedPnL += result.pnl;
@@ -398,7 +398,7 @@ export function calculatePortfolioPnL(
   for (const trade of closedTrades) {
     // Group fills by position to calculate realized P&L
     // Simplified: assume buy then sell
-    if (trade.side === "sell") {
+    if (trade.side === 'sell') {
       totalRealizedPnL += trade.executionPrice * trade.quantity;
     } else {
       totalRealizedPnL -= trade.executionPrice * trade.quantity;
@@ -432,10 +432,10 @@ export function calculatePortfolioPnL(
             (netPnL /
               positions.reduce(
                 (sum, p) => sum + p.entryPrice * p.quantity,
-                0,
+                0
               )) *
               100 *
-              10000,
+              10000
           ) / 10000
         : 0,
     roi: 0, // Would calculate based on margin
@@ -465,7 +465,7 @@ export function calculateDailyPnL(fills: OrderFill[]): DailyPnLBreakdown[] {
 
   // Group fills by date
   for (const fill of fills) {
-    const dateKey = fill.timestamp.toISOString().split("T")[0];
+    const dateKey = fill.timestamp.toISOString().split('T')[0];
     if (!dailyMap.has(dateKey)) {
       dailyMap.set(dateKey, []);
     }
@@ -485,7 +485,7 @@ export function calculateDailyPnL(fills: OrderFill[]): DailyPnLBreakdown[] {
       const buy = dayFills[i];
       const sell = dayFills[i + 1];
 
-      if (buy.side === "buy" && sell.side === "sell") {
+      if (buy.side === 'buy' && sell.side === 'sell') {
         const tradePnL =
           sell.quantity * sell.executionPrice -
           buy.quantity * buy.executionPrice -
@@ -527,19 +527,19 @@ export function calculateDailyPnL(fills: OrderFill[]): DailyPnLBreakdown[] {
  */
 export function calculatePnLByAssetClass(
   positions: Position[],
-  prices: Map<string, number>,
+  prices: Map<string, number>
 ): PnLByAssetClass {
   const result: PnLByAssetClass = {};
 
   for (const position of positions) {
-    const assetClass = position.assetClass || "Unknown";
+    const assetClass = position.assetClass || 'Unknown';
     const currentPrice = prices.get(position.symbol) || position.currentPrice;
 
     const unrealizedResult = calculateUnrealizedPnL(
       position.entryPrice,
       currentPrice,
       position.quantity,
-      position.side as "long" | "short",
+      position.side as 'long' | 'short'
     );
 
     if (!result[assetClass]) {
@@ -557,7 +557,7 @@ export function calculatePnLByAssetClass(
     result[assetClass].positionCount += 1;
     result[assetClass].pnlPercentage = calculatePnLPercentage(
       result[assetClass].grossPnL,
-      position.entryPrice * position.quantity,
+      position.entryPrice * position.quantity
     );
   }
 
@@ -587,10 +587,10 @@ export function calculatePnLByAssetClass(
 export function calculateRunningPnL(
   fills: OrderFill[],
   start: Date,
-  end: Date,
+  end: Date
 ): RunningPnLMetrics {
   const filteredFills = fills.filter(
-    (f) => f.timestamp >= start && f.timestamp <= end,
+    (f) => f.timestamp >= start && f.timestamp <= end
   );
 
   const dailyMetrics = calculateDailyPnL(filteredFills);
@@ -649,7 +649,7 @@ export function getWinLossStats(fills: OrderFill[]): WinLossStats {
     const buy = fills[i];
     const sell = fills[i + 1];
 
-    if (buy.side === "buy" && sell.side === "sell") {
+    if (buy.side === 'buy' && sell.side === 'sell') {
       const tradePnL =
         sell.quantity * sell.executionPrice -
         buy.quantity * buy.executionPrice -
@@ -712,9 +712,9 @@ export function getWinLossStats(fills: OrderFill[]): WinLossStats {
  * @param currency - Optional currency code (default: USD)
  * @returns Formatted P&L string
  */
-export function formatPnL(pnl: number, currency: string = "USD"): string {
-  const sign = pnl > 0 ? "+" : pnl < 0 ? "-" : "";
-  const currencySymbol = currency === "USD" ? "$" : currency;
+export function formatPnL(pnl: number, currency: string = 'USD'): string {
+  const sign = pnl > 0 ? '+' : pnl < 0 ? '-' : '';
+  const currencySymbol = currency === 'USD' ? '$' : currency;
   return `${sign}${currencySymbol}${Math.abs(pnl).toFixed(2)}`;
 }
 
@@ -724,10 +724,10 @@ export function formatPnL(pnl: number, currency: string = "USD"): string {
  * @param pnl - P&L value
  * @returns Trend status: 'profit', 'loss', or 'breakeven'
  */
-export function getPnLTrend(pnl: number): "profit" | "loss" | "breakeven" {
-  if (pnl > 0) return "profit";
-  if (pnl < 0) return "loss";
-  return "breakeven";
+export function getPnLTrend(pnl: number): 'profit' | 'loss' | 'breakeven' {
+  if (pnl > 0) return 'profit';
+  if (pnl < 0) return 'loss';
+  return 'breakeven';
 }
 
 /**
@@ -736,8 +736,8 @@ export function getPnLTrend(pnl: number): "profit" | "loss" | "breakeven" {
  * @param pnl - P&L value
  * @returns Icon: '+' for profit, '-' for loss, '=' for breakeven
  */
-export function getPnLIcon(pnl: number): "+" | "-" | "=" {
-  if (pnl > 0) return "+";
-  if (pnl < 0) return "-";
-  return "=";
+export function getPnLIcon(pnl: number): '+' | '-' | '=' {
+  if (pnl > 0) return '+';
+  if (pnl < 0) return '-';
+  return '=';
 }

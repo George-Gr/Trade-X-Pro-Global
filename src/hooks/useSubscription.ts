@@ -4,13 +4,13 @@
  * Simplified wrapper for Supabase real-time subscriptions
  */
 
-import { useEffect, useRef, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { getSubscriptionManager } from "@/lib/subscriptionManager";
+import { useEffect, useRef, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { getSubscriptionManager } from '@/lib/subscriptionManager';
 
 interface UseSubscriptionOptions {
   table: string;
-  event?: "INSERT" | "UPDATE" | "DELETE" | "*";
+  event?: 'INSERT' | 'UPDATE' | 'DELETE' | '*';
   filter?: string;
   onData: (payload: unknown) => void;
   enabled?: boolean;
@@ -20,18 +20,18 @@ interface UseSubscriptionOptions {
 export function useSubscription(options: UseSubscriptionOptions) {
   const {
     table,
-    event = "*",
+    event = '*',
     filter,
     onData,
     enabled = true,
     channelId,
   } = options;
-  const subscriptionIdRef = useRef<string>("");
+  const subscriptionIdRef = useRef<string>('');
 
   const unsubscribe = useCallback(() => {
     if (subscriptionIdRef.current) {
       getSubscriptionManager().unsubscribe(subscriptionIdRef.current);
-      subscriptionIdRef.current = "";
+      subscriptionIdRef.current = '';
     }
   }, []);
 
@@ -50,14 +50,14 @@ export function useSubscription(options: UseSubscriptionOptions) {
     const channel = supabase
       .channel(id)
       .on(
-        "postgres_changes" as never,
+        'postgres_changes' as never,
         {
           event,
-          schema: "public",
+          schema: 'public',
           table,
           ...(filter ? { filter } : {}),
         } as never,
-        onData as never,
+        onData as never
       )
       .subscribe();
 

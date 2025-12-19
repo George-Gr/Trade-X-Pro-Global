@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
 
 interface Watchlist {
   id: string;
@@ -22,7 +22,7 @@ export const useWatchlists = () => {
     Record<string, WatchlistItem[]>
   >({});
   const [activeWatchlistId, setActiveWatchlistId] = useState<string | null>(
-    null,
+    null
   );
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -35,10 +35,10 @@ export const useWatchlists = () => {
       if (!user) return;
 
       const { data: lists, error } = await supabase
-        .from("watchlists")
-        .select("*")
-        .order("is_default", { ascending: false })
-        .order("created_at", { ascending: true });
+        .from('watchlists')
+        .select('*')
+        .order('is_default', { ascending: false })
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
 
@@ -48,8 +48,8 @@ export const useWatchlists = () => {
       } else {
         // Create default watchlist if none exists
         const { data: newList, error: createError } = await supabase
-          .from("watchlists")
-          .insert({ name: "My Watchlist", is_default: true, user_id: user.id })
+          .from('watchlists')
+          .insert({ name: 'My Watchlist', is_default: true, user_id: user.id })
           .select()
           .single();
 
@@ -62,9 +62,9 @@ export const useWatchlists = () => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error loading watchlists",
+        title: 'Error loading watchlists',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -75,10 +75,10 @@ export const useWatchlists = () => {
     async (watchlistId: string) => {
       try {
         const { data, error } = await supabase
-          .from("watchlist_items")
-          .select("*")
-          .eq("watchlist_id", watchlistId)
-          .order("order_index", { ascending: true });
+          .from('watchlist_items')
+          .select('*')
+          .eq('watchlist_id', watchlistId)
+          .order('order_index', { ascending: true });
 
         if (error) throw error;
 
@@ -89,13 +89,13 @@ export const useWatchlists = () => {
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
         toast({
-          title: "Error loading watchlist items",
+          title: 'Error loading watchlist items',
           description: message,
-          variant: "destructive",
+          variant: 'destructive',
         });
       }
     },
-    [toast],
+    [toast]
   );
 
   const createWatchlist = async (name: string) => {
@@ -103,10 +103,10 @@ export const useWatchlists = () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
-        .from("watchlists")
+        .from('watchlists')
         .insert({ name, user_id: user.id })
         .select()
         .single();
@@ -115,7 +115,7 @@ export const useWatchlists = () => {
 
       setWatchlists((prev) => [...prev, data]);
       toast({
-        title: "Watchlist created",
+        title: 'Watchlist created',
         description: `"${name}" has been created successfully.`,
       });
 
@@ -123,9 +123,9 @@ export const useWatchlists = () => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error creating watchlist",
+        title: 'Error creating watchlist',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return null;
     }
@@ -133,7 +133,7 @@ export const useWatchlists = () => {
 
   const deleteWatchlist = async (id: string) => {
     try {
-      const { error } = await supabase.from("watchlists").delete().eq("id", id);
+      const { error } = await supabase.from('watchlists').delete().eq('id', id);
 
       if (error) throw error;
 
@@ -144,15 +144,15 @@ export const useWatchlists = () => {
       }
 
       toast({
-        title: "Watchlist deleted",
-        description: "Watchlist has been removed successfully.",
+        title: 'Watchlist deleted',
+        description: 'Watchlist has been removed successfully.',
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error deleting watchlist",
+        title: 'Error deleting watchlist',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -164,15 +164,15 @@ export const useWatchlists = () => {
 
       if (exists) {
         toast({
-          title: "Symbol already in watchlist",
+          title: 'Symbol already in watchlist',
           description: `${symbol} is already in this watchlist.`,
-          variant: "destructive",
+          variant: 'destructive',
         });
         return;
       }
 
       const { data, error } = await supabase
-        .from("watchlist_items")
+        .from('watchlist_items')
         .insert({
           watchlist_id: watchlistId,
           symbol,
@@ -189,43 +189,43 @@ export const useWatchlists = () => {
       }));
 
       toast({
-        title: "Symbol added",
+        title: 'Symbol added',
         description: `${symbol} has been added to your watchlist.`,
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error adding symbol",
+        title: 'Error adding symbol',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
 
   const removeSymbolFromWatchlist = async (
     watchlistId: string,
-    itemId: string,
+    itemId: string
   ) => {
     try {
       const { error } = await supabase
-        .from("watchlist_items")
+        .from('watchlist_items')
         .delete()
-        .eq("id", itemId);
+        .eq('id', itemId);
 
       if (error) throw error;
 
       setWatchlistItems((prev) => ({
         ...prev,
         [watchlistId]: (prev[watchlistId] || []).filter(
-          (item) => item.id !== itemId,
+          (item) => item.id !== itemId
         ),
       }));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error removing symbol",
+        title: 'Error removing symbol',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };

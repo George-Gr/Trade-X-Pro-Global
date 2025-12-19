@@ -1,8 +1,8 @@
-import { useState, useRef, Suspense, lazy } from "react";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
+import { useState, useRef, Suspense, lazy } from 'react';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
 import {
   Drawer,
   DrawerTrigger,
@@ -10,51 +10,51 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerClose,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { Menu, X, HelpCircle } from "lucide-react";
-import { TradeLoading } from "@/components/trading/TradeLoading";
+} from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { Menu, X, HelpCircle } from 'lucide-react';
+import { TradeLoading } from '@/components/trading/TradeLoading';
 import {
   OnboardingTour,
   useOnboardingTour,
-} from "@/components/onboarding/OnboardingTour";
-import { useViewModeSafe } from "@/contexts/ViewModeContext";
-import { ViewModeToggle, ProModeOnly } from "@/components/ui/ViewModeToggle";
+} from '@/components/onboarding/OnboardingTour';
+import { useViewModeSafe } from '@/contexts/ViewModeContext';
+import { ViewModeToggle, ProModeOnly } from '@/components/ui/ViewModeToggle';
 
 // Lazy load heavy components for better bundle splitting
 const EnhancedWatchlist = lazy(
-  () => import("@/components/trading/EnhancedWatchlist"),
+  () => import('@/components/trading/EnhancedWatchlist')
 );
-const AssetTree = lazy(() => import("@/components/trading/AssetTree"));
-const TradingPanel = lazy(() => import("@/components/trading/TradingPanel"));
+const AssetTree = lazy(() => import('@/components/trading/AssetTree'));
+const TradingPanel = lazy(() => import('@/components/trading/TradingPanel'));
 const EnhancedPortfolioDashboard = lazy(
-  () => import("@/components/trading/EnhancedPortfolioDashboard"),
+  () => import('@/components/trading/EnhancedPortfolioDashboard')
 );
-const ChartPanel = lazy(() => import("@/components/trading/ChartPanel"));
+const ChartPanel = lazy(() => import('@/components/trading/ChartPanel'));
 const TradingViewMarketsWidget = lazy(
-  () => import("@/components/trading/TradingViewMarketsWidget"),
+  () => import('@/components/trading/TradingViewMarketsWidget')
 );
 const TechnicalIndicators = lazy(
-  () => import("@/components/trading/TechnicalIndicators"),
+  () => import('@/components/trading/TechnicalIndicators')
 );
 const MarketSentiment = lazy(
-  () => import("@/components/trading/MarketSentiment"),
+  () => import('@/components/trading/MarketSentiment')
 );
 const TradingSignals = lazy(
-  () => import("@/components/trading/TradingSignals"),
+  () => import('@/components/trading/TradingSignals')
 );
 const EconomicCalendar = lazy(
-  () => import("@/components/trading/EconomicCalendar"),
+  () => import('@/components/trading/EconomicCalendar')
 );
 const KYCStatusBanner = lazy(() =>
-  import("@/components/trading/KYCStatusBanner").then((module) => ({
+  import('@/components/trading/KYCStatusBanner').then((module) => ({
     default: module.KYCStatusBanner,
-  })),
+  }))
 );
 
 const Trade = () => {
-  const [selectedSymbol, setSelectedSymbol] = useState("EURUSD");
-  const [activeTab, setActiveTab] = useState("trade");
+  const [selectedSymbol, setSelectedSymbol] = useState('EURUSD');
+  const [activeTab, setActiveTab] = useState('trade');
   const [showWatchlistDrawer, setShowWatchlistDrawer] = useState(false);
   const [showTradingDrawer, setShowTradingDrawer] = useState(false);
   const [showTour, setShowTour] = useState(false);
@@ -63,21 +63,21 @@ const Trade = () => {
   const { startTour } = useOnboardingTour();
   const { isProMode, isBasicMode } = useViewModeSafe();
 
-  const handleQuickTrade = (symbol: string, side: "buy" | "sell") => {
+  const handleQuickTrade = (symbol: string, side: 'buy' | 'sell') => {
     setSelectedSymbol(symbol);
-    setActiveTab("trade");
+    setActiveTab('trade');
 
     // Scroll to trading panel
     setTimeout(() => {
       tradingPanelRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
+        behavior: 'smooth',
+        block: 'nearest',
       });
     }, 100);
 
     toast({
-      title: "Symbol selected",
-      description: `${symbol} is ready for ${side === "buy" ? "buying" : "selling"}`,
+      title: 'Symbol selected',
+      description: `${symbol} is ready for ${side === 'buy' ? 'buying' : 'selling'}`,
     });
   };
 
@@ -113,7 +113,7 @@ const Trade = () => {
               size="sm"
               onClick={() => {
                 setShowTour(true);
-                startTour("trading");
+                startTour('trading');
               }}
               aria-label="Start tutorial"
             >
@@ -291,7 +291,7 @@ const Trade = () => {
                   className="flex-1 text-xs md:text-sm"
                   tabIndex={0}
                   role="tab"
-                  aria-selected={activeTab === "trade"}
+                  aria-selected={activeTab === 'trade'}
                   aria-controls="tab-content-trade"
                 >
                   Trade
@@ -301,7 +301,7 @@ const Trade = () => {
                   className="flex-1 text-xs md:text-sm"
                   tabIndex={0}
                   role="tab"
-                  aria-selected={activeTab === "analysis"}
+                  aria-selected={activeTab === 'analysis'}
                   aria-controls="tab-content-analysis"
                 >
                   Analysis
@@ -311,7 +311,7 @@ const Trade = () => {
                   className="flex-1 text-xs md:text-sm"
                   tabIndex={0}
                   role="tab"
-                  aria-selected={activeTab === "markets"}
+                  aria-selected={activeTab === 'markets'}
                   aria-controls="tab-content-markets"
                 >
                   Markets

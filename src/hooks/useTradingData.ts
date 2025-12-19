@@ -10,11 +10,11 @@
  * Single source of truth for trading data with unified subscriptions
  */
 
-import { useEffect, useState, useCallback, useMemo, useRef } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuth } from "./useAuth";
-import { getSubscriptionManager } from "@/lib/subscriptionManager";
-import type { Position as DBPosition } from "@/integrations/supabase/types/tables";
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from './useAuth';
+import { getSubscriptionManager } from '@/lib/subscriptionManager';
+import type { Position as DBPosition } from '@/integrations/supabase/types/tables';
 
 // Types
 interface ProfileData {
@@ -25,7 +25,7 @@ interface ProfileData {
   margin_level: number | null;
 }
 
-interface PositionWithPnL extends Omit<DBPosition, "closed_at"> {
+interface PositionWithPnL extends Omit<DBPosition, 'closed_at'> {
   unrealized_pnl: number;
   closed_at: string | undefined;
   current_price: number;
@@ -53,7 +53,7 @@ interface RiskMetrics {
   capitalAtRisk: number;
   isCloseOnly: boolean;
   isLiquidationRisk: boolean;
-  riskLevel: "low" | "medium" | "high" | "critical";
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
 }
 
 interface PortfolioSummary {
@@ -85,7 +85,7 @@ interface TradingDataReturn {
   // Actions
   refresh: () => Promise<void>;
   updatePositionPrices: (
-    pricesMap: Map<string, { currentPrice: number }>,
+    pricesMap: Map<string, { currentPrice: number }>
   ) => void;
 }
 
@@ -116,22 +116,22 @@ export function useTradingData(): TradingDataReturn {
       // Parallel fetch all data
       const [profileRes, positionsRes, closedRes] = await Promise.all([
         supabase
-          .from("profiles")
-          .select("balance, equity, margin_used, free_margin, margin_level")
-          .eq("id", user.id)
+          .from('profiles')
+          .select('balance, equity, margin_used, free_margin, margin_level')
+          .eq('id', user.id)
           .single(),
         supabase
-          .from("positions")
-          .select("*")
-          .eq("user_id", user.id)
-          .eq("status", "open")
-          .order("opened_at", { ascending: false }),
+          .from('positions')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('status', 'open')
+          .order('opened_at', { ascending: false }),
         supabase
-          .from("positions")
-          .select("realized_pnl")
-          .eq("user_id", user.id)
-          .eq("status", "closed")
-          .order("closed_at", { ascending: false })
+          .from('positions')
+          .select('realized_pnl')
+          .eq('user_id', user.id)
+          .eq('status', 'closed')
+          .order('closed_at', { ascending: false })
           .limit(100),
       ]);
 
@@ -146,17 +146,17 @@ export function useTradingData(): TradingDataReturn {
           ...pos,
           opened_at: pos.opened_at ?? new Date().toISOString(),
           closed_at: pos.closed_at ?? undefined,
-          status: (pos.status ?? "open") as "open" | "closed",
+          status: (pos.status ?? 'open') as 'open' | 'closed',
           current_price: pos.current_price ?? 0,
           realized_pnl: pos.realized_pnl ?? 0,
           unrealized_pnl: pos.unrealized_pnl ?? 0,
-        })),
+        }))
       );
       setClosedTrades(closedRes.data || []);
       setError(null);
     } catch (err) {
       if (!isMountedRef.current) return;
-      setError(err instanceof Error ? err.message : "Failed to fetch data");
+      setError(err instanceof Error ? err.message : 'Failed to fetch data');
     } finally {
       if (isMountedRef.current) setLoading(false);
     }
@@ -177,33 +177,33 @@ export function useTradingData(): TradingDataReturn {
     const profileChannel = supabase
       .channel(profileId)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        fetchData,
+        fetchData
       )
       .subscribe();
-    manager.register(profileId, profileChannel, "profiles");
+    manager.register(profileId, profileChannel, 'profiles');
 
     // Positions subscription
     const positionsChannel = supabase
       .channel(positionsId)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "positions",
+          event: '*',
+          schema: 'public',
+          table: 'positions',
           filter: `user_id=eq.${user.id}`,
         },
-        fetchData,
+        fetchData
       )
       .subscribe();
-    manager.register(positionsId, positionsChannel, "positions");
+    manager.register(positionsId, positionsChannel, 'positions');
 
     return () => {
       isMountedRef.current = false;
@@ -216,12 +216,12 @@ export function useTradingData(): TradingDataReturn {
   const calculateUnrealizedPnL = useCallback(
     (position: PositionWithPnL, currentPrice: number): number => {
       const priceDiff =
-        position.side === "buy"
+        position.side === 'buy'
           ? currentPrice - position.entry_price
           : position.entry_price - currentPrice;
       return priceDiff * position.quantity * CONTRACT_SIZE;
     },
-    [],
+    []
   );
 
   // Update prices from price stream
@@ -233,7 +233,7 @@ export function useTradingData(): TradingDataReturn {
           if (priceData) {
             const unrealized_pnl = calculateUnrealizedPnL(
               pos,
-              priceData.currentPrice,
+              priceData.currentPrice
             );
             return {
               ...pos,
@@ -242,34 +242,34 @@ export function useTradingData(): TradingDataReturn {
             };
           }
           return pos;
-        }),
+        })
       );
     },
-    [calculateUnrealizedPnL],
+    [calculateUnrealizedPnL]
   );
 
   // Computed: Total unrealized PnL
   const totalUnrealizedPnL = useMemo(
     () => positions.reduce((sum, pos) => sum + (pos.unrealized_pnl || 0), 0),
-    [positions],
+    [positions]
   );
 
   // Computed: Total realized PnL
   const totalRealizedPnL = useMemo(
     () => closedTrades.reduce((sum, t) => sum + (t.realized_pnl || 0), 0),
-    [closedTrades],
+    [closedTrades]
   );
 
   // Computed: Equity
   const equity = useMemo(
     () => (profile?.balance || 0) + totalUnrealizedPnL,
-    [profile?.balance, totalUnrealizedPnL],
+    [profile?.balance, totalUnrealizedPnL]
   );
 
   // Computed: Free margin
   const freeMargin = useMemo(
     () => equity - (profile?.margin_used || 0),
-    [equity, profile?.margin_used],
+    [equity, profile?.margin_used]
   );
 
   // Computed: Margin level
@@ -278,7 +278,7 @@ export function useTradingData(): TradingDataReturn {
       (profile?.margin_used || 0) === 0
         ? Infinity
         : (equity / (profile?.margin_used || 1)) * 100,
-    [equity, profile?.margin_used],
+    [equity, profile?.margin_used]
   );
 
   // Computed: PnL metrics
@@ -288,10 +288,10 @@ export function useTradingData(): TradingDataReturn {
 
     const profitSum = profitable.reduce(
       (s, p) => s + (p.unrealized_pnl || 0),
-      0,
+      0
     );
     const lossSum = Math.abs(
-      losing.reduce((s, p) => s + (p.unrealized_pnl || 0), 0),
+      losing.reduce((s, p) => s + (p.unrealized_pnl || 0), 0)
     );
 
     return {
@@ -321,13 +321,13 @@ export function useTradingData(): TradingDataReturn {
     const ml = marginLevel === Infinity ? 9999 : marginLevel;
     const capitalAtRisk = positions.reduce(
       (s, p) => s + Math.abs(p.unrealized_pnl || 0),
-      0,
+      0
     );
 
-    let riskLevel: "low" | "medium" | "high" | "critical" = "low";
-    if (ml < LIQUIDATION_THRESHOLD) riskLevel = "critical";
-    else if (ml < MARGIN_CALL_THRESHOLD) riskLevel = "high";
-    else if (ml < 150) riskLevel = "medium";
+    let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    if (ml < LIQUIDATION_THRESHOLD) riskLevel = 'critical';
+    else if (ml < MARGIN_CALL_THRESHOLD) riskLevel = 'high';
+    else if (ml < 150) riskLevel = 'medium';
 
     return {
       marginLevel: ml,
@@ -348,7 +348,7 @@ export function useTradingData(): TradingDataReturn {
       positionCount: positions.length,
       totalExposure: positions.reduce(
         (s, p) => s + p.quantity * (p.current_price || 0) * CONTRACT_SIZE,
-        0,
+        0
       ),
       avgEntryPrice:
         positions.length > 0
@@ -356,7 +356,7 @@ export function useTradingData(): TradingDataReturn {
           : 0,
       totalMarginUsed: profile?.margin_used || 0,
     }),
-    [positions, profile?.margin_used],
+    [positions, profile?.margin_used]
   );
 
   return {

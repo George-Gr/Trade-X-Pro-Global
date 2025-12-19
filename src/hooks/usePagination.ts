@@ -4,9 +4,9 @@
  * Cursor-based pagination for Supabase queries
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { logger } from "@/lib/logger";
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { logger } from '@/lib/logger';
 
 interface PaginationOptions {
   table: string;
@@ -31,9 +31,9 @@ interface PaginationState<T> {
 export function usePagination<T = unknown>(options: PaginationOptions) {
   const {
     table,
-    select = "*",
+    select = '*',
     pageSize = 20,
-    orderBy = "created_at",
+    orderBy = 'created_at',
     ascending = false,
     filter = {},
     enabled = true,
@@ -60,12 +60,12 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
     try {
       let query = supabase
         .from(table as never)
-        .select(select, { count: "exact" }) as never;
+        .select(select, { count: 'exact' }) as never;
       Object.entries(filter).forEach(([k, v]) => {
         if (v != null)
           query = (query as { eq: (k: string, v: unknown) => unknown }).eq(
             k,
-            v,
+            v
           ) as never;
       });
       query = (
@@ -74,7 +74,7 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
         }
       ).order(orderBy, { ascending }) as never;
       query = (query as { limit: (n: number) => unknown }).limit(
-        pageSize,
+        pageSize
       ) as never;
 
       const { data, error, count } = await (query as Promise<{
@@ -88,7 +88,7 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
       const items = (data || []) as T[];
       if (items.length > 0)
         cursorRef.current = String(
-          (items[items.length - 1] as Record<string, unknown>)[orderBy] ?? "",
+          (items[items.length - 1] as Record<string, unknown>)[orderBy] ?? ''
         );
 
       setState({
@@ -102,12 +102,12 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
       });
     } catch (err) {
       if (!isMountedRef.current) return;
-      logger.error("Pagination error", err);
+      logger.error('Pagination error', err);
       setState((prev) => ({
         ...prev,
         loading: false,
         loadingMore: false,
-        error: err instanceof Error ? err.message : "Failed",
+        error: err instanceof Error ? err.message : 'Failed',
       }));
     }
   }, [enabled, table, select, orderBy, ascending, pageSize, filter]);
@@ -122,7 +122,7 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
         if (v != null)
           query = (query as { eq: (k: string, v: unknown) => unknown }).eq(
             k,
-            v,
+            v
           ) as never;
       });
       query = (
@@ -133,14 +133,14 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
       query = ascending
         ? ((query as { gt: (col: string, v: string) => unknown }).gt(
             orderBy,
-            cursorRef.current!,
+            cursorRef.current!
           ) as never)
         : ((query as { lt: (col: string, v: string) => unknown }).lt(
             orderBy,
-            cursorRef.current!,
+            cursorRef.current!
           ) as never);
       query = (query as { limit: (n: number) => unknown }).limit(
-        pageSize,
+        pageSize
       ) as never;
 
       const { data, error } = await (query as Promise<{
@@ -153,7 +153,7 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
       const items = (data || []) as T[];
       if (items.length > 0)
         cursorRef.current = String(
-          (items[items.length - 1] as Record<string, unknown>)[orderBy] ?? "",
+          (items[items.length - 1] as Record<string, unknown>)[orderBy] ?? ''
         );
 
       setState((prev) => ({
@@ -168,7 +168,7 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
       setState((prev) => ({
         ...prev,
         loadingMore: false,
-        error: err instanceof Error ? err.message : "Failed",
+        error: err instanceof Error ? err.message : 'Failed',
       }));
     }
   }, [
@@ -213,7 +213,7 @@ export function usePagination<T = unknown>(options: PaginationOptions) {
  * Extends usePagination with IntersectionObserver for infinite scroll functionality
  */
 export function useInfiniteScroll<T = unknown>(
-  options: PaginationOptions & { threshold?: number },
+  options: PaginationOptions & { threshold?: number }
 ) {
   const { threshold = 0.1, ...rest } = options;
   const pagination = usePagination<T>(rest);
@@ -227,7 +227,7 @@ export function useInfiniteScroll<T = unknown>(
       ([e]) => {
         if (e.isIntersecting && hasMore && !loadingMore) loadMore();
       },
-      { threshold },
+      { threshold }
     );
     obs.observe(el);
     return () => obs.disconnect();

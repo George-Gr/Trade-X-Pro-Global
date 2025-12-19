@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 interface LoadingState {
   isLoading: boolean;
@@ -16,7 +16,7 @@ interface UseLoadingOptions {
 
 export function useLoading<T = unknown>(
   asyncFunction: (...args: unknown[]) => Promise<T>,
-  options: UseLoadingOptions = {},
+  options: UseLoadingOptions = {}
 ) {
   const {
     initialLoading = false,
@@ -59,7 +59,7 @@ export function useLoading<T = unknown>(
 
         // Check if request was cancelled
         if (abortControllerRef.current.signal.aborted) {
-          throw new Error("Request cancelled");
+          throw new Error('Request cancelled');
         }
 
         const result = await asyncFunction(...args);
@@ -83,7 +83,7 @@ export function useLoading<T = unknown>(
         }
 
         const errorMessage =
-          error instanceof Error ? error.message : "An error occurred";
+          error instanceof Error ? error.message : 'An error occurred';
         setState({
           isLoading: false,
           error: errorMessage,
@@ -94,7 +94,7 @@ export function useLoading<T = unknown>(
         return null;
       }
     },
-    [asyncFunction, debounceMs, onSuccess, onError],
+    [asyncFunction, debounceMs, onSuccess, onError]
   );
 
   const reset = useCallback(() => {

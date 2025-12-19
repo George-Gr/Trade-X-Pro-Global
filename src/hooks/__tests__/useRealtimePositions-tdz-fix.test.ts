@@ -14,10 +14,10 @@
  * circular reference and prevents the TDZ error.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 
-describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
-  it("should not throw ReferenceError: Cannot access subscribe before initialization", () => {
+describe('useRealtimePositions: Temporal Dead Zone (TDZ) Fix', () => {
+  it('should not throw ReferenceError: Cannot access subscribe before initialization', () => {
     // This test simulates the scenario where a hook has a circular dependency
     // between two useCallback functions. The fix is to use a ref to break the circle.
 
@@ -46,17 +46,17 @@ describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
     // Now calling handleSubscriptionError should not throw TDZ error
     expect(() => {
       handleSubscriptionError();
-    }).not.toThrow("Cannot access");
+    }).not.toThrow('Cannot access');
   });
 
-  it("should properly call subscribe through ref when reconnecting", async () => {
+  it('should properly call subscribe through ref when reconnecting', async () => {
     const callLog: string[] = [];
     const subscribeRef: { current: (() => Promise<void>) | null } = {
       current: null,
     };
 
     const subscribe = async () => {
-      callLog.push("subscribe-called");
+      callLog.push('subscribe-called');
     };
 
     subscribeRef.current = subscribe;
@@ -67,10 +67,10 @@ describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
       await fn();
     }
 
-    expect(callLog).toContain("subscribe-called");
+    expect(callLog).toContain('subscribe-called');
   });
 
-  it("should handle null subscribeRef gracefully during initialization", () => {
+  it('should handle null subscribeRef gracefully during initialization', () => {
     const subscribeRef: { current: (() => Promise<void>) | null } = {
       current: null,
     };
@@ -87,7 +87,7 @@ describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
     expect(subscribeRef.current).toBeNull();
   });
 
-  it("should maintain proper dependency order: handleSubscriptionError before subscribe", () => {
+  it('should maintain proper dependency order: handleSubscriptionError before subscribe', () => {
     // This verifies the order of definitions prevents TDZ issues
     const definitions: string[] = [];
 
@@ -95,26 +95,26 @@ describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
     const subscribeRef: { current: (() => Promise<void>) | null } = {
       current: null,
     };
-    definitions.push("handleSubscriptionError-defined");
+    definitions.push('handleSubscriptionError-defined');
 
     // Step 2: subscribe defined (can reference handleSubscriptionError)
     const subscribe = async () => {
       // Implementation
     };
-    definitions.push("subscribe-defined");
+    definitions.push('subscribe-defined');
 
     // Step 3: Assign subscribe to ref (after definition)
     subscribeRef.current = subscribe;
-    definitions.push("subscribeRef-assigned");
+    definitions.push('subscribeRef-assigned');
 
     // Verify correct order
-    expect(definitions[0]).toBe("handleSubscriptionError-defined");
-    expect(definitions[1]).toBe("subscribe-defined");
-    expect(definitions[2]).toBe("subscribeRef-assigned");
+    expect(definitions[0]).toBe('handleSubscriptionError-defined');
+    expect(definitions[1]).toBe('subscribe-defined');
+    expect(definitions[2]).toBe('subscribeRef-assigned');
     expect(subscribeRef.current).toBe(subscribe);
   });
 
-  it("should avoid TDZ by not including subscribe in useEffect deps", () => {
+  it('should avoid TDZ by not including subscribe in useEffect deps', () => {
     // The key insight: when useEffect depends on subscribe, React tries to
     // evaluate the dependency during render, which can cause TDZ if subscribe
     // hasn't been fully initialized yet.
@@ -132,7 +132,7 @@ describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
     // Inside effect: const fn = subscribeRef.current; if (fn) fn();
 
     const subscribe = () => {
-      effectDeps.push("subscribe-called");
+      effectDeps.push('subscribe-called');
     };
 
     subscribeRef.current = subscribe;
@@ -143,6 +143,6 @@ describe("useRealtimePositions: Temporal Dead Zone (TDZ) Fix", () => {
       fn();
     }
 
-    expect(effectDeps).toContain("subscribe-called");
+    expect(effectDeps).toContain('subscribe-called');
   });
 });

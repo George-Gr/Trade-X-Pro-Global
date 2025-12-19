@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
 
 export interface OrderTemplate {
   id: string;
   name: string;
   symbol: string | null;
-  order_type: "market" | "limit" | "stop" | "stop_limit";
+  order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
   volume: number;
   leverage: number;
   stop_loss: number | null;
@@ -28,19 +28,19 @@ export const useOrderTemplates = () => {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from("order_templates")
-        .select("*")
-        .order("is_default", { ascending: false })
-        .order("created_at", { ascending: false });
+        .from('order_templates')
+        .select('*')
+        .order('is_default', { ascending: false })
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setTemplates(data || []);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error loading templates",
+        title: 'Error loading templates',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -48,16 +48,16 @@ export const useOrderTemplates = () => {
   }, [toast]);
 
   const createTemplate = async (
-    template: Omit<OrderTemplate, "id" | "created_at">,
+    template: Omit<OrderTemplate, 'id' | 'created_at'>
   ) => {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
-        .from("order_templates")
+        .from('order_templates')
         .insert({
           ...template,
           user_id: user.id,
@@ -69,7 +69,7 @@ export const useOrderTemplates = () => {
 
       setTemplates((prev) => [data, ...prev]);
       toast({
-        title: "Template created",
+        title: 'Template created',
         description: `"${template.name}" has been saved.`,
       });
 
@@ -77,9 +77,9 @@ export const useOrderTemplates = () => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error creating template",
+        title: 'Error creating template',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return null;
     }
@@ -87,30 +87,30 @@ export const useOrderTemplates = () => {
 
   const updateTemplate = async (
     id: string,
-    updates: Partial<OrderTemplate>,
+    updates: Partial<OrderTemplate>
   ) => {
     try {
       const { error } = await supabase
-        .from("order_templates")
+        .from('order_templates')
         .update(updates)
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw error;
 
       setTemplates((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, ...updates } : t)),
+        prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
       );
 
       toast({
-        title: "Template updated",
-        description: "Changes have been saved.",
+        title: 'Template updated',
+        description: 'Changes have been saved.',
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error updating template",
+        title: 'Error updating template',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -118,23 +118,23 @@ export const useOrderTemplates = () => {
   const deleteTemplate = async (id: string) => {
     try {
       const { error } = await supabase
-        .from("order_templates")
+        .from('order_templates')
         .delete()
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw error;
 
       setTemplates((prev) => prev.filter((t) => t.id !== id));
       toast({
-        title: "Template deleted",
-        description: "Template has been removed.",
+        title: 'Template deleted',
+        description: 'Template has been removed.',
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error deleting template",
+        title: 'Error deleting template',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };

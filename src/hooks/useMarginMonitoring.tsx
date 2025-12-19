@@ -30,9 +30,9 @@
  * }
  */
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useAuth } from "./useAuth";
-import { useRealtimePositions } from "./useRealtimePositions";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useAuth } from './useAuth';
+import { useRealtimePositions } from './useRealtimePositions';
 import {
   MarginStatus,
   getMarginStatus,
@@ -43,8 +43,8 @@ import {
   getMarginActionRequired,
   estimateTimeToLiquidation,
   type MarginAction,
-} from "@/lib/trading/marginMonitoring";
-import { supabase } from "@/lib/supabaseBrowserClient";
+} from '@/lib/trading/marginMonitoring';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 interface MarginMonitoringState {
   marginLevel: number | null;
@@ -107,9 +107,9 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, equity, margin_used, margin_level")
-        .eq("id", user.id)
+        .from('profiles')
+        .select('id, equity, margin_used, margin_level')
+        .eq('id', user.id)
         .single();
 
       if (error) throw error;
@@ -120,7 +120,7 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
         if (currentMarginLevel === null && data.equity && data.margin_used) {
           currentMarginLevel = calculateMarginLevel(
             data.equity,
-            data.margin_used,
+            data.margin_used
           );
         }
 
@@ -164,7 +164,7 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
         error:
           error instanceof Error
             ? error.message
-            : "Failed to fetch margin data",
+            : 'Failed to fetch margin data',
       }));
     }
   }, [user?.id, enabled, onStatusChange, onCritical, onLiquidationRisk]);
@@ -173,7 +173,7 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
    * Subscribe to real-time position updates
    * This triggers margin recalculation when positions change
    */
-  const { positions } = useRealtimePositions(user?.id || "");
+  const { positions } = useRealtimePositions(user?.id || '');
 
   // Recalculate margin when positions change
   useEffect(() => {
@@ -206,11 +206,11 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
     const channel = supabase
       .channel(`margin-updates-${user.id}`)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
         (payload) => {
@@ -225,7 +225,7 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
             ) {
               currentMarginLevel = calculateMarginLevel(
                 Number(newData.equity),
-                Number(newData.margin_used),
+                Number(newData.margin_used)
               ) as number;
             }
 
@@ -252,10 +252,10 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
               isWarning: isMarginWarning(Number(currentMarginLevel ?? 0)),
               isCritical: isMarginCritical(Number(currentMarginLevel ?? 0)),
               isLiquidationRisk: isLiquidationRisk(
-                Number(currentMarginLevel ?? 0),
+                Number(currentMarginLevel ?? 0)
               ),
               timeToLiquidation: estimateTimeToLiquidation(
-                Number(currentMarginLevel ?? 0),
+                Number(currentMarginLevel ?? 0)
               ),
               recommendedActions: getMarginActionRequired(status),
               isLoading: false,
@@ -263,7 +263,7 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
               lastUpdated: new Date(),
             });
           }
-        },
+        }
       )
       .subscribe();
 

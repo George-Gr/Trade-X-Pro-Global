@@ -16,7 +16,7 @@
   /* Buttons - primary, secondary, and all variants */
   .btn,
   button,
-  [role="button"],
+  [role='button'],
   .button {
     min-height: 44px;
     min-width: 44px;
@@ -57,7 +57,7 @@
   }
 
   .form-control::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -227,7 +227,7 @@
   }
 
   .bottom-navigation-zone::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -350,36 +350,36 @@
 
 @media (max-width: 767px) {
   /* Input types optimization */
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"] {
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'] {
     font-size: 16px; /* Prevents zoom on iOS */
     -webkit-text-size-adjust: 100%;
   }
 
   /* Number inputs for trading */
-  input[type="number"] {
+  input[type='number'] {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     appearance: none;
   }
 
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
   /* Tel input for mobile numbers */
-  input[type="tel"] {
+  input[type='tel'] {
     font-size: 16px; /* Prevents zoom on iOS */
     -webkit-text-size-adjust: 100%;
   }
 
   /* Number inputs for trading values */
   /* Note: inputmode should be set as HTML attribute, not CSS property */
-  input[type="number"][data-trading] {
+  input[type='number'][data-trading] {
     font-size: 16px;
     -webkit-text-size-adjust: 100%;
     font-weight: 600;

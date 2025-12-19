@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 
 /**
  * Edge Function: price-stream
@@ -15,9 +15,9 @@ import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
  */
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 interface PriceCache {
@@ -35,14 +35,14 @@ const CACHE_TTL_MS = 2000; // 2 seconds
  * Fetch price from Finnhub (primary provider)
  */
 async function fetchFromFinnhub(
-  symbol: string,
+  symbol: string
 ): Promise<Record<string, unknown>> {
-  const apiKey = Deno.env.get("FINNHUB_API_KEY");
-  if (!apiKey) throw new Error("Finnhub API key not configured");
+  const apiKey = Deno.env.get('FINNHUB_API_KEY');
+  if (!apiKey) throw new Error('Finnhub API key not configured');
 
   const response = await fetch(
     `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`,
-    { signal: AbortSignal.timeout(5000) },
+    { signal: AbortSignal.timeout(5000) }
   );
 
   if (!response.ok) throw new Error(`Finnhub error: ${response.status}`);
@@ -53,14 +53,14 @@ async function fetchFromFinnhub(
  * Fetch price from Twelve Data (secondary provider)
  */
 async function fetchFromTwelveData(
-  symbol: string,
+  symbol: string
 ): Promise<Record<string, unknown>> {
-  const apiKey = Deno.env.get("TWELVE_DATA_API_KEY");
-  if (!apiKey) throw new Error("Twelve Data API key not configured");
+  const apiKey = Deno.env.get('TWELVE_DATA_API_KEY');
+  if (!apiKey) throw new Error('Twelve Data API key not configured');
 
   const response = await fetch(
     `https://api.twelvedata.com/price?symbol=${symbol}&apikey=${apiKey}`,
-    { signal: AbortSignal.timeout(5000) },
+    { signal: AbortSignal.timeout(5000) }
   );
 
   if (!response.ok) throw new Error(`Twelve Data error: ${response.status}`);
@@ -83,31 +83,31 @@ async function fetchFromTwelveData(
  * Fetch price from Alpha Vantage (tertiary provider)
  */
 async function fetchFromAlphaVantage(
-  symbol: string,
+  symbol: string
 ): Promise<Record<string, unknown>> {
-  const apiKey = Deno.env.get("ALPHA_VANTAGE_API_KEY");
-  if (!apiKey) throw new Error("Alpha Vantage API key not configured");
+  const apiKey = Deno.env.get('ALPHA_VANTAGE_API_KEY');
+  if (!apiKey) throw new Error('Alpha Vantage API key not configured');
 
   const response = await fetch(
     `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`,
-    { signal: AbortSignal.timeout(5000) },
+    { signal: AbortSignal.timeout(5000) }
   );
 
   if (!response.ok) throw new Error(`Alpha Vantage error: ${response.status}`);
   const data = await response.json();
-  const quote = data["Global Quote"];
+  const quote = data['Global Quote'];
 
-  if (!quote) throw new Error("No data from Alpha Vantage");
+  if (!quote) throw new Error('No data from Alpha Vantage');
 
   // Convert to Finnhub format
   return {
-    c: parseFloat(quote["05. price"]),
-    d: parseFloat(quote["09. change"]),
-    dp: parseFloat(quote["10. change percent"].replace("%", "")),
-    h: parseFloat(quote["03. high"]),
-    l: parseFloat(quote["04. low"]),
-    o: parseFloat(quote["02. open"]),
-    pc: parseFloat(quote["08. previous close"]),
+    c: parseFloat(quote['05. price']),
+    d: parseFloat(quote['09. change']),
+    dp: parseFloat(quote['10. change percent'].replace('%', '')),
+    h: parseFloat(quote['03. high']),
+    l: parseFloat(quote['04. low']),
+    o: parseFloat(quote['02. open']),
+    pc: parseFloat(quote['08. previous close']),
     t: Date.now() / 1000,
   };
 }
@@ -152,7 +152,7 @@ function generateFallbackPrice(symbol: string): Record<string, unknown> {
  * Fetch price with automatic fallback
  */
 async function fetchPriceWithFallback(
-  symbol: string,
+  symbol: string
 ): Promise<Record<string, unknown>> {
   const now = Date.now();
   const cached = priceCache[symbol];
@@ -169,9 +169,9 @@ async function fetchPriceWithFallback(
   }
 
   const providers = [
-    { name: "Finnhub", fn: fetchFromFinnhub },
-    { name: "TwelveData", fn: fetchFromTwelveData },
-    { name: "AlphaVantage", fn: fetchFromAlphaVantage },
+    { name: 'Finnhub', fn: fetchFromFinnhub },
+    { name: 'TwelveData', fn: fetchFromTwelveData },
+    { name: 'AlphaVantage', fn: fetchFromAlphaVantage },
   ];
 
   for (const provider of providers) {
@@ -179,7 +179,7 @@ async function fetchPriceWithFallback(
       console.log(`Trying ${provider.name} for ${symbol}`);
       const data = await provider.fn(symbol);
 
-      if (data && typeof data.c === "number" && data.c > 0) {
+      if (data && typeof data.c === 'number' && data.c > 0) {
         priceCache[symbol] = {
           price: data.c,
           timestamp: now,
@@ -191,7 +191,7 @@ async function fetchPriceWithFallback(
     } catch (error) {
       console.error(
         `${provider.name} failed for ${symbol}:`,
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error.message : String(error)
       );
       continue;
     }
@@ -203,7 +203,7 @@ async function fetchPriceWithFallback(
     return {
       ...generateFallbackPrice(symbol),
       c: cached.price,
-      provider: "stale-cache",
+      provider: 'stale-cache',
       cached: true,
     };
   }
@@ -215,9 +215,9 @@ async function fetchPriceWithFallback(
     priceCache[symbol] = {
       price: (fallback.c as number) || 0,
       timestamp: now,
-      provider: "fallback",
+      provider: 'fallback',
     };
-    return { ...fallback, provider: "fallback" };
+    return { ...fallback, provider: 'fallback' };
   }
 
   throw new Error(`Unable to fetch price for ${symbol}`);
@@ -225,33 +225,33 @@ async function fetchPriceWithFallback(
 
 serve(async (req: Request) => {
   // Handle CORS preflight
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const upgradeHeader = req.headers.get("upgrade") || "";
+  const upgradeHeader = req.headers.get('upgrade') || '';
 
   // WebSocket connection for streaming
-  if (upgradeHeader.toLowerCase() === "websocket") {
+  if (upgradeHeader.toLowerCase() === 'websocket') {
     const { socket, response } = Deno.upgradeWebSocket(req);
 
     let intervalId: number | null = null;
     let subscribedSymbols: string[] = [];
 
     socket.onopen = () => {
-      console.log("WebSocket client connected");
-      socket.send(JSON.stringify({ type: "connected", timestamp: Date.now() }));
+      console.log('WebSocket client connected');
+      socket.send(JSON.stringify({ type: 'connected', timestamp: Date.now() }));
     };
 
     socket.onmessage = async (event: Event) => {
       try {
         const messageEvent = event as MessageEvent;
         const message = JSON.parse(messageEvent.data);
-        console.log("Received message:", message);
+        console.log('Received message:', message);
 
-        if (message.type === "subscribe") {
+        if (message.type === 'subscribe') {
           subscribedSymbols = message.symbols || [];
-          console.log("Subscribed to:", subscribedSymbols);
+          console.log('Subscribed to:', subscribedSymbols);
 
           // Clear existing interval
           if (intervalId !== null) {
@@ -270,30 +270,30 @@ serve(async (req: Request) => {
                 console.error(`Error fetching ${symbol}:`, error);
                 prices[symbol] = {
                   error:
-                    error instanceof Error ? error.message : "Unknown error",
+                    error instanceof Error ? error.message : 'Unknown error',
                 };
               }
             }
 
             socket.send(
               JSON.stringify({
-                type: "prices",
+                type: 'prices',
                 data: prices,
                 timestamp: Date.now(),
-              }),
+              })
             );
           }, 2000); // Update every 2 seconds
 
           socket.send(
             JSON.stringify({
-              type: "subscribed",
+              type: 'subscribed',
               symbols: subscribedSymbols,
               timestamp: Date.now(),
-            }),
+            })
           );
         }
 
-        if (message.type === "unsubscribe") {
+        if (message.type === 'unsubscribe') {
           if (intervalId !== null) {
             clearInterval(intervalId);
             intervalId = null;
@@ -301,32 +301,32 @@ serve(async (req: Request) => {
           subscribedSymbols = [];
           socket.send(
             JSON.stringify({
-              type: "unsubscribed",
+              type: 'unsubscribed',
               timestamp: Date.now(),
-            }),
+            })
           );
         }
       } catch (error) {
-        console.error("Error processing message:", error);
+        console.error('Error processing message:', error);
         socket.send(
           JSON.stringify({
-            type: "error",
-            message: error instanceof Error ? error.message : "Unknown error",
+            type: 'error',
+            message: error instanceof Error ? error.message : 'Unknown error',
             timestamp: Date.now(),
-          }),
+          })
         );
       }
     };
 
     socket.onclose = () => {
-      console.log("WebSocket client disconnected");
+      console.log('WebSocket client disconnected');
       if (intervalId !== null) {
         clearInterval(intervalId);
       }
     };
 
     socket.onerror = (error: Event) => {
-      console.error("WebSocket error:", error);
+      console.error('WebSocket error:', error);
     };
 
     return response;
@@ -337,27 +337,27 @@ serve(async (req: Request) => {
     const { symbol } = await req.json();
 
     if (!symbol) {
-      return new Response(JSON.stringify({ error: "Symbol required" }), {
+      return new Response(JSON.stringify({ error: 'Symbol required' }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const priceData = await fetchPriceWithFallback(symbol);
 
     return new Response(JSON.stringify(priceData), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

@@ -85,7 +85,7 @@
 }
 
 .tab-nav-indicator:focus-visible::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -135,18 +135,18 @@
    ========================================================================== */
 
 /* Status messages that should be announced */
-[role="status"] {
+[role='status'] {
   position: relative;
 }
 
-[role="status"]::after {
+[role='status']::after {
   /* Indicator that this is a live region */
   position: absolute;
   pointer-events: none;
 }
 
 /* Polite announcements (don't interrupt) */
-[aria-live="polite"] {
+[aria-live='polite'] {
   /* Styled to draw attention without being intrusive */
   padding: 8px 12px;
   border-radius: 4px;
@@ -157,7 +157,7 @@
 }
 
 /* Assertive announcements (interrupt) */
-[aria-live="assertive"] {
+[aria-live='assertive'] {
   padding: 8px 12px;
   border-radius: 4px;
   background-color: hsl(var(--warning) / 0.1);
@@ -178,9 +178,9 @@ label {
 }
 
 label[required]::after {
-  content: " *";
+  content: ' *';
   color: hsl(var(--destructive));
-  aria-label: "required";
+  aria-label: 'required';
 }
 
 /* Form field error states with accessibility */
@@ -191,9 +191,9 @@ select:invalid {
   background-color: hsl(var(--destructive) / 0.05);
 }
 
-input[aria-invalid="true"],
-textarea[aria-invalid="true"],
-select[aria-invalid="true"] {
+input[aria-invalid='true'],
+textarea[aria-invalid='true'],
+select[aria-invalid='true'] {
   border-color: hsl(var(--destructive));
 }
 
@@ -212,7 +212,7 @@ select[aria-invalid="true"] {
 }
 
 .form-error-message::before {
-  content: "⚠";
+  content: '⚠';
   flex-shrink: 0;
   font-weight: 600;
 }
@@ -244,12 +244,12 @@ button:disabled {
   opacity: 0.5;
 }
 
-button[aria-pressed="true"] {
+button[aria-pressed='true'] {
   background-color: hsl(var(--accent) / 0.2);
   border: 1px solid hsl(var(--accent) / 0.3);
 }
 
-button[aria-pressed="false"] {
+button[aria-pressed='false'] {
   background-color: transparent;
   border: 1px solid hsl(var(--border));
 }
@@ -433,7 +433,7 @@ a:has(> svg:only-child):not(:has(> span)) {
 }
 
 .status-success::before {
-  content: "✓ ";
+  content: '✓ ';
 }
 
 .status-warning {
@@ -441,7 +441,7 @@ a:has(> svg:only-child):not(:has(> span)) {
 }
 
 .status-warning::before {
-  content: "⚠ ";
+  content: '⚠ ';
 }
 
 .status-error {
@@ -449,7 +449,7 @@ a:has(> svg:only-child):not(:has(> span)) {
 }
 
 .status-error::before {
-  content: "✗ ";
+  content: '✗ ';
 }
 
 /* ============================================================================
@@ -457,32 +457,32 @@ a:has(> svg:only-child):not(:has(> span)) {
    ========================================================================== */
 
 /* Modal/Dialog focus trap */
-[role="dialog"] {
+[role='dialog'] {
   position: fixed;
   z-index: 1000;
   display: flex;
   flex-direction: column;
 }
 
-[role="dialog"]::backdrop {
+[role='dialog']::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Menu focus management */
-[role="menu"] {
+[role='menu'] {
   outline: none;
 }
 
-[role="menuitem"] {
+[role='menuitem'] {
   cursor: pointer;
   position: relative;
 }
 
-[role="menuitem"]:focus-visible {
+[role='menuitem']:focus-visible {
   background-color: hsl(var(--accent) / 0.1);
 }
 
-[role="menuitem"][aria-current="page"] {
+[role='menuitem'][aria-current='page'] {
   background-color: hsl(var(--accent) / 0.2);
   font-weight: 500;
 }
@@ -494,8 +494,8 @@ a:has(> svg:only-child):not(:has(> span)) {
 /* Minimum 44x44px touch targets for mobile */
 button,
 a,
-input[type="checkbox"],
-input[type="radio"] {
+input[type='checkbox'],
+input[type='radio'] {
   min-height: 44px;
   min-width: 44px;
 }
@@ -504,8 +504,8 @@ input[type="radio"] {
 @media (min-width: 768px) {
   button,
   a,
-  input[type="checkbox"],
-  input[type="radio"] {
+  input[type='checkbox'],
+  input[type='radio'] {
     min-height: auto;
     min-width: auto;
   }
@@ -521,7 +521,7 @@ input[type="radio"] {
    ========================================================================== */
 
 /* Make loading states apparent to screen readers */
-[aria-busy="true"] {
+[aria-busy='true'] {
   opacity: 0.6;
   pointer-events: none;
 }
@@ -578,21 +578,21 @@ input[type="radio"] {
    ========================================================================== */
 
 /* Support for right-to-left languages */
-[dir="rtl"] {
+[dir='rtl'] {
   direction: rtl;
 }
 
-[dir="rtl"] label {
+[dir='rtl'] label {
   text-align: right;
 }
 
-[dir="rtl"] input,
-[dir="rtl"] textarea,
-[dir="rtl"] select {
+[dir='rtl'] input,
+[dir='rtl'] textarea,
+[dir='rtl'] select {
   text-align: right;
 }
 
-[dir="rtl"] .form-error-message {
+[dir='rtl'] .form-error-message {
   flex-direction: row-reverse;
 }
 
@@ -602,19 +602,19 @@ input[type="radio"] {
 
 /* Mark required fields */
 [required],
-[aria-required="true"] {
+[aria-required='true'] {
   position: relative;
 }
 
 /* Mark invalid fields */
 [invalid],
-[aria-invalid="true"] {
+[aria-invalid='true'] {
   border-color: hsl(var(--destructive));
 }
 
 /* Disabled state clarity */
 [disabled],
-[aria-disabled="true"] {
+[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.5;
 }

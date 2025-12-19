@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   WCAGAAAEnhancer,
   AccessibilityPreferences,
-} from "../components/accessibility/WCAGAAAEnhancer";
+} from '../components/accessibility/WCAGAAAEnhancer';
 
 // Singleton instance
 export const wcagAAAEnhancer = WCAGAAAEnhancer.getInstance();
@@ -24,7 +24,7 @@ export const wcagAAAEnhancer = WCAGAAAEnhancer.getInstance();
  */
 export function useAccessibilityPreferences() {
   const [preferences, setPreferences] = useState<AccessibilityPreferences>(
-    wcagAAAEnhancer.getPreferences(),
+    wcagAAAEnhancer.getPreferences()
   );
 
   useEffect(() => {
@@ -33,14 +33,14 @@ export function useAccessibilityPreferences() {
     };
 
     document.addEventListener(
-      "accessibilityPreferenceChanged",
-      handlePreferenceChange as EventListener,
+      'accessibilityPreferenceChanged',
+      handlePreferenceChange as EventListener
     );
 
     return () => {
       document.removeEventListener(
-        "accessibilityPreferenceChanged",
-        handlePreferenceChange as EventListener,
+        'accessibilityPreferenceChanged',
+        handlePreferenceChange as EventListener
       );
     };
   }, []);
@@ -48,7 +48,7 @@ export function useAccessibilityPreferences() {
   const updatePreference = useCallback(
     <K extends keyof AccessibilityPreferences>(
       key: K,
-      value: AccessibilityPreferences[K],
+      value: AccessibilityPreferences[K]
     ) => {
       wcagAAAEnhancer.updatePreference(key, value);
       setPreferences((prev: AccessibilityPreferences) => ({
@@ -56,12 +56,12 @@ export function useAccessibilityPreferences() {
         [key]: value,
       }));
     },
-    [],
+    []
   );
 
   const currentPalette = useMemo(
     () => wcagAAAEnhancer.getCurrentColorPalette(),
-    [preferences],
+    [preferences]
   );
 
   return {

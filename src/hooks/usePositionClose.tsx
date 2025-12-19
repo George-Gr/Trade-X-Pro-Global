@@ -1,13 +1,13 @@
-import { useState, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
-import { rateLimiter, checkRateLimit } from "@/lib/rateLimiter";
+import { useState, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
+import { rateLimiter, checkRateLimit } from '@/lib/rateLimiter';
 import {
   generateIdempotencyKey,
   executeWithIdempotency,
-} from "@/lib/idempotency";
-import { sanitizeText, sanitizeNumber } from "@/lib/sanitize";
-import { logger } from "@/lib/logger";
+} from '@/lib/idempotency';
+import { sanitizeText, sanitizeNumber } from '@/lib/sanitize';
+import { logger } from '@/lib/logger';
 
 /**
  * Request payload for closing a position
@@ -50,7 +50,7 @@ export interface ClosePositionResult {
     pnl: number;
   }>;
   /** Final position status after closing */
-  position_status: "closed" | "partial";
+  position_status: 'closed' | 'partial';
 }
 
 /**
@@ -101,17 +101,17 @@ export const usePositionClose = () => {
    */
   const closePosition = useCallback(
     async (
-      request: ClosePositionRequest,
+      request: ClosePositionRequest
     ): Promise<ClosePositionResult | null> => {
       // Check rate limit before proceeding
-      const rateCheck = checkRateLimit("order");
+      const rateCheck = checkRateLimit('order');
       if (!rateCheck.allowed) {
         toast({
-          title: "Rate Limit Exceeded",
+          title: 'Rate Limit Exceeded',
           description: `Please wait ${Math.ceil(rateCheck.resetIn / 1000)} seconds before closing another position.`,
-          variant: "destructive",
+          variant: 'destructive',
         });
-        logger.warn("Close position rate limit exceeded", {
+        logger.warn('Close position rate limit exceeded', {
           metadata: {
             remaining: rateCheck.remaining,
             resetIn: rateCheck.resetIn,
@@ -130,9 +130,9 @@ export const usePositionClose = () => {
 
         if (!session) {
           toast({
-            title: "Authentication Required",
-            description: "Please log in to close positions",
-            variant: "destructive",
+            title: 'Authentication Required',
+            description: 'Please log in to close positions',
+            variant: 'destructive',
           });
           return null;
         }
@@ -148,29 +148,29 @@ export const usePositionClose = () => {
         // Generate idempotency key
         const idempotencyKey = generateIdempotencyKey(
           session.user.id,
-          "close_position",
+          'close_position',
           {
             position_id: sanitizedRequest.position_id,
             quantity: sanitizedRequest.quantity,
-          },
+          }
         );
 
         // Execute with rate limiting and idempotency protection
         const result = await rateLimiter.execute(
-          "order",
+          'order',
           async () => {
             return executeWithIdempotency(
               idempotencyKey,
-              "close-position",
+              'close-position',
               async () => {
                 const { data, error } = await supabase.functions.invoke(
-                  "close-position",
+                  'close-position',
                   {
                     body: {
                       ...sanitizedRequest,
                       idempotency_key: idempotencyKey,
                     },
-                  },
+                  }
                 );
 
                 if (error) {
@@ -182,10 +182,10 @@ export const usePositionClose = () => {
                 }
 
                 return data;
-              },
+              }
             );
           },
-          10, // High priority for position close
+          10 // High priority for position close
         );
 
         const closeResult = result.data as ClosePositionResult;
@@ -195,12 +195,12 @@ export const usePositionClose = () => {
             : `-$${Math.abs(closeResult.realized_pnl).toFixed(2)}`;
 
         toast({
-          title: "Position Closed",
+          title: 'Position Closed',
           description: `Closed ${closeResult.closed_quantity} lots at ${closeResult.close_price}. P&L: ${pnlText}`,
-          variant: closeResult.realized_pnl >= 0 ? "default" : "destructive",
+          variant: closeResult.realized_pnl >= 0 ? 'default' : 'destructive',
         });
 
-        logger.info("Position closed successfully", {
+        logger.info('Position closed successfully', {
           metadata: {
             positionId: closeResult.position_id,
             realizedPnl: closeResult.realized_pnl,
@@ -213,31 +213,31 @@ export const usePositionClose = () => {
         const errorMessage =
           error instanceof Error
             ? error.message
-            : "An unexpected error occurred";
+            : 'An unexpected error occurred';
 
         // Check for duplicate request error
-        if (errorMessage.includes("already being processed")) {
+        if (errorMessage.includes('already being processed')) {
           toast({
-            title: "Duplicate Request",
+            title: 'Duplicate Request',
             description:
-              "This close request is already being processed. Please wait.",
-            variant: "destructive",
+              'This close request is already being processed. Please wait.',
+            variant: 'destructive',
           });
         } else {
           toast({
-            title: "Close Failed",
+            title: 'Close Failed',
             description: errorMessage,
-            variant: "destructive",
+            variant: 'destructive',
           });
         }
 
-        logger.error("Close position failed", error);
+        logger.error('Close position failed', error);
         return null;
       } finally {
         setIsClosing(false);
       }
     },
-    [toast],
+    [toast]
   );
 
   /**
@@ -245,7 +245,7 @@ export const usePositionClose = () => {
    * @returns Rate limit status including remaining requests and reset time
    */
   const getRateLimitStatus = useCallback(() => {
-    return checkRateLimit("order");
+    return checkRateLimit('order');
   }, []);
 
   return {

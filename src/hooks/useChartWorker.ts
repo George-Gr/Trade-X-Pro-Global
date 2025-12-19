@@ -3,7 +3,7 @@
  * Manages communication with the chart calculation Web Worker
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface WorkerMessage {
   id: string;
@@ -27,21 +27,21 @@ export interface ChartWorkerResult<T> {
 export const useChartWorker = <T>() => {
   const workerRef = useRef<Worker | null>(null);
   const [responses, setResponses] = useState<Map<string, WorkerResponse>>(
-    new Map(),
+    new Map()
   );
   const [pendingRequests, setPendingRequests] = useState<Set<string>>(
-    new Set(),
+    new Set()
   );
 
   useEffect(() => {
     // Initialize worker
-    if (typeof window !== "undefined" && window.Worker) {
+    if (typeof window !== 'undefined' && window.Worker) {
       try {
         workerRef.current = new Worker(
-          new URL("../workers/chartWorker.ts", import.meta.url),
+          new URL('../workers/chartWorker.ts', import.meta.url),
           {
-            type: "module",
-          },
+            type: 'module',
+          }
         );
 
         // Listen for messages from worker
@@ -62,8 +62,8 @@ export const useChartWorker = <T>() => {
         };
       } catch (error) {
         console.warn(
-          "Web Worker not supported or failed to initialize:",
-          error,
+          'Web Worker not supported or failed to initialize:',
+          error
         );
       }
     }
@@ -80,7 +80,7 @@ export const useChartWorker = <T>() => {
     <D>(type: string, data: D): Promise<T> => {
       return new Promise((resolve, reject) => {
         if (!workerRef.current) {
-          reject(new Error("Worker not available"));
+          reject(new Error('Worker not available'));
           return;
         }
 
@@ -98,7 +98,7 @@ export const useChartWorker = <T>() => {
             newPending.delete(id);
             return newPending;
           });
-          reject(new Error("Worker request timeout"));
+          reject(new Error('Worker request timeout'));
         }, 5000); // 5 second timeout
 
         // Check for response periodically
@@ -111,7 +111,7 @@ export const useChartWorker = <T>() => {
             if (response.success) {
               resolve(response.result as T);
             } else {
-              reject(new Error(response.error || "Worker calculation failed"));
+              reject(new Error(response.error || 'Worker calculation failed'));
             }
 
             // Clean up response
@@ -124,42 +124,42 @@ export const useChartWorker = <T>() => {
         }, 10);
       });
     },
-    [responses],
+    [responses]
   );
 
   const calculateTrend = useCallback(
     (values: number[]): Promise<unknown> => {
-      return sendRequest("calculateTrend", { values });
+      return sendRequest('calculateTrend', { values });
     },
-    [sendRequest],
+    [sendRequest]
   );
 
   const normalizeData = useCallback(
     (data: { value: number }[]): Promise<unknown> => {
-      return sendRequest("normalizeData", data);
+      return sendRequest('normalizeData', data);
     },
-    [sendRequest],
+    [sendRequest]
   );
 
   const generateSparkline = useCallback(
     (values: number[], labels?: string[]): Promise<unknown> => {
-      return sendRequest("generateSparkline", { values, labels });
+      return sendRequest('generateSparkline', { values, labels });
     },
-    [sendRequest],
+    [sendRequest]
   );
 
   const optimizeData = useCallback(
     (data: unknown[], maxPoints?: number): Promise<unknown> => {
-      return sendRequest("optimizeData", { data, maxPoints });
+      return sendRequest('optimizeData', { data, maxPoints });
     },
-    [sendRequest],
+    [sendRequest]
   );
 
   const getLoadingState = useCallback(
     (type: string): boolean => {
       return Array.from(pendingRequests).some((id) => id.startsWith(type));
     },
-    [pendingRequests],
+    [pendingRequests]
   );
 
   const clearResponses = useCallback(() => {

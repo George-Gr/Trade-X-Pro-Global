@@ -5,20 +5,20 @@
  * Respects user's reduced motion settings.
  */
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from 'react';
 
 /**
  * Haptic feedback intensity patterns
  */
 export type HapticPattern =
-  | "light" // Light tap - 10ms
-  | "medium" // Medium tap - 30ms
-  | "heavy" // Heavy tap - 50ms
-  | "success" // Success pattern - double tap
-  | "warning" // Warning pattern - longer vibration
-  | "error" // Error pattern - three short taps
-  | "selection" // Selection change - very light
-  | "impact"; // Button press impact
+  | 'light' // Light tap - 10ms
+  | 'medium' // Medium tap - 30ms
+  | 'heavy' // Heavy tap - 50ms
+  | 'success' // Success pattern - double tap
+  | 'warning' // Warning pattern - longer vibration
+  | 'error' // Error pattern - three short taps
+  | 'selection' // Selection change - very light
+  | 'impact'; // Button press impact
 
 /**
  * Vibration patterns for different feedback types
@@ -70,15 +70,15 @@ interface HapticFeedbackReturn {
  * Check if vibration API is available
  */
 const checkVibrationSupport = (): boolean => {
-  return typeof navigator !== "undefined" && "vibrate" in navigator;
+  return typeof navigator !== 'undefined' && 'vibrate' in navigator;
 };
 
 /**
  * Check if user prefers reduced motion
  */
 const checkReducedMotion = (): boolean => {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 /**
@@ -86,9 +86,9 @@ const checkReducedMotion = (): boolean => {
  */
 const applyIntensity = (
   pattern: number | number[],
-  multiplier: number,
+  multiplier: number
 ): number | number[] => {
-  if (typeof pattern === "number") {
+  if (typeof pattern === 'number') {
     return Math.round(pattern * multiplier);
   }
   return pattern.map((v) => Math.round(v * multiplier));
@@ -119,7 +119,7 @@ const applyIntensity = (
  * ```
  */
 export const useHapticFeedback = (
-  options: UseHapticFeedbackOptions = {},
+  options: UseHapticFeedbackOptions = {}
 ): HapticFeedbackReturn => {
   const { forceEnable = false, intensityMultiplier = 1 } = options;
 
@@ -135,32 +135,32 @@ export const useHapticFeedback = (
    * Core trigger function
    */
   const trigger = useCallback(
-    (pattern: HapticPattern = "medium") => {
+    (pattern: HapticPattern = 'medium') => {
       if (!isEnabled) return;
 
       try {
         const vibrationPattern = HAPTIC_PATTERNS[pattern];
         const adjustedPattern = applyIntensity(
           vibrationPattern,
-          intensityMultiplier,
+          intensityMultiplier
         );
         navigator.vibrate(adjustedPattern);
       } catch (e) {
         // Silently fail - haptic feedback is non-critical
       }
     },
-    [isEnabled, intensityMultiplier],
+    [isEnabled, intensityMultiplier]
   );
 
   // Convenience methods
-  const lightTap = useCallback(() => trigger("light"), [trigger]);
-  const mediumTap = useCallback(() => trigger("medium"), [trigger]);
-  const heavyTap = useCallback(() => trigger("heavy"), [trigger]);
-  const success = useCallback(() => trigger("success"), [trigger]);
-  const warning = useCallback(() => trigger("warning"), [trigger]);
-  const error = useCallback(() => trigger("error"), [trigger]);
-  const selection = useCallback(() => trigger("selection"), [trigger]);
-  const impact = useCallback(() => trigger("impact"), [trigger]);
+  const lightTap = useCallback(() => trigger('light'), [trigger]);
+  const mediumTap = useCallback(() => trigger('medium'), [trigger]);
+  const heavyTap = useCallback(() => trigger('heavy'), [trigger]);
+  const success = useCallback(() => trigger('success'), [trigger]);
+  const warning = useCallback(() => trigger('warning'), [trigger]);
+  const error = useCallback(() => trigger('error'), [trigger]);
+  const selection = useCallback(() => trigger('selection'), [trigger]);
+  const impact = useCallback(() => trigger('impact'), [trigger]);
 
   return {
     trigger,
@@ -180,7 +180,7 @@ export const useHapticFeedback = (
 /**
  * Standalone haptic trigger for use outside React components
  */
-export const triggerHaptic = (pattern: HapticPattern = "medium"): void => {
+export const triggerHaptic = (pattern: HapticPattern = 'medium'): void => {
   if (!checkVibrationSupport()) return;
   if (checkReducedMotion()) return;
 

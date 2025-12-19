@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface RiskEvent {
   id: string;
@@ -28,15 +28,15 @@ export const useRiskEvents = (limit = 5) => {
     const fetchEvents = async () => {
       setLoading(true);
       const { data, error } = await supabase
-        .from("risk_events")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("resolved", false)
-        .order("created_at", { ascending: false })
+        .from('risk_events')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('resolved', false)
+        .order('created_at', { ascending: false })
         .limit(limit);
 
       if (error) {
-        console.error("Failed to fetch risk events:", error);
+        console.error('Failed to fetch risk events:', error);
         if (mounted) setEvents([]);
       } else {
         if (mounted) setEvents((data as RiskEvent[]) || []);
@@ -49,18 +49,18 @@ export const useRiskEvents = (limit = 5) => {
     const channel = supabase
       .channel(`risk-events:${user.id}`)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "INSERT",
-          schema: "public",
-          table: "risk_events",
+          event: 'INSERT',
+          schema: 'public',
+          table: 'risk_events',
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
           setEvents((prev) =>
-            [payload.new as RiskEvent, ...prev].slice(0, limit),
+            [payload.new as RiskEvent, ...prev].slice(0, limit)
           );
-        },
+        }
       )
       .subscribe();
 

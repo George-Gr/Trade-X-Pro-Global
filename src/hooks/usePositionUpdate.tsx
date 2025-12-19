@@ -12,9 +12,9 @@
  * - React Query for caching and invalidation
  */
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useAuth } from "./useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useAuth } from './useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 // ============================================================================
 // TYPES
@@ -23,14 +23,14 @@ import { supabase } from "@/lib/supabaseBrowserClient";
 export interface PositionMetrics {
   position_id: string;
   symbol: string;
-  side: "long" | "short";
+  side: 'long' | 'short';
   quantity: number;
   entry_price: number;
   current_price: number;
   unrealized_pnl: number;
   margin_used: number;
   margin_level: number;
-  margin_status: "SAFE" | "WARNING" | "CRITICAL" | "LIQUIDATION";
+  margin_status: 'SAFE' | 'WARNING' | 'CRITICAL' | 'LIQUIDATION';
   stop_loss?: number;
   take_profit?: number;
 }
@@ -68,7 +68,7 @@ export interface UsePositionUpdateReturn {
   refresh: () => Promise<void>;
   manualUpdate: (
     positionIds?: string[],
-    prices?: Record<string, number>,
+    prices?: Record<string, number>
   ) => Promise<PositionMetrics[]>;
 }
 
@@ -77,7 +77,7 @@ export interface UsePositionUpdateReturn {
 // ============================================================================
 
 export function usePositionUpdate(
-  options: UsePositionUpdateOptions = {},
+  options: UsePositionUpdateOptions = {}
 ): UsePositionUpdateReturn {
   const {
     enabled = true,
@@ -104,25 +104,25 @@ export function usePositionUpdate(
   const fetchPositions = useCallback(
     async (
       positionIds?: string[],
-      prices?: Record<string, number>,
+      prices?: Record<string, number>
     ): Promise<PositionMetrics[]> => {
       if (!user) {
-        setError(new Error("User not authenticated"));
+        setError(new Error('User not authenticated'));
         return [];
       }
 
       try {
         const { data: sessionData } = await supabase.auth.getSession();
         if (!sessionData.session) {
-          throw new Error("No active session");
+          throw new Error('No active session');
         }
 
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update-positions`,
           {
-            method: "POST",
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${sessionData.session.access_token}`,
             },
             body: JSON.stringify({
@@ -130,14 +130,13 @@ export function usePositionUpdate(
               positions: positionIds,
               prices,
             }),
-          },
+          }
         );
 
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(
-            errorData.error ||
-              `HTTP ${response.status}: ${response.statusText}`,
+            errorData.error || `HTTP ${response.status}: ${response.statusText}`
           );
         }
 
@@ -159,7 +158,7 @@ export function usePositionUpdate(
           return data.updated;
         }
 
-        throw new Error("Invalid response format");
+        throw new Error('Invalid response format');
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
@@ -171,7 +170,7 @@ export function usePositionUpdate(
         return [];
       }
     },
-    [user, onUpdate, onError],
+    [user, onUpdate, onError]
   );
 
   // =========================================================================
@@ -198,15 +197,15 @@ export function usePositionUpdate(
     const channel = supabase
       .channel(`positions:${user.id}`)
       .on(
-        "broadcast",
+        'broadcast',
         {
-          event: "position:updated",
+          event: 'position:updated',
         },
         (payload: { payload: PositionUpdate }) => {
           setPositions((prev) => {
             const updated = [...prev];
             const index = updated.findIndex(
-              (p) => p.position_id === payload.payload.id,
+              (p) => p.position_id === payload.payload.id
             );
 
             if (index >= 0) {
@@ -216,7 +215,7 @@ export function usePositionUpdate(
                 unrealized_pnl: payload.payload.unrealized_pnl,
                 margin_level: payload.payload.margin_level,
                 margin_status: payload.payload
-                  .margin_status as PositionMetrics["margin_status"],
+                  .margin_status as PositionMetrics['margin_status'],
               };
             }
 
@@ -224,12 +223,12 @@ export function usePositionUpdate(
           });
 
           setLastUpdated(new Date());
-        },
+        }
       )
       .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
+        if (status === 'SUBSCRIBED') {
           // Subscription established successfully
-        } else if (status === "CHANNEL_ERROR") {
+        } else if (status === 'CHANNEL_ERROR') {
           // Subscription error - automatic retry will occur
         }
       });
@@ -292,7 +291,7 @@ export function usePositionUpdate(
         setIsRefreshing(false);
       }
     },
-    [fetchPositions],
+    [fetchPositions]
   );
 
   // =========================================================================

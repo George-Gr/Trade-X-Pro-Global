@@ -4,9 +4,9 @@
  * Enhanced version with throttling, batching, and memory optimization
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { throttle } from "@/lib/performanceUtils";
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { throttle } from '@/lib/performanceUtils';
 
 export interface PriceData {
   symbol: string;
@@ -37,7 +37,7 @@ const CACHE_TTL_MS = 1000;
 
 // Symbol mapping for Finnhub
 const mapSymbolToFinnhub = (symbol: string): string => {
-  if (symbol.length === 6 && !symbol.includes(":")) {
+  if (symbol.length === 6 && !symbol.includes(':')) {
     const base = symbol.substring(0, 3);
     const quote = symbol.substring(3, 6);
     return `OANDA:${base}_${quote}`;
@@ -56,7 +56,7 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
 
   try {
     const finnhubSymbol = mapSymbolToFinnhub(symbol);
-    const { data, error } = await supabase.functions.invoke("get-stock-price", {
+    const { data, error } = await supabase.functions.invoke('get-stock-price', {
       body: { symbol: finnhubSymbol },
     });
 
@@ -88,7 +88,7 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
 // Batch fetch with concurrency limit
 const fetchPricesBatched = async (
   symbols: string[],
-  maxConcurrent: number,
+  maxConcurrent: number
 ): Promise<Map<string, PriceData>> => {
   const results = new Map<string, PriceData>();
 
@@ -123,8 +123,8 @@ export const usePriceUpdatesOptimized = ({
 
   // Memoize symbol list to prevent unnecessary re-renders
   const symbolList = useMemo(
-    () => [...new Set(symbols)].sort().join(","),
-    [symbols],
+    () => [...new Set(symbols)].sort().join(','),
+    [symbols]
   );
 
   // Throttled state update to prevent excessive re-renders
@@ -139,19 +139,19 @@ export const usePriceUpdatesOptimized = ({
     // then cast the returned throttled function back to the specific signature we expect.
     const throttled = throttle(
       updater as unknown as (...args: unknown[]) => void,
-      throttleMs,
+      throttleMs
     ) as unknown;
     return throttled as (p: Map<string, PriceData>) => void;
   }, [throttleMs]);
 
   const updatePrices = useCallback(async () => {
-    if (!enabled || symbolList === "") {
+    if (!enabled || symbolList === '') {
       setIsLoading(false);
       return;
     }
 
     try {
-      const symbolArray = symbolList.split(",").filter(Boolean);
+      const symbolArray = symbolList.split(',').filter(Boolean);
       if (symbolArray.length === 0) {
         setIsLoading(false);
         return;
@@ -162,7 +162,7 @@ export const usePriceUpdatesOptimized = ({
       setError(null);
       setIsLoading(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch prices");
+      setError(err instanceof Error ? err.message : 'Failed to fetch prices');
       setIsLoading(false);
     }
   }, [symbolList, enabled, maxConcurrent, updatePricesThrottled]);
@@ -170,7 +170,7 @@ export const usePriceUpdatesOptimized = ({
   useEffect(() => {
     isMountedRef.current = true;
 
-    if (!enabled || symbolList === "") {
+    if (!enabled || symbolList === '') {
       setIsLoading(false);
       return;
     }
@@ -197,7 +197,7 @@ export const usePriceUpdatesOptimized = ({
       }
       return null;
     },
-    [prices, intervalMs],
+    [prices, intervalMs]
   );
 
   const refreshPrice = useCallback(async (symbol: string) => {

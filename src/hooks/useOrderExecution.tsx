@@ -1,17 +1,17 @@
-import { useState, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
 import {
   getActionableErrorMessage,
   formatToastError,
-} from "@/lib/errorMessageService";
-import { rateLimiter, checkRateLimit } from "@/lib/rateLimiter";
+} from '@/lib/errorMessageService';
+import { rateLimiter, checkRateLimit } from '@/lib/rateLimiter';
 import {
   generateIdempotencyKey,
   executeWithIdempotency,
-} from "@/lib/idempotency";
-import { sanitizeSymbol, sanitizeNumber } from "@/lib/sanitize";
-import { logger } from "@/lib/logger";
+} from '@/lib/idempotency';
+import { sanitizeSymbol, sanitizeNumber } from '@/lib/sanitize';
+import { logger } from '@/lib/logger';
 
 /**
  * Request payload for executing a trading order
@@ -21,9 +21,9 @@ export interface OrderRequest {
   /** Trading symbol (e.g., 'EURUSD', 'AAPL') */
   symbol: string;
   /** Type of order to execute */
-  order_type: "market" | "limit" | "stop" | "stop_limit";
+  order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
   /** Direction of the trade */
-  side: "buy" | "sell";
+  side: 'buy' | 'sell';
   /** Number of lots to trade */
   quantity: number;
   /** Price for limit/stop orders (optional for market orders) */
@@ -44,7 +44,7 @@ export interface OrderResult {
   /** Trading symbol */
   symbol: string;
   /** Trade direction */
-  side: "buy" | "sell";
+  side: 'buy' | 'sell';
   /** Executed quantity in lots */
   quantity: number;
   /** Actual execution price */
@@ -110,14 +110,14 @@ export const useOrderExecution = () => {
   const executeOrder = useCallback(
     async (orderRequest: OrderRequest): Promise<OrderResult | null> => {
       // Check rate limit before proceeding
-      const rateCheck = checkRateLimit("order");
+      const rateCheck = checkRateLimit('order');
       if (!rateCheck.allowed) {
         toast({
-          title: "Rate Limit Exceeded",
+          title: 'Rate Limit Exceeded',
           description: `Please wait ${Math.ceil(rateCheck.resetIn / 1000)} seconds before placing another order.`,
-          variant: "destructive",
+          variant: 'destructive',
         });
-        logger.warn("Order rate limit exceeded", {
+        logger.warn('Order rate limit exceeded', {
           metadata: {
             remaining: rateCheck.remaining,
             resetIn: rateCheck.resetIn,
@@ -136,9 +136,9 @@ export const useOrderExecution = () => {
 
         if (!session) {
           toast({
-            title: "Authentication Required",
-            description: "Please log in to place orders",
-            variant: "destructive",
+            title: 'Authentication Required',
+            description: 'Please log in to place orders',
+            variant: 'destructive',
           });
           return null;
         }
@@ -162,31 +162,31 @@ export const useOrderExecution = () => {
         // Generate idempotency key based on order parameters
         const idempotencyKey = generateIdempotencyKey(
           session.user.id,
-          "execute_order",
+          'execute_order',
           {
             symbol: sanitizedRequest.symbol,
             side: sanitizedRequest.side,
             quantity: sanitizedRequest.quantity,
             order_type: sanitizedRequest.order_type,
-          },
+          }
         );
 
         // Execute with rate limiting and idempotency protection
         const result = await rateLimiter.execute(
-          "order",
+          'order',
           async () => {
             return executeWithIdempotency(
               idempotencyKey,
-              "execute-order",
+              'execute-order',
               async () => {
                 const { data, error } = await supabase.functions.invoke(
-                  "execute-order",
+                  'execute-order',
                   {
                     body: {
                       ...sanitizedRequest,
                       idempotency_key: idempotencyKey,
                     },
-                  },
+                  }
                 );
 
                 if (error) {
@@ -198,29 +198,29 @@ export const useOrderExecution = () => {
                 }
 
                 return data;
-              },
+              }
             );
           },
-          10, // High priority for order execution
+          10 // High priority for order execution
         );
 
         // Extract order data from edge function response
         const orderData = result.data;
         if (!orderData || !orderData.success) {
           toast({
-            title: "Order Failed",
-            description: orderData?.error || "Order execution failed",
-            variant: "destructive",
+            title: 'Order Failed',
+            description: orderData?.error || 'Order execution failed',
+            variant: 'destructive',
           });
           return null;
         }
 
         toast({
-          title: "Order Executed",
+          title: 'Order Executed',
           description: `${orderRequest.side.toUpperCase()} ${orderRequest.quantity} ${orderRequest.symbol} at ${orderData.execution_price.toFixed(4)}`,
         });
 
-        logger.info("Order executed successfully", {
+        logger.info('Order executed successfully', {
           metadata: {
             orderId: orderData.order_id,
             symbol: orderData.symbol,
@@ -245,30 +245,30 @@ export const useOrderExecution = () => {
         const errorMessage =
           error instanceof Error
             ? error.message
-            : "An unexpected error occurred";
+            : 'An unexpected error occurred';
 
         // Check for duplicate request error
-        if (errorMessage.includes("already being processed")) {
+        if (errorMessage.includes('already being processed')) {
           toast({
-            title: "Duplicate Request",
-            description: "This order is already being processed. Please wait.",
-            variant: "destructive",
+            title: 'Duplicate Request',
+            description: 'This order is already being processed. Please wait.',
+            variant: 'destructive',
           });
         } else {
-          const actionableError = formatToastError(error, "order_submission");
+          const actionableError = formatToastError(error, 'order_submission');
           toast({
             ...actionableError,
-            variant: actionableError.variant as "default" | "destructive",
+            variant: actionableError.variant as 'default' | 'destructive',
           });
         }
 
-        logger.error("Order execution failed", error);
+        logger.error('Order execution failed', error);
         return null;
       } finally {
         setIsExecuting(false);
       }
     },
-    [toast],
+    [toast]
   );
 
   /**
@@ -276,7 +276,7 @@ export const useOrderExecution = () => {
    * @returns Rate limit status including remaining requests and reset time
    */
   const getRateLimitStatus = useCallback(() => {
-    return checkRateLimit("order");
+    return checkRateLimit('order');
   }, []);
 
   return {

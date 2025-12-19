@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useNotifications } from "@/contexts/notificationContextHelpers";
-import { useToast } from "@/hooks/use-toast";
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/contexts/notificationContextHelpers';
+import { useToast } from '@/hooks/use-toast';
 import {
   AuthenticatedLayoutContext,
   type AuthenticatedLayoutContextType,
-} from "@/contexts/AuthenticatedLayoutContext";
-import { formatToastError } from "@/lib/errorMessageService";
+} from '@/contexts/AuthenticatedLayoutContext';
+import { formatToastError } from '@/lib/errorMessageService';
 
 // Provider component
 export function AuthenticatedLayoutProvider({
@@ -21,23 +21,23 @@ export function AuthenticatedLayoutProvider({
     try {
       const { error } = await signOut();
       if (error) {
-        const actionableError = formatToastError(error, "authentication");
+        const actionableError = formatToastError(error, 'authentication');
         toast({
           ...actionableError,
-          variant: actionableError.variant as "default" | "destructive",
+          variant: actionableError.variant as 'default' | 'destructive',
         });
       } else {
         toast({
-          title: "Logged Out",
-          description: "You have been successfully logged out",
+          title: 'Logged Out',
+          description: 'You have been successfully logged out',
         });
         setSidebarOpen(false);
       }
     } catch (error) {
-      const actionableError = formatToastError(error, "authentication");
+      const actionableError = formatToastError(error, 'authentication');
       toast({
         ...actionableError,
-        variant: actionableError.variant as "default" | "destructive",
+        variant: actionableError.variant as 'default' | 'destructive',
       });
     }
   };

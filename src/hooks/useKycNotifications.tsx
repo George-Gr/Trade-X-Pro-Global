@@ -11,10 +11,10 @@
  * - Clear action messages
  */
 
-import { useEffect, useRef } from "react";
-import { useAuth } from "./useAuth";
-import { useToast } from "./use-toast";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useEffect, useRef } from 'react';
+import { useAuth } from './useAuth';
+import { useToast } from './use-toast';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 interface NotificationPayload {
   kyc_status?: string;
@@ -34,9 +34,9 @@ export const useKycNotifications = () => {
     // Get initial KYC status
     const getInitialStatus = async () => {
       const { data } = await supabase
-        .from("profiles")
-        .select("kyc_status")
-        .eq("id", user.id)
+        .from('profiles')
+        .select('kyc_status')
+        .eq('id', user.id)
         .single();
 
       if (data) {
@@ -50,11 +50,11 @@ export const useKycNotifications = () => {
     const subscription = supabase
       .channel(`kyc-notifications-${user.id}`)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
         (payload) => {
@@ -67,62 +67,62 @@ export const useKycNotifications = () => {
             lastStatusRef.current = newStatus;
 
             // Send appropriate notification based on new status
-            if (newStatus === "approved") {
+            if (newStatus === 'approved') {
               toast({
-                title: "✅ KYC Approved!",
+                title: '✅ KYC Approved!',
                 description:
-                  "Your identity has been verified. You can now trade with full access.",
+                  'Your identity has been verified. You can now trade with full access.',
                 duration: 5000,
               });
 
               // Create in-app notification (store in notifications table)
               createKycNotification(
                 user.id,
-                "KYC Approved",
-                "Your account is now fully verified and trading is enabled.",
-                "approval",
+                'KYC Approved',
+                'Your account is now fully verified and trading is enabled.',
+                'approval'
               );
             } else if (
-              newStatus === "rejected" ||
-              newStatus === "requires_resubmit"
+              newStatus === 'rejected' ||
+              newStatus === 'requires_resubmit'
             ) {
               const reason =
-                newData.kyc_rejection_reason || "Document verification failed";
+                newData.kyc_rejection_reason || 'Document verification failed';
               toast({
-                title: "❌ KYC Rejected",
+                title: '❌ KYC Rejected',
                 description: reason,
-                variant: "destructive",
+                variant: 'destructive',
                 duration: 5000,
               });
 
               // Create in-app notification
               createKycNotification(
                 user.id,
-                "KYC Rejected",
+                'KYC Rejected',
                 `Your submission was not approved. Reason: ${reason}. You can resubmit after 7 days.`,
-                "rejection",
+                'rejection'
               );
             } else if (
-              newStatus === "submitted" ||
-              newStatus === "under_review"
+              newStatus === 'submitted' ||
+              newStatus === 'under_review'
             ) {
               toast({
-                title: "⏳ Under Review",
+                title: '⏳ Under Review',
                 description:
-                  "Your KYC documents have been received and are under review.",
+                  'Your KYC documents have been received and are under review.',
                 duration: 5000,
               });
 
               // Create in-app notification
               createKycNotification(
                 user.id,
-                "KYC Under Review",
-                "Your documents are being reviewed. This typically takes 24-48 hours.",
-                "info",
+                'KYC Under Review',
+                'Your documents are being reviewed. This typically takes 24-48 hours.',
+                'info'
               );
             }
           }
-        },
+        }
       )
       .subscribe();
 
@@ -139,10 +139,10 @@ async function createKycNotification(
   userId: string,
   title: string,
   message: string,
-  type: "approval" | "rejection" | "info",
+  type: 'approval' | 'rejection' | 'info'
 ) {
   try {
-    await supabase.functions.invoke("send-notification", {
+    await supabase.functions.invoke('send-notification', {
       body: {
         user_id: userId,
         title,
@@ -151,6 +151,6 @@ async function createKycNotification(
       },
     });
   } catch (err) {
-    console.error("Failed to create KYC notification:", err);
+    console.error('Failed to create KYC notification:', err);
   }
 }

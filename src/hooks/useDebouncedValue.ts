@@ -4,7 +4,7 @@
  * Returns a debounced version of a value that only updates after a delay
  */
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
  * Debounces a value - useful for search inputs, price displays, etc.
@@ -46,7 +46,7 @@ export function useThrottledValue<T>(value: T, limit: number): T {
           setThrottledValue(pendingValue.current);
           lastUpdate.current = Date.now();
         },
-        limit - (now - lastUpdate.current),
+        limit - (now - lastUpdate.current)
       );
 
       return () => clearTimeout(timer);
@@ -61,7 +61,7 @@ export function useThrottledValue<T>(value: T, limit: number): T {
  */
 export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
-  delay: number,
+  delay: number
 ): T {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const callbackRef = useRef(callback);
@@ -80,7 +80,7 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
         callbackRef.current(...args);
       }, delay);
     },
-    [delay],
+    [delay]
   ) as T;
 
   // Cleanup on unmount
@@ -100,7 +100,7 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
  */
 export function useThrottledCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
-  limit: number,
+  limit: number
 ): T {
   const lastRan = useRef<number>(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -126,11 +126,11 @@ export function useThrottledCallback<T extends (...args: unknown[]) => unknown>(
             callbackRef.current(...args);
             lastRan.current = Date.now();
           },
-          limit - (now - lastRan.current),
+          limit - (now - lastRan.current)
         );
       }
     },
-    [limit],
+    [limit]
   ) as T;
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export function useThrottledCallback<T extends (...args: unknown[]) => unknown>(
  * RAF-throttled callback for smooth animations
  */
 export function useRAFCallback<T extends (...args: unknown[]) => unknown>(
-  callback: T,
+  callback: T
 ): T {
   const rafRef = useRef<number | null>(null);
   const argsRef = useRef<Parameters<T> | null>(null);

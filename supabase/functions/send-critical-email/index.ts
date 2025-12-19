@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 
 /**
  * Edge Function: send-critical-email
@@ -8,15 +8,15 @@ import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
  */
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 interface EmailRequest {
   to: string;
   subject: string;
-  type: "margin_warning" | "margin_critical" | "liquidation" | "margin_call";
+  type: 'margin_warning' | 'margin_critical' | 'liquidation' | 'margin_call';
   data: {
     user_name?: string;
     margin_level: number;
@@ -28,11 +28,11 @@ interface EmailRequest {
 }
 
 // Resend API key from environment
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
 function getEmailTemplate(
   type: string,
-  data: unknown,
+  data: unknown
 ): { subject: string; html: string } {
   const baseStyle = `
     <style>
@@ -54,7 +54,7 @@ function getEmailTemplate(
 
   // Type guard to ensure data has required properties
   const hasRequiredData = (
-    d: unknown,
+    d: unknown
   ): d is {
     margin_level: number;
     equity: number;
@@ -63,22 +63,22 @@ function getEmailTemplate(
     time_to_liquidation?: number;
   } => {
     return (
-      typeof d === "object" &&
+      typeof d === 'object' &&
       d !== null &&
-      typeof (d as Record<string, unknown>).margin_level === "number" &&
-      typeof (d as Record<string, unknown>).equity === "number" &&
-      typeof (d as Record<string, unknown>).margin_used === "number"
+      typeof (d as Record<string, unknown>).margin_level === 'number' &&
+      typeof (d as Record<string, unknown>).equity === 'number' &&
+      typeof (d as Record<string, unknown>).margin_used === 'number'
     );
   };
 
   if (!hasRequiredData(data)) {
     return {
-      subject: "Notification from TradeX Pro",
-      html: "<p>You have a new notification</p>",
+      subject: 'Notification from TradeX Pro',
+      html: '<p>You have a new notification</p>',
     };
   }
 
-  if (type === "margin_warning") {
+  if (type === 'margin_warning') {
     return {
       subject: `⚠️ Margin Level Warning - ${data.margin_level.toFixed(2)}%`,
       html: `
@@ -100,12 +100,12 @@ function getEmailTemplate(
             
             <div class="metric">
               <div class="metric-label">Account Equity</div>
-              <div class="metric-value">$${data.equity.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div class="metric-value">$${data.equity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
             
             <div class="metric">
               <div class="metric-label">Margin Used</div>
-              <div class="metric-value">$${data.margin_used.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div class="metric-value">$${data.margin_used.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
             
             ${
@@ -113,13 +113,13 @@ function getEmailTemplate(
                 ? `
               <div class="actions">
                 <h3>Recommended Actions:</h3>
-                ${(data.actions as string[]).map((action: string) => `<div class="action-item">${action}</div>`).join("")}
+                ${(data.actions as string[]).map((action: string) => `<div class="action-item">${action}</div>`).join('')}
               </div>
             `
-                : ""
+                : ''
             }
             
-            <a href="${Deno.env.get("APP_URL")}/risk-management" class="button">View Risk Management</a>
+            <a href="${Deno.env.get('APP_URL')}/risk-management" class="button">View Risk Management</a>
             
             <div class="footer">
               <p>This is an automated notification from TradeX Pro</p>
@@ -131,7 +131,7 @@ function getEmailTemplate(
     };
   }
 
-  if (type === "margin_critical" || type === "margin_call") {
+  if (type === 'margin_critical' || type === 'margin_call') {
     return {
       subject: `🚨 URGENT: Margin Call - ${data.margin_level.toFixed(2)}%`,
       html: `
@@ -145,7 +145,7 @@ function getEmailTemplate(
               <p><strong>IMMEDIATE ACTION REQUIRED</strong></p>
               <p>Your margin level is at ${data.margin_level.toFixed(2)}%, which is below the margin call threshold of 150%.</p>
               <p>Your account is now in <strong>close-only mode</strong>. You cannot open new positions.</p>
-              ${data.time_to_liquidation ? `<p><strong>Estimated time to liquidation: ${data.time_to_liquidation} minutes</strong></p>` : ""}
+              ${data.time_to_liquidation ? `<p><strong>Estimated time to liquidation: ${data.time_to_liquidation} minutes</strong></p>` : ''}
             </div>
             
             <div class="metric">
@@ -155,12 +155,12 @@ function getEmailTemplate(
             
             <div class="metric">
               <div class="metric-label">Account Equity</div>
-              <div class="metric-value">$${data.equity.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div class="metric-value">$${data.equity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
             
             <div class="metric">
               <div class="metric-label">Margin Used</div>
-              <div class="metric-value">$${data.margin_used.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div class="metric-value">$${data.margin_used.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
             
             ${
@@ -168,14 +168,14 @@ function getEmailTemplate(
                 ? `
               <div class="actions">
                 <h3>REQUIRED ACTIONS:</h3>
-                ${(data.actions as string[]).map((action: string) => `<div class="action-item" style="background: #f8d7da; border-color: #dc3545;">${action}</div>`).join("")}
+                ${(data.actions as string[]).map((action: string) => `<div class="action-item" style="background: #f8d7da; border-color: #dc3545;">${action}</div>`).join('')}
               </div>
             `
-                : ""
+                : ''
             }
             
-            <a href="${Deno.env.get("APP_URL")}/wallet" class="button" style="background: #dc3545;">Deposit Funds Now</a>
-            <a href="${Deno.env.get("APP_URL")}/portfolio" class="button" style="background: #6c757d;">Close Positions</a>
+            <a href="${Deno.env.get('APP_URL')}/wallet" class="button" style="background: #dc3545;">Deposit Funds Now</a>
+            <a href="${Deno.env.get('APP_URL')}/portfolio" class="button" style="background: #6c757d;">Close Positions</a>
             
             <div class="footer">
               <p><strong>This is a critical automated notification from TradeX Pro</strong></p>
@@ -187,7 +187,7 @@ function getEmailTemplate(
     };
   }
 
-  if (type === "liquidation") {
+  if (type === 'liquidation') {
     return {
       subject: `🔴 LIQUIDATION ALERT - Positions Being Closed`,
       html: `
@@ -210,7 +210,7 @@ function getEmailTemplate(
             
             <div class="metric">
               <div class="metric-label">Account Equity</div>
-              <div class="metric-value">$${data.equity.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div class="metric-value">$${data.equity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
             
             <p style="background: white; padding: 20px; margin: 20px 0; border-radius: 5px;">
@@ -218,7 +218,7 @@ function getEmailTemplate(
               You will be notified once the liquidation process is complete.
             </p>
             
-            <a href="${Deno.env.get("APP_URL")}/history" class="button" style="background: #8b0000;">View Liquidation History</a>
+            <a href="${Deno.env.get('APP_URL')}/history" class="button" style="background: #8b0000;">View Liquidation History</a>
             
             <div class="footer">
               <p><strong>This is an automated liquidation notification from TradeX Pro</strong></p>
@@ -231,26 +231,26 @@ function getEmailTemplate(
   }
 
   return {
-    subject: "Notification from TradeX Pro",
-    html: "<p>You have a new notification</p>",
+    subject: 'Notification from TradeX Pro',
+    html: '<p>You have a new notification</p>',
   };
 }
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     // Validate CRON_SECRET for security
-    const CRON_SECRET = Deno.env.get("CRON_SECRET");
-    const providedSecret = req.headers.get("X-Cron-Secret");
+    const CRON_SECRET = Deno.env.get('CRON_SECRET');
+    const providedSecret = req.headers.get('X-Cron-Secret');
 
     if (!CRON_SECRET || providedSecret !== CRON_SECRET) {
-      console.error("Unauthorized access attempt to send-critical-email");
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      console.error('Unauthorized access attempt to send-critical-email');
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -258,11 +258,11 @@ serve(async (req: Request) => {
 
     if (!emailRequest.to || !emailRequest.type || !emailRequest.data) {
       return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
+        JSON.stringify({ error: 'Missing required fields' }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -270,22 +270,22 @@ serve(async (req: Request) => {
 
     if (!RESEND_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "RESEND_API_KEY not configured" }),
+        JSON.stringify({ error: 'RESEND_API_KEY not configured' }),
         {
           status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
-    const result = await fetch("https://api.resend.com/emails", {
-      method: "POST",
+    const result = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: "TradeX Pro Alerts <alerts@tradexpro.com>",
+        from: 'TradeX Pro Alerts <alerts@tradexpro.com>',
         to: emailRequest.to,
         subject: template.subject,
         html: template.html,
@@ -293,21 +293,21 @@ serve(async (req: Request) => {
     });
 
     const data = await result.json();
-    console.log("Email sent:", data);
+    console.log('Email sent:', data);
 
     return new Response(JSON.stringify({ success: true, data }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error('Error sending email:', error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

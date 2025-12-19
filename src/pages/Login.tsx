@@ -1,25 +1,24 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { validationRules } from "@/lib/validationRules";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Form,
+  FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { TrendingUp, AlertCircle, X, ArrowRight, Sparkles } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
-import { useForm } from "react-hook-form";
-import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { validationRules } from '@/lib/validationRules';
+import { motion } from 'framer-motion';
+import { AlertCircle, ArrowRight, Sparkles, TrendingUp, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface LoginFormData {
   email: string;
@@ -35,39 +34,39 @@ const Login = () => {
 
   const form = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   // Check localStorage for demo banner preference
   useEffect(() => {
-    const bannerDismissed = localStorage.getItem("demoBannerDismissed");
-    if (bannerDismissed === "true") {
+    const bannerDismissed = localStorage.getItem('demoBannerDismissed');
+    if (bannerDismissed === 'true') {
       setShowDemoBanner(false);
     }
   }, []);
 
   // Demo credentials
   const demoCredentials = {
-    email: "demo@tradingpro.com",
-    password: "Demo123!",
+    email: 'demo@tradingpro.com',
+    password: 'Demo123!',
   };
 
   // Handle demo login
   const handleDemoLogin = () => {
-    form.setValue("email", demoCredentials.email);
-    form.setValue("password", demoCredentials.password);
+    form.setValue('email', demoCredentials.email);
+    form.setValue('password', demoCredentials.password);
     toast({
-      title: "Demo credentials filled",
-      description: "Click login to access the demo account",
+      title: 'Demo credentials filled',
+      description: 'Click login to access the demo account',
     });
   };
 
   // Dismiss demo banner
   const handleDismissBanner = () => {
     setShowDemoBanner(false);
-    localStorage.setItem("demoBannerDismissed", "true");
+    localStorage.setItem('demoBannerDismissed', 'true');
   };
 
   const {
@@ -80,9 +79,9 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       if (isAdmin) {
-        navigate("/admin");
+        navigate('/admin');
       } else {
-        navigate("/dashboard");
+        navigate('/dashboard');
       }
     }
   }, [user, isAdmin, navigate]);
@@ -95,22 +94,22 @@ const Login = () => {
 
       if (error) {
         toast({
-          title: "Login Failed",
+          title: 'Login Failed',
           description: error.message,
-          variant: "destructive",
+          variant: 'destructive',
         });
       } else {
         toast({
-          title: "Login Successful",
-          description: "Welcome back to TradePro",
+          title: 'Login Successful',
+          description: 'Welcome back to TradePro',
         });
         // Navigation handled by useEffect
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+        title: 'Error',
+        description: 'An unexpected error occurred',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -135,7 +134,7 @@ const Login = () => {
             opacity: [0.3, 0.5, 0.3],
             x: [0, 20, 0],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
           className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-accent/30 to-transparent blur-3xl"
@@ -144,7 +143,7 @@ const Login = () => {
             opacity: [0.4, 0.2, 0.4],
             x: [0, -20, 0],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-primary-glow/20 to-transparent blur-3xl"
@@ -152,7 +151,7 @@ const Login = () => {
             scale: [1, 1.1, 1],
             rotate: [0, 180, 360],
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
         />
 
         {/* Dot pattern overlay */}
@@ -254,7 +253,7 @@ const Login = () => {
                             id="email"
                             type="email"
                             placeholder="Enter your email"
-                            {...register("email", validationRules.email)}
+                            {...register('email', validationRules.email)}
                             disabled={isLoading}
                           />
                         </FormControl>
@@ -282,7 +281,7 @@ const Login = () => {
                             id="password"
                             type="password"
                             placeholder="Enter your password"
-                            {...register("password", validationRules.password)}
+                            {...register('password', validationRules.password)}
                             disabled={isLoading}
                           />
                         </FormControl>
@@ -300,7 +299,7 @@ const Login = () => {
                     disabled={isLoading}
                     aria-label="Sign in to your trading account"
                   >
-                    {isLoading ? "Logging in..." : "Login"}
+                    {isLoading ? 'Logging in...' : 'Login'}
                     {!isLoading && (
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     )}

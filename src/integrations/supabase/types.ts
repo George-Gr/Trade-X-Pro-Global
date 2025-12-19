@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5";
+    PostgrestVersion: '13.0.5';
   };
   public: {
     Tables: {
@@ -212,18 +212,18 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "fills_order_id_fkey";
-            columns: ["order_id"];
+            foreignKeyName: 'fills_order_id_fkey';
+            columns: ['order_id'];
             isOneToOne: false;
-            referencedRelation: "orders";
-            referencedColumns: ["id"];
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "fills_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'fills_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -269,7 +269,7 @@ export type Database = {
           rejection_reason: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
-          status: Database["public"]["Enums"]["kyc_status"] | null;
+          status: Database['public']['Enums']['kyc_status'] | null;
           updated_at: string | null;
           user_id: string;
         };
@@ -281,7 +281,7 @@ export type Database = {
           rejection_reason?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
-          status?: Database["public"]["Enums"]["kyc_status"] | null;
+          status?: Database['public']['Enums']['kyc_status'] | null;
           updated_at?: string | null;
           user_id: string;
         };
@@ -293,17 +293,17 @@ export type Database = {
           rejection_reason?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
-          status?: Database["public"]["Enums"]["kyc_status"] | null;
+          status?: Database['public']['Enums']['kyc_status'] | null;
           updated_at?: string | null;
           user_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "kyc_documents_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'kyc_documents_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -373,7 +373,7 @@ export type Database = {
           description: string | null;
           id: string;
           reference_id: string | null;
-          transaction_type: Database["public"]["Enums"]["transaction_type"];
+          transaction_type: Database['public']['Enums']['transaction_type'];
           user_id: string;
         };
         Insert: {
@@ -384,7 +384,7 @@ export type Database = {
           description?: string | null;
           id?: string;
           reference_id?: string | null;
-          transaction_type: Database["public"]["Enums"]["transaction_type"];
+          transaction_type: Database['public']['Enums']['transaction_type'];
           user_id: string;
         };
         Update: {
@@ -395,16 +395,16 @@ export type Database = {
           description?: string | null;
           id?: string;
           reference_id?: string | null;
-          transaction_type?: Database["public"]["Enums"]["transaction_type"];
+          transaction_type?: Database['public']['Enums']['transaction_type'];
           user_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "ledger_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'ledger_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -417,7 +417,7 @@ export type Database = {
           description: string | null;
           id: string;
           reference_id: string | null;
-          transaction_type: Database["public"]["Enums"]["transaction_type"];
+          transaction_type: Database['public']['Enums']['transaction_type'];
           user_id: string;
         };
         Insert: {
@@ -428,7 +428,7 @@ export type Database = {
           description?: string | null;
           id?: string;
           reference_id?: string | null;
-          transaction_type: Database["public"]["Enums"]["transaction_type"];
+          transaction_type: Database['public']['Enums']['transaction_type'];
           user_id: string;
         };
         Update: {
@@ -439,7 +439,7 @@ export type Database = {
           description?: string | null;
           id?: string;
           reference_id?: string | null;
-          transaction_type?: Database["public"]["Enums"]["transaction_type"];
+          transaction_type?: Database['public']['Enums']['transaction_type'];
           user_id?: string;
         };
         Relationships: [];
@@ -519,18 +519,18 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "liquidation_events_margin_call_event_id_fkey";
-            columns: ["margin_call_event_id"];
+            foreignKeyName: 'liquidation_events_margin_call_event_id_fkey';
+            columns: ['margin_call_event_id'];
             isOneToOne: false;
-            referencedRelation: "margin_call_events";
-            referencedColumns: ["id"];
+            referencedRelation: 'margin_call_events';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "liquidation_events_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'liquidation_events_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -603,11 +603,11 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "margin_call_events_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'margin_call_events_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -699,7 +699,7 @@ export type Database = {
           is_default: boolean;
           leverage: number;
           name: string;
-          order_type: Database["public"]["Enums"]["order_type"];
+          order_type: Database['public']['Enums']['order_type'];
           stop_loss: number | null;
           symbol: string | null;
           take_profit: number | null;
@@ -713,7 +713,7 @@ export type Database = {
           is_default?: boolean;
           leverage?: number;
           name: string;
-          order_type: Database["public"]["Enums"]["order_type"];
+          order_type: Database['public']['Enums']['order_type'];
           stop_loss?: number | null;
           symbol?: string | null;
           take_profit?: number | null;
@@ -727,7 +727,7 @@ export type Database = {
           is_default?: boolean;
           leverage?: number;
           name?: string;
-          order_type?: Database["public"]["Enums"]["order_type"];
+          order_type?: Database['public']['Enums']['order_type'];
           stop_loss?: number | null;
           symbol?: string | null;
           take_profit?: number | null;
@@ -745,11 +745,11 @@ export type Database = {
           filled_at: string | null;
           id: string;
           idempotency_key: string;
-          order_type: Database["public"]["Enums"]["order_type"];
+          order_type: Database['public']['Enums']['order_type'];
           price: number | null;
           quantity: number;
-          side: Database["public"]["Enums"]["order_side"];
-          status: Database["public"]["Enums"]["order_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status: Database['public']['Enums']['order_status'] | null;
           stop_loss: number | null;
           symbol: string;
           take_profit: number | null;
@@ -762,11 +762,11 @@ export type Database = {
           filled_at?: string | null;
           id?: string;
           idempotency_key: string;
-          order_type: Database["public"]["Enums"]["order_type"];
+          order_type: Database['public']['Enums']['order_type'];
           price?: number | null;
           quantity: number;
-          side: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["order_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['order_status'] | null;
           stop_loss?: number | null;
           symbol: string;
           take_profit?: number | null;
@@ -779,11 +779,11 @@ export type Database = {
           filled_at?: string | null;
           id?: string;
           idempotency_key?: string;
-          order_type?: Database["public"]["Enums"]["order_type"];
+          order_type?: Database['public']['Enums']['order_type'];
           price?: number | null;
           quantity?: number;
-          side?: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["order_status"] | null;
+          side?: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['order_status'] | null;
           stop_loss?: number | null;
           symbol?: string;
           take_profit?: number | null;
@@ -791,11 +791,11 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "orders_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'orders_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -807,11 +807,11 @@ export type Database = {
           filled_at: string | null;
           id: string;
           idempotency_key: string;
-          order_type: Database["public"]["Enums"]["order_type"];
+          order_type: Database['public']['Enums']['order_type'];
           price: number | null;
           quantity: number;
-          side: Database["public"]["Enums"]["order_side"];
-          status: Database["public"]["Enums"]["order_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status: Database['public']['Enums']['order_status'] | null;
           stop_loss: number | null;
           symbol: string;
           take_profit: number | null;
@@ -824,11 +824,11 @@ export type Database = {
           filled_at?: string | null;
           id?: string;
           idempotency_key: string;
-          order_type: Database["public"]["Enums"]["order_type"];
+          order_type: Database['public']['Enums']['order_type'];
           price?: number | null;
           quantity: number;
-          side: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["order_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['order_status'] | null;
           stop_loss?: number | null;
           symbol: string;
           take_profit?: number | null;
@@ -841,11 +841,11 @@ export type Database = {
           filled_at?: string | null;
           id?: string;
           idempotency_key?: string;
-          order_type?: Database["public"]["Enums"]["order_type"];
+          order_type?: Database['public']['Enums']['order_type'];
           price?: number | null;
           quantity?: number;
-          side?: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["order_status"] | null;
+          side?: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['order_status'] | null;
           stop_loss?: number | null;
           symbol?: string;
           take_profit?: number | null;
@@ -864,7 +864,7 @@ export type Database = {
           position_id: string;
           quantity: number;
           remaining_quantity: number;
-          side: Database["public"]["Enums"]["order_side"];
+          side: Database['public']['Enums']['order_side'];
           symbol: string;
           user_id: string;
         };
@@ -878,7 +878,7 @@ export type Database = {
           position_id: string;
           quantity: number;
           remaining_quantity: number;
-          side: Database["public"]["Enums"]["order_side"];
+          side: Database['public']['Enums']['order_side'];
           symbol: string;
           user_id: string;
         };
@@ -892,7 +892,7 @@ export type Database = {
           position_id?: string;
           quantity?: number;
           remaining_quantity?: number;
-          side?: Database["public"]["Enums"]["order_side"];
+          side?: Database['public']['Enums']['order_side'];
           symbol?: string;
           user_id?: string;
         };
@@ -910,8 +910,8 @@ export type Database = {
           opened_at: string | null;
           quantity: number;
           realized_pnl: number | null;
-          side: Database["public"]["Enums"]["order_side"];
-          status: Database["public"]["Enums"]["position_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status: Database['public']['Enums']['position_status'] | null;
           symbol: string;
           trailing_stop_distance: number | null;
           trailing_stop_enabled: boolean;
@@ -930,8 +930,8 @@ export type Database = {
           opened_at?: string | null;
           quantity: number;
           realized_pnl?: number | null;
-          side: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["position_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['position_status'] | null;
           symbol: string;
           trailing_stop_distance?: number | null;
           trailing_stop_enabled?: boolean;
@@ -950,8 +950,8 @@ export type Database = {
           opened_at?: string | null;
           quantity?: number;
           realized_pnl?: number | null;
-          side?: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["position_status"] | null;
+          side?: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['position_status'] | null;
           symbol?: string;
           trailing_stop_distance?: number | null;
           trailing_stop_enabled?: boolean;
@@ -961,11 +961,11 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "positions_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'positions_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -981,8 +981,8 @@ export type Database = {
           opened_at: string | null;
           quantity: number;
           realized_pnl: number | null;
-          side: Database["public"]["Enums"]["order_side"];
-          status: Database["public"]["Enums"]["position_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status: Database['public']['Enums']['position_status'] | null;
           symbol: string;
           trailing_stop_distance: number | null;
           trailing_stop_enabled: boolean;
@@ -1001,8 +1001,8 @@ export type Database = {
           opened_at?: string | null;
           quantity: number;
           realized_pnl?: number | null;
-          side: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["position_status"] | null;
+          side: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['position_status'] | null;
           symbol: string;
           trailing_stop_distance?: number | null;
           trailing_stop_enabled?: boolean;
@@ -1021,8 +1021,8 @@ export type Database = {
           opened_at?: string | null;
           quantity?: number;
           realized_pnl?: number | null;
-          side?: Database["public"]["Enums"]["order_side"];
-          status?: Database["public"]["Enums"]["position_status"] | null;
+          side?: Database['public']['Enums']['order_side'];
+          status?: Database['public']['Enums']['position_status'] | null;
           symbol?: string;
           trailing_stop_distance?: number | null;
           trailing_stop_enabled?: boolean;
@@ -1067,7 +1067,7 @@ export type Database = {
       };
       profiles: {
         Row: {
-          account_status: Database["public"]["Enums"]["account_status"] | null;
+          account_status: Database['public']['Enums']['account_status'] | null;
           balance: number;
           country: string | null;
           created_at: string | null;
@@ -1076,14 +1076,14 @@ export type Database = {
           free_margin: number | null;
           full_name: string | null;
           id: string;
-          kyc_status: Database["public"]["Enums"]["kyc_status"] | null;
+          kyc_status: Database['public']['Enums']['kyc_status'] | null;
           margin_level: number | null;
           margin_used: number;
           phone: string | null;
           updated_at: string | null;
         };
         Insert: {
-          account_status?: Database["public"]["Enums"]["account_status"] | null;
+          account_status?: Database['public']['Enums']['account_status'] | null;
           balance?: number;
           country?: string | null;
           created_at?: string | null;
@@ -1092,14 +1092,14 @@ export type Database = {
           free_margin?: number | null;
           full_name?: string | null;
           id: string;
-          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null;
+          kyc_status?: Database['public']['Enums']['kyc_status'] | null;
           margin_level?: number | null;
           margin_used?: number;
           phone?: string | null;
           updated_at?: string | null;
         };
         Update: {
-          account_status?: Database["public"]["Enums"]["account_status"] | null;
+          account_status?: Database['public']['Enums']['account_status'] | null;
           balance?: number;
           country?: string | null;
           created_at?: string | null;
@@ -1108,7 +1108,7 @@ export type Database = {
           free_margin?: number | null;
           full_name?: string | null;
           id?: string;
-          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null;
+          kyc_status?: Database['public']['Enums']['kyc_status'] | null;
           margin_level?: number | null;
           margin_used?: number;
           phone?: string | null;
@@ -1228,19 +1228,19 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
-          role: Database["public"]["Enums"]["app_role"];
+          role: Database['public']['Enums']['app_role'];
           user_id: string;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
-          role?: Database["public"]["Enums"]["app_role"];
+          role?: Database['public']['Enums']['app_role'];
           user_id: string;
         };
         Update: {
           created_at?: string | null;
           id?: string;
-          role?: Database["public"]["Enums"]["app_role"];
+          role?: Database['public']['Enums']['app_role'];
           user_id?: string;
         };
         Relationships: [];
@@ -1269,11 +1269,11 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "watchlist_items_watchlist_id_fkey";
-            columns: ["watchlist_id"];
+            foreignKeyName: 'watchlist_items_watchlist_id_fkey';
+            columns: ['watchlist_id'];
             isOneToOne: false;
-            referencedRelation: "watchlists";
-            referencedColumns: ["id"];
+            referencedRelation: 'watchlists';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -1335,10 +1335,10 @@ export type Database = {
         Args: {
           p_current_price: number;
           p_idempotency_key: string;
-          p_order_type: Database["public"]["Enums"]["order_type"];
+          p_order_type: Database['public']['Enums']['order_type'];
           p_price: number;
           p_quantity: number;
-          p_side: Database["public"]["Enums"]["order_side"];
+          p_side: Database['public']['Enums']['order_side'];
           p_slippage?: number;
           p_stop_loss: number;
           p_symbol: string;
@@ -1350,28 +1350,28 @@ export type Database = {
       generate_lead_number: { Args: never; Returns: string };
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["app_role"];
+          _role: Database['public']['Enums']['app_role'];
           _user_id: string;
         };
         Returns: boolean;
       };
     };
     Enums: {
-      account_status: "active" | "suspended" | "closed";
-      app_role: "admin" | "user";
-      kyc_status: "pending" | "approved" | "rejected" | "resubmitted";
-      order_side: "buy" | "sell";
-      order_status: "pending" | "filled" | "partial" | "cancelled" | "rejected";
-      order_type: "market" | "limit" | "stop" | "stop_limit";
-      position_status: "open" | "closed";
+      account_status: 'active' | 'suspended' | 'closed';
+      app_role: 'admin' | 'user';
+      kyc_status: 'pending' | 'approved' | 'rejected' | 'resubmitted';
+      order_side: 'buy' | 'sell';
+      order_status: 'pending' | 'filled' | 'partial' | 'cancelled' | 'rejected';
+      order_type: 'market' | 'limit' | 'stop' | 'stop_limit';
+      position_status: 'open' | 'closed';
       transaction_type:
-        | "deposit"
-        | "withdrawal"
-        | "commission"
-        | "profit"
-        | "loss"
-        | "swap"
-        | "adjustment";
+        | 'deposit'
+        | 'withdrawal'
+        | 'commission'
+        | 'profit'
+        | 'loss'
+        | 'swap'
+        | 'adjustment';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1379,36 +1379,36 @@ export type Database = {
   };
 };
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 
 type DefaultSchema = DatabaseWithoutInternals[Extract<
   keyof Database,
-  "public"
+  'public'
 >];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R;
       }
       ? R
@@ -1417,23 +1417,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I;
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I;
       }
       ? I
@@ -1442,23 +1442,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U;
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U;
       }
       ? U
@@ -1467,56 +1467,56 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+    | keyof DefaultSchema['Enums']
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
     : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
+    | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never;
 
 export const Constants = {
   public: {
     Enums: {
-      account_status: ["active", "suspended", "closed"],
-      app_role: ["admin", "user"],
-      kyc_status: ["pending", "approved", "rejected", "resubmitted"],
-      order_side: ["buy", "sell"],
-      order_status: ["pending", "filled", "partial", "cancelled", "rejected"],
-      order_type: ["market", "limit", "stop", "stop_limit"],
-      position_status: ["open", "closed"],
+      account_status: ['active', 'suspended', 'closed'],
+      app_role: ['admin', 'user'],
+      kyc_status: ['pending', 'approved', 'rejected', 'resubmitted'],
+      order_side: ['buy', 'sell'],
+      order_status: ['pending', 'filled', 'partial', 'cancelled', 'rejected'],
+      order_type: ['market', 'limit', 'stop', 'stop_limit'],
+      position_status: ['open', 'closed'],
       transaction_type: [
-        "deposit",
-        "withdrawal",
-        "commission",
-        "profit",
-        "loss",
-        "swap",
-        "adjustment",
+        'deposit',
+        'withdrawal',
+        'commission',
+        'profit',
+        'loss',
+        'swap',
+        'adjustment',
       ],
     },
   },

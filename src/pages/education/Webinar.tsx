@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Users, Calendar, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { Users, Calendar, CheckCircle2 } from 'lucide-react';
 
 export default function Webinar() {
   return (
@@ -41,24 +41,24 @@ export default function Webinar() {
                 <div className="space-y-4">
                   {[
                     {
-                      title: "Technical Analysis Basics",
-                      day: "Monday",
-                      time: "18:00 GMT",
+                      title: 'Technical Analysis Basics',
+                      day: 'Monday',
+                      time: '18:00 GMT',
                     },
                     {
-                      title: "Forex Trading Strategies",
-                      day: "Wednesday",
-                      time: "19:00 GMT",
+                      title: 'Forex Trading Strategies',
+                      day: 'Wednesday',
+                      time: '19:00 GMT',
                     },
                     {
-                      title: "Risk Management Essentials",
-                      day: "Thursday",
-                      time: "18:00 GMT",
+                      title: 'Risk Management Essentials',
+                      day: 'Thursday',
+                      time: '18:00 GMT',
                     },
                     {
-                      title: "Market Analysis Q&A",
-                      day: "Friday",
-                      time: "17:00 GMT",
+                      title: 'Market Analysis Q&A',
+                      day: 'Friday',
+                      time: '17:00 GMT',
                     },
                   ].map((webinar, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
@@ -82,14 +82,14 @@ export default function Webinar() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "Live interaction with professional traders",
-                    "Real-time market analysis",
-                    "Trading strategy discussions",
-                    "Q&A sessions with experts",
-                    "Free access for all members",
-                    "Recorded sessions available",
-                    "Exclusive trading insights",
-                    "Networking opportunities",
+                    'Live interaction with professional traders',
+                    'Real-time market analysis',
+                    'Trading strategy discussions',
+                    'Q&A sessions with experts',
+                    'Free access for all members',
+                    'Recorded sessions available',
+                    'Exclusive trading insights',
+                    'Networking opportunities',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -109,19 +109,19 @@ export default function Webinar() {
               <div className="grid md:grid-cols-3 gap-6">
                 {[
                   {
-                    title: "Introduction to Technical Analysis",
-                    level: "Beginner",
-                    duration: "60 min",
+                    title: 'Introduction to Technical Analysis',
+                    level: 'Beginner',
+                    duration: '60 min',
                   },
                   {
-                    title: "Advanced Charting Patterns",
-                    level: "Intermediate",
-                    duration: "90 min",
+                    title: 'Advanced Charting Patterns',
+                    level: 'Intermediate',
+                    duration: '90 min',
                   },
                   {
-                    title: "Algorithmic Trading Strategies",
-                    level: "Advanced",
-                    duration: "120 min",
+                    title: 'Algorithmic Trading Strategies',
+                    level: 'Advanced',
+                    duration: '120 min',
                   },
                 ].map((webinar, i) => (
                   <Card key={i} className="bg-muted/50 border-border">
@@ -131,11 +131,11 @@ export default function Webinar() {
                       </p>
                       <div className="space-y-2 text-sm text-muted-foreground">
                         <p>
-                          Level:{" "}
+                          Level:{' '}
                           <span className="font-semibold">{webinar.level}</span>
                         </p>
                         <p>
-                          Duration:{" "}
+                          Duration:{' '}
                           <span className="font-semibold">
                             {webinar.duration}
                           </span>

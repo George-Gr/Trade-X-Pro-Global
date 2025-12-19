@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { TrendingUp, Clock, DollarSign, Zap, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { TrendingUp, Clock, DollarSign, Zap, CheckCircle2 } from 'lucide-react';
 
 export default function TradingConditions() {
   return (
@@ -59,34 +59,34 @@ export default function TradingConditions() {
                     <tbody>
                       {[
                         {
-                          asset: "Forex (EUR/USD)",
-                          standard: "1.0 pips",
-                          premium: "0.5 pips",
-                          ecn: "0.0 pips",
+                          asset: 'Forex (EUR/USD)',
+                          standard: '1.0 pips',
+                          premium: '0.5 pips',
+                          ecn: '0.0 pips',
                         },
                         {
-                          asset: "Stocks (US)",
-                          standard: "$0.05",
-                          premium: "$0.02",
-                          ecn: "$0.01",
+                          asset: 'Stocks (US)',
+                          standard: '$0.05',
+                          premium: '$0.02',
+                          ecn: '$0.01',
                         },
                         {
-                          asset: "Indices (S&P 500)",
-                          standard: "1.0 points",
-                          premium: "0.5 points",
-                          ecn: "0.1 points",
+                          asset: 'Indices (S&P 500)',
+                          standard: '1.0 points',
+                          premium: '0.5 points',
+                          ecn: '0.1 points',
                         },
                         {
-                          asset: "Commodities (Gold)",
-                          standard: "$0.50",
-                          premium: "$0.30",
-                          ecn: "$0.10",
+                          asset: 'Commodities (Gold)',
+                          standard: '$0.50',
+                          premium: '$0.30',
+                          ecn: '$0.10',
                         },
                         {
-                          asset: "Crypto (BTC/USD)",
-                          standard: "$20",
-                          premium: "$15",
-                          ecn: "$10",
+                          asset: 'Crypto (BTC/USD)',
+                          standard: '$20',
+                          premium: '$15',
+                          ecn: '$10',
                         },
                       ].map((row, i) => (
                         <tr
@@ -141,11 +141,11 @@ export default function TradingConditions() {
                     </h3>
                     <div className="space-y-4">
                       {[
-                        { asset: "Forex", leverage: "1:500" },
-                        { asset: "Indices", leverage: "1:500" },
-                        { asset: "Commodities", leverage: "1:500" },
-                        { asset: "Stocks", leverage: "1:20" },
-                        { asset: "Cryptocurrencies", leverage: "1:100" },
+                        { asset: 'Forex', leverage: '1:500' },
+                        { asset: 'Indices', leverage: '1:500' },
+                        { asset: 'Commodities', leverage: '1:500' },
+                        { asset: 'Stocks', leverage: '1:20' },
+                        { asset: 'Cryptocurrencies', leverage: '1:100' },
                       ].map((item, i) => (
                         <div
                           key={i}
@@ -200,36 +200,36 @@ export default function TradingConditions() {
                 <div className="grid md:grid-cols-2 gap-6">
                   {[
                     {
-                      market: "Forex",
-                      hours: "Sunday 22:00 - Friday 21:00 (GMT)",
-                      detail: "24 hours, 5 days per week",
+                      market: 'Forex',
+                      hours: 'Sunday 22:00 - Friday 21:00 (GMT)',
+                      detail: '24 hours, 5 days per week',
                     },
                     {
-                      market: "Stocks (US)",
-                      hours: "14:30 - 21:00 GMT",
+                      market: 'Stocks (US)',
+                      hours: '14:30 - 21:00 GMT',
                       detail:
-                        "Pre-market (14:00-14:30) and After-hours (21:00-22:00) available",
+                        'Pre-market (14:00-14:30) and After-hours (21:00-22:00) available',
                     },
                     {
-                      market: "Stocks (UK)",
-                      hours: "08:00 - 16:30 GMT",
-                      detail: "London Stock Exchange trading hours",
+                      market: 'Stocks (UK)',
+                      hours: '08:00 - 16:30 GMT',
+                      detail: 'London Stock Exchange trading hours',
                     },
                     {
-                      market: "Stocks (EU)",
-                      hours: "08:00 - 16:30 CET",
-                      detail: "European market hours",
+                      market: 'Stocks (EU)',
+                      hours: '08:00 - 16:30 CET',
+                      detail: 'European market hours',
                     },
                     {
-                      market: "Indices",
-                      hours: "Varies by index",
-                      detail: "Most indices trade 24/5 with short breaks",
+                      market: 'Indices',
+                      hours: 'Varies by index',
+                      detail: 'Most indices trade 24/5 with short breaks',
                     },
                     {
-                      market: "Cryptocurrencies",
-                      hours: "24/7/365",
+                      market: 'Cryptocurrencies',
+                      hours: '24/7/365',
                       detail:
-                        "Trade 24 hours a day, 7 days a week, 365 days per year",
+                        'Trade 24 hours a day, 7 days a week, 365 days per year',
                     },
                   ].map((item, i) => (
                     <Card key={i} className="bg-muted/50 border-border">
@@ -272,15 +272,15 @@ export default function TradingConditions() {
                     </h3>
                     <ul className="space-y-4">
                       {[
-                        { item: "Spread on Forex", price: "Included in price" },
+                        { item: 'Spread on Forex', price: 'Included in price' },
                         {
-                          item: "Commission on Stocks",
-                          price: "From $0.02/share",
+                          item: 'Commission on Stocks',
+                          price: 'From $0.02/share',
                         },
-                        { item: "Overnight Swap Fee", price: "Market rate" },
-                        { item: "Withdrawal Fee", price: "Free" },
-                        { item: "Deposit Fee", price: "Free" },
-                        { item: "Account Fee", price: "Free" },
+                        { item: 'Overnight Swap Fee', price: 'Market rate' },
+                        { item: 'Withdrawal Fee', price: 'Free' },
+                        { item: 'Deposit Fee', price: 'Free' },
+                        { item: 'Account Fee', price: 'Free' },
                       ].map((fee, i) => (
                         <li
                           key={i}
@@ -303,12 +303,12 @@ export default function TradingConditions() {
                     </h3>
                     <ul className="space-y-4">
                       {[
-                        "Account maintenance fees",
-                        "Inactivity fees",
-                        "MT4/MT5 subscription",
-                        "Platform fees",
-                        "Data feed charges",
-                        "Educational materials",
+                        'Account maintenance fees',
+                        'Inactivity fees',
+                        'MT4/MT5 subscription',
+                        'Platform fees',
+                        'Data feed charges',
+                        'Educational materials',
                       ].map((item, i) => (
                         <li
                           key={i}

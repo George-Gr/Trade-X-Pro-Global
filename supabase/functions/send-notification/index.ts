@@ -1,77 +1,77 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.79.0";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.79.0';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 const NotificationRequestSchema = z.object({
-  user_id: z.string().uuid("Invalid user ID format"),
-  type: z.string().min(1, "Type required").max(50, "Type too long"),
-  title: z.string().min(1, "Title required").max(200, "Title too long"),
-  message: z.string().min(1, "Message required").max(2000, "Message too long"),
+  user_id: z.string().uuid('Invalid user ID format'),
+  type: z.string().min(1, 'Type required').max(50, 'Type too long'),
+  title: z.string().min(1, 'Title required').max(200, 'Title too long'),
+  message: z.string().min(1, 'Message required').max(2000, 'Message too long'),
   data: z.record(z.any()).optional(),
   send_email: z.boolean().optional().default(true),
 });
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Authenticate the request
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const token = authHeader.replace("Bearer ", "");
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // Check rate limit: 5 requests per minute
-    const { data: rateLimitOk } = await supabase.rpc("check_rate_limit", {
+    const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
       p_user_id: user.id,
-      p_endpoint: "send-notification",
+      p_endpoint: 'send-notification',
       p_max_requests: 5,
       p_window_seconds: 60,
     });
 
     if (!rateLimitOk) {
-      console.log("Rate limit exceeded for user");
+      console.log('Rate limit exceeded for user');
       return new Response(
         JSON.stringify({
           error:
-            "Too many requests. Please wait before sending another notification.",
+            'Too many requests. Please wait before sending another notification.',
         }),
         {
           status: 429,
           headers: {
             ...corsHeaders,
-            "Content-Type": "application/json",
-            "Retry-After": "60",
+            'Content-Type': 'application/json',
+            'Retry-After': '60',
           },
-        },
+        }
       );
     }
 
@@ -80,21 +80,21 @@ serve(async (req: Request) => {
     const validation = NotificationRequestSchema.safeParse(body);
 
     if (!validation.success) {
-      console.error("Input validation failed:", validation.error);
+      console.error('Input validation failed:', validation.error);
       return new Response(
         JSON.stringify({
-          error: "Invalid input",
+          error: 'Invalid input',
           details: validation.error.issues
             .map(
               (i: unknown) =>
-                `${(i as { path: string[]; message: string }).path.join(".")}: ${(i as { path: string[]; message: string }).message}`,
+                `${(i as { path: string[]; message: string }).path.join('.')}: ${(i as { path: string[]; message: string }).message}`
             )
-            .join(", "),
+            .join(', '),
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -103,65 +103,65 @@ serve(async (req: Request) => {
     // Ensure caller can only send to themselves (unless admin)
     if (user_id !== user.id) {
       const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id)
-        .eq("role", "admin")
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
         .single();
 
       if (!roleData) {
         return new Response(
           JSON.stringify({
-            error: "Forbidden: Can only send notifications to yourself",
+            error: 'Forbidden: Can only send notifications to yourself',
           }),
           {
             status: 403,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
     }
 
-    console.log("Creating notification:", { user_id, type, title });
+    console.log('Creating notification:', { user_id, type, title });
 
     // Get user email and notification preferences
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("email")
-      .eq("id", user_id)
+      .from('profiles')
+      .select('email')
+      .eq('id', user_id)
       .single();
 
     if (profileError || !profile) {
-      throw new Error("User profile not found");
+      throw new Error('User profile not found');
     }
 
     const { data: preferences, error: prefsError } = await supabase
-      .from("notification_preferences")
-      .select("*")
-      .eq("user_id", user_id)
+      .from('notification_preferences')
+      .select('*')
+      .eq('user_id', user_id)
       .single();
 
     if (prefsError) {
-      console.error("Error fetching preferences:", prefsError);
+      console.error('Error fetching preferences:', prefsError);
     }
 
     // Check if this type of notification is enabled
     const notificationTypeEnabled = checkNotificationEnabled(type, preferences);
 
     if (!notificationTypeEnabled) {
-      console.log("Notification type disabled for user:", type);
+      console.log('Notification type disabled for user:', type);
       return new Response(
-        JSON.stringify({ message: "Notification type disabled" }),
+        JSON.stringify({ message: 'Notification type disabled' }),
         {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 200,
-        },
+        }
       );
     }
 
     // Create notification record
     const { error: notificationError } = await supabase
-      .from("notifications")
+      .from('notifications')
       .insert({
         user_id,
         type,
@@ -178,20 +178,20 @@ serve(async (req: Request) => {
     // Send email if enabled using Resend API directly
     if (send_email && preferences?.email_enabled) {
       try {
-        const resendApiKey = Deno.env.get("RESEND_API_KEY");
+        const resendApiKey = Deno.env.get('RESEND_API_KEY');
         if (!resendApiKey) {
-          console.warn("RESEND_API_KEY not configured, skipping email");
+          console.warn('RESEND_API_KEY not configured, skipping email');
         } else {
           const emailHtml = generateEmailHtml(title, message, data);
 
-          const emailResponse = await fetch("https://api.resend.com/emails", {
-            method: "POST",
+          const emailResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
             headers: {
               Authorization: `Bearer ${resendApiKey}`,
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              from: "Trading Platform <notifications@resend.dev>",
+              from: 'Trading Platform <notifications@resend.dev>',
               to: [profile.email],
               subject: title,
               html: emailHtml,
@@ -200,29 +200,29 @@ serve(async (req: Request) => {
 
           if (!emailResponse.ok) {
             const errorData = await emailResponse.text();
-            console.error("Error sending email:", errorData);
+            console.error('Error sending email:', errorData);
           } else {
-            console.log("Email sent successfully to:", profile.email);
+            console.log('Email sent successfully to:', profile.email);
           }
         }
       } catch (emailError) {
-        console.error("Error sending email:", emailError);
+        console.error('Error sending email:', emailError);
         // Don't throw - notification was created, email is optional
       }
     }
 
     return new Response(
-      JSON.stringify({ message: "Notification created successfully" }),
+      JSON.stringify({ message: 'Notification created successfully' }),
       {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
-      },
+      }
     );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error("Error in send-notification function:", err);
+    console.error('Error in send-notification function:', err);
     return new Response(JSON.stringify({ error: message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,
     });
   }
@@ -232,16 +232,16 @@ function checkNotificationEnabled(type: string, preferences: unknown): boolean {
   if (!preferences) return true;
 
   const typeMap: Record<string, string> = {
-    order_filled: "order_notifications",
-    order_executed: "order_notifications",
-    margin_warning: "margin_notifications",
-    margin_call: "margin_notifications",
-    stop_out: "margin_notifications",
-    pnl_milestone: "pnl_notifications",
-    position_update: "order_notifications",
-    kyc_update: "kyc_notifications",
-    price_alert: "price_alert_notifications",
-    risk_event: "risk_notifications",
+    order_filled: 'order_notifications',
+    order_executed: 'order_notifications',
+    margin_warning: 'margin_notifications',
+    margin_call: 'margin_notifications',
+    stop_out: 'margin_notifications',
+    pnl_milestone: 'pnl_notifications',
+    position_update: 'order_notifications',
+    kyc_update: 'kyc_notifications',
+    price_alert: 'price_alert_notifications',
+    risk_event: 'risk_notifications',
   };
 
   const prefKey = typeMap[type];
@@ -252,16 +252,16 @@ function checkNotificationEnabled(type: string, preferences: unknown): boolean {
 function generateEmailHtml(
   title: string,
   message: string,
-  data?: Record<string, unknown>,
+  data?: Record<string, unknown>
 ): string {
   // Escape HTML to prevent XSS
   const escapeHtml = (unsafe: string) => {
     return unsafe
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   };
 
   const safeTitle = escapeHtml(title);
@@ -301,12 +301,12 @@ function generateEmailHtml(
                   <div class="data-item">
                     <span class="label">${escapeHtml(formatLabel(key))}:</span> ${escapeHtml(formatValue(value))}
                   </div>
-                `,
+                `
                   )
-                  .join("")}
+                  .join('')}
               </div>
             `
-                : ""
+                : ''
             }
           </div>
           <div class="footer">
@@ -321,16 +321,16 @@ function generateEmailHtml(
 
 function formatLabel(key: string): string {
   return key
-    .split("_")
+    .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+    .join(' ');
 }
 
 function formatValue(value: unknown): string {
-  if (typeof value === "number") {
+  if (typeof value === 'number') {
     return value.toFixed(2);
   }
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     return JSON.stringify(value);
   }
   return String(value);

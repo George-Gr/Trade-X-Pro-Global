@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useMemo } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -7,30 +7,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Loader2, Search, Filter, RefreshCw } from "lucide-react";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { useTradingHistory } from "@/hooks/useTradingHistory";
-import TradeStatisticsCards from "@/components/history/TradeStatisticsCards";
-import ExportButtons from "@/components/history/ExportButtons";
+} from '@/components/ui/select';
+import { Loader2, Search, Filter, RefreshCw } from 'lucide-react';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { useTradingHistory } from '@/hooks/useTradingHistory';
+import TradeStatisticsCards from '@/components/history/TradeStatisticsCards';
+import ExportButtons from '@/components/history/ExportButtons';
 
 const History = () => {
-  const [activeTab, setActiveTab] = useState("trades");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [symbolFilter, setSymbolFilter] = useState<string>("all");
-  const [sideFilter, setSideFilter] = useState<string>("all");
-  const [dateRange, setDateRange] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState('trades');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [symbolFilter, setSymbolFilter] = useState<string>('all');
+  const [sideFilter, setSideFilter] = useState<string>('all');
+  const [dateRange, setDateRange] = useState<string>('all');
 
   const { closedPositions, orders, ledger, statistics, loading, refresh } =
     useTradingHistory();
@@ -48,42 +48,42 @@ const History = () => {
     // Search filter
     if (searchQuery) {
       filtered = filtered.filter((trade) =>
-        trade.symbol.toLowerCase().includes(searchQuery.toLowerCase()),
+        trade.symbol.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     // Symbol filter
-    if (symbolFilter !== "all") {
+    if (symbolFilter !== 'all') {
       filtered = filtered.filter((trade) => trade.symbol === symbolFilter);
     }
 
     // Side filter
-    if (sideFilter !== "all") {
+    if (sideFilter !== 'all') {
       filtered = filtered.filter((trade) => trade.side === sideFilter);
     }
 
     // Date range filter
-    if (dateRange !== "all") {
+    if (dateRange !== 'all') {
       const now = new Date();
       const filterDate = new Date();
 
       switch (dateRange) {
-        case "today":
+        case 'today':
           filterDate.setHours(0, 0, 0, 0);
           break;
-        case "week":
+        case 'week':
           filterDate.setDate(now.getDate() - 7);
           break;
-        case "month":
+        case 'month':
           filterDate.setMonth(now.getMonth() - 1);
           break;
-        case "year":
+        case 'year':
           filterDate.setFullYear(now.getFullYear() - 1);
           break;
       }
 
       filtered = filtered.filter(
-        (trade) => new Date(trade.closed_at) >= filterDate,
+        (trade) => new Date(trade.closed_at) >= filterDate
       );
     }
 
@@ -96,11 +96,11 @@ const History = () => {
 
     if (searchQuery) {
       filtered = filtered.filter((order) =>
-        order.symbol.toLowerCase().includes(searchQuery.toLowerCase()),
+        order.symbol.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    if (symbolFilter !== "all") {
+    if (symbolFilter !== 'all') {
       filtered = filtered.filter((order) => order.symbol === symbolFilter);
     }
 
@@ -117,7 +117,7 @@ const History = () => {
           entry.transaction_type
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          entry.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+          entry.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -125,16 +125,16 @@ const History = () => {
   }, [ledger, searchQuery]);
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
   };
 
   const formatPrice = (value: number, symbol: string) => {
-    const isJpy = symbol.includes("JPY");
+    const isJpy = symbol.includes('JPY');
     return value.toFixed(isJpy ? 3 : 5);
   };
 
@@ -157,7 +157,7 @@ const History = () => {
             </div>
             <Button variant="outline" onClick={refresh} disabled={loading}>
               <RefreshCw
-                className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`}
               />
               Refresh
             </Button>
@@ -229,10 +229,10 @@ const History = () => {
                 <Button
                   variant="ghost"
                   onClick={() => {
-                    setSearchQuery("");
-                    setSymbolFilter("all");
-                    setSideFilter("all");
-                    setDateRange("all");
+                    setSearchQuery('');
+                    setSymbolFilter('all');
+                    setSideFilter('all');
+                    setDateRange('all');
                   }}
                 >
                   Clear Filters
@@ -274,8 +274,8 @@ const History = () => {
                       <p className="text-lg">No closed positions</p>
                       <p className="text-sm mt-2">
                         {closedPositions.length === 0
-                          ? "Your closed trades will appear here"
-                          : "No trades match your filters"}
+                          ? 'Your closed trades will appear here'
+                          : 'No trades match your filters'}
                       </p>
                     </div>
                   ) : (
@@ -301,7 +301,7 @@ const History = () => {
                               const duration = Math.floor(
                                 (new Date(trade.closed_at).getTime() -
                                   new Date(trade.opened_at).getTime()) /
-                                  (1000 * 60),
+                                  (1000 * 60)
                               );
                               return (
                                 <TableRow key={trade.id}>
@@ -314,9 +314,9 @@ const History = () => {
                                   <TableCell>
                                     <Badge
                                       variant={
-                                        trade.side === "buy"
-                                          ? "default"
-                                          : "destructive"
+                                        trade.side === 'buy'
+                                          ? 'default'
+                                          : 'destructive'
                                       }
                                     >
                                       {trade.side.toUpperCase()}
@@ -328,23 +328,23 @@ const History = () => {
                                   <TableCell>
                                     {formatPrice(
                                       trade.entry_price,
-                                      trade.symbol,
+                                      trade.symbol
                                     )}
                                   </TableCell>
                                   <TableCell>
                                     {formatPrice(
                                       trade.exit_price,
-                                      trade.symbol,
+                                      trade.symbol
                                     )}
                                   </TableCell>
                                   <TableCell
                                     className={`font-semibold ${
                                       trade.realized_pnl >= 0
-                                        ? "text-profit"
-                                        : "text-loss"
+                                        ? 'text-profit'
+                                        : 'text-loss'
                                     }`}
                                   >
-                                    {trade.realized_pnl >= 0 ? "+" : ""}
+                                    {trade.realized_pnl >= 0 ? '+' : ''}
                                     {formatCurrency(trade.realized_pnl)}
                                   </TableCell>
                                   <TableCell>
@@ -368,7 +368,7 @@ const History = () => {
                           const duration = Math.floor(
                             (new Date(trade.closed_at).getTime() -
                               new Date(trade.opened_at).getTime()) /
-                              (1000 * 60),
+                              (1000 * 60)
                           );
                           return (
                             <Card
@@ -387,9 +387,9 @@ const History = () => {
                                   </div>
                                   <Badge
                                     variant={
-                                      trade.side === "buy"
-                                        ? "default"
-                                        : "destructive"
+                                      trade.side === 'buy'
+                                        ? 'default'
+                                        : 'destructive'
                                     }
                                   >
                                     {trade.side.toUpperCase()}
@@ -411,7 +411,7 @@ const History = () => {
                                     <p className="font-mono font-semibold">
                                       {formatPrice(
                                         trade.entry_price,
-                                        trade.symbol,
+                                        trade.symbol
                                       )}
                                     </p>
                                   </div>
@@ -422,7 +422,7 @@ const History = () => {
                                     <p className="font-mono font-semibold">
                                       {formatPrice(
                                         trade.exit_price,
-                                        trade.symbol,
+                                        trade.symbol
                                       )}
                                     </p>
                                   </div>
@@ -445,11 +445,11 @@ const History = () => {
                                     <span
                                       className={`font-semibold ${
                                         trade.realized_pnl >= 0
-                                          ? "text-profit"
-                                          : "text-loss"
+                                          ? 'text-profit'
+                                          : 'text-loss'
                                       }`}
                                     >
-                                      {trade.realized_pnl >= 0 ? "+" : ""}
+                                      {trade.realized_pnl >= 0 ? '+' : ''}
                                       {formatCurrency(trade.realized_pnl)}
                                     </span>
                                   </div>
@@ -526,9 +526,9 @@ const History = () => {
                                 <TableCell>
                                   <Badge
                                     variant={
-                                      order.side === "buy"
-                                        ? "default"
-                                        : "destructive"
+                                      order.side === 'buy'
+                                        ? 'default'
+                                        : 'destructive'
                                     }
                                   >
                                     {order.side.toUpperCase()}
@@ -540,15 +540,15 @@ const History = () => {
                                 <TableCell>
                                   {order.price
                                     ? formatPrice(order.price, order.symbol)
-                                    : "-"}
+                                    : '-'}
                                 </TableCell>
                                 <TableCell>
                                   {order.fill_price
                                     ? formatPrice(
                                         order.fill_price,
-                                        order.symbol,
+                                        order.symbol
                                       )
-                                    : "-"}
+                                    : '-'}
                                 </TableCell>
                                 <TableCell>
                                   {formatCurrency(order.commission)}
@@ -556,11 +556,11 @@ const History = () => {
                                 <TableCell>
                                   <Badge
                                     variant={
-                                      order.status === "filled"
-                                        ? "default"
-                                        : order.status === "cancelled"
-                                          ? "destructive"
-                                          : "secondary"
+                                      order.status === 'filled'
+                                        ? 'default'
+                                        : order.status === 'cancelled'
+                                          ? 'destructive'
+                                          : 'secondary'
                                     }
                                   >
                                     {order.status.toUpperCase()}
@@ -595,9 +595,9 @@ const History = () => {
                                   </Badge>
                                   <Badge
                                     variant={
-                                      order.side === "buy"
-                                        ? "default"
-                                        : "destructive"
+                                      order.side === 'buy'
+                                        ? 'default'
+                                        : 'destructive'
                                     }
                                   >
                                     {order.side.toUpperCase()}
@@ -620,7 +620,7 @@ const History = () => {
                                   <p className="font-mono font-semibold">
                                     {order.price
                                       ? formatPrice(order.price, order.symbol)
-                                      : "-"}
+                                      : '-'}
                                   </p>
                                 </div>
                                 <div>
@@ -631,9 +631,9 @@ const History = () => {
                                     {order.fill_price
                                       ? formatPrice(
                                           order.fill_price,
-                                          order.symbol,
+                                          order.symbol
                                         )
-                                      : "-"}
+                                      : '-'}
                                   </p>
                                 </div>
                                 <div>
@@ -652,11 +652,11 @@ const History = () => {
                                   </span>
                                   <Badge
                                     variant={
-                                      order.status === "filled"
-                                        ? "default"
-                                        : order.status === "cancelled"
-                                          ? "destructive"
-                                          : "secondary"
+                                      order.status === 'filled'
+                                        ? 'default'
+                                        : order.status === 'cancelled'
+                                          ? 'destructive'
+                                          : 'secondary'
                                     }
                                   >
                                     {order.status.toUpperCase()}
@@ -718,17 +718,17 @@ const History = () => {
                                   <Badge variant="outline">
                                     {entry.transaction_type
                                       .toUpperCase()
-                                      .replace("_", " ")}
+                                      .replace('_', ' ')}
                                   </Badge>
                                 </TableCell>
                                 <TableCell
                                   className={`font-semibold ${
                                     entry.amount >= 0
-                                      ? "text-profit"
-                                      : "text-loss"
+                                      ? 'text-profit'
+                                      : 'text-loss'
                                   }`}
                                 >
-                                  {entry.amount >= 0 ? "+" : ""}
+                                  {entry.amount >= 0 ? '+' : ''}
                                   {formatCurrency(entry.amount)}
                                 </TableCell>
                                 <TableCell>
@@ -738,7 +738,7 @@ const History = () => {
                                   {formatCurrency(entry.balance_after)}
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
-                                  {entry.description || "-"}
+                                  {entry.description || '-'}
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -758,7 +758,7 @@ const History = () => {
                                 <div>
                                   <h3 className="font-semibold text-lg">
                                     {entry.transaction_type
-                                      .replace("_", " ")
+                                      .replace('_', ' ')
                                       .toUpperCase()}
                                   </h3>
                                   <p className="text-xs text-muted-foreground">
@@ -768,11 +768,11 @@ const History = () => {
                                 <span
                                   className={`font-semibold text-lg ${
                                     entry.amount >= 0
-                                      ? "text-profit"
-                                      : "text-loss"
+                                      ? 'text-profit'
+                                      : 'text-loss'
                                   }`}
                                 >
-                                  {entry.amount >= 0 ? "+" : ""}
+                                  {entry.amount >= 0 ? '+' : ''}
                                   {formatCurrency(entry.amount)}
                                 </span>
                               </div>

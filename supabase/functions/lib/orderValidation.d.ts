@@ -5,15 +5,15 @@ export class ValidationError extends Error {
 }
 
 export function validateOrderInput(
-  body: unknown,
+  body: unknown
 ): Promise<Record<string, unknown>>;
 export function validateAssetExists(
   supabase: unknown,
-  symbol: string,
+  symbol: string
 ): Promise<Record<string, unknown>>;
 export function validateQuantity(
   orderRequest: unknown,
-  assetSpec: unknown,
+  assetSpec: unknown
 ): void;
 export function validateAccountStatus(profile: unknown): void;
 export function validateKYCStatus(profile: unknown): void;

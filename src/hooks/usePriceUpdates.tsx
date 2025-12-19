@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
 export interface PriceData {
   symbol: string;
@@ -21,7 +21,7 @@ interface UsePriceUpdatesOptions {
   enabled?: boolean;
 }
 
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 const CACHE_DURATION_MS = 1000; // Cache prices for 1 second to avoid excessive API calls
 
@@ -30,7 +30,7 @@ const priceCache = new Map<string, { data: PriceData; timestamp: number }>();
 
 const mapSymbolToFinnhub = (symbol: string): string => {
   // Map common trading symbols to Finnhub format
-  if (symbol.length === 6 && !symbol.includes(":")) {
+  if (symbol.length === 6 && !symbol.includes(':')) {
     // Forex pair (e.g., EURUSD -> OANDA:EUR_USD)
     const base = symbol.substring(0, 3);
     const quote = symbol.substring(3, 6);
@@ -53,7 +53,7 @@ const fetchPriceData = async (symbol: string): Promise<PriceData | null> => {
 
   try {
     const finnhubSymbol = mapSymbolToFinnhub(symbol);
-    const { data, error } = await supabase.functions.invoke("get-stock-price", {
+    const { data, error } = await supabase.functions.invoke('get-stock-price', {
       body: { symbol: finnhubSymbol },
     });
 
@@ -125,7 +125,7 @@ export const usePriceUpdates = ({
         setIsLoading(false);
       } catch (err) {
         // Price update error - will retry next interval
-        setError(err instanceof Error ? err.message : "Failed to fetch prices");
+        setError(err instanceof Error ? err.message : 'Failed to fetch prices');
         setIsLoading(false);
       }
     };

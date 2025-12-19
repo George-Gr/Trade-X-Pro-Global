@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { TrendingUp, Users, Award, Globe, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { TrendingUp, Users, Award, Globe, CheckCircle2 } from 'lucide-react';
 
 export default function AboutUs() {
   return (
@@ -80,21 +80,21 @@ export default function AboutUs() {
               {[
                 {
                   icon: Award,
-                  title: "Professional Platform",
+                  title: 'Professional Platform',
                   description:
-                    "Advanced trading terminal with institutional-grade tools and features",
+                    'Advanced trading terminal with institutional-grade tools and features',
                 },
                 {
                   icon: Users,
-                  title: "Expert Support",
+                  title: 'Expert Support',
                   description:
-                    "24/5 customer support and dedicated account managers available",
+                    '24/5 customer support and dedicated account managers available',
                 },
                 {
                   icon: Globe,
-                  title: "Global Reach",
+                  title: 'Global Reach',
                   description:
-                    "Serve traders from 150+ countries with multilingual support",
+                    'Serve traders from 150+ countries with multilingual support',
                 },
               ].map((item, i) => (
                 <Card
@@ -118,10 +118,10 @@ export default function AboutUs() {
               <h2 className="text-3xl font-bold mb-8">Company Facts</h2>
               <div className="grid md:grid-cols-4 gap-6">
                 {[
-                  { stat: "500K+", label: "Active Traders" },
-                  { stat: "150+", label: "Countries" },
-                  { stat: "10+", label: "Years Experience" },
-                  { stat: "24/5", label: "Support Available" },
+                  { stat: '500K+', label: 'Active Traders' },
+                  { stat: '150+', label: 'Countries' },
+                  { stat: '10+', label: 'Years Experience' },
+                  { stat: '24/5', label: 'Support Available' },
                 ].map((fact, i) => (
                   <div
                     key={i}
@@ -143,30 +143,30 @@ export default function AboutUs() {
               <div className="grid md:grid-cols-2 gap-6">
                 {[
                   {
-                    value: "Transparency",
+                    value: 'Transparency',
                     description:
-                      "Clear pricing, no hidden fees, honest communication",
+                      'Clear pricing, no hidden fees, honest communication',
                   },
                   {
-                    value: "Education",
-                    description: "Empowering traders with knowledge and skills",
+                    value: 'Education',
+                    description: 'Empowering traders with knowledge and skills',
                   },
                   {
-                    value: "Security",
-                    description: "Bank-level encryption and data protection",
+                    value: 'Security',
+                    description: 'Bank-level encryption and data protection',
                   },
                   {
-                    value: "Excellence",
-                    description: "Continuous improvement and innovation",
+                    value: 'Excellence',
+                    description: 'Continuous improvement and innovation',
                   },
                   {
-                    value: "Integrity",
-                    description: "Ethical business practices and compliance",
+                    value: 'Integrity',
+                    description: 'Ethical business practices and compliance',
                   },
                   {
-                    value: "Community",
+                    value: 'Community',
                     description:
-                      "Supporting traders and building relationships",
+                      'Supporting traders and building relationships',
                   },
                 ].map((item, i) => (
                   <div

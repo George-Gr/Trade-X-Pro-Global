@@ -1,33 +1,33 @@
-import React from "react";
-import { logger } from "@/lib/logger";
-import * as Sentry from "@sentry/react";
+import { logger } from '@/lib/logger';
+import * as Sentry from '@sentry/react';
+import type { FC } from 'react';
 
-const DevSentryTest: React.FC = () => {
+const DevSentryTest: FC = () => {
   const throwError = () => {
     // This will be caught by ErrorBoundary and also reported to Sentry in production
-    throw new Error("Sentry test error (throw) - DevSentryTest");
+    throw new Error('Sentry test error (throw) - DevSentryTest');
   };
 
   const logError = () => {
-    const err = new Error("Sentry test error (logger) - DevSentryTest");
-    logger.error("Manual error capture from DevSentryTest", err, {
-      action: "dev_sentry_test",
-      component: "DevSentryTest",
+    const err = new Error('Sentry test error (logger) - DevSentryTest');
+    logger.error('Manual error capture from DevSentryTest', err, {
+      action: 'dev_sentry_test',
+      component: 'DevSentryTest',
     });
-    alert("logger.error called. Check console (dev) or Sentry (prod)");
+    alert('logger.error called. Check console (dev) or Sentry (prod)');
   };
 
   const sendMessage = () => {
-    logger.info("Sending test message to Sentry via logger", {
-      action: "dev_sentry_test",
-      component: "DevSentryTest",
+    logger.info('Sending test message to Sentry via logger', {
+      action: 'dev_sentry_test',
+      component: 'DevSentryTest',
     });
     const env = import.meta.env as ImportMetaEnv;
     if (env.PROD && env.VITE_SENTRY_DSN) {
-      Sentry.captureMessage("Test message from DevSentryTest");
-      alert("Sentry.captureMessage called (production mode)");
+      Sentry.captureMessage('Test message from DevSentryTest');
+      alert('Sentry.captureMessage called (production mode)');
     } else {
-      alert("Sentry not active (ensure VITE_SENTRY_DSN and production mode)");
+      alert('Sentry not active (ensure VITE_SENTRY_DSN and production mode)');
     }
   };
 

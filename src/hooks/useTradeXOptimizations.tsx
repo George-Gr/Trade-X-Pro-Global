@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from 'react';
 
 // Quick setup hooks for easy integration
 export function useTradeXOptimizations() {
-  const [isOptimized, setIsOptimized] = React.useState(false);
+  const [isOptimized, setIsOptimized] = useState(false);
 
   useEffect(() => {
     // Mark optimization as active

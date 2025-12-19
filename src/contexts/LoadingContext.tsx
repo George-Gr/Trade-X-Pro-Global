@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, useState } from "react";
+import React, { createContext, useContext, useCallback, useState } from 'react';
 
 /**
  * FE-010: Global Loading States Context
@@ -39,7 +39,7 @@ export function LoadingProvider({
   children,
 }: { children?: React.ReactNode } = {}) {
   const [operations, setOperations] = useState<Map<string, LoadingOperation>>(
-    new Map(),
+    new Map()
   );
 
   const startOperation = useCallback((id: string, message?: string) => {
@@ -84,7 +84,7 @@ export function LoadingProvider({
 
   const getOperation = useCallback(
     (id: string) => operations.get(id),
-    [operations],
+    [operations]
   );
 
   const clearAllOperations = useCallback(() => {
@@ -115,7 +115,7 @@ export function LoadingProvider({
 export function useLoadingContext() {
   const context = useContext(LoadingContext);
   if (!context) {
-    throw new Error("useLoadingContext must be used within LoadingProvider");
+    throw new Error('useLoadingContext must be used within LoadingProvider');
   }
   return context;
 }

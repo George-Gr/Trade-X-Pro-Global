@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -7,19 +7,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Loader2, X } from "lucide-react";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
-import { usePriceUpdates } from "@/hooks/usePriceUpdates";
-import { usePositionClose } from "@/hooks/usePositionClose";
-import { PortfolioLoading } from "@/components/portfolio/PortfolioLoading";
-import { usePnLCalculations } from "@/hooks/usePnLCalculations";
-import { useToast } from "@/hooks/use-toast";
-import { TrailingStopDialog } from "@/components/trading/TrailingStopDialog";
-import { PriceAlertsManager } from "@/components/trading/PriceAlertsManager";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Loader2, X } from 'lucide-react';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
+import { usePriceUpdates } from '@/hooks/usePriceUpdates';
+import { usePositionClose } from '@/hooks/usePositionClose';
+import { PortfolioLoading } from '@/components/portfolio/PortfolioLoading';
+import { usePnLCalculations } from '@/hooks/usePnLCalculations';
+import { useToast } from '@/hooks/use-toast';
+import { TrailingStopDialog } from '@/components/trading/TrailingStopDialog';
+import { PriceAlertsManager } from '@/components/trading/PriceAlertsManager';
 
 const Portfolio = () => {
   const { toast } = useToast();
@@ -38,7 +38,7 @@ const Portfolio = () => {
   // Always call hooks at the top level (React Hook Rules)
   const { closePosition, isClosing } = usePositionClose();
   const [closingPositions, setClosingPositions] = useState<Set<string>>(
-    new Set(),
+    new Set()
   );
 
   // Initialize P&L calculations with memoization
@@ -46,11 +46,11 @@ const Portfolio = () => {
     ...position,
     entryPrice: position.entry_price,
     currentPrice: position.current_price,
-    side: (position.side === "buy" ? "long" : "short") as "long" | "short", // Explicit type assertion
+    side: (position.side === 'buy' ? 'long' : 'short') as 'long' | 'short', // Explicit type assertion
   }));
 
   const priceMap = new Map(
-    mappedPositions.map((p) => [p.symbol, p.currentPrice]),
+    mappedPositions.map((p) => [p.symbol, p.currentPrice])
   );
 
   const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor, getPnLStatus } =
@@ -61,7 +61,7 @@ const Portfolio = () => {
       })),
       priceMap,
       undefined,
-      { enabled: positions.length > 0 },
+      { enabled: positions.length > 0 }
     );
 
   const symbols = positions.map((p) => p.symbol);
@@ -82,9 +82,9 @@ const Portfolio = () => {
     const priceData = getPrice(symbol);
     if (!priceData) {
       toast({
-        title: "Error",
-        description: "Unable to get current price for position",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Unable to get current price for position',
+        variant: 'destructive',
       });
       setClosingPositions((prev) => {
         const next = new Set(prev);
@@ -110,21 +110,21 @@ const Portfolio = () => {
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
   };
 
   const formatPrice = (value: number, symbol: string) => {
-    const isJpy = symbol.includes("JPY");
+    const isJpy = symbol.includes('JPY');
     return value.toFixed(isJpy ? 3 : 5);
   };
 
   const formatMarginLevel = (level: number) => {
-    if (!isFinite(level)) return "∞";
+    if (!isFinite(level)) return '∞';
     return `${level.toFixed(0)}%`;
   };
 
@@ -143,21 +143,21 @@ const Portfolio = () => {
   const pnLStatus = getPnLStatus(totalPnL);
 
   const portfolioMetrics = [
-    { label: "Balance", value: formatCurrency(balance) },
-    { label: "Equity", value: formatCurrency(equity) },
+    { label: 'Balance', value: formatCurrency(balance) },
+    { label: 'Equity', value: formatCurrency(equity) },
     {
-      label: "Unrealized P&L",
+      label: 'Unrealized P&L',
       value: formatPnL(unrealizedPnL),
       color: getPnLColor(unrealizedPnL),
     },
     {
-      label: "Realized P&L",
+      label: 'Realized P&L',
       value: formatPnL(realizedPnL),
       color: getPnLColor(realizedPnL),
     },
-    { label: "Margin Used", value: formatCurrency(marginUsed) },
-    { label: "Free Margin", value: formatCurrency(freeMargin) },
-    { label: "Margin Level", value: formatMarginLevel(marginLevel) },
+    { label: 'Margin Used', value: formatCurrency(marginUsed) },
+    { label: 'Free Margin', value: formatCurrency(freeMargin) },
+    { label: 'Margin Level', value: formatMarginLevel(marginLevel) },
   ];
 
   return (
@@ -187,7 +187,7 @@ const Portfolio = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className={`text-lg font-bold ${metric.color || ""}`}>
+                    <div className={`text-lg font-bold ${metric.color || ''}`}>
                       {metric.value}
                     </div>
                   </CardContent>
@@ -230,13 +230,13 @@ const Portfolio = () => {
                   <TableBody>
                     {positions.map((position) => {
                       const isPositionClosing = closingPositions.has(
-                        position.id,
+                        position.id
                       );
                       const positionPnL = positionPnLMap.get(position.id);
                       const pnLValue = positionPnL?.unrealizedPnL || 0;
                       const pnLPercentage =
                         positionPnL?.unrealizedPnLPercentage || 0;
-                      const pnLColor = positionPnL ? getPnLColor(pnLValue) : "";
+                      const pnLColor = positionPnL ? getPnLColor(pnLValue) : '';
                       const currentPrice =
                         positionPnL?.currentPrice ||
                         position.current_price ||
@@ -250,9 +250,9 @@ const Portfolio = () => {
                           <TableCell>
                             <Badge
                               variant={
-                                position.side === "buy"
-                                  ? "default"
-                                  : "destructive"
+                                position.side === 'buy'
+                                  ? 'default'
+                                  : 'destructive'
                               }
                             >
                               {position.side.toUpperCase()}
@@ -296,7 +296,7 @@ const Portfolio = () => {
                                 onClick={() =>
                                   handleClosePosition(
                                     position.id,
-                                    position.symbol,
+                                    position.symbol
                                   )
                                 }
                                 disabled={isPositionClosing || isClosing}
@@ -352,7 +352,7 @@ const Portfolio = () => {
                     <div className="text-2xl font-bold">
                       {positions.length > 0
                         ? formatCurrency(marginUsed / positions.length)
-                        : "$0.00"}
+                        : '$0.00'}
                     </div>
                   </div>
                   <div>
@@ -362,17 +362,17 @@ const Portfolio = () => {
                     <div
                       className={`text-2xl font-bold ${
                         marginLevel > 300
-                          ? "text-profit"
+                          ? 'text-profit'
                           : marginLevel > 150
-                            ? "text-yellow-500"
-                            : "text-loss"
+                            ? 'text-yellow-500'
+                            : 'text-loss'
                       }`}
                     >
                       {marginLevel > 300
-                        ? "Low"
+                        ? 'Low'
                         : marginLevel > 150
-                          ? "Medium"
-                          : "High"}
+                          ? 'Medium'
+                          : 'High'}
                     </div>
                   </div>
                 </div>
@@ -436,7 +436,7 @@ const Portfolio = () => {
                               portfolioPnL.positionCount) *
                             100
                           ).toFixed(1)
-                        : "0"}
+                        : '0'}
                       %
                     </div>
                   </div>
@@ -447,7 +447,7 @@ const Portfolio = () => {
                     <div className="text-xl font-bold">
                       {portfolioPnL.profitFactor > 0
                         ? portfolioPnL.profitFactor.toFixed(2)
-                        : "0.00"}
+                        : '0.00'}
                     </div>
                   </div>
                   <div>

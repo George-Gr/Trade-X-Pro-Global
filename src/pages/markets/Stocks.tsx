@@ -1,9 +1,9 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { TrendingUp, CheckCircle2 } from "lucide-react";
+import { PublicHeader } from '@/components/layout/PublicHeader';
+import { PublicFooter } from '@/components/layout/PublicFooter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { TrendingUp, CheckCircle2 } from 'lucide-react';
 
 export default function Stocks() {
   return (
@@ -40,14 +40,14 @@ export default function Stocks() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    "Go long or short on price movements",
-                    "Commission from $0.02 per share",
-                    "Leverage up to 1:20",
-                    "No stamp duty or exchange fees",
-                    "Dividend adjustments on long positions",
-                    "Access to US, UK, EU markets",
-                    "Real-time execution",
-                    "Margin monitoring and alerts",
+                    'Go long or short on price movements',
+                    'Commission from $0.02 per share',
+                    'Leverage up to 1:20',
+                    'No stamp duty or exchange fees',
+                    'Dividend adjustments on long positions',
+                    'Access to US, UK, EU markets',
+                    'Real-time execution',
+                    'Margin monitoring and alerts',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-2.5" />
@@ -64,22 +64,22 @@ export default function Stocks() {
                 <div className="space-y-4">
                   {[
                     {
-                      market: "US Tech",
+                      market: 'US Tech',
                       stocks:
-                        "Apple, Microsoft, Tesla, Amazon, Google, Meta, Nvidia",
+                        'Apple, Microsoft, Tesla, Amazon, Google, Meta, Nvidia',
                     },
                     {
-                      market: "US Finance",
+                      market: 'US Finance',
                       stocks:
-                        "JPMorgan, Goldman Sachs, Bank of America, Morgan Stanley",
+                        'JPMorgan, Goldman Sachs, Bank of America, Morgan Stanley',
                     },
                     {
-                      market: "UK Stocks",
-                      stocks: "BP, HSBC, Vodafone, Lloyds, Barclays",
+                      market: 'UK Stocks',
+                      stocks: 'BP, HSBC, Vodafone, Lloyds, Barclays',
                     },
                     {
-                      market: "EU Stocks",
-                      stocks: "SAP, Siemens, BMW, Volkswagen, Total",
+                      market: 'EU Stocks',
+                      stocks: 'SAP, Siemens, BMW, Volkswagen, Total',
                     },
                   ].map((item, i) => (
                     <div key={i} className="p-4 bg-muted/50 rounded-lg">
@@ -112,34 +112,34 @@ export default function Stocks() {
                   <tbody>
                     {[
                       {
-                        stock: "Apple (AAPL)",
-                        commission: "$0.02/share",
-                        leverage: "1:20",
-                        hours: "14:30-21:00",
+                        stock: 'Apple (AAPL)',
+                        commission: '$0.02/share',
+                        leverage: '1:20',
+                        hours: '14:30-21:00',
                       },
                       {
-                        stock: "Tesla (TSLA)",
-                        commission: "$0.02/share",
-                        leverage: "1:20",
-                        hours: "14:30-21:00",
+                        stock: 'Tesla (TSLA)',
+                        commission: '$0.02/share',
+                        leverage: '1:20',
+                        hours: '14:30-21:00',
                       },
                       {
-                        stock: "Microsoft (MSFT)",
-                        commission: "$0.02/share",
-                        leverage: "1:20",
-                        hours: "14:30-21:00",
+                        stock: 'Microsoft (MSFT)',
+                        commission: '$0.02/share',
+                        leverage: '1:20',
+                        hours: '14:30-21:00',
                       },
                       {
-                        stock: "Amazon (AMZN)",
-                        commission: "$0.02/share",
-                        leverage: "1:20",
-                        hours: "14:30-21:00",
+                        stock: 'Amazon (AMZN)',
+                        commission: '$0.02/share',
+                        leverage: '1:20',
+                        hours: '14:30-21:00',
                       },
                       {
-                        stock: "HSBC (HSBA)",
-                        commission: "$0.02/share",
-                        leverage: "1:20",
-                        hours: "08:00-16:30",
+                        stock: 'HSBC (HSBA)',
+                        commission: '$0.02/share',
+                        leverage: '1:20',
+                        hours: '08:00-16:30',
                       },
                     ].map((row, i) => (
                       <tr

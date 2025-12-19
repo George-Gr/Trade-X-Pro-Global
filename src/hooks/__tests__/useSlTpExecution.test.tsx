@@ -1,14 +1,14 @@
 /// <reference types="vitest/globals" />
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import {
   useSlTpExecution,
   SLTPExecutionOptions,
   ClosureResponse,
-} from "../useSlTpExecution";
+} from '../useSlTpExecution';
 
 // Mock the Supabase client at the correct path used by the implementation
-vi.mock("@/lib/supabaseBrowserClient", () => ({
+vi.mock('@/lib/supabaseBrowserClient', () => ({
   supabase: {
     functions: {
       invoke: vi.fn(),
@@ -16,16 +16,16 @@ vi.mock("@/lib/supabaseBrowserClient", () => ({
   },
 }));
 
-const { supabase } = await import("@/lib/supabaseBrowserClient");
+const { supabase } = await import('@/lib/supabaseBrowserClient');
 
-describe("useSlTpExecution", () => {
+describe('useSlTpExecution', () => {
   let invokeSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
     // Properly mock the invoke function using spyOn for each test
-    invokeSpy = vi.spyOn(supabase.functions, "invoke");
+    invokeSpy = vi.spyOn(supabase.functions, 'invoke');
   });
 
   afterEach(() => {
@@ -36,12 +36,12 @@ describe("useSlTpExecution", () => {
   /**
    * Test 1: Successful execution returns closure data
    */
-  it("should execute stop loss and return closure response", async () => {
+  it('should execute stop loss and return closure response', async () => {
     const mockResponse: ClosureResponse = {
-      closure_id: "closure-123",
-      position_id: "pos-123",
-      reason: "stop_loss",
-      status: "completed",
+      closure_id: 'closure-123',
+      position_id: 'pos-123',
+      reason: 'stop_loss',
+      status: 'completed',
       entry_price: 1.09,
       exit_price: 1.085,
       quantity_closed: 1.0,
@@ -60,8 +60,8 @@ describe("useSlTpExecution", () => {
     const { result } = renderHook(() => useSlTpExecution());
 
     const options: SLTPExecutionOptions = {
-      positionId: "pos-123",
-      triggerType: "stop_loss",
+      positionId: 'pos-123',
+      triggerType: 'stop_loss',
       currentPrice: 1.085,
     };
 
@@ -81,12 +81,12 @@ describe("useSlTpExecution", () => {
   /**
    * Test 2: Take profit execution
    */
-  it("should execute take profit and return closure response", async () => {
+  it('should execute take profit and return closure response', async () => {
     const mockResponse: ClosureResponse = {
-      closure_id: "closure-124",
-      position_id: "pos-124",
-      reason: "take_profit",
-      status: "completed",
+      closure_id: 'closure-124',
+      position_id: 'pos-124',
+      reason: 'take_profit',
+      status: 'completed',
       entry_price: 1.08,
       exit_price: 1.09,
       quantity_closed: 2.0,
@@ -105,8 +105,8 @@ describe("useSlTpExecution", () => {
     const { result } = renderHook(() => useSlTpExecution());
 
     const options: SLTPExecutionOptions = {
-      positionId: "pos-124",
-      triggerType: "take_profit",
+      positionId: 'pos-124',
+      triggerType: 'take_profit',
       currentPrice: 1.09,
     };
 
@@ -117,19 +117,19 @@ describe("useSlTpExecution", () => {
         await result.current.executeStopLossOrTakeProfit(options);
     });
 
-    expect(executionResult!.reason).toBe("take_profit");
+    expect(executionResult!.reason).toBe('take_profit');
     expect(executionResult!.realized_pnl).toBe(200);
   });
 
   /**
    * Test 3: Network error triggers retry
    */
-  it("should retry on transient network error", async () => {
+  it('should retry on transient network error', async () => {
     const mockResponse: ClosureResponse = {
-      closure_id: "closure-125",
-      position_id: "pos-125",
-      reason: "stop_loss",
-      status: "completed",
+      closure_id: 'closure-125',
+      position_id: 'pos-125',
+      reason: 'stop_loss',
+      status: 'completed',
       entry_price: 1.09,
       exit_price: 1.085,
       quantity_closed: 1.0,
@@ -142,7 +142,7 @@ describe("useSlTpExecution", () => {
 
     // First call fails with transient error, second succeeds
     invokeSpy
-      .mockRejectedValueOnce(new Error("ECONNREFUSED"))
+      .mockRejectedValueOnce(new Error('ECONNREFUSED'))
       .mockResolvedValueOnce({
         data: { data: mockResponse },
         error: null,
@@ -151,8 +151,8 @@ describe("useSlTpExecution", () => {
     const { result } = renderHook(() => useSlTpExecution());
 
     const options: SLTPExecutionOptions = {
-      positionId: "pos-125",
-      triggerType: "stop_loss",
+      positionId: 'pos-125',
+      triggerType: 'stop_loss',
       currentPrice: 1.085,
     };
 
@@ -172,14 +172,14 @@ describe("useSlTpExecution", () => {
   /**
    * Test 4: Permanent error is not retried
    */
-  it("should not retry on validation error", async () => {
-    invokeSpy.mockRejectedValueOnce(new Error("Invalid position ID"));
+  it('should not retry on validation error', async () => {
+    invokeSpy.mockRejectedValueOnce(new Error('Invalid position ID'));
 
     const { result } = renderHook(() => useSlTpExecution());
 
     const options: SLTPExecutionOptions = {
-      positionId: "invalid-pos",
-      triggerType: "stop_loss",
+      positionId: 'invalid-pos',
+      triggerType: 'stop_loss',
       currentPrice: 1.085,
     };
 
@@ -195,7 +195,7 @@ describe("useSlTpExecution", () => {
 
     expect(thrownError).not.toBeNull();
     expect((thrownError as unknown as Error)?.message).toContain(
-      "Invalid position ID",
+      'Invalid position ID'
     );
     // Should only be called once (no retry)
     expect(invokeSpy).toHaveBeenCalledTimes(1);
@@ -204,14 +204,14 @@ describe("useSlTpExecution", () => {
   /**
    * Test 5: All retries exhausted throws error
    */
-  it("should throw error after max retries exhausted", async () => {
-    invokeSpy.mockRejectedValue(new Error("ECONNREFUSED"));
+  it('should throw error after max retries exhausted', async () => {
+    invokeSpy.mockRejectedValue(new Error('ECONNREFUSED'));
 
     const { result } = renderHook(() => useSlTpExecution());
 
     const options: SLTPExecutionOptions = {
-      positionId: "pos-126",
-      triggerType: "stop_loss",
+      positionId: 'pos-126',
+      triggerType: 'stop_loss',
       currentPrice: 1.085,
     };
 
@@ -235,12 +235,12 @@ describe("useSlTpExecution", () => {
   /**
    * Test 6: Idempotency key prevents duplicate execution
    */
-  it("should use idempotency key to prevent duplicates", async () => {
+  it('should use idempotency key to prevent duplicates', async () => {
     const mockResponse: ClosureResponse = {
-      closure_id: "closure-127",
-      position_id: "pos-127",
-      reason: "stop_loss",
-      status: "completed",
+      closure_id: 'closure-127',
+      position_id: 'pos-127',
+      reason: 'stop_loss',
+      status: 'completed',
       entry_price: 1.09,
       exit_price: 1.085,
       quantity_closed: 1.0,
@@ -258,10 +258,10 @@ describe("useSlTpExecution", () => {
 
     const { result } = renderHook(() => useSlTpExecution());
 
-    const idempotencyKey = "custom-idempotency-key";
+    const idempotencyKey = 'custom-idempotency-key';
     const options: SLTPExecutionOptions = {
-      positionId: "pos-127",
-      triggerType: "stop_loss",
+      positionId: 'pos-127',
+      triggerType: 'stop_loss',
       currentPrice: 1.085,
       idempotencyKey,
     };

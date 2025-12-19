@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect } from 'react';
 
 export interface SwipeConfig {
   onSwipeLeft?: () => void;
@@ -68,7 +68,7 @@ export const useSwipe = (config: SwipeConfig = {}): SwipeReturn => {
       touchStartRef.current = { x: touch.clientX, y: touch.clientY };
       touchEndRef.current = null;
     },
-    [preventDefault],
+    [preventDefault]
   );
 
   const onTouchMove = useCallback(
@@ -80,7 +80,7 @@ export const useSwipe = (config: SwipeConfig = {}): SwipeReturn => {
       const touch = e.touches[0];
       touchEndRef.current = { x: touch.clientX, y: touch.clientY };
     },
-    [preventDefault],
+    [preventDefault]
   );
 
   const onTouchEnd = useCallback(
@@ -94,7 +94,7 @@ export const useSwipe = (config: SwipeConfig = {}): SwipeReturn => {
       touchStartRef.current = null;
       touchEndRef.current = null;
     },
-    [handleSwipe],
+    [handleSwipe]
   );
 
   // Cleanup on unmount
@@ -124,7 +124,7 @@ export const useNavigationSwipe = () => {
     // For horizontal navigation (left/right)
     onHorizontalSwipe: (
       onSwipeLeft?: () => void,
-      onSwipeRight?: () => void,
+      onSwipeRight?: () => void
     ) => ({
       onTouchStart,
       onTouchMove,
@@ -152,10 +152,10 @@ export const useNavigationSwipe = () => {
 
 // Swipe directions for common use cases
 export const SWIPE_DIRECTIONS = {
-  LEFT: "left",
-  RIGHT: "right",
-  UP: "up",
-  DOWN: "down",
+  LEFT: 'left',
+  RIGHT: 'right',
+  UP: 'up',
+  DOWN: 'down',
 } as const;
 
 export type SwipeDirection =

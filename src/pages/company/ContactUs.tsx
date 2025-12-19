@@ -84,12 +84,12 @@ export default function ContactUs() {
       <PublicHeader />
 
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
+        <section className="bg-linear-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl font-bold mb-6">
                 Contact Us
-                <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                <span className="block mt-2 bg-linear-to-r from-primary to-primary-glow bg-clip-text text-transparent">
                   We're Here to Help
                 </span>
               </h1>
@@ -105,7 +105,7 @@ export default function ContactUs() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
               <CardContent className="text-center">
-                <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
+                <div className="h-14 w-14 rounded-lg bg-linear-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <Mail className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Email</h3>
@@ -120,7 +120,7 @@ export default function ContactUs() {
 
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
               <CardContent className="text-center">
-                <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
+                <div className="h-14 w-14 rounded-lg bg-linear-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <Phone className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Phone</h3>
@@ -133,7 +133,7 @@ export default function ContactUs() {
 
             <Card className="hover:shadow-lg transition-all hover:-translate-y-1">
               <CardContent className="text-center">
-                <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
+                <div className="h-14 w-14 rounded-lg bg-linear-to-br from-primary to-primary-glow flex items-center justify-center mx-auto mb-4">
                   <MapPin className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Address</h3>
@@ -208,7 +208,14 @@ export default function ContactUs() {
                       control={form.control}
                       name="subject"
                       rules={{ required: 'Please select a subject' }}
-                      render={({ field }: { field: any }) => (
+                      render={({
+                        field,
+                      }: {
+                        field: {
+                          value: string;
+                          onChange: (value: string) => void;
+                        };
+                      }) => (
                         <FormItem>
                           <FormLabel htmlFor="contact-subject">
                             Subject
@@ -252,7 +259,7 @@ export default function ContactUs() {
                             <Textarea
                               id="contact-message"
                               placeholder="Your message..."
-                              className="min-h-[120px]"
+                              className="min-h-30"
                               {...form.register('message', {
                                 required: 'Message is required',
                                 minLength: {
@@ -270,7 +277,7 @@ export default function ContactUs() {
 
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-primary to-primary-glow flex items-center justify-center gap-4"
+                      className="w-full bg-linear-to-r from-primary to-primary-glow flex items-center justify-center gap-4"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -377,7 +384,7 @@ export default function ContactUs() {
           </Card>
 
           <div className="text-center">
-            <Card className="bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
+            <Card className="bg-linear-to-br from-primary/10 to-primary-glow/5 border-primary/20">
               <CardContent className="p-8">
                 <h2 className="text-3xl font-bold mb-4">
                   Ready to Get Started?
@@ -388,7 +395,7 @@ export default function ContactUs() {
                 <Link to="/register">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-primary to-primary-glow"
+                    className="bg-linear-to-r from-primary to-primary-glow"
                   >
                     Create Account
                   </Button>

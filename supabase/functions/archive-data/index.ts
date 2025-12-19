@@ -7,12 +7,12 @@
  * @requires CRON_SECRET for authentication
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-cron-secret",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, x-cron-secret',
 };
 
 interface ArchiveResult {
@@ -29,7 +29,7 @@ interface ArchiveResult {
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -37,27 +37,27 @@ Deno.serve(async (req) => {
 
   try {
     // Verify cron secret for authentication
-    const cronSecret = req.headers.get("x-cron-secret");
-    const expectedSecret = Deno.env.get("CRON_SECRET");
+    const cronSecret = req.headers.get('x-cron-secret');
+    const expectedSecret = Deno.env.get('CRON_SECRET');
 
     if (!cronSecret || cronSecret !== expectedSecret) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // Create Supabase client with service role
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Call the archive function
-    const { data, error } = await supabase.rpc("archive_old_data");
+    const { data, error } = await supabase.rpc('archive_old_data');
 
     if (error) {
-      console.error("Archive error:", error);
+      console.error('Archive error:', error);
       return new Response(
         JSON.stringify({
           success: false,
@@ -66,8 +66,8 @@ Deno.serve(async (req) => {
         } as ArchiveResult),
         {
           status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -75,17 +75,17 @@ Deno.serve(async (req) => {
     const [ordersCount, fillsCount, ledgerCount, positionsCount] =
       await Promise.all([
         supabase
-          .from("orders_archive")
-          .select("id", { count: "exact", head: true }),
+          .from('orders_archive')
+          .select('id', { count: 'exact', head: true }),
         supabase
-          .from("fills_archive")
-          .select("id", { count: "exact", head: true }),
+          .from('fills_archive')
+          .select('id', { count: 'exact', head: true }),
         supabase
-          .from("ledger_archive")
-          .select("id", { count: "exact", head: true }),
+          .from('ledger_archive')
+          .select('id', { count: 'exact', head: true }),
         supabase
-          .from("positions_archive")
-          .select("id", { count: "exact", head: true }),
+          .from('positions_archive')
+          .select('id', { count: 'exact', head: true }),
       ]);
 
     const result: ArchiveResult = {
@@ -99,24 +99,24 @@ Deno.serve(async (req) => {
       executionTime: Date.now() - startTime,
     };
 
-    console.log("Archive completed:", result);
+    console.log('Archive completed:', result);
 
     return new Response(JSON.stringify(result), {
       status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Unexpected error:", error);
+    console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
         executionTime: Date.now() - startTime,
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });

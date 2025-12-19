@@ -1,27 +1,27 @@
-import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { formatToastError } from "@/lib/errorMessageService";
-import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { formatToastError } from '@/lib/errorMessageService';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import { RiskAlerts } from "@/components/risk/RiskAlerts";
-import { MarginLevelIndicator } from "@/components/risk/MarginLevelIndicator";
-import { RiskSettingsForm } from "@/components/risk/RiskSettingsForm";
-import { RiskManagementLoading } from "@/components/risk/RiskManagementLoading";
-import { Shield, TrendingDown, Lock, AlertTriangle } from "lucide-react";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
+import { RiskAlerts } from '@/components/risk/RiskAlerts';
+import { MarginLevelIndicator } from '@/components/risk/MarginLevelIndicator';
+import { RiskSettingsForm } from '@/components/risk/RiskSettingsForm';
+import { RiskManagementLoading } from '@/components/risk/RiskManagementLoading';
+import { Shield, TrendingDown, Lock, AlertTriangle } from 'lucide-react';
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import("@/lib/supabaseBrowserClient");
+  const { supabase } = await import('@/lib/supabaseBrowserClient');
   return supabase;
 };
 
@@ -60,9 +60,9 @@ export default function RiskManagement() {
     try {
       const supabase = await getSupabaseClient();
       const { data, error } = await supabase
-        .from("risk_settings")
-        .select("*")
-        .eq("user_id", user.id)
+        .from('risk_settings')
+        .select('*')
+        .eq('user_id', user.id)
         .single();
 
       if (error) throw error;
@@ -81,11 +81,11 @@ export default function RiskManagement() {
         });
       }
     } catch (err: unknown) {
-      const actionableError = formatToastError(err, "data_fetching");
+      const actionableError = formatToastError(err, 'data_fetching');
       toast({
         ...actionableError,
         variant:
-          actionableError.variant === "destructive" ? "destructive" : "default",
+          actionableError.variant === 'destructive' ? 'destructive' : 'default',
       });
     } finally {
       setLoading(false);
@@ -103,22 +103,22 @@ export default function RiskManagement() {
     try {
       const supabase = await getSupabaseClient();
       const { error } = await supabase
-        .from("risk_settings")
+        .from('risk_settings')
         .update(settings)
-        .eq("user_id", user.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
       toast({
-        title: "Settings Saved",
-        description: "Your risk management settings have been updated",
+        title: 'Settings Saved',
+        description: 'Your risk management settings have been updated',
       });
     } catch (err: unknown) {
-      const actionableError = formatToastError(err, "form_validation");
+      const actionableError = formatToastError(err, 'form_validation');
       toast({
         ...actionableError,
         variant:
-          actionableError.variant === "destructive" ? "destructive" : "default",
+          actionableError.variant === 'destructive' ? 'destructive' : 'default',
       });
     } finally {
       setSaving(false);
@@ -190,7 +190,7 @@ export default function RiskManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {settings.enforce_stop_loss ? "Required" : "Optional"}
+                  {settings.enforce_stop_loss ? 'Required' : 'Optional'}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Protection status

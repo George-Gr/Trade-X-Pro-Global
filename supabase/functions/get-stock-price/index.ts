@@ -1,9 +1,9 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 interface PriceRequest {
@@ -32,15 +32,15 @@ const rateLimitStore = new Map<
 >();
 
 function getClientIP(req: Request): string {
-  const forwardedFor = req.headers.get("x-forwarded-for");
+  const forwardedFor = req.headers.get('x-forwarded-for');
   if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
+    return forwardedFor.split(',')[0].trim();
   }
-  const realIP = req.headers.get("x-real-ip");
+  const realIP = req.headers.get('x-real-ip');
   if (realIP) {
     return realIP;
   }
-  return "unknown";
+  return 'unknown';
 }
 
 function checkRateLimit(clientIP: string): {
@@ -90,61 +90,61 @@ function checkRateLimit(clientIP: string): {
 async function signPriceData(
   symbol: string,
   price: number,
-  timestamp: number,
+  timestamp: number
 ): Promise<string> {
-  const PRICE_SIGNING_KEY = Deno.env.get("PRICE_SIGNING_KEY");
+  const PRICE_SIGNING_KEY = Deno.env.get('PRICE_SIGNING_KEY');
 
   if (!PRICE_SIGNING_KEY) {
     // Return empty signature if key not configured (backward compatible)
-    return "";
+    return '';
   }
 
   const message = `${symbol}:${price}:${timestamp}`;
 
   const keyData = new TextEncoder().encode(PRICE_SIGNING_KEY);
   const cryptoKey = await crypto.subtle.importKey(
-    "raw",
+    'raw',
     keyData,
-    { name: "HMAC", hash: "SHA-256" },
+    { name: 'HMAC', hash: 'SHA-256' },
     false,
-    ["sign"],
+    ['sign']
   );
 
   const signature = await crypto.subtle.sign(
-    "HMAC",
+    'HMAC',
     cryptoKey,
-    new TextEncoder().encode(message),
+    new TextEncoder().encode(message)
   );
 
   // Convert to hex string
   return Array.from(new Uint8Array(signature))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 // Simulated forex/commodity/crypto data for development
 const FOREX_MOCK_DATA: Record<string, { base: number; volatility: number }> = {
-  "OANDA:EUR_USD": { base: 1.085, volatility: 0.0015 },
-  "OANDA:GBP_USD": { base: 1.265, volatility: 0.002 },
-  "OANDA:USD_JPY": { base: 149.5, volatility: 0.3 },
-  "OANDA:AUD_USD": { base: 0.655, volatility: 0.0018 },
-  "OANDA:USD_CAD": { base: 1.385, volatility: 0.0012 },
-  "OANDA:USD_CHF": { base: 0.875, volatility: 0.0012 },
-  "OANDA:NZD_USD": { base: 0.61, volatility: 0.0015 },
-  "OANDA:EUR_GBP": { base: 0.858, volatility: 0.0012 },
-  "OANDA:EUR_JPY": { base: 162.2, volatility: 0.35 },
-  "OANDA:GBP_JPY": { base: 189.1, volatility: 0.4 },
-  "OANDA:XAU_USD": { base: 2350.0, volatility: 15.0 },
-  "OANDA:XAG_USD": { base: 28.5, volatility: 0.3 },
-  "OANDA:BCO_USD": { base: 82.5, volatility: 1.2 },
-  "OANDA:WTICO_USD": { base: 78.0, volatility: 1.1 },
-  "OANDA:NATGAS_USD": { base: 2.85, volatility: 0.08 },
-  "OANDA:BTC_USD": { base: 67500.0, volatility: 800.0 },
-  "OANDA:ETH_USD": { base: 3450.0, volatility: 60.0 },
+  'OANDA:EUR_USD': { base: 1.085, volatility: 0.0015 },
+  'OANDA:GBP_USD': { base: 1.265, volatility: 0.002 },
+  'OANDA:USD_JPY': { base: 149.5, volatility: 0.3 },
+  'OANDA:AUD_USD': { base: 0.655, volatility: 0.0018 },
+  'OANDA:USD_CAD': { base: 1.385, volatility: 0.0012 },
+  'OANDA:USD_CHF': { base: 0.875, volatility: 0.0012 },
+  'OANDA:NZD_USD': { base: 0.61, volatility: 0.0015 },
+  'OANDA:EUR_GBP': { base: 0.858, volatility: 0.0012 },
+  'OANDA:EUR_JPY': { base: 162.2, volatility: 0.35 },
+  'OANDA:GBP_JPY': { base: 189.1, volatility: 0.4 },
+  'OANDA:XAU_USD': { base: 2350.0, volatility: 15.0 },
+  'OANDA:XAG_USD': { base: 28.5, volatility: 0.3 },
+  'OANDA:BCO_USD': { base: 82.5, volatility: 1.2 },
+  'OANDA:WTICO_USD': { base: 78.0, volatility: 1.1 },
+  'OANDA:NATGAS_USD': { base: 2.85, volatility: 0.08 },
+  'OANDA:BTC_USD': { base: 67500.0, volatility: 800.0 },
+  'OANDA:ETH_USD': { base: 3450.0, volatility: 60.0 },
 };
 
 async function generateForexPrice(
-  symbol: string,
+  symbol: string
 ): Promise<SignedPriceResponse | null> {
   const mock = FOREX_MOCK_DATA[symbol];
   if (!mock) {
@@ -176,7 +176,7 @@ async function generateForexPrice(
 }
 
 async function generateStockFallbackPrice(
-  symbol: string,
+  symbol: string
 ): Promise<SignedPriceResponse | null> {
   const BASELINES: Record<string, { base: number; volatility: number }> = {
     AAPL: { base: 180, volatility: 1.5 },
@@ -221,7 +221,7 @@ const stockCache = new Map<
 >();
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -230,23 +230,23 @@ serve(async (req) => {
 
   const rateLimitHeaders = {
     ...corsHeaders,
-    "X-RateLimit-Limit": String(MAX_REQUESTS_PER_WINDOW),
-    "X-RateLimit-Remaining": String(rateLimit.remaining),
-    "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetIn / 1000)),
+    'X-RateLimit-Limit': String(MAX_REQUESTS_PER_WINDOW),
+    'X-RateLimit-Remaining': String(rateLimit.remaining),
+    'X-RateLimit-Reset': String(Math.ceil(rateLimit.resetIn / 1000)),
   };
 
   if (!rateLimit.allowed) {
     console.warn(`Rate limit exceeded for IP: ${clientIP}`);
     return new Response(
-      JSON.stringify({ error: "Too many requests. Please try again later." }),
+      JSON.stringify({ error: 'Too many requests. Please try again later.' }),
       {
         status: 429,
         headers: {
           ...rateLimitHeaders,
-          "Content-Type": "application/json",
-          "Retry-After": String(Math.ceil(rateLimit.resetIn / 1000)),
+          'Content-Type': 'application/json',
+          'Retry-After': String(Math.ceil(rateLimit.resetIn / 1000)),
         },
-      },
+      }
     );
   }
 
@@ -254,51 +254,51 @@ serve(async (req) => {
     const { symbol }: PriceRequest = await req.json();
 
     if (!symbol) {
-      return new Response(JSON.stringify({ error: "Symbol is required" }), {
+      return new Response(JSON.stringify({ error: 'Symbol is required' }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // Validate symbol format to prevent injection
     if (!/^[A-Z0-9:_-]{1,30}$/i.test(symbol)) {
-      return new Response(JSON.stringify({ error: "Invalid symbol format" }), {
+      return new Response(JSON.stringify({ error: 'Invalid symbol format' }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // Check if it's a forex symbol
-    if (symbol.startsWith("OANDA:")) {
+    if (symbol.startsWith('OANDA:')) {
       console.log(`Using simulated data for forex symbol: ${symbol}`);
       const forexData = await generateForexPrice(symbol);
 
       if (!forexData) {
         return new Response(
-          JSON.stringify({ error: "Forex symbol not supported" }),
+          JSON.stringify({ error: 'Forex symbol not supported' }),
           {
             status: 404,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       return new Response(JSON.stringify(forexData), {
-        headers: { ...rateLimitHeaders, "Content-Type": "application/json" },
+        headers: { ...rateLimitHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // For stocks, use Finnhub API with caching
-    const FINNHUB_API_KEY = Deno.env.get("FINNHUB_API_KEY");
+    const FINNHUB_API_KEY = Deno.env.get('FINNHUB_API_KEY');
 
     if (!FINNHUB_API_KEY) {
-      console.error("FINNHUB_API_KEY not configured");
+      console.error('FINNHUB_API_KEY not configured');
       return new Response(
-        JSON.stringify({ error: "Service configuration error" }),
+        JSON.stringify({ error: 'Service configuration error' }),
         {
           status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -309,8 +309,8 @@ serve(async (req) => {
       return new Response(JSON.stringify(cached.data), {
         headers: {
           ...rateLimitHeaders,
-          "Content-Type": "application/json",
-          "X-Cache": "hit",
+          'Content-Type': 'application/json',
+          'X-Cache': 'hit',
         },
       });
     }
@@ -318,7 +318,7 @@ serve(async (req) => {
     try {
       console.log(`Fetching stock price from Finnhub: ${symbol}`);
       const response = await fetch(
-        `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(symbol)}&token=${FINNHUB_API_KEY}`,
+        `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(symbol)}&token=${FINNHUB_API_KEY}`
       );
 
       if (!response.ok) {
@@ -329,8 +329,8 @@ serve(async (req) => {
             return new Response(JSON.stringify(cached.data), {
               headers: {
                 ...rateLimitHeaders,
-                "Content-Type": "application/json",
-                "X-Cache": "stale",
+                'Content-Type': 'application/json',
+                'X-Cache': 'stale',
               },
             });
           }
@@ -341,8 +341,8 @@ serve(async (req) => {
             return new Response(JSON.stringify(fallback), {
               headers: {
                 ...rateLimitHeaders,
-                "Content-Type": "application/json",
-                "X-Cache": "fallback",
+                'Content-Type': 'application/json',
+                'X-Cache': 'fallback',
               },
             });
           }
@@ -360,40 +360,40 @@ serve(async (req) => {
             {
               headers: {
                 ...rateLimitHeaders,
-                "Content-Type": "application/json",
-                "X-Cache": "empty",
+                'Content-Type': 'application/json',
+                'X-Cache': 'empty',
               },
-            },
+            }
           );
         }
         return new Response(
-          JSON.stringify({ error: "Failed to fetch stock price" }),
+          JSON.stringify({ error: 'Failed to fetch stock price' }),
           {
             status: 502,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       const data = await response.json();
 
-      if (typeof data?.c !== "number" || data.c <= 0) {
+      if (typeof data?.c !== 'number' || data.c <= 0) {
         console.warn(`Invalid quote payload for ${symbol}:`, data);
         if (cached) {
           return new Response(JSON.stringify(cached.data), {
             headers: {
               ...rateLimitHeaders,
-              "Content-Type": "application/json",
-              "X-Cache": "stale",
+              'Content-Type': 'application/json',
+              'X-Cache': 'stale',
             },
           });
         }
         return new Response(
-          JSON.stringify({ error: "Invalid provider response" }),
+          JSON.stringify({ error: 'Invalid provider response' }),
           {
             status: 502,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
@@ -412,18 +412,18 @@ serve(async (req) => {
       return new Response(JSON.stringify(signedData), {
         headers: {
           ...rateLimitHeaders,
-          "Content-Type": "application/json",
-          "X-Cache": "miss",
+          'Content-Type': 'application/json',
+          'X-Cache': 'miss',
         },
       });
     } catch (e) {
-      console.error("Network error calling Finnhub:", e);
+      console.error('Network error calling Finnhub:', e);
       if (cached) {
         return new Response(JSON.stringify(cached.data), {
           headers: {
             ...rateLimitHeaders,
-            "Content-Type": "application/json",
-            "X-Cache": "stale",
+            'Content-Type': 'application/json',
+            'X-Cache': 'stale',
           },
         });
       }
@@ -433,8 +433,8 @@ serve(async (req) => {
         return new Response(JSON.stringify(fallback), {
           headers: {
             ...rateLimitHeaders,
-            "Content-Type": "application/json",
-            "X-Cache": "fallback",
+            'Content-Type': 'application/json',
+            'X-Cache': 'fallback',
           },
         });
       }
@@ -452,17 +452,17 @@ serve(async (req) => {
         {
           headers: {
             ...rateLimitHeaders,
-            "Content-Type": "application/json",
-            "X-Cache": "empty",
+            'Content-Type': 'application/json',
+            'X-Cache': 'empty',
           },
-        },
+        }
       );
     }
   } catch (error) {
-    console.error("Error in get-stock-price:", error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
+    console.error('Error in get-stock-price:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });

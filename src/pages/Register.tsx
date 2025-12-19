@@ -1,4 +1,4 @@
-import MultiStepRegistration from "@/components/registration/MultiStepRegistration";
+import MultiStepRegistration from '@/components/registration/MultiStepRegistration';
 
 const Register = () => {
   return <MultiStepRegistration />;
