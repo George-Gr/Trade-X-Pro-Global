@@ -15,7 +15,7 @@
  * - /project_resources_docs/TradeX_Pro_Assets_Fees_Spreads.md
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Asset class definitions with leverage and maintenance margin ratios
@@ -212,14 +212,14 @@ export const ASSET_CLASS_CONFIG: Record<
  * Validation schema for margin calculation inputs
  */
 export const MarginCalculationSchema = z.object({
-  positionSize: z.number().positive("Position size must be positive"),
-  entryPrice: z.number().positive("Entry price must be positive"),
+  positionSize: z.number().positive('Position size must be positive'),
+  entryPrice: z.number().positive('Entry price must be positive'),
   leverage: z
     .number()
-    .positive("Leverage must be positive")
-    .max(500, "Leverage exceeds maximum"),
-  currentPrice: z.number().positive("Current price must be positive"),
-  accountEquity: z.number().nonnegative("Account equity cannot be negative"),
+    .positive('Leverage must be positive')
+    .max(500, 'Leverage exceeds maximum'),
+  currentPrice: z.number().positive('Current price must be positive'),
+  accountEquity: z.number().nonnegative('Account equity cannot be negative'),
 });
 
 export type MarginCalculationInput = z.infer<typeof MarginCalculationSchema>;
@@ -231,10 +231,10 @@ export class MarginCalculationError extends Error {
   constructor(
     public status: number,
     public details: string,
-    message?: string,
+    message?: string
   ) {
     super(message || details);
-    this.name = "MarginCalculationError";
+    this.name = 'MarginCalculationError';
   }
 }
 
@@ -255,7 +255,7 @@ export class MarginCalculationError extends Error {
 export function calculateMarginRequired(
   positionSize: number,
   entryPrice: number,
-  leverage: number,
+  leverage: number
 ): number {
   const margin = (positionSize * entryPrice) / leverage;
   return Math.round(margin * 10000) / 10000; // Round to 4 decimals
@@ -278,13 +278,13 @@ export function calculateMarginRequired(
  */
 export function calculateFreeMargin(
   totalEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): number {
   if (marginUsed > totalEquity) {
     throw new MarginCalculationError(
       400,
-      "Margin used exceeds total equity",
-      "Account is in negative equity",
+      'Margin used exceeds total equity',
+      'Account is in negative equity'
     );
   }
   const freeMargin = totalEquity - marginUsed;
@@ -310,13 +310,13 @@ export function calculateFreeMargin(
  */
 export function calculateMarginLevel(
   totalEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): number {
   if (marginUsed <= 0) {
     throw new MarginCalculationError(
       400,
-      "Margin used must be positive to calculate margin level",
-      "Invalid margin used value",
+      'Margin used must be positive to calculate margin level',
+      'Invalid margin used value'
     );
   }
   const marginLevel = (totalEquity / marginUsed) * 100;
@@ -334,7 +334,7 @@ export function calculateMarginLevel(
  */
 export function calculatePositionValue(
   positionSize: number,
-  currentPrice: number,
+  currentPrice: number
 ): number {
   const value = positionSize * currentPrice;
   return Math.round(value * 10000) / 10000;
@@ -355,7 +355,7 @@ export function calculatePositionValue(
 export function calculateUnrealizedPnL(
   positionSize: number,
   entryPrice: number,
-  currentPrice: number,
+  currentPrice: number
 ): number {
   const pnl = positionSize * (currentPrice - entryPrice);
   return Math.round(pnl * 10000) / 10000;
@@ -380,7 +380,7 @@ export function calculateLiquidationPrice(
   entryPrice: number,
   positionSize: number,
   leverage: number,
-  maintenanceMarginRatio: number,
+  maintenanceMarginRatio: number
 ): number {
   const isLong = positionSize > 0;
   const marginBuffer =
@@ -402,7 +402,7 @@ export function calculateLiquidationPrice(
  */
 export function canOpenPosition(
   newMarginRequired: number,
-  freeMargin: number,
+  freeMargin: number
 ): boolean {
   return newMarginRequired <= freeMargin;
 }
@@ -422,20 +422,20 @@ export function canOpenPosition(
 export function calculateMaxPositionSize(
   availableEquity: number,
   leverage: number,
-  currentPrice: number,
+  currentPrice: number
 ): number {
   if (availableEquity < 0) {
     throw new MarginCalculationError(
       400,
-      "Available equity cannot be negative",
-      "Insufficient funds",
+      'Available equity cannot be negative',
+      'Insufficient funds'
     );
   }
   if (currentPrice <= 0) {
     throw new MarginCalculationError(
       400,
-      "Current price must be positive",
-      "Invalid price",
+      'Current price must be positive',
+      'Invalid price'
     );
   }
   const maxSize = (availableEquity * leverage) / currentPrice;
@@ -450,7 +450,7 @@ export interface MarginSummary {
   totalMarginUsed: number;
   freeMargin: number;
   marginLevel: number; // percentage
-  marginLevelStatus: "safe" | "warning" | "critical" | "liquidation"; // based on margin level
+  marginLevelStatus: 'safe' | 'warning' | 'critical' | 'liquidation'; // based on margin level
   canOpenNewPosition: boolean;
 }
 
@@ -463,7 +463,7 @@ export interface MarginSummary {
  */
 export function calculateMarginSummary(
   totalEquity: number,
-  totalMarginUsed: number,
+  totalMarginUsed: number
 ): MarginSummary {
   // Handle case where margin exceeds equity (negative equity scenario)
   let freeMargin: number;
@@ -483,14 +483,14 @@ export function calculateMarginSummary(
   }
 
   // Determine status based on margin level
-  let marginLevelStatus: "safe" | "warning" | "critical" | "liquidation" =
-    "safe";
+  let marginLevelStatus: 'safe' | 'warning' | 'critical' | 'liquidation' =
+    'safe';
   if (marginLevel < 50) {
-    marginLevelStatus = "liquidation";
+    marginLevelStatus = 'liquidation';
   } else if (marginLevel < 100) {
-    marginLevelStatus = "critical";
+    marginLevelStatus = 'critical';
   } else if (marginLevel < 200) {
-    marginLevelStatus = "warning";
+    marginLevelStatus = 'warning';
   }
 
   return {
@@ -499,7 +499,7 @@ export function calculateMarginSummary(
     freeMargin,
     marginLevel,
     marginLevelStatus,
-    canOpenNewPosition: freeMargin > 0 && marginLevelStatus !== "liquidation",
+    canOpenNewPosition: freeMargin > 0 && marginLevelStatus !== 'liquidation',
   };
 }
 
@@ -510,7 +510,7 @@ export function calculateMarginSummary(
  * @returns Asset configuration or default config if not found
  */
 export function getAssetConfig(
-  symbol: string,
+  symbol: string
 ): (typeof ASSET_CLASS_CONFIG)[keyof typeof ASSET_CLASS_CONFIG] {
   return (
     ASSET_CLASS_CONFIG[symbol] || {

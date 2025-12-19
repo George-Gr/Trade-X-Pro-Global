@@ -15,25 +15,25 @@
  * - marginMonitoring (1.2.4): For status classification
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Margin call status enum
  */
 export enum MarginCallStatus {
-  PENDING = "pending",
-  NOTIFIED = "notified",
-  RESOLVED = "resolved",
-  ESCALATED = "escalated",
+  PENDING = 'pending',
+  NOTIFIED = 'notified',
+  RESOLVED = 'resolved',
+  ESCALATED = 'escalated',
 }
 
 /**
  * Margin call severity levels
  */
 export enum MarginCallSeverity {
-  STANDARD = "standard", // 100-150% margin level
-  URGENT = "urgent", // 50-100% margin level
-  CRITICAL = "critical", // < 50% margin level (escalation imminent)
+  STANDARD = 'standard', // 100-150% margin level
+  URGENT = 'urgent', // 50-100% margin level
+  CRITICAL = 'critical', // < 50% margin level (escalation imminent)
 }
 
 /**
@@ -50,7 +50,7 @@ export interface MarginCallEvent {
   recommendedActions: string[];
   escalatedToLiquidationAt: Date | null;
   resolvedAt: Date | null;
-  resolutionType: "manual_deposit" | "position_close" | "liquidation" | null;
+  resolutionType: 'manual_deposit' | 'position_close' | 'liquidation' | null;
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -87,7 +87,7 @@ export interface StateChangeResult {
  */
 export interface MarginCallAction {
   action: string;
-  urgency: "high" | "medium" | "low";
+  urgency: 'high' | 'medium' | 'low';
   description: string;
   suggestedAmount?: number;
 }
@@ -136,7 +136,7 @@ export const MarginCallEventSchema = z.object({
   escalatedToLiquidationAt: z.date().nullable(),
   resolvedAt: z.date().nullable(),
   resolutionType: z
-    .enum(["manual_deposit", "position_close", "liquidation"])
+    .enum(['manual_deposit', 'position_close', 'liquidation'])
     .nullable(),
   notes: z.string().nullable(),
   createdAt: z.date(),
@@ -157,7 +157,7 @@ export const MarginCallEventSchema = z.object({
  */
 export function detectMarginCall(
   accountEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): MarginCallDetectionResult {
   if (marginUsed === 0) {
     return {
@@ -167,7 +167,7 @@ export function detectMarginCall(
       shouldEscalate: false,
       shouldEnforceCloseOnly: false,
       timeToLiquidationMinutes: null,
-      message: "No margin used",
+      message: 'No margin used',
     };
   }
 
@@ -213,7 +213,7 @@ export function detectMarginCall(
     timeToLiquidationMinutes,
     message: isTriggered
       ? `Margin call triggered at ${marginLevel.toFixed(2)}% margin level`
-      : "Account margin level is safe",
+      : 'Account margin level is safe',
   };
 }
 
@@ -243,7 +243,7 @@ export function isMarginCallTriggered(marginLevel: number): boolean {
  * classifyMarginCallSeverity(40);  // 'critical'
  */
 export function classifyMarginCallSeverity(
-  marginLevel: number,
+  marginLevel: number
 ): MarginCallSeverity {
   if (marginLevel < 50) {
     return MarginCallSeverity.CRITICAL;
@@ -267,7 +267,7 @@ export function classifyMarginCallSeverity(
  */
 export function shouldEscalateToLiquidation(
   marginLevel: number,
-  timeInCallMinutes: number,
+  timeInCallMinutes: number
 ): boolean {
   // Escalate if critical level for 30+ minutes
   if (marginLevel < 50 && timeInCallMinutes >= 30) {
@@ -298,7 +298,7 @@ export function shouldEscalateToLiquidation(
 export function updateMarginCallState(
   userId: string,
   previousLevel: number,
-  currentLevel: number,
+  currentLevel: number
 ): StateChangeResult {
   const wasCalling = isMarginCallTriggered(previousLevel);
   const isCalling = isMarginCallTriggered(currentLevel);
@@ -309,7 +309,7 @@ export function updateMarginCallState(
       previousStatus: MarginCallStatus.PENDING,
       newStatus: MarginCallStatus.NOTIFIED,
       changed: true,
-      reason: "Margin level fell below 150% threshold",
+      reason: 'Margin level fell below 150% threshold',
       escalationRequired:
         classifyMarginCallSeverity(currentLevel) !==
         MarginCallSeverity.STANDARD,
@@ -322,7 +322,7 @@ export function updateMarginCallState(
       previousStatus: MarginCallStatus.NOTIFIED,
       newStatus: MarginCallStatus.RESOLVED,
       changed: true,
-      reason: "Margin level recovered above 150% threshold",
+      reason: 'Margin level recovered above 150% threshold',
       escalationRequired: false,
     };
   }
@@ -355,7 +355,7 @@ export function updateMarginCallState(
       ? MarginCallStatus.NOTIFIED
       : MarginCallStatus.PENDING,
     changed: false,
-    reason: "No significant margin level change",
+    reason: 'No significant margin level change',
     escalationRequired: false,
   };
 }
@@ -372,7 +372,7 @@ export function updateMarginCallState(
  */
 export function hasConsecutiveBreaches(
   breachCount: number,
-  window: number,
+  window: number
 ): boolean {
   // More than 3 breaches in 30 minutes indicates problem
   return breachCount > 3 && window <= 30;
@@ -406,7 +406,7 @@ export function getMarginCallDuration(startTime: Date): number {
  * shouldRestrictNewTrading('resolved'); // false
  */
 export function shouldRestrictNewTrading(
-  marginCallStatus: MarginCallStatus,
+  marginCallStatus: MarginCallStatus
 ): boolean {
   return (
     marginCallStatus === MarginCallStatus.NOTIFIED ||
@@ -426,7 +426,7 @@ export function shouldRestrictNewTrading(
  * shouldEnforceCloseOnly('pending'); // false
  */
 export function shouldEnforceCloseOnly(
-  marginCallStatus: MarginCallStatus,
+  marginCallStatus: MarginCallStatus
 ): boolean {
   return (
     marginCallStatus === MarginCallStatus.NOTIFIED ||
@@ -450,41 +450,41 @@ export function shouldEnforceCloseOnly(
  * // }
  */
 export function generateMarginCallNotification(
-  call: MarginCallEvent,
+  call: MarginCallEvent
 ): Record<string, unknown> {
   const urgencyMap = {
-    [MarginCallSeverity.STANDARD]: { priority: "HIGH", icon: "⚠️" },
-    [MarginCallSeverity.URGENT]: { priority: "CRITICAL", icon: "🔴" },
-    [MarginCallSeverity.CRITICAL]: { priority: "CRITICAL", icon: "🚨" },
+    [MarginCallSeverity.STANDARD]: { priority: 'HIGH', icon: '⚠️' },
+    [MarginCallSeverity.URGENT]: { priority: 'CRITICAL', icon: '🔴' },
+    [MarginCallSeverity.CRITICAL]: { priority: 'CRITICAL', icon: '🚨' },
   };
 
   const { priority, icon } = urgencyMap[call.severity];
 
   return {
-    type: "MARGIN_CALL",
+    type: 'MARGIN_CALL',
     priority,
     icon,
     title: `${icon} Margin Call - Account at Risk`,
     message: `Your account margin level is ${call.marginLevelAtTrigger.toFixed(2)}%. ${
       call.estimatedTimeToLiquidationMinutes
         ? `Estimated time to liquidation: ${call.estimatedTimeToLiquidationMinutes} minutes.`
-        : ""
+        : ''
     } Add funds or close positions immediately to prevent forced liquidation.`,
     actions: [
       {
-        label: "Deposit Funds",
-        action: "NAVIGATE_WALLET",
-        color: "primary",
+        label: 'Deposit Funds',
+        action: 'NAVIGATE_WALLET',
+        color: 'primary',
       },
       {
-        label: "View Positions",
-        action: "NAVIGATE_POSITIONS",
-        color: "secondary",
+        label: 'View Positions',
+        action: 'NAVIGATE_POSITIONS',
+        color: 'secondary',
       },
       {
-        label: "Risk Management",
-        action: "NAVIGATE_RISK",
-        color: "secondary",
+        label: 'Risk Management',
+        action: 'NAVIGATE_RISK',
+        color: 'secondary',
       },
     ],
     metadata: {
@@ -514,7 +514,7 @@ export function generateMarginCallNotification(
  */
 export function getRecommendedActions(
   marginLevel: number,
-  positionCount: number,
+  positionCount: number
 ): MarginCallAction[] {
   const actions: MarginCallAction[] = [];
 
@@ -522,63 +522,63 @@ export function getRecommendedActions(
     // Critical - immediate action needed
     actions.push(
       {
-        action: "Deposit funds immediately",
-        urgency: "high",
+        action: 'Deposit funds immediately',
+        urgency: 'high',
         description:
-          "Add funds to account to bring margin level above 50% and prevent forced liquidation",
+          'Add funds to account to bring margin level above 50% and prevent forced liquidation',
       },
       {
-        action: "Close all non-essential positions",
-        urgency: "high",
+        action: 'Close all non-essential positions',
+        urgency: 'high',
         description:
-          "Close positions with lowest margin contribution to free up margin quickly",
+          'Close positions with lowest margin contribution to free up margin quickly',
       },
       {
-        action: "Reduce leverage",
-        urgency: "high",
+        action: 'Reduce leverage',
+        urgency: 'high',
         description:
-          "If using high leverage, reduce it to lower margin requirements",
-      },
+          'If using high leverage, reduce it to lower margin requirements',
+      }
     );
   } else if (marginLevel < 100) {
     // Urgent - immediate action recommended
     actions.push(
       {
-        action: "Deposit funds",
-        urgency: "high",
-        description: "Add funds to account to increase margin level above 100%",
+        action: 'Deposit funds',
+        urgency: 'high',
+        description: 'Add funds to account to increase margin level above 100%',
       },
       {
-        action: "Close largest losing positions",
-        urgency: "high",
+        action: 'Close largest losing positions',
+        urgency: 'high',
         description:
-          "Close positions with largest unrealized losses to free margin",
+          'Close positions with largest unrealized losses to free margin',
       },
       {
-        action: "Set tight stop losses",
-        urgency: "medium",
-        description: "Protect remaining positions with protective stops",
-      },
+        action: 'Set tight stop losses',
+        urgency: 'medium',
+        description: 'Protect remaining positions with protective stops',
+      }
     );
   } else if (marginLevel < 150) {
     // Standard warning - action recommended
     actions.push(
       {
-        action: "Monitor margin level closely",
-        urgency: "medium",
-        description: "Watch margin level throughout trading session",
+        action: 'Monitor margin level closely',
+        urgency: 'medium',
+        description: 'Watch margin level throughout trading session',
       },
       {
-        action: "Be ready to deposit funds",
-        urgency: "medium",
+        action: 'Be ready to deposit funds',
+        urgency: 'medium',
         description:
-          "Have deposit method ready in case margin level drops further",
+          'Have deposit method ready in case margin level drops further',
       },
       {
-        action: "Avoid new high-leverage trades",
-        urgency: "low",
-        description: "Reduce position size for new trades to preserve margin",
-      },
+        action: 'Avoid new high-leverage trades',
+        urgency: 'low',
+        description: 'Reduce position size for new trades to preserve margin',
+      }
     );
   }
 
@@ -601,7 +601,7 @@ export function calculateRiskMetrics(
   marginLevel: number,
   openPositions: number,
   averageLeverage: number = 1,
-  largestPosition: number = 0,
+  largestPosition: number = 0
 ): RiskMetrics {
   const status = getMarginCallStatusFromLevel(marginLevel);
   const positionsAtRisk =
@@ -646,7 +646,7 @@ function getMarginCallStatusFromLevel(marginLevel: number): MarginCallStatus {
  * @returns true if valid
  */
 export function validateMarginCallEvent(
-  event: Partial<MarginCallEvent>,
+  event: Partial<MarginCallEvent>
 ): boolean {
   try {
     MarginCallEventSchema.parse(event);
@@ -667,10 +667,10 @@ export function validateMarginCallEvent(
  */
 export function formatMarginCallStatus(status: MarginCallStatus): string {
   const labels: Record<MarginCallStatus, string> = {
-    [MarginCallStatus.PENDING]: "No Margin Call",
-    [MarginCallStatus.NOTIFIED]: "Margin Call Active",
-    [MarginCallStatus.RESOLVED]: "Margin Call Resolved",
-    [MarginCallStatus.ESCALATED]: "Escalated to Liquidation",
+    [MarginCallStatus.PENDING]: 'No Margin Call',
+    [MarginCallStatus.NOTIFIED]: 'Margin Call Active',
+    [MarginCallStatus.RESOLVED]: 'Margin Call Resolved',
+    [MarginCallStatus.ESCALATED]: 'Escalated to Liquidation',
   };
   return labels[status];
 }
@@ -686,10 +686,10 @@ export function formatMarginCallStatus(status: MarginCallStatus): string {
  */
 export function getMarginCallStatusColor(status: MarginCallStatus): string {
   const colors: Record<MarginCallStatus, string> = {
-    [MarginCallStatus.PENDING]: "text-status-safe",
-    [MarginCallStatus.NOTIFIED]: "text-yellow-600",
-    [MarginCallStatus.RESOLVED]: "text-status-info",
-    [MarginCallStatus.ESCALATED]: "text-red-600",
+    [MarginCallStatus.PENDING]: 'text-status-safe',
+    [MarginCallStatus.NOTIFIED]: 'text-yellow-600',
+    [MarginCallStatus.RESOLVED]: 'text-status-info',
+    [MarginCallStatus.ESCALATED]: 'text-red-600',
   };
   return colors[status];
 }
@@ -705,9 +705,9 @@ export function getMarginCallStatusColor(status: MarginCallStatus): string {
  */
 export function getSeverityBgColor(severity: MarginCallSeverity): string {
   const colors: Record<MarginCallSeverity, string> = {
-    [MarginCallSeverity.STANDARD]: "bg-yellow-100",
-    [MarginCallSeverity.URGENT]: "bg-orange-100",
-    [MarginCallSeverity.CRITICAL]: "bg-red-100",
+    [MarginCallSeverity.STANDARD]: 'bg-yellow-100',
+    [MarginCallSeverity.URGENT]: 'bg-orange-100',
+    [MarginCallSeverity.CRITICAL]: 'bg-red-100',
   };
   return colors[severity];
 }

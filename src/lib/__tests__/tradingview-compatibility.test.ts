@@ -5,11 +5,11 @@
  * and other common TradingView widget issues in modern JavaScript environments.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { initTradingViewCompatibility } from "@/lib/tradingViewCompatibility";
-import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
+import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
 
-describe("TradingView Compatibility Layer", () => {
+describe('TradingView Compatibility Layer', () => {
   let originalDefineProperty: typeof Object.defineProperty;
   let originalConsoleWarn: typeof console.warn;
   let consoleWarnings: string[];
@@ -22,7 +22,7 @@ describe("TradingView Compatibility Layer", () => {
     // Mock console.warn to capture warnings
     consoleWarnings = [];
     console.warn = vi.fn((...args: any[]) => {
-      consoleWarnings.push(args.join(" "));
+      consoleWarnings.push(args.join(' '));
     });
 
     // Reset any previous modifications
@@ -35,17 +35,17 @@ describe("TradingView Compatibility Layer", () => {
     console.warn = originalConsoleWarn;
   });
 
-  it("should initialize without throwing errors", () => {
+  it('should initialize without throwing errors', () => {
     expect(() => {
       initTradingViewCompatibility();
     }).not.toThrow();
   });
 
-  it("should handle DataView Symbol.toStringTag assignment gracefully", () => {
+  it('should handle DataView Symbol.toStringTag assignment gracefully', () => {
     // Store original descriptor
     const originalDescriptor = Object.getOwnPropertyDescriptor(
       DataView.prototype,
-      Symbol.toStringTag,
+      Symbol.toStringTag
     );
 
     try {
@@ -59,7 +59,7 @@ describe("TradingView Compatibility Layer", () => {
       expect(view.getFloat64(0)).toBeCloseTo(3.14159);
 
       // Test Symbol.toStringTag access
-      expect(view[Symbol.toStringTag]).toBe("DataView");
+      expect(view[Symbol.toStringTag]).toBe('DataView');
     } finally {
       // Restore original descriptor if it existed
       if (originalDescriptor) {
@@ -67,7 +67,7 @@ describe("TradingView Compatibility Layer", () => {
           Object.defineProperty(
             DataView.prototype,
             Symbol.toStringTag,
-            originalDescriptor,
+            originalDescriptor
           );
         } catch (error) {
           // Ignore restore errors in test environment
@@ -76,7 +76,7 @@ describe("TradingView Compatibility Layer", () => {
     }
   });
 
-  it("should provide fallback for common assignment patterns", () => {
+  it('should provide fallback for common assignment patterns', () => {
     // Test Object.assign fallback
     const originalAssign = Object.assign;
 
@@ -84,7 +84,7 @@ describe("TradingView Compatibility Layer", () => {
 
     // Should handle assignment without throwing
     const target = {};
-    const source = { [Symbol.toStringTag]: "test" };
+    const source = { [Symbol.toStringTag]: 'test' };
 
     expect(() => {
       Object.assign(target, source);
@@ -94,7 +94,7 @@ describe("TradingView Compatibility Layer", () => {
     Object.assign = originalAssign;
   });
 
-  it("should log warnings for compatibility issues", () => {
+  it('should log warnings for compatibility issues', () => {
     // Initialize compatibility layer
     initTradingViewCompatibility();
 
@@ -103,7 +103,7 @@ describe("TradingView Compatibility Layer", () => {
     // Note: Actual warnings depend on the environment
   });
 
-  it("should be idempotent (can be called multiple times)", () => {
+  it('should be idempotent (can be called multiple times)', () => {
     expect(() => {
       initTradingViewCompatibility();
       initTradingViewCompatibility();
@@ -111,7 +111,7 @@ describe("TradingView Compatibility Layer", () => {
     }).not.toThrow();
   });
 
-  it("should preserve existing DataView functionality", () => {
+  it('should preserve existing DataView functionality', () => {
     // Create a DataView and test basic functionality
     const buffer = new ArrayBuffer(8);
     const view = new DataView(buffer);
@@ -126,7 +126,7 @@ describe("TradingView Compatibility Layer", () => {
     expect(view.byteOffset).toBe(0);
   });
 
-  it("should handle edge cases gracefully", () => {
+  it('should handle edge cases gracefully', () => {
     // Test with various scenarios
     const testCases = [
       () => initTradingViewCompatibility(),
@@ -150,14 +150,14 @@ describe("TradingView Compatibility Layer", () => {
   });
 });
 
-describe("TradingView Error Boundary", () => {
+describe('TradingView Error Boundary', () => {
   // Note: Full component testing would require React Testing Library
   // This is a basic structure for future expansion
 
-  it("should be importable without errors", () => {
+  it('should be importable without errors', () => {
     expect(() => {
       // Import is done at top of file, just verify the module exists
-      expect(typeof TradingViewErrorBoundary).toBe("function");
+      expect(typeof TradingViewErrorBoundary).toBe('function');
     }).not.toThrow();
   });
 });

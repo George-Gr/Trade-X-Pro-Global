@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import type { TabComponentProps } from "../types";
+import type { TabComponentProps } from '@/components/accessibility/types';
+import { useState, type KeyboardEvent, type MouseEvent } from 'react';
 
 /**
  * RolesTab Component
@@ -30,23 +30,23 @@ export function RolesTab({
    * Handle keyboard input for slider control
    * Supports: Arrow keys (Left/Down decrement, Right/Up increment), Home (min), End (max)
    */
-  const handleSliderKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleSliderKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
-      case "ArrowLeft":
-      case "ArrowDown":
+      case 'ArrowLeft':
+      case 'ArrowDown':
         e.preventDefault();
         setSliderValue((prev) => Math.max(sliderMin, prev - sliderStep));
         break;
-      case "ArrowRight":
-      case "ArrowUp":
+      case 'ArrowRight':
+      case 'ArrowUp':
         e.preventDefault();
         setSliderValue((prev) => Math.min(sliderMax, prev + sliderStep));
         break;
-      case "Home":
+      case 'Home':
         e.preventDefault();
         setSliderValue(sliderMin);
         break;
-      case "End":
+      case 'End':
         e.preventDefault();
         setSliderValue(sliderMax);
         break;
@@ -58,12 +58,12 @@ export function RolesTab({
   /**
    * Handle mouse/pointer input for slider dragging
    */
-  const handleSliderMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSliderMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     const slider = e.currentTarget;
     const rect = slider.getBoundingClientRect();
     const percentage = ((e.clientX - rect.left) / rect.width) * 100;
     const newValue = Math.round(
-      Math.max(sliderMin, Math.min(sliderMax, percentage)),
+      Math.max(sliderMin, Math.min(sliderMax, percentage))
     );
     setSliderValue(newValue);
   };

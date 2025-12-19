@@ -9,7 +9,7 @@
  * `npm run sync-validators` to copy it into the Supabase functions folder before
  * deploying Edge Functions (or CI can run the same script).
  */
-import { z } from "zod";
+import { z } from 'zod';
 
 export class ValidationError extends Error {
   status: number;
@@ -52,11 +52,11 @@ export const OrderRequestSchema = z.object({
   symbol: z
     .string()
     .trim()
-    .min(1, "Symbol required")
-    .max(20, "Symbol too long")
-    .regex(/^[A-Z0-9_]+$/, "Invalid symbol format"),
-  order_type: z.enum(["market", "limit", "stop", "stop_limit"]),
-  side: z.enum(["buy", "sell"]),
+    .min(1, 'Symbol required')
+    .max(20, 'Symbol too long')
+    .regex(/^[A-Z0-9_]+$/, 'Invalid symbol format'),
+  order_type: z.enum(['market', 'limit', 'stop', 'stop_limit']),
+  side: z.enum(['buy', 'sell']),
   quantity: z.number().positive().finite().max(1000000),
   price: z.number().positive().finite().optional(),
   stop_loss: z.number().positive().finite().optional(),
@@ -70,24 +70,24 @@ export function validateOrderInput(body: unknown) {
     const details = validation.error.issues
       .map(
         (issue: { path: PropertyKey[]; message: string }) =>
-          `${issue.path.join(".")}: ${issue.message}`,
+          `${issue.path.join('.')}: ${issue.message}`
       )
-      .join(", ");
-    throw new ValidationError(400, "Invalid input", details);
+      .join(', ');
+    throw new ValidationError(400, 'Invalid input', details);
   }
   return validation.data;
 }
 
 export async function validateAssetExists(db: SupabaseClient, symbol: string) {
   const { data: assetSpec, error } = await (db as SupabaseClient)
-    .from("asset_specs")
-    .select("*")
-    .eq("symbol", symbol)
-    .eq("is_tradable", true)
+    .from('asset_specs')
+    .select('*')
+    .eq('symbol', symbol)
+    .eq('is_tradable', true)
     .maybeSingle();
 
   if (error || !assetSpec) {
-    throw new ValidationError(400, "Invalid or untradable symbol");
+    throw new ValidationError(400, 'Invalid or untradable symbol');
   }
 
   return assetSpec;
@@ -95,71 +95,71 @@ export async function validateAssetExists(db: SupabaseClient, symbol: string) {
 
 export function validateQuantity(
   orderRequest: { quantity: number },
-  assetSpec: AssetSpec,
+  assetSpec: AssetSpec
 ) {
   const minQ =
-    typeof assetSpec.min_quantity === "number" ? assetSpec.min_quantity : 0;
+    typeof assetSpec.min_quantity === 'number' ? assetSpec.min_quantity : 0;
   const maxQ =
-    typeof assetSpec.max_quantity === "number"
+    typeof assetSpec.max_quantity === 'number'
       ? assetSpec.max_quantity
       : Number.MAX_SAFE_INTEGER;
 
   if (orderRequest.quantity < minQ || orderRequest.quantity > maxQ) {
     throw new ValidationError(
       400,
-      "Invalid quantity",
-      `min_quantity=${minQ}, max_quantity=${maxQ}`,
+      'Invalid quantity',
+      `min_quantity=${minQ}, max_quantity=${maxQ}`
     );
   }
 }
 
 export function validateAccountStatus(profile: UserProfile | null) {
   if (!profile) {
-    throw new ValidationError(404, "User profile not found");
+    throw new ValidationError(404, 'User profile not found');
   }
-  if (profile.account_status !== "active") {
-    throw new ValidationError(403, "Account suspended or closed");
+  if (profile.account_status !== 'active') {
+    throw new ValidationError(403, 'Account suspended or closed');
   }
 }
 
 export function validateKYCStatus(profile: UserProfile | null) {
   if (!profile) {
-    throw new ValidationError(404, "User profile not found");
+    throw new ValidationError(404, 'User profile not found');
   }
-  if (profile.kyc_status !== "approved") {
+  if (profile.kyc_status !== 'approved') {
     throw new ValidationError(
       403,
-      "KYC verification required",
-      profile.kyc_status,
+      'KYC verification required',
+      profile.kyc_status
     );
   }
 }
 
 export function validateMarketHours(
   assetSpec: AssetSpec | null,
-  now = new Date(),
+  now = new Date()
 ) {
   const hours = assetSpec?.trading_hours;
   if (!hours) return true;
   try {
-    const [oh, om] = hours.open.split(":").map(Number);
-    const [ch, cm] = hours.close.split(":").map(Number);
+    const [oh, om] = hours.open.split(':').map(Number);
+    const [ch, cm] = hours.close.split(':').map(Number);
     const openDate = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
       oh,
-      om,
+      om
     );
     const closeDate = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
       ch,
-      cm,
+      cm
     );
     if (now < openDate || now > closeDate) {
-      throw new ValidationError(400, "Market closed for this asset");
+      throw new ValidationError(400, 'Market closed for this asset');
     }
     return true;
   } catch (err) {
@@ -170,12 +170,12 @@ export function validateMarketHours(
 
 export function validateLeverage(
   profile: UserProfile | null,
-  assetSpec: AssetSpec | null,
+  assetSpec: AssetSpec | null
 ) {
   const assetLeverage = assetSpec?.leverage ?? null;
   const userMax = profile?.max_leverage ?? null;
   if (assetLeverage && userMax && assetLeverage > userMax) {
-    throw new ValidationError(400, "Leverage exceeds account limit");
+    throw new ValidationError(400, 'Leverage exceeds account limit');
   }
   return true;
 }

@@ -1,5 +1,4 @@
-import React from "react";
-import type { TabComponentProps } from "../types";
+import type { TabComponentProps } from '@/components/accessibility/types';
 
 /**
  * ValidationTab Component

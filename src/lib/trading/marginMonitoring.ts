@@ -25,10 +25,10 @@
 // ============================================================================
 
 export enum MarginStatus {
-  SAFE = "SAFE",
-  WARNING = "WARNING",
-  CRITICAL = "CRITICAL",
-  LIQUIDATION = "LIQUIDATION",
+  SAFE = 'SAFE',
+  WARNING = 'WARNING',
+  CRITICAL = 'CRITICAL',
+  LIQUIDATION = 'LIQUIDATION',
 }
 
 export interface MarginLevel {
@@ -53,7 +53,7 @@ export interface MarginCheckResult {
 
 export interface MarginAction {
   action: string;
-  urgency: "info" | "warning" | "critical" | "emergency";
+  urgency: 'info' | 'warning' | 'critical' | 'emergency';
   description: string;
   recommendation?: string;
 }
@@ -128,7 +128,7 @@ export function isLiquidationRisk(marginLevel: number): boolean {
  */
 export function calculateMarginLevel(
   accountEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): number {
   if (marginUsed <= 0) {
     // No margin used = infinite safety
@@ -144,7 +144,7 @@ export function calculateMarginLevel(
  */
 export function getMarginLevelInfo(
   accountEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): MarginLevel {
   const marginLevel = calculateMarginLevel(accountEquity, marginUsed);
   const status = getMarginStatus(marginLevel);
@@ -187,70 +187,70 @@ export function shouldEnforceCloseOnly(marginStatus: MarginStatus): boolean {
  * Get recommended actions based on margin status
  */
 export function getMarginActionRequired(
-  marginStatus: MarginStatus,
+  marginStatus: MarginStatus
 ): MarginAction[] {
   switch (marginStatus) {
     case MarginStatus.SAFE:
       return [
         {
-          action: "monitor",
-          urgency: "info",
-          description: "Your account is in good standing",
+          action: 'monitor',
+          urgency: 'info',
+          description: 'Your account is in good standing',
         },
       ];
 
     case MarginStatus.WARNING:
       return [
         {
-          action: "reduce_size",
-          urgency: "warning",
-          description: "Reduce position sizes to improve margin level",
-          recommendation: "Close some positions or reduce leverage",
+          action: 'reduce_size',
+          urgency: 'warning',
+          description: 'Reduce position sizes to improve margin level',
+          recommendation: 'Close some positions or reduce leverage',
         },
         {
-          action: "add_funds",
-          urgency: "warning",
-          description: "Add funds to increase available margin",
-          recommendation: "Deposit additional capital",
+          action: 'add_funds',
+          urgency: 'warning',
+          description: 'Add funds to increase available margin',
+          recommendation: 'Deposit additional capital',
         },
       ];
 
     case MarginStatus.CRITICAL:
       return [
         {
-          action: "close_positions",
-          urgency: "critical",
-          description: "Close positions immediately to avoid liquidation",
-          recommendation: "Close one or more positions",
+          action: 'close_positions',
+          urgency: 'critical',
+          description: 'Close positions immediately to avoid liquidation',
+          recommendation: 'Close one or more positions',
         },
         {
-          action: "add_funds_urgent",
-          urgency: "critical",
-          description: "Add funds urgently to prevent forced liquidation",
-          recommendation: "Deposit capital immediately",
+          action: 'add_funds_urgent',
+          urgency: 'critical',
+          description: 'Add funds urgently to prevent forced liquidation',
+          recommendation: 'Deposit capital immediately',
         },
         {
-          action: "order_restriction",
-          urgency: "critical",
+          action: 'order_restriction',
+          urgency: 'critical',
           description:
-            "New orders are restricted - close-only mode enabled for losing positions",
-          recommendation: "Can only close positions at this level",
+            'New orders are restricted - close-only mode enabled for losing positions',
+          recommendation: 'Can only close positions at this level',
         },
       ];
 
     case MarginStatus.LIQUIDATION:
       return [
         {
-          action: "force_liquidation",
-          urgency: "emergency",
-          description: "Liquidation may be forced automatically",
-          recommendation: "Close all positions immediately",
+          action: 'force_liquidation',
+          urgency: 'emergency',
+          description: 'Liquidation may be forced automatically',
+          recommendation: 'Close all positions immediately',
         },
         {
-          action: "emergency_deposit",
-          urgency: "emergency",
-          description: "Emergency deposit required to prevent liquidation",
-          recommendation: "Deposit funds now to stay solvent",
+          action: 'emergency_deposit',
+          urgency: 'emergency',
+          description: 'Emergency deposit required to prevent liquidation',
+          recommendation: 'Deposit funds now to stay solvent',
         },
       ];
   }
@@ -264,7 +264,7 @@ export function shouldCreateAlert(
   currentStatus: MarginStatus,
   previousStatus: MarginStatus | null,
   lastAlertTime: string | null,
-  minAlertIntervalMinutes = 5,
+  minAlertIntervalMinutes = 5
 ): boolean {
   // Always alert on status change
   if (!previousStatus || currentStatus !== previousStatus) {
@@ -288,12 +288,12 @@ export function shouldCreateAlert(
  */
 export function formatMarginStatus(status: MarginStatus): string {
   const labels: Record<MarginStatus, string> = {
-    [MarginStatus.SAFE]: "Safe",
-    [MarginStatus.WARNING]: "Warning",
-    [MarginStatus.CRITICAL]: "Critical",
-    [MarginStatus.LIQUIDATION]: "Liquidation Risk",
+    [MarginStatus.SAFE]: 'Safe',
+    [MarginStatus.WARNING]: 'Warning',
+    [MarginStatus.CRITICAL]: 'Critical',
+    [MarginStatus.LIQUIDATION]: 'Liquidation Risk',
   };
-  return labels[status] || "Unknown";
+  return labels[status] || 'Unknown';
 }
 
 /**
@@ -301,7 +301,7 @@ export function formatMarginStatus(status: MarginStatus): string {
  */
 export function formatMarginLevel(marginLevel: number): string {
   if (!isFinite(marginLevel)) {
-    return "∞%";
+    return '∞%';
   }
   return `${marginLevel.toFixed(2)}%`;
 }
@@ -311,12 +311,12 @@ export function formatMarginLevel(marginLevel: number): string {
  */
 export function getMarginStatusClass(status: MarginStatus): string {
   const classes: Record<MarginStatus, string> = {
-    [MarginStatus.SAFE]: "margin-safe",
-    [MarginStatus.WARNING]: "margin-warning",
-    [MarginStatus.CRITICAL]: "margin-critical",
-    [MarginStatus.LIQUIDATION]: "margin-liquidation",
+    [MarginStatus.SAFE]: 'margin-safe',
+    [MarginStatus.WARNING]: 'margin-warning',
+    [MarginStatus.CRITICAL]: 'margin-critical',
+    [MarginStatus.LIQUIDATION]: 'margin-liquidation',
   };
-  return classes[status] || "margin-unknown";
+  return classes[status] || 'margin-unknown';
 }
 
 /**
@@ -324,12 +324,12 @@ export function getMarginStatusClass(status: MarginStatus): string {
  */
 export function getMarginStatusColor(status: MarginStatus): string {
   const colors: Record<MarginStatus, string> = {
-    [MarginStatus.SAFE]: "green",
-    [MarginStatus.WARNING]: "yellow",
-    [MarginStatus.CRITICAL]: "orange",
-    [MarginStatus.LIQUIDATION]: "red",
+    [MarginStatus.SAFE]: 'green',
+    [MarginStatus.WARNING]: 'yellow',
+    [MarginStatus.CRITICAL]: 'orange',
+    [MarginStatus.LIQUIDATION]: 'red',
   };
-  return colors[status] || "gray";
+  return colors[status] || 'gray';
 }
 
 /**
@@ -337,12 +337,12 @@ export function getMarginStatusColor(status: MarginStatus): string {
  */
 export function getMarginStatusIcon(status: MarginStatus): string {
   const icons: Record<MarginStatus, string> = {
-    [MarginStatus.SAFE]: "✓",
-    [MarginStatus.WARNING]: "⚠",
-    [MarginStatus.CRITICAL]: "⚠",
-    [MarginStatus.LIQUIDATION]: "✕",
+    [MarginStatus.SAFE]: '✓',
+    [MarginStatus.WARNING]: '⚠',
+    [MarginStatus.CRITICAL]: '⚠',
+    [MarginStatus.LIQUIDATION]: '✕',
   };
-  return icons[status] || "?";
+  return icons[status] || '?';
 }
 
 /**
@@ -368,7 +368,7 @@ export function estimateTimeToLiquidation(marginLevel: number): number | null {
  */
 export function hasMarginThresholdCrossed(
   currentLevel: number,
-  previousLevel: number,
+  previousLevel: number
 ): boolean {
   const thresholds = [200, 100, 50];
 
@@ -394,22 +394,22 @@ export function hasMarginThresholdCrossed(
  */
 export function validateMarginInputs(
   accountEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): { valid: boolean; error?: string } {
-  if (typeof accountEquity !== "number" || !isFinite(accountEquity)) {
-    return { valid: false, error: "Invalid account equity" };
+  if (typeof accountEquity !== 'number' || !isFinite(accountEquity)) {
+    return { valid: false, error: 'Invalid account equity' };
   }
 
-  if (typeof marginUsed !== "number" || !isFinite(marginUsed)) {
-    return { valid: false, error: "Invalid margin used" };
+  if (typeof marginUsed !== 'number' || !isFinite(marginUsed)) {
+    return { valid: false, error: 'Invalid margin used' };
   }
 
   if (accountEquity < 0) {
-    return { valid: false, error: "Account equity cannot be negative" };
+    return { valid: false, error: 'Account equity cannot be negative' };
   }
 
   if (marginUsed < 0) {
-    return { valid: false, error: "Margin used cannot be negative" };
+    return { valid: false, error: 'Margin used cannot be negative' };
   }
 
   return { valid: true };
@@ -420,7 +420,7 @@ export function validateMarginInputs(
  */
 export function calculateFreeMargin(
   accountEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): number {
   return Math.max(0, accountEquity - marginUsed);
 }
@@ -441,7 +441,7 @@ export function calculateAvailableLeverage(marginLevel: number): number {
  */
 export function isAccountInDanger(
   accountEquity: number,
-  marginUsed: number,
+  marginUsed: number
 ): boolean {
   const marginLevel = calculateMarginLevel(accountEquity, marginUsed);
   return isLiquidationRisk(marginLevel) || isMarginCritical(marginLevel);

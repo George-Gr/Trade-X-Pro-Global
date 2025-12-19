@@ -6,12 +6,12 @@
  */
 
 export type OrderStatus =
-  | "pending"
-  | "open"
-  | "partially_filled"
-  | "filled"
-  | "cancelled"
-  | "rejected"
-  | "expired";
+  | 'pending'
+  | 'open'
+  | 'partially_filled'
+  | 'filled'
+  | 'cancelled'
+  | 'rejected'
+  | 'expired';
 
 // Business logic moved to orderUtils.ts for Fast Refresh compatibility.

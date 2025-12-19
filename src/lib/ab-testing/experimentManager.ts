@@ -1,4 +1,4 @@
-import { trackCustomMetric } from "../../hooks/useWebVitalsEnhanced";
+import { trackCustomMetric } from '../../hooks/useWebVitalsEnhanced';
 
 export interface ExperimentVariant {
   id: string;
@@ -12,15 +12,15 @@ export interface Experiment {
   id: string;
   name: string;
   description?: string;
-  status: "active" | "paused" | "completed";
+  status: 'active' | 'paused' | 'completed';
   variants: ExperimentVariant[];
   startDate: Date;
   endDate?: Date;
   targetMetric:
-    | "conversion_rate"
-    | "click_through_rate"
-    | "engagement_time"
-    | "bounce_rate";
+    | 'conversion_rate'
+    | 'click_through_rate'
+    | 'engagement_time'
+    | 'bounce_rate';
   confidence: number; // Statistical confidence threshold
   trafficAllocation: number; // Total traffic percentage to include in experiment
   metadata?: Record<string, unknown>;
@@ -34,7 +34,7 @@ export interface ExperimentResult {
   conversionRate: number;
   confidence: number;
   improvement: number; // % improvement over control
-  significance: "significant" | "not_significant" | "insufficient_data";
+  significance: 'significant' | 'not_significant' | 'insufficient_data';
 }
 
 export class ExperimentManager {
@@ -58,7 +58,7 @@ export class ExperimentManager {
 
   private loadFromStorage() {
     try {
-      const stored = localStorage.getItem("ab_experiments");
+      const stored = localStorage.getItem('ab_experiments');
       if (stored) {
         const data = JSON.parse(stored);
         Object.entries(data).forEach(([id, experiment]) => {
@@ -66,7 +66,7 @@ export class ExperimentManager {
         });
       }
     } catch (error) {
-      console.warn("Failed to load experiments from storage:", error);
+      console.warn('Failed to load experiments from storage:', error);
     }
   }
 
@@ -76,34 +76,34 @@ export class ExperimentManager {
       this.experiments.forEach((experiment, id) => {
         data[id] = experiment;
       });
-      localStorage.setItem("ab_experiments", JSON.stringify(data));
+      localStorage.setItem('ab_experiments', JSON.stringify(data));
     } catch (error) {
-      console.warn("Failed to save experiments to storage:", error);
+      console.warn('Failed to save experiments to storage:', error);
     }
   }
 
   private setupEventListeners() {
     // Listen for custom events to track conversions
-    document.addEventListener("ab-test-conversion", (event: Event) => {
+    document.addEventListener('ab-test-conversion', (event: Event) => {
       const customEvent = event as CustomEvent<{
         experimentId: string;
         variantId: string;
       }>;
       this.trackConversion(
         customEvent.detail.experimentId,
-        customEvent.detail.variantId,
+        customEvent.detail.variantId
       );
     });
 
     // Listen for page visibility changes to track engagement
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         this.trackEngagement();
       }
     });
   }
 
-  createExperiment(experiment: Omit<Experiment, "startDate">): string {
+  createExperiment(experiment: Omit<Experiment, 'startDate'>): string {
     const id = `exp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const fullExperiment: Experiment = {
       ...experiment,
@@ -115,14 +115,14 @@ export class ExperimentManager {
     this.saveToStorage();
 
     // Track experiment creation
-    trackCustomMetric("experiment_created", 1, "A/B Testing");
+    trackCustomMetric('experiment_created', 1, 'A/B Testing');
 
     return id;
   }
 
   getVariant(experimentId: string, userId: string): ExperimentVariant | null {
     const experiment = this.experiments.get(experimentId);
-    if (!experiment || experiment.status !== "active") {
+    if (!experiment || experiment.status !== 'active') {
       return null;
     }
 
@@ -146,7 +146,7 @@ export class ExperimentManager {
 
   private selectWeightedVariant(
     variants: ExperimentVariant[],
-    userId: string,
+    userId: string
   ): ExperimentVariant {
     // Use user ID for consistent assignment
     const hash = this.hashString(userId);
@@ -176,7 +176,7 @@ export class ExperimentManager {
 
   trackConversion(experimentId: string, variantId: string) {
     const experiment = this.experiments.get(experimentId);
-    if (!experiment || experiment.status !== "active") {
+    if (!experiment || experiment.status !== 'active') {
       return;
     }
 
@@ -189,7 +189,7 @@ export class ExperimentManager {
     conversions.set(variantId, (conversions.get(variantId) || 0) + 1);
 
     // Track conversion event
-    trackCustomMetric(`${experimentId}_conversion`, 1, "A/B Testing");
+    trackCustomMetric(`${experimentId}_conversion`, 1, 'A/B Testing');
 
     // Check for statistical significance
     this.checkSignificance(experimentId);
@@ -209,12 +209,12 @@ export class ExperimentManager {
     const startTime = performance.now();
 
     window.addEventListener(
-      "beforeunload",
+      'beforeunload',
       () => {
         const timeSpent = performance.now() - startTime;
-        trackCustomMetric("engagement_time", timeSpent, "User Behavior");
+        trackCustomMetric('engagement_time', timeSpent, 'User Behavior');
       },
-      { once: true },
+      { once: true }
     );
   }
 
@@ -243,17 +243,17 @@ export class ExperimentManager {
         conversionRate,
         confidence: this.calculateConfidence(
           variantConversions,
-          variantParticipants,
+          variantParticipants
         ),
         improvement: 0, // Will be calculated relative to control
-        significance: "not_significant",
+        significance: 'not_significant',
       };
     });
   }
 
   private calculateConfidence(
     conversions: number,
-    participants: number,
+    participants: number
   ): number {
     if (participants === 0) return 0;
 
@@ -269,8 +269,8 @@ export class ExperimentManager {
     const results = this.getResults(experimentId);
     const control = results.find(
       (r) =>
-        r.variantName.toLowerCase().includes("control") ||
-        r.variantName.toLowerCase().includes("a"),
+        r.variantName.toLowerCase().includes('control') ||
+        r.variantName.toLowerCase().includes('a')
     );
 
     if (!control) return;
@@ -284,37 +284,37 @@ export class ExperimentManager {
           100;
         result.significance = this.determineSignificance(
           result.confidence,
-          result.improvement,
+          result.improvement
         );
       }
     });
 
     // If significant improvement found, could trigger auto-pause or notification
     const significantVariant = results.find(
-      (r) => r.significance === "significant",
+      (r) => r.significance === 'significant'
     );
     if (significantVariant) {
-      trackCustomMetric("significant_result", 1, "A/B Testing");
+      trackCustomMetric('significant_result', 1, 'A/B Testing');
     }
   }
 
   private determineSignificance(
     confidence: number,
-    improvement: number,
-  ): "significant" | "not_significant" | "insufficient_data" {
+    improvement: number
+  ): 'significant' | 'not_significant' | 'insufficient_data' {
     if (confidence < 80 || Math.abs(improvement) < 5) {
-      return "insufficient_data";
+      return 'insufficient_data';
     }
 
     return Math.abs(improvement) > 10 && confidence > 90
-      ? "significant"
-      : "not_significant";
+      ? 'significant'
+      : 'not_significant';
   }
 
   pauseExperiment(experimentId: string) {
     const experiment = this.experiments.get(experimentId);
     if (experiment) {
-      experiment.status = "paused";
+      experiment.status = 'paused';
       this.saveToStorage();
     }
   }
@@ -322,7 +322,7 @@ export class ExperimentManager {
   resumeExperiment(experimentId: string) {
     const experiment = this.experiments.get(experimentId);
     if (experiment) {
-      experiment.status = "active";
+      experiment.status = 'active';
       this.saveToStorage();
     }
   }
@@ -330,7 +330,7 @@ export class ExperimentManager {
   completeExperiment(experimentId: string) {
     const experiment = this.experiments.get(experimentId);
     if (experiment) {
-      experiment.status = "completed";
+      experiment.status = 'completed';
       experiment.endDate = new Date();
       this.saveToStorage();
 
@@ -355,19 +355,19 @@ export class ExperimentManager {
         totalParticipants: results.reduce((sum, r) => sum + r.participants, 0),
         totalConversions: results.reduce((sum, r) => sum + r.conversions, 0),
         bestPerformingVariant: results.reduce((best, current) =>
-          current.conversionRate > best.conversionRate ? current : best,
+          current.conversionRate > best.conversionRate ? current : best
         ),
       },
     };
 
     // Store report (in real implementation, would send to analytics service)
-    console.warn("Experiment Report:", report);
-    trackCustomMetric("experiment_completed", 1, "A/B Testing");
+    console.warn('Experiment Report:', report);
+    trackCustomMetric('experiment_completed', 1, 'A/B Testing');
   }
 
   getActiveExperiments(): Experiment[] {
     return Array.from(this.experiments.values()).filter(
-      (exp) => exp.status === "active",
+      (exp) => exp.status === 'active'
     );
   }
 

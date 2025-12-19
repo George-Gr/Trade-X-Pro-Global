@@ -7,15 +7,15 @@ import type {
   PortfolioMetrics,
   DrawdownAnalysis,
   AssetClassMetrics,
-} from "@/lib/risk/portfolioMetrics";
+} from '@/lib/risk/portfolioMetrics';
 import type {
   RiskMetrics,
   PortfolioRiskAssessment,
-} from "@/lib/risk/riskMetrics";
+} from '@/lib/risk/riskMetrics';
 import type {
   ConcentrationAnalysis,
   StressTestResults,
-} from "@/lib/risk/positionAnalysis";
+} from '@/lib/risk/positionAnalysis';
 
 /**
  * Export risk dashboard data to CSV format
@@ -27,20 +27,20 @@ export function exportRiskDashboardToCSV(
   assetClassMetrics: AssetClassMetrics,
   concentration: ConcentrationAnalysis | null,
   stressTests: StressTestResults | null,
-  fileName: string = "risk-dashboard.csv",
+  fileName: string = 'risk-dashboard.csv'
 ): void {
   const rows: string[] = [];
   const timestamp = new Date().toISOString();
 
   // Header
-  rows.push("Risk Dashboard Export");
+  rows.push('Risk Dashboard Export');
   rows.push(`Generated: ${timestamp}`);
-  rows.push("");
+  rows.push('');
 
   // Risk Metrics Section
   if (riskMetrics) {
-    rows.push("RISK METRICS");
-    rows.push("Metric,Value");
+    rows.push('RISK METRICS');
+    rows.push('Metric,Value');
     rows.push(`Margin Level,${riskMetrics.currentMarginLevel.toFixed(2)}%`);
     rows.push(`Free Margin,$${riskMetrics.freeMargin.toFixed(2)}`);
     rows.push(`Used Margin,$${riskMetrics.usedMargin.toFixed(2)}`);
@@ -49,31 +49,31 @@ export function exportRiskDashboardToCSV(
     rows.push(`Risk Level,${riskMetrics.riskLevel.toUpperCase()}`);
     rows.push(`Capital at Risk,$${riskMetrics.capitalAtRisk.toFixed(2)}`);
     rows.push(
-      `Capital at Risk %,${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`,
+      `Capital at Risk %,${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`
     );
-    rows.push("");
+    rows.push('');
   }
 
   // Portfolio Metrics Section
   if (portfolioMetrics) {
-    rows.push("PORTFOLIO METRICS");
-    rows.push("Metric,Value");
+    rows.push('PORTFOLIO METRICS');
+    rows.push('Metric,Value');
     rows.push(`Total Capital,$${portfolioMetrics.totalCapital.toFixed(2)}`);
     rows.push(`Current Equity,$${portfolioMetrics.currentEquity.toFixed(2)}`);
     rows.push(
-      `Total Realized P&L,$${portfolioMetrics.totalRealizedPnL.toFixed(2)}`,
+      `Total Realized P&L,$${portfolioMetrics.totalRealizedPnL.toFixed(2)}`
     );
     rows.push(
-      `Total Unrealized P&L,$${portfolioMetrics.totalUnrealizedPnL.toFixed(2)}`,
+      `Total Unrealized P&L,$${portfolioMetrics.totalUnrealizedPnL.toFixed(2)}`
     );
     rows.push(`Total P&L,$${portfolioMetrics.totalPnL.toFixed(2)}`);
     rows.push(`Total P&L %,${portfolioMetrics.totalPnLPercentage.toFixed(2)}%`);
     rows.push(`ROI,${portfolioMetrics.roi.toFixed(2)}%`);
-    rows.push("");
+    rows.push('');
 
     // Trade Statistics
-    rows.push("TRADE STATISTICS");
-    rows.push("Metric,Value");
+    rows.push('TRADE STATISTICS');
+    rows.push('Metric,Value');
     rows.push(`Total Trades,${portfolioMetrics.totalTrades}`);
     rows.push(`Profitable Trades,${portfolioMetrics.profitableTrades}`);
     rows.push(`Losing Trades,${portfolioMetrics.losingTrades}`);
@@ -84,85 +84,85 @@ export function exportRiskDashboardToCSV(
     rows.push(`Average Win,$${portfolioMetrics.averageWin.toFixed(2)}`);
     rows.push(`Average Loss,$${portfolioMetrics.averageLoss.toFixed(2)}`);
     rows.push(`Expectancy,$${portfolioMetrics.expectancy.toFixed(2)}`);
-    rows.push("");
+    rows.push('');
 
     // Drawdown Analysis
     if (drawdownAnalysis) {
-      rows.push("DRAWDOWN ANALYSIS");
-      rows.push("Metric,Value");
+      rows.push('DRAWDOWN ANALYSIS');
+      rows.push('Metric,Value');
       rows.push(
-        `Current Drawdown,$${drawdownAnalysis.currentDrawdown.toFixed(2)}`,
+        `Current Drawdown,$${drawdownAnalysis.currentDrawdown.toFixed(2)}`
       );
       rows.push(
-        `Current Drawdown %,${drawdownAnalysis.drawdownPercentage.toFixed(2)}%`,
+        `Current Drawdown %,${drawdownAnalysis.drawdownPercentage.toFixed(2)}%`
       );
       rows.push(`Max Drawdown,$${drawdownAnalysis.maxDrawdown.toFixed(2)}`);
       rows.push(
-        `Max Drawdown %,${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%`,
+        `Max Drawdown %,${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%`
       );
       rows.push(`Peak Equity,$${drawdownAnalysis.peakEquity.toFixed(2)}`);
       rows.push(`Trough Equity,$${drawdownAnalysis.troughEquity.toFixed(2)}`);
-      rows.push("");
+      rows.push('');
     }
   }
 
   // Asset Class Metrics Section
   if (Object.keys(assetClassMetrics).length > 0) {
-    rows.push("ASSET CLASS BREAKDOWN");
+    rows.push('ASSET CLASS BREAKDOWN');
     rows.push(
-      "Asset Class,Positions,Total Value,Unrealized P&L,Portfolio %,P&L %",
+      'Asset Class,Positions,Total Value,Unrealized P&L,Portfolio %,P&L %'
     );
     for (const [assetClass, metrics] of Object.entries(assetClassMetrics)) {
       rows.push(
-        `${assetClass},${metrics.positions},$${metrics.totalValue.toFixed(2)},$${metrics.unrealizedPnL.toFixed(2)},${metrics.percentageOfPortfolio.toFixed(2)}%,${metrics.pnlPercentage.toFixed(2)}%`,
+        `${assetClass},${metrics.positions},$${metrics.totalValue.toFixed(2)},$${metrics.unrealizedPnL.toFixed(2)},${metrics.percentageOfPortfolio.toFixed(2)}%,${metrics.pnlPercentage.toFixed(2)}%`
       );
     }
-    rows.push("");
+    rows.push('');
   }
 
   // Concentration Analysis Section
   if (concentration && concentration.totalPositions > 0) {
-    rows.push("TOP POSITIONS BY CONCENTRATION");
+    rows.push('TOP POSITIONS BY CONCENTRATION');
     rows.push(
-      "Symbol,Asset Class,Concentration %,Position Value,Unrealized P&L,Risk Level",
+      'Symbol,Asset Class,Concentration %,Position Value,Unrealized P&L,Risk Level'
     );
     for (const position of concentration.topPositions) {
       rows.push(
-        `${position.symbol},${position.assetClass},${position.percentageOfPortfolio.toFixed(2)}%,$${position.positionValue.toFixed(2)},$${position.unrealizedPnL.toFixed(2)},${position.risk}`,
+        `${position.symbol},${position.assetClass},${position.percentageOfPortfolio.toFixed(2)}%,$${position.positionValue.toFixed(2)},$${position.unrealizedPnL.toFixed(2)},${position.risk}`
       );
     }
-    rows.push("");
+    rows.push('');
 
-    rows.push("CONCENTRATION METRICS");
-    rows.push("Metric,Value");
+    rows.push('CONCENTRATION METRICS');
+    rows.push('Metric,Value');
     rows.push(`Total Positions,${concentration.totalPositions}`);
     rows.push(`Herfindahl Index,${concentration.herfindahlIndex.toFixed(2)}`);
     rows.push(`Concentration Level,${concentration.concentrationLevel}`);
     rows.push(`Diversification Score,${concentration.diversificationScore}%`);
-    rows.push("");
+    rows.push('');
   }
 
   // Stress Test Results Section
   if (stressTests && stressTests.scenarios.length > 0) {
-    rows.push("STRESS TEST RESULTS");
-    rows.push("Price Movement %,Estimated Loss,$,Margin Level,Risk Level");
+    rows.push('STRESS TEST RESULTS');
+    rows.push('Price Movement %,Estimated Loss,$,Margin Level,Risk Level');
     for (const scenario of stressTests.scenarios) {
       rows.push(
-        `${scenario.priceMovement}%,$${scenario.estimatedLoss.toFixed(2)},${scenario.marginLevel.toFixed(2)}%,${scenario.riskLevel}`,
+        `${scenario.priceMovement}%,$${scenario.estimatedLoss.toFixed(2)},${scenario.marginLevel.toFixed(2)}%,${scenario.riskLevel}`
       );
     }
-    rows.push("");
+    rows.push('');
 
-    rows.push("STRESS TEST SUMMARY");
-    rows.push("Metric,Value");
+    rows.push('STRESS TEST SUMMARY');
+    rows.push('Metric,Value');
     rows.push(`Max Possible Loss,$${stressTests.maxPossibleLoss.toFixed(2)}`);
     rows.push(`Survival Rate,${stressTests.survivalRate.toFixed(2)}%`);
-    rows.push("");
+    rows.push('');
   }
 
   // Download CSV
-  const csvContent = rows.join("\n");
-  downloadFile(csvContent, fileName, "text/csv");
+  const csvContent = rows.join('\n');
+  downloadFile(csvContent, fileName, 'text/csv');
 }
 
 /**
@@ -176,150 +176,150 @@ export function exportRiskDashboardToPDF(
   assetClassMetrics: AssetClassMetrics,
   concentration: ConcentrationAnalysis | null,
   stressTests: StressTestResults | null,
-  fileName: string = "risk-dashboard.txt",
+  fileName: string = 'risk-dashboard.txt'
 ): void {
   const lines: string[] = [];
   const timestamp = new Date().toISOString();
   const formattedDate = new Date().toLocaleDateString();
 
   // Header
-  lines.push("═".repeat(80));
-  lines.push("RISK DASHBOARD REPORT".padEnd(40) + formattedDate.padStart(40));
-  lines.push("═".repeat(80));
-  lines.push("");
+  lines.push('═'.repeat(80));
+  lines.push('RISK DASHBOARD REPORT'.padEnd(40) + formattedDate.padStart(40));
+  lines.push('═'.repeat(80));
+  lines.push('');
 
   // Risk Metrics Section
   if (riskMetrics) {
-    lines.push("RISK METRICS".padEnd(40) + "─".repeat(40));
+    lines.push('RISK METRICS'.padEnd(40) + '─'.repeat(40));
     lines.push(
       `  Margin Level: ${riskMetrics.currentMarginLevel.toFixed(2)}%`.padEnd(
-        50,
-      ) + `Risk Level: ${riskMetrics.riskLevel.toUpperCase()}`,
+        50
+      ) + `Risk Level: ${riskMetrics.riskLevel.toUpperCase()}`
     );
     lines.push(
       `  Free Margin: $${riskMetrics.freeMargin.toFixed(2)}`.padEnd(50) +
-        `Capital at Risk: $${riskMetrics.capitalAtRisk.toFixed(2)}`,
+        `Capital at Risk: $${riskMetrics.capitalAtRisk.toFixed(2)}`
     );
     lines.push(
       `  Used Margin: $${riskMetrics.usedMargin.toFixed(2)}`.padEnd(50) +
-        `Capital at Risk %: ${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`,
+        `Capital at Risk %: ${riskMetrics.capitalAtRiskPercentage.toFixed(2)}%`
     );
-    lines.push("");
+    lines.push('');
   }
 
   // Portfolio Performance Section
   if (portfolioMetrics) {
-    lines.push("PORTFOLIO PERFORMANCE".padEnd(40) + "─".repeat(40));
+    lines.push('PORTFOLIO PERFORMANCE'.padEnd(40) + '─'.repeat(40));
     lines.push(
       `  Current Equity: $${portfolioMetrics.currentEquity.toFixed(2)}`.padEnd(
-        50,
-      ) + `Total Capital: $${portfolioMetrics.totalCapital.toFixed(2)}`,
+        50
+      ) + `Total Capital: $${portfolioMetrics.totalCapital.toFixed(2)}`
     );
     lines.push(
       `  Total P&L: $${portfolioMetrics.totalPnL.toFixed(2)}`.padEnd(50) +
-        `P&L %: ${portfolioMetrics.totalPnLPercentage.toFixed(2)}%`,
+        `P&L %: ${portfolioMetrics.totalPnLPercentage.toFixed(2)}%`
     );
     lines.push(
       `  ROI: ${portfolioMetrics.roi.toFixed(2)}%`.padEnd(50) +
-        `Total Trades: ${portfolioMetrics.totalTrades}`,
+        `Total Trades: ${portfolioMetrics.totalTrades}`
     );
-    lines.push("");
+    lines.push('');
 
     // Trade Statistics
-    lines.push("TRADE STATISTICS".padEnd(40) + "─".repeat(40));
+    lines.push('TRADE STATISTICS'.padEnd(40) + '─'.repeat(40));
     lines.push(
       `  Win Rate: ${portfolioMetrics.winRate.toFixed(2)}%`.padEnd(50) +
-        `Profit Factor: ${portfolioMetrics.profitFactor.toFixed(2)}`,
+        `Profit Factor: ${portfolioMetrics.profitFactor.toFixed(2)}`
     );
     lines.push(
       `  Largest Win: $${portfolioMetrics.largestWin.toFixed(2)}`.padEnd(50) +
-        `Largest Loss: $${portfolioMetrics.largestLoss.toFixed(2)}`,
+        `Largest Loss: $${portfolioMetrics.largestLoss.toFixed(2)}`
     );
     lines.push(
       `  Average Win: $${portfolioMetrics.averageWin.toFixed(2)}`.padEnd(50) +
-        `Average Loss: $${portfolioMetrics.averageLoss.toFixed(2)}`,
+        `Average Loss: $${portfolioMetrics.averageLoss.toFixed(2)}`
     );
-    lines.push("");
+    lines.push('');
 
     // Drawdown
     if (drawdownAnalysis) {
-      lines.push("DRAWDOWN ANALYSIS".padEnd(40) + "─".repeat(40));
+      lines.push('DRAWDOWN ANALYSIS'.padEnd(40) + '─'.repeat(40));
       lines.push(
-        `  Current Drawdown: $${drawdownAnalysis.currentDrawdown.toFixed(2)} (${drawdownAnalysis.drawdownPercentage.toFixed(2)}%)`,
+        `  Current Drawdown: $${drawdownAnalysis.currentDrawdown.toFixed(2)} (${drawdownAnalysis.drawdownPercentage.toFixed(2)}%)`
       );
       lines.push(
-        `  Max Drawdown: $${drawdownAnalysis.maxDrawdown.toFixed(2)} (${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%)`,
+        `  Max Drawdown: $${drawdownAnalysis.maxDrawdown.toFixed(2)} (${drawdownAnalysis.maxDrawdownPercentage.toFixed(2)}%)`
       );
       lines.push(
         `  Peak Equity: $${drawdownAnalysis.peakEquity.toFixed(2)}`.padEnd(50) +
-          `Trough Equity: $${drawdownAnalysis.troughEquity.toFixed(2)}`,
+          `Trough Equity: $${drawdownAnalysis.troughEquity.toFixed(2)}`
       );
-      lines.push("");
+      lines.push('');
     }
   }
 
   // Asset Class Breakdown
   if (Object.keys(assetClassMetrics).length > 0) {
-    lines.push("ASSET CLASS ALLOCATION".padEnd(40) + "─".repeat(40));
+    lines.push('ASSET CLASS ALLOCATION'.padEnd(40) + '─'.repeat(40));
     for (const [assetClass, metrics] of Object.entries(assetClassMetrics)) {
       lines.push(
         `  ${assetClass}:`.padEnd(50) +
-          `${metrics.percentageOfPortfolio.toFixed(1)}% (${metrics.positions} position${metrics.positions > 1 ? "s" : ""})`,
+          `${metrics.percentageOfPortfolio.toFixed(1)}% (${metrics.positions} position${metrics.positions > 1 ? 's' : ''})`
       );
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Concentration Analysis
   if (concentration && concentration.totalPositions > 0) {
-    lines.push("CONCENTRATION ANALYSIS".padEnd(40) + "─".repeat(40));
+    lines.push('CONCENTRATION ANALYSIS'.padEnd(40) + '─'.repeat(40));
     lines.push(
       `  Diversification Score: ${concentration.diversificationScore}%`.padEnd(
-        50,
-      ) + `Concentration Level: ${concentration.concentrationLevel}`,
+        50
+      ) + `Concentration Level: ${concentration.concentrationLevel}`
     );
     lines.push(
       `  Total Positions: ${concentration.totalPositions}`.padEnd(50) +
-        `Herfindahl Index: ${concentration.herfindahlIndex.toFixed(2)}`,
+        `Herfindahl Index: ${concentration.herfindahlIndex.toFixed(2)}`
     );
-    lines.push("");
+    lines.push('');
 
     if (concentration.topPositions.length > 0) {
-      lines.push("  Top Positions:");
+      lines.push('  Top Positions:');
       for (const position of concentration.topPositions.slice(0, 5)) {
         lines.push(
-          `    • ${position.symbol} (${position.assetClass}): ${position.percentageOfPortfolio.toFixed(2)}% - ${position.risk} risk`,
+          `    • ${position.symbol} (${position.assetClass}): ${position.percentageOfPortfolio.toFixed(2)}% - ${position.risk} risk`
         );
       }
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Stress Test Summary
   if (stressTests) {
-    lines.push("STRESS TEST SUMMARY".padEnd(40) + "─".repeat(40));
+    lines.push('STRESS TEST SUMMARY'.padEnd(40) + '─'.repeat(40));
     lines.push(
       `  Max Possible Loss: $${stressTests.maxPossibleLoss.toFixed(2)}`.padEnd(
-        50,
-      ) + `Survival Rate: ${stressTests.survivalRate.toFixed(2)}%`,
+        50
+      ) + `Survival Rate: ${stressTests.survivalRate.toFixed(2)}%`
     );
     lines.push(
       `  Most Severe Scenario: ${stressTests.mostSevereScenario.name}`.padEnd(
-        50,
+        50
       ) +
-        `Est. Loss: $${stressTests.mostSevereScenario.estimatedLoss.toFixed(2)}`,
+        `Est. Loss: $${stressTests.mostSevereScenario.estimatedLoss.toFixed(2)}`
     );
-    lines.push("");
+    lines.push('');
   }
 
   // Footer
-  lines.push("═".repeat(80));
+  lines.push('═'.repeat(80));
   lines.push(`Generated: ${timestamp}`);
-  lines.push("═".repeat(80));
+  lines.push('═'.repeat(80));
 
   // Download as text file (can be printed to PDF from browser)
-  const content = lines.join("\n");
-  downloadFile(content, fileName, "text/plain");
+  const content = lines.join('\n');
+  downloadFile(content, fileName, 'text/plain');
 }
 
 /**
@@ -331,7 +331,7 @@ export function generateRiskDashboardHTMLReport(
   drawdownAnalysis: DrawdownAnalysis | null,
   assetClassMetrics: AssetClassMetrics,
   concentration: ConcentrationAnalysis | null,
-  stressTests: StressTestResults | null,
+  stressTests: StressTestResults | null
 ): string {
   const timestamp = new Date().toISOString();
   const formattedDate = new Date().toLocaleDateString();
@@ -488,7 +488,7 @@ export function generateRiskDashboardHTMLReport(
             </div>
             <div class="metric-card">
                 <div class="metric-label">Total P&L</div>
-                <div class="metric-value" style="color: ${portfolioMetrics.totalPnL >= 0 ? "#28a745" : "#dc3545"}">
+                <div class="metric-value" style="color: ${portfolioMetrics.totalPnL >= 0 ? '#28a745' : '#dc3545'}">
                     $${portfolioMetrics.totalPnL.toFixed(2)}
                 </div>
             </div>
@@ -575,7 +575,7 @@ export function generateRiskDashboardHTMLReport(
             </div>
             <div class="metric-card">
                 <div class="metric-label">Recovery Status</div>
-                <div class="metric-value">${drawdownAnalysis.isRecovering ? "Recovering" : "Drawdown"}</div>
+                <div class="metric-value">${drawdownAnalysis.isRecovering ? 'Recovering' : 'Drawdown'}</div>
             </div>
         </div>
     </div>
@@ -605,7 +605,7 @@ export function generateRiskDashboardHTMLReport(
                 <td>$${metrics.totalValue.toFixed(2)}</td>
                 <td>${metrics.percentageOfPortfolio.toFixed(2)}%</td>
                 <td>$${metrics.unrealizedPnL.toFixed(2)}</td>
-                <td style="color: ${metrics.pnlPercentage >= 0 ? "#28a745" : "#dc3545"}">
+                <td style="color: ${metrics.pnlPercentage >= 0 ? '#28a745' : '#dc3545'}">
                     ${metrics.pnlPercentage.toFixed(2)}%
                 </td>
             </tr>
@@ -635,11 +635,11 @@ export function generateRiskDashboardHTMLReport(
 function downloadFile(
   content: string,
   fileName: string,
-  mimeType: string,
+  mimeType: string
 ): void {
   const blob = new Blob([content], { type: mimeType });
   const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = url;
   link.download = fileName;
   document.body.appendChild(link);

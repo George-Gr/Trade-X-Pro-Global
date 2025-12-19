@@ -13,43 +13,43 @@
  * - IMPLEMENTATION_TASKS_DETAILED.md TASK 1.1.4
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Order types supported by the platform
  */
 export enum OrderType {
-  Market = "market",
-  Limit = "limit",
-  Stop = "stop",
-  StopLimit = "stop_limit",
+  Market = 'market',
+  Limit = 'limit',
+  Stop = 'stop',
+  StopLimit = 'stop_limit',
 }
 
 /**
  * Order execution sides
  */
 export enum OrderSide {
-  Buy = "buy",
-  Sell = "sell",
+  Buy = 'buy',
+  Sell = 'sell',
 }
 
 /**
  * Order execution status
  */
 export enum OrderStatus {
-  Pending = "pending",
-  Filled = "filled",
-  Partial = "partial",
-  Cancelled = "cancelled",
-  Rejected = "rejected",
+  Pending = 'pending',
+  Filled = 'filled',
+  Partial = 'partial',
+  Cancelled = 'cancelled',
+  Rejected = 'rejected',
 }
 
 /**
  * Position status
  */
 export enum PositionStatus {
-  Open = "open",
-  Closed = "closed",
+  Open = 'open',
+  Closed = 'closed',
 }
 
 /**
@@ -57,8 +57,8 @@ export enum PositionStatus {
  */
 export const OrderInputSchema = z.object({
   symbol: z.string().min(1),
-  order_type: z.enum(["market", "limit", "stop", "stop_limit"]),
-  side: z.enum(["buy", "sell"]),
+  order_type: z.enum(['market', 'limit', 'stop', 'stop_limit']),
+  side: z.enum(['buy', 'sell']),
   quantity: z.number().positive(),
   price: z.number().positive().optional(), // For limit orders
   stop_price: z.number().positive().optional(), // For stop/stop-limit orders
@@ -112,7 +112,7 @@ export interface MarketSnapshot {
   bid: number;
   ask: number;
   volatility: number;
-  liquidity: "very_high" | "high" | "medium" | "low";
+  liquidity: 'very_high' | 'high' | 'medium' | 'low';
   timestamp: Date;
 }
 
@@ -123,10 +123,10 @@ export interface MarketSnapshot {
  * @returns Matching result
  */
 export function checkMarketOrderMatch(
-  condition: OrderCondition,
+  condition: OrderCondition
 ): MatchingResult {
   if (condition.orderType !== OrderType.Market) {
-    return { matched: false, reason: "Not a market order" };
+    return { matched: false, reason: 'Not a market order' };
   }
 
   return {
@@ -148,10 +148,10 @@ export function checkMarketOrderMatch(
  */
 export function checkLimitOrderMatch(
   condition: OrderCondition,
-  market: MarketSnapshot,
+  market: MarketSnapshot
 ): MatchingResult {
   if (!condition.limitPrice) {
-    return { matched: false, reason: "Limit price not specified" };
+    return { matched: false, reason: 'Limit price not specified' };
   }
 
   const shouldExecute =
@@ -187,10 +187,10 @@ export function checkLimitOrderMatch(
 export function checkStopOrderTrigger(
   condition: OrderCondition,
   market: MarketSnapshot,
-  previousPrice: number,
+  previousPrice: number
 ): MatchingResult {
   if (!condition.priceLevel) {
-    return { matched: false, reason: "Stop price not specified" };
+    return { matched: false, reason: 'Stop price not specified' };
   }
 
   // Check if price has touched stop level
@@ -208,13 +208,13 @@ export function checkStopOrderTrigger(
   const shouldTrigger = currentPriceTouched && !previousPriceTouched;
 
   if (!shouldTrigger) {
-    return { matched: false, reason: "Stop level not touched" };
+    return { matched: false, reason: 'Stop level not touched' };
   }
 
   return {
     matched: true,
     shouldTrigger: true,
-    reason: "Stop order triggered",
+    reason: 'Stop order triggered',
   };
 }
 
@@ -232,20 +232,20 @@ export function checkStopOrderTrigger(
 export function checkStopLimitOrderMatch(
   condition: OrderCondition,
   market: MarketSnapshot,
-  previousPrice: number,
+  previousPrice: number
 ): MatchingResult {
   if (!condition.priceLevel || !condition.limitPrice) {
-    return { matched: false, reason: "Stop or limit price not specified" };
+    return { matched: false, reason: 'Stop or limit price not specified' };
   }
 
   // First: check if stop is triggered
   const stopTriggerResult = checkStopOrderTrigger(
     condition,
     market,
-    previousPrice,
+    previousPrice
   );
   if (!stopTriggerResult.shouldTrigger) {
-    return { matched: false, reason: "Stop level not triggered" };
+    return { matched: false, reason: 'Stop level not triggered' };
   }
 
   // Second: check if limit condition is met
@@ -276,10 +276,10 @@ export function checkTrailingStopOrderTrigger(
   market: MarketSnapshot,
   highestPrice: number,
   lowestPrice: number,
-  previousPrice: number,
+  previousPrice: number
 ): MatchingResult {
   if (!condition.trailingAmount) {
-    return { matched: false, reason: "Trailing amount not specified" };
+    return { matched: false, reason: 'Trailing amount not specified' };
   }
 
   const shouldTrigger =
@@ -290,13 +290,13 @@ export function checkTrailingStopOrderTrigger(
         previousPrice < lowestPrice + condition.trailingAmount;
 
   if (!shouldTrigger) {
-    return { matched: false, reason: "Price has not triggered trailing stop" };
+    return { matched: false, reason: 'Price has not triggered trailing stop' };
   }
 
   return {
     matched: true,
     shouldTrigger: true,
-    reason: "Trailing stop triggered",
+    reason: 'Trailing stop triggered',
   };
 }
 
@@ -311,7 +311,7 @@ export function checkTrailingStopOrderTrigger(
 export function calculateExecutionPrice(
   marketPrice: number,
   side: OrderSide,
-  slippageAmount: number,
+  slippageAmount: number
 ): number {
   if (side === OrderSide.Buy) {
     return marketPrice + slippageAmount; // Buy slips up
@@ -331,7 +331,7 @@ export function calculateExecutionPrice(
 export function shouldOrderExecute(
   orderCondition: OrderCondition,
   market: MarketSnapshot,
-  previousPrice: number = market.currentPrice,
+  previousPrice: number = market.currentPrice
 ): MatchingResult {
   switch (orderCondition.orderType) {
     case OrderType.Market:
@@ -347,7 +347,7 @@ export function shouldOrderExecute(
       return checkStopLimitOrderMatch(orderCondition, market, previousPrice);
 
     default:
-      return { matched: false, reason: "Unknown order type" };
+      return { matched: false, reason: 'Unknown order type' };
   }
 }
 
@@ -369,7 +369,7 @@ export function calculatePostExecutionBalance(
   quantity: number,
   side: OrderSide,
   commission: number,
-  currentBalance: number,
+  currentBalance: number
 ): number {
   const orderCost = executionPrice * quantity;
   const totalCost = orderCost + commission;
@@ -393,7 +393,7 @@ export function calculatePostExecutionBalance(
 export function calculateMarginRequired(
   quantity: number,
   entryPrice: number,
-  leverage: number,
+  leverage: number
 ): number {
   const positionValue = quantity * entryPrice;
   return positionValue / leverage;
@@ -412,7 +412,7 @@ export function calculateUnrealizedPnL(
   quantity: number,
   entryPrice: number,
   currentPrice: number,
-  side: OrderSide,
+  side: OrderSide
 ): number {
   const priceDifference = currentPrice - entryPrice;
 
@@ -434,14 +434,14 @@ export function calculateUnrealizedPnL(
 export function validateExecutionPreConditions(
   balance: number,
   marginRequired: number,
-  freeMargin: number,
+  freeMargin: number
 ): { valid: boolean; reason?: string } {
   if (balance <= 0) {
-    return { valid: false, reason: "Insufficient balance" };
+    return { valid: false, reason: 'Insufficient balance' };
   }
 
   if (marginRequired > freeMargin) {
-    return { valid: false, reason: "Insufficient margin" };
+    return { valid: false, reason: 'Insufficient margin' };
   }
 
   return { valid: true };
@@ -454,9 +454,9 @@ export class OrderMatchingError extends Error {
   constructor(
     public status: number,
     public details: string,
-    message?: string,
+    message?: string
   ) {
     super(message || details);
-    this.name = "OrderMatchingError";
+    this.name = 'OrderMatchingError';
   }
 }

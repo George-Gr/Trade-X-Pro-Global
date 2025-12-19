@@ -1,5 +1,5 @@
-import React from "react";
-import { trackCustomMetric } from "../../hooks/useWebVitalsEnhanced";
+import { trackCustomMetric } from '@/hooks/useWebVitalsEnhanced';
+import { useEffect } from 'react';
 
 export interface SEOConfig {
   title: string;
@@ -7,7 +7,7 @@ export interface SEOConfig {
   keywords?: string[];
   image?: string;
   url?: string;
-  type?: "website" | "article" | "product" | "service";
+  type?: 'website' | 'article' | 'product' | 'service';
   locale?: string;
   siteName?: string;
   author?: string;
@@ -17,42 +17,42 @@ export interface SEOConfig {
   tags?: string[];
   price?: string;
   currency?: string;
-  availability?: "in_stock" | "out_of_stock" | "pre_order";
+  availability?: 'in_stock' | 'out_of_stock' | 'pre_order';
   brand?: string;
   category?: string;
 }
 
 export interface RichSnippetData {
-  "@context": string;
-  "@type": string;
+  '@context': string;
+  '@type': string;
   [key: string]: unknown;
 }
 
 export interface OpenGraphData {
-  "og:title": string;
-  "og:description": string;
-  "og:image": string;
-  "og:url": string;
-  "og:type": string;
-  "og:site_name": string;
-  "og:locale": string;
-  "og:price:amount"?: string;
-  "og:price:currency"?: string;
-  "og:availability"?: string;
-  "og:brand"?: string;
+  'og:title': string;
+  'og:description': string;
+  'og:image': string;
+  'og:url': string;
+  'og:type': string;
+  'og:site_name': string;
+  'og:locale': string;
+  'og:price:amount'?: string;
+  'og:price:currency'?: string;
+  'og:availability'?: string;
+  'og:brand'?: string;
 }
 
 export interface TwitterCardData {
-  "twitter:card": "summary" | "summary_large_image" | "app" | "player";
-  "twitter:site": string;
-  "twitter:creator": string;
-  "twitter:title": string;
-  "twitter:description": string;
-  "twitter:image": string;
-  "twitter:image:alt": string;
-  "twitter:player"?: string;
-  "twitter:player:width"?: string;
-  "twitter:player:height"?: string;
+  'twitter:card': 'summary' | 'summary_large_image' | 'app' | 'player';
+  'twitter:site': string;
+  'twitter:creator': string;
+  'twitter:title': string;
+  'twitter:description': string;
+  'twitter:image': string;
+  'twitter:image:alt': string;
+  'twitter:player'?: string;
+  'twitter:player:width'?: string;
+  'twitter:player:height'?: string;
 }
 
 export class SEOManager {
@@ -84,7 +84,7 @@ export class SEOManager {
     });
 
     // Listen for route changes
-    window.addEventListener("popstate", () => {
+    window.addEventListener('popstate', () => {
       setTimeout(() => this.updatePageSEO(), 100);
     });
   }
@@ -92,59 +92,59 @@ export class SEOManager {
   private initializeDefaultConfigs() {
     // Set default configurations for different pages
     this.defaultConfigs = {
-      "/": {
+      '/': {
         title:
-          "TradeX Pro - Professional Trading Platform | Forex, CFDs, Stocks",
+          'TradeX Pro - Professional Trading Platform | Forex, CFDs, Stocks',
         description:
-          "TradeX Pro offers advanced trading tools, real-time market data, and professional-grade analytics for forex, CFDs, and stocks. Start trading with confidence.",
+          'TradeX Pro offers advanced trading tools, real-time market data, and professional-grade analytics for forex, CFDs, and stocks. Start trading with confidence.',
         keywords: [
-          "trading platform",
-          "forex trading",
-          "CFD trading",
-          "stock trading",
-          "professional trading",
+          'trading platform',
+          'forex trading',
+          'CFD trading',
+          'stock trading',
+          'professional trading',
         ],
-        type: "website" as const,
-        siteName: "TradeX Pro",
+        type: 'website' as const,
+        siteName: 'TradeX Pro',
       },
-      "/signup": {
-        title: "Create Account - TradeX Pro | Start Trading Today",
+      '/signup': {
+        title: 'Create Account - TradeX Pro | Start Trading Today',
         description:
-          "Create your TradeX Pro account and start trading with advanced tools, real-time data, and professional support. Join thousands of successful traders.",
+          'Create your TradeX Pro account and start trading with advanced tools, real-time data, and professional support. Join thousands of successful traders.',
         keywords: [
-          "trading account",
-          "forex signup",
-          "CFD registration",
-          "start trading",
+          'trading account',
+          'forex signup',
+          'CFD registration',
+          'start trading',
         ],
-        type: "website" as const,
-        siteName: "TradeX Pro",
+        type: 'website' as const,
+        siteName: 'TradeX Pro',
       },
-      "/trade": {
-        title: "Trading Platform - TradeX Pro | Advanced Charts & Tools",
+      '/trade': {
+        title: 'Trading Platform - TradeX Pro | Advanced Charts & Tools',
         description:
-          "Access professional trading tools, advanced charting, real-time market data, and instant order execution on TradeX Pro platform.",
+          'Access professional trading tools, advanced charting, real-time market data, and instant order execution on TradeX Pro platform.',
         keywords: [
-          "trading tools",
-          "forex charts",
-          "technical analysis",
-          "trading platform",
+          'trading tools',
+          'forex charts',
+          'technical analysis',
+          'trading platform',
         ],
-        type: "service" as const,
-        siteName: "TradeX Pro",
+        type: 'service' as const,
+        siteName: 'TradeX Pro',
       },
-      "/portfolio": {
-        title: "Portfolio Management - TradeX Pro | Track Your Performance",
+      '/portfolio': {
+        title: 'Portfolio Management - TradeX Pro | Track Your Performance',
         description:
-          "Monitor your trading portfolio, track performance, analyze P&L, and manage your investments with TradeX Pro portfolio tools.",
+          'Monitor your trading portfolio, track performance, analyze P&L, and manage your investments with TradeX Pro portfolio tools.',
         keywords: [
-          "portfolio management",
-          "trading performance",
-          "P&L tracking",
-          "investment tracking",
+          'portfolio management',
+          'trading performance',
+          'P&L tracking',
+          'investment tracking',
         ],
-        type: "service" as const,
-        siteName: "TradeX Pro",
+        type: 'service' as const,
+        siteName: 'TradeX Pro',
       },
     };
   }
@@ -154,7 +154,7 @@ export class SEOManager {
   public updatePageSEO(config?: Partial<SEOConfig>) {
     const pathname = window.location.pathname;
     const baseConfig =
-      this.defaultConfigs[pathname] || this.defaultConfigs["/"];
+      this.defaultConfigs[pathname] || this.defaultConfigs['/'];
     const finalConfig = { ...baseConfig, ...config };
 
     // Update current config
@@ -176,85 +176,85 @@ export class SEOManager {
     this.updateCanonicalURL(finalConfig);
 
     // Track SEO update
-    trackCustomMetric("seo_update", 1, "SEO");
+    trackCustomMetric('seo_update', 1, 'SEO');
   }
 
   private updateMetaTags(config: SEOConfig) {
     // Basic meta tags
-    this.updateMetaTag("title", config.title);
-    this.updateMetaTag("description", config.description);
+    this.updateMetaTag('title', config.title);
+    this.updateMetaTag('description', config.description);
 
     if (config.keywords) {
-      this.updateMetaTag("keywords", config.keywords.join(", "));
+      this.updateMetaTag('keywords', config.keywords.join(', '));
     }
 
     // Additional meta tags for better SEO
     this.updateMetaTag(
-      "robots",
-      "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+      'robots',
+      'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
     );
-    this.updateMetaTag("author", config.author || "TradeX Pro");
-    this.updateMetaTag("language", config.locale || "en-US");
-    this.updateMetaTag("revisit-after", "7 days");
+    this.updateMetaTag('author', config.author || 'TradeX Pro');
+    this.updateMetaTag('language', config.locale || 'en-US');
+    this.updateMetaTag('revisit-after', '7 days');
 
     // Mobile optimization
-    this.updateMetaTag("viewport", "width=device-width, initial-scale=1.0");
-    this.updateMetaTag("mobile-web-app-capable", "yes");
-    this.updateMetaTag("apple-mobile-web-app-capable", "yes");
-    this.updateMetaTag("apple-mobile-web-app-status-bar-style", "default");
+    this.updateMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    this.updateMetaTag('mobile-web-app-capable', 'yes');
+    this.updateMetaTag('apple-mobile-web-app-capable', 'yes');
+    this.updateMetaTag('apple-mobile-web-app-status-bar-style', 'default');
 
     // Theme color for mobile browsers
-    this.updateMetaTag("theme-color", "#3b82f6");
-    this.updateMetaTag("msapplication-TileColor", "#3b82f6");
+    this.updateMetaTag('theme-color', '#3b82f6');
+    this.updateMetaTag('msapplication-TileColor', '#3b82f6');
   }
 
   private updateOpenGraphTags(config: SEOConfig) {
     const ogData: OpenGraphData = {
-      "og:title": config.title,
-      "og:description": config.description,
-      "og:image": config.image || "/assets/og-image.jpg",
-      "og:url": config.url || window.location.href,
-      "og:type": config.type || "website",
-      "og:site_name": config.siteName || "TradeX Pro",
-      "og:locale": config.locale || "en_US",
+      'og:title': config.title,
+      'og:description': config.description,
+      'og:image': config.image || '/assets/og-image.jpg',
+      'og:url': config.url || window.location.href,
+      'og:type': config.type || 'website',
+      'og:site_name': config.siteName || 'TradeX Pro',
+      'og:locale': config.locale || 'en_US',
     };
 
     // Add product-specific tags if applicable
-    if (config.type === "product" || config.type === "service") {
+    if (config.type === 'product' || config.type === 'service') {
       if (config.price) {
-        ogData["og:price:amount"] = config.price;
+        ogData['og:price:amount'] = config.price;
       }
       if (config.currency) {
-        ogData["og:price:currency"] = config.currency;
+        ogData['og:price:currency'] = config.currency;
       }
       if (config.availability) {
-        ogData["og:availability"] = config.availability;
+        ogData['og:availability'] = config.availability;
       }
       if (config.brand) {
-        ogData["og:brand"] = config.brand;
+        ogData['og:brand'] = config.brand;
       }
     }
 
     // Apply Open Graph tags
     Object.entries(ogData).forEach(([property, content]) => {
-      this.updateMetaTag(property, content, "property");
+      this.updateMetaTag(property, content, 'property');
     });
   }
 
   private updateTwitterCardTags(config: SEOConfig) {
     const twitterData: TwitterCardData = {
-      "twitter:card": "summary_large_image",
-      "twitter:site": "@TradeXPro",
-      "twitter:creator": "@TradeXPro",
-      "twitter:title": config.title,
-      "twitter:description": config.description,
-      "twitter:image": config.image || "/assets/twitter-image.jpg",
-      "twitter:image:alt": config.title,
+      'twitter:card': 'summary_large_image',
+      'twitter:site': '@TradeXPro',
+      'twitter:creator': '@TradeXPro',
+      'twitter:title': config.title,
+      'twitter:description': config.description,
+      'twitter:image': config.image || '/assets/twitter-image.jpg',
+      'twitter:image:alt': config.title,
     };
 
     // Apply Twitter Card tags
     Object.entries(twitterData).forEach(([name, content]) => {
-      this.updateMetaTag(name, content, "name");
+      this.updateMetaTag(name, content, 'name');
     });
   }
 
@@ -262,44 +262,44 @@ export class SEOManager {
     let canonicalUrl = config.url || window.location.href;
 
     // Remove query parameters and fragments for canonical URL
-    canonicalUrl = canonicalUrl.split("?")[0].split("#")[0];
+    canonicalUrl = canonicalUrl.split('?')[0].split('#')[0];
 
     // Ensure HTTPS
-    canonicalUrl = canonicalUrl.replace("http://", "https://");
+    canonicalUrl = canonicalUrl.replace('http://', 'https://');
 
-    this.updateLinkTag("canonical", canonicalUrl);
+    this.updateLinkTag('canonical', canonicalUrl);
   }
 
   private updateMetaTag(
     name: string,
     content: string,
-    attribute: "name" | "property" = "name",
+    attribute: 'name' | 'property' = 'name'
   ) {
     let element = document.querySelector(
-      `meta[${attribute}="${name}"]`,
+      `meta[${attribute}="${name}"]`
     ) as HTMLMetaElement;
 
     if (!element) {
-      element = document.createElement("meta");
+      element = document.createElement('meta');
       element.setAttribute(attribute, name);
       document.head.appendChild(element);
     }
 
-    element.setAttribute("content", content);
+    element.setAttribute('content', content);
   }
 
   private updateLinkTag(rel: string, href: string) {
     let element = document.querySelector(
-      `link[rel="${rel}"]`,
+      `link[rel="${rel}"]`
     ) as HTMLLinkElement;
 
     if (!element) {
-      element = document.createElement("link");
-      element.setAttribute("rel", rel);
+      element = document.createElement('link');
+      element.setAttribute('rel', rel);
       document.head.appendChild(element);
     }
 
-    element.setAttribute("href", href);
+    element.setAttribute('href', href);
   }
 
   private generateStructuredData(config: SEOConfig) {
@@ -311,40 +311,40 @@ export class SEOManager {
 
     // Remove existing structured data
     const existingScript = document.querySelector(
-      'script[type="application/ld+json"]',
+      'script[type="application/ld+json"]'
     );
     if (existingScript) {
       existingScript.remove();
     }
 
     // Add new structured data
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
     script.textContent = JSON.stringify(structuredData, null, 2);
     document.head.appendChild(script);
 
     // Track structured data generation
-    trackCustomMetric("structured_data_generated", 1, "SEO");
+    trackCustomMetric('structured_data_generated', 1, 'SEO');
   }
 
   private createStructuredData(config: SEOConfig): RichSnippetData {
     const baseData = {
-      "@context": "https://schema.org",
-      "@type": this.getSchemaType(config.type),
+      '@context': 'https://schema.org',
+      '@type': this.getSchemaType(config.type),
       name: config.title,
       description: config.description,
       url: config.url || window.location.href,
       image: config.image,
       author: {
-        "@type": "Organization",
-        name: config.author || "TradeX Pro",
+        '@type': 'Organization',
+        name: config.author || 'TradeX Pro',
       },
       publisher: {
-        "@type": "Organization",
-        name: config.siteName || "TradeX Pro",
+        '@type': 'Organization',
+        name: config.siteName || 'TradeX Pro',
         logo: {
-          "@type": "ImageObject",
-          url: "/assets/logo.png",
+          '@type': 'ImageObject',
+          url: '/assets/logo.png',
         },
       },
       datePublished: config.publishedTime,
@@ -353,74 +353,74 @@ export class SEOManager {
 
     // Add type-specific data
     switch (config.type) {
-      case "website":
+      case 'website':
         return {
           ...baseData,
-          "@type": "WebSite",
+          '@type': 'WebSite',
           potentialAction: {
-            "@type": "SearchAction",
+            '@type': 'SearchAction',
             target: {
-              "@type": "EntryPoint",
-              urlTemplate: "/search?q={search_term_string}",
+              '@type': 'EntryPoint',
+              urlTemplate: '/search?q={search_term_string}',
             },
-            "query-input": "required name=search_term_string",
+            'query-input': 'required name=search_term_string',
           },
         };
 
-      case "service":
+      case 'service':
         return {
           ...baseData,
-          "@type": "Service",
-          serviceType: "Trading Platform",
-          areaServed: "Worldwide",
+          '@type': 'Service',
+          serviceType: 'Trading Platform',
+          areaServed: 'Worldwide',
           hasOfferCatalog: {
-            "@type": "OfferCatalog",
-            name: "Trading Services",
+            '@type': 'OfferCatalog',
+            name: 'Trading Services',
             itemListElement: [
               {
-                "@type": "Offer",
+                '@type': 'Offer',
                 itemOffered: {
-                  "@type": "Service",
-                  name: "Forex Trading",
+                  '@type': 'Service',
+                  name: 'Forex Trading',
                 },
               },
               {
-                "@type": "Offer",
+                '@type': 'Offer',
                 itemOffered: {
-                  "@type": "Service",
-                  name: "CFD Trading",
+                  '@type': 'Service',
+                  name: 'CFD Trading',
                 },
               },
               {
-                "@type": "Offer",
+                '@type': 'Offer',
                 itemOffered: {
-                  "@type": "Service",
-                  name: "Stock Trading",
+                  '@type': 'Service',
+                  name: 'Stock Trading',
                 },
               },
             ],
           },
         };
 
-      case "product":
+      case 'product':
         return {
           ...baseData,
-          "@type": "Product",
+          '@type': 'Product',
           brand: {
-            "@type": "Brand",
-            name: config.brand || "TradeX Pro",
+            '@type': 'Brand',
+            name: config.brand || 'TradeX Pro',
           },
           category: config.category,
           offers: {
-            "@type": "Offer",
+            '@type': 'Offer',
             price: config.price,
-            priceCurrency: config.currency || "USD",
+            priceCurrency: config.currency || 'USD',
             availability: config.availability
               ? `https://schema.org/${config.availability}`
               : undefined,
             seller: {
-              "@type": "Organization",
-              name: "TradeX Pro",
+              '@type': 'Organization',
+              name: 'TradeX Pro',
             },
           },
         };
@@ -432,50 +432,50 @@ export class SEOManager {
 
   private getSchemaType(type?: string): string {
     const typeMap: Record<string, string> = {
-      website: "WebSite",
-      article: "Article",
-      product: "Product",
-      service: "Service",
+      website: 'WebSite',
+      article: 'Article',
+      product: 'Product',
+      service: 'Service',
     };
 
-    return typeMap[type || "website"] || "WebSite";
+    return typeMap[type || 'website'] || 'WebSite';
   }
 
   // Advanced SEO features
   public generateBreadcrumbStructuredData(
-    breadcrumbs: Array<{ name: string; url: string }>,
+    breadcrumbs: Array<{ name: string; url: string }>
   ) {
     const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
       itemListElement: breadcrumbs.map((crumb, index) => ({
-        "@type": "ListItem",
+        '@type': 'ListItem',
         position: index + 1,
         name: crumb.name,
         item: crumb.url,
       })),
     };
 
-    this.addStructuredData("breadcrumb", structuredData);
+    this.addStructuredData('breadcrumb', structuredData);
   }
 
   public generateFAQStructuredData(
-    faqs: Array<{ question: string; answer: string }>,
+    faqs: Array<{ question: string; answer: string }>
   ) {
     const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
       mainEntity: faqs.map((faq) => ({
-        "@type": "Question",
+        '@type': 'Question',
         name: faq.question,
         acceptedAnswer: {
-          "@type": "Answer",
+          '@type': 'Answer',
           text: faq.answer,
         },
       })),
     };
 
-    this.addStructuredData("faq", structuredData);
+    this.addStructuredData('faq', structuredData);
   }
 
   public generateReviewStructuredData(
@@ -484,28 +484,28 @@ export class SEOManager {
       rating: number;
       reviewBody: string;
       datePublished: string;
-    }>,
+    }>
   ) {
     const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "Product",
+      '@context': 'https://schema.org',
+      '@type': 'Product',
       review: reviews.map((review) => ({
-        "@type": "Review",
+        '@type': 'Review',
         author: {
-          "@type": "Person",
+          '@type': 'Person',
           name: review.author,
         },
         reviewRating: {
-          "@type": "Rating",
+          '@type': 'Rating',
           ratingValue: review.rating,
-          bestRating: "5",
+          bestRating: '5',
         },
         reviewBody: review.reviewBody,
         datePublished: review.datePublished,
       })),
     };
 
-    this.addStructuredData("reviews", structuredData);
+    this.addStructuredData('reviews', structuredData);
   }
 
   private addStructuredData(key: string, data: RichSnippetData) {
@@ -513,9 +513,9 @@ export class SEOManager {
     let script = document.getElementById(scriptId) as HTMLScriptElement;
 
     if (!script) {
-      script = document.createElement("script");
+      script = document.createElement('script');
       script.id = scriptId;
-      script.type = "application/ld+json";
+      script.type = 'application/ld+json';
       document.head.appendChild(script);
     }
 
@@ -527,9 +527,9 @@ export class SEOManager {
     const startTime = performance.now();
 
     // Track page load performance
-    window.addEventListener("load", () => {
+    window.addEventListener('load', () => {
       const loadTime = performance.now() - startTime;
-      trackCustomMetric("seo_page_load_time", loadTime, "SEO Performance");
+      trackCustomMetric('seo_page_load_time', loadTime, 'SEO Performance');
     });
 
     // Track Core Web Vitals impact on SEO
@@ -537,32 +537,32 @@ export class SEOManager {
   }
 
   private trackWebVitalsSEO() {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
           // Track metrics that affect SEO
-          if (entry.entryType === "largest-contentful-paint") {
-            trackCustomMetric("seo_lcp", entry.startTime, "SEO Performance");
-          } else if (entry.entryType === "first-input") {
+          if (entry.entryType === 'largest-contentful-paint') {
+            trackCustomMetric('seo_lcp', entry.startTime, 'SEO Performance');
+          } else if (entry.entryType === 'first-input') {
             trackCustomMetric(
-              "seo_fid",
+              'seo_fid',
               (entry as PerformanceEntry & { processingStart?: number })
                 .processingStart! - entry.startTime,
-              "SEO Performance",
+              'SEO Performance'
             );
-          } else if (entry.entryType === "layout-shift") {
+          } else if (entry.entryType === 'layout-shift') {
             trackCustomMetric(
-              "seo_cls",
+              'seo_cls',
               (entry as PerformanceEntry & { value?: number }).value!,
-              "SEO Performance",
+              'SEO Performance'
             );
           }
         });
       });
 
       observer.observe({
-        entryTypes: ["largest-contentful-paint", "first-input", "layout-shift"],
+        entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'],
       });
     }
   }
@@ -580,89 +580,89 @@ export class SEOManager {
     let score = 100;
 
     // Check for required meta tags
-    const title = document.querySelector("title")?.textContent;
+    const title = document.querySelector('title')?.textContent;
     const description = document
       .querySelector('meta[name="description"]')
-      ?.getAttribute("content");
+      ?.getAttribute('content');
     const viewport = document
       .querySelector('meta[name="viewport"]')
-      ?.getAttribute("content");
+      ?.getAttribute('content');
 
     if (!title) {
-      issues.push("Missing page title");
+      issues.push('Missing page title');
       score -= 10;
     } else if (title.length < 30 || title.length > 60) {
-      issues.push("Page title should be 30-60 characters");
+      issues.push('Page title should be 30-60 characters');
       score -= 5;
     }
 
     if (!description) {
-      issues.push("Missing meta description");
+      issues.push('Missing meta description');
       score -= 10;
     } else if (description.length < 120 || description.length > 160) {
-      issues.push("Meta description should be 120-160 characters");
+      issues.push('Meta description should be 120-160 characters');
       score -= 5;
     }
 
     if (!viewport) {
-      issues.push("Missing viewport meta tag");
+      issues.push('Missing viewport meta tag');
       score -= 5;
     }
 
     // Check for Open Graph tags
     const ogTitle = document
       .querySelector('meta[property="og:title"]')
-      ?.getAttribute("content");
+      ?.getAttribute('content');
     const ogDescription = document
       .querySelector('meta[property="og:description"]')
-      ?.getAttribute("content");
+      ?.getAttribute('content');
     const ogImage = document
       .querySelector('meta[property="og:image"]')
-      ?.getAttribute("content");
+      ?.getAttribute('content');
 
     if (!ogTitle || !ogDescription || !ogImage) {
-      issues.push("Missing Open Graph tags");
+      issues.push('Missing Open Graph tags');
       score -= 5;
       recommendations.push(
-        "Add complete Open Graph tags for better social media sharing",
+        'Add complete Open Graph tags for better social media sharing'
       );
     }
 
     // Check for structured data
     const structuredData = document.querySelectorAll(
-      'script[type="application/ld+json"]',
+      'script[type="application/ld+json"]'
     );
     if (structuredData.length === 0) {
-      issues.push("No structured data found");
+      issues.push('No structured data found');
       score -= 5;
       recommendations.push(
-        "Add structured data for better search engine understanding",
+        'Add structured data for better search engine understanding'
       );
     }
 
     // Check for canonical URL
     const canonical = document
       .querySelector('link[rel="canonical"]')
-      ?.getAttribute("href");
+      ?.getAttribute('href');
     if (!canonical) {
-      issues.push("Missing canonical URL");
+      issues.push('Missing canonical URL');
       score -= 3;
     }
 
     // Additional recommendations
     if (score >= 90) {
-      recommendations.push("SEO optimization is excellent");
+      recommendations.push('SEO optimization is excellent');
     } else if (score >= 70) {
       recommendations.push(
-        "Consider implementing structured data for better search visibility",
+        'Consider implementing structured data for better search visibility'
       );
       recommendations.push(
-        "Optimize page loading speed for better Core Web Vitals",
+        'Optimize page loading speed for better Core Web Vitals'
       );
     } else {
-      recommendations.push("Implement comprehensive SEO optimization");
+      recommendations.push('Implement comprehensive SEO optimization');
       recommendations.push(
-        "Add structured data, meta tags, and optimize loading performance",
+        'Add structured data, meta tags, and optimize loading performance'
       );
     }
 
@@ -671,63 +671,63 @@ export class SEOManager {
       issues,
       recommendations,
       structuredDataCount: structuredData.length,
-      metaTagsCount: document.head.querySelectorAll("meta").length,
+      metaTagsCount: document.head.querySelectorAll('meta').length,
     };
   }
 
   // Update SEO for specific trading scenarios
   public updateTradingSEO(
-    scenario: "forex" | "stocks" | "cfds" | "crypto",
-    additionalConfig?: Partial<SEOConfig>,
+    scenario: 'forex' | 'stocks' | 'cfds' | 'crypto',
+    additionalConfig?: Partial<SEOConfig>
   ) {
     const tradingConfigs = {
       forex: {
-        title: "Forex Trading - TradeX Pro | 50+ Currency Pairs",
+        title: 'Forex Trading - TradeX Pro | 50+ Currency Pairs',
         description:
-          "Trade major, minor, and exotic currency pairs with competitive spreads and advanced charting tools on TradeX Pro platform.",
+          'Trade major, minor, and exotic currency pairs with competitive spreads and advanced charting tools on TradeX Pro platform.',
         keywords: [
-          "forex trading",
-          "currency pairs",
-          "forex broker",
-          "fx trading",
+          'forex trading',
+          'currency pairs',
+          'forex broker',
+          'fx trading',
         ],
-        type: "service" as const,
+        type: 'service' as const,
       },
       stocks: {
-        title: "Stock Trading - TradeX Pro | Real-time Market Data",
+        title: 'Stock Trading - TradeX Pro | Real-time Market Data',
         description:
-          "Trade global stocks with real-time quotes, advanced analytics, and professional trading tools on TradeX Pro.",
+          'Trade global stocks with real-time quotes, advanced analytics, and professional trading tools on TradeX Pro.',
         keywords: [
-          "stock trading",
-          "equity trading",
-          "share trading",
-          "stock market",
+          'stock trading',
+          'equity trading',
+          'share trading',
+          'stock market',
         ],
-        type: "service" as const,
+        type: 'service' as const,
       },
       cfds: {
-        title: "CFD Trading - TradeX Pro | Contracts for Difference",
+        title: 'CFD Trading - TradeX Pro | Contracts for Difference',
         description:
-          "Trade CFDs on indices, commodities, and cryptocurrencies with leverage and advanced risk management tools.",
+          'Trade CFDs on indices, commodities, and cryptocurrencies with leverage and advanced risk management tools.',
         keywords: [
-          "CFD trading",
-          "contracts for difference",
-          "index trading",
-          "commodity trading",
+          'CFD trading',
+          'contracts for difference',
+          'index trading',
+          'commodity trading',
         ],
-        type: "service" as const,
+        type: 'service' as const,
       },
       crypto: {
-        title: "Cryptocurrency Trading - TradeX Pro | Bitcoin & Altcoins",
+        title: 'Cryptocurrency Trading - TradeX Pro | Bitcoin & Altcoins',
         description:
-          "Trade Bitcoin, Ethereum, and other cryptocurrencies with real-time data and advanced trading tools.",
+          'Trade Bitcoin, Ethereum, and other cryptocurrencies with real-time data and advanced trading tools.',
         keywords: [
-          "crypto trading",
-          "bitcoin trading",
-          "ethereum trading",
-          "cryptocurrency",
+          'crypto trading',
+          'bitcoin trading',
+          'ethereum trading',
+          'cryptocurrency',
         ],
-        type: "service" as const,
+        type: 'service' as const,
       },
     };
 
@@ -741,7 +741,7 @@ export const seoManager = SEOManager.getInstance();
 
 // React hook for SEO management
 export function useSEO(config?: Partial<SEOConfig>) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (config) {
       seoManager.updatePageSEO(config);
     } else {
@@ -762,12 +762,12 @@ export function useSEO(config?: Partial<SEOConfig>) {
         rating: number;
         reviewBody: string;
         datePublished: string;
-      }>,
+      }>
     ) => seoManager.generateReviewStructuredData(reviews),
     getSEOReport: () => seoManager.getSEOReport(),
     updateTradingSEO: (
-      scenario: "forex" | "stocks" | "cfds" | "crypto",
-      additionalConfig?: Partial<SEOConfig>,
+      scenario: 'forex' | 'stocks' | 'cfds' | 'crypto',
+      additionalConfig?: Partial<SEOConfig>
     ) => seoManager.updateTradingSEO(scenario, additionalConfig),
   };
 }

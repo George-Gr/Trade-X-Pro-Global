@@ -1,5 +1,5 @@
-import React from "react";
-import type { TabComponentProps } from "../types";
+// React import not required with the automatic JSX runtime
+import type { TabComponentProps } from '../types';
 
 /**
  * LiveRegionsTab Component
@@ -39,7 +39,7 @@ export function LiveRegionsTab({
             <button
               onClick={() =>
                 onAnnounceToScreenReader(
-                  "Content updated: New notification received",
+                  'Content updated: New notification received'
                 )
               }
               className="px-4 py-2 bg-blue-500 text-white rounded-lg"
@@ -49,7 +49,7 @@ export function LiveRegionsTab({
 
             <button
               onClick={() =>
-                onAnnounceToScreenReader("ALERT: Critical system notification")
+                onAnnounceToScreenReader('ALERT: Critical system notification')
               }
               className="px-4 py-2 bg-red-500 text-white rounded-lg"
             >
@@ -57,7 +57,7 @@ export function LiveRegionsTab({
             </button>
 
             <button
-              onClick={() => onAnnounceToScreenReader("Loading complete")}
+              onClick={() => onAnnounceToScreenReader('Loading complete')}
               className="px-4 py-2 bg-green-500 text-white rounded-lg"
             >
               Status Update
@@ -103,7 +103,7 @@ export function LiveRegionsTab({
             onClick={() => {
               // Simulate modal opening
               onAnnounceToScreenReader(
-                "Modal dialog opened. Press Escape to close.",
+                'Modal dialog opened. Press Escape to close.'
               );
             }}
             className="px-4 py-2 bg-purple-500 text-white rounded-lg"

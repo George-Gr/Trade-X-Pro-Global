@@ -10,7 +10,7 @@
  * - Edge cases and error handling
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 import {
   AssetClass,
   AccountTier,
@@ -27,11 +27,11 @@ import {
   getAvailableAccountTiers,
   formatCommission,
   CommissionCalculationInput,
-} from "../commissionCalculation";
+} from '../commissionCalculation';
 
-describe("Commission Calculation Engine", () => {
-  describe("Asset Class Configuration", () => {
-    it("should have configuration for all asset classes", () => {
+describe('Commission Calculation Engine', () => {
+  describe('Asset Class Configuration', () => {
+    it('should have configuration for all asset classes', () => {
       const assetClasses = getSupportedAssetClasses();
       expect(assetClasses).toContain(AssetClass.Stock);
       expect(assetClasses).toContain(AssetClass.Forex);
@@ -39,40 +39,40 @@ describe("Commission Calculation Engine", () => {
       expect(assetClasses).toHaveLength(7); // 7 asset classes
     });
 
-    it("should return commission config for stock", () => {
+    it('should return commission config for stock', () => {
       const config = getCommissionConfig(AssetClass.Stock);
       expect(config.hasCommission).toBe(true);
-      expect(config.commissionType).toBe("per_share");
+      expect(config.commissionType).toBe('per_share');
       expect(config.baseCommission).toBe(0.02);
     });
 
-    it("should return commission config for forex (no commission)", () => {
+    it('should return commission config for forex (no commission)', () => {
       const config = getCommissionConfig(AssetClass.Forex);
       expect(config.hasCommission).toBe(false);
-      expect(config.commissionType).toBe("none");
+      expect(config.commissionType).toBe('none');
       expect(config.baseCommission).toBe(0);
     });
 
-    it("should return commission config for ETF", () => {
+    it('should return commission config for ETF', () => {
       const config = getCommissionConfig(AssetClass.ETF);
       expect(config.hasCommission).toBe(true);
-      expect(config.commissionType).toBe("per_share");
+      expect(config.commissionType).toBe('per_share');
       expect(config.baseCommission).toBe(0.02); // Same as stocks
     });
 
-    it("should throw error for invalid asset class", () => {
+    it('should throw error for invalid asset class', () => {
       expect(() => {
-        getCommissionConfig("invalid" as AssetClass);
+        getCommissionConfig('invalid' as AssetClass);
       }).toThrow(CommissionCalculationError);
     });
   });
 
-  describe("Stock Commission Calculation", () => {
-    it("should calculate per-share commission for 100 shares at $150", () => {
+  describe('Stock Commission Calculation', () => {
+    it('should calculate per-share commission for 100 shares at $150', () => {
       const result = calculateCommission({
-        symbol: "AAPL",
+        symbol: 'AAPL',
         assetClass: AssetClass.Stock,
-        side: "buy",
+        side: 'buy',
         quantity: 100,
         executionPrice: 150.0,
         accountTier: AccountTier.Standard,
@@ -83,11 +83,11 @@ describe("Commission Calculation Engine", () => {
       expect(result.tierMultiplier).toBe(1.0);
     });
 
-    it("should apply minimum commission of $1", () => {
+    it('should apply minimum commission of $1', () => {
       const result = calculateCommission({
-        symbol: "BRK.A",
+        symbol: 'BRK.A',
         assetClass: AssetClass.Stock,
-        side: "buy",
+        side: 'buy',
         quantity: 1,
         executionPrice: 500000.0,
         accountTier: AccountTier.Standard,
@@ -97,11 +97,11 @@ describe("Commission Calculation Engine", () => {
       expect(result.totalCommission).toBe(1.0); // Minimum commission applied
     });
 
-    it("should apply maximum commission of $50", () => {
+    it('should apply maximum commission of $50', () => {
       const result = calculateCommission({
-        symbol: "TSLA",
+        symbol: 'TSLA',
         assetClass: AssetClass.Stock,
-        side: "buy",
+        side: 'buy',
         quantity: 5000,
         executionPrice: 250.0,
         accountTier: AccountTier.Standard,
@@ -112,20 +112,20 @@ describe("Commission Calculation Engine", () => {
       expect(result.totalCommission).toBe(50.0); // Maximum commission applied
     });
 
-    it("should calculate commission for both buy and sell", () => {
+    it('should calculate commission for both buy and sell', () => {
       const buyResult = calculateCommission({
-        symbol: "MSFT",
+        symbol: 'MSFT',
         assetClass: AssetClass.Stock,
-        side: "buy",
+        side: 'buy',
         quantity: 50,
         executionPrice: 300.0,
         accountTier: AccountTier.Standard,
       });
 
       const sellResult = calculateCommission({
-        symbol: "MSFT",
+        symbol: 'MSFT',
         assetClass: AssetClass.Stock,
-        side: "sell",
+        side: 'sell',
         quantity: 50,
         executionPrice: 300.0,
         accountTier: AccountTier.Standard,
@@ -136,12 +136,12 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("ETF Commission Calculation", () => {
-    it("should calculate ETF commission (same as stocks)", () => {
+  describe('ETF Commission Calculation', () => {
+    it('should calculate ETF commission (same as stocks)', () => {
       const result = calculateCommission({
-        symbol: "VOO",
+        symbol: 'VOO',
         assetClass: AssetClass.ETF,
-        side: "buy",
+        side: 'buy',
         quantity: 100,
         executionPrice: 500.0,
         accountTier: AccountTier.Standard,
@@ -152,12 +152,12 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Forex Commission Calculation", () => {
-    it("should have zero commission for forex (spread only)", () => {
+  describe('Forex Commission Calculation', () => {
+    it('should have zero commission for forex (spread only)', () => {
       const result = calculateCommission({
-        symbol: "EURUSD",
+        symbol: 'EURUSD',
         assetClass: AssetClass.Forex,
-        side: "buy",
+        side: 'buy',
         quantity: 100000,
         executionPrice: 1.085,
         accountTier: AccountTier.Standard,
@@ -168,12 +168,12 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Crypto Commission Calculation", () => {
-    it("should have zero commission for crypto", () => {
+  describe('Crypto Commission Calculation', () => {
+    it('should have zero commission for crypto', () => {
       const result = calculateCommission({
-        symbol: "BTCUSD",
+        symbol: 'BTCUSD',
         assetClass: AssetClass.Crypto,
-        side: "buy",
+        side: 'buy',
         quantity: 0.5,
         executionPrice: 42000.0,
         accountTier: AccountTier.Standard,
@@ -183,16 +183,16 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Tier-Based Discounts", () => {
+  describe('Tier-Based Discounts', () => {
     const baseInput = {
-      symbol: "AAPL",
+      symbol: 'AAPL',
       assetClass: AssetClass.Stock,
-      side: "buy" as const,
+      side: 'buy' as const,
       quantity: 100,
       executionPrice: 150.0,
     };
 
-    it("should apply 10% discount for Silver tier", () => {
+    it('should apply 10% discount for Silver tier', () => {
       const result = calculateCommission({
         ...baseInput,
         accountTier: AccountTier.Silver,
@@ -203,7 +203,7 @@ describe("Commission Calculation Engine", () => {
       expect(result.totalCommission).toBe(1.8); // $2.00 * 0.9
     });
 
-    it("should apply 20% discount for Gold tier", () => {
+    it('should apply 20% discount for Gold tier', () => {
       const result = calculateCommission({
         ...baseInput,
         accountTier: AccountTier.Gold,
@@ -211,10 +211,10 @@ describe("Commission Calculation Engine", () => {
 
       expect(result.tierMultiplier).toBe(0.8);
       expect(result.totalCommission).toBe(1.6); // $2.00 * 0.8
-      expect(result.notes).toContain("20%");
+      expect(result.notes).toContain('20%');
     });
 
-    it("should apply 30% discount for Platinum tier", () => {
+    it('should apply 30% discount for Platinum tier', () => {
       const result = calculateCommission({
         ...baseInput,
         accountTier: AccountTier.Platinum,
@@ -222,10 +222,10 @@ describe("Commission Calculation Engine", () => {
 
       expect(result.tierMultiplier).toBe(0.7);
       expect(result.totalCommission).toBe(1.4); // $2.00 * 0.7
-      expect(result.notes).toContain("30%");
+      expect(result.notes).toContain('30%');
     });
 
-    it("should apply no discount for Standard tier", () => {
+    it('should apply no discount for Standard tier', () => {
       const result = calculateCommission({
         ...baseInput,
         accountTier: AccountTier.Standard,
@@ -236,11 +236,11 @@ describe("Commission Calculation Engine", () => {
       expect(result.notes).toBeUndefined();
     });
 
-    it("should default to Standard tier if not specified", () => {
+    it('should default to Standard tier if not specified', () => {
       const result = calculateCommission({
-        symbol: "MSFT",
+        symbol: 'MSFT',
         assetClass: AssetClass.Stock,
-        side: "buy" as const,
+        side: 'buy' as const,
         quantity: 100,
         executionPrice: 300.0,
         accountTier: AccountTier.Standard,
@@ -251,57 +251,57 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Order Cost With Commission", () => {
-    it("should calculate buy cost including commission", () => {
+  describe('Order Cost With Commission', () => {
+    it('should calculate buy cost including commission', () => {
       const orderValue = 100 * 150.0; // $15,000
       const commission = 2.0;
       const totalCost = calculateOrderCostWithCommission(
         100,
         150.0,
         commission,
-        "buy",
+        'buy'
       );
 
       expect(totalCost).toBe(15002.0); // Order + commission
     });
 
-    it("should calculate sell proceeds deducting commission", () => {
+    it('should calculate sell proceeds deducting commission', () => {
       const orderValue = 100 * 150.0; // $15,000
       const commission = 2.0;
       const netProceeds = calculateOrderCostWithCommission(
         100,
         150.0,
         commission,
-        "sell",
+        'sell'
       );
 
       expect(netProceeds).toBe(14998.0); // Order - commission
     });
   });
 
-  describe("Batch Commission Calculation", () => {
-    it("should calculate commissions for multiple orders", () => {
+  describe('Batch Commission Calculation', () => {
+    it('should calculate commissions for multiple orders', () => {
       const orders: CommissionCalculationInput[] = [
         {
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
         },
         {
-          symbol: "MSFT",
+          symbol: 'MSFT',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 50,
           executionPrice: 300.0,
           accountTier: AccountTier.Gold,
         },
         {
-          symbol: "EURUSD",
+          symbol: 'EURUSD',
           assetClass: AssetClass.Forex,
-          side: "buy",
+          side: 'buy',
           quantity: 100000,
           executionPrice: 1.085,
           accountTier: AccountTier.Standard,
@@ -316,20 +316,20 @@ describe("Commission Calculation Engine", () => {
       expect(results[2].totalCommission).toBe(0); // Forex (no commission)
     });
 
-    it("should calculate total commission across all orders", () => {
+    it('should calculate total commission across all orders', () => {
       const orders: CommissionCalculationInput[] = [
         {
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
         },
         {
-          symbol: "MSFT",
+          symbol: 'MSFT',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 50,
           executionPrice: 300.0,
           accountTier: AccountTier.Gold,
@@ -342,12 +342,12 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Edge Cases", () => {
-    it("should handle fractional shares (ETF)", () => {
+  describe('Edge Cases', () => {
+    it('should handle fractional shares (ETF)', () => {
       const result = calculateCommission({
-        symbol: "VOO",
+        symbol: 'VOO',
         assetClass: AssetClass.ETF,
-        side: "buy",
+        side: 'buy',
         quantity: 2.5,
         executionPrice: 500.0,
         accountTier: AccountTier.Standard,
@@ -357,11 +357,11 @@ describe("Commission Calculation Engine", () => {
       expect(result.totalCommission).toBe(1.0);
     });
 
-    it("should handle very large orders", () => {
+    it('should handle very large orders', () => {
       const result = calculateCommission({
-        symbol: "AAPL",
+        symbol: 'AAPL',
         assetClass: AssetClass.Stock,
-        side: "buy",
+        side: 'buy',
         quantity: 100000,
         executionPrice: 150.0,
         accountTier: AccountTier.Standard,
@@ -372,11 +372,11 @@ describe("Commission Calculation Engine", () => {
       expect(result.totalCommission).toBe(50.0); // Maximum cap applied
     });
 
-    it("should handle very small decimal prices", () => {
+    it('should handle very small decimal prices', () => {
       const result = calculateCommission({
-        symbol: "EURUSD",
+        symbol: 'EURUSD',
         assetClass: AssetClass.Forex,
-        side: "buy",
+        side: 'buy',
         quantity: 100000,
         executionPrice: 0.9999,
         accountTier: AccountTier.Standard,
@@ -386,11 +386,11 @@ describe("Commission Calculation Engine", () => {
       expect(result.totalCommission).toBe(0);
     });
 
-    it("should handle commission rounding correctly", () => {
+    it('should handle commission rounding correctly', () => {
       const result = calculateCommission({
-        symbol: "AAPL",
+        symbol: 'AAPL',
         assetClass: AssetClass.Stock,
-        side: "buy" as const,
+        side: 'buy' as const,
         quantity: 33,
         executionPrice: 150.0,
         accountTier: AccountTier.Silver,
@@ -402,13 +402,13 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Input Validation", () => {
-    it("should reject invalid asset class", () => {
+  describe('Input Validation', () => {
+    it('should reject invalid asset class', () => {
       expect(() => {
         calculateCommission({
-          symbol: "AAPL",
-          assetClass: "invalid" as AssetClass,
-          side: "buy",
+          symbol: 'AAPL',
+          assetClass: 'invalid' as AssetClass,
+          side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
@@ -416,12 +416,12 @@ describe("Commission Calculation Engine", () => {
       }).toThrow();
     });
 
-    it("should reject invalid side", () => {
+    it('should reject invalid side', () => {
       expect(() => {
         calculateCommission({
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "invalid" as unknown as "buy" | "sell",
+          side: 'invalid' as unknown as 'buy' | 'sell',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
@@ -429,12 +429,12 @@ describe("Commission Calculation Engine", () => {
       }).toThrow();
     });
 
-    it("should reject zero quantity", () => {
+    it('should reject zero quantity', () => {
       expect(() => {
         calculateCommission({
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 0,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
@@ -442,12 +442,12 @@ describe("Commission Calculation Engine", () => {
       }).toThrow();
     });
 
-    it("should reject negative quantity", () => {
+    it('should reject negative quantity', () => {
       expect(() => {
         calculateCommission({
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: -100,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
@@ -455,12 +455,12 @@ describe("Commission Calculation Engine", () => {
       }).toThrow();
     });
 
-    it("should reject zero price", () => {
+    it('should reject zero price', () => {
       expect(() => {
         calculateCommission({
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: 0,
           accountTier: AccountTier.Standard,
@@ -468,12 +468,12 @@ describe("Commission Calculation Engine", () => {
       }).toThrow();
     });
 
-    it("should reject negative price", () => {
+    it('should reject negative price', () => {
       expect(() => {
         calculateCommission({
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: -150.0,
           accountTier: AccountTier.Standard,
@@ -481,12 +481,12 @@ describe("Commission Calculation Engine", () => {
       }).toThrow();
     });
 
-    it("should reject empty symbol", () => {
+    it('should reject empty symbol', () => {
       expect(() => {
         calculateCommission({
-          symbol: "",
+          symbol: '',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Standard,
@@ -495,30 +495,30 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Formatting Utilities", () => {
-    it("should format commission with default USD symbol", () => {
+  describe('Formatting Utilities', () => {
+    it('should format commission with default USD symbol', () => {
       const formatted = formatCommission(2.5);
-      expect(formatted).toBe("$2.50");
+      expect(formatted).toBe('$2.50');
     });
 
-    it("should format commission with custom currency symbol", () => {
-      const formatted = formatCommission(150.75, "£");
-      expect(formatted).toBe("£150.75");
+    it('should format commission with custom currency symbol', () => {
+      const formatted = formatCommission(150.75, '£');
+      expect(formatted).toBe('£150.75');
     });
 
-    it("should format zero commission", () => {
+    it('should format zero commission', () => {
       const formatted = formatCommission(0);
-      expect(formatted).toBe("$0.00");
+      expect(formatted).toBe('$0.00');
     });
 
-    it("should format large commission", () => {
+    it('should format large commission', () => {
       const formatted = formatCommission(1234.56);
-      expect(formatted).toBe("$1234.56");
+      expect(formatted).toBe('$1234.56');
     });
   });
 
-  describe("Account Tier Coverage", () => {
-    it("should return all available account tiers", () => {
+  describe('Account Tier Coverage', () => {
+    it('should return all available account tiers', () => {
       const tiers = getAvailableAccountTiers();
       expect(tiers).toContain(AccountTier.Standard);
       expect(tiers).toContain(AccountTier.Silver);
@@ -528,51 +528,51 @@ describe("Commission Calculation Engine", () => {
     });
   });
 
-  describe("Integration Scenarios", () => {
-    it("should handle realistic day trading scenario", () => {
+  describe('Integration Scenarios', () => {
+    it('should handle realistic day trading scenario', () => {
       // Day trader: 5 round-trip trades, Gold tier
       const orders: CommissionCalculationInput[] = [
         // Buy AAPL
         {
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Gold,
         },
         // Sell AAPL
         {
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "sell",
+          side: 'sell',
           quantity: 100,
           executionPrice: 150.5,
           accountTier: AccountTier.Gold,
         },
         // Buy MSFT
         {
-          symbol: "MSFT",
+          symbol: 'MSFT',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 50,
           executionPrice: 300.0,
           accountTier: AccountTier.Gold,
         },
         // Sell MSFT
         {
-          symbol: "MSFT",
+          symbol: 'MSFT',
           assetClass: AssetClass.Stock,
-          side: "sell",
+          side: 'sell',
           quantity: 50,
           executionPrice: 301.0,
           accountTier: AccountTier.Gold,
         },
         // Hedge with Forex
         {
-          symbol: "EURUSD",
+          symbol: 'EURUSD',
           assetClass: AssetClass.Forex,
-          side: "buy",
+          side: 'buy',
           quantity: 100000,
           executionPrice: 1.085,
           accountTier: AccountTier.Gold,
@@ -589,52 +589,52 @@ describe("Commission Calculation Engine", () => {
       // Forex: $0
     });
 
-    it("should handle mixed asset class portfolio", () => {
+    it('should handle mixed asset class portfolio', () => {
       const portfolio: CommissionCalculationInput[] = [
         {
-          symbol: "AAPL",
+          symbol: 'AAPL',
           assetClass: AssetClass.Stock,
-          side: "buy",
+          side: 'buy',
           quantity: 100,
           executionPrice: 150.0,
           accountTier: AccountTier.Silver,
         },
         {
-          symbol: "VOO",
+          symbol: 'VOO',
           assetClass: AssetClass.ETF,
-          side: "buy",
+          side: 'buy',
           quantity: 50,
           executionPrice: 500.0,
           accountTier: AccountTier.Silver,
         },
         {
-          symbol: "BND",
+          symbol: 'BND',
           assetClass: AssetClass.Bond,
-          side: "buy",
+          side: 'buy',
           quantity: 1000,
           executionPrice: 100.0,
           accountTier: AccountTier.Silver,
         },
         {
-          symbol: "GLD",
+          symbol: 'GLD',
           assetClass: AssetClass.Commodity,
-          side: "buy",
+          side: 'buy',
           quantity: 10,
           executionPrice: 1800.0,
           accountTier: AccountTier.Silver,
         },
         {
-          symbol: "SPX",
+          symbol: 'SPX',
           assetClass: AssetClass.Index,
-          side: "buy",
+          side: 'buy',
           quantity: 1,
           executionPrice: 4500.0,
           accountTier: AccountTier.Silver,
         },
         {
-          symbol: "BTCUSD",
+          symbol: 'BTCUSD',
           assetClass: AssetClass.Crypto,
-          side: "buy",
+          side: 'buy',
           quantity: 0.5,
           executionPrice: 42000.0,
           accountTier: AccountTier.Silver,

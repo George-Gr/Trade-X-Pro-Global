@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 import {
   OrderType,
   OrderSide,
@@ -17,22 +17,22 @@ import {
   OrderMatchingError,
   type OrderCondition,
   type MarketSnapshot,
-} from "../orderMatching";
+} from '../orderMatching';
 
-describe("Order Matching & Execution Engine", () => {
+describe('Order Matching & Execution Engine', () => {
   // Helper to create market snapshot
   const createMarket = (price: number): MarketSnapshot => ({
-    symbol: "EURUSD",
+    symbol: 'EURUSD',
     currentPrice: price,
     bid: price - 0.0001,
     ask: price + 0.0001,
     volatility: 15,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     timestamp: new Date(),
   });
 
-  describe("checkMarketOrderMatch", () => {
-    it("matches market orders immediately", () => {
+  describe('checkMarketOrderMatch', () => {
+    it('matches market orders immediately', () => {
       const condition: OrderCondition = {
         priceLevel: 0,
         orderType: OrderType.Market,
@@ -47,7 +47,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.reason).toBeUndefined();
     });
 
-    it("rejects non-market orders", () => {
+    it('rejects non-market orders', () => {
       const condition: OrderCondition = {
         priceLevel: 1.085,
         orderType: OrderType.Limit,
@@ -62,8 +62,8 @@ describe("Order Matching & Execution Engine", () => {
     });
   });
 
-  describe("checkLimitOrderMatch", () => {
-    it("executes buy limit when price <= limit", () => {
+  describe('checkLimitOrderMatch', () => {
+    it('executes buy limit when price <= limit', () => {
       const market = createMarket(1.0845);
       const condition: OrderCondition = {
         priceLevel: 1.0845,
@@ -79,7 +79,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.executionPrice).toBe(1.085);
     });
 
-    it("rejects buy limit when price > limit", () => {
+    it('rejects buy limit when price > limit', () => {
       const market = createMarket(1.0855);
       const condition: OrderCondition = {
         priceLevel: 1.0855,
@@ -94,7 +94,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(false);
     });
 
-    it("executes sell limit when price >= limit", () => {
+    it('executes sell limit when price >= limit', () => {
       const market = createMarket(1.0855);
       const condition: OrderCondition = {
         priceLevel: 1.0855,
@@ -109,7 +109,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(true);
     });
 
-    it("rejects sell limit when price < limit", () => {
+    it('rejects sell limit when price < limit', () => {
       const market = createMarket(1.0845);
       const condition: OrderCondition = {
         priceLevel: 1.0845,
@@ -124,7 +124,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(false);
     });
 
-    it("rejects limit without limit price", () => {
+    it('rejects limit without limit price', () => {
       const market = createMarket(1.085);
       const condition: OrderCondition = {
         priceLevel: 1.085,
@@ -136,12 +136,12 @@ describe("Order Matching & Execution Engine", () => {
       const result = checkLimitOrderMatch(condition, market);
 
       expect(result.matched).toBe(false);
-      expect(result.reason).toContain("Limit price");
+      expect(result.reason).toContain('Limit price');
     });
   });
 
-  describe("checkStopOrderTrigger", () => {
-    it("triggers buy stop when price touches stop level from below", () => {
+  describe('checkStopOrderTrigger', () => {
+    it('triggers buy stop when price touches stop level from below', () => {
       const market = createMarket(1.085);
       const previousPrice = 1.084;
       const condition: OrderCondition = {
@@ -157,7 +157,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.shouldTrigger).toBe(true);
     });
 
-    it("does not re-trigger buy stop if already above level", () => {
+    it('does not re-trigger buy stop if already above level', () => {
       const market = createMarket(1.086);
       const previousPrice = 1.085;
       const condition: OrderCondition = {
@@ -172,7 +172,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(false);
     });
 
-    it("triggers sell stop when price touches stop level from above", () => {
+    it('triggers sell stop when price touches stop level from above', () => {
       const market = createMarket(1.084);
       const previousPrice = 1.085;
       const condition: OrderCondition = {
@@ -188,7 +188,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.shouldTrigger).toBe(true);
     });
 
-    it("does not re-trigger sell stop if already below level", () => {
+    it('does not re-trigger sell stop if already below level', () => {
       const market = createMarket(1.083);
       const previousPrice = 1.084;
       const condition: OrderCondition = {
@@ -204,8 +204,8 @@ describe("Order Matching & Execution Engine", () => {
     });
   });
 
-  describe("checkStopLimitOrderMatch", () => {
-    it("executes stop-limit when both conditions met", () => {
+  describe('checkStopLimitOrderMatch', () => {
+    it('executes stop-limit when both conditions met', () => {
       const market = createMarket(1.0848);
       const previousPrice = 1.084;
       const condition: OrderCondition = {
@@ -220,11 +220,11 @@ describe("Order Matching & Execution Engine", () => {
       const result = checkStopLimitOrderMatch(condition, market, previousPrice);
 
       // Note: This depends on if limit check passes after stop trigger
-      expect(result).toHaveProperty("matched");
-      expect(result).toHaveProperty("reason");
+      expect(result).toHaveProperty('matched');
+      expect(result).toHaveProperty('reason');
     });
 
-    it("rejects stop-limit if stop not triggered", () => {
+    it('rejects stop-limit if stop not triggered', () => {
       const market = createMarket(1.084);
       const previousPrice = 1.084;
       const condition: OrderCondition = {
@@ -238,10 +238,10 @@ describe("Order Matching & Execution Engine", () => {
       const result = checkStopLimitOrderMatch(condition, market, previousPrice);
 
       expect(result.matched).toBe(false);
-      expect(result.reason).toContain("Stop");
+      expect(result.reason).toContain('Stop');
     });
 
-    it("rejects stop-limit if limit not met after stop trigger", () => {
+    it('rejects stop-limit if limit not met after stop trigger', () => {
       const market = createMarket(1.0856);
       const previousPrice = 1.084;
       const condition: OrderCondition = {
@@ -258,8 +258,8 @@ describe("Order Matching & Execution Engine", () => {
     });
   });
 
-  describe("checkTrailingStopOrderTrigger", () => {
-    it("triggers trailing stop for buy order when price drops", () => {
+  describe('checkTrailingStopOrderTrigger', () => {
+    it('triggers trailing stop for buy order when price drops', () => {
       const market = createMarket(1.0835);
       const previousPrice = 1.0845;
       const highestPrice = 1.085;
@@ -279,14 +279,14 @@ describe("Order Matching & Execution Engine", () => {
         market,
         highestPrice,
         0,
-        previousPrice,
+        previousPrice
       );
 
       expect(result.matched).toBe(true);
       expect(result.shouldTrigger).toBe(true);
     });
 
-    it("triggers trailing stop for sell order when price rises", () => {
+    it('triggers trailing stop for sell order when price rises', () => {
       const market = createMarket(1.0865);
       const previousPrice = 1.0855;
       const lowestPrice = 1.085;
@@ -306,14 +306,14 @@ describe("Order Matching & Execution Engine", () => {
         market,
         0,
         lowestPrice,
-        previousPrice,
+        previousPrice
       );
 
       expect(result.matched).toBe(true);
       expect(result.shouldTrigger).toBe(true);
     });
 
-    it("does not trigger trailing stop prematurely", () => {
+    it('does not trigger trailing stop prematurely', () => {
       const market = createMarket(1.084);
       const previousPrice = 1.0845;
       const highestPrice = 1.085;
@@ -332,35 +332,35 @@ describe("Order Matching & Execution Engine", () => {
         market,
         highestPrice,
         0,
-        previousPrice,
+        previousPrice
       );
 
       expect(result.matched).toBe(false);
     });
   });
 
-  describe("calculateExecutionPrice", () => {
-    it("adds slippage for buy orders", () => {
+  describe('calculateExecutionPrice', () => {
+    it('adds slippage for buy orders', () => {
       const result = calculateExecutionPrice(1.085, OrderSide.Buy, 0.0005);
 
       expect(result).toBe(1.0855);
     });
 
-    it("subtracts slippage for sell orders", () => {
+    it('subtracts slippage for sell orders', () => {
       const result = calculateExecutionPrice(1.085, OrderSide.Sell, 0.0005);
 
       expect(result).toBe(1.0845);
     });
 
-    it("handles zero slippage", () => {
+    it('handles zero slippage', () => {
       const result = calculateExecutionPrice(1.085, OrderSide.Buy, 0);
 
       expect(result).toBe(1.085);
     });
   });
 
-  describe("shouldOrderExecute", () => {
-    it("identifies executable market orders", () => {
+  describe('shouldOrderExecute', () => {
+    it('identifies executable market orders', () => {
       const market = createMarket(1.085);
       const condition: OrderCondition = {
         priceLevel: 0,
@@ -374,7 +374,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(true);
     });
 
-    it("identifies executable limit orders", () => {
+    it('identifies executable limit orders', () => {
       const market = createMarket(1.0845);
       const condition: OrderCondition = {
         priceLevel: 1.0845,
@@ -389,7 +389,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(true);
     });
 
-    it("identifies triggered stop orders", () => {
+    it('identifies triggered stop orders', () => {
       const market = createMarket(1.085);
       const condition: OrderCondition = {
         priceLevel: 1.085,
@@ -404,8 +404,8 @@ describe("Order Matching & Execution Engine", () => {
     });
   });
 
-  describe("calculatePostExecutionBalance", () => {
-    it("deducts buy order cost and commission", () => {
+  describe('calculatePostExecutionBalance', () => {
+    it('deducts buy order cost and commission', () => {
       const balance = 10000;
       const executionPrice = 1.085;
       const quantity = 100000;
@@ -416,14 +416,14 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         OrderSide.Buy,
         commission,
-        balance,
+        balance
       );
 
       const expectedCost = executionPrice * quantity + commission;
       expect(result).toBe(balance - expectedCost);
     });
 
-    it("adds sell proceeds and deducts commission", () => {
+    it('adds sell proceeds and deducts commission', () => {
       const balance = 10000;
       const executionPrice = 1.085;
       const quantity = 100000;
@@ -434,7 +434,7 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         OrderSide.Sell,
         commission,
-        balance,
+        balance
       );
 
       const proceeds = executionPrice * quantity;
@@ -442,8 +442,8 @@ describe("Order Matching & Execution Engine", () => {
     });
   });
 
-  describe("calculateMarginRequired", () => {
-    it("calculates margin for forex position", () => {
+  describe('calculateMarginRequired', () => {
+    it('calculates margin for forex position', () => {
       const quantity = 1; // 1 lot
       const entryPrice = 1.085;
       const leverage = 100; // 1:100 leverage
@@ -453,7 +453,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(result).toBeCloseTo((quantity * entryPrice) / leverage);
     });
 
-    it("calculates higher margin for lower leverage", () => {
+    it('calculates higher margin for lower leverage', () => {
       const quantity = 1;
       const entryPrice = 1.085;
 
@@ -464,8 +464,8 @@ describe("Order Matching & Execution Engine", () => {
     });
   });
 
-  describe("calculateUnrealizedPnL", () => {
-    it("calculates positive P&L for profitable buy position", () => {
+  describe('calculateUnrealizedPnL', () => {
+    it('calculates positive P&L for profitable buy position', () => {
       const quantity = 100000;
       const entryPrice = 1.085;
       const currentPrice = 1.086; // 10 pips profit
@@ -474,14 +474,14 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         entryPrice,
         currentPrice,
-        OrderSide.Buy,
+        OrderSide.Buy
       );
 
       expect(result).toBeGreaterThan(0);
       expect(result).toBeCloseTo(quantity * (currentPrice - entryPrice));
     });
 
-    it("calculates negative P&L for losing buy position", () => {
+    it('calculates negative P&L for losing buy position', () => {
       const quantity = 100000;
       const entryPrice = 1.085;
       const currentPrice = 1.084; // 10 pips loss
@@ -490,13 +490,13 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         entryPrice,
         currentPrice,
-        OrderSide.Buy,
+        OrderSide.Buy
       );
 
       expect(result).toBeLessThan(0);
     });
 
-    it("calculates positive P&L for profitable sell position", () => {
+    it('calculates positive P&L for profitable sell position', () => {
       const quantity = 100000;
       const entryPrice = 1.085;
       const currentPrice = 1.084; // 10 pips profit on short
@@ -505,13 +505,13 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         entryPrice,
         currentPrice,
-        OrderSide.Sell,
+        OrderSide.Sell
       );
 
       expect(result).toBeGreaterThan(0);
     });
 
-    it("calculates negative P&L for losing sell position", () => {
+    it('calculates negative P&L for losing sell position', () => {
       const quantity = 100000;
       const entryPrice = 1.085;
       const currentPrice = 1.086; // 10 pips loss on short
@@ -520,39 +520,39 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         entryPrice,
         currentPrice,
-        OrderSide.Sell,
+        OrderSide.Sell
       );
 
       expect(result).toBeLessThan(0);
     });
   });
 
-  describe("validateExecutionPreConditions", () => {
-    it("validates sufficient balance and margin", () => {
+  describe('validateExecutionPreConditions', () => {
+    it('validates sufficient balance and margin', () => {
       const result = validateExecutionPreConditions(10000, 500, 2000);
 
       expect(result.valid).toBe(true);
     });
 
-    it("rejects insufficient margin", () => {
+    it('rejects insufficient margin', () => {
       const result = validateExecutionPreConditions(10000, 3000, 2000);
 
       expect(result.valid).toBe(false);
-      expect(result.reason).toContain("margin");
+      expect(result.reason).toContain('margin');
     });
 
-    it("rejects zero or negative balance", () => {
+    it('rejects zero or negative balance', () => {
       const result = validateExecutionPreConditions(0, 500, 2000);
 
       expect(result.valid).toBe(false);
-      expect(result.reason).toContain("balance");
+      expect(result.reason).toContain('balance');
     });
   });
 
   // ===== INTEGRATION TESTS =====
 
-  describe("Integration: Complete order execution flow", () => {
-    it("executes market buy order with slippage", () => {
+  describe('Integration: Complete order execution flow', () => {
+    it('executes market buy order with slippage', () => {
       const market = createMarket(1.085);
       const condition: OrderCondition = {
         priceLevel: 0,
@@ -570,7 +570,7 @@ describe("Order Matching & Execution Engine", () => {
       const executionPrice = calculateExecutionPrice(
         market.currentPrice,
         OrderSide.Buy,
-        slippage,
+        slippage
       );
       expect(executionPrice).toBeGreaterThan(market.currentPrice);
 
@@ -582,12 +582,12 @@ describe("Order Matching & Execution Engine", () => {
         condition.quantity,
         OrderSide.Buy,
         commission,
-        initialBalance,
+        initialBalance
       );
       expect(newBalance).toBeLessThan(initialBalance);
     });
 
-    it("executes limit order when price reaches target", () => {
+    it('executes limit order when price reaches target', () => {
       const market = createMarket(1.0845);
       const condition: OrderCondition = {
         priceLevel: 1.0845,
@@ -603,7 +603,7 @@ describe("Order Matching & Execution Engine", () => {
       expect(matchResult.executionPrice).toBe(1.085);
     });
 
-    it("triggers stop order and converts to market", () => {
+    it('triggers stop order and converts to market', () => {
       const market = createMarket(1.085);
       const previousPrice = 1.084;
       const condition: OrderCondition = {
@@ -623,12 +623,12 @@ describe("Order Matching & Execution Engine", () => {
       const executionPrice = calculateExecutionPrice(
         market.currentPrice,
         OrderSide.Buy,
-        slippage,
+        slippage
       );
       expect(executionPrice).toBeGreaterThan(market.currentPrice);
     });
 
-    it("validates pre-conditions before position creation", () => {
+    it('validates pre-conditions before position creation', () => {
       const balance = 10000;
       const marginRequired = 500;
       const freeMargin = 2000;
@@ -636,7 +636,7 @@ describe("Order Matching & Execution Engine", () => {
       const validation = validateExecutionPreConditions(
         balance,
         marginRequired,
-        freeMargin,
+        freeMargin
       );
 
       expect(validation.valid).toBe(true);
@@ -649,14 +649,14 @@ describe("Order Matching & Execution Engine", () => {
         const calculatedMargin = calculateMarginRequired(
           quantity,
           entryPrice,
-          leverage,
+          leverage
         );
 
         expect(calculatedMargin).toBeLessThanOrEqual(freeMargin);
       }
     });
 
-    it("handles complex risk management scenario", () => {
+    it('handles complex risk management scenario', () => {
       // Buy position with stop loss and take profit
       const entryPrice = 1.085;
       const stopLoss = 1.084; // 10 pips stop
@@ -675,7 +675,7 @@ describe("Order Matching & Execution Engine", () => {
       const stopTriggers = checkStopOrderTrigger(
         stopCondition,
         marketAtStop,
-        entryPrice,
+        entryPrice
       );
       expect(stopTriggers.matched).toBe(true);
 
@@ -684,14 +684,14 @@ describe("Order Matching & Execution Engine", () => {
         quantity,
         entryPrice,
         stopLoss,
-        OrderSide.Buy,
+        OrderSide.Buy
       );
       expect(loss).toBeLessThan(0);
     });
   });
 
-  describe("Edge cases and boundary conditions", () => {
-    it("handles limit price equal to market price", () => {
+  describe('Edge cases and boundary conditions', () => {
+    it('handles limit price equal to market price', () => {
       const marketPrice = 1.085;
       const market = createMarket(marketPrice);
       const condition: OrderCondition = {
@@ -707,39 +707,39 @@ describe("Order Matching & Execution Engine", () => {
       expect(result.matched).toBe(true);
     });
 
-    it("handles very small order quantities", () => {
+    it('handles very small order quantities', () => {
       const result = calculatePostExecutionBalance(
         1.085,
         0.01,
         OrderSide.Buy,
         0,
-        10000,
+        10000
       );
 
       expect(result).toBeLessThan(10000);
       expect(result).toBeGreaterThan(9999); // Only tiny deduction
     });
 
-    it("handles large order quantities", () => {
+    it('handles large order quantities', () => {
       const result = calculatePostExecutionBalance(
         1.085,
         10000000,
         OrderSide.Buy,
         100,
-        1000000,
+        1000000
       );
 
       expect(result).toBeLessThan(1000000);
       expect(Number.isFinite(result)).toBe(true);
     });
 
-    it("handles zero slippage", () => {
+    it('handles zero slippage', () => {
       const price = calculateExecutionPrice(1.085, OrderSide.Buy, 0);
 
       expect(price).toBe(1.085);
     });
 
-    it("handles very high leverage", () => {
+    it('handles very high leverage', () => {
       const result = calculateMarginRequired(1, 1.085, 500);
 
       expect(result).toBeDefined();

@@ -93,7 +93,7 @@ export interface PerformanceTrend {
  */
 export function calculateTotalPnL(
   realizedPnL: number,
-  unrealizedPnL: number,
+  unrealizedPnL: number
 ): number {
   const total = realizedPnL + unrealizedPnL;
   return Math.round(total * 100) / 100;
@@ -108,7 +108,7 @@ export function calculateTotalPnL(
  */
 export function calculatePnLPercentage(
   pnl: number,
-  initialCapital: number,
+  initialCapital: number
 ): number {
   if (initialCapital === 0) return 0;
   return Math.round((pnl / initialCapital) * 100 * 100) / 100;
@@ -139,7 +139,7 @@ export function calculateROI(pnl: number, capitalInvested: number): number {
  */
 export function calculateWinRate(
   profitableTrades: number,
-  totalTrades: number,
+  totalTrades: number
 ): number {
   if (totalTrades === 0) return 0;
   return Math.round((profitableTrades / totalTrades) * 100 * 100) / 100;
@@ -155,7 +155,7 @@ export function calculateWinRate(
  */
 export function calculateProfitFactor(
   totalProfit: number,
-  totalLoss: number,
+  totalLoss: number
 ): number {
   if (totalLoss === 0) {
     return totalProfit > 0 ? 999.99 : 0; // Max out at 999.99 if no losses
@@ -173,7 +173,7 @@ export function calculateProfitFactor(
  */
 export function calculateAverageWin(
   totalProfit: number,
-  profitableTrades: number,
+  profitableTrades: number
 ): number {
   if (profitableTrades === 0) return 0;
   return Math.round((totalProfit / profitableTrades) * 100) / 100;
@@ -188,7 +188,7 @@ export function calculateAverageWin(
  */
 export function calculateAverageLoss(
   totalLoss: number,
-  losingTrades: number,
+  losingTrades: number
 ): number {
   if (losingTrades === 0) return 0;
   return Math.round((totalLoss / losingTrades) * 100) / 100;
@@ -203,7 +203,7 @@ export function calculateAverageLoss(
  */
 export function calculateRiskRewardRatio(
   averageWin: number,
-  averageLoss: number,
+  averageLoss: number
 ): number {
   if (averageLoss === 0) return 0;
   const ratio = Math.abs(averageWin / averageLoss);
@@ -221,7 +221,7 @@ export function calculateRiskRewardRatio(
 export function calculateExpectancy(
   winRate: number,
   averageWin: number,
-  averageLoss: number,
+  averageLoss: number
 ): number {
   const winProbability = winRate / 100;
   const lossProbability = 1 - winProbability;
@@ -243,7 +243,7 @@ export function calculateExpectancy(
  */
 export function calculateDrawdown(
   currentEquity: number,
-  peakEquity: number,
+  peakEquity: number
 ): number {
   if (peakEquity === 0) return 0;
   const drawdown = peakEquity - currentEquity;
@@ -259,7 +259,7 @@ export function calculateDrawdown(
  */
 export function calculateDrawdownPercentage(
   currentEquity: number,
-  peakEquity: number,
+  peakEquity: number
 ): number {
   if (peakEquity === 0) return 0;
   const drawdownPercentage = ((peakEquity - currentEquity) / peakEquity) * 100;
@@ -286,6 +286,14 @@ export function calculateMaxDrawdown(equityHistory: number[]): {
       troughEquity: 0,
     };
   }
+
+  if (!equityHistory.length)
+    return {
+      maxDrawdown: 0,
+      maxDrawdownPercentage: 0,
+      peakEquity: 0,
+      troughEquity: 0,
+    };
 
   let peak = equityHistory[0];
   let maxDrawdown = 0;
@@ -326,7 +334,7 @@ export function calculateMaxDrawdown(equityHistory: number[]): {
  */
 export function calculateRecoveryFactor(
   netProfit: number,
-  maxDrawdown: number,
+  maxDrawdown: number
 ): number {
   if (maxDrawdown === 0) {
     return netProfit > 0 ? 999.99 : 0;
@@ -348,16 +356,16 @@ export function analyzeDrawdown(
   currentEquity: number,
   peakEquity: number,
   maxDrawdown: number,
-  equityHistory: number[] = [],
+  equityHistory: number[] = []
 ): DrawdownAnalysis {
   const currentDrawdown = calculateDrawdown(currentEquity, peakEquity);
   const currentDrawdownPercentage = calculateDrawdownPercentage(
     currentEquity,
-    peakEquity,
+    peakEquity
   );
   const maxDrawdownPercentage = calculateDrawdownPercentage(
     peakEquity - maxDrawdown,
-    peakEquity,
+    peakEquity
   );
 
   return {
@@ -390,12 +398,12 @@ export function breakdownByAssetClass(
     currentPrice: number;
     unrealizedPnL: number;
   }>,
-  totalPortfolioValue: number,
+  totalPortfolioValue: number
 ): AssetClassMetrics {
   const breakdown: AssetClassMetrics = {};
 
   for (const position of positions) {
-    const assetClass = position.assetClass || "Other";
+    const assetClass = position.assetClass || 'Other';
     const positionValue = position.quantity * position.currentPrice;
 
     if (!breakdown[assetClass]) {
@@ -416,6 +424,7 @@ export function breakdownByAssetClass(
   // Calculate percentages
   for (const assetClass in breakdown) {
     const data = breakdown[assetClass];
+    if (!data) continue;
     data.percentageOfPortfolio =
       totalPortfolioValue > 0
         ? Math.round((data.totalValue / totalPortfolioValue) * 100 * 100) / 100
@@ -450,7 +459,7 @@ export function calculatePortfolioMetrics(
   realizedPnL: number,
   unrealizedPnL: number,
   trades: Array<{ pnl: number; isProfit: boolean }> = [],
-  equityHistory: number[] = [],
+  equityHistory: number[] = []
 ): PortfolioMetrics {
   const totalPnL = calculateTotalPnL(realizedPnL, unrealizedPnL);
   const totalPnLPercentage = calculatePnLPercentage(totalPnL, initialCapital);
@@ -484,7 +493,7 @@ export function calculatePortfolioMetrics(
   const maxDrawdownData = calculateMaxDrawdown(equityHistory);
   const recoveryFactor = calculateRecoveryFactor(
     totalPnL,
-    maxDrawdownData.maxDrawdown,
+    maxDrawdownData.maxDrawdown
   );
 
   const currentDrawdown = calculateDrawdown(equity, maxDrawdownData.peakEquity);

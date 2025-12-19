@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useFormAccessibility } from "@/lib/completeAriaLabeling";
-import type { TabComponentProps } from "../types";
+import { useFormAccessibility } from '@/lib/completeAriaLabeling';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import type { TabComponentProps } from '../types';
 
 /**
  * FormsTab Component
@@ -29,20 +29,20 @@ export function FormsTab({
   // Zod schema for validation
   const formSchema = z
     .object({
-      username: z.string().min(1, "Username is required"),
-      email: z.string().email("Enter a valid email address"),
-      password: z.string().min(8, "Password must be at least 8 characters"),
-      confirmPassword: z.string().min(1, "Please confirm your password"),
-      country: z.string().min(1, "Please select your country"),
-      bio: z.string().max(500).optional().or(z.literal("")),
+      username: z.string().min(1, 'Username is required'),
+      email: z.string().email('Enter a valid email address'),
+      password: z.string().min(8, 'Password must be at least 8 characters'),
+      confirmPassword: z.string().min(1, 'Please confirm your password'),
+      country: z.string().min(1, 'Please select your country'),
+      bio: z.string().max(500).optional().or(z.literal('')),
       terms: z
         .boolean()
-        .refine((val) => val === true, "You must accept the terms"),
+        .refine((val) => val === true, 'You must accept the terms'),
       newsletter: z.boolean().optional(),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
+      message: 'Passwords do not match',
+      path: ['confirmPassword'],
     });
 
   type FormValues = z.infer<typeof formSchema>;
@@ -56,12 +56,12 @@ export function FormsTab({
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: formData.username ?? "",
-      email: formData.email ?? "",
-      password: formData.password ?? "",
-      confirmPassword: formData.confirmPassword ?? "",
-      country: formData.country ?? "",
-      bio: formData.bio ?? "",
+      username: formData.username ?? '',
+      email: formData.email ?? '',
+      password: formData.password ?? '',
+      confirmPassword: formData.confirmPassword ?? '',
+      country: formData.country ?? '',
+      bio: formData.bio ?? '',
       terms: formData.terms ?? false,
       newsletter: formData.newsletter ?? false,
     },
@@ -70,12 +70,12 @@ export function FormsTab({
   // Keep external formData in sync if parent updates it
   useEffect(() => {
     reset({
-      username: formData.username ?? "",
-      email: formData.email ?? "",
-      password: formData.password ?? "",
-      confirmPassword: formData.confirmPassword ?? "",
-      country: formData.country ?? "",
-      bio: formData.bio ?? "",
+      username: formData.username ?? '',
+      email: formData.email ?? '',
+      password: formData.password ?? '',
+      confirmPassword: formData.confirmPassword ?? '',
+      country: formData.country ?? '',
+      bio: formData.bio ?? '',
       terms: formData.terms ?? false,
       newsletter: formData.newsletter ?? false,
     });
@@ -121,7 +121,7 @@ export function FormsTab({
             </label>
             {/* register returns ref and handlers; preserve inputRefs for test harness */}
             {(() => {
-              const { ref, ...rest } = register("username");
+              const { ref, ...rest } = register('username');
               return (
                 <input
                   id="username"
@@ -132,11 +132,11 @@ export function FormsTab({
                     if (inputRefs?.current) inputRefs.current.username = el;
                   }}
                   aria-describedby={
-                    errors.username ? "username-error" : "username-help"
+                    errors.username ? 'username-error' : 'username-help'
                   }
                   aria-required="true"
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                    errors.username ? "border-red-500" : "border-gray-300"
+                    errors.username ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter your username"
                 />
@@ -170,7 +170,7 @@ export function FormsTab({
               </span>
             </label>
             {(() => {
-              const { ref, ...rest } = register("email");
+              const { ref, ...rest } = register('email');
               return (
                 <input
                   id="email"
@@ -180,10 +180,10 @@ export function FormsTab({
                     ref(el);
                     if (inputRefs?.current) inputRefs.current.email = el;
                   }}
-                  aria-describedby={errors.email ? "email-error" : "email-help"}
+                  aria-describedby={errors.email ? 'email-error' : 'email-help'}
                   aria-required="true"
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                    errors.email ? "border-red-500" : "border-gray-300"
+                    errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="user@example.com"
                 />
@@ -217,7 +217,7 @@ export function FormsTab({
               </span>
             </label>
             {(() => {
-              const { ref, ...rest } = register("password");
+              const { ref, ...rest } = register('password');
               return (
                 <input
                   id="password"
@@ -228,11 +228,11 @@ export function FormsTab({
                     if (inputRefs?.current) inputRefs.current.password = el;
                   }}
                   aria-describedby={
-                    errors.password ? "password-error" : "password-help"
+                    errors.password ? 'password-error' : 'password-help'
                   }
                   aria-required="true"
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                    errors.password ? "border-red-500" : "border-gray-300"
+                    errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Create a strong password"
                 />
@@ -268,7 +268,7 @@ export function FormsTab({
               </span>
             </label>
             {(() => {
-              const { ref, ...rest } = register("confirmPassword");
+              const { ref, ...rest } = register('confirmPassword');
               return (
                 <input
                   id="confirmPassword"
@@ -280,13 +280,13 @@ export function FormsTab({
                       inputRefs.current.confirmPassword = el;
                   }}
                   aria-describedby={
-                    errors.confirmPassword ? "confirm-error" : "confirm-help"
+                    errors.confirmPassword ? 'confirm-error' : 'confirm-help'
                   }
                   aria-required="true"
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                     errors.confirmPassword
-                      ? "border-red-500"
-                      : "border-gray-300"
+                      ? 'border-red-500'
+                      : 'border-gray-300'
                   }`}
                   placeholder="Confirm your password"
                 />
@@ -319,7 +319,7 @@ export function FormsTab({
               </span>
             </label>
             {(() => {
-              const { ref, ...rest } = register("country");
+              const { ref, ...rest } = register('country');
               return (
                 <select
                   id="country"
@@ -329,11 +329,11 @@ export function FormsTab({
                     if (inputRefs?.current) inputRefs.current.country = el;
                   }}
                   aria-describedby={
-                    errors.country ? "country-error" : "country-help"
+                    errors.country ? 'country-error' : 'country-help'
                   }
                   aria-required="true"
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                    errors.country ? "border-red-500" : "border-gray-300"
+                    errors.country ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
                   <option value="">Select your country</option>
@@ -369,7 +369,7 @@ export function FormsTab({
               Bio
             </label>
             {(() => {
-              const { ref, ...rest } = register("bio");
+              const { ref, ...rest } = register('bio');
               return (
                 <textarea
                   id="bio"
@@ -394,7 +394,7 @@ export function FormsTab({
           <div>
             <label className="flex items-start space-x-3 cursor-pointer">
               {(() => {
-                const { ref, ...rest } = register("terms");
+                const { ref, ...rest } = register('terms');
                 return (
                   <input
                     type="checkbox"
@@ -407,7 +407,7 @@ export function FormsTab({
                         ).terms = el;
                     }}
                     aria-describedby={
-                      errors.terms ? "terms-error" : "terms-help"
+                      errors.terms ? 'terms-error' : 'terms-help'
                     }
                     aria-required="true"
                     className="mt-1 text-blue-600 focus:ring-blue-500"
@@ -443,7 +443,7 @@ export function FormsTab({
           <div>
             <label className="flex items-start space-x-3 cursor-pointer">
               {(() => {
-                const { ref, ...rest } = register("newsletter");
+                const { ref, ...rest } = register('newsletter');
                 return (
                   <input
                     type="checkbox"
@@ -485,7 +485,7 @@ export function FormsTab({
               onClick={() => {
                 reset();
                 setErrors?.({});
-                onAnnounceToScreenReader?.("Form cleared");
+                onAnnounceToScreenReader?.('Form cleared');
               }}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg font-medium focus:ring-2 focus:ring-gray-500 focus:outline-none"
             >
@@ -513,14 +513,22 @@ export function FormsTab({
           <div className="p-4 bg-green-50 border border-green-200 rounded">
             <h4 className="font-semibold text-green-900">With Labels</h4>
             <p className="text-2xl font-bold text-green-900">
-              {formAccessibility.formFields.filter((f) => f.label).length}
+              {
+                formAccessibility.formFields.filter(
+                  (f: { label?: string | null }) => f.label
+                ).length
+              }
             </p>
           </div>
 
           <div className="p-4 bg-purple-50 border border-purple-200 rounded">
             <h4 className="font-semibold text-purple-900">Required Fields</h4>
             <p className="text-2xl font-bold text-purple-900">
-              {formAccessibility.formFields.filter((f) => f.required).length}
+              {
+                formAccessibility.formFields.filter(
+                  (f: { required?: boolean }) => f.required
+                ).length
+              }
             </p>
           </div>
         </div>

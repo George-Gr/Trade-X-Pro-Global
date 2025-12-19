@@ -17,7 +17,7 @@
  * - IMPLEMENTATION_TASKS_DETAILED.md TASK 1.1.3
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Asset class slippage configuration
@@ -31,7 +31,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: number; // Maximum slippage (pips/points/%)
     volatilityMultiplier: number; // How much slippage increases with volatility (factor)
     priceStep: number; // Minimum price movement unit
-    liquidity: "very_high" | "high" | "medium" | "low"; // Market liquidity
+    liquidity: 'very_high' | 'high' | 'medium' | 'low'; // Market liquidity
     afterHoursPenalty: number; // Extra slippage after hours (multiplier)
   }
 > = {
@@ -43,7 +43,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.6,
     volatilityMultiplier: 3,
     priceStep: 0.0001,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   USDJPY: {
@@ -52,7 +52,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.6,
     volatilityMultiplier: 3,
     priceStep: 0.001,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   GBPUSD: {
@@ -61,7 +61,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.6,
     volatilityMultiplier: 3,
     priceStep: 0.0001,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   USDCHF: {
@@ -70,7 +70,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.6,
     volatilityMultiplier: 3,
     priceStep: 0.0001,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
 
@@ -81,7 +81,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 2,
     volatilityMultiplier: 2.5,
     priceStep: 0.0001,
-    liquidity: "high",
+    liquidity: 'high',
     afterHoursPenalty: 3,
   },
   AUDCAD: {
@@ -90,7 +90,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 2,
     volatilityMultiplier: 2.5,
     priceStep: 0.0001,
-    liquidity: "high",
+    liquidity: 'high',
     afterHoursPenalty: 3,
   },
 
@@ -101,7 +101,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 15,
     volatilityMultiplier: 4,
     priceStep: 0.0001,
-    liquidity: "low",
+    liquidity: 'low',
     afterHoursPenalty: 5,
   },
   USDRUB: {
@@ -110,7 +110,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 15,
     volatilityMultiplier: 4,
     priceStep: 0.0001,
-    liquidity: "low",
+    liquidity: 'low',
     afterHoursPenalty: 5,
   },
 
@@ -121,7 +121,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 2,
     volatilityMultiplier: 2,
     priceStep: 0.1,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   US100: {
@@ -130,7 +130,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 2,
     volatilityMultiplier: 2,
     priceStep: 0.1,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   UK100: {
@@ -139,7 +139,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 2,
     volatilityMultiplier: 2,
     priceStep: 0.1,
-    liquidity: "high",
+    liquidity: 'high',
     afterHoursPenalty: 2.5,
   },
   GER40: {
@@ -148,7 +148,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 2,
     volatilityMultiplier: 2,
     priceStep: 0.1,
-    liquidity: "high",
+    liquidity: 'high',
     afterHoursPenalty: 2.5,
   },
 
@@ -159,7 +159,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 1,
     volatilityMultiplier: 3,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   XAGUSD: {
@@ -168,7 +168,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 1.5,
     volatilityMultiplier: 3,
     priceStep: 0.001,
-    liquidity: "high",
+    liquidity: 'high',
     afterHoursPenalty: 2.5,
   },
   WTIUSD: {
@@ -177,7 +177,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.8,
     volatilityMultiplier: 3,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
   BRENTUSD: {
@@ -186,7 +186,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.8,
     volatilityMultiplier: 3,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
 
@@ -197,7 +197,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.15,
     volatilityMultiplier: 2,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 3,
   },
   TSLA: {
@@ -206,7 +206,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.2,
     volatilityMultiplier: 2.5,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 3,
   },
   MSFT: {
@@ -215,7 +215,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.15,
     volatilityMultiplier: 2,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 3,
   },
   GOOGL: {
@@ -224,7 +224,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.15,
     volatilityMultiplier: 2,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 3,
   },
 
@@ -235,7 +235,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 50,
     volatilityMultiplier: 2.5,
     priceStep: 1,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 1.5, // 24/7, minimal time-based variance
   },
   ETHUSD: {
@@ -244,7 +244,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 40,
     volatilityMultiplier: 2.5,
     priceStep: 0.1,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 1.5,
   },
   XRPUSD: {
@@ -253,7 +253,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.001,
     volatilityMultiplier: 2,
     priceStep: 0.00001,
-    liquidity: "high",
+    liquidity: 'high',
     afterHoursPenalty: 1.3,
   },
 
@@ -264,7 +264,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.15,
     volatilityMultiplier: 2,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 3,
   },
   QQQ: {
@@ -273,7 +273,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.15,
     volatilityMultiplier: 2,
     priceStep: 0.01,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 3,
   },
 
@@ -284,7 +284,7 @@ export const ASSET_SLIPPAGE_CONFIG: Record<
     maxSlippage: 0.05,
     volatilityMultiplier: 2,
     priceStep: 0.001,
-    liquidity: "very_high",
+    liquidity: 'very_high',
     afterHoursPenalty: 2,
   },
 };
@@ -318,18 +318,18 @@ export interface SlippageResult {
  * Validation schema for slippage calculation
  */
 export const SlippageCalculationSchema = z.object({
-  symbol: z.string().min(1, "Symbol required"),
-  marketPrice: z.number().positive("Market price must be positive"),
-  orderQuantity: z.number().positive("Order quantity must be positive"),
-  side: z.enum(["buy", "sell"], { message: "Side must be buy or sell" }),
+  symbol: z.string().min(1, 'Symbol required'),
+  marketPrice: z.number().positive('Market price must be positive'),
+  orderQuantity: z.number().positive('Order quantity must be positive'),
+  side: z.enum(['buy', 'sell'], { message: 'Side must be buy or sell' }),
   conditions: z.object({
     currentVolatility: z
       .number()
-      .nonnegative("Current volatility cannot be negative"),
+      .nonnegative('Current volatility cannot be negative'),
     averageVolatility: z
       .number()
-      .positive("Average volatility must be positive"),
-    dailyVolume: z.number().positive("Daily volume must be positive"),
+      .positive('Average volatility must be positive'),
+    dailyVolume: z.number().positive('Daily volume must be positive'),
     isHighVolatility: z.boolean(),
     isLowLiquidity: z.boolean(),
     orderSizePercentage: z.number().nonnegative(),
@@ -349,10 +349,10 @@ export class SlippageCalculationError extends Error {
   constructor(
     public status: number,
     public details: string,
-    message?: string,
+    message?: string
   ) {
     super(message || details);
-    this.name = "SlippageCalculationError";
+    this.name = 'SlippageCalculationError';
   }
 }
 
@@ -405,7 +405,7 @@ export function calculateVolatilityMultiplier(
   currentVolatility: number,
   averageVolatility: number,
   assetVolatilityMult: number,
-  isHighVolatility: boolean,
+  isHighVolatility: boolean
 ): number {
   const ratio = currentVolatility / (averageVolatility || 1);
   let multiplier = ratio * assetVolatilityMult;
@@ -439,8 +439,8 @@ export function calculateVolatilityMultiplier(
  */
 export function calculateSizeMultiplier(
   orderSizePercentage: number,
-  liquidity: "very_high" | "high" | "medium" | "low",
-  isLowLiquidity: boolean,
+  liquidity: 'very_high' | 'high' | 'medium' | 'low',
+  isLowLiquidity: boolean
 ): number {
   // Cap order size percentage to 100 for calculation
   const cappedSize = Math.min(orderSizePercentage, 100);
@@ -479,7 +479,7 @@ export function calculateSizeMultiplier(
  */
 export function calculateBaseSlippage(
   config: (typeof ASSET_SLIPPAGE_CONFIG)[string],
-  random: () => number,
+  random: () => number
 ): number {
   const range = config.maxSlippage - config.minSlippage;
   const randomSlippage = config.minSlippage + random() * range;
@@ -501,7 +501,7 @@ export function calculateBaseSlippage(
  */
 export function calculateAfterHoursPenalty(
   config: (typeof ASSET_SLIPPAGE_CONFIG)[string],
-  isAfterHours: boolean,
+  isAfterHours: boolean
 ): number {
   return isAfterHours ? config.afterHoursPenalty : 1;
 }
@@ -533,7 +533,7 @@ export function calculateAfterHoursPenalty(
  * // Returns slippage, execution price, and all intermediate values
  */
 export function calculateSlippage(
-  input: SlippageCalculationInput,
+  input: SlippageCalculationInput
 ): SlippageResult {
   // Validate input
   const validation = SlippageCalculationSchema.safeParse(input);
@@ -541,10 +541,10 @@ export function calculateSlippage(
     const details = validation.error.issues
       .map(
         (issue: { path: PropertyKey[]; message: string }) =>
-          `${issue.path.join(".")}: ${issue.message}`,
+          `${issue.path.join('.')}: ${issue.message}`
       )
-      .join(", ");
-    throw new SlippageCalculationError(400, "Invalid slippage input", details);
+      .join(', ');
+    throw new SlippageCalculationError(400, 'Invalid slippage input', details);
   }
 
   const { symbol, marketPrice, orderQuantity, side, conditions, seed } =
@@ -555,7 +555,7 @@ export function calculateSlippage(
   if (!config) {
     throw new SlippageCalculationError(
       400,
-      `Asset ${symbol} not supported for slippage calculation`,
+      `Asset ${symbol} not supported for slippage calculation`
     );
   }
 
@@ -567,20 +567,20 @@ export function calculateSlippage(
     conditions.currentVolatility,
     conditions.averageVolatility,
     config.volatilityMultiplier,
-    conditions.isHighVolatility,
+    conditions.isHighVolatility
   );
 
   // Calculate size multiplier
   const sizeMultiplier = calculateSizeMultiplier(
     conditions.orderSizePercentage,
     config.liquidity,
-    conditions.isLowLiquidity,
+    conditions.isLowLiquidity
   );
 
   // Calculate after-hours penalty
   const afterHoursPenalty = calculateAfterHoursPenalty(
     config,
-    conditions.isAfterHours,
+    conditions.isAfterHours
   );
 
   // Calculate base slippage
@@ -596,7 +596,7 @@ export function calculateSlippage(
   // Calculate execution price
   const slippageInPrice = clampedSlippage * config.priceStep;
   const executionPrice =
-    side === "buy"
+    side === 'buy'
       ? marketPrice + slippageInPrice // Buy slips up
       : marketPrice - slippageInPrice; // Sell slips down
 
@@ -623,8 +623,8 @@ export function calculateSlippage(
 export function getExecutionPrice(
   symbol: string,
   marketPrice: number,
-  side: "buy" | "sell",
-  orderQuantity: number,
+  side: 'buy' | 'sell',
+  orderQuantity: number
 ): number {
   const result = calculateSlippage({
     symbol,
@@ -652,7 +652,7 @@ export function getExecutionPrice(
  * @returns Asset slippage configuration or undefined
  */
 export function getAssetSlippageConfig(
-  symbol: string,
+  symbol: string
 ): (typeof ASSET_SLIPPAGE_CONFIG)[string] | undefined {
   return ASSET_SLIPPAGE_CONFIG[symbol];
 }

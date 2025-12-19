@@ -6,13 +6,13 @@
  */
 
 export type OrderStatus =
-  | "pending"
-  | "open"
-  | "partially_filled"
-  | "filled"
-  | "cancelled"
-  | "rejected"
-  | "expired";
+  | 'pending'
+  | 'open'
+  | 'partially_filled'
+  | 'filled'
+  | 'cancelled'
+  | 'rejected'
+  | 'expired';
 
 /**
  * Classifies the status of an order based on its state.
@@ -26,16 +26,16 @@ export const classifyOrderStatus = (orderState: {
 }): OrderStatus => {
   const { status, filled_quantity, quantity } = orderState;
 
-  if (status === "cancelled") return "cancelled";
-  if (status === "rejected") return "rejected";
-  if (status === "expired") return "expired";
-  if (filled_quantity >= quantity) return "filled";
+  if (status === 'cancelled') return 'cancelled';
+  if (status === 'rejected') return 'rejected';
+  if (status === 'expired') return 'expired';
+  if (filled_quantity >= quantity) return 'filled';
   if (filled_quantity > 0 && filled_quantity < quantity)
-    return "partially_filled";
-  if (status === "open" || status === "active") return "open";
-  if (status === "pending") return "pending";
+    return 'partially_filled';
+  if (status === 'open' || status === 'active') return 'open';
+  if (status === 'pending') return 'pending';
 
-  return "pending";
+  return 'pending';
 };
 
 /**
@@ -43,7 +43,7 @@ export const classifyOrderStatus = (orderState: {
  */
 export const calculateFillPercentage = (
   filledQuantity: number,
-  totalQuantity: number,
+  totalQuantity: number
 ): number => {
   if (totalQuantity === 0) return 0;
   return Math.round((filledQuantity / totalQuantity) * 100);

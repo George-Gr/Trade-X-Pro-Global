@@ -1,6 +1,15 @@
 // Dynamic import utilities for code splitting and bundle optimization
-import React from "react";
-import { trackCustomMetric } from "../../hooks/useWebVitalsEnhanced";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  createElement,
+  type ComponentProps,
+  type ComponentType,
+} from 'react';
+import { trackCustomMetric } from '../../hooks/useWebVitalsEnhanced';
 
 // Network Information API types
 interface NetworkInformation {
@@ -59,30 +68,30 @@ export class DynamicImportManager {
 
   private setupPerformanceObserver() {
     // Monitor dynamic import performance
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       const observer = new PerformanceObserver(
         (list: PerformanceObserverEntryList) => {
           const entries = list.getEntries();
           entries.forEach((entry: PerformanceEntry) => {
             if (
-              entry.name.includes("dynamic-import") ||
+              entry.name.includes('dynamic-import') ||
               (entry as unknown as { initiatorType?: string }).initiatorType ===
-                "fetch"
+                'fetch'
             ) {
               this.trackImportPerformance(entry);
             }
           });
-        },
+        }
       );
-      observer.observe({ entryTypes: ["navigation", "resource"] });
+      observer.observe({ entryTypes: ['navigation', 'resource'] });
     }
   }
 
   private setupServiceWorkerMessageHandler() {
     // Listen for preload requests from service worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.addEventListener("message", (event) => {
-        if (event.data?.type === "PRECACHE_MODULE") {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'PRECACHE_MODULE') {
           this.preloadModule(event.data.path);
         }
       });
@@ -100,7 +109,7 @@ export class DynamicImportManager {
    */
   async importModule<T = unknown>(
     path: string,
-    options: DynamicImportOptions = {},
+    options: DynamicImportOptions = {}
   ): Promise<T> {
     const { timeout = 5000, retries = 2, fallback } = options;
 
@@ -120,7 +129,7 @@ export class DynamicImportManager {
       path,
       timeout,
       retries,
-      fallback,
+      fallback
     );
     this.importCache.set(path, importPromise);
 
@@ -138,7 +147,7 @@ export class DynamicImportManager {
     path: string,
     timeout: number,
     retries: number,
-    fallback?: () => void,
+    fallback?: () => void
   ): Promise<T> {
     let lastError: Error;
 
@@ -151,7 +160,7 @@ export class DynamicImportManager {
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(
             () => reject(new Error(`Import timeout after ${timeout}ms`)),
-            timeout,
+            timeout
           );
         });
 
@@ -164,7 +173,7 @@ export class DynamicImportManager {
         trackCustomMetric(
           `dynamic_import_${path}`,
           endTime - startTime,
-          "Performance",
+          'Performance'
         );
 
         return result;
@@ -175,7 +184,7 @@ export class DynamicImportManager {
         if (attempt <= retries) {
           // Wait before retry with exponential backoff
           await new Promise((resolve) =>
-            setTimeout(resolve, Math.pow(2, attempt) * 1000),
+            setTimeout(resolve, Math.pow(2, attempt) * 1000)
           );
         }
       }
@@ -188,7 +197,7 @@ export class DynamicImportManager {
         const defaultResult = {} as T;
         return defaultResult;
       } catch (fallbackError) {
-        console.error("Fallback also failed:", fallbackError);
+        console.error('Fallback also failed:', fallbackError);
       }
     }
 
@@ -208,13 +217,13 @@ export class DynamicImportManager {
   }
 
   private trackImportPerformance(entry: PerformanceEntry) {
-    if (entry.entryType === "navigation") {
+    if (entry.entryType === 'navigation') {
       // Track navigation performance for dynamic routes
-      trackCustomMetric("dynamic_route_load", entry.duration, "Performance");
-    } else if (entry.entryType === "resource") {
+      trackCustomMetric('dynamic_route_load', entry.duration, 'Performance');
+    } else if (entry.entryType === 'resource') {
       // Track resource loading for code chunks
-      if (entry.name.includes(".js") || entry.name.includes(".chunk")) {
-        trackCustomMetric("chunk_load_time", entry.duration, "Performance");
+      if (entry.name.includes('.js') || entry.name.includes('.chunk')) {
+        trackCustomMetric('chunk_load_time', entry.duration, 'Performance');
       }
     }
   }
@@ -277,27 +286,27 @@ export class DynamicImportManager {
    */
   preloadCommonModules() {
     const commonPaths = [
-      "./components/ui/Button",
-      "./components/ui/Card",
-      "./components/forms/TradingForm",
-      "./hooks/useTradingData",
-      "./hooks/usePriceStream",
-      "./lib/format",
-      "./lib/validationRules",
+      './components/ui/Button',
+      './components/ui/Card',
+      './components/forms/TradingForm',
+      './hooks/useTradingData',
+      './hooks/usePriceStream',
+      './lib/format',
+      './lib/validationRules',
     ];
 
     // Preload modules based on network conditions
-    if ("connection" in navigator) {
+    if ('connection' in navigator) {
       const connection = (
         navigator as Navigator & { connection?: NetworkInformation }
       ).connection;
       if (
         connection &&
-        (connection.effectiveType === "4g" || connection.downlink > 2)
+        (connection.effectiveType === '4g' || connection.downlink > 2)
       ) {
         // Good connection - preload more modules
         commonPaths.forEach((path) => this.preloadModule(path));
-      } else if (connection && connection.effectiveType === "3g") {
+      } else if (connection && connection.effectiveType === '3g') {
         // Moderate connection - preload fewer modules
         commonPaths.slice(0, 3).forEach((path) => this.preloadModule(path));
       }
@@ -315,11 +324,11 @@ export class DynamicImportManager {
    */
   async loadRouteComponents(routePath: string): Promise<unknown> {
     const routeMap: Record<string, string> = {
-      "/trade": "./pages/Trade",
-      "/portfolio": "./pages/Portfolio",
-      "/history": "./pages/History",
-      "/settings": "./pages/Settings",
-      "/admin": "./pages/Admin",
+      '/trade': './pages/Trade',
+      '/portfolio': './pages/Portfolio',
+      '/history': './pages/History',
+      '/settings': './pages/Settings',
+      '/admin': './pages/Admin',
     };
 
     const componentPath = routeMap[routePath];
@@ -341,29 +350,29 @@ export class DynamicImportManager {
    */
   async loadHeavyComponent(
     componentName: string,
-    priority: "high" | "medium" | "low" = "medium",
+    priority: 'high' | 'medium' | 'low' = 'medium'
   ): Promise<unknown> {
     const heavyComponents: Record<
       string,
       { path: string; size: number; priority: number }
     > = {
       TradingViewChart: {
-        path: "./components/charts/TradingViewChart",
+        path: './components/charts/TradingViewChart',
         size: 500000,
         priority: 1,
       },
       AdvancedAnalytics: {
-        path: "./components/analytics/AdvancedAnalytics",
+        path: './components/analytics/AdvancedAnalytics',
         size: 300000,
         priority: 2,
       },
       RiskDashboard: {
-        path: "./pages/AdminRiskDashboard",
+        path: './pages/AdminRiskDashboard',
         size: 400000,
         priority: 1,
       },
       ReportGenerator: {
-        path: "./components/reports/ReportGenerator",
+        path: './components/reports/ReportGenerator',
         size: 250000,
         priority: 3,
       },
@@ -385,7 +394,7 @@ export class DynamicImportManager {
 
   private shouldLoadComponent(
     componentPriority: number,
-    requestPriority: "high" | "medium" | "low",
+    requestPriority: 'high' | 'medium' | 'low'
   ): boolean {
     const priorityMap = { high: 1, medium: 2, low: 3 };
     return componentPriority <= priorityMap[requestPriority];
@@ -423,12 +432,12 @@ export class DynamicImportManager {
         ...value,
         successRate:
           value.attempts > 0
-            ? ((value.success / value.attempts) * 100).toFixed(2) + "%"
-            : "0%",
+            ? ((value.success / value.attempts) * 100).toFixed(2) + '%'
+            : '0%',
         failureRate:
           value.attempts > 0
-            ? ((value.failures / value.attempts) * 100).toFixed(2) + "%"
-            : "0%",
+            ? ((value.failures / value.attempts) * 100).toFixed(2) + '%'
+            : '0%',
       };
     });
     return stats;
@@ -457,13 +466,13 @@ export const dynamicImportManager = DynamicImportManager.getInstance();
 // Utility functions for React components
 export function useDynamicImport<T = unknown>(
   path: string,
-  options?: DynamicImportOptions,
+  options?: DynamicImportOptions
 ) {
-  const [module, setModule] = React.useState<T | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<Error | null>(null);
+  const [module, setModule] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let isCancelled = false;
 
     dynamicImportManager
@@ -491,13 +500,13 @@ export function useDynamicImport<T = unknown>(
 
 // HOC for dynamic component loading
 export function withDynamicImport<
-  T extends React.ComponentType<Record<string, unknown>>,
->(importFunc: () => Promise<{ default: T }>, fallback?: React.ComponentType) {
-  return function DynamicComponent(props: React.ComponentProps<T>) {
-    const [Component, setComponent] = React.useState<T | null>(null);
-    const [loading, setLoading] = React.useState(true);
+  T extends ComponentType<Record<string, unknown>>,
+>(importFunc: () => Promise<{ default: T }>, fallback?: ComponentType) {
+  return function DynamicComponent(props: ComponentProps<T>) {
+    const [Component, setComponent] = useState<T | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    React.useEffect(() => {
+    useEffect(() => {
       let isCancelled = false;
 
       importFunc()
@@ -508,7 +517,7 @@ export function withDynamicImport<
           }
         })
         .catch((error) => {
-          console.error("Failed to load dynamic component:", error);
+          console.error('Failed to load dynamic component:', error);
           if (!isCancelled) {
             setLoading(false);
           }
@@ -521,24 +530,24 @@ export function withDynamicImport<
 
     if (loading) {
       return fallback
-        ? React.createElement(fallback)
-        : React.createElement("div", null, "Loading...");
+        ? createElement(fallback)
+        : createElement('div', null, 'Loading...');
     }
 
     if (!Component) {
       return fallback
-        ? React.createElement(fallback)
-        : React.createElement("div", null, "Failed to load component");
+        ? createElement(fallback)
+        : createElement('div', null, 'Failed to load component');
     }
 
-    return React.createElement(Component, props);
+    return createElement(Component, props);
   };
 }
 
 // Preload critical modules on app start
 export function initializePreloading() {
   // Preload critical modules after app loads
-  window.addEventListener("load", () => {
+  window.addEventListener('load', () => {
     setTimeout(() => {
       dynamicImportManager.preloadCommonModules();
     }, 1000);

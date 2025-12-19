@@ -1,5 +1,5 @@
-import React from "react";
-import { trackCustomMetric } from "../../hooks/useWebVitalsEnhanced";
+import { useEffect, useCallback } from 'react';
+import { trackCustomMetric } from '../../hooks/useWebVitalsEnhanced';
 
 export interface PerformanceBaseline {
   timestamp: Date;
@@ -16,7 +16,7 @@ export interface PerformanceBaseline {
 }
 
 export interface PerformanceAlert {
-  type: "warning" | "critical";
+  type: 'warning' | 'critical';
   metric: string;
   value: number;
   threshold: number;
@@ -30,7 +30,7 @@ export interface PerformanceBudget {
   metric: string;
   warning: number;
   critical: number;
-  unit: "ms" | "bytes" | "percent";
+  unit: 'ms' | 'bytes' | 'percent';
   enabled: boolean;
 }
 
@@ -57,45 +57,45 @@ export class PerformanceMonitoring {
   private setupDefaultBudgets() {
     this.budgets = [
       {
-        metric: "LCP",
+        metric: 'LCP',
         warning: 2500,
         critical: 4000,
-        unit: "ms",
+        unit: 'ms',
         enabled: true,
       },
       {
-        metric: "FID",
+        metric: 'FID',
         warning: 100,
         critical: 300,
-        unit: "ms",
+        unit: 'ms',
         enabled: true,
       },
       {
-        metric: "CLS",
+        metric: 'CLS',
         warning: 0.1,
         critical: 0.25,
-        unit: "percent",
+        unit: 'percent',
         enabled: true,
       },
       {
-        metric: "TTFB",
+        metric: 'TTFB',
         warning: 600,
         critical: 1200,
-        unit: "ms",
+        unit: 'ms',
         enabled: true,
       },
       {
-        metric: "FCP",
+        metric: 'FCP',
         warning: 1800,
         critical: 3000,
-        unit: "ms",
+        unit: 'ms',
         enabled: true,
       },
       {
-        metric: "BundleSize",
+        metric: 'BundleSize',
         warning: 500000, // 500KB
         critical: 1000000, // 1MB
-        unit: "bytes",
+        unit: 'bytes',
         enabled: true,
       },
     ];
@@ -116,16 +116,16 @@ export class PerformanceMonitoring {
 
   private setupCoreWebVitalsMonitoring() {
     // Monitor Core Web Vitals
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       // LCP
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1] as PerformanceEntry;
         if (lastEntry) {
-          this.recordMetric("LCP", lastEntry.startTime);
+          this.recordMetric('LCP', lastEntry.startTime);
         }
       });
-      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
 
       // FID (now INP)
       const fidObserver = new PerformanceObserver((list) => {
@@ -133,12 +133,12 @@ export class PerformanceMonitoring {
         entries.forEach((entry) => {
           const eventEntry = entry as PerformanceEventTiming;
           this.recordMetric(
-            "FID",
-            eventEntry.processingStart - eventEntry.startTime,
+            'FID',
+            eventEntry.processingStart - eventEntry.startTime
           );
         });
       });
-      fidObserver.observe({ entryTypes: ["first-input"] });
+      fidObserver.observe({ entryTypes: ['first-input'] });
 
       // CLS
       let clsValue = 0;
@@ -149,43 +149,43 @@ export class PerformanceMonitoring {
             clsValue += entry.value;
           }
         });
-        this.recordMetric("CLS", clsValue);
+        this.recordMetric('CLS', clsValue);
       });
-      clsObserver.observe({ entryTypes: ["layout-shift"] });
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
 
       // TTFB
       const navObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
           const navEntry = entry as PerformanceNavigationTiming;
-          if (navEntry.entryType === "navigation") {
-            this.recordMetric("TTFB", navEntry.responseStart);
-            this.recordMetric("FCP", navEntry.loadEventEnd);
+          if (navEntry.entryType === 'navigation') {
+            this.recordMetric('TTFB', navEntry.responseStart);
+            this.recordMetric('FCP', navEntry.loadEventEnd);
           }
         });
       });
-      navObserver.observe({ entryTypes: ["navigation"] });
+      navObserver.observe({ entryTypes: ['navigation'] });
     }
   }
 
   private setupResourceMonitoring() {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       const resourceObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
           this.analyzeResource(entry as PerformanceResourceTiming);
         });
       });
-      resourceObserver.observe({ entryTypes: ["resource"] });
+      resourceObserver.observe({ entryTypes: ['resource'] });
     }
   }
 
   private setupBundleSizeMonitoring() {
     // Monitor bundle size by observing script tags
-    const scripts = document.querySelectorAll("script[src]");
+    const scripts = document.querySelectorAll('script[src]');
     scripts.forEach((script) => {
-      const src = script.getAttribute("src");
-      if (src && (src.includes(".js") || src.includes(".chunk"))) {
+      const src = script.getAttribute('src');
+      if (src && (src.includes('.js') || src.includes('.chunk'))) {
         // Estimate bundle size based on resource timing
         this.estimateBundleSize(src);
       }
@@ -193,7 +193,7 @@ export class PerformanceMonitoring {
   }
 
   private setupNetworkConditionMonitoring() {
-    if ("connection" in navigator) {
+    if ('connection' in navigator) {
       const connection = (
         navigator as unknown as {
           connection?: {
@@ -205,17 +205,17 @@ export class PerformanceMonitoring {
       ).connection;
       if (connection) {
         const networkTypeValue = this.mapNetworkTypeToNumber(
-          connection.effectiveType,
+          connection.effectiveType
         );
-        this.recordMetric("NetworkType", networkTypeValue);
-        this.recordMetric("Downlink", connection.downlink);
+        this.recordMetric('NetworkType', networkTypeValue);
+        this.recordMetric('Downlink', connection.downlink);
 
         // Listen for network changes
-        connection.addEventListener("change", () => {
+        connection.addEventListener('change', () => {
           const newNetworkTypeValue = this.mapNetworkTypeToNumber(
-            connection.effectiveType,
+            connection.effectiveType
           );
-          this.recordMetric("NetworkTypeChanged", newNetworkTypeValue);
+          this.recordMetric('NetworkTypeChanged', newNetworkTypeValue);
         });
       }
     }
@@ -223,26 +223,26 @@ export class PerformanceMonitoring {
 
   private mapNetworkTypeToNumber(effectiveType: string): number {
     const typeMap: Record<string, number> = {
-      "slow-2g": 1,
-      "2g": 2,
-      "3g": 3,
-      "4g": 4,
+      'slow-2g': 1,
+      '2g': 2,
+      '3g': 3,
+      '4g': 4,
     };
     return typeMap[effectiveType] || 0;
   }
 
   private setupUserTiming() {
     // Custom performance marks
-    window.addEventListener("load", () => {
+    window.addEventListener('load', () => {
       // Mark when React app is ready
-      performance.mark("react-ready");
+      performance.mark('react-ready');
 
       // Mark when main content is visible
-      const mainContent = document.querySelector("main");
+      const mainContent = document.querySelector('main');
       if (mainContent) {
         const observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
-            performance.mark("main-content-visible");
+            performance.mark('main-content-visible');
             observer.disconnect();
           }
         });
@@ -262,11 +262,11 @@ export class PerformanceMonitoring {
     const slowThreshold = this.getSlowResourceThreshold(resourceType);
     if (loadTime > slowThreshold) {
       this.createAlert(
-        "warning",
-        "ResourceLoadTime",
+        'warning',
+        'ResourceLoadTime',
         loadTime,
         slowThreshold,
-        `Slow ${resourceType} resource: ${entry.name}`,
+        `Slow ${resourceType} resource: ${entry.name}`
       );
     }
 
@@ -277,13 +277,13 @@ export class PerformanceMonitoring {
   }
 
   private getResourceType(url: string): string {
-    if (url.includes(".js")) return "script";
-    if (url.includes(".css")) return "stylesheet";
-    if (url.includes(".png") || url.includes(".jpg") || url.includes(".webp"))
-      return "image";
-    if (url.includes(".woff") || url.includes(".ttf")) return "font";
-    if (url.includes("chunk")) return "chunk";
-    return "other";
+    if (url.includes('.js')) return 'script';
+    if (url.includes('.css')) return 'stylesheet';
+    if (url.includes('.png') || url.includes('.jpg') || url.includes('.webp'))
+      return 'image';
+    if (url.includes('.woff') || url.includes('.ttf')) return 'font';
+    if (url.includes('chunk')) return 'chunk';
+    return 'other';
   }
 
   private getSlowResourceThreshold(type: string): number {
@@ -304,8 +304,8 @@ export class PerformanceMonitoring {
     if (entries.length > 0) {
       const entry = entries[0] as PerformanceResourceTiming;
       this.recordMetric(
-        "BundleSize",
-        entry.transferSize || entry.decodedBodySize,
+        'BundleSize',
+        entry.transferSize || entry.decodedBodySize
       );
     }
   }
@@ -318,7 +318,7 @@ export class PerformanceMonitoring {
     this.recordBaseline(metric, value);
 
     // Track custom metric
-    trackCustomMetric(metric.toLowerCase(), value, "Performance");
+    trackCustomMetric(metric.toLowerCase(), value, 'Performance');
   }
 
   private recordResourceLoadTime(type: string, time: number) {
@@ -330,19 +330,19 @@ export class PerformanceMonitoring {
     const budget = this.budgets.find((b) => b.metric === metric && b.enabled);
     if (!budget) return;
 
-    let alertType: "warning" | "critical" | null = null;
+    let alertType: 'warning' | 'critical' | null = null;
 
-    if (budget.unit === "ms" || budget.unit === "bytes") {
+    if (budget.unit === 'ms' || budget.unit === 'bytes') {
       if (value > budget.critical) {
-        alertType = "critical";
+        alertType = 'critical';
       } else if (value > budget.warning) {
-        alertType = "warning";
+        alertType = 'warning';
       }
-    } else if (budget.unit === "percent") {
+    } else if (budget.unit === 'percent') {
       if (value > budget.critical) {
-        alertType = "critical";
+        alertType = 'critical';
       } else if (value > budget.warning) {
-        alertType = "warning";
+        alertType = 'warning';
       }
     }
 
@@ -352,17 +352,17 @@ export class PerformanceMonitoring {
         metric,
         value,
         budget.warning,
-        `${metric} ${alertType}: ${value}ms (budget: ${budget.warning}ms)`,
+        `${metric} ${alertType}: ${value}ms (budget: ${budget.warning}ms)`
       );
     }
   }
 
   private createAlert(
-    type: "warning" | "critical",
+    type: 'warning' | 'critical',
     metric: string,
     value: number,
     threshold: number,
-    message: string,
+    message: string
   ) {
     const alert: PerformanceAlert = {
       type,
@@ -386,17 +386,17 @@ export class PerformanceMonitoring {
     this.sendAlert(alert);
 
     // Log critical alerts
-    if (type === "critical") {
-      console.error("Performance Alert:", alert);
+    if (type === 'critical') {
+      console.error('Performance Alert:', alert);
     } else {
-      console.warn("Performance Warning:", alert);
+      console.warn('Performance Warning:', alert);
     }
   }
 
   private sendAlert(alert: PerformanceAlert) {
     // In a real implementation, send to monitoring service
     if (
-      typeof window !== "undefined" &&
+      typeof window !== 'undefined' &&
       (
         window as unknown as {
           gtag?: (event: string, action: string, data: unknown) => void;
@@ -407,8 +407,8 @@ export class PerformanceMonitoring {
         window as unknown as {
           gtag?: (event: string, action: string, data: unknown) => void;
         }
-      ).gtag?.("event", "performance_alert", {
-        event_category: "Performance",
+      ).gtag?.('event', 'performance_alert', {
+        event_category: 'Performance',
         event_label: alert.metric,
         custom_parameter_1: alert.type,
         custom_parameter_2: alert.message,
@@ -421,14 +421,14 @@ export class PerformanceMonitoring {
     if (this.baselines.length === 0) {
       this.baselines.push({
         timestamp: new Date(),
-        lcp: metric === "LCP" ? value : 0,
-        fid: metric === "FID" ? value : 0,
-        cls: metric === "CLS" ? value : 0,
-        ttfb: metric === "TTFB" ? value : 0,
-        fcp: metric === "FCP" ? value : 0,
+        lcp: metric === 'LCP' ? value : 0,
+        fid: metric === 'FID' ? value : 0,
+        cls: metric === 'CLS' ? value : 0,
+        ttfb: metric === 'TTFB' ? value : 0,
+        fcp: metric === 'FCP' ? value : 0,
         ttit: 0,
         tbt: 0,
-        bundleSize: metric === "BundleSize" ? value : 0,
+        bundleSize: metric === 'BundleSize' ? value : 0,
         cacheHitRate: 0,
         resourceLoadTimes: {},
       });
@@ -445,10 +445,10 @@ export class PerformanceMonitoring {
     const lastBaseline = this.baselines[this.baselines.length - 1];
     if (lastBaseline) {
       // Calculate cache hit rate over recent requests
-      const recentRequests = performance.getEntriesByType("resource");
+      const recentRequests = performance.getEntriesByType('resource');
       const cacheHits = recentRequests.filter(
         (entry: PerformanceResourceTiming) =>
-          entry.transferSize === 0 && entry.decodedBodySize > 0,
+          entry.transferSize === 0 && entry.decodedBodySize > 0
       ).length;
 
       lastBaseline.cacheHitRate =
@@ -474,12 +474,12 @@ export class PerformanceMonitoring {
   public measureUserFlow(flowName: string, startMark: string, endMark: string) {
     try {
       performance.measure(flowName, startMark, endMark);
-      const measure = performance.getEntriesByName(flowName, "measure")[0];
+      const measure = performance.getEntriesByName(flowName, 'measure')[0];
       if (measure) {
         this.recordMetric(`Flow_${flowName}`, measure.duration);
       }
     } catch (error) {
-      console.warn("Failed to measure user flow:", error);
+      console.warn('Failed to measure user flow:', error);
     }
   }
 
@@ -509,31 +509,31 @@ export class PerformanceMonitoring {
     // Check each metric and provide recommendations
     if (currentBaseline.lcp > 2500) {
       recommendations.push(
-        "Optimize Largest Contentful Paint by preloading critical resources and optimizing images",
+        'Optimize Largest Contentful Paint by preloading critical resources and optimizing images'
       );
     }
 
     if (currentBaseline.fid > 100) {
       recommendations.push(
-        "Reduce First Input Delay by minimizing main thread work and code splitting",
+        'Reduce First Input Delay by minimizing main thread work and code splitting'
       );
     }
 
     if (currentBaseline.cls > 0.1) {
       recommendations.push(
-        "Improve Cumulative Layout Shift by setting explicit dimensions for images and ads",
+        'Improve Cumulative Layout Shift by setting explicit dimensions for images and ads'
       );
     }
 
     if (currentBaseline.bundleSize > 500000) {
       recommendations.push(
-        "Reduce bundle size through code splitting, tree shaking, and dynamic imports",
+        'Reduce bundle size through code splitting, tree shaking, and dynamic imports'
       );
     }
 
     if (currentBaseline.cacheHitRate < 80) {
       recommendations.push(
-        "Improve cache hit rate by implementing proper cache headers and service workers",
+        'Improve cache hit rate by implementing proper cache headers and service workers'
       );
     }
 
@@ -601,17 +601,17 @@ export function withPerformanceTracking<
  * @returns Object with trackRender function for manual render tracking
  */
 export function usePerformanceMonitoring(componentName: string) {
-  React.useEffect(() => {
+  useEffect(() => {
     performanceMonitoring.markUserAction(`component-mount-${componentName}`);
 
     return () => {
       performanceMonitoring.markUserAction(
-        `component-unmount-${componentName}`,
+        `component-unmount-${componentName}`
       );
     };
   }, [componentName]);
 
-  const trackRender = React.useCallback(() => {
+  const trackRender = useCallback(() => {
     performanceMonitoring.markUserAction(`component-render-${componentName}`);
   }, [componentName]);
 

@@ -3,7 +3,7 @@
  * Comprehensive tests for risk metrics, portfolio metrics, and position analysis
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 import {
   calculateMarginLevel,
   calculateFreeMargin,
@@ -18,7 +18,7 @@ import {
   isCloseOnlyMode,
   isLiquidationRisk,
   formatMarginLevel,
-} from "@/lib/risk/riskMetrics";
+} from '@/lib/risk/riskMetrics';
 import {
   calculateTotalPnL,
   calculatePnLPercentage,
@@ -36,7 +36,7 @@ import {
   analyzeDrawdown,
   breakdownByAssetClass,
   calculatePortfolioMetrics,
-} from "@/lib/risk/portfolioMetrics";
+} from '@/lib/risk/portfolioMetrics';
 import {
   calculateConcentration,
   classifyConcentrationRisk,
@@ -47,69 +47,69 @@ import {
   calculateEffectiveNumberOfPositions,
   assessDiversification,
   runStressTests,
-} from "@/lib/risk/positionAnalysis";
+} from '@/lib/risk/positionAnalysis';
 
 // ============================================================================
 // RISK METRICS TESTS
 // ============================================================================
 
-describe("Risk Metrics Calculations", () => {
-  describe("Margin Level", () => {
-    it("should calculate margin level correctly", () => {
+describe('Risk Metrics Calculations', () => {
+  describe('Margin Level', () => {
+    it('should calculate margin level correctly', () => {
       const marginLevel = calculateMarginLevel(10000, 5000);
       expect(marginLevel).toBe(200);
     });
 
-    it("should handle zero margin used", () => {
+    it('should handle zero margin used', () => {
       const marginLevel = calculateMarginLevel(10000, 0);
       expect(marginLevel).toBe(10000);
     });
 
-    it("should classify SAFE risk level", () => {
+    it('should classify SAFE risk level', () => {
       const riskLevel = classifyRiskLevel(300);
-      expect(riskLevel).toBe("safe");
+      expect(riskLevel).toBe('safe');
     });
 
-    it("should classify WARNING risk level", () => {
+    it('should classify WARNING risk level', () => {
       const riskLevel = classifyRiskLevel(150);
-      expect(riskLevel).toBe("warning");
+      expect(riskLevel).toBe('warning');
     });
 
-    it("should classify CRITICAL risk level", () => {
+    it('should classify CRITICAL risk level', () => {
       const riskLevel = classifyRiskLevel(75);
-      expect(riskLevel).toBe("critical");
+      expect(riskLevel).toBe('critical');
     });
 
-    it("should classify LIQUIDATION risk level", () => {
+    it('should classify LIQUIDATION risk level', () => {
       const riskLevel = classifyRiskLevel(25);
-      expect(riskLevel).toBe("liquidation");
+      expect(riskLevel).toBe('liquidation');
     });
   });
 
-  describe("Free and Used Margin", () => {
-    it("should calculate free margin correctly", () => {
+  describe('Free and Used Margin', () => {
+    it('should calculate free margin correctly', () => {
       const freeMargin = calculateFreeMargin(10000, 3000);
       expect(freeMargin).toBe(7000);
     });
 
-    it("should not return negative free margin", () => {
+    it('should not return negative free margin', () => {
       const freeMargin = calculateFreeMargin(2000, 5000);
       expect(freeMargin).toBe(0);
     });
 
-    it("should calculate margin usage percentage", () => {
+    it('should calculate margin usage percentage', () => {
       const usage = calculateMarginUsagePercentage(5000, 10000);
       expect(usage).toBe(50);
     });
 
-    it("should cap margin usage at 100%", () => {
+    it('should cap margin usage at 100%', () => {
       const usage = calculateMarginUsagePercentage(15000, 10000);
       expect(usage).toBe(100);
     });
   });
 
-  describe("Capital at Risk", () => {
-    it("should calculate total capital at risk", () => {
+  describe('Capital at Risk', () => {
+    it('should calculate total capital at risk', () => {
       const positions = [
         { positionValue: 5000, marginRequired: 2500 },
         { positionValue: 3000, marginRequired: 1500 },
@@ -118,82 +118,82 @@ describe("Risk Metrics Calculations", () => {
       expect(car).toBe(8000);
     });
 
-    it("should handle empty positions array", () => {
+    it('should handle empty positions array', () => {
       const car = calculateCapitalAtRisk([]);
       expect(car).toBe(0);
     });
 
-    it("should calculate capital at risk percentage", () => {
+    it('should calculate capital at risk percentage', () => {
       const carPercentage = calculateCapitalAtRiskPercentage(8000, 10000);
       expect(carPercentage).toBe(80);
     });
   });
 
-  describe("Liquidation Price", () => {
-    it("should calculate liquidation price for long positions", () => {
-      const liquidationPrice = calculateLiquidationPrice(100, "long", 2);
+  describe('Liquidation Price', () => {
+    it('should calculate liquidation price for long positions', () => {
+      const liquidationPrice = calculateLiquidationPrice(100, 'long', 2);
       expect(liquidationPrice).toBe(50);
     });
 
-    it("should calculate liquidation price for short positions", () => {
-      const liquidationPrice = calculateLiquidationPrice(100, "short", 2);
+    it('should calculate liquidation price for short positions', () => {
+      const liquidationPrice = calculateLiquidationPrice(100, 'short', 2);
       expect(liquidationPrice).toBe(200);
     });
 
-    it("should calculate movement to liquidation for long", () => {
-      const movement = calculateMovementToLiquidation(100, 50, "long");
+    it('should calculate movement to liquidation for long', () => {
+      const movement = calculateMovementToLiquidation(100, 50, 'long');
       expect(movement).toBe(50); // 50% movement
     });
 
-    it("should calculate movement to liquidation for short", () => {
-      const movement = calculateMovementToLiquidation(100, 200, "short");
+    it('should calculate movement to liquidation for short', () => {
+      const movement = calculateMovementToLiquidation(100, 200, 'short');
       expect(movement).toBe(100); // 100% movement
     });
   });
 
-  describe("Close-only and Liquidation Risk", () => {
-    it("should detect close-only mode", () => {
+  describe('Close-only and Liquidation Risk', () => {
+    it('should detect close-only mode', () => {
       const closeOnly = isCloseOnlyMode(80);
       expect(closeOnly).toBe(true);
     });
 
-    it("should not be in close-only mode", () => {
+    it('should not be in close-only mode', () => {
       const closeOnly = isCloseOnlyMode(200);
       expect(closeOnly).toBe(false);
     });
 
-    it("should detect liquidation risk", () => {
+    it('should detect liquidation risk', () => {
       const risk = isLiquidationRisk(30);
       expect(risk).toBe(true);
     });
 
-    it("should not have liquidation risk", () => {
+    it('should not have liquidation risk', () => {
       const risk = isLiquidationRisk(150);
       expect(risk).toBe(false);
     });
   });
 
-  describe("Margin Level Formatting", () => {
-    it("should format finite margin level", () => {
+  describe('Margin Level Formatting', () => {
+    it('should format finite margin level', () => {
       const formatted = formatMarginLevel(150.25);
-      expect(formatted).toBe("150.25%");
+      expect(formatted).toBe('150.25%');
     });
 
-    it("should format infinite margin level", () => {
+    it('should format infinite margin level', () => {
       const formatted = formatMarginLevel(15000);
-      expect(formatted).toBe("∞%");
+      expect(formatted).toBe('∞%');
     });
   });
 
-  describe("Comprehensive Risk Metrics", () => {
-    it("should calculate complete risk metrics", () => {
+  describe('Comprehensive Risk Metrics', () => {
+    it('should calculate complete risk metrics', () => {
       const positions = [{ positionValue: 5000, marginRequired: 2500 }];
       const metrics = calculateRiskMetrics(10000, 2500, positions);
 
       expect(metrics.currentMarginLevel).toBe(400);
       expect(metrics.freeMargin).toBe(7500);
       expect(metrics.usedMargin).toBe(2500);
-      expect(metrics.riskLevel).toBe("safe");
+      expect(metrics.riskLevel).toBe('safe');
       expect(metrics.capitalAtRisk).toBe(5000);
     });
   });
@@ -203,101 +203,101 @@ describe("Risk Metrics Calculations", () => {
 // PORTFOLIO METRICS TESTS
 // ============================================================================
 
-describe("Portfolio Metrics Calculations", () => {
-  describe("P&L Calculations", () => {
-    it("should calculate total P&L", () => {
+describe('Portfolio Metrics Calculations', () => {
+  describe('P&L Calculations', () => {
+    it('should calculate total P&L', () => {
       const totalPnL = calculateTotalPnL(5000, 2000);
       expect(totalPnL).toBe(7000);
     });
 
-    it("should calculate P&L percentage", () => {
+    it('should calculate P&L percentage', () => {
       const pnlPercentage = calculatePnLPercentage(1000, 10000);
       expect(pnlPercentage).toBe(10);
     });
 
-    it("should calculate ROI", () => {
+    it('should calculate ROI', () => {
       const roi = calculateROI(2000, 10000);
       expect(roi).toBe(20);
     });
   });
 
-  describe("Trade Statistics", () => {
-    it("should calculate win rate", () => {
+  describe('Trade Statistics', () => {
+    it('should calculate win rate', () => {
       const winRate = calculateWinRate(70, 100);
       expect(winRate).toBe(70);
     });
 
-    it("should handle zero total trades", () => {
+    it('should handle zero total trades', () => {
       const winRate = calculateWinRate(0, 0);
       expect(winRate).toBe(0);
     });
 
-    it("should calculate profit factor", () => {
+    it('should calculate profit factor', () => {
       const profitFactor = calculateProfitFactor(10000, 5000);
       expect(profitFactor).toBe(2);
     });
 
-    it("should max out profit factor on zero loss", () => {
+    it('should max out profit factor on zero loss', () => {
       const profitFactor = calculateProfitFactor(5000, 0);
       expect(profitFactor).toBe(999.99);
     });
 
-    it("should calculate average win", () => {
+    it('should calculate average win', () => {
       const avgWin = calculateAverageWin(5000, 50);
       expect(avgWin).toBe(100);
     });
 
-    it("should calculate average loss", () => {
+    it('should calculate average loss', () => {
       const avgLoss = calculateAverageLoss(2000, 40);
       expect(avgLoss).toBe(50);
     });
 
-    it("should calculate risk-reward ratio", () => {
+    it('should calculate risk-reward ratio', () => {
       const ratio = calculateRiskRewardRatio(200, 100);
       expect(ratio).toBe(2);
     });
 
-    it("should calculate expectancy", () => {
+    it('should calculate expectancy', () => {
       const expectancy = calculateExpectancy(60, 100, -50);
       // Win prob 60% * 100 - Loss prob 40% * 50 = 60 - 20 = 40
       expect(expectancy).toBe(40);
     });
   });
 
-  describe("Drawdown Analysis", () => {
-    it("should calculate drawdown", () => {
+  describe('Drawdown Analysis', () => {
+    it('should calculate drawdown', () => {
       const drawdown = calculateDrawdown(8000, 10000);
       expect(drawdown).toBe(2000);
     });
 
-    it("should not calculate negative drawdown", () => {
+    it('should not calculate negative drawdown', () => {
       const drawdown = calculateDrawdown(12000, 10000);
       expect(drawdown).toBe(0);
     });
 
-    it("should calculate drawdown percentage", () => {
+    it('should calculate drawdown percentage', () => {
       const percentage = calculateDrawdownPercentage(8000, 10000);
       expect(percentage).toBe(20);
     });
 
-    it("should calculate max drawdown from history", () => {
+    it('should calculate max drawdown from history', () => {
       const history = [10000, 9000, 8500, 9500, 8000, 9000];
       const maxDrawdown = calculateMaxDrawdown(history);
       expect(maxDrawdown.maxDrawdown).toBe(2000);
       expect(maxDrawdown.maxDrawdownPercentage).toBe(20);
     });
 
-    it("should calculate recovery factor", () => {
+    it('should calculate recovery factor', () => {
       const recoveryFactor = calculateRecoveryFactor(5000, 1000);
       expect(recoveryFactor).toBe(5);
     });
 
-    it("should max out recovery factor on zero drawdown", () => {
+    it('should max out recovery factor on zero drawdown', () => {
       const recoveryFactor = calculateRecoveryFactor(1000, 0);
       expect(recoveryFactor).toBe(999.99);
     });
 
-    it("should analyze drawdown details", () => {
+    it('should analyze drawdown details', () => {
       const analysis = analyzeDrawdown(9000, 10000, 2000);
       expect(analysis.currentDrawdown).toBe(1000);
       expect(analysis.maxDrawdown).toBe(2000);
@@ -305,19 +305,19 @@ describe("Portfolio Metrics Calculations", () => {
     });
   });
 
-  describe("Asset Class Breakdown", () => {
-    it("should breakdown portfolio by asset class", () => {
+  describe('Asset Class Breakdown', () => {
+    it('should breakdown portfolio by asset class', () => {
       const positions = [
         {
-          symbol: "EURUSD",
-          assetClass: "Forex",
+          symbol: 'EURUSD',
+          assetClass: 'Forex',
           quantity: 100,
           currentPrice: 1.1,
           unrealizedPnL: 50,
         },
         {
-          symbol: "AAPL",
-          assetClass: "Stocks",
+          symbol: 'AAPL',
+          assetClass: 'Stocks',
           quantity: 10,
           currentPrice: 150,
           unrealizedPnL: 100,
@@ -325,15 +325,15 @@ describe("Portfolio Metrics Calculations", () => {
       ];
       const breakdown = breakdownByAssetClass(positions, 2600);
 
-      expect(breakdown["Forex"]).toBeDefined();
-      expect(breakdown["Stocks"]).toBeDefined();
-      expect(breakdown["Forex"].positions).toBe(1);
-      expect(breakdown["Stocks"].positions).toBe(1);
+      expect(breakdown['Forex']).toBeDefined();
+      expect(breakdown['Stocks']).toBeDefined();
+      expect(breakdown['Forex'].positions).toBe(1);
+      expect(breakdown['Stocks'].positions).toBe(1);
     });
   });
 
-  describe("Comprehensive Portfolio Metrics", () => {
-    it("should calculate complete portfolio metrics", () => {
+  describe('Comprehensive Portfolio Metrics', () => {
+    it('should calculate complete portfolio metrics', () => {
       const trades = [
         { pnl: 500, isProfit: true },
         { pnl: -200, isProfit: false },
@@ -347,7 +347,7 @@ describe("Portfolio Metrics Calculations", () => {
         500,
         200,
         trades,
-        equityHistory,
+        equityHistory
       );
 
       expect(metrics.totalRealizedPnL).toBe(500);
@@ -365,118 +365,118 @@ describe("Portfolio Metrics Calculations", () => {
 // POSITION ANALYSIS TESTS
 // ============================================================================
 
-describe("Position Analysis Calculations", () => {
-  describe("Concentration Analysis", () => {
-    it("should calculate position concentration", () => {
+describe('Position Analysis Calculations', () => {
+  describe('Concentration Analysis', () => {
+    it('should calculate position concentration', () => {
       const concentration = calculateConcentration(5000, 10000);
       expect(concentration).toBe(50);
     });
 
-    it("should classify low concentration risk", () => {
+    it('should classify low concentration risk', () => {
       const risk = classifyConcentrationRisk(3);
-      expect(risk).toBe("low");
+      expect(risk).toBe('low');
     });
 
-    it("should classify medium concentration risk", () => {
+    it('should classify medium concentration risk', () => {
       const risk = classifyConcentrationRisk(7);
-      expect(risk).toBe("medium");
+      expect(risk).toBe('medium');
     });
 
-    it("should classify high concentration risk", () => {
+    it('should classify high concentration risk', () => {
       const risk = classifyConcentrationRisk(15);
-      expect(risk).toBe("high");
+      expect(risk).toBe('high');
     });
 
-    it("should classify critical concentration risk", () => {
+    it('should classify critical concentration risk', () => {
       const risk = classifyConcentrationRisk(60);
-      expect(risk).toBe("critical");
+      expect(risk).toBe('critical');
     });
   });
 
-  describe("Herfindahl Index", () => {
-    it("should calculate Herfindahl Index", () => {
+  describe('Herfindahl Index', () => {
+    it('should calculate Herfindahl Index', () => {
       const concentrations = [25, 25, 25, 25]; // Perfect diversification
       const hi = calculateHerfindahlIndex(concentrations);
       expect(hi).toBe(2500); // 4 × 25² = 2500
     });
 
-    it("should detect high concentration", () => {
+    it('should detect high concentration', () => {
       const concentrations = [90, 5, 3, 2]; // Highly concentrated
       const hi = calculateHerfindahlIndex(concentrations);
       expect(hi).toBeGreaterThan(8000);
     });
   });
 
-  describe("Correlation Analysis", () => {
-    it("should calculate perfect correlation", () => {
+  describe('Correlation Analysis', () => {
+    it('should calculate perfect correlation', () => {
       const prices1 = [100, 101, 102, 103, 104];
       const prices2 = [100, 101, 102, 103, 104];
       const correlation = calculateCorrelation(prices1, prices2);
       expect(correlation).toBeCloseTo(1, 0.1);
     });
 
-    it("should calculate negative correlation", () => {
+    it('should calculate negative correlation', () => {
       const prices1 = [100, 101, 102, 103, 104];
       const prices2 = [104, 103, 102, 101, 100];
       const correlation = calculateCorrelation(prices1, prices2);
       expect(correlation).toBeLessThan(0);
     });
 
-    it("should classify high hedging potential", () => {
+    it('should classify high hedging potential', () => {
       const potential = classifyHedgingPotential(-0.7);
-      expect(potential).toBe("high");
+      expect(potential).toBe('high');
     });
 
-    it("should classify low hedging potential", () => {
+    it('should classify low hedging potential', () => {
       const potential = classifyHedgingPotential(0.8);
-      expect(potential).toBe("low");
+      expect(potential).toBe('low');
     });
   });
 
-  describe("Effective Number of Positions", () => {
-    it("should calculate ENP for equal weight positions", () => {
+  describe('Effective Number of Positions', () => {
+    it('should calculate ENP for equal weight positions', () => {
       const concentrations = [25, 25, 25, 25]; // 4 equal positions
       const enp = calculateEffectiveNumberOfPositions(concentrations);
       expect(enp).toBeCloseTo(4, 1);
     });
 
-    it("should detect single position concentration", () => {
+    it('should detect single position concentration', () => {
       const concentrations = [100]; // Single position
       const enp = calculateEffectiveNumberOfPositions(concentrations);
       expect(enp).toBeLessThan(2);
     });
   });
 
-  describe("Diversification Assessment", () => {
-    it("should assess reasonably diversified portfolio", () => {
+  describe('Diversification Assessment', () => {
+    it('should assess reasonably diversified portfolio', () => {
       const positions = [
         {
-          symbol: "EUR",
-          assetClass: "Forex",
+          symbol: 'EUR',
+          assetClass: 'Forex',
           quantity: 100,
           currentPrice: 1.1,
         },
         {
-          symbol: "GBP",
-          assetClass: "Forex",
+          symbol: 'GBP',
+          assetClass: 'Forex',
           quantity: 100,
           currentPrice: 1.3,
         },
         {
-          symbol: "JPY",
-          assetClass: "Forex",
+          symbol: 'JPY',
+          assetClass: 'Forex',
           quantity: 1000,
           currentPrice: 0.01,
         },
         {
-          symbol: "AAPL",
-          assetClass: "Stocks",
+          symbol: 'AAPL',
+          assetClass: 'Stocks',
           quantity: 10,
           currentPrice: 150,
         },
         {
-          symbol: "MSFT",
-          assetClass: "Stocks",
+          symbol: 'MSFT',
+          assetClass: 'Stocks',
           quantity: 10,
           currentPrice: 300,
         },
@@ -488,11 +488,11 @@ describe("Position Analysis Calculations", () => {
       expect(diversification.numberOfSymbols).toBeGreaterThanOrEqual(5); // At least 5 positions
     });
 
-    it("should detect poorly diversified portfolio", () => {
+    it('should detect poorly diversified portfolio', () => {
       const positions = [
         {
-          symbol: "SINGLE",
-          assetClass: "Stocks",
+          symbol: 'SINGLE',
+          assetClass: 'Stocks',
           quantity: 1000,
           currentPrice: 100,
         },
@@ -505,12 +505,12 @@ describe("Position Analysis Calculations", () => {
     });
   });
 
-  describe("Stress Testing", () => {
-    it("should run stress tests", () => {
+  describe('Stress Testing', () => {
+    it('should run stress tests', () => {
       const positions = [
         {
-          symbol: "EURUSD",
-          side: "long" as const,
+          symbol: 'EURUSD',
+          side: 'long' as const,
           quantity: 100,
           currentPrice: 1.1,
           liquidationPrice: 1.05,
@@ -529,20 +529,20 @@ describe("Position Analysis Calculations", () => {
     });
   });
 
-  describe("Comprehensive Concentration Analysis", () => {
-    it("should provide complete concentration analysis", () => {
+  describe('Comprehensive Concentration Analysis', () => {
+    it('should provide complete concentration analysis', () => {
       const positions = [
         {
-          symbol: "EUR",
-          assetClass: "Forex",
+          symbol: 'EUR',
+          assetClass: 'Forex',
           quantity: 100,
           currentPrice: 1.1,
           marginRequired: 550,
           unrealizedPnL: 50,
         },
         {
-          symbol: "AAPL",
-          assetClass: "Stocks",
+          symbol: 'AAPL',
+          assetClass: 'Stocks',
           quantity: 50,
           currentPrice: 150,
           marginRequired: 7500,
@@ -565,8 +565,8 @@ describe("Position Analysis Calculations", () => {
 // INTEGRATION TESTS
 // ============================================================================
 
-describe("Risk Dashboard Integration", () => {
-  it("should calculate metrics for realistic portfolio scenario", () => {
+describe('Risk Dashboard Integration', () => {
+  it('should calculate metrics for realistic portfolio scenario', () => {
     // Setup realistic portfolio
     const profiles = {
       equity: 15000,
@@ -593,7 +593,7 @@ describe("Risk Dashboard Integration", () => {
     const riskMetrics = calculateRiskMetrics(
       profiles.equity,
       profiles.marginUsed,
-      positions,
+      positions
     );
 
     const portfolioMetrics = calculatePortfolioMetrics(
@@ -601,24 +601,24 @@ describe("Risk Dashboard Integration", () => {
       profiles.balance,
       profiles.realizedPnL,
       500,
-      trades,
+      trades
     );
 
     // Verify results make sense
-    expect(riskMetrics.riskLevel).toBe("safe");
+    expect(riskMetrics.riskLevel).toBe('safe');
     expect(portfolioMetrics.winRate).toBeGreaterThan(50);
     expect(portfolioMetrics.profitFactor).toBeGreaterThan(1);
     expect(portfolioMetrics.totalPnL).toBeGreaterThan(0);
   });
 
-  it("should handle edge cases correctly", () => {
+  it('should handle edge cases correctly', () => {
     // Zero positions
     const riskMetrics1 = calculateRiskMetrics(10000, 0, []);
     expect(riskMetrics1.capitalAtRisk).toBe(0);
 
     // High leverage (margin level 50% = critical, not yet liquidation)
     const riskMetrics2 = calculateRiskMetrics(5000, 10000, []);
-    expect(riskMetrics2.riskLevel).toBe("critical");
+    expect(riskMetrics2.riskLevel).toBe('critical');
 
     // No trades
     const portfolioMetrics = calculatePortfolioMetrics(10000, 10000, 0, 0, []);

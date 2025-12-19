@@ -18,37 +18,37 @@
 // ============================================================================
 
 export enum ClosureReason {
-  TAKE_PROFIT = "take_profit",
-  STOP_LOSS = "stop_loss",
-  TRAILING_STOP = "trailing_stop",
-  TIME_EXPIRY = "time_expiry",
-  MANUAL_USER = "manual_user",
-  MARGIN_CALL = "margin_call",
-  LIQUIDATION = "liquidation",
-  ADMIN_FORCED = "admin_forced",
+  TAKE_PROFIT = 'take_profit',
+  STOP_LOSS = 'stop_loss',
+  TRAILING_STOP = 'trailing_stop',
+  TIME_EXPIRY = 'time_expiry',
+  MANUAL_USER = 'manual_user',
+  MARGIN_CALL = 'margin_call',
+  LIQUIDATION = 'liquidation',
+  ADMIN_FORCED = 'admin_forced',
 }
 
 export enum ClosureStatus {
-  PENDING = "pending",
-  IN_PROGRESS = "in_progress",
-  COMPLETED = "completed",
-  PARTIAL = "partial",
-  FAILED = "failed",
-  CANCELLED = "cancelled",
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  PARTIAL = 'partial',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
 }
 
 export interface Position {
   id: string;
   user_id: string;
   symbol: string;
-  side: "long" | "short";
+  side: 'long' | 'short';
   quantity: number;
   entry_price: number;
   current_price: number;
   unrealized_pnl: number;
   margin_used: number;
   margin_level: number;
-  status: "open" | "closing" | "closed";
+  status: 'open' | 'closing' | 'closed';
   take_profit_level?: number;
   stop_loss_level?: number;
   trailing_stop_distance?: number;
@@ -151,11 +151,11 @@ export interface ClosureSummary {
  */
 export function checkTakeProfitTriggered(
   position: Position,
-  currentPrice: number,
+  currentPrice: number
 ): boolean {
   if (!position.take_profit_level) return false;
 
-  if (position.side === "long") {
+  if (position.side === 'long') {
     return currentPrice >= position.take_profit_level;
   } else {
     return currentPrice <= position.take_profit_level;
@@ -170,11 +170,11 @@ export function checkTakeProfitTriggered(
  */
 export function checkStopLossTriggered(
   position: Position,
-  currentPrice: number,
+  currentPrice: number
 ): boolean {
   if (!position.stop_loss_level) return false;
 
-  if (position.side === "long") {
+  if (position.side === 'long') {
     return currentPrice <= position.stop_loss_level;
   } else {
     return currentPrice >= position.stop_loss_level;
@@ -192,7 +192,7 @@ export function checkStopLossTriggered(
 export function checkTrailingStopTriggered(
   position: Position,
   currentPrice: number,
-  priceHistory: number[] = [],
+  priceHistory: number[] = []
 ): boolean {
   if (!position.trailing_stop_distance || !position.trailing_stop_peak_price) {
     return false;
@@ -201,7 +201,7 @@ export function checkTrailingStopTriggered(
   const peakPrice = position.trailing_stop_peak_price;
   const stopDistance = position.trailing_stop_distance;
 
-  if (position.side === "long") {
+  if (position.side === 'long') {
     // For long: trailing stop is below peak
     // Triggered when price falls below (peak - distance)
     return currentPrice <= peakPrice - stopDistance;
@@ -220,7 +220,7 @@ export function checkTrailingStopTriggered(
  */
 export function checkTimeBasedExpiryTriggered(
   position: Position,
-  maxHoldDurationMs: number,
+  maxHoldDurationMs: number
 ): boolean {
   const createdAtMs = new Date(position.created_at).getTime();
   const nowMs = Date.now();
@@ -239,7 +239,7 @@ export function checkTimeBasedExpiryTriggered(
 export function shouldForceClosure(
   position: Position,
   marginLevel: number,
-  liquidationTrigger: boolean = false,
+  liquidationTrigger: boolean = false
 ): boolean {
   // Force close if liquidation triggered (system emergency)
   if (liquidationTrigger) return true;
@@ -265,7 +265,7 @@ export function getPrimaryClosureTrigger(
   currentPrice: number,
   marginLevel: number = 100,
   maxHoldDurationMs: number = Infinity,
-  liquidationTrigger: boolean = false,
+  liquidationTrigger: boolean = false
 ): ClosureReason | null {
   // Priority 1: Force closure (margin call, liquidation)
   if (shouldForceClosure(position, marginLevel, liquidationTrigger)) {
@@ -313,7 +313,7 @@ export function getPrimaryClosureTrigger(
 export function calculateClosureSlippage(
   symbol: string,
   closureReason: ClosureReason,
-  normalSlippage: number = 0.1,
+  normalSlippage: number = 0.1
 ): number {
   // Force closures get worst-case pricing (1.5x normal slippage)
   if (
@@ -345,17 +345,17 @@ export function calculateClosurePrice(
   position: Position,
   currentPrice: number,
   closureReason: ClosureReason,
-  normalSlippage: number = 0.1,
+  normalSlippage: number = 0.1
 ): number {
   const slippagePercent = calculateClosureSlippage(
     position.symbol,
     closureReason,
-    normalSlippage,
+    normalSlippage
   );
 
   const slippageAmount = currentPrice * (slippagePercent / 100);
 
-  if (position.side === "long") {
+  if (position.side === 'long') {
     // Selling long position: worse price (lower) when buying at closure
     return Math.max(0, currentPrice - slippageAmount);
   } else {
@@ -372,11 +372,11 @@ export function calculateClosurePrice(
  */
 export function calculateRealizedPnLOnClosure(
   position: Position,
-  exitPrice: number,
+  exitPrice: number
 ): { pnl: number; pnlPercentage: number } {
   const priceDifference = exitPrice - position.entry_price;
 
-  if (position.side === "long") {
+  if (position.side === 'long') {
     // Long: profit when price increases
     const pnl = priceDifference * position.quantity;
     const pnlPercentage = (priceDifference / position.entry_price) * 100;
@@ -403,7 +403,7 @@ export function calculateCommissionOnClosure(
   symbol: string,
   quantity: number,
   exitPrice: number,
-  commissionRate: number = 0.1,
+  commissionRate: number = 0.1
 ): number {
   const notionalValue = quantity * exitPrice;
   return (notionalValue * commissionRate) / 100;
@@ -418,7 +418,7 @@ export function calculateCommissionOnClosure(
  */
 export function calculateAvailableMarginAfterClosure(
   position: Position,
-  leverage: number = 2,
+  leverage: number = 2
 ): number {
   // Margin used = (quantity * entry_price) / leverage
   // When position closes, this margin is freed
@@ -439,45 +439,45 @@ export function calculateAvailableMarginAfterClosure(
 export function validateClosurePreConditions(
   position: Position,
   currentPrice: number,
-  marginLevel: number = 100,
+  marginLevel: number = 100
 ): ClosurePreConditions {
   const errors: string[] = [];
   const warnings: string[] = [];
 
   // Check position exists and is open
-  if (position.status !== "open") {
+  if (position.status !== 'open') {
     errors.push(`Position status is ${position.status}, not open`);
   }
 
   // Check quantity is positive
   if (position.quantity <= 0) {
-    errors.push("Position quantity must be positive");
+    errors.push('Position quantity must be positive');
   }
 
   // Check entry price is valid
   if (position.entry_price <= 0) {
-    errors.push("Position entry price must be positive");
+    errors.push('Position entry price must be positive');
   }
 
   // Check current price is available
   if (currentPrice <= 0) {
-    errors.push("Current market price must be available");
+    errors.push('Current market price must be available');
   }
 
   // Warn if closing at unfavorable price
   const unrealizedPnL = calculateRealizedPnLOnClosure(
     position,
-    currentPrice,
+    currentPrice
   ).pnl;
   if (unrealizedPnL < 0 && unrealizedPnL < position.unrealized_pnl * 0.9) {
     warnings.push(
-      "Closure price is significantly worse than current market price",
+      'Closure price is significantly worse than current market price'
     );
   }
 
   // Warn if margin is critical
   if (marginLevel < 100) {
-    warnings.push("Account margin level is critical");
+    warnings.push('Account margin level is critical');
   }
 
   return {
@@ -495,7 +495,7 @@ export function validateClosurePreConditions(
  */
 export function checkClosureSafety(
   position: Position,
-  marketPrices: Record<string, number>,
+  marketPrices: Record<string, number>
 ): { safe: boolean; issues: string[] } {
   const issues: string[] = [];
 
@@ -509,7 +509,7 @@ export function checkClosureSafety(
 
   // Check position quantity matches expected
   if (position.quantity <= 0) {
-    issues.push("Position quantity invalid");
+    issues.push('Position quantity invalid');
   }
 
   return {
@@ -534,7 +534,7 @@ export function checkClosureSafety(
 export function executePositionClosure(
   position: Position,
   currentPrice: number,
-  reason: ClosureReason,
+  reason: ClosureReason
 ): ClosureResult {
   // Validate preconditions
   const validation = validateClosurePreConditions(position, currentPrice);
@@ -554,7 +554,7 @@ export function executePositionClosure(
       new_margin_level: position.margin_level,
       new_available_margin: 0,
       hold_duration_seconds: 0,
-      message: validation.errors.join("; "),
+      message: validation.errors.join('; '),
       notification_sent: false,
       error: validation.errors[0],
     };
@@ -566,14 +566,14 @@ export function executePositionClosure(
   // Calculate P&L
   const { pnl, pnlPercentage } = calculateRealizedPnLOnClosure(
     position,
-    exitPrice,
+    exitPrice
   );
 
   // Calculate costs
   const commission = calculateCommissionOnClosure(
     position.symbol,
     position.quantity,
-    exitPrice,
+    exitPrice
   );
   const slippageAmount = Math.abs(currentPrice - exitPrice) * position.quantity;
 
@@ -621,7 +621,7 @@ export function executePartialClosure(
   position: Position,
   quantityToClose: number,
   currentPrice: number,
-  reason: ClosureReason,
+  reason: ClosureReason
 ): ClosureResult {
   // Validate quantity
   if (quantityToClose <= 0 || quantityToClose > position.quantity) {
@@ -642,7 +642,7 @@ export function executePartialClosure(
       hold_duration_seconds: 0,
       message: `Cannot close ${quantityToClose} of ${position.quantity} quantity`,
       notification_sent: false,
-      error: "Invalid partial close quantity",
+      error: 'Invalid partial close quantity',
     };
   }
 
@@ -658,7 +658,7 @@ export function executePartialClosure(
   const commission = calculateCommissionOnClosure(
     position.symbol,
     quantityToClose,
-    exitPrice,
+    exitPrice
   );
   const slippageAmount = Math.abs(currentPrice - exitPrice) * quantityToClose;
 
@@ -704,7 +704,7 @@ export function executePartialClosure(
 export function updateTrailingStop(
   position: Position,
   currentPrice: number,
-  highPrice: number,
+  highPrice: number
 ): Position {
   if (!position.trailing_stop_distance) {
     return position;
@@ -712,7 +712,7 @@ export function updateTrailingStop(
 
   const updated = { ...position };
 
-  if (position.side === "long") {
+  if (position.side === 'long') {
     // For long: peak is the highest price reached
     // Stop is always below peak by trailing distance
     if (
@@ -744,7 +744,7 @@ export function updateTrailingStop(
  */
 export function getPositionClosureSummary(
   positionId: string,
-  closures: PositionClosure[],
+  closures: PositionClosure[]
 ): ClosureSummary {
   const wins = closures.filter((c) => c.realized_pnl > 0).length;
   const losses = closures.filter((c) => c.realized_pnl < 0).length;
@@ -781,16 +781,16 @@ export function getPositionClosureSummary(
  */
 export function formatClosureReason(reason: ClosureReason): string {
   const reasons: Record<ClosureReason, string> = {
-    [ClosureReason.TAKE_PROFIT]: "Take Profit",
-    [ClosureReason.STOP_LOSS]: "Stop Loss",
-    [ClosureReason.TRAILING_STOP]: "Trailing Stop",
-    [ClosureReason.TIME_EXPIRY]: "Position Expired",
-    [ClosureReason.MANUAL_USER]: "Manual Close",
-    [ClosureReason.MARGIN_CALL]: "Margin Call",
-    [ClosureReason.LIQUIDATION]: "Liquidation",
-    [ClosureReason.ADMIN_FORCED]: "Admin Forced",
+    [ClosureReason.TAKE_PROFIT]: 'Take Profit',
+    [ClosureReason.STOP_LOSS]: 'Stop Loss',
+    [ClosureReason.TRAILING_STOP]: 'Trailing Stop',
+    [ClosureReason.TIME_EXPIRY]: 'Position Expired',
+    [ClosureReason.MANUAL_USER]: 'Manual Close',
+    [ClosureReason.MARGIN_CALL]: 'Margin Call',
+    [ClosureReason.LIQUIDATION]: 'Liquidation',
+    [ClosureReason.ADMIN_FORCED]: 'Admin Forced',
   };
-  return reasons[reason] || "Unknown";
+  return reasons[reason] || 'Unknown';
 }
 
 /**
@@ -808,34 +808,34 @@ export function formatClosureStatus(status: ClosureStatus): {
     { label: string; color: string; icon: string }
   > = {
     [ClosureStatus.PENDING]: {
-      label: "Pending",
-      color: "gray",
-      icon: "clock",
+      label: 'Pending',
+      color: 'gray',
+      icon: 'clock',
     },
     [ClosureStatus.IN_PROGRESS]: {
-      label: "In Progress",
-      color: "blue",
-      icon: "loader",
+      label: 'In Progress',
+      color: 'blue',
+      icon: 'loader',
     },
     [ClosureStatus.COMPLETED]: {
-      label: "Completed",
-      color: "green",
-      icon: "check",
+      label: 'Completed',
+      color: 'green',
+      icon: 'check',
     },
     [ClosureStatus.PARTIAL]: {
-      label: "Partial",
-      color: "yellow",
-      icon: "activity",
+      label: 'Partial',
+      color: 'yellow',
+      icon: 'activity',
     },
     [ClosureStatus.FAILED]: {
-      label: "Failed",
-      color: "red",
-      icon: "x",
+      label: 'Failed',
+      color: 'red',
+      icon: 'x',
     },
     [ClosureStatus.CANCELLED]: {
-      label: "Cancelled",
-      color: "orange",
-      icon: "ban",
+      label: 'Cancelled',
+      color: 'orange',
+      icon: 'ban',
     },
   };
   return statuses[status];
@@ -849,7 +849,7 @@ export function formatClosureStatus(status: ClosureStatus): {
  */
 export function getClosureImpact(
   position: Position,
-  exitPrice: number,
+  exitPrice: number
 ): {
   realizedPnL: number;
   commission: number;
@@ -860,7 +860,7 @@ export function getClosureImpact(
   const commission = calculateCommissionOnClosure(
     position.symbol,
     position.quantity,
-    exitPrice,
+    exitPrice
   );
   const marginRecovered = calculateAvailableMarginAfterClosure(position);
 
