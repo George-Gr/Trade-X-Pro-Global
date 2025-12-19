@@ -1,6 +1,6 @@
-import * as React from "react";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { LucideAlertCircle } from "lucide-react";
+import * as React from 'react';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { LucideAlertCircle } from 'lucide-react';
 
 interface PlaceholderProps {
   title: string;

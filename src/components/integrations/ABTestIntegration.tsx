@@ -119,7 +119,7 @@ export function QuickSignupCTA({
       }
       return 'social'; // fallback default
     }
-  }, [variant, experimentManager]);
+  }, [variant]);
 
   const getCTAContent = () => {
     switch (currentVariant) {

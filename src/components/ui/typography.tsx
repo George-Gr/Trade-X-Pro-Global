@@ -1,5 +1,5 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 /**
  * Typography Scale for TradePro
@@ -24,11 +24,11 @@ export const H1 = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h1
     ref={ref}
-    className={cn("typography-h1 tracking-tight", className)}
+    className={cn('typography-h1 tracking-tight', className)}
     {...props}
   />
 ));
-H1.displayName = "H1";
+H1.displayName = 'H1';
 
 /**
  * Section Title (H2) - 24px, semibold
@@ -40,11 +40,11 @@ export const H2 = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h2
     ref={ref}
-    className={cn("typography-h2 tracking-tight", className)}
+    className={cn('typography-h2 tracking-tight', className)}
     {...props}
   />
 ));
-H2.displayName = "H2";
+H2.displayName = 'H2';
 
 /**
  * Card Title (H3) - 18px, semibold
@@ -54,9 +54,9 @@ export const H3 = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cn("typography-h3", className)} {...props} />
+  <h3 ref={ref} className={cn('typography-h3', className)} {...props} />
 ));
-H3.displayName = "H3";
+H3.displayName = 'H3';
 
 /**
  * Subsection Title (H4) - 16px, semibold
@@ -66,9 +66,9 @@ export const H4 = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h4 ref={ref} className={cn("typography-h4", className)} {...props} />
+  <h4 ref={ref} className={cn('typography-h4', className)} {...props} />
 ));
-H4.displayName = "H4";
+H4.displayName = 'H4';
 
 /**
  * Large Body Text - base (14px), normal
@@ -80,11 +80,11 @@ export const BodyLarge = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("typography-body leading-relaxed", className)}
+    className={cn('typography-body leading-relaxed', className)}
     {...props}
   />
 ));
-BodyLarge.displayName = "BodyLarge";
+BodyLarge.displayName = 'BodyLarge';
 
 /**
  * Body Text (default) - 14px, normal
@@ -96,11 +96,11 @@ export const Body = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("typography-body leading-relaxed", className)}
+    className={cn('typography-body leading-relaxed', className)}
     {...props}
   />
 ));
-Body.displayName = "Body";
+Body.displayName = 'Body';
 
 /**
  * Small Body Text - 12px, normal
@@ -113,13 +113,13 @@ export const BodySmall = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      "typography-small leading-relaxed text-muted-foreground",
-      className,
+      'typography-small leading-relaxed text-muted-foreground',
+      className
     )}
     {...props}
   />
 ));
-BodySmall.displayName = "BodySmall";
+BodySmall.displayName = 'BodySmall';
 
 /**
  * Label Text - 14px, medium
@@ -129,9 +129,9 @@ export const Label = React.forwardRef<
   HTMLLabelElement,
   React.LabelHTMLAttributes<HTMLLabelElement>
 >(({ className, ...props }, ref) => (
-  <label ref={ref} className={cn("typography-label", className)} {...props} />
+  <label ref={ref} className={cn('typography-label', className)} {...props} />
 ));
-Label.displayName = "Label";
+Label.displayName = 'Label';
 
 /**
  * Caption Text - 12px, medium
@@ -143,11 +143,11 @@ export const Caption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("typography-caption text-muted-foreground", className)}
+    className={cn('typography-caption text-muted-foreground', className)}
     {...props}
   />
 ));
-Caption.displayName = "Caption";
+Caption.displayName = 'Caption';
 
 // Export all components
 export { H1 as Heading1, H2 as Heading2, H3 as Heading3, H4 as Heading4 };

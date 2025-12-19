@@ -1,6 +1,6 @@
-import React from "react";
-import { WCAGAAAEnhancer } from "../accessibility/WCAGAAAEnhancer";
-import { cn } from "../../lib/utils";
+import React from 'react';
+import { WCAGAAAEnhancer } from '../accessibility/WCAGAAAEnhancer';
+import { cn } from '../../lib/utils';
 
 export function FontSizeControl() {
   const wcagEnhancer = WCAGAAAEnhancer.getInstance();
@@ -8,7 +8,7 @@ export function FontSizeControl() {
 
   const increaseFont = () => {
     const currentSize = parseInt(
-      document.documentElement.style.fontSize || "16",
+      document.documentElement.style.fontSize || '16'
     );
     const newSize = Math.min(currentSize + 2, 24);
     document.documentElement.style.fontSize = `${newSize}px`;
@@ -16,15 +16,15 @@ export function FontSizeControl() {
 
   const decreaseFont = () => {
     const currentSize = parseInt(
-      document.documentElement.style.fontSize || "16",
+      document.documentElement.style.fontSize || '16'
     );
     const newSize = Math.max(currentSize - 2, 12);
     document.documentElement.style.fontSize = `${newSize}px`;
   };
 
   const resetFont = () => {
-    document.documentElement.style.fontSize = "16px";
-    wcagEnhancer.updatePreference("largeFonts", false);
+    document.documentElement.style.fontSize = '16px';
+    wcagEnhancer.updatePreference('largeFonts', false);
   };
 
   return (
@@ -59,10 +59,10 @@ export function ColorBlindModeSelector() {
   const preferences = wcagEnhancer.getPreferences();
 
   const modes = [
-    { value: "none", label: "Normal Vision" },
-    { value: "deuteranopia", label: "Deuteranopia (Green-Blind)" },
-    { value: "protanopia", label: "Protanopia (Red-Blind)" },
-    { value: "tritanopia", label: "Tritanopia (Blue-Blind)" },
+    { value: 'none', label: 'Normal Vision' },
+    { value: 'deuteranopia', label: 'Deuteranopia (Green-Blind)' },
+    { value: 'protanopia', label: 'Protanopia (Red-Blind)' },
+    { value: 'tritanopia', label: 'Tritanopia (Blue-Blind)' },
   ];
 
   return (
@@ -70,12 +70,12 @@ export function ColorBlindModeSelector() {
       value={preferences.colorBlindMode}
       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
         wcagEnhancer.updatePreference(
-          "colorBlindMode",
+          'colorBlindMode',
           e.target.value as
-            | "none"
-            | "deuteranopia"
-            | "protanopia"
-            | "tritanopia",
+            | 'none'
+            | 'deuteranopia'
+            | 'protanopia'
+            | 'tritanopia'
         )
       }
       className="px-3 py-1 border rounded"

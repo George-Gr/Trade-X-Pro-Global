@@ -1,55 +1,54 @@
-import * as React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Star, Quote } from "lucide-react";
-import { motion } from "framer-motion";
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Quote, Star } from 'lucide-react';
 import {
+  AnimatedSectionHeader,
   ScrollReveal,
   StaggerContainer,
   StaggerItem,
-  AnimatedSectionHeader,
-} from "./ScrollReveal";
+} from './ScrollReveal';
 
 const testimonials = [
   {
-    name: "Michael Chen",
-    role: "Day Trader",
-    location: "Singapore",
-    avatar: "MC",
+    name: 'Michael Chen',
+    role: 'Day Trader',
+    location: 'Singapore',
+    avatar: 'MC',
     rating: 5,
     quote:
       "TradeX Pro's risk-free environment helped me develop my forex strategy. After 3 months of practice, I increased my virtual portfolio by 47%.",
-    highlight: "+47% portfolio growth",
+    highlight: '+47% portfolio growth',
   },
   {
-    name: "Sarah Williams",
-    role: "Investment Analyst",
-    location: "London, UK",
-    avatar: "SW",
+    name: 'Sarah Williams',
+    role: 'Investment Analyst',
+    location: 'London, UK',
+    avatar: 'SW',
     rating: 5,
     quote:
-      "The advanced charting tools are on par with institutional platforms. I use TradeX Pro to backtest strategies before deploying real capital.",
-    highlight: "Professional-grade tools",
+      'The advanced charting tools are on par with institutional platforms. I use TradeX Pro to backtest strategies before deploying real capital.',
+    highlight: 'Professional-grade tools',
   },
   {
-    name: "Ahmed Hassan",
-    role: "Part-time Trader",
-    location: "Dubai, UAE",
-    avatar: "AH",
+    name: 'Ahmed Hassan',
+    role: 'Part-time Trader',
+    location: 'Dubai, UAE',
+    avatar: 'AH',
     rating: 5,
     quote:
-      "As a beginner, I was afraid to start trading. TradeX Pro let me learn without fear of losing money. The $50K virtual capital is generous!",
-    highlight: "Perfect for beginners",
+      'As a beginner, I was afraid to start trading. TradeX Pro let me learn without fear of losing money. The $50K virtual capital is generous!',
+    highlight: 'Perfect for beginners',
   },
   {
-    name: "Emma Rodriguez",
-    role: "Swing Trader",
-    location: "Barcelona, Spain",
-    avatar: "ER",
+    name: 'Emma Rodriguez',
+    role: 'Swing Trader',
+    location: 'Barcelona, Spain',
+    avatar: 'ER',
     rating: 5,
     quote:
       "The real-time data and instant execution helped me understand market dynamics. I've been practicing for 6 months and feel ready for live trading.",
-    highlight: "6 months of practice",
+    highlight: '6 months of practice',
   },
 ];
 

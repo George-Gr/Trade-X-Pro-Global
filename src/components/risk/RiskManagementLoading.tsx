@@ -1,6 +1,6 @@
-import { RiskManagementSkeleton } from "@/components/ui/LoadingSkeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { RiskManagementSkeleton } from '@/components/ui/LoadingSkeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function RiskManagementLoading() {
   return (

@@ -1,5 +1,4 @@
-import * as React from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from 'lucide-react';
 
 export function RiskDisclaimer() {
   return (
@@ -10,13 +9,13 @@ export function RiskDisclaimer() {
           <p className="text-sm text-foreground/80 leading-relaxed">
             <span className="font-semibold text-destructive">
               Risk Warning:
-            </span>{" "}
+            </span>{' '}
             CFDs are complex instruments and come with a high risk of losing
             money rapidly due to leverage.
             <span className="font-semibold">
-              {" "}
+              {' '}
               76% of retail investor accounts lose money when trading CFDs.
-            </span>{" "}
+            </span>{' '}
             You should consider whether you understand how CFDs work and whether
             you can afford to take the high risk of losing your money. TradeX
             Pro is a virtual trading platform for educational purposes only. No
@@ -34,7 +33,7 @@ export function CompactRiskDisclaimer() {
       <p>
         <span className="font-semibold">Risk Warning:</span> 76% of retail CFD
         accounts lose money. TradeX Pro is a virtual trading platform for
-        educational purposes only.{" "}
+        educational purposes only.{' '}
         <a
           href="/legal/risk-disclosure"
           className="underline hover:text-primary transition-colors"

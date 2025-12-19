@@ -1,27 +1,27 @@
-import React, { useMemo, useState, useCallback } from "react";
-import { X, Edit2, Loader2, AlertCircle } from "lucide-react";
-import { FixedSizeList as List } from "react-window";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { useRealtimePositions } from "@/hooks/useRealtimePositions";
-import { usePnLCalculations } from "@/hooks/usePnLCalculations";
-import { usePositionClose } from "@/hooks/usePositionClose";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
+import React, { useMemo, useState, useCallback } from 'react';
+import { X, Edit2, Loader2, AlertCircle } from 'lucide-react';
+import { FixedSizeList as List } from 'react-window';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { useRealtimePositions } from '@/hooks/useRealtimePositions';
+import { usePnLCalculations } from '@/hooks/usePnLCalculations';
+import { usePositionClose } from '@/hooks/usePositionClose';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import {
   PositionsHeader,
   SortHeader,
   type SortConfig,
-} from "./PositionsHeader";
-import { PositionsMetrics } from "./PositionsMetrics";
+} from './PositionsHeader';
+import { PositionsMetrics } from './PositionsMetrics';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,11 +31,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import type { Position } from "@/types/position";
-import type { PositionPnLDetails } from "@/lib/trading/pnlCalculation";
+} from '@/components/ui/alert-dialog';
+import type { Position } from '@/types/position';
+import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
 
-type FilterType = "all" | "long" | "short" | "profit" | "loss";
+type FilterType = 'all' | 'long' | 'short' | 'profit' | 'loss';
 
 /**
  * EnhancedPositionsTable Component
@@ -56,7 +56,7 @@ const EnhancedPositionsTable: React.FC = () => {
   const { toast } = useToast();
   const { positions, isLoading: positionsLoading } = useRealtimePositions(
     user?.id || null,
-    { autoSubscribe: true },
+    { autoSubscribe: true }
   );
   // Build a price map from positions for usePnLCalculations
   const priceMap = useMemo(() => {
@@ -81,18 +81,18 @@ const EnhancedPositionsTable: React.FC = () => {
   const { positionPnLMap, getPnLColor } = usePnLCalculations(
     mappedPositions,
     priceMap,
-    {},
+    {}
   );
   const { closePosition, isClosing } = usePositionClose();
 
   // State management
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: "created_at",
-    direction: "desc",
+    key: 'created_at',
+    direction: 'desc',
   });
-  const [filterType, setFilterType] = useState<FilterType>("all");
+  const [filterType, setFilterType] = useState<FilterType>('all');
   const [expandedPositionId, setExpandedPositionId] = useState<string | null>(
-    null,
+    null
   );
   const [selectedForClose, setSelectedForClose] = useState<string | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -106,7 +106,7 @@ const EnhancedPositionsTable: React.FC = () => {
       if (!pnlData) {
         const diff = position.current_price - position.entry_price;
         const pnl =
-          position.side === "long"
+          position.side === 'long'
             ? diff * position.quantity
             : -diff * position.quantity;
         return {
@@ -116,7 +116,7 @@ const EnhancedPositionsTable: React.FC = () => {
       }
       return pnlData;
     },
-    [positionPnLMap],
+    [positionPnLMap]
   );
 
   // Filter positions
@@ -124,13 +124,13 @@ const EnhancedPositionsTable: React.FC = () => {
     if (!positions) return [];
 
     return positions.filter((pos) => {
-      if (filterType === "all") return true;
-      if (filterType === "long") return pos.side === "long";
-      if (filterType === "short") return pos.side === "short";
+      if (filterType === 'all') return true;
+      if (filterType === 'long') return pos.side === 'long';
+      if (filterType === 'short') return pos.side === 'short';
 
       const pnlData = getPositionPnL(pos);
-      if (filterType === "profit") return pnlData.unrealizedPnL > 0;
-      if (filterType === "loss") return pnlData.unrealizedPnL < 0;
+      if (filterType === 'profit') return pnlData.unrealizedPnL > 0;
+      if (filterType === 'loss') return pnlData.unrealizedPnL < 0;
       return true;
     });
   }, [positions, filterType, getPositionPnL]);
@@ -141,10 +141,10 @@ const EnhancedPositionsTable: React.FC = () => {
       let aVal: number | string = 0;
       let bVal: number | string = 0;
 
-      if (sortConfig.key === "pnl") {
+      if (sortConfig.key === 'pnl') {
         aVal = getPositionPnL(a).unrealizedPnL || 0;
         bVal = getPositionPnL(b).unrealizedPnL || 0;
-      } else if (sortConfig.key === "margin_level") {
+      } else if (sortConfig.key === 'margin_level') {
         aVal = a.margin_used || 0;
         bVal = b.margin_used || 0;
       } else {
@@ -152,18 +152,18 @@ const EnhancedPositionsTable: React.FC = () => {
         bVal = (b[sortConfig.key as keyof Position] as number | string) || 0;
       }
 
-      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
 
     return sorted;
   }, [filteredPositions, sortConfig, getPositionPnL]);
 
-  const handleSort = (key: SortConfig["key"]) => {
+  const handleSort = (key: SortConfig['key']) => {
     setSortConfig((prev) => ({
       key,
-      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
 
@@ -175,14 +175,14 @@ const EnhancedPositionsTable: React.FC = () => {
       setShowConfirmClose(false);
       setSelectedForClose(null);
       toast({
-        title: "Position closed",
-        description: "Your position has been closed successfully.",
+        title: 'Position closed',
+        description: 'Your position has been closed successfully.',
       });
     } catch (err) {
       toast({
-        title: "Error closing position",
-        description: "Failed to close position",
-        variant: "destructive",
+        title: 'Error closing position',
+        description: 'Failed to close position',
+        variant: 'destructive',
       });
     }
   };
@@ -201,7 +201,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="Symbol"
                 sortKey="symbol"
-                isActive={sortConfig.key === "symbol"}
+                isActive={sortConfig.key === 'symbol'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -210,7 +210,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="Side"
                 sortKey="side"
-                isActive={sortConfig.key === "side"}
+                isActive={sortConfig.key === 'side'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -219,7 +219,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="Qty"
                 sortKey="quantity"
-                isActive={sortConfig.key === "quantity"}
+                isActive={sortConfig.key === 'quantity'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -228,7 +228,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="Entry"
                 sortKey="entry_price"
-                isActive={sortConfig.key === "entry_price"}
+                isActive={sortConfig.key === 'entry_price'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -237,7 +237,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="Current"
                 sortKey="current_price"
-                isActive={sortConfig.key === "current_price"}
+                isActive={sortConfig.key === 'current_price'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -246,7 +246,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="P&L"
                 sortKey="pnl"
-                isActive={sortConfig.key === "pnl"}
+                isActive={sortConfig.key === 'pnl'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -255,7 +255,7 @@ const EnhancedPositionsTable: React.FC = () => {
               <SortHeader
                 label="Margin"
                 sortKey="margin_level"
-                isActive={sortConfig.key === "margin_level"}
+                isActive={sortConfig.key === 'margin_level'}
                 direction={sortConfig.direction}
                 onSort={handleSort}
               />
@@ -281,12 +281,12 @@ const EnhancedPositionsTable: React.FC = () => {
                   <td className="py-4 px-4">
                     <Badge
                       variant={
-                        position.side === "long" ? "default" : "secondary"
+                        position.side === 'long' ? 'default' : 'secondary'
                       }
                       className={
-                        position.side === "long"
-                          ? "bg-buy text-foreground"
-                          : "bg-sell text-foreground"
+                        position.side === 'long'
+                          ? 'bg-buy text-foreground'
+                          : 'bg-sell text-foreground'
                       }
                     >
                       {position.side.toUpperCase()}
@@ -317,7 +317,7 @@ const EnhancedPositionsTable: React.FC = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4 text-right font-mono text-sm">
-                    ${position.margin_used?.toFixed(2) || "0.00"}
+                    ${position.margin_used?.toFixed(2) || '0.00'}
                   </td>
                   <td className="py-4 px-4 text-center">
                     <div className="flex items-center justify-center gap-2">
@@ -395,11 +395,11 @@ const EnhancedPositionsTable: React.FC = () => {
                 <div className="flex-1">
                   <h3 className="font-bold text-lg">{position.symbol}</h3>
                   <Badge
-                    variant={position.side === "long" ? "default" : "secondary"}
+                    variant={position.side === 'long' ? 'default' : 'secondary'}
                     className={`mt-2 ${
-                      position.side === "long"
-                        ? "bg-buy text-foreground"
-                        : "bg-sell text-foreground"
+                      position.side === 'long'
+                        ? 'bg-buy text-foreground'
+                        : 'bg-sell text-foreground'
                     }`}
                   >
                     {position.side.toUpperCase()}
@@ -584,9 +584,9 @@ const EnhancedPositionsTable: React.FC = () => {
                 <Button
                   onClick={() => {
                     toast({
-                      title: "Success",
+                      title: 'Success',
                       description:
-                        "Position stops updated (edit feature ready for backend integration)",
+                        'Position stops updated (edit feature ready for backend integration)',
                     });
                     setEditDialogOpen(false);
                   }}
@@ -622,7 +622,7 @@ const EnhancedPositionsTable: React.FC = () => {
                   Closing...
                 </>
               ) : (
-                "Close Position"
+                'Close Position'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -659,7 +659,7 @@ const PositionDetails: React.FC<{
       <div>
         <span className="text-muted-foreground text-xs">Margin Used</span>
         <div className="font-mono font-semibold">
-          ${position.margin_used?.toFixed(2) || "0.00"}
+          ${position.margin_used?.toFixed(2) || '0.00'}
         </div>
       </div>
       {position.stop_loss && (

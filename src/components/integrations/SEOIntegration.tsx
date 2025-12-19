@@ -1,23 +1,23 @@
-import React, { useEffect, useCallback } from "react";
-import { seoManager, useSEO } from "../../lib/seo/SEOManager";
+import React, { useEffect, useCallback } from 'react';
+import { seoManager, useSEO } from '../../lib/seo/SEOManager';
 
 interface SEOIntegrationProps {
   children: React.ReactNode;
   enableSEO?: boolean;
-  pageType?: "landing" | "signup" | "trade" | "portfolio" | "about";
+  pageType?: 'landing' | 'signup' | 'trade' | 'portfolio' | 'about';
   customConfig?: {
     title?: string;
     description?: string;
     keywords?: string[];
     image?: string;
-    tradingType?: "forex" | "stocks" | "cfds" | "crypto";
+    tradingType?: 'forex' | 'stocks' | 'cfds' | 'crypto';
   };
 }
 
 export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
   children,
   enableSEO = true,
-  pageType = "landing",
+  pageType = 'landing',
   customConfig = {},
 }) => {
   const {
@@ -33,70 +33,70 @@ export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
       const pageConfigs: Record<string, Record<string, unknown>> = {
         landing: {
           title:
-            "TradeX Pro - Professional Trading Platform | Forex, CFDs, Stocks",
+            'TradeX Pro - Professional Trading Platform | Forex, CFDs, Stocks',
           description:
-            "TradeX Pro offers advanced trading tools, real-time market data, and professional-grade analytics for forex, CFDs, and stocks. Start trading with confidence.",
+            'TradeX Pro offers advanced trading tools, real-time market data, and professional-grade analytics for forex, CFDs, and stocks. Start trading with confidence.',
           keywords: [
-            "trading platform",
-            "forex trading",
-            "CFD trading",
-            "stock trading",
-            "professional trading",
+            'trading platform',
+            'forex trading',
+            'CFD trading',
+            'stock trading',
+            'professional trading',
           ],
-          type: "website" as const,
-          siteName: "TradeX Pro",
+          type: 'website' as const,
+          siteName: 'TradeX Pro',
         },
         signup: {
-          title: "Create Account - TradeX Pro | Start Trading Today",
+          title: 'Create Account - TradeX Pro | Start Trading Today',
           description:
-            "Create your TradeX Pro account and start trading with advanced tools, real-time data, and professional support. Join thousands of successful traders.",
+            'Create your TradeX Pro account and start trading with advanced tools, real-time data, and professional support. Join thousands of successful traders.',
           keywords: [
-            "trading account",
-            "forex signup",
-            "CFD registration",
-            "start trading",
+            'trading account',
+            'forex signup',
+            'CFD registration',
+            'start trading',
           ],
-          type: "website" as const,
-          siteName: "TradeX Pro",
+          type: 'website' as const,
+          siteName: 'TradeX Pro',
         },
         trade: {
-          title: "Trading Platform - TradeX Pro | Advanced Charts & Tools",
+          title: 'Trading Platform - TradeX Pro | Advanced Charts & Tools',
           description:
-            "Access professional trading tools, advanced charting, real-time market data, and instant order execution on TradeX Pro platform.",
+            'Access professional trading tools, advanced charting, real-time market data, and instant order execution on TradeX Pro platform.',
           keywords: [
-            "trading tools",
-            "forex charts",
-            "technical analysis",
-            "trading platform",
+            'trading tools',
+            'forex charts',
+            'technical analysis',
+            'trading platform',
           ],
-          type: "service" as const,
-          siteName: "TradeX Pro",
+          type: 'service' as const,
+          siteName: 'TradeX Pro',
         },
         portfolio: {
-          title: "Portfolio Management - TradeX Pro | Track Your Performance",
+          title: 'Portfolio Management - TradeX Pro | Track Your Performance',
           description:
-            "Monitor your trading portfolio, track performance, analyze P&L, and manage your investments with TradeX Pro portfolio tools.",
+            'Monitor your trading portfolio, track performance, analyze P&L, and manage your investments with TradeX Pro portfolio tools.',
           keywords: [
-            "portfolio management",
-            "trading performance",
-            "P&L tracking",
-            "investment tracking",
+            'portfolio management',
+            'trading performance',
+            'P&L tracking',
+            'investment tracking',
           ],
-          type: "service" as const,
-          siteName: "TradeX Pro",
+          type: 'service' as const,
+          siteName: 'TradeX Pro',
         },
         about: {
-          title: "About TradeX Pro - Professional Trading Platform",
+          title: 'About TradeX Pro - Professional Trading Platform',
           description:
-            "Learn about TradeX Pro, our mission to democratize trading, advanced technology, and professional trading tools.",
+            'Learn about TradeX Pro, our mission to democratize trading, advanced technology, and professional trading tools.',
           keywords: [
-            "about tradex pro",
-            "trading platform",
-            "forex broker",
-            "professional trading",
+            'about tradex pro',
+            'trading platform',
+            'forex broker',
+            'professional trading',
           ],
-          type: "website" as const,
-          siteName: "TradeX Pro",
+          type: 'website' as const,
+          siteName: 'TradeX Pro',
         },
       };
 
@@ -105,34 +105,34 @@ export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
 
       updateSEO(finalConfig);
     },
-    [updateSEO],
+    [updateSEO]
   );
 
   const generateLandingPageStructuredData = useCallback(() => {
     // Generate FAQ structured data
     const faqs = [
       {
-        question: "What is TradeX Pro?",
+        question: 'What is TradeX Pro?',
         answer:
-          "TradeX Pro is a professional trading platform offering advanced tools for forex, CFDs, and stock trading with real-time market data and analytics.",
+          'TradeX Pro is a professional trading platform offering advanced tools for forex, CFDs, and stock trading with real-time market data and analytics.',
       },
       {
-        question: "How do I start trading?",
+        question: 'How do I start trading?',
         answer:
-          "Simply create an account, complete verification, and start trading with our intuitive platform and professional tools.",
+          'Simply create an account, complete verification, and start trading with our intuitive platform and professional tools.',
       },
       {
-        question: "What markets can I trade?",
+        question: 'What markets can I trade?',
         answer:
-          "You can trade forex pairs, CFDs on indices and commodities, stocks, and cryptocurrencies on our platform.",
+          'You can trade forex pairs, CFDs on indices and commodities, stocks, and cryptocurrencies on our platform.',
       },
     ];
     generateFAQ(faqs);
 
     // Generate breadcrumb structured data
     generateBreadcrumbs([
-      { name: "Home", url: window.location.origin },
-      { name: "Trading Platform", url: window.location.href },
+      { name: 'Home', url: window.location.origin },
+      { name: 'Trading Platform', url: window.location.href },
     ]);
   }, [generateFAQ, generateBreadcrumbs]);
 
@@ -140,77 +140,77 @@ export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
     // Generate review structured data for social proof
     const reviews = [
       {
-        author: "John Smith",
+        author: 'John Smith',
         rating: 5,
-        reviewBody: "Excellent trading platform with great tools and support.",
-        datePublished: "2024-12-01",
+        reviewBody: 'Excellent trading platform with great tools and support.',
+        datePublished: '2024-12-01',
       },
       {
-        author: "Sarah Johnson",
+        author: 'Sarah Johnson',
         rating: 5,
-        reviewBody: "Best trading experience I have had. Highly recommended!",
-        datePublished: "2024-11-28",
+        reviewBody: 'Best trading experience I have had. Highly recommended!',
+        datePublished: '2024-11-28',
       },
     ];
     generateReviews(reviews);
 
     // Generate breadcrumb structured data
     generateBreadcrumbs([
-      { name: "Home", url: window.location.origin },
-      { name: "Sign Up", url: window.location.href },
+      { name: 'Home', url: window.location.origin },
+      { name: 'Sign Up', url: window.location.href },
     ]);
   }, [generateReviews, generateBreadcrumbs]);
 
   const generateTradingPageStructuredData = useCallback(() => {
     // Generate service structured data
     const serviceData = {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Professional Trading Platform",
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Professional Trading Platform',
       description:
-        "Advanced trading tools with real-time market data and analytics",
+        'Advanced trading tools with real-time market data and analytics',
       provider: {
-        "@type": "Organization",
-        name: "TradeX Pro",
+        '@type': 'Organization',
+        name: 'TradeX Pro',
       },
-      areaServed: "Worldwide",
-      serviceType: "Trading Services",
+      areaServed: 'Worldwide',
+      serviceType: 'Trading Services',
     };
 
     // Add service structured data
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
     script.textContent = JSON.stringify(serviceData);
     document.head.appendChild(script);
 
     // Generate breadcrumb structured data
     generateBreadcrumbs([
-      { name: "Home", url: window.location.origin },
-      { name: "Trading Platform", url: window.location.href },
+      { name: 'Home', url: window.location.origin },
+      { name: 'Trading Platform', url: window.location.href },
     ]);
   }, [generateBreadcrumbs]);
 
   const generatePortfolioPageStructuredData = useCallback(() => {
     // Generate breadcrumb structured data
     generateBreadcrumbs([
-      { name: "Home", url: window.location.origin },
-      { name: "Portfolio", url: window.location.href },
+      { name: 'Home', url: window.location.origin },
+      { name: 'Portfolio', url: window.location.href },
     ]);
   }, [generateBreadcrumbs]);
 
   const generateStructuredData = useCallback(
     (type: string) => {
       switch (type) {
-        case "landing":
+        case 'landing':
           generateLandingPageStructuredData();
           break;
-        case "signup":
+        case 'signup':
           generateSignupPageStructuredData();
           break;
-        case "trade":
+        case 'trade':
           generateTradingPageStructuredData();
           break;
-        case "portfolio":
+        case 'portfolio':
           generatePortfolioPageStructuredData();
           break;
       }
@@ -220,7 +220,7 @@ export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
       generateSignupPageStructuredData,
       generateTradingPageStructuredData,
       generatePortfolioPageStructuredData,
-    ],
+    ]
   );
 
   useEffect(() => {
@@ -242,7 +242,7 @@ export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
 export function TradingSEO({
   tradingType,
 }: {
-  tradingType: "forex" | "stocks" | "cfds" | "crypto";
+  tradingType: 'forex' | 'stocks' | 'cfds' | 'crypto';
 }) {
   const { updateTradingSEO } = useSEO();
 
@@ -275,10 +275,10 @@ function SEOHealthMonitor() {
 
   if (
     !seoReport ||
-    typeof seoReport !== "object" ||
+    typeof seoReport !== 'object' ||
     seoReport === null ||
-    !("score" in seoReport) ||
-    typeof seoReport.score !== "number"
+    !('score' in seoReport) ||
+    typeof seoReport.score !== 'number'
   ) {
     return null;
   }
@@ -300,7 +300,7 @@ function SEOHealthMonitor() {
           onClick={() => setIsVisible(!isVisible)}
           className="text-gray-500 hover:text-gray-700"
         >
-          {isVisible ? "−" : "+"}
+          {isVisible ? '−' : '+'}
         </button>
       </div>
 
@@ -312,10 +312,10 @@ function SEOHealthMonitor() {
               <span
                 className={`text-sm font-bold ${
                   typedSeoReport.score >= 90
-                    ? "text-green-600"
+                    ? 'text-green-600'
                     : typedSeoReport.score >= 70
-                      ? "text-yellow-600"
-                      : "text-red-600"
+                      ? 'text-yellow-600'
+                      : 'text-red-600'
                 }`}
               >
                 {typedSeoReport.score}/100
@@ -325,10 +325,10 @@ function SEOHealthMonitor() {
               <div
                 className={`h-2 rounded-full ${
                   typedSeoReport.score >= 90
-                    ? "bg-green-500"
+                    ? 'bg-green-500'
                     : typedSeoReport.score >= 70
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
                 }`}
                 style={{ width: `${typedSeoReport.score}%` }}
               />
@@ -385,13 +385,13 @@ export function DynamicMetaTags({
   description,
   keywords,
   image,
-  type = "website",
+  type = 'website',
 }: {
   title: string;
   description: string;
   keywords?: string[];
   image?: string;
-  type?: "website" | "article" | "product" | "service";
+  type?: 'website' | 'article' | 'product' | 'service';
 }) {
   const { updateSEO } = useSEO();
 
@@ -412,39 +412,39 @@ export function DynamicMetaTags({
 export function QuickSEOSetup({
   pageType,
 }: {
-  pageType: "landing" | "signup" | "trade" | "portfolio";
+  pageType: 'landing' | 'signup' | 'trade' | 'portfolio';
 }) {
   const { updateSEO } = useSEO();
 
   useEffect(() => {
     const quickConfigs = {
       landing: {
-        title: "TradeX Pro - Professional Trading Platform",
+        title: 'TradeX Pro - Professional Trading Platform',
         description:
-          "Advanced trading tools for forex, CFDs, and stocks. Start trading today with professional-grade analytics.",
-        keywords: ["trading", "forex", "CFD", "stocks", "professional trading"],
-        image: "/assets/og-image.jpg",
+          'Advanced trading tools for forex, CFDs, and stocks. Start trading today with professional-grade analytics.',
+        keywords: ['trading', 'forex', 'CFD', 'stocks', 'professional trading'],
+        image: '/assets/og-image.jpg',
       },
       signup: {
-        title: "Create Account - TradeX Pro",
+        title: 'Create Account - TradeX Pro',
         description:
-          "Join thousands of successful traders. Create your account and start trading with advanced tools.",
-        keywords: ["signup", "trading account", "create account"],
-        image: "/assets/signup-og.jpg",
+          'Join thousands of successful traders. Create your account and start trading with advanced tools.',
+        keywords: ['signup', 'trading account', 'create account'],
+        image: '/assets/signup-og.jpg',
       },
       trade: {
-        title: "Trading Platform - TradeX Pro",
+        title: 'Trading Platform - TradeX Pro',
         description:
-          "Professional trading tools with real-time data, advanced charts, and instant execution.",
-        keywords: ["trading platform", "forex trading", "trading tools"],
-        image: "/assets/trading-og.jpg",
+          'Professional trading tools with real-time data, advanced charts, and instant execution.',
+        keywords: ['trading platform', 'forex trading', 'trading tools'],
+        image: '/assets/trading-og.jpg',
       },
       portfolio: {
-        title: "Portfolio - TradeX Pro",
+        title: 'Portfolio - TradeX Pro',
         description:
-          "Monitor your trading performance, track P&L, and manage your investments.",
-        keywords: ["portfolio", "trading performance", "P&L"],
-        image: "/assets/portfolio-og.jpg",
+          'Monitor your trading performance, track P&L, and manage your investments.',
+        keywords: ['portfolio', 'trading performance', 'P&L'],
+        image: '/assets/portfolio-og.jpg',
       },
     };
 
@@ -497,23 +497,23 @@ export function RichSnippets({
 
   const generateBusinessStructuredData = (info: Record<string, unknown>) => {
     const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "Organization",
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
       name: info.name,
       description: info.description,
       url: info.url,
       logo: info.logo,
       address: info.address
         ? {
-            "@type": "PostalAddress",
+            '@type': 'PostalAddress',
             ...info.address,
           }
         : undefined,
       telephone: info.phone,
     };
 
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
     script.textContent = JSON.stringify(structuredData);
     document.head.appendChild(script);
   };

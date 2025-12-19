@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from "recharts";
-import {
-  usePerformanceMonitor,
   useMemoryMonitor,
   useNetworkStatus,
-} from "@/lib/performance";
+  usePerformanceMonitor,
+} from '@/lib/performance';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 /**
  * Performance Monitoring Dashboard
  *
@@ -44,14 +44,14 @@ export function PerformanceDashboard() {
   const network = useNetworkStatus();
 
   // Performance monitoring hook
-  usePerformanceMonitor("PerformanceDashboard");
+  usePerformanceMonitor('PerformanceDashboard');
 
   // Collect performance metrics callback
   const collectPerformanceMetrics = useCallback((): PerformanceMetric[] => {
     const now = Date.now();
-    const entries = performance.getEntriesByType("navigation");
-    const paintEntries = performance.getEntriesByType("paint");
-    const resourceEntries = performance.getEntriesByType("resource");
+    const entries = performance.getEntriesByType('navigation');
+    const paintEntries = performance.getEntriesByType('paint');
+    const resourceEntries = performance.getEntriesByType('resource');
 
     const metrics: PerformanceMetric[] = [];
 
@@ -62,13 +62,13 @@ export function PerformanceDashboard() {
       metrics.push({
         timestamp: now,
         value: nav.loadEventEnd - nav.loadEventStart,
-        label: "Load Time",
+        label: 'Load Time',
       });
 
       metrics.push({
         timestamp: now,
         value: nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart,
-        label: "DOM Content Loaded",
+        label: 'DOM Content Loaded',
       });
     }
 
@@ -85,23 +85,23 @@ export function PerformanceDashboard() {
     const totalTransferSize = resourceEntries.reduce(
       (sum, entry) =>
         sum + ((entry as PerformanceResourceTiming).transferSize || 0),
-      0,
+      0
     );
     const totalDuration = resourceEntries.reduce(
       (sum, entry) => sum + entry.duration,
-      0,
+      0
     );
 
     metrics.push({
       timestamp: now,
       value: totalTransferSize,
-      label: "Total Transfer Size",
+      label: 'Total Transfer Size',
     });
 
     metrics.push({
       timestamp: now,
       value: totalDuration / Math.max(resourceEntries.length, 1),
-      label: "Avg Resource Duration",
+      label: 'Avg Resource Duration',
     });
 
     // Memory metrics
@@ -109,13 +109,13 @@ export function PerformanceDashboard() {
       metrics.push({
         timestamp: now,
         value: memory.usedJSHeapSize / 1024 / 1024, // MB
-        label: "Memory Usage",
+        label: 'Memory Usage',
       });
 
       metrics.push({
         timestamp: now,
         value: memory.totalJSHeapSize / 1024 / 1024, // MB
-        label: "Total Memory",
+        label: 'Total Memory',
       });
     }
 
@@ -148,10 +148,10 @@ export function PerformanceDashboard() {
     // This would integrate with webpack-bundle-analyzer data
     // For now, provide mock data structure
     return [
-      { name: "main", size: 1200, gzipSize: 400, modules: 150 },
-      { name: "vendor", size: 800, gzipSize: 250, modules: 80 },
-      { name: "charts", size: 400, gzipSize: 120, modules: 30 },
-      { name: "trading", size: 300, gzipSize: 90, modules: 25 },
+      { name: 'main', size: 1200, gzipSize: 400, modules: 150 },
+      { name: 'vendor', size: 800, gzipSize: 250, modules: 80 },
+      { name: 'charts', size: 400, gzipSize: 120, modules: 30 },
+      { name: 'trading', size: 300, gzipSize: 90, modules: 25 },
     ];
   };
 
@@ -162,7 +162,7 @@ export function PerformanceDashboard() {
         acc[metric.label].push(metric.value);
         return acc;
       },
-      {} as Record<string, number[]>,
+      {} as Record<string, number[]>
     );
 
     const summary: Record<string, { avg: number; min: number; max: number }> =
@@ -215,11 +215,11 @@ export function PerformanceDashboard() {
             onClick={() => setIsMonitoring(!isMonitoring)}
             className={`px-4 py-2 rounded-lg font-medium ${
               isMonitoring
-                ? "bg-green-500 text-white"
-                : "bg-gray-200 text-gray-700"
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-200 text-gray-700'
             }`}
           >
-            {isMonitoring ? "Stop Monitoring" : "Start Monitoring"}
+            {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
           </button>
           <button
             onClick={() => {
@@ -244,10 +244,10 @@ export function PerformanceDashboard() {
             <div
               className={`p-3 rounded-full ${
                 performanceScore.avg >= 90
-                  ? "bg-green-100"
+                  ? 'bg-green-100'
                   : performanceScore.avg >= 75
-                    ? "bg-yellow-100"
-                    : "bg-red-100"
+                    ? 'bg-yellow-100'
+                    : 'bg-red-100'
               }`}
             >
               <svg
@@ -300,7 +300,9 @@ export function PerformanceDashboard() {
                 <div
                   className="bg-blue-600 h-2 rounded-full"
                   style={{
-                    width: `${(memory.usedJSHeapSize / memory.totalJSHeapSize) * 100}%`,
+                    width: `${
+                      (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100
+                    }%`,
                   }}
                 />
               </div>
@@ -317,17 +319,17 @@ export function PerformanceDashboard() {
             <div
               className={`flex items-center gap-3 p-3 rounded ${
                 network.isOnline
-                  ? "bg-green-50 border border-green-200"
-                  : "bg-red-50 border border-red-200"
+                  ? 'bg-green-50 border border-green-200'
+                  : 'bg-red-50 border border-red-200'
               }`}
             >
               <div
                 className={`w-3 h-3 rounded-full ${
-                  network.isOnline ? "bg-green-500" : "bg-red-500"
+                  network.isOnline ? 'bg-green-500' : 'bg-red-500'
                 }`}
               />
               <span className="font-medium">
-                {network.isOnline ? "Online" : "Offline"}
+                {network.isOnline ? 'Online' : 'Offline'}
               </span>
             </div>
 

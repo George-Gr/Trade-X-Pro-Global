@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress, MultiStepProgress } from "@/components/ui/progress";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress, MultiStepProgress } from '@/components/ui/progress';
 import {
   LoadingSpinner,
   PageLoadingOverlay,
-} from "@/components/ui/LoadingSkeleton";
+} from '@/components/ui/LoadingSkeleton';
 import {
   SuccessAnimation,
   ErrorAnimation,
   WarningAnimation,
   InfoAnimation,
-} from "@/components/ui/SuccessAnimation";
+} from '@/components/ui/SuccessAnimation';
 import {
   NumberCounter,
   LargeNumberCounter,
   CompactNumberCounter,
-} from "@/components/ui/NumberCounter";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/NumberCounter';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { cn } from '@/lib/utils';
 
 export function MicroInteractionsDemo() {
-  const [activeDemo, setActiveDemo] = useState<string>("");
-  const [loadingType, setLoadingType] = useState<string>("");
+  const [activeDemo, setActiveDemo] = useState<string>('');
+  const [loadingType, setLoadingType] = useState<string>('');
   const [progressValue, setProgressValue] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -32,10 +32,10 @@ export function MicroInteractionsDemo() {
   const reducedMotion = useReducedMotion();
 
   const steps = [
-    { id: "step1", label: "Personal Info", status: "completed" as const },
-    { id: "step2", label: "Account Setup", status: "completed" as const },
-    { id: "step3", label: "Verification", status: "active" as const },
-    { id: "step4", label: "Complete", status: "pending" as const },
+    { id: 'step1', label: 'Personal Info', status: 'completed' as const },
+    { id: 'step2', label: 'Account Setup', status: 'completed' as const },
+    { id: 'step3', label: 'Verification', status: 'active' as const },
+    { id: 'step4', label: 'Complete', status: 'pending' as const },
   ];
 
   useEffect(() => {
@@ -59,40 +59,40 @@ export function MicroInteractionsDemo() {
 
   const demos = [
     {
-      id: "buttons",
-      title: "Button Interactions",
-      description: "Hover and click feedback",
+      id: 'buttons',
+      title: 'Button Interactions',
+      description: 'Hover and click feedback',
       component: (
         <div className="space-y-4">
           <div className="flex flex-wrap gap-4">
-            <Button onClick={() => setActiveDemo("buttons")}>Default</Button>
+            <Button onClick={() => setActiveDemo('buttons')}>Default</Button>
             <Button
               variant="secondary"
-              onClick={() => setActiveDemo("buttons")}
+              onClick={() => setActiveDemo('buttons')}
             >
               Secondary
             </Button>
             <Button
               variant="destructive"
-              onClick={() => setActiveDemo("buttons")}
+              onClick={() => setActiveDemo('buttons')}
             >
               Destructive
             </Button>
-            <Button variant="outline" onClick={() => setActiveDemo("buttons")}>
+            <Button variant="outline" onClick={() => setActiveDemo('buttons')}>
               Outline
             </Button>
-            <Button variant="ghost" onClick={() => setActiveDemo("buttons")}>
+            <Button variant="ghost" onClick={() => setActiveDemo('buttons')}>
               Ghost
             </Button>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Button variant="success" onClick={() => setActiveDemo("buttons")}>
+            <Button variant="success" onClick={() => setActiveDemo('buttons')}>
               Success
             </Button>
-            <Button variant="warning" onClick={() => setActiveDemo("buttons")}>
+            <Button variant="warning" onClick={() => setActiveDemo('buttons')}>
               Warning
             </Button>
-            <Button variant="loading" onClick={() => setActiveDemo("buttons")}>
+            <Button variant="loading" onClick={() => setActiveDemo('buttons')}>
               Loading
             </Button>
           </div>
@@ -100,9 +100,9 @@ export function MicroInteractionsDemo() {
       ),
     },
     {
-      id: "cards",
-      title: "Card Hover Effects",
-      description: "Lift and scale interactions",
+      id: 'cards',
+      title: 'Card Hover Effects',
+      description: 'Lift and scale interactions',
       component: (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card elevation="1" variant="primary" interactive>
@@ -133,9 +133,9 @@ export function MicroInteractionsDemo() {
       ),
     },
     {
-      id: "progress",
-      title: "Progress Indicators",
-      description: "Multi-step forms and loading",
+      id: 'progress',
+      title: 'Progress Indicators',
+      description: 'Multi-step forms and loading',
       component: (
         <div className="space-y-8">
           <div>
@@ -153,9 +153,9 @@ export function MicroInteractionsDemo() {
       ),
     },
     {
-      id: "loading",
-      title: "Loading Animations",
-      description: "Various loading states",
+      id: 'loading',
+      title: 'Loading Animations',
+      description: 'Various loading states',
       component: (
         <div className="space-y-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -190,9 +190,9 @@ export function MicroInteractionsDemo() {
       ),
     },
     {
-      id: "feedback",
-      title: "Success/Error Feedback",
-      description: "Visual feedback animations",
+      id: 'feedback',
+      title: 'Success/Error Feedback',
+      description: 'Visual feedback animations',
       component: (
         <div className="space-y-8">
           <div className="flex flex-wrap gap-4">
@@ -219,9 +219,9 @@ export function MicroInteractionsDemo() {
       ),
     },
     {
-      id: "counting",
-      title: "Number Counting",
-      description: "Animated statistics",
+      id: 'counting',
+      title: 'Number Counting',
+      description: 'Animated statistics',
       component: (
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -283,7 +283,7 @@ export function MicroInteractionsDemo() {
             elevation="1"
             variant="primary"
             interactive
-            className={cn(activeDemo === demo.id && "ring-2 ring-primary/50")}
+            className={cn(activeDemo === demo.id && 'ring-2 ring-primary/50')}
             onClick={() => setActiveDemo(demo.id)}
           >
             <CardHeader>

@@ -1,18 +1,18 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import EnhancedPositionsTable from "@/components/trading/EnhancedPositionsTable";
-import OrderHistory from "@/components/trading/OrderHistory";
-import EnhancedPortfolioDashboard from "@/components/trading/EnhancedPortfolioDashboard";
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import EnhancedPositionsTable from '@/components/trading/EnhancedPositionsTable';
+import OrderHistory from '@/components/trading/OrderHistory';
+import EnhancedPortfolioDashboard from '@/components/trading/EnhancedPortfolioDashboard';
 
 // Mock hooks
-vi.mock("@/hooks/useRealtimePositions", () => ({
+vi.mock('@/hooks/useRealtimePositions', () => ({
   useRealtimePositions: vi.fn(() => ({
     positions: [
       {
-        id: "1",
-        symbol: "EURUSD",
-        side: "buy",
+        id: '1',
+        symbol: 'EURUSD',
+        side: 'buy',
         quantity: 1.0,
         entry_price: 1.085,
         current_price: 1.0875,
@@ -23,9 +23,9 @@ vi.mock("@/hooks/useRealtimePositions", () => ({
         created_at: new Date().toISOString(),
       },
       {
-        id: "2",
-        symbol: "GBPUSD",
-        side: "sell",
+        id: '2',
+        symbol: 'GBPUSD',
+        side: 'sell',
         quantity: 0.5,
         entry_price: 1.27,
         current_price: 1.268,
@@ -40,17 +40,17 @@ vi.mock("@/hooks/useRealtimePositions", () => ({
   })),
 }));
 
-vi.mock("@/hooks/usePnLCalculations", () => ({
+vi.mock('@/hooks/usePnLCalculations', () => ({
   usePnLCalculations: vi.fn(() => ({
     positionPnLMap: new Map([
-      ["1", { pnl: 250, pnlPercent: 0.23 }],
-      ["2", { pnl: 100, pnlPercent: 0.08 }],
+      ['1', { pnl: 250, pnlPercent: 0.23 }],
+      ['2', { pnl: 100, pnlPercent: 0.08 }],
     ]),
-    getPnLColor: (pnl: number) => (pnl >= 0 ? "#00BFA5" : "#E53935"),
+    getPnLColor: (pnl: number) => (pnl >= 0 ? '#00BFA5' : '#E53935'),
   })),
 }));
 
-vi.mock("@/hooks/usePositionClose", () => ({
+vi.mock('@/hooks/usePositionClose', () => ({
   usePositionClose: vi.fn(() => ({
     closePosition: vi.fn(async () => {}),
     isClosing: null,
@@ -58,29 +58,29 @@ vi.mock("@/hooks/usePositionClose", () => ({
   })),
 }));
 
-vi.mock("@/hooks/useAuth", () => ({
+vi.mock('@/hooks/useAuth', () => ({
   useAuth: vi.fn(() => ({
-    user: { id: "test-user-123" },
+    user: { id: 'test-user-123' },
   })),
 }));
 
-vi.mock("@/hooks/use-toast", () => ({
+vi.mock('@/hooks/use-toast', () => ({
   useToast: vi.fn(() => ({
     toast: vi.fn(),
   })),
 }));
 
-vi.mock("@/hooks/useOrdersTable", () => ({
+vi.mock('@/hooks/useOrdersTable', () => ({
   useOrdersTable: vi.fn(() => ({
     orders: [
       {
-        id: "1",
-        symbol: "EURUSD",
-        type: "market",
-        side: "buy",
+        id: '1',
+        symbol: 'EURUSD',
+        type: 'market',
+        side: 'buy',
         quantity: 1.0,
         price: 1.085,
-        status: "filled",
+        status: 'filled',
         filled_quantity: 1.0,
         average_price: 1.085,
         commission: 2.5,
@@ -92,19 +92,19 @@ vi.mock("@/hooks/useOrdersTable", () => ({
   })),
 }));
 
-vi.mock("@/hooks/usePortfolioData", () => ({
+vi.mock('@/hooks/usePortfolioData', () => ({
   usePortfolioData: vi.fn(() => ({
     profile: {
-      id: "user-123",
+      id: 'user-123',
       balance: 10000,
       margin_used: 800,
       realized_pnl: 500,
     },
     positions: [
       {
-        id: "1",
-        symbol: "EURUSD",
-        side: "buy",
+        id: '1',
+        symbol: 'EURUSD',
+        side: 'buy',
         quantity: 1.0,
         entry_price: 1.085,
         current_price: 1.0875,
@@ -115,28 +115,28 @@ vi.mock("@/hooks/usePortfolioData", () => ({
   })),
 }));
 
-describe("EnhancedPositionsTable", () => {
-  it("should render positions table with all positions", () => {
+describe('EnhancedPositionsTable', () => {
+  it('should render positions table with all positions', () => {
     render(<EnhancedPositionsTable />);
     expect(screen.getByText(/open positions/i)).toBeInTheDocument();
-    expect(screen.getAllByText("EURUSD")).toHaveLength(2); // One in desktop table, one in mobile card
+    expect(screen.getAllByText('EURUSD')).toHaveLength(2); // One in desktop table, one in mobile card
   });
-  it("should display position quantities", () => {
+  it('should display position quantities', () => {
     render(<EnhancedPositionsTable />);
     expect(screen.getAllByText(/1\.00/)).toHaveLength(2); // One in desktop table, one in mobile card
   });
 
-  it("should show buy/sell badges", () => {
+  it('should show buy/sell badges', () => {
     render(<EnhancedPositionsTable />);
-    const buyBadges = screen.queryAllByText("BUY");
+    const buyBadges = screen.queryAllByText('BUY');
     expect(buyBadges.length).toBeGreaterThan(0);
   });
 
-  it("should filter positions by side", async () => {
+  it('should filter positions by side', async () => {
     render(<EnhancedPositionsTable />);
     const buyButton = screen
-      .getAllByRole("button")
-      .find((btn) => btn.textContent?.trim() === "Buy");
+      .getAllByRole('button')
+      .find((btn) => btn.textContent?.trim() === 'Buy');
     if (buyButton) fireEvent.click(buyButton);
     await waitFor(() => {
       expect(screen.getByText(/open positions/i)).toBeInTheDocument();
@@ -144,44 +144,44 @@ describe("EnhancedPositionsTable", () => {
   });
 });
 
-describe("OrderHistory", () => {
-  it("should render order history", () => {
+describe('OrderHistory', () => {
+  it('should render order history', () => {
     render(<OrderHistory />);
     expect(screen.getByText(/order history/i)).toBeInTheDocument();
   });
 
-  it("should display order count", () => {
+  it('should display order count', () => {
     render(<OrderHistory />);
     expect(screen.queryByText(/\(1\)/)).toBeInTheDocument();
   });
 
-  it("should show order type badges", () => {
+  it('should show order type badges', () => {
     render(<OrderHistory />);
     const typeBadges = screen.queryAllByText(/MARKET|LIMIT/i);
     expect(typeBadges.length).toBeGreaterThan(0);
   });
 });
 
-describe("EnhancedPortfolioDashboard", () => {
-  it("should render dashboard with metrics", () => {
+describe('EnhancedPortfolioDashboard', () => {
+  it('should render dashboard with metrics', () => {
     render(<EnhancedPortfolioDashboard />);
     expect(screen.getByText(/total equity/i)).toBeInTheDocument();
     expect(screen.getByText(/balance/i)).toBeInTheDocument();
   });
 
-  it("should have position and order tabs", () => {
+  it('should have position and order tabs', () => {
     render(<EnhancedPortfolioDashboard />);
-    expect(screen.getByRole("tablist")).toBeInTheDocument();
+    expect(screen.getByRole('tablist')).toBeInTheDocument();
   });
 
-  it("should display margin level", () => {
+  it('should display margin level', () => {
     render(<EnhancedPortfolioDashboard />);
     expect(screen.getByText(/margin level/i)).toBeInTheDocument();
   });
 
-  it("should switch between tabs", async () => {
+  it('should switch between tabs', async () => {
     render(<EnhancedPortfolioDashboard />);
-    const tabs = screen.getAllByRole("tab");
+    const tabs = screen.getAllByRole('tab');
     expect(tabs.length).toBeGreaterThan(1);
 
     // Verify tabs exist and are rendered
@@ -189,36 +189,36 @@ describe("EnhancedPortfolioDashboard", () => {
     expect(tabs[1]).toBeInTheDocument();
 
     // Tab 0 should be Positions, Tab 1 should be Orders
-    expect(tabs[0].textContent).toContain("Positions");
-    expect(tabs[1].textContent).toContain("Orders");
+    expect(tabs[0].textContent).toContain('Positions');
+    expect(tabs[1].textContent).toContain('Orders');
   });
 });
 
-describe("Integration Tests", () => {
-  it("should display positions and their data", () => {
+describe('Integration Tests', () => {
+  it('should display positions and their data', () => {
     render(<EnhancedPositionsTable />);
     const positionsHeader = screen.getByText(/open positions/i);
     expect(positionsHeader).toBeInTheDocument();
-    expect(screen.getAllByText("EURUSD")).toHaveLength(2); // One in desktop table, one in mobile card
+    expect(screen.getAllByText('EURUSD')).toHaveLength(2); // One in desktop table, one in mobile card
   });
 
-  it("should handle filter changes efficiently", async () => {
+  it('should handle filter changes efficiently', async () => {
     render(<EnhancedPositionsTable />);
     const buttons = screen
-      .getAllByRole("button")
-      .filter((btn) => btn.textContent?.includes("All"));
+      .getAllByRole('button')
+      .filter((btn) => btn.textContent?.includes('All'));
     if (buttons.length > 0) {
       fireEvent.click(buttons[0]);
       await waitFor(
         () => {
           expect(screen.getByText(/open positions/i)).toBeInTheDocument();
         },
-        { timeout: 100 },
+        { timeout: 100 }
       );
     }
   });
 
-  it("should render responsive layout", () => {
+  it('should render responsive layout', () => {
     window.innerWidth = 375;
     const { rerender } = render(<EnhancedPositionsTable />);
     expect(screen.getByText(/open positions/i)).toBeInTheDocument();

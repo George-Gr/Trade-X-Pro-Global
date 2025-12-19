@@ -1,25 +1,25 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { OrderStatusBadge } from "./OrderStatusBadge";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { OrderStatusBadge } from './OrderStatusBadge';
 import {
   calculateFillPercentage,
   type OrderStatus,
-} from "@/lib/trading/orderUtils";
-import { Copy, X } from "lucide-react";
+} from '@/lib/trading/orderUtils';
+import { Copy, X } from 'lucide-react';
 
 export interface Order {
   id: string;
   symbol: string;
-  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
-  side: "buy" | "sell";
+  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
+  side: 'buy' | 'sell';
   quantity: number;
   filled_quantity: number;
   price?: number;
@@ -65,25 +65,25 @@ export const OrderDetailDialog = ({
     ? calculateFillPercentage(order.filled_quantity, order.quantity)
     : 0;
   const canModify = order
-    ? ["open", "partially_filled"].includes(order.status)
+    ? ['open', 'partially_filled'].includes(order.status)
     : false;
   const canCancel = order
-    ? ["pending", "open", "partially_filled"].includes(order.status)
+    ? ['pending', 'open', 'partially_filled'].includes(order.status)
     : false;
 
   const sideColor =
-    order?.side === "buy"
-      ? "bg-background border-blue-200"
-      : "bg-background border-orange-200";
+    order?.side === 'buy'
+      ? 'bg-background border-blue-200'
+      : 'bg-background border-orange-200';
   const sideTextColor =
-    order?.side === "buy" ? "text-blue-700" : "text-orange-700";
+    order?.side === 'buy' ? 'text-blue-700' : 'text-orange-700';
 
   const orderTypeLabel =
     order?.type
-      .replace("_", "-")
-      .split("-")
+      .replace('_', '-')
+      .split('-')
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ") || "";
+      .join(' ') || '';
 
   const copyOrderId = () => {
     if (order) navigator.clipboard.writeText(order.id);
@@ -185,14 +185,14 @@ export const OrderDetailDialog = ({
                 <div
                   className={`text-lg font-bold ${
                     order.realized_pnl && order.realized_pnl > 0
-                      ? "text-buy text-green-600"
-                      : "text-sell text-red-600"
+                      ? 'text-buy text-green-600'
+                      : 'text-sell text-red-600'
                   }`}
                 >
                   {order.realized_pnl !== undefined ? (
                     <>${order.realized_pnl.toFixed(2)}</>
                   ) : (
-                    "N/A"
+                    'N/A'
                   )}
                 </div>
               </div>
@@ -246,7 +246,7 @@ export const OrderDetailDialog = ({
                   Price Levels
                 </h4>
                 <div className="space-y-4">
-                  {order.type === "market" && (
+                  {order.type === 'market' && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">
                         Market Order

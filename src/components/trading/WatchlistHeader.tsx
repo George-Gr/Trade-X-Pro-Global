@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, FolderPlus, Plus } from "lucide-react";
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search, FolderPlus, Plus } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { useWatchlists } from "@/hooks/useWatchlists";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { useWatchlists } from '@/hooks/useWatchlists';
 
 interface WatchlistHeaderProps {
   searchQuery: string;
@@ -25,13 +25,13 @@ export const WatchlistHeader = ({
   onCreateWatchlist,
   onAddSymbol,
 }: WatchlistHeaderProps) => {
-  const [newWatchlistName, setNewWatchlistName] = useState("");
+  const [newWatchlistName, setNewWatchlistName] = useState('');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const handleCreateWatchlist = async () => {
     if (newWatchlistName.trim()) {
       await onCreateWatchlist(newWatchlistName);
-      setNewWatchlistName("");
+      setNewWatchlistName('');
       setCreateDialogOpen(false);
     }
   };
@@ -59,7 +59,7 @@ export const WatchlistHeader = ({
                     value={newWatchlistName}
                     onChange={(e) => setNewWatchlistName(e.target.value)}
                     onKeyDown={(e) =>
-                      e.key === "Enter" && handleCreateWatchlist()
+                      e.key === 'Enter' && handleCreateWatchlist()
                     }
                   />
                 </div>

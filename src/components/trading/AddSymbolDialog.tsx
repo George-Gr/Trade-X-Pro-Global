@@ -1,28 +1,28 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const POPULAR_SYMBOLS = [
-  { symbol: "EURUSD", name: "Euro / US Dollar" },
-  { symbol: "GBPUSD", name: "British Pound / US Dollar" },
-  { symbol: "USDJPY", name: "US Dollar / Japanese Yen" },
-  { symbol: "AUDUSD", name: "Australian Dollar / US Dollar" },
-  { symbol: "BTCUSD", name: "Bitcoin / US Dollar" },
-  { symbol: "ETHUSD", name: "Ethereum / US Dollar" },
-  { symbol: "XAUUSD", name: "Gold / US Dollar" },
-  { symbol: "AAPL", name: "Apple Inc." },
-  { symbol: "GOOGL", name: "Alphabet Inc." },
-  { symbol: "TSLA", name: "Tesla Inc." },
+  { symbol: 'EURUSD', name: 'Euro / US Dollar' },
+  { symbol: 'GBPUSD', name: 'British Pound / US Dollar' },
+  { symbol: 'USDJPY', name: 'US Dollar / Japanese Yen' },
+  { symbol: 'AUDUSD', name: 'Australian Dollar / US Dollar' },
+  { symbol: 'BTCUSD', name: 'Bitcoin / US Dollar' },
+  { symbol: 'ETHUSD', name: 'Ethereum / US Dollar' },
+  { symbol: 'XAUUSD', name: 'Gold / US Dollar' },
+  { symbol: 'AAPL', name: 'Apple Inc.' },
+  { symbol: 'GOOGL', name: 'Alphabet Inc.' },
+  { symbol: 'TSLA', name: 'Tesla Inc.' },
 ];
 
 interface AddSymbolDialogProps {
@@ -37,7 +37,7 @@ interface AddSymbolDialogProps {
  */
 const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [symbol, setSymbol] = useState("");
+  const [symbol, setSymbol] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAdd = async () => {
@@ -45,7 +45,7 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
       setIsLoading(true);
       try {
         await onAddSymbol(symbol);
-        setSymbol("");
+        setSymbol('');
         setOpen(false);
       } finally {
         setIsLoading(false);
@@ -76,7 +76,7 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
               placeholder="Enter symbol (e.g., EURUSD)"
               value={symbol}
               onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               disabled={isLoading}
             />
           </div>
@@ -92,8 +92,8 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
                   size="sm"
                   onClick={() => setSymbol(s.symbol)}
                   className={cn(
-                    "justify-start text-xs",
-                    symbol === s.symbol && "border-primary",
+                    'justify-start text-xs',
+                    symbol === s.symbol && 'border-primary'
                   )}
                 >
                   {s.symbol}
@@ -106,7 +106,7 @@ const AddSymbolDialog = ({ onAddSymbol }: AddSymbolDialogProps) => {
             className="w-full"
             disabled={isLoading || !symbol.trim()}
           >
-            {isLoading ? "Adding..." : "Add Symbol"}
+            {isLoading ? 'Adding...' : 'Add Symbol'}
           </Button>
         </div>
       </DialogContent>

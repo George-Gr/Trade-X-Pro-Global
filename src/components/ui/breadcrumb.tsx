@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { ChevronRight, MoreHorizontal, Home } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { ChevronRight, MoreHorizontal, Home } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 export interface BreadcrumbItemConfig {
   title: string;
@@ -14,201 +14,201 @@ export interface BreadcrumbItemConfig {
 
 // Breadcrumb configuration for all routes
 const BREADCRUMB_CONFIG = {
-  "/education": {
-    title: "Education",
+  '/education': {
+    title: 'Education',
   },
-  "/education/webinar": {
-    title: "Webinar",
-    path: "/education",
+  '/education/webinar': {
+    title: 'Webinar',
+    path: '/education',
   },
-  "/education/certifications": {
-    title: "Certifications",
-    path: "/education",
+  '/education/certifications': {
+    title: 'Certifications',
+    path: '/education',
   },
-  "/education/tutorials": {
-    title: "Tutorials",
-    path: "/education",
+  '/education/tutorials': {
+    title: 'Tutorials',
+    path: '/education',
   },
-  "/education/mentorship": {
-    title: "Mentorship",
-    path: "/education",
+  '/education/mentorship': {
+    title: 'Mentorship',
+    path: '/education',
   },
-  "/education/glossary": {
-    title: "Glossary",
-    path: "/education",
+  '/education/glossary': {
+    title: 'Glossary',
+    path: '/education',
   },
 
   // Company pages
-  "/company": {
-    title: "Company",
+  '/company': {
+    title: 'Company',
   },
-  "/company/about": {
-    title: "About Us",
-    path: "/company",
+  '/company/about': {
+    title: 'About Us',
+    path: '/company',
   },
-  "/company/regulation": {
-    title: "Regulation",
-    path: "/company",
+  '/company/regulation': {
+    title: 'Regulation',
+    path: '/company',
   },
-  "/company/security": {
-    title: "Security",
-    path: "/company",
+  '/company/security': {
+    title: 'Security',
+    path: '/company',
   },
-  "/company/partners": {
-    title: "Partners",
-    path: "/company",
+  '/company/partners': {
+    title: 'Partners',
+    path: '/company',
   },
-  "/company/contact": {
-    title: "Contact Us",
-    path: "/company",
+  '/company/contact': {
+    title: 'Contact Us',
+    path: '/company',
   },
 
   // Authenticated pages
-  "/dashboard": {
-    title: "Dashboard",
+  '/dashboard': {
+    title: 'Dashboard',
   },
-  "/trade": {
-    title: "Trade",
+  '/trade': {
+    title: 'Trade',
   },
-  "/portfolio": {
-    title: "Portfolio",
+  '/portfolio': {
+    title: 'Portfolio',
   },
-  "/history": {
-    title: "History",
+  '/history': {
+    title: 'History',
   },
-  "/pending-orders": {
-    title: "Pending Orders",
+  '/pending-orders': {
+    title: 'Pending Orders',
   },
-  "/wallet": {
-    title: "Wallet",
+  '/wallet': {
+    title: 'Wallet',
   },
-  "/settings": {
-    title: "Settings",
+  '/settings': {
+    title: 'Settings',
   },
-  "/kyc": {
-    title: "KYC",
+  '/kyc': {
+    title: 'KYC',
   },
-  "/notifications": {
-    title: "Notifications",
+  '/notifications': {
+    title: 'Notifications',
   },
-  "/risk-management": {
-    title: "Risk Management",
+  '/risk-management': {
+    title: 'Risk Management',
   },
 
   // Admin pages
-  "/admin": {
-    title: "Admin",
+  '/admin': {
+    title: 'Admin',
   },
-  "/admin/risk": {
-    title: "Admin Risk Dashboard",
-    path: "/admin",
+  '/admin/risk': {
+    title: 'Admin Risk Dashboard',
+    path: '/admin',
   },
 };
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
-  React.ComponentPropsWithoutRef<"nav"> & {
+  React.ComponentPropsWithoutRef<'nav'> & {
     separator?: React.ReactNode;
   }
 >(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
-Breadcrumb.displayName = "Breadcrumb";
+Breadcrumb.displayName = 'Breadcrumb';
 
 const BreadcrumbList = React.forwardRef<
   HTMLOListElement,
-  React.ComponentPropsWithoutRef<"ol">
+  React.ComponentPropsWithoutRef<'ol'>
 >(({ className, ...props }, ref) => (
   <ol
     ref={ref}
     className={cn(
-      "flex flex-wrap items-center wrap-break-word gap-4.5 sm:gap-4.5 text-sm text-muted-foreground",
-      className,
+      'flex flex-wrap items-center wrap-break-word gap-4.5 sm:gap-4.5 text-sm text-muted-foreground',
+      className
     )}
     {...props}
   />
 ));
-BreadcrumbList.displayName = "BreadcrumbList";
+BreadcrumbList.displayName = 'BreadcrumbList';
 
 const BreadcrumbItem = React.forwardRef<
   HTMLLIElement,
-  React.ComponentPropsWithoutRef<"li">
+  React.ComponentPropsWithoutRef<'li'>
 >(({ className, ...props }, ref) => (
   <li
     ref={ref}
-    className={cn("inline-flex items-center gap-4.5", className)}
+    className={cn('inline-flex items-center gap-4.5', className)}
     {...props}
   />
 ));
-BreadcrumbItem.displayName = "BreadcrumbItem";
+BreadcrumbItem.displayName = 'BreadcrumbItem';
 
 const BreadcrumbLink = React.forwardRef<
   HTMLAnchorElement,
-  React.ComponentPropsWithoutRef<"a"> & {
+  React.ComponentPropsWithoutRef<'a'> & {
     asChild?: boolean;
   }
 >(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot : "a";
+  const Comp = asChild ? Slot : 'a';
 
   return (
     <Comp
       ref={ref}
-      className={cn("hover:text-foreground transition-colors", className)}
+      className={cn('hover:text-foreground transition-colors', className)}
       {...props}
     />
   );
 });
-BreadcrumbLink.displayName = "BreadcrumbLink";
+BreadcrumbLink.displayName = 'BreadcrumbLink';
 
 const BreadcrumbPage = React.forwardRef<
   HTMLSpanElement,
-  React.ComponentPropsWithoutRef<"span">
+  React.ComponentPropsWithoutRef<'span'>
 >(({ className, ...props }, ref) => (
   <span
     ref={ref}
     role="link"
     aria-disabled="true"
     aria-current="page"
-    className={cn("font-normal text-foreground", className)}
+    className={cn('font-normal text-foreground', className)}
     {...props}
   />
 ));
-BreadcrumbPage.displayName = "BreadcrumbPage";
+BreadcrumbPage.displayName = 'BreadcrumbPage';
 
 const BreadcrumbSeparator = ({
   children,
   className,
   ...props
-}: React.ComponentProps<"li">) => (
+}: React.ComponentProps<'li'>) => (
   <li
     role="presentation"
     aria-hidden="true"
-    className={cn("icon-sm", className)}
+    className={cn('icon-sm', className)}
     {...props}
   >
     {children ?? <ChevronRight />}
   </li>
 );
-BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
+BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
 
 const BreadcrumbEllipsis = ({
   className,
   ...props
-}: React.ComponentProps<"span">) => (
+}: React.ComponentProps<'span'>) => (
   <span
     role="presentation"
     aria-hidden="true"
-    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    className={cn('flex h-9 w-9 items-center justify-center', className)}
     {...props}
   >
     <MoreHorizontal className="h-4 w-4" />
     <span className="sr-only">More</span>
   </span>
 );
-BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";
+BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis';
 
 // AutoBreadcrumb component for automatic breadcrumb generation
 export const AutoBreadcrumb = React.forwardRef<
   HTMLElement,
-  React.ComponentPropsWithoutRef<"nav"> & {
+  React.ComponentPropsWithoutRef<'nav'> & {
     maxItems?: number;
     truncateLength?: number;
   }
@@ -221,17 +221,17 @@ export const AutoBreadcrumb = React.forwardRef<
     path?: string;
   })[] => {
     const pathSegments = location.pathname
-      .split("/")
+      .split('/')
       .filter((segment: string) => segment.length > 0);
     const items: (BreadcrumbItemConfig & { path?: string })[] = [];
 
     // Always start with Home
     const homeConfig = (
       BREADCRUMB_CONFIG as Record<string, BreadcrumbItemConfig | undefined>
-    )["/"];
-    items.push(homeConfig || { title: "Home" });
+    )['/'];
+    items.push(homeConfig || { title: 'Home' });
 
-    let currentPath = "";
+    let currentPath = '';
 
     for (let i = 0; i < pathSegments.length; i++) {
       const segment = pathSegments[i];
@@ -278,8 +278,8 @@ export const AutoBreadcrumb = React.forwardRef<
     <Breadcrumb
       ref={ref}
       className={cn(
-        "bg-muted/70 rounded-md px-3 py-2 text-foreground",
-        className,
+        'bg-muted/70 rounded-md px-3 py-2 text-foreground',
+        className
       )}
       {...props}
     >
@@ -289,11 +289,11 @@ export const AutoBreadcrumb = React.forwardRef<
           const isFirst = index === 0;
 
           return (
-            <BreadcrumbItem key={isFirst ? "home" : item.path || item.title}>
+            <BreadcrumbItem key={isFirst ? 'home' : item.path || item.title}>
               {isFirst ? (
                 // Home icon for first item
                 <BreadcrumbLink
-                  onClick={() => handleNavigation("/")}
+                  onClick={() => handleNavigation('/')}
                   className="flex items-center gap-1 text-foreground/90 hover:text-primary transition-colors font-medium"
                   aria-label="Go to Home"
                 >
@@ -323,7 +323,7 @@ export const AutoBreadcrumb = React.forwardRef<
   );
 });
 
-AutoBreadcrumb.displayName = "AutoBreadcrumb";
+AutoBreadcrumb.displayName = 'AutoBreadcrumb';
 
 export {
   Breadcrumb,

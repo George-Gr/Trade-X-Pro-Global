@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, DollarSign, Target } from "lucide-react";
-import type { TradeStatistics } from "@/hooks/useTradingHistory";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TrendingUp, TrendingDown, DollarSign, Target } from 'lucide-react';
+import type { TradeStatistics } from '@/hooks/useTradingHistory';
 
 interface TradeStatisticsCardsProps {
   statistics: TradeStatistics | null;
@@ -10,9 +10,9 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
   if (!statistics) return null;
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
@@ -64,10 +64,10 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
         <CardContent>
           <div
             className={`text-2xl font-bold ${
-              statistics.totalPnL >= 0 ? "text-profit" : "text-loss"
+              statistics.totalPnL >= 0 ? 'text-profit' : 'text-loss'
             }`}
           >
-            {statistics.totalPnL >= 0 ? "+" : ""}
+            {statistics.totalPnL >= 0 ? '+' : ''}
             {formatCurrency(statistics.totalPnL)}
           </div>
           <p className="text-xs text-muted-foreground mt-2">Net profit/loss</p>
@@ -84,10 +84,10 @@ const TradeStatisticsCards = ({ statistics }: TradeStatisticsCardsProps) => {
         <CardContent>
           <div
             className={`text-2xl font-bold ${
-              statistics.averagePnL >= 0 ? "text-profit" : "text-loss"
+              statistics.averagePnL >= 0 ? 'text-profit' : 'text-loss'
             }`}
           >
-            {statistics.averagePnL >= 0 ? "+" : ""}
+            {statistics.averagePnL >= 0 ? '+' : ''}
             {formatCurrency(statistics.averagePnL)}
           </div>
           <p className="text-xs text-muted-foreground mt-2">Per trade</p>

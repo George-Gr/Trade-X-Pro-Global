@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Download, FileText } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from '@/components/ui/button';
+import { Download, FileText } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import type {
   TradeHistoryItem,
   LedgerEntry,
   OrderHistoryItem,
-} from "@/hooks/useTradingHistory";
+} from '@/hooks/useTradingHistory';
 
 interface ExportButtonsProps {
   trades: TradeHistoryItem[];
@@ -19,9 +19,9 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
   const exportToCSV = (data: unknown[], filename: string) => {
     if (data.length === 0) {
       toast({
-        title: "No data to export",
-        description: "There is no data available to export",
-        variant: "destructive",
+        title: 'No data to export',
+        description: 'There is no data available to export',
+        variant: 'destructive',
       });
       return;
     }
@@ -30,30 +30,30 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
     const first = data[0] as Record<string, unknown>;
     const headers = Object.keys(first);
     const csvContent = [
-      headers.join(","),
+      headers.join(','),
       ...data.map((row) => {
         const r = row as Record<string, unknown>;
         return headers
-          .map((header) => JSON.stringify(r[header] ?? ""))
-          .join(",");
+          .map((header) => JSON.stringify(r[header] ?? ''))
+          .join(',');
       }),
-    ].join("\n");
+    ].join('\n');
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
+    link.setAttribute('href', url);
     link.setAttribute(
-      "download",
-      `${filename}_${new Date().toISOString().split("T")[0]}.csv`,
+      'download',
+      `${filename}_${new Date().toISOString().split('T')[0]}.csv`
     );
-    link.style.visibility = "hidden";
+    link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
     toast({
-      title: "Export successful",
+      title: 'Export successful',
       description: `${filename} has been downloaded`,
     });
   };
@@ -61,12 +61,12 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
   const exportTradesToPDF = () => {
     // For a simple implementation, we'll create a printable HTML version
     // In production, you'd use a library like jsPDF or pdfmake
-    const printWindow = window.open("", "_blank");
+    const printWindow = window.open('', '_blank');
     if (!printWindow) {
       toast({
-        title: "Pop-up blocked",
-        description: "Please allow pop-ups to export PDF",
-        variant: "destructive",
+        title: 'Pop-up blocked',
+        description: 'Please allow pop-ups to export PDF',
+        variant: 'destructive',
       });
       return;
     }
@@ -115,13 +115,13 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
                   <td>${trade.quantity.toFixed(2)}</td>
                   <td>${trade.entry_price.toFixed(5)}</td>
                   <td>${trade.exit_price.toFixed(5)}</td>
-                  <td class="${trade.realized_pnl >= 0 ? "profit" : "loss"}">
+                  <td class="${trade.realized_pnl >= 0 ? 'profit' : 'loss'}">
                     $${trade.realized_pnl.toFixed(2)}
                   </td>
                 </tr>
-              `,
+              `
                 )
-                .join("")}
+                .join('')}
             </tbody>
           </table>
           <button onclick="window.print()" style="margin-top: 20px; padding: 10px 20px; cursor: pointer;">
@@ -135,8 +135,8 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
     printWindow.document.close();
 
     toast({
-      title: "PDF preview opened",
-      description: "Use the print dialog to save as PDF",
+      title: 'PDF preview opened',
+      description: 'Use the print dialog to save as PDF',
     });
   };
 
@@ -144,21 +144,21 @@ const ExportButtons = ({ trades, orders, ledger }: ExportButtonsProps) => {
     <div className="flex gap-4">
       <Button
         variant="outline"
-        onClick={() => exportToCSV(trades, "trades_history")}
+        onClick={() => exportToCSV(trades, 'trades_history')}
       >
         <Download className="h-4 w-4 mr-2" />
         Export Trades CSV
       </Button>
       <Button
         variant="outline"
-        onClick={() => exportToCSV(orders, "orders_history")}
+        onClick={() => exportToCSV(orders, 'orders_history')}
       >
         <Download className="h-4 w-4 mr-2" />
         Export Orders CSV
       </Button>
       <Button
         variant="outline"
-        onClick={() => exportToCSV(ledger, "ledger_history")}
+        onClick={() => exportToCSV(ledger, 'ledger_history')}
       >
         <Download className="h-4 w-4 mr-2" />
         Export Ledger CSV

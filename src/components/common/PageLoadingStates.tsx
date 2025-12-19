@@ -2,9 +2,9 @@ import {
   NotificationsSkeleton,
   ProfileSkeleton,
   KYCSkeleton,
-} from "@/components/ui/LoadingSkeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+} from '@/components/ui/LoadingSkeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function SettingsLoading() {
   return (

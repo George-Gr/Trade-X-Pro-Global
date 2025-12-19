@@ -1,78 +1,78 @@
-import React, { useEffect, useState } from "react";
-import { cn } from "../../lib/utils";
+import React, { useEffect, useState } from 'react';
 import {
   experimentManager,
   ExperimentVariant,
-} from "../../lib/ab-testing/experimentManager";
-import { CTAConfig } from "./ctaExperimentUtils";
+} from '../../lib/ab-testing/experimentManager';
+import { cn } from '../../lib/utils';
+import { CTAConfig } from './ctaExperimentUtils';
 
 // Static CSS class definitions moved to module scope for performance
 const BASE_CLASSES = [
-  "inline-flex items-center justify-center rounded-md font-medium transition-colors",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-  "disabled:opacity-50 disabled:pointer-events-none",
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+  'disabled:opacity-50 disabled:pointer-events-none',
 ];
 
 const SIZE_CLASSES = {
-  sm: "h-9 px-3 text-sm",
-  md: "h-10 px-4 py-2",
-  lg: "h-11 px-8",
-  xl: "h-12 px-10 text-lg",
+  sm: 'h-9 px-3 text-sm',
+  md: 'h-10 px-4 py-2',
+  lg: 'h-11 px-8',
+  xl: 'h-12 px-10 text-lg',
 };
 
 const STYLE_CLASSES: Record<string, Record<string, string>> = {
   filled: {
-    primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-    accent: "bg-accent text-accent-foreground hover:bg-accent/80",
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+    accent: 'bg-accent text-accent-foreground hover:bg-accent/80',
     destructive:
-      "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    success: "bg-green-600 text-white hover:bg-green-700",
-    warning: "bg-yellow-600 text-white hover:bg-yellow-700",
-    info: "bg-blue-600 text-white hover:bg-blue-700",
-    gold: "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white hover:from-yellow-500 hover:to-yellow-700",
+      'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    success: 'bg-green-600 text-white hover:bg-green-700',
+    warning: 'bg-yellow-600 text-white hover:bg-yellow-700',
+    info: 'bg-blue-600 text-white hover:bg-blue-700',
+    gold: 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white hover:from-yellow-500 hover:to-yellow-700',
   },
   outline: {
     primary:
-      "border border-primary bg-background hover:bg-primary hover:text-primary-foreground",
+      'border border-primary bg-background hover:bg-primary hover:text-primary-foreground',
     secondary:
-      "border border-secondary bg-background hover:bg-secondary hover:text-secondary-foreground",
+      'border border-secondary bg-background hover:bg-secondary hover:text-secondary-foreground',
     accent:
-      "border border-accent bg-background hover:bg-accent hover:text-accent-foreground",
+      'border border-accent bg-background hover:bg-accent hover:text-accent-foreground',
     destructive:
-      "border border-destructive bg-background hover:bg-destructive hover:text-destructive-foreground",
+      'border border-destructive bg-background hover:bg-destructive hover:text-destructive-foreground',
     success:
-      "border border-green-600 bg-background hover:bg-green-600 hover:text-white",
+      'border border-green-600 bg-background hover:bg-green-600 hover:text-white',
     warning:
-      "border border-yellow-600 bg-background hover:bg-yellow-600 hover:text-white",
-    info: "border border-blue-600 bg-background hover:bg-blue-600 hover:text-white",
-    gold: "border border-yellow-400 bg-background hover:bg-yellow-400 hover:text-white",
+      'border border-yellow-600 bg-background hover:bg-yellow-600 hover:text-white',
+    info: 'border border-blue-600 bg-background hover:bg-blue-600 hover:text-white',
+    gold: 'border border-yellow-400 bg-background hover:bg-yellow-400 hover:text-white',
   },
   ghost: {
-    primary: "hover:bg-primary hover:text-primary-foreground",
-    secondary: "hover:bg-secondary hover:text-secondary-foreground",
-    accent: "hover:bg-accent hover:text-accent-foreground",
-    destructive: "hover:bg-destructive hover:text-destructive-foreground",
-    success: "hover:bg-green-600 hover:text-white",
-    warning: "hover:bg-yellow-600 hover:text-white",
-    info: "hover:bg-blue-600 hover:text-white",
-    gold: "hover:bg-yellow-400 hover:text-white",
+    primary: 'hover:bg-primary hover:text-primary-foreground',
+    secondary: 'hover:bg-secondary hover:text-secondary-foreground',
+    accent: 'hover:bg-accent hover:text-accent-foreground',
+    destructive: 'hover:bg-destructive hover:text-destructive-foreground',
+    success: 'hover:bg-green-600 hover:text-white',
+    warning: 'hover:bg-yellow-600 hover:text-white',
+    info: 'hover:bg-blue-600 hover:text-white',
+    gold: 'hover:bg-yellow-400 hover:text-white',
   },
 };
 
 const POSITION_CLASSES = {
-  left: "justify-start",
-  right: "justify-end",
-  center: "justify-center",
+  left: 'justify-start',
+  right: 'justify-end',
+  center: 'justify-center',
 };
 
 interface CTAVariantProps {
   experimentId: string;
   userId: string;
   children: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
-  trackConversion?: boolean;
+  className?: string | undefined;
+  onClick?: (() => void) | undefined;
+  trackConversion?: boolean | undefined;
 }
 
 export function CTAVariant({
@@ -85,11 +85,11 @@ export function CTAVariant({
 }: CTAVariantProps) {
   const [variant, setVariant] = useState<ExperimentVariant | null>(null);
   const [config, setConfig] = useState<CTAConfig>({
-    text: "Get Started",
-    color: "primary",
-    size: "md",
-    style: "filled",
-    position: "center",
+    text: 'Get Started',
+    color: 'primary',
+    size: 'md',
+    style: 'filled',
+    position: 'center',
   });
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export function CTAVariant({
       experimentManager.trackConversion(experimentId, variant.id);
 
       // Dispatch custom event for analytics
-      const conversionEvent = new CustomEvent("ab-test-conversion", {
+      const conversionEvent = new CustomEvent('ab-test-conversion', {
         detail: {
           experimentId,
           variantId: variant.id,
@@ -137,9 +137,9 @@ export function CTAVariant({
       SIZE_CLASSES[config.size],
       STYLE_CLASSES[config.style]?.[config.color] ||
         STYLE_CLASSES.filled?.[config.color] ||
-        STYLE_CLASSES.filled.primary,
-      POSITION_CLASSES[config.position || "center"],
-      className,
+        STYLE_CLASSES.filled?.primary,
+      POSITION_CLASSES[config.position || 'center'],
+      className
     );
   };
 
@@ -147,12 +147,12 @@ export function CTAVariant({
     if (!config.icon) return null;
 
     const iconClasses = cn(
-      config.size === "sm"
-        ? "w-4 h-4"
-        : config.size === "lg"
-          ? "w-5 h-5"
-          : "w-4 h-4",
-      config.position === "left" ? "mr-2" : "ml-2",
+      config.size === 'sm'
+        ? 'w-4 h-4'
+        : config.size === 'lg'
+        ? 'w-5 h-5'
+        : 'w-4 h-4',
+      config.position === 'left' ? 'mr-2' : 'ml-2'
     );
 
     return <span className={iconClasses}>{config.icon}</span>;
@@ -161,7 +161,7 @@ export function CTAVariant({
   if (!variant) {
     // Show default CTA while variant is loading
     return (
-      <button className={cn(getButtonStyles(), "animate-pulse")} disabled>
+      <button className={cn(getButtonStyles(), 'animate-pulse')} disabled>
         Loading...
       </button>
     );
@@ -175,9 +175,9 @@ export function CTAVariant({
       data-variant-id={variant.id}
       data-variant-name={variant.name}
     >
-      {config.position === "left" && renderIcon()}
+      {config.position === 'left' && renderIcon()}
       <span>{config.text}</span>
-      {config.position === "right" && renderIcon()}
+      {config.position === 'right' && renderIcon()}
       {children}
     </button>
   );
@@ -202,7 +202,7 @@ export function TradingSignupCTA({
       className={className}
       onClick={onSignup}
     >
-      {children || "Start Trading"}
+      {children || 'Start Trading'}
     </CTAVariant>
   );
 }
@@ -225,7 +225,7 @@ export function DepositCTA({
       className={className}
       onClick={onDeposit}
     >
-      {children || "Make Deposit"}
+      {children || 'Make Deposit'}
     </CTAVariant>
   );
 }
@@ -248,7 +248,7 @@ export function DownloadAppCTA({
       className={className}
       onClick={onDownload}
     >
-      {children || "Download App"}
+      {children || 'Download App'}
     </CTAVariant>
   );
 }

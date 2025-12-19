@@ -7,12 +7,12 @@
  * - Reorder buttons
  */
 
-import React from "react";
-import { RotateCcw } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import type { OrderTableItem } from "@/hooks/useOrdersTable";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import type { OrderTableItem } from '@/hooks/useOrdersTable';
+import { RotateCcw } from 'lucide-react';
+import type { FC } from 'react';
 
 interface MobileOrderCardsProps {
   orders: OrderTableItem[];
@@ -22,7 +22,7 @@ interface MobileOrderCardsProps {
   renderExpandedContent: (order: OrderTableItem) => React.ReactNode;
 }
 
-const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
+const MobileOrderCards: FC<MobileOrderCardsProps> = ({
   orders,
   expandedOrderId,
   onExpandToggle,
@@ -31,40 +31,40 @@ const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
 }) => {
   const getStatusColor = (status: string): string => {
     switch (status) {
-      case "filled":
-        return "#00BFA5";
-      case "pending":
-        return "#FDD835";
-      case "cancelled":
-        return "#9E9E9E";
-      case "rejected":
-        return "#E53935";
+      case 'filled':
+        return '#00BFA5';
+      case 'pending':
+        return '#FDD835';
+      case 'cancelled':
+        return '#9E9E9E';
+      case 'rejected':
+        return '#E53935';
       default:
-        return "#9E9E9E";
+        return '#9E9E9E';
     }
   };
 
   const getStatusLabel = (status: string): string => {
     switch (status) {
-      case "filled":
-        return "Filled";
-      case "pending":
-        return "Pending";
-      case "cancelled":
-        return "Cancelled";
-      case "rejected":
-        return "Rejected";
+      case 'filled':
+        return 'Filled';
+      case 'pending':
+        return 'Pending';
+      case 'cancelled':
+        return 'Cancelled';
+      case 'rejected':
+        return 'Rejected';
       default:
         return status;
     }
   };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Date(date).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -91,7 +91,7 @@ const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
                 <Badge
                   style={{
                     backgroundColor: getStatusColor(order.status),
-                    color: "white",
+                    color: 'white',
                   }}
                 >
                   {getStatusLabel(order.status)}
@@ -103,11 +103,11 @@ const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
                 <div>
                   <span className="text-muted-foreground">Side</span>
                   <Badge
-                    variant={order.side === "buy" ? "default" : "secondary"}
+                    variant={order.side === 'buy' ? 'default' : 'secondary'}
                     className={`mt-2 ${
-                      order.side === "buy"
-                        ? "bg-buy text-foreground"
-                        : "bg-sell text-foreground"
+                      order.side === 'buy'
+                        ? 'bg-buy text-foreground'
+                        : 'bg-sell text-foreground'
                     }`}
                   >
                     {order.side.toUpperCase()}
@@ -136,7 +136,7 @@ const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
                   <div className="font-mono font-semibold">
                     {order.limit_price || order.price
                       ? `$${(order.limit_price || order.price || 0).toFixed(5)}`
-                      : "-"}
+                      : '-'}
                   </div>
                 </div>
               </div>
@@ -149,8 +149,8 @@ const MobileOrderCards: React.FC<MobileOrderCardsProps> = ({
               )}
 
               {/* Reorder Action */}
-              {(order.status === "cancelled" ||
-                order.status === "rejected") && (
+              {(order.status === 'cancelled' ||
+                order.status === 'rejected') && (
                 <Button
                   size="sm"
                   variant="outline"

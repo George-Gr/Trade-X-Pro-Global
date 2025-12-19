@@ -1,14 +1,13 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Edit, X, Copy } from "lucide-react";
-import { OrderStatusBadge } from "./OrderStatusBadge";
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Edit, X, Copy } from 'lucide-react';
+import { OrderStatusBadge } from './OrderStatusBadge';
 import {
   calculateFillPercentage,
   type OrderStatus,
-} from "@/lib/trading/orderUtils";
-import type { Order } from "./OrderRow";
+} from '@/lib/trading/orderUtils';
+import type { Order } from './OrderRow';
 
 interface OrdersTableMobileProps {
   orders: Order[];
@@ -24,30 +23,30 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
   onViewDetails,
 }) => {
   const canModify = (order: Order) =>
-    ["open", "partially_filled"].includes(order.status);
+    ['open', 'partially_filled'].includes(order.status);
   const canCancel = (order: Order) =>
-    ["pending", "open", "partially_filled"].includes(order.status);
+    ['pending', 'open', 'partially_filled'].includes(order.status);
 
   const copyOrderId = (orderId: string) => {
     navigator.clipboard.writeText(orderId);
   };
 
-  const getTypeLabel = (type: Order["type"]) =>
+  const getTypeLabel = (type: Order['type']) =>
     type
-      .replace("_", "-")
-      .split("-")
+      .replace('_', '-')
+      .split('-')
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+      .join(' ');
 
-  const getSideBadgeColor = (side: "buy" | "sell") =>
-    side === "buy" ? "bg-buy text-foreground" : "bg-sell text-foreground";
+  const getSideBadgeColor = (side: 'buy' | 'sell') =>
+    side === 'buy' ? 'bg-buy text-foreground' : 'bg-sell text-foreground';
 
   return (
     <div className="lg:hidden space-y-3">
       {orders.map((order) => {
         const fillPercentage = calculateFillPercentage(
           order.filled_quantity,
-          order.quantity,
+          order.quantity
         );
 
         return (
@@ -74,7 +73,7 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
               </div>
               <div className="text-right">
                 <OrderStatusBadge status={order.status as OrderStatus} />
-                {order.status === "partially_filled" && (
+                {order.status === 'partially_filled' && (
                   <p className="text-xs text-muted-foreground mt-1">
                     {fillPercentage.toFixed(1)}% filled
                   </p>
@@ -140,18 +139,18 @@ export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
                     style={{
                       color:
                         order.realized_pnl > 0
-                          ? "hsl(var(--buy))"
-                          : "hsl(var(--sell))",
+                          ? 'hsl(var(--buy))'
+                          : 'hsl(var(--sell))',
                     }}
                   >
-                    {order.realized_pnl > 0 ? "+" : ""}$
+                    {order.realized_pnl > 0 ? '+' : ''}$
                     {order.realized_pnl.toFixed(2)}
                   </p>
                 </div>
               )}
 
               {/* Fill Percentage for Partial Fills */}
-              {order.status === "partially_filled" && (
+              {order.status === 'partially_filled' && (
                 <div>
                   <span className="text-xs text-muted-foreground font-medium">
                     Filled

@@ -1,11 +1,11 @@
-import React, { useState, memo } from "react";
+import { usePositionClose } from '@/hooks/usePositionClose';
 import {
   calculateUnrealizedPnL,
   getPositionColor,
-} from "@/lib/trading/positionUtils";
-import type { Position } from "@/types/position";
-import { PositionCloseDialog } from "./PositionCloseDialog";
-import { usePositionClose } from "@/hooks/usePositionClose";
+} from '@/lib/trading/positionUtils';
+import type { Position } from '@/types/position';
+import { memo, useState } from 'react';
+import { PositionCloseDialog } from './PositionCloseDialog';
 
 export const PositionRow = memo(
   ({
@@ -54,7 +54,9 @@ export const PositionRow = memo(
         <div role="cell">{position.current_price.toFixed(4)}</div>
         <div
           role="cell"
-          className={`font-medium ${color === "green" ? "text-buy" : color === "red" ? "text-sell" : ""}`}
+          className={`font-medium ${
+            color === 'green' ? 'text-buy' : color === 'red' ? 'text-sell' : ''
+          }`}
         >
           {pnl.toFixed(2)}
         </div>
@@ -105,7 +107,7 @@ export const PositionRow = memo(
       prevProps.onSelect !== nextProps.onSelect;
 
     return !positionChanged && !selectionChanged && !callbacksChanged;
-  },
+  }
 );
 
 export default PositionRow;

@@ -1,5 +1,5 @@
-import { OrderFormData } from "./OrderForm";
-import { Button } from "@/components/ui/button";
+import { OrderFormData } from './OrderForm';
+import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Loader2, TrendingUp, TrendingDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/alert-dialog';
+import { Loader2, TrendingUp, TrendingDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TradingPanelConfirmationDialogProps {
   open: boolean;
@@ -30,7 +30,7 @@ export const TradingPanelConfirmationDialog = ({
   onConfirm,
   onCancel,
 }: TradingPanelConfirmationDialogProps) => {
-  const isBuy = pendingOrder?.side === "buy";
+  const isBuy = pendingOrder?.side === 'buy';
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -52,10 +52,10 @@ export const TradingPanelConfirmationDialog = ({
                     <span className="text-muted-foreground text-sm">Side</span>
                     <span
                       className={cn(
-                        "font-semibold text-sm px-2 py-0.5 rounded",
+                        'font-semibold text-sm px-2 py-0.5 rounded',
                         isBuy
-                          ? "bg-profit/10 text-profit"
-                          : "bg-loss/10 text-loss",
+                          ? 'bg-profit/10 text-profit'
+                          : 'bg-loss/10 text-loss'
                       )}
                     >
                       {pendingOrder.side.toUpperCase()}
@@ -72,7 +72,7 @@ export const TradingPanelConfirmationDialog = ({
                   <div className="flex justify-between">
                     <span className="text-muted-foreground text-sm">Type</span>
                     <span className="font-semibold text-sm capitalize">
-                      {pendingOrder.type.replace("_", "-")}
+                      {pendingOrder.type.replace('_', '-')}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-border pt-2">
@@ -101,10 +101,10 @@ export const TradingPanelConfirmationDialog = ({
             onClick={onConfirm}
             disabled={isExecuting}
             className={cn(
-              "flex-1 font-semibold",
+              'flex-1 font-semibold',
               isBuy
-                ? "bg-profit hover:bg-profit/90 text-white"
-                : "bg-loss hover:bg-loss/90 text-white",
+                ? 'bg-profit hover:bg-profit/90 text-white'
+                : 'bg-loss hover:bg-loss/90 text-white'
             )}
           >
             {isExecuting ? (
@@ -113,7 +113,7 @@ export const TradingPanelConfirmationDialog = ({
                 Executing...
               </>
             ) : (
-              "Execute Order"
+              'Execute Order'
             )}
           </Button>
         </AlertDialogFooter>

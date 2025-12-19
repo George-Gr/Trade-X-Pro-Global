@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-import { TrendingUp, TrendingDown, AlertCircle, Info } from "lucide-react";
-import { OrderFormData } from "./OrderForm";
-import { cn } from "@/lib/utils";
+import { useMemo } from 'react';
+import { TrendingUp, TrendingDown, AlertCircle, Info } from 'lucide-react';
+import { OrderFormData } from './OrderForm';
+import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
 
 interface OrderPreviewProps {
   formData: Partial<OrderFormData>;
@@ -25,19 +25,19 @@ export const OrderPreview = ({
   slippage = 0.0001,
 }: OrderPreviewProps) => {
   const quantity = formData.quantity || 0;
-  const side = formData.side || "buy";
+  const side = formData.side || 'buy';
 
   const executionPrice = useMemo(() => {
-    if (formData.type === "market") {
+    if (formData.type === 'market') {
       const slippageAmount = currentPrice * slippage;
-      return side === "buy"
+      return side === 'buy'
         ? currentPrice + slippageAmount
         : currentPrice - slippageAmount;
     }
-    if (formData.type === "limit" && formData.limitPrice)
+    if (formData.type === 'limit' && formData.limitPrice)
       return formData.limitPrice;
     if (
-      (formData.type === "stop" || formData.type === "stop_limit") &&
+      (formData.type === 'stop' || formData.type === 'stop_limit') &&
       formData.stopPrice
     )
       return formData.stopPrice;
@@ -51,7 +51,7 @@ export const OrderPreview = ({
   const tpPnL = useMemo(() => {
     if (!formData.takeProfitPrice) return null;
     const pips =
-      side === "buy"
+      side === 'buy'
         ? (formData.takeProfitPrice - executionPrice) / 0.0001
         : (executionPrice - formData.takeProfitPrice) / 0.0001;
     return pips * quantity * 100000 * 0.0001 - commissionAmount;
@@ -66,7 +66,7 @@ export const OrderPreview = ({
   const slPnL = useMemo(() => {
     if (!formData.stopLossPrice) return null;
     const pips =
-      side === "buy"
+      side === 'buy'
         ? (formData.stopLossPrice - executionPrice) / 0.0001
         : (executionPrice - formData.stopLossPrice) / 0.0001;
     return pips * quantity * 100000 * 0.0001 - commissionAmount;
@@ -89,13 +89,13 @@ export const OrderPreview = ({
 
   const formatOrderType = (type?: string) => {
     const types: Record<string, string> = {
-      market: "Market",
-      limit: "Limit",
-      stop: "Stop",
-      stop_limit: "Stop-Limit",
-      trailing_stop: "Trailing",
+      market: 'Market',
+      limit: 'Limit',
+      stop: 'Stop',
+      stop_limit: 'Stop-Limit',
+      trailing_stop: 'Trailing',
     };
-    return types[type || "market"] || "Market";
+    return types[type || 'market'] || 'Market';
   };
 
   return (
@@ -116,10 +116,10 @@ export const OrderPreview = ({
           </span>
           <span
             className={cn(
-              "text-xs font-bold px-2 py-0.5 rounded",
-              side === "buy"
-                ? "bg-profit/10 text-profit"
-                : "bg-loss/10 text-loss",
+              'text-xs font-bold px-2 py-0.5 rounded',
+              side === 'buy'
+                ? 'bg-profit/10 text-profit'
+                : 'bg-loss/10 text-loss'
             )}
           >
             {side.toUpperCase()}
@@ -218,12 +218,12 @@ export const OrderPreview = ({
           {riskReward !== null && (
             <div
               className={cn(
-                "p-2.5 rounded-lg border text-center",
+                'p-2.5 rounded-lg border text-center',
                 riskReward >= 2
-                  ? "bg-profit/5 border-profit/20"
+                  ? 'bg-profit/5 border-profit/20'
                   : riskReward >= 1
-                    ? "bg-warning/5 border-warning/20"
-                    : "bg-loss/5 border-loss/20",
+                    ? 'bg-warning/5 border-warning/20'
+                    : 'bg-loss/5 border-loss/20'
               )}
             >
               <span className="text-[10px] text-muted-foreground uppercase block mb-1">
@@ -231,12 +231,12 @@ export const OrderPreview = ({
               </span>
               <span
                 className={cn(
-                  "font-mono text-lg font-bold",
+                  'font-mono text-lg font-bold',
                   riskReward >= 2
-                    ? "text-profit"
+                    ? 'text-profit'
                     : riskReward >= 1
-                      ? "text-warning"
-                      : "text-loss",
+                      ? 'text-warning'
+                      : 'text-loss'
                 )}
               >
                 1:{riskReward.toFixed(2)}

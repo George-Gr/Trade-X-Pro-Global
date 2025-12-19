@@ -1,17 +1,17 @@
-import React, { useMemo, useState } from "react";
-import { ChevronDown, Loader2, AlertCircle } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { useOrdersTable, type OrderTableItem } from "@/hooks/useOrdersTable";
-import { useToast } from "@/hooks/use-toast";
+import React, { useMemo, useState } from 'react';
+import { ChevronDown, Loader2, AlertCircle } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { useOrdersTable, type OrderTableItem } from '@/hooks/useOrdersTable';
+import { useToast } from '@/hooks/use-toast';
 import {
   OrderFilter,
   type OrderFilterType,
-} from "@/components/trading/OrderFilter";
-import { OrderDetailExpander } from "@/components/trading/OrderDetailExpander";
+} from '@/components/trading/OrderFilter';
+import { OrderDetailExpander } from '@/components/trading/OrderDetailExpander';
 import DesktopOrderTable, {
   type OrderSortKey,
-} from "@/components/trading/DesktopOrderTable";
-import MobileOrderCards from "@/components/trading/MobileOrderCards";
+} from '@/components/trading/DesktopOrderTable';
+import MobileOrderCards from '@/components/trading/MobileOrderCards';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,11 +21,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
 interface SortConfig {
-  key: "created_at" | "symbol" | "quantity" | "price";
-  direction: "asc" | "desc";
+  key: 'created_at' | 'symbol' | 'quantity' | 'price';
+  direction: 'asc' | 'desc';
 }
 
 type Order = OrderTableItem;
@@ -46,14 +46,14 @@ const OrderHistory: React.FC = () => {
   const { toast } = useToast();
 
   // State management
-  const [filterStatus, setFilterStatus] = useState<OrderFilterType>("all");
+  const [filterStatus, setFilterStatus] = useState<OrderFilterType>('all');
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: "created_at",
-    direction: "desc",
+    key: 'created_at',
+    direction: 'desc',
   });
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [selectedForReorder, setSelectedForReorder] = useState<Order | null>(
-    null,
+    null
   );
   const [showReorderConfirm, setShowReorderConfirm] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
@@ -63,7 +63,7 @@ const OrderHistory: React.FC = () => {
     if (!orders) return [];
 
     return orders.filter((order) => {
-      if (filterStatus === "all") return true;
+      if (filterStatus === 'all') return true;
       return order.status === filterStatus;
     });
   }, [orders, filterStatus]);
@@ -74,11 +74,11 @@ const OrderHistory: React.FC = () => {
       const aVal = a[sortConfig.key] as number | string;
       const bVal = b[sortConfig.key] as number | string;
 
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
       }
-      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
 
@@ -88,7 +88,7 @@ const OrderHistory: React.FC = () => {
   const handleSort = (key: OrderSortKey) => {
     setSortConfig((prev) => ({
       key,
-      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
 
@@ -101,7 +101,7 @@ const OrderHistory: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       toast({
-        title: "Order Resubmitted",
+        title: 'Order Resubmitted',
         description: `${selectedForReorder.symbol} ${selectedForReorder.side.toUpperCase()} order placed`,
       });
 
@@ -109,9 +109,9 @@ const OrderHistory: React.FC = () => {
       setSelectedForReorder(null);
     } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to reorder. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to reorder. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsReordering(false);
@@ -120,29 +120,29 @@ const OrderHistory: React.FC = () => {
 
   const getStatusColor = (status: string): string => {
     switch (status) {
-      case "filled":
-        return "#00BFA5";
-      case "pending":
-        return "#FDD835";
-      case "cancelled":
-        return "#9E9E9E";
-      case "rejected":
-        return "#E53935";
+      case 'filled':
+        return '#00BFA5';
+      case 'pending':
+        return '#FDD835';
+      case 'cancelled':
+        return '#9E9E9E';
+      case 'rejected':
+        return '#E53935';
       default:
-        return "#9E9E9E";
+        return '#9E9E9E';
     }
   };
 
   const getStatusLabel = (status: string): string => {
     switch (status) {
-      case "filled":
-        return "Filled";
-      case "pending":
-        return "Pending";
-      case "cancelled":
-        return "Cancelled";
-      case "rejected":
-        return "Rejected";
+      case 'filled':
+        return 'Filled';
+      case 'pending':
+        return 'Pending';
+      case 'cancelled':
+        return 'Cancelled';
+      case 'rejected':
+        return 'Rejected';
       default:
         return status;
     }
@@ -160,14 +160,14 @@ const OrderHistory: React.FC = () => {
       <button
         onClick={() => handleSort(sortKey)}
         className="flex items-center gap-4 hover:text-primary transition-colors text-sm"
-        aria-label={`Sort by ${label}, currently ${isActive ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "unsorted"}`}
+        aria-label={`Sort by ${label}, currently ${isActive ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'unsorted'}`}
         aria-pressed={isActive}
       >
         {label}
         {isActive && (
           <ChevronDown
             className={`h-3 w-3 transition-transform ${
-              sortConfig.direction === "asc" ? "rotate-180" : ""
+              sortConfig.direction === 'asc' ? 'rotate-180' : ''
             }`}
             aria-hidden="true"
           />
@@ -177,11 +177,11 @@ const OrderHistory: React.FC = () => {
   };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Date(date).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -259,8 +259,8 @@ const OrderHistory: React.FC = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Reorder</AlertDialogTitle>
             <AlertDialogDescription>
-              Place a new {selectedForReorder?.side.toUpperCase()} order for{" "}
-              {selectedForReorder?.quantity.toFixed(2)}{" "}
+              Place a new {selectedForReorder?.side.toUpperCase()} order for{' '}
+              {selectedForReorder?.quantity.toFixed(2)}{' '}
               {selectedForReorder?.symbol}?
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -273,7 +273,7 @@ const OrderHistory: React.FC = () => {
                   Placing...
                 </>
               ) : (
-                "Reorder"
+                'Reorder'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

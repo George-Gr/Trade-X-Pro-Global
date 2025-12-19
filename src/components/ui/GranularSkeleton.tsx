@@ -1,165 +1,165 @@
-import React from "react";
-import { cn } from "../../lib/utils";
+import React from 'react';
+import { cn } from '../../lib/utils';
 
 interface GranularSkeletonProps {
   type:
-    | "hero"
-    | "card"
-    | "chart"
-    | "table"
-    | "form"
-    | "navigation"
-    | "sidebar"
-    | "footer";
+    | 'hero'
+    | 'card'
+    | 'chart'
+    | 'table'
+    | 'form'
+    | 'navigation'
+    | 'sidebar'
+    | 'footer';
   className?: string;
-  animation?: "pulse" | "wave" | "none";
-  size?: "sm" | "md" | "lg" | "xl";
+  animation?: 'pulse' | 'wave' | 'none';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export function GranularSkeleton({
   type,
   className,
-  animation = "pulse",
-  size = "md",
+  animation = 'pulse',
+  size = 'md',
 }: GranularSkeletonProps) {
   const skeletonStyles = {
-    pulse: "animate-pulse",
-    wave: "animate-[wave_2s_ease-in-out_infinite]",
-    none: "",
+    pulse: 'animate-pulse',
+    wave: 'animate-[wave_2s_ease-in-out_infinite]',
+    none: '',
   };
 
   const sizeStyles = {
-    sm: "h-4",
-    md: "h-6",
-    lg: "h-8",
-    xl: "h-12",
+    sm: 'h-4',
+    md: 'h-6',
+    lg: 'h-8',
+    xl: 'h-12',
   };
 
   const baseClasses = cn(
-    "bg-muted rounded",
+    'bg-muted rounded',
     skeletonStyles[animation],
-    className,
+    className
   );
 
   const renderSkeleton = () => {
     switch (type) {
-      case "hero":
+      case 'hero':
         return (
-          <div className={cn(baseClasses, "h-96 w-full")}>
+          <div className={cn(baseClasses, 'h-96 w-full')}>
             <div className="space-y-4 p-6">
               <div className={cn(baseClasses, sizeStyles[size])} />
-              <div className={cn(baseClasses, "h-4 w-3/4")} />
-              <div className={cn(baseClasses, "h-4 w-1/2")} />
+              <div className={cn(baseClasses, 'h-4 w-3/4')} />
+              <div className={cn(baseClasses, 'h-4 w-1/2')} />
               <div className="flex gap-4 mt-8">
-                <div className={cn(baseClasses, "h-12 w-32")} />
-                <div className={cn(baseClasses, "h-12 w-32")} />
+                <div className={cn(baseClasses, 'h-12 w-32')} />
+                <div className={cn(baseClasses, 'h-12 w-32')} />
               </div>
             </div>
           </div>
         );
 
-      case "card":
+      case 'card':
         return (
-          <div className={cn(baseClasses, "h-48 w-full")}>
+          <div className={cn(baseClasses, 'h-48 w-full')}>
             <div className="p-4 space-y-3">
               <div className={cn(baseClasses, sizeStyles[size])} />
-              <div className={cn(baseClasses, "h-32")} />
+              <div className={cn(baseClasses, 'h-32')} />
               <div className="flex justify-between">
-                <div className={cn(baseClasses, "h-4 w-20")} />
-                <div className={cn(baseClasses, "h-4 w-16")} />
+                <div className={cn(baseClasses, 'h-4 w-20')} />
+                <div className={cn(baseClasses, 'h-4 w-16')} />
               </div>
             </div>
           </div>
         );
 
-      case "chart":
+      case 'chart':
         return (
-          <div className={cn(baseClasses, "h-64 w-full")}>
+          <div className={cn(baseClasses, 'h-64 w-full')}>
             <div className="p-4 space-y-2">
               <div className={cn(baseClasses, sizeStyles[size])} />
-              <div className={cn(baseClasses, "h-48")} />
+              <div className={cn(baseClasses, 'h-48')} />
               <div className="flex gap-2 justify-end">
-                <div className={cn(baseClasses, "h-3 w-12")} />
-                <div className={cn(baseClasses, "h-3 w-12")} />
-                <div className={cn(baseClasses, "h-3 w-12")} />
+                <div className={cn(baseClasses, 'h-3 w-12')} />
+                <div className={cn(baseClasses, 'h-3 w-12')} />
+                <div className={cn(baseClasses, 'h-3 w-12')} />
               </div>
             </div>
           </div>
         );
 
-      case "table":
+      case 'table':
         return (
-          <div className={cn(baseClasses, "h-80 w-full")}>
+          <div className={cn(baseClasses, 'h-80 w-full')}>
             <div className="p-4 space-y-3">
               <div className="flex gap-2">
-                <div className={cn(baseClasses, "h-6 w-1/4")} />
-                <div className={cn(baseClasses, "h-6 w-1/4")} />
-                <div className={cn(baseClasses, "h-6 w-1/4")} />
-                <div className={cn(baseClasses, "h-6 w-1/4")} />
+                <div className={cn(baseClasses, 'h-6 w-1/4')} />
+                <div className={cn(baseClasses, 'h-6 w-1/4')} />
+                <div className={cn(baseClasses, 'h-6 w-1/4')} />
+                <div className={cn(baseClasses, 'h-6 w-1/4')} />
               </div>
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex gap-2">
-                  <div className={cn(baseClasses, "h-4 w-1/4")} />
-                  <div className={cn(baseClasses, "h-4 w-1/4")} />
-                  <div className={cn(baseClasses, "h-4 w-1/4")} />
-                  <div className={cn(baseClasses, "h-4 w-1/4")} />
+                  <div className={cn(baseClasses, 'h-4 w-1/4')} />
+                  <div className={cn(baseClasses, 'h-4 w-1/4')} />
+                  <div className={cn(baseClasses, 'h-4 w-1/4')} />
+                  <div className={cn(baseClasses, 'h-4 w-1/4')} />
                 </div>
               ))}
             </div>
           </div>
         );
 
-      case "form":
+      case 'form':
         return (
-          <div className={cn(baseClasses, "h-64 w-full")}>
+          <div className={cn(baseClasses, 'h-64 w-full')}>
             <div className="p-6 space-y-4">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="space-y-2">
-                  <div className={cn(baseClasses, "h-4 w-1/3")} />
-                  <div className={cn(baseClasses, "h-10 w-full")} />
+                  <div className={cn(baseClasses, 'h-4 w-1/3')} />
+                  <div className={cn(baseClasses, 'h-10 w-full')} />
                 </div>
               ))}
-              <div className={cn(baseClasses, "h-12 w-32 mt-6")} />
+              <div className={cn(baseClasses, 'h-12 w-32 mt-6')} />
             </div>
           </div>
         );
 
-      case "navigation":
+      case 'navigation':
         return (
-          <div className={cn(baseClasses, "h-16 w-full")}>
+          <div className={cn(baseClasses, 'h-16 w-full')}>
             <div className="flex items-center justify-between p-4">
-              <div className={cn(baseClasses, "h-8 w-32")} />
+              <div className={cn(baseClasses, 'h-8 w-32')} />
               <div className="flex gap-4">
                 {[...Array(3)].map((_, i) => (
-                  <div key={i} className={cn(baseClasses, "h-6 w-16")} />
+                  <div key={i} className={cn(baseClasses, 'h-6 w-16')} />
                 ))}
               </div>
-              <div className={cn(baseClasses, "h-8 w-24")} />
+              <div className={cn(baseClasses, 'h-8 w-24')} />
             </div>
           </div>
         );
 
-      case "sidebar":
+      case 'sidebar':
         return (
-          <div className={cn(baseClasses, "h-96 w-full")}>
+          <div className={cn(baseClasses, 'h-96 w-full')}>
             <div className="p-4 space-y-3">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className={cn(baseClasses, "h-8 w-full")} />
+                <div key={i} className={cn(baseClasses, 'h-8 w-full')} />
               ))}
             </div>
           </div>
         );
 
-      case "footer":
+      case 'footer':
         return (
-          <div className={cn(baseClasses, "h-32 w-full")}>
+          <div className={cn(baseClasses, 'h-32 w-full')}>
             <div className="p-6 space-y-3">
               <div className="grid grid-cols-4 gap-4">
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="space-y-2">
-                    <div className={cn(baseClasses, "h-4 w-3/4")} />
-                    <div className={cn(baseClasses, "h-3 w-1/2")} />
-                    <div className={cn(baseClasses, "h-3 w-2/3")} />
+                    <div className={cn(baseClasses, 'h-4 w-3/4')} />
+                    <div className={cn(baseClasses, 'h-3 w-1/2')} />
+                    <div className={cn(baseClasses, 'h-3 w-2/3')} />
                   </div>
                 ))}
               </div>
@@ -168,7 +168,7 @@ export function GranularSkeleton({
         );
 
       default:
-        return <div className={cn(baseClasses, "h-24 w-full")} />;
+        return <div className={cn(baseClasses, 'h-24 w-full')} />;
     }
   };
 
@@ -197,14 +197,14 @@ export function SkeletonContainer({
     return <>{fallback}</>;
   }
 
-  return <div className={cn("space-y-4", className)}>{children}</div>;
+  return <div className={cn('space-y-4', className)}>{children}</div>;
 }
 
 // Progressive loading wrapper
 interface ProgressiveSkeletonProps {
   sections: Array<{
     id: string;
-    type: GranularSkeletonProps["type"];
+    type: GranularSkeletonProps['type'];
     title?: string;
     loaded?: boolean;
   }>;
@@ -216,7 +216,7 @@ export function ProgressiveSkeleton({
   className,
 }: ProgressiveSkeletonProps) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       {sections.map((section) => (
         <div key={section.id} className="space-y-2">
           {section.title && (

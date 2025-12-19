@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import {
   TrendingUp,
   Facebook,
@@ -6,7 +6,7 @@ import {
   Linkedin,
   Youtube,
   Instagram,
-} from "lucide-react";
+} from 'lucide-react';
 
 export const PublicFooter = () => {
   const currentYear = new Date().getFullYear();
@@ -271,9 +271,9 @@ export const PublicFooter = () => {
               complex instruments and come with a high risk of losing money
               rapidly due to leverage.
               <strong>
-                {" "}
+                {' '}
                 75% of retail investor accounts lose money when trading CFDs.
-              </strong>{" "}
+              </strong>{' '}
               You should consider whether you understand how CFDs work and
               whether you can afford to take the high risk of losing your money.
             </p>

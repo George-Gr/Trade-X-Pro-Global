@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   analyticsManager,
   useAnalytics,
-} from "../../lib/analytics/AnalyticsManager";
-import { performanceMonitoring } from "../../lib/performance/performanceMonitoring";
-import { cn } from "../../lib/utils";
+} from '../../lib/analytics/AnalyticsManager';
+import { performanceMonitoring } from '../../lib/performance/performanceMonitoring';
+import { cn } from '../../lib/utils';
 
 interface AnalyticsIntegrationProps {
   children: React.ReactNode;
@@ -35,11 +35,11 @@ export function AnalyticsIntegration({
 
       // Setup performance correlation
       const setupPerformanceCorrelation = () => {
-        if ("PerformanceObserver" in window) {
+        if ('PerformanceObserver' in window) {
           const observer = new PerformanceObserver((list) => {
             const entries = list.getEntries();
             entries.forEach((entry) => {
-              if (entry.entryType === "largest-contentful-paint") {
+              if (entry.entryType === 'largest-contentful-paint') {
                 // Correlate performance with user behavior
                 analyticsManager.correlateWithPerformance({
                   lcp: entry.startTime,
@@ -48,7 +48,7 @@ export function AnalyticsIntegration({
             });
           });
 
-          observer.observe({ entryTypes: ["largest-contentful-paint"] });
+          observer.observe({ entryTypes: ['largest-contentful-paint'] });
         }
       };
 
@@ -79,7 +79,7 @@ export function AnalyticsIntegration({
 
   return (
     <div
-      className={cn("analytics-container", { "analytics-active": isRecording })}
+      className={cn('analytics-container', { 'analytics-active': isRecording })}
     >
       {children}
       {enableAnalytics && <AnalyticsDashboard data={analyticsData} />}
@@ -165,9 +165,7 @@ export function FunnelVisualization({
   if (!showVisualization || !funnelData) return null;
 
   const maxCount = Math.max(
-    ...funnelData.steps.map(
-      (step: { actualCount: number }) => step.actualCount,
-    ),
+    ...funnelData.steps.map((step: { actualCount: number }) => step.actualCount)
   );
 
   return (
@@ -182,7 +180,7 @@ export function FunnelVisualization({
               actualCount: number;
               dropOffRate?: number;
             },
-            index: number,
+            index: number
           ) => {
             const width =
               maxCount > 0 ? (step.actualCount / maxCount) * 100 : 0;
@@ -216,12 +214,12 @@ export function FunnelVisualization({
                 )}
               </div>
             );
-          },
+          }
         )}
       </div>
       <div className="mt-4 pt-3 border-t border-gray-200">
         <div className="text-sm">
-          <strong>Overall Conversion Rate:</strong>{" "}
+          <strong>Overall Conversion Rate:</strong>{' '}
           {funnelData.conversionRate.toFixed(2)}%
         </div>
       </div>
@@ -253,8 +251,8 @@ type AnalyticsDashboardData = {
 function AnalyticsDashboard({ data }: { data: AnalyticsDashboardData | null }) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "session" | "funnels" | "performance"
-  >("session");
+    'session' | 'funnels' | 'performance'
+  >('session');
 
   if (!data) return null;
 
@@ -266,22 +264,22 @@ function AnalyticsDashboard({ data }: { data: AnalyticsDashboardData | null }) {
           onClick={() => setIsVisible(!isVisible)}
           className="text-gray-500 hover:text-gray-700"
         >
-          {isVisible ? "−" : "+"}
+          {isVisible ? '−' : '+'}
         </button>
       </div>
 
       {isVisible && (
         <div className="p-3">
           <div className="flex space-x-1 mb-3">
-            {(["session", "funnels", "performance"] as const).map((tab) => (
+            {(['session', 'funnels', 'performance'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "px-2 py-1 text-xs rounded",
+                  'px-2 py-1 text-xs rounded',
                   activeTab === tab
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 )}
               >
                 {tab}
@@ -289,7 +287,7 @@ function AnalyticsDashboard({ data }: { data: AnalyticsDashboardData | null }) {
             ))}
           </div>
 
-          {activeTab === "session" && data.session && (
+          {activeTab === 'session' && data.session && (
             <div className="space-y-2 text-xs">
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-blue-50 p-2 rounded">
@@ -318,7 +316,7 @@ function AnalyticsDashboard({ data }: { data: AnalyticsDashboardData | null }) {
             </div>
           )}
 
-          {activeTab === "funnels" && data.funnels && (
+          {activeTab === 'funnels' && data.funnels && (
             <div className="space-y-2 text-xs">
               {data.funnels.slice(0, 3).map((funnel: AnalyticsFunnel) => (
                 <div key={funnel.id} className="bg-gray-50 p-2 rounded">
@@ -331,17 +329,17 @@ function AnalyticsDashboard({ data }: { data: AnalyticsDashboardData | null }) {
             </div>
           )}
 
-          {activeTab === "performance" && (
+          {activeTab === 'performance' && (
             <div className="space-y-2 text-xs">
               <div className="bg-gray-50 p-2 rounded">
                 <div className="font-medium">Recording Status</div>
                 <div
                   className={cn(
-                    "inline-block w-2 h-2 rounded-full mr-1",
-                    data.isRecording ? "bg-green-500" : "bg-red-500",
+                    'inline-block w-2 h-2 rounded-full mr-1',
+                    data.isRecording ? 'bg-green-500' : 'bg-red-500'
                   )}
                 />
-                {data.isRecording ? "Active" : "Inactive"}
+                {data.isRecording ? 'Active' : 'Inactive'}
               </div>
             </div>
           )}
@@ -359,18 +357,18 @@ export function QuickAnalyticsSetup() {
 
   useEffect(() => {
     // Track page view
-    analyticsManager.trackCustomEvent("page_view", {
+    analyticsManager.trackCustomEvent('page_view', {
       page: window.location.pathname,
       timestamp: Date.now(),
     });
 
     // Track user engagement
     const trackEngagement = () => {
-      analyticsManager.trackCustomEvent("user_engagement", {
+      analyticsManager.trackCustomEvent('user_engagement', {
         timeOnPage: Date.now() - performance.now(),
         scrollDepth: Math.round(
           ((window.scrollY + window.innerHeight) / document.body.scrollHeight) *
-            100,
+            100
         ),
       });
     };
@@ -382,7 +380,7 @@ export function QuickAnalyticsSetup() {
     const trackScrollMilestones = () => {
       const scrollDepth = Math.round(
         ((window.scrollY + window.innerHeight) / document.body.scrollHeight) *
-          100,
+          100
       );
 
       [25, 50, 75, 90].forEach((milestone) => {
@@ -390,8 +388,8 @@ export function QuickAnalyticsSetup() {
           scrollDepth >= milestone &&
           !document.body.dataset[`scrolled_${milestone}`]
         ) {
-          document.body.dataset[`scrolled_${milestone}`] = "true";
-          analyticsManager.trackCustomEvent("scroll_milestone", {
+          document.body.dataset[`scrolled_${milestone}`] = 'true';
+          analyticsManager.trackCustomEvent('scroll_milestone', {
             milestone,
             scrollDepth,
           });
@@ -405,12 +403,12 @@ export function QuickAnalyticsSetup() {
     };
 
     let scrollTimeout: NodeJS.Timeout;
-    window.addEventListener("scroll", scrollListener, { passive: true });
+    window.addEventListener('scroll', scrollListener, { passive: true });
 
     return () => {
       clearTimeout(engagementTimer);
       clearTimeout(scrollTimeout);
-      window.removeEventListener("scroll", scrollListener);
+      window.removeEventListener('scroll', scrollListener);
     };
   }, []);
 
@@ -426,19 +424,19 @@ export function PerformanceCorrelation() {
 
   useEffect(() => {
     // Setup performance monitoring correlation
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const metrics: { lcp?: number; fid?: number; cls?: number } = {};
 
         entries.forEach((entry) => {
-          if (entry.entryType === "largest-contentful-paint") {
+          if (entry.entryType === 'largest-contentful-paint') {
             metrics.lcp = entry.startTime;
-          } else if (entry.entryType === "first-input") {
+          } else if (entry.entryType === 'first-input') {
             metrics.fid =
               (entry as PerformanceEventTiming).processingStart -
               entry.startTime;
-          } else if (entry.entryType === "layout-shift") {
+          } else if (entry.entryType === 'layout-shift') {
             metrics.cls = (entry as LayoutShift).value;
           }
         });
@@ -450,7 +448,7 @@ export function PerformanceCorrelation() {
       });
 
       observer.observe({
-        entryTypes: ["largest-contentful-paint", "first-input", "layout-shift"],
+        entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'],
       });
 
       return () => observer.disconnect();
@@ -462,13 +460,13 @@ export function PerformanceCorrelation() {
   return (
     <div className="performance-correlation fixed top-4 right-4 bg-black bg-opacity-75 text-white text-xs p-2 rounded z-50">
       <div className="font-semibold mb-1">Performance Correlation</div>
-      {typeof correlationData.lcp === "number" && (
+      {typeof correlationData.lcp === 'number' && (
         <div>LCP: {Math.round(correlationData.lcp)}ms</div>
       )}
-      {typeof correlationData.fid === "number" && (
+      {typeof correlationData.fid === 'number' && (
         <div>FID: {Math.round(correlationData.fid)}ms</div>
       )}
-      {typeof correlationData.cls === "number" && (
+      {typeof correlationData.cls === 'number' && (
         <div>CLS: {correlationData.cls.toFixed(3)}</div>
       )}
     </div>

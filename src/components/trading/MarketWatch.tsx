@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
-import { Card } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, Loader2 } from "lucide-react";
-import { usePriceUpdates } from "@/hooks/usePriceUpdates";
+import { useState, useEffect, useMemo } from 'react';
+import { Card } from '@/components/ui/card';
+import { TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { usePriceUpdates } from '@/hooks/usePriceUpdates';
 
 interface MarketWatchProps {
   onSelectSymbol: (symbol: string) => void;
@@ -18,14 +18,14 @@ interface MarketData {
 }
 
 const DEFAULT_WATCHED_SYMBOLS = [
-  { symbol: "EURUSD", name: "Euro vs US Dollar" },
-  { symbol: "GBPUSD", name: "British Pound vs US Dollar" },
-  { symbol: "USDJPY", name: "US Dollar vs Japanese Yen" },
-  { symbol: "XAUUSD", name: "Gold vs US Dollar" },
-  { symbol: "AAPL", name: "Apple Inc" },
-  { symbol: "TSLA", name: "Tesla Inc" },
-  { symbol: "GOOGL", name: "Alphabet Inc" },
-  { symbol: "MSFT", name: "Microsoft Corp" },
+  { symbol: 'EURUSD', name: 'Euro vs US Dollar' },
+  { symbol: 'GBPUSD', name: 'British Pound vs US Dollar' },
+  { symbol: 'USDJPY', name: 'US Dollar vs Japanese Yen' },
+  { symbol: 'XAUUSD', name: 'Gold vs US Dollar' },
+  { symbol: 'AAPL', name: 'Apple Inc' },
+  { symbol: 'TSLA', name: 'Tesla Inc' },
+  { symbol: 'GOOGL', name: 'Alphabet Inc' },
+  { symbol: 'MSFT', name: 'Microsoft Corp' },
 ];
 
 const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
@@ -69,7 +69,7 @@ const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
       </div>
       <div className="flex-1 overflow-auto">
         {marketData.map((data) => {
-          const decimalPlaces = data.symbol.includes("JPY")
+          const decimalPlaces = data.symbol.includes('JPY')
             ? 2
             : data.symbol.length === 6
               ? 5
@@ -79,7 +79,7 @@ const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
                 (data.ask - data.bid) *
                 (decimalPlaces === 5 ? 100000 : 100)
               ).toFixed(1)
-            : "-";
+            : '-';
 
           return (
             <button
@@ -87,8 +87,8 @@ const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
               onClick={() => onSelectSymbol(data.symbol)}
               className={`w-full p-4 border-b border-border hover:bg-secondary/50 transition-colors text-left ${
                 selectedSymbol === data.symbol
-                  ? "bg-primary/10 border-l-2 border-l-primary"
-                  : ""
+                  ? 'bg-primary/10 border-l-2 border-l-primary'
+                  : ''
               }`}
               disabled={!data.hasData}
             >
@@ -101,7 +101,7 @@ const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
                 </div>
                 {data.hasData ? (
                   <div
-                    className={`flex items-center gap-4 text-xs ${data.change >= 0 ? "text-profit" : "text-loss"}`}
+                    className={`flex items-center gap-4 text-xs ${data.change >= 0 ? 'text-profit' : 'text-loss'}`}
                   >
                     {data.change >= 0 ? (
                       <TrendingUp className="h-3 w-3" />
@@ -109,7 +109,7 @@ const MarketWatch = ({ onSelectSymbol, selectedSymbol }: MarketWatchProps) => {
                       <TrendingDown className="h-3 w-3" />
                     )}
                     <span>
-                      {data.changePercent >= 0 ? "+" : ""}
+                      {data.changePercent >= 0 ? '+' : ''}
                       {data.changePercent.toFixed(2)}%
                     </span>
                   </div>

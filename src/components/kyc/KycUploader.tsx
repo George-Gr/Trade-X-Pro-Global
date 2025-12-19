@@ -1,19 +1,19 @@
 // KycUploader: Comprehensive user UI for uploading KYC documents
-import React, { useState, useRef, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import React, { useState, useRef, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Upload,
   CheckCircle,
@@ -22,13 +22,13 @@ import {
   FileText,
   Image as ImageIcon,
   X,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface DocumentUpload {
   id: string;
   type: string;
   file: File | null;
-  status: "pending" | "uploading" | "validated" | "error";
+  status: 'pending' | 'uploading' | 'validated' | 'error';
   progress: number;
   error?: string;
   thumbnail?: string;
@@ -44,28 +44,28 @@ interface DocumentRequirement {
 
 const REQUIRED_DOCUMENTS: DocumentRequirement[] = [
   {
-    type: "id_front",
-    label: "ID (Front)",
-    description: "Front side of your national ID, passport, or driver license",
+    type: 'id_front',
+    label: 'ID (Front)',
+    description: 'Front side of your national ID, passport, or driver license',
     required: true,
   },
   {
-    type: "id_back",
-    label: "ID (Back)",
-    description: "Back side of your national ID, passport, or driver license",
+    type: 'id_back',
+    label: 'ID (Back)',
+    description: 'Back side of your national ID, passport, or driver license',
     required: true,
   },
   {
-    type: "proof_of_address",
-    label: "Proof of Address",
+    type: 'proof_of_address',
+    label: 'Proof of Address',
     description:
-      "Recent utility bill, bank statement, or government letter (< 3 months old)",
+      'Recent utility bill, bank statement, or government letter (< 3 months old)',
     required: true,
   },
   {
-    type: "selfie",
-    label: "Selfie Verification",
-    description: "Photo of you holding your ID document",
+    type: 'selfie',
+    label: 'Selfie Verification',
+    description: 'Photo of you holding your ID document',
     required: false,
   },
 ];
@@ -85,17 +85,17 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     if (file.size > 10 * 1024 * 1024) {
       return {
         valid: false,
-        error: "File size exceeds 10MB limit. Please upload a smaller file.",
+        error: 'File size exceeds 10MB limit. Please upload a smaller file.',
       };
     }
 
     // Check file type
-    const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
       return {
         valid: false,
         error:
-          "File format not supported. Only JPEG, PNG, and PDF files are allowed.",
+          'File format not supported. Only JPEG, PNG, and PDF files are allowed.',
       };
     }
 
@@ -106,14 +106,14 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   // Generate thumbnail for image files
   const generateThumbnail = (file: File): Promise<string> => {
     return new Promise((resolve) => {
-      if (!file.type.includes("image")) {
-        resolve("");
+      if (!file.type.includes('image')) {
+        resolve('');
         return;
       }
 
       const reader = new FileReader();
       reader.onload = (e) => {
-        resolve((e.target?.result as string) || "");
+        resolve((e.target?.result as string) || '');
       };
       reader.readAsDataURL(file);
     });
@@ -126,7 +126,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
       const validation = validateFile(file);
       if (!validation.valid) {
-        setGlobalError(validation.error || "Invalid file");
+        setGlobalError(validation.error || 'Invalid file');
         return;
       }
 
@@ -142,12 +142,12 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                 ? {
                     ...u,
                     file,
-                    status: "pending" as const,
+                    status: 'pending' as const,
                     error: undefined,
                     thumbnail,
                   }
-                : u,
-            ),
+                : u
+            )
           );
         } else {
           // Add new
@@ -157,7 +157,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               id: `${documentType}_${Date.now()}`,
               type: documentType,
               file,
-              status: "pending",
+              status: 'pending',
               progress: 0,
               thumbnail,
             },
@@ -165,23 +165,23 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         }
       });
     },
-    [uploads],
+    [uploads]
   );
 
   // Handle drag and drop
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type === 'dragenter' || e.type === 'dragover') {
       setIsDragActive(true);
-    } else if (e.type === "dragleave") {
+    } else if (e.type === 'dragleave') {
       setIsDragActive(false);
     }
   };
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
-    documentType: string,
+    documentType: string
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -201,22 +201,22 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       setUploads((prev) =>
         prev.map((u) =>
           u.id === upload.id
-            ? { ...u, status: "uploading" as const, progress: 0 }
-            : u,
-        ),
+            ? { ...u, status: 'uploading' as const, progress: 0 }
+            : u
+        )
       );
 
       // Request signed upload URL
-      const submitResp = await fetch("/supabase/functions/submit-kyc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const submitResp = await fetch('/supabase/functions/submit-kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: upload.type }),
-        credentials: "include",
+        credentials: 'include',
       });
 
       if (!submitResp.ok) {
         const err = await submitResp.json().catch(() => ({}));
-        throw new Error(err?.error || "Failed to request upload URL");
+        throw new Error(err?.error || 'Failed to request upload URL');
       }
 
       const submitJson = await submitResp.json();
@@ -228,38 +228,38 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       const filePath = uploadInfo.filePath || uploadInfo.file_path;
 
       if (!signedUrl || !filePath) {
-        throw new Error("Upload information missing from server response");
+        throw new Error('Upload information missing from server response');
       }
 
       // Upload file with progress tracking
       const xhr = new XMLHttpRequest();
 
       const uploadPromise = new Promise<void>((resolve, reject) => {
-        xhr.upload.addEventListener("progress", (e) => {
+        xhr.upload.addEventListener('progress', (e) => {
           if (e.lengthComputable) {
             const progress = Math.round((e.loaded / e.total) * 100);
             setUploads((prev) =>
-              prev.map((u) => (u.id === upload.id ? { ...u, progress } : u)),
+              prev.map((u) => (u.id === upload.id ? { ...u, progress } : u))
             );
           }
         });
 
-        xhr.addEventListener("load", () => {
+        xhr.addEventListener('load', () => {
           if (xhr.status === 200 || xhr.status === 201) {
             resolve();
           } else {
-            reject(new Error("File upload failed"));
+            reject(new Error('File upload failed'));
           }
         });
 
-        xhr.addEventListener("error", () => {
-          reject(new Error("File upload error"));
+        xhr.addEventListener('error', () => {
+          reject(new Error('File upload error'));
         });
 
-        xhr.open("PUT", signedUrl);
+        xhr.open('PUT', signedUrl);
         xhr.setRequestHeader(
-          "Content-Type",
-          (upload.file as File).type || "application/octet-stream",
+          'Content-Type',
+          (upload.file as File).type || 'application/octet-stream'
         );
         xhr.send(upload.file);
       });
@@ -268,38 +268,38 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
       // Validate uploaded file
       const validateResp = await fetch(
-        "/supabase/functions/validate-kyc-upload",
+        '/supabase/functions/validate-kyc-upload',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ filePath }),
-          credentials: "include",
-        },
+          credentials: 'include',
+        }
       );
 
       if (!validateResp.ok) {
         const err = await validateResp.json().catch(() => ({}));
-        throw new Error(err?.error || "Validation failed");
+        throw new Error(err?.error || 'Validation failed');
       }
 
       setUploads((prev) =>
         prev.map((u) =>
           u.id === upload.id
-            ? { ...u, status: "validated" as const, progress: 100 }
-            : u,
-        ),
+            ? { ...u, status: 'validated' as const, progress: 100 }
+            : u
+        )
       );
 
       return true;
     } catch (err: unknown) {
       const errorMsg =
-        err instanceof Error ? err.message : String(err) || "Upload failed";
+        err instanceof Error ? err.message : String(err) || 'Upload failed';
       setUploads((prev) =>
         prev.map((u) =>
           u.id === upload.id
-            ? { ...u, status: "error" as const, error: errorMsg }
-            : u,
-        ),
+            ? { ...u, status: 'error' as const, error: errorMsg }
+            : u
+        )
       );
       return false;
     }
@@ -317,7 +317,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     const missing = requiredDocs.filter((d) => !uploadedTypes.includes(d.type));
     if (missing.length > 0) {
       setGlobalError(
-        `Please upload all required documents: ${missing.map((d) => d.label).join(", ")}`,
+        `Please upload all required documents: ${missing.map((d) => d.label).join(', ')}`
       );
       return;
     }
@@ -327,27 +327,27 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     try {
       // Upload all documents in parallel
       const uploadPromises = uploads
-        .filter((u) => u.status === "pending" || u.status === "error")
+        .filter((u) => u.status === 'pending' || u.status === 'error')
         .map((u) => uploadDocument(u));
 
       const results = await Promise.all(uploadPromises);
 
       if (results.some((r) => !r)) {
-        setGlobalError("Some documents failed to upload. Please try again.");
+        setGlobalError('Some documents failed to upload. Please try again.');
         setSubmitting(false);
         return;
       }
 
       // All documents uploaded successfully
       setSuccessMessage(
-        "All documents uploaded successfully! Your KYC submission is under review.",
+        'All documents uploaded successfully! Your KYC submission is under review.'
       );
       if (onSuccess) {
         setTimeout(onSuccess, 2000);
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      setGlobalError(errorMessage || "Submission failed");
+      setGlobalError(errorMessage || 'Submission failed');
     } finally {
       setSubmitting(false);
     }
@@ -359,7 +359,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   };
 
   const requiredUploaded = REQUIRED_DOCUMENTS.filter((d) => d.required).every(
-    (d) => uploads.some((u) => u.type === d.type),
+    (d) => uploads.some((u) => u.type === d.type)
   );
 
   return (
@@ -403,10 +403,10 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                   className="text-xs"
                 >
                   <div className="flex items-center gap-4">
-                    {uploaded?.status === "validated" && (
+                    {uploaded?.status === 'validated' && (
                       <CheckCircle className="h-3 w-3 text-profit" />
                     )}
-                    {doc.label.split(" ")[0]}
+                    {doc.label.split(' ')[0]}
                   </div>
                 </TabsTrigger>
               );
@@ -431,7 +431,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                         <span className="text-destructive ml-2">*</span>
                       )}
                     </label>
-                    {upload?.status === "validated" && (
+                    {upload?.status === 'validated' && (
                       <Badge className="bg-profit">
                         <CheckCircle className="h-3 w-3 mr-2" />
                         Uploaded
@@ -446,9 +446,9 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                   <div
                     className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-[280px] flex flex-col items-center justify-center ${
                       isDragActive
-                        ? "border-primary bg-primary/5 scale-105"
-                        : "border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2"
-                    } ${upload?.status === "validated" ? "bg-buy/5 border-buy/30" : ""}`}
+                        ? 'border-primary bg-primary/5 scale-105'
+                        : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2'
+                    } ${upload?.status === 'validated' ? 'bg-buy/5 border-buy/30' : ''}`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
@@ -467,7 +467,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                           </div>
                         ) : (
                           <div className="flex justify-center mb-4">
-                            {upload.file.type.includes("pdf") ? (
+                            {upload.file.type.includes('pdf') ? (
                               <FileText className="h-12 w-12 text-muted-foreground" />
                             ) : (
                               <ImageIcon className="h-12 w-12 text-muted-foreground" />
@@ -481,7 +481,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                           {(upload.file.size / 1024 / 1024).toFixed(2)} MB
                         </p>
 
-                        {upload.status === "uploading" && (
+                        {upload.status === 'uploading' && (
                           <div className="space-y-2 mt-4 w-full">
                             <Progress value={upload.progress} className="h-2" />
                             <p className="text-xs font-medium text-primary">
@@ -490,7 +490,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                           </div>
                         )}
 
-                        {upload.status === "error" && (
+                        {upload.status === 'error' && (
                           <div className="mt-3 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
                             <p className="text-xs text-destructive font-medium">
                               {upload.error}
@@ -498,7 +498,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                           </div>
                         )}
 
-                        {upload.status === "validated" && (
+                        {upload.status === 'validated' && (
                           <div className="flex items-center justify-center gap-2 mt-3">
                             <CheckCircle className="h-5 w-5 text-buy animate-in fade-in zoom-in-50" />
                             <p className="text-xs font-medium text-buy">
@@ -507,7 +507,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                           </div>
                         )}
 
-                        {upload.status !== "uploading" && (
+                        {upload.status !== 'uploading' && (
                           <Button
                             type="button"
                             variant="ghost"
@@ -568,20 +568,20 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                   key={doc.type}
                   className="flex items-center gap-3 transition-all duration-200"
                 >
-                  {uploaded?.status === "validated" ? (
+                  {uploaded?.status === 'validated' ? (
                     <CheckCircle className="h-5 w-5 text-buy shrink-0 animate-in zoom-in-50" />
-                  ) : uploaded?.status === "uploading" ? (
+                  ) : uploaded?.status === 'uploading' ? (
                     <Loader2 className="h-5 w-5 text-primary shrink-0 animate-spin" />
-                  ) : uploaded?.status === "error" ? (
+                  ) : uploaded?.status === 'error' ? (
                     <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
                   ) : (
                     <div className="h-5 w-5 border-2 border-muted-foreground/30 rounded-full shrink-0" />
                   )}
                   <span
                     className={
-                      uploaded?.status === "validated"
-                        ? "text-buy font-medium"
-                        : ""
+                      uploaded?.status === 'validated'
+                        ? 'text-buy font-medium'
+                        : ''
                     }
                   >
                     {doc.label}
@@ -632,7 +632,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               (
                 (e.target as unknown as Record<string, unknown>)
                   .dataset as Record<string, unknown>
-              )?.docType || "id_front";
+              )?.docType || 'id_front';
             if (file) {
               handleFileSelect(file, docType as string);
             }

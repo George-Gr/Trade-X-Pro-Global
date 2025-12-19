@@ -8,7 +8,7 @@
  * - Diversification: Diversification score, stats, and top positions
  */
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -23,18 +23,18 @@ import {
   PieChart,
   Pie,
   Cell,
-} from "recharts";
+} from 'recharts';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { AlertCircle } from "lucide-react";
-import { formatCurrency } from "@/lib/risk/riskMetrics";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { AlertCircle } from 'lucide-react';
+import { formatCurrency } from '@/lib/risk/riskMetrics';
 
 interface RiskChartsPanelProps {
   equityHistory: number[] | null;
@@ -90,7 +90,7 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
   riskMetrics,
   portfolioMetrics,
 }) => {
-  const [selectedTab, setSelectedTab] = useState("overview");
+  const [selectedTab, setSelectedTab] = useState('overview');
 
   // Prepare chart data
   const equityChartData = useMemo(() => {
@@ -110,19 +110,19 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
 
   const assetClassChartData = useMemo(() => {
     const COLORS = [
-      "hsl(var(--secondary))",
-      "hsl(var(--destructive))",
-      "hsl(var(--buy))",
-      "hsl(var(--warning))",
-      "hsl(var(--sidebar-primary))",
-      "hsl(var(--accent))",
+      'hsl(var(--secondary))',
+      'hsl(var(--destructive))',
+      'hsl(var(--buy))',
+      'hsl(var(--warning))',
+      'hsl(var(--sidebar-primary))',
+      'hsl(var(--accent))',
     ];
     return Object.entries(assetClassMetrics).map(
       ([assetClass, metrics], index) => ({
         name: assetClass,
         value: metrics.percentageOfPortfolio,
         color: COLORS[index % COLORS.length],
-      }),
+      })
     );
   }, [assetClassMetrics]);
 
@@ -334,8 +334,8 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
                     {diversification.isWellDiversified
-                      ? "Portfolio is well diversified"
-                      : "Consider diversifying further"}
+                      ? 'Portfolio is well diversified'
+                      : 'Consider diversifying further'}
                   </p>
                 </CardContent>
               </Card>
@@ -400,13 +400,13 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                       <div className="w-full bg-border rounded-full h-2">
                         <div
                           className={`h-2 rounded-full ${
-                            pos.risk === "critical"
-                              ? "bg-sell"
-                              : pos.risk === "high"
-                                ? "bg-orange-600"
-                                : pos.risk === "medium"
-                                  ? "bg-yellow-600"
-                                  : "bg-buy"
+                            pos.risk === 'critical'
+                              ? 'bg-sell'
+                              : pos.risk === 'high'
+                                ? 'bg-orange-600'
+                                : pos.risk === 'medium'
+                                  ? 'bg-yellow-600'
+                                  : 'bg-buy'
                           }`}
                           style={{
                             width: `${Math.min(pos.percentageOfPortfolio, 100)}%`,

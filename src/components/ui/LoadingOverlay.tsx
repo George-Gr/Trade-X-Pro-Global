@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { ShimmerEffect } from "@/components/ui/LoadingSkeleton";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { ShimmerEffect } from '@/components/ui/LoadingSkeleton';
 
 interface LoadingOverlayProps {
   isLoading: boolean;
@@ -20,15 +20,15 @@ export function LoadingOverlay({
   fadeDuration = 300,
 }: LoadingOverlayProps) {
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       {children}
 
       {isLoading && (
         <div
           className={cn(
-            "absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center",
+            'absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center',
             `transition-all duration-${fadeDuration} ease-in-out`,
-            overlayClassName,
+            overlayClassName
           )}
         >
           <div className="text-center space-y-4">
@@ -66,10 +66,10 @@ export function ProgressLoadingOverlay({
   className,
   showPercentage = true,
   showText = true,
-  text = "Loading...",
+  text = 'Loading...',
 }: ProgressLoadingOverlayProps) {
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       {children}
 
       <div className="absolute inset-0 bg-background/90 backdrop-blur-md z-10">
@@ -82,7 +82,7 @@ export function ProgressLoadingOverlay({
                   className="absolute inset-0 rounded-full border-2 border-primary border-t-primary animate-spin"
                   style={{
                     transform: `rotate(${progress * 3.6}deg)`,
-                    transition: "transform 0.3s ease-out",
+                    transition: 'transform 0.3s ease-out',
                   }}
                 ></div>
               </div>
@@ -133,7 +133,7 @@ export function SkeletonOverlay({
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       <div className="absolute inset-0 bg-muted/50 rounded animate-pulse-slow">
         {shimmer && <ShimmerEffect className="absolute inset-0 rounded" />}
       </div>
@@ -172,8 +172,8 @@ export function OptimisticLoading({
     <div
       className={cn(
         className,
-        isOptimistic && "optimistic-loading",
-        isOptimistic && "animate-pulse-slow",
+        isOptimistic && 'optimistic-loading',
+        isOptimistic && 'animate-pulse-slow'
       )}
     >
       {children}

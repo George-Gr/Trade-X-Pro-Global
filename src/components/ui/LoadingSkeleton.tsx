@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { LucideIcon } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { LucideIcon } from 'lucide-react';
 
 interface DashboardStatsSkeletonProps {
   count?: number;
@@ -15,13 +15,13 @@ export function DashboardStatsSkeleton({
   animated = true,
 }: DashboardStatsSkeletonProps) {
   return (
-    <div className={cn("dashboard-grid mb-8", className)}>
+    <div className={cn('dashboard-grid mb-8', className)}>
       {Array.from({ length: count }).map((_, index) => (
         <Card
           key={index}
           elevation="1"
           variant="primary"
-          className={animated ? "animate-slide-in-up" : ""}
+          className={animated ? 'animate-slide-in-up' : ''}
           style={{ animationDelay: `${index * 100}ms` }}
         >
           <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
@@ -30,32 +30,32 @@ export function DashboardStatsSkeleton({
                 <Skeleton
                   variant="text"
                   className={cn(
-                    "w-3/4 h-4",
-                    animated && "animate-loading-pulse",
+                    'w-3/4 h-4',
+                    animated && 'animate-loading-pulse'
                   )}
                 />
               </CardTitle>
               <Skeleton
                 variant="text"
                 className={cn(
-                  "w-1/2 h-3 mt-2",
-                  animated && "animate-loading-pulse",
+                  'w-1/2 h-3 mt-2',
+                  animated && 'animate-loading-pulse'
                 )}
               />
             </div>
             <Skeleton
               variant="avatar"
-              className={cn("h-5 w-5", animated && "animate-loading-pulse")}
+              className={cn('h-5 w-5', animated && 'animate-loading-pulse')}
             />
           </CardHeader>
           <CardContent className="space-y-2">
             <Skeleton
               variant="text"
-              className={cn("w-1/2 h-8", animated && "animate-loading-pulse")}
+              className={cn('w-1/2 h-8', animated && 'animate-loading-pulse')}
             />
             <Skeleton
               variant="text"
-              className={cn("w-1/3 h-3", animated && "animate-loading-pulse")}
+              className={cn('w-1/3 h-3', animated && 'animate-loading-pulse')}
             />
           </CardContent>
         </Card>
@@ -72,7 +72,7 @@ interface MarketWatchSkeletonProps {
 
 export function MarketWatchSkeleton({
   className,
-  height = "h-[400px]",
+  height = 'h-[400px]',
   animated = true,
 }: MarketWatchSkeletonProps) {
   return (
@@ -80,20 +80,20 @@ export function MarketWatchSkeleton({
       elevation="2"
       variant="primary"
       className={cn(
-        "border-border/70 mb-xl",
-        animated && "animate-slide-in-up",
-        className,
+        'border-border/70 mb-xl',
+        animated && 'animate-slide-in-up',
+        className
       )}
     >
       <CardHeader>
         <CardTitle className="text-base font-semibold text-primary-contrast">
           <Skeleton
             variant="text"
-            className={cn("w-1/3 h-5", animated && "animate-loading-pulse")}
+            className={cn('w-1/3 h-5', animated && 'animate-loading-pulse')}
           />
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(height, "bg-muted/50 rounded-lg")}>
+      <CardContent className={cn(height, 'bg-muted/50 rounded-lg')}>
         <div className="flex items-center justify-center h-full">
           <div className="space-y-4 text-center">
             <div className="flex justify-center">
@@ -118,7 +118,7 @@ export function PortfolioTableSkeleton({
   className,
 }: PortfolioTableSkeletonProps) {
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       <div className="flex items-center justify-between">
         <Skeleton variant="text" className="w-1/4 h-7" />
         <Skeleton variant="button" className="h-10 w-32" />
@@ -194,8 +194,8 @@ export function RiskManagementSkeleton({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6",
-        className,
+        'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6',
+        className
       )}
     >
       {Array.from({ length: 4 }).map((_, index) => (
@@ -222,7 +222,7 @@ interface TradeFormSkeletonProps {
 
 export function TradeFormSkeleton({ className }: TradeFormSkeletonProps) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left Column */}
         <div className="space-y-4">
@@ -276,10 +276,10 @@ interface ChartSkeletonProps {
 
 export function ChartSkeleton({
   className,
-  height = "h-[300px]",
+  height = 'h-[300px]',
 }: ChartSkeletonProps) {
   return (
-    <div className={cn("rounded-lg border bg-card p-6", className)}>
+    <div className={cn('rounded-lg border bg-card p-6', className)}>
       <div className="flex items-center justify-between mb-4">
         <Skeleton variant="text" className="h-5 w-1/3" />
         <Skeleton variant="text" className="h-4 w-1/6" />
@@ -287,7 +287,7 @@ export function ChartSkeleton({
       <div
         className={cn(
           height,
-          "bg-muted/50 rounded-lg flex items-center justify-center",
+          'bg-muted/50 rounded-lg flex items-center justify-center'
         )}
       >
         <div className="space-y-3 text-center">
@@ -306,7 +306,7 @@ interface ProfileSkeletonProps {
 
 export function ProfileSkeleton({ className }: ProfileSkeletonProps) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       <div className="flex items-center space-x-4">
         <Skeleton variant="avatar" className="h-20 w-20" />
         <div className="space-y-2">
@@ -362,7 +362,7 @@ export function NotificationsSkeleton({
   className,
 }: NotificationsSkeletonProps) {
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
@@ -387,7 +387,7 @@ interface KYCSkeletonProps {
 
 export function KYCSkeleton({ className }: KYCSkeletonProps) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       <div className="text-center py-8">
         <Skeleton variant="avatar" className="h-16 w-16 mx-auto mb-4" />
         <Skeleton variant="text" className="h-6 w-1/3 mx-auto mb-2" />
@@ -447,7 +447,7 @@ export function LoadingWrapper({
   if (isLoading) {
     return (
       <div
-        className={cn("animate-pulse-slow", className)}
+        className={cn('animate-pulse-slow', className)}
         role="status"
         aria-label="Loading"
       >
@@ -464,8 +464,8 @@ export const ShimmerEffect = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "relative overflow-hidden bg-gradient-to-r from-transparent via-white/20 to-transparent",
-        className,
+        'relative overflow-hidden bg-gradient-to-r from-transparent via-white/20 to-transparent',
+        className
       )}
     >
       <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -488,89 +488,89 @@ export const ShimmerEffect = ({ className }: { className?: string }) => {
 
 // Enhanced Loading Spinner Component
 interface LoadingSpinnerProps {
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "dots" | "spinner" | "pulse" | "bounce";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'dots' | 'spinner' | 'pulse' | 'bounce';
   className?: string;
   text?: string;
 }
 
 export function LoadingSpinner({
-  size = "md",
-  variant = "spinner",
+  size = 'md',
+  variant = 'spinner',
   className,
   text,
 }: LoadingSpinnerProps) {
   const sizeClasses = {
-    sm: "h-6 w-6",
-    md: "h-8 w-8",
-    lg: "h-12 w-12",
-    xl: "h-16 w-16",
+    sm: 'h-6 w-6',
+    md: 'h-8 w-8',
+    lg: 'h-12 w-12',
+    xl: 'h-16 w-16',
   };
 
   const spinnerContent = (
-    <div className={cn("flex items-center justify-center", className)}>
-      {variant === "spinner" && (
+    <div className={cn('flex items-center justify-center', className)}>
+      {variant === 'spinner' && (
         <div
           className={cn(
-            "animate-loading-spin rounded-full border-2 border-current border-t-transparent",
-            sizeClasses[size],
+            'animate-loading-spin rounded-full border-2 border-current border-t-transparent',
+            sizeClasses[size]
           )}
         />
       )}
 
-      {variant === "dots" && (
+      {variant === 'dots' && (
         <div className="flex space-x-2">
           <div
             className={cn(
-              "rounded-full bg-current animate-loading-bounce",
-              sizeClasses[size],
+              'rounded-full bg-current animate-loading-bounce',
+              sizeClasses[size]
             )}
-            style={{ animationDelay: "0s" }}
+            style={{ animationDelay: '0s' }}
           />
           <div
             className={cn(
-              "rounded-full bg-current animate-loading-bounce",
-              sizeClasses[size],
+              'rounded-full bg-current animate-loading-bounce',
+              sizeClasses[size]
             )}
-            style={{ animationDelay: "0.2s" }}
+            style={{ animationDelay: '0.2s' }}
           />
           <div
             className={cn(
-              "rounded-full bg-current animate-loading-bounce",
-              sizeClasses[size],
+              'rounded-full bg-current animate-loading-bounce',
+              sizeClasses[size]
             )}
-            style={{ animationDelay: "0.4s" }}
+            style={{ animationDelay: '0.4s' }}
           />
         </div>
       )}
 
-      {variant === "pulse" && (
+      {variant === 'pulse' && (
         <div
           className={cn(
-            "rounded-full bg-current animate-loading-pulse",
-            sizeClasses[size],
+            'rounded-full bg-current animate-loading-pulse',
+            sizeClasses[size]
           )}
         />
       )}
 
-      {variant === "bounce" && (
+      {variant === 'bounce' && (
         <div className="flex space-x-1">
           <div
             className={cn(
-              "w-2 bg-current rounded-full animate-loading-bounce",
-              size === "sm" ? "h-4" : size === "lg" ? "h-8" : "h-6",
+              'w-2 bg-current rounded-full animate-loading-bounce',
+              size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6'
             )}
           />
           <div
             className={cn(
-              "w-2 bg-current rounded-full animate-loading-bounce",
-              size === "sm" ? "h-4" : size === "lg" ? "h-8" : "h-6",
+              'w-2 bg-current rounded-full animate-loading-bounce',
+              size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6'
             )}
           />
           <div
             className={cn(
-              "w-2 bg-current rounded-full animate-loading-bounce",
-              size === "sm" ? "h-4" : size === "lg" ? "h-8" : "h-6",
+              'w-2 bg-current rounded-full animate-loading-bounce',
+              size === 'sm' ? 'h-4' : size === 'lg' ? 'h-8' : 'h-6'
             )}
           />
         </div>
@@ -599,7 +599,7 @@ interface PageLoadingOverlayProps {
 
 export function PageLoadingOverlay({
   visible = false,
-  text = "Loading...",
+  text = 'Loading...',
 }: PageLoadingOverlayProps) {
   if (!visible) return null;
 

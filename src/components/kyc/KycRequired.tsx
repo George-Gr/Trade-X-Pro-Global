@@ -11,25 +11,25 @@
  * - Clear action items
  */
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import {
   AlertCircle,
   CheckCircle2,
   Clock,
   XCircle,
   ArrowRight,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface KycRequiredProps {
   kycStatus: string;
@@ -48,65 +48,65 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
 
   const getStatusConfig = () => {
     switch (kycStatus) {
-      case "approved":
+      case 'approved':
         return {
           icon: CheckCircle2,
-          iconColor: "text-profit",
-          title: "KYC Approved",
+          iconColor: 'text-profit',
+          title: 'KYC Approved',
           description:
-            "Your identity has been verified. You can now trade with full access.",
-          message: "Trading is now enabled for your account.",
+            'Your identity has been verified. You can now trade with full access.',
+          message: 'Trading is now enabled for your account.',
           showButton: false,
-          buttonText: "Return to Trading",
-          severity: "default",
+          buttonText: 'Return to Trading',
+          severity: 'default',
         };
 
-      case "under_review":
-      case "submitted":
+      case 'under_review':
+      case 'submitted':
         return {
           icon: Clock,
-          iconColor: "text-amber-500",
-          title: "KYC Under Review",
+          iconColor: 'text-amber-500',
+          title: 'KYC Under Review',
           description:
-            "Your documents are being reviewed by our compliance team.",
+            'Your documents are being reviewed by our compliance team.',
           message:
             "This typically takes 24-48 hours. We'll notify you once the review is complete.",
           showButton: true,
-          buttonText: "View Submission",
-          severity: "warning",
+          buttonText: 'View Submission',
+          severity: 'warning',
         };
 
-      case "rejected":
-      case "requires_resubmit":
+      case 'rejected':
+      case 'requires_resubmit':
         return {
           icon: XCircle,
-          iconColor: "text-destructive",
-          title: "KYC Rejected",
+          iconColor: 'text-destructive',
+          title: 'KYC Rejected',
           description:
-            "Your submission was not approved. Please review the feedback and resubmit.",
+            'Your submission was not approved. Please review the feedback and resubmit.',
           message:
             rejectionReason ||
-            "Your submission did not meet our verification requirements.",
+            'Your submission did not meet our verification requirements.',
           showButton: true,
           buttonText: daysUntilResubmit
-            ? "Resubmit in Progress"
-            : "Resubmit Documents",
-          severity: "destructive",
+            ? 'Resubmit in Progress'
+            : 'Resubmit Documents',
+          severity: 'destructive',
           canResubmit: !daysUntilResubmit,
         };
 
       default:
         return {
           icon: AlertCircle,
-          iconColor: "text-muted-foreground",
-          title: "KYC Verification Required",
+          iconColor: 'text-muted-foreground',
+          title: 'KYC Verification Required',
           description:
-            "Please complete identity verification to start trading.",
+            'Please complete identity verification to start trading.',
           message:
-            "Submit your documents to get verified and unlock trading features.",
+            'Submit your documents to get verified and unlock trading features.',
           showButton: true,
-          buttonText: "Start KYC Verification",
-          severity: "info",
+          buttonText: 'Start KYC Verification',
+          severity: 'info',
         };
     }
   };
@@ -121,13 +121,13 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
           <div className="flex justify-center">
             <div
               className={`rounded-full p-4 ${
-                config.severity === "default"
-                  ? "bg-profit/10"
-                  : config.severity === "warning"
-                    ? "bg-amber-500/10"
-                    : config.severity === "destructive"
-                      ? "bg-destructive/10"
-                      : "bg-muted"
+                config.severity === 'default'
+                  ? 'bg-profit/10'
+                  : config.severity === 'warning'
+                    ? 'bg-amber-500/10'
+                    : config.severity === 'destructive'
+                      ? 'bg-destructive/10'
+                      : 'bg-muted'
               }`}
             >
               <Icon className={`h-8 w-8 ${config.iconColor}`} />
@@ -146,27 +146,27 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
           <div className="flex justify-center">
             <Badge
               variant={
-                config.severity === "default"
-                  ? "default"
-                  : config.severity === "warning"
-                    ? "secondary"
-                    : config.severity === "destructive"
-                      ? "destructive"
-                      : "outline"
+                config.severity === 'default'
+                  ? 'default'
+                  : config.severity === 'warning'
+                    ? 'secondary'
+                    : config.severity === 'destructive'
+                      ? 'destructive'
+                      : 'outline'
               }
             >
-              {kycStatus.replace(/_/g, " ").toUpperCase()}
+              {kycStatus.replace(/_/g, ' ').toUpperCase()}
             </Badge>
           </div>
 
           {/* Message */}
           <Alert
             variant={
-              config.severity === "default"
-                ? "default"
-                : config.severity === "destructive"
-                  ? "destructive"
-                  : "default"
+              config.severity === 'default'
+                ? 'default'
+                : config.severity === 'destructive'
+                  ? 'destructive'
+                  : 'default'
             }
           >
             <AlertCircle className="h-4 w-4" />
@@ -178,16 +178,16 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
             <Alert className="border-amber-500/20 bg-amber-500/5">
               <Clock className="h-4 w-4 text-amber-500" />
               <AlertDescription>
-                You can resubmit your documents in{" "}
+                You can resubmit your documents in{' '}
                 <strong>
-                  {daysUntilResubmit} day{daysUntilResubmit !== 1 ? "s" : ""}
+                  {daysUntilResubmit} day{daysUntilResubmit !== 1 ? 's' : ''}
                 </strong>
               </AlertDescription>
             </Alert>
           )}
 
           {/* Approval Date */}
-          {approvedAt && config.severity === "default" && (
+          {approvedAt && config.severity === 'default' && (
             <div className="text-sm text-muted-foreground text-center">
               Approved on {new Date(approvedAt).toLocaleDateString()}
             </div>
@@ -197,9 +197,9 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
           <div className="space-y-2">
             {config.showButton && (
               <Button
-                onClick={() => navigate("/kyc")}
+                onClick={() => navigate('/kyc')}
                 disabled={
-                  !config.canResubmit && kycStatus === "requires_resubmit"
+                  !config.canResubmit && kycStatus === 'requires_resubmit'
                 }
                 className="w-full"
               >
@@ -208,10 +208,10 @@ export const KycRequired: React.FC<KycRequiredProps> = ({
               </Button>
             )}
 
-            {config.severity !== "default" && (
+            {config.severity !== 'default' && (
               <Button
                 variant="outline"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate('/dashboard')}
                 className="w-full"
               >
                 Return to Dashboard

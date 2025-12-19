@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { formatToastError } from "@/lib/errorMessageService";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { formatToastError } from '@/lib/errorMessageService';
+import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Loader2, FileText, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Loader2, FileText, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface DocumentViewerProps {
   filePath: string;
@@ -26,14 +26,14 @@ const DocumentViewer = ({
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [fileType, setFileType] = useState<string>("");
+  const [fileType, setFileType] = useState<string>('');
   const { toast } = useToast();
 
   const loadDocument = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.storage
-        .from("kyc-documents")
+        .from('kyc-documents')
         .download(filePath);
 
       if (error) throw error;
@@ -42,13 +42,13 @@ const DocumentViewer = ({
       setFileUrl(url);
 
       // Determine file type from extension
-      const ext = filePath.split(".").pop()?.toLowerCase();
-      setFileType(ext || "");
+      const ext = filePath.split('.').pop()?.toLowerCase();
+      setFileType(ext || '');
     } catch (error) {
-      const actionableError = formatToastError(error, "data_fetching");
+      const actionableError = formatToastError(error, 'data_fetching');
       toast({
         ...actionableError,
-        variant: actionableError.variant as "default" | "destructive",
+        variant: actionableError.variant as 'default' | 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -83,9 +83,9 @@ const DocumentViewer = ({
 
   const handleDownload = () => {
     if (fileUrl) {
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = fileUrl;
-      a.download = filePath.split("/").pop() || "document";
+      a.download = filePath.split('/').pop() || 'document';
       a.click();
     }
   };
@@ -112,7 +112,7 @@ const DocumentViewer = ({
             </div>
           ) : fileUrl ? (
             <div className="aspect-[4/3] w-full">
-              {fileType === "pdf" ? (
+              {fileType === 'pdf' ? (
                 <iframe
                   src={fileUrl}
                   className="w-full h-full border-0"

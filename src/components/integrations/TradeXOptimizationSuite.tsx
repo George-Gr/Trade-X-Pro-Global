@@ -1,28 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   PerformanceIntegration,
   PerformanceDashboard,
-} from "./PerformanceIntegration";
-import { ABTestIntegration, QuickSignupCTA } from "./ABTestIntegration";
-import { initializeCTAExperiments } from "../../lib/ab-testing/ctaExperiments";
+} from './PerformanceIntegration';
+import { ABTestIntegration, QuickSignupCTA } from './ABTestIntegration';
+import { initializeCTAExperiments } from '../../lib/ab-testing/ctaExperiments';
 import {
   AnalyticsIntegration,
   QuickAnalyticsSetup,
   PerformanceCorrelation,
-} from "./AnalyticsIntegration";
-import { SEOIntegration, QuickSEOSetup, TradingSEO } from "./SEOIntegration";
+} from './AnalyticsIntegration';
+import { SEOIntegration, QuickSEOSetup, TradingSEO } from './SEOIntegration';
 import {
   AccessibilityIntegration,
   QuickAccessibilitySetup,
-} from "./AccessibilityIntegration";
-import { GranularSkeleton } from "../ui/GranularSkeleton";
-import { cn } from "../../lib/utils";
+} from './AccessibilityIntegration';
+import { GranularSkeleton } from '../ui/GranularSkeleton';
+import { cn } from '../../lib/utils';
 
 interface TradeXOptimizationSuiteProps {
   children: React.ReactNode;
   userId?: string;
-  pageType?: "landing" | "signup" | "trade" | "portfolio" | "about";
-  tradingType?: "forex" | "stocks" | "cfds" | "crypto";
+  pageType?: 'landing' | 'signup' | 'trade' | 'portfolio' | 'about';
+  tradingType?: 'forex' | 'stocks' | 'cfds' | 'crypto';
   enableAllOptimizations?: boolean;
   customConfig?: {
     performance?: {
@@ -58,9 +58,9 @@ interface TradeXOptimizationSuiteProps {
 
 export function TradeXOptimizationSuite({
   children,
-  userId = "anonymous",
-  pageType = "landing",
-  tradingType = "forex",
+  userId = 'anonymous',
+  pageType = 'landing',
+  tradingType = 'forex',
   enableAllOptimizations = true,
   customConfig = {},
   loading = false,
@@ -69,35 +69,35 @@ export function TradeXOptimizationSuite({
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const initializeOptimizationSystems = React.useCallback(() => {
-    console.warn("🚀 Initializing TradeX Pro Optimization Suite...");
+    console.warn('🚀 Initializing TradeX Pro Optimization Suite...');
 
     // Initialize A/B testing experiments
     if (customConfig.abTesting?.autoInitializeExperiments !== false) {
       try {
         const experimentIds = initializeCTAExperiments();
-        console.warn("✅ A/B Testing experiments initialized:", experimentIds);
+        console.warn('✅ A/B Testing experiments initialized:', experimentIds);
       } catch (error) {
-        console.warn("⚠️ A/B Testing initialization failed:", error);
+        console.warn('⚠️ A/B Testing initialization failed:', error);
       }
     }
 
     // Initialize analytics
     try {
       // Analytics will be automatically initialized by the AnalyticsIntegration component
-      console.warn("✅ Analytics system ready");
+      console.warn('✅ Analytics system ready');
     } catch (error) {
-      console.warn("⚠️ Analytics initialization failed:", error);
+      console.warn('⚠️ Analytics initialization failed:', error);
     }
 
     // Initialize accessibility features
     try {
       // Accessibility features will be automatically initialized by the AccessibilityIntegration component
-      console.warn("✅ Accessibility features ready");
+      console.warn('✅ Accessibility features ready');
     } catch (error) {
-      console.warn("⚠️ Accessibility initialization failed:", error);
+      console.warn('⚠️ Accessibility initialization failed:', error);
     }
 
-    console.warn("🎯 TradeX Pro Optimization Suite fully initialized");
+    console.warn('🎯 TradeX Pro Optimization Suite fully initialized');
   }, [customConfig.abTesting?.autoInitializeExperiments]);
 
   useEffect(() => {
@@ -177,8 +177,8 @@ export function TradeXOptimizationSuite({
 
   return (
     <div
-      className={cn("tradex-optimization-suite", "relative min-h-screen", {
-        "optimization-active": enableAllOptimizations && isInitialized,
+      className={cn('tradex-optimization-suite', 'relative min-h-screen', {
+        'optimization-active': enableAllOptimizations && isInitialized,
         [`page-${pageType}`]: true,
         [`trading-${tradingType}`]: true,
       })}
@@ -266,7 +266,7 @@ export function TradeXOptimizationSuite({
       )}
 
       {/* Development-only dashboards */}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <DevDashboards
           showPerformance={config.performance.enableMonitoring}
           showAnalytics={config.analytics.enableAnalytics}
@@ -324,17 +324,17 @@ function DevDashboards({
 
   useEffect(() => {
     // Only show in development
-    if (process.env.NODE_ENV !== "development") return;
+    if (process.env.NODE_ENV !== 'development') return;
 
     // Enable dashboards with Ctrl+Shift+D
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "D") {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         setShowDashboards(!showDashboards);
       }
     };
 
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
   }, [showDashboards]);
 
   if (!showDashboards) {
@@ -429,4 +429,4 @@ function OptimizationStatusIndicator({
 // Quick setup hooks for easy integration - moved to separate file
 
 // Pre-configured optimization presets - moved to separate file
-export { OPTIMIZATION_PRESETS } from "../../lib/performance/optimizationPresets";
+export { OPTIMIZATION_PRESETS } from '../../lib/performance/optimizationPresets';

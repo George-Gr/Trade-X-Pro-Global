@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { useAuth } from "@/hooks/useAuth";
-import { AlertTriangle } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/hooks/useAuth';
+import { AlertTriangle } from 'lucide-react';
 
 export const MarginLevelIndicator = () => {
   const { user } = useAuth();
@@ -18,16 +18,16 @@ export const MarginLevelIndicator = () => {
     const fetchData = async () => {
       // Get profile data
       const { data: profile } = await supabase
-        .from("profiles")
-        .select("equity, margin_used")
-        .eq("id", user.id)
+        .from('profiles')
+        .select('equity, margin_used')
+        .eq('id', user.id)
         .single();
 
       // Get risk settings
       const { data: settings } = await supabase
-        .from("risk_settings")
-        .select("margin_call_level, stop_out_level")
-        .eq("user_id", user.id)
+        .from('risk_settings')
+        .select('margin_call_level, stop_out_level')
+        .eq('user_id', user.id)
         .single();
 
       if (profile && profile.margin_used > 0) {
@@ -46,13 +46,13 @@ export const MarginLevelIndicator = () => {
 
     // Subscribe to profile changes
     const channel = supabase
-      .channel("margin-updates")
+      .channel('margin-updates')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "profiles",
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
         (payload) => {
@@ -61,7 +61,7 @@ export const MarginLevelIndicator = () => {
             setMarginLevel((equity / margin_used) * 100);
             setHasData(true);
           }
-        },
+        }
       )
       .subscribe();
 
@@ -71,15 +71,15 @@ export const MarginLevelIndicator = () => {
   }, [user]);
 
   const getColor = () => {
-    if (marginLevel < stopOutLevel) return "hsl(var(--destructive))";
-    if (marginLevel < marginCallLevel) return "hsl(var(--warning))";
-    return "hsl(var(--primary))";
+    if (marginLevel < stopOutLevel) return 'hsl(var(--destructive))';
+    if (marginLevel < marginCallLevel) return 'hsl(var(--warning))';
+    return 'hsl(var(--primary))';
   };
 
   const getStatus = () => {
-    if (marginLevel < stopOutLevel) return "Critical - Stop Out Risk";
-    if (marginLevel < marginCallLevel) return "Warning - Margin Call";
-    return "Healthy";
+    if (marginLevel < stopOutLevel) return 'Critical - Stop Out Risk';
+    if (marginLevel < marginCallLevel) return 'Warning - Margin Call';
+    return 'Healthy';
   };
 
   // Return null to let parent handle the empty state display
@@ -98,7 +98,7 @@ export const MarginLevelIndicator = () => {
         className="h-2"
         style={
           {
-            "--progress-background": getColor(),
+            '--progress-background': getColor(),
           } as React.CSSProperties
         }
       />

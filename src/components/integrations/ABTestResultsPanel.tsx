@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { cn } from "../../lib/utils";
+import { useState } from 'react';
+import { cn } from '../../lib/utils';
 
 interface ABTestResult {
   variantId: string;
@@ -19,7 +19,7 @@ export function ABTestResultsPanel({ results }: ABTestResultsPanelProps) {
   if (!results || results.length === 0) return null;
 
   const bestPerformingVariant = results.reduce((best, current) =>
-    current.conversionRate > best.conversionRate ? current : best,
+    current.conversionRate > best.conversionRate ? current : best
   );
 
   return (
@@ -32,7 +32,7 @@ export function ABTestResultsPanel({ results }: ABTestResultsPanelProps) {
           onClick={() => setIsVisible(!isVisible)}
           className="text-gray-500 hover:text-gray-700"
         >
-          {isVisible ? "−" : "+"}
+          {isVisible ? '−' : '+'}
         </button>
       </div>
 
@@ -42,10 +42,10 @@ export function ABTestResultsPanel({ results }: ABTestResultsPanelProps) {
             <div
               key={result.variantId}
               className={cn(
-                "p-2 rounded border-l-2",
+                'p-2 rounded border-l-2',
                 result.variantId === bestPerformingVariant.variantId
-                  ? "bg-green-50 border-green-400"
-                  : "bg-gray-50 border-gray-300",
+                  ? 'bg-green-50 border-green-400'
+                  : 'bg-gray-50 border-gray-300'
               )}
             >
               <div className="font-medium">{result.variantName}</div>
@@ -55,7 +55,7 @@ export function ABTestResultsPanel({ results }: ABTestResultsPanelProps) {
               <div className="text-gray-500">
                 {result.participants} participants
               </div>
-              {result.significance === "significant" && (
+              {result.significance === 'significant' && (
                 <div className="text-green-600 font-medium">✓ Significant</div>
               )}
             </div>
@@ -63,7 +63,7 @@ export function ABTestResultsPanel({ results }: ABTestResultsPanelProps) {
 
           <div className="pt-2 border-t border-gray-200">
             <div className="text-xs text-gray-500">
-              Best:{" "}
+              Best:{' '}
               <span className="font-medium">
                 {bestPerformingVariant.variantName}
               </span>

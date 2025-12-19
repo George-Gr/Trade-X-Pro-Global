@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 interface TradingViewChartProps {
   symbol: string;
@@ -44,29 +44,29 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
     let initialData: CandleData[] = [];
 
     // Dynamically import lightweight-charts to avoid bundling it in the initial chunk
-    import("lightweight-charts")
+    import('lightweight-charts')
       .then((lc) => {
         if (!mounted) return;
 
         // Create chart - using type assertion due to lightweight-charts complex type definitions
         chart = lc.createChart(chartContainerRef.current!, {
           layout: {
-            background: { type: lc.ColorType.Solid, color: "transparent" },
-            textColor: "hsl(var(--foreground) / 0.85)",
+            background: { type: lc.ColorType.Solid, color: 'transparent' },
+            textColor: 'hsl(var(--foreground) / 0.85)',
           },
           grid: {
-            vertLines: { color: "hsl(var(--foreground) / 0.05)" },
-            horzLines: { color: "hsl(var(--foreground) / 0.05)" },
+            vertLines: { color: 'hsl(var(--foreground) / 0.05)' },
+            horzLines: { color: 'hsl(var(--foreground) / 0.05)' },
           },
           width: chartContainerRef.current!.clientWidth,
           height: chartContainerRef.current!.clientHeight,
           timeScale: {
             timeVisible: true,
             secondsVisible: false,
-            borderColor: "hsl(var(--foreground) / 0.1)",
+            borderColor: 'hsl(var(--foreground) / 0.1)',
           },
           rightPriceScale: {
-            borderColor: "hsl(var(--foreground) / 0.1)",
+            borderColor: 'hsl(var(--foreground) / 0.1)',
           },
           crosshair: {
             mode: 0,
@@ -75,22 +75,22 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
 
         // Add candlestick series using the provided helper
         candlestickSeries = chart.addCandlestickSeries({
-          upColor: "hsl(var(--buy))",
-          downColor: "hsl(var(--destructive))",
-          borderUpColor: "hsl(var(--buy))",
-          borderDownColor: "hsl(var(--destructive))",
-          wickUpColor: "hsl(var(--buy))",
-          wickDownColor: "hsl(var(--destructive))",
+          upColor: 'hsl(var(--buy))',
+          downColor: 'hsl(var(--destructive))',
+          borderUpColor: 'hsl(var(--buy))',
+          borderDownColor: 'hsl(var(--destructive))',
+          wickUpColor: 'hsl(var(--buy))',
+          wickDownColor: 'hsl(var(--destructive))',
         });
 
         // Generate realistic candlestick data
         const generateData = () => {
           const data: CandleData[] = [];
-          const basePrice = symbol.includes("USD")
+          const basePrice = symbol.includes('USD')
             ? 1.0856
-            : symbol.includes("BTC")
-              ? 43250
-              : 178.42;
+            : symbol.includes('BTC')
+            ? 43250
+            : 178.42;
           const now = Math.floor(Date.now() / 1000);
           const interval = 900; // 15 minutes
 
@@ -131,12 +131,13 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
           }
         };
 
-        window.addEventListener("resize", handleResize);
+        window.addEventListener('resize', handleResize);
 
         // Simulate real-time updates
         const updateInterval = setInterval(() => {
           if (!initialData.length) return;
           const lastData = initialData[initialData.length - 1];
+          if (!lastData) return;
           const now = Math.floor(Date.now() / 1000);
           const interval = 900;
 
@@ -168,7 +169,7 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
 
         // Store cleanup closure
         (chart as unknown as Record<string, unknown>)._cleanup = () => {
-          window.removeEventListener("resize", handleResize);
+          window.removeEventListener('resize', handleResize);
           clearInterval(updateInterval);
           if (chart) chart.remove();
         };

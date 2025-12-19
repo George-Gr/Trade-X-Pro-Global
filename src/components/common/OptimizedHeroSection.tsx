@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { OptimizedBackgroundImage } from "@/components/common/OptimizedBackgroundImage";
-import { HERO_IMAGES, getOptimizedImageSrc } from "@/lib/imageOptimization";
+import { useEffect, useState } from 'react';
+import { OptimizedBackgroundImage } from '@/components/common/OptimizedBackgroundImage';
+import { HERO_IMAGES, getOptimizedImageSrc } from '@/lib/imageOptimization';
 
 interface HeroSectionProps {
   children: React.ReactNode;
@@ -15,14 +15,14 @@ interface HeroSectionProps {
 export const OptimizedHeroSection = ({
   children,
   imageKey,
-  className = "",
+  className = '',
   style = {},
   priority = false,
   overlay = true,
-  minHeight = "80vh",
+  minHeight = '80vh',
 }: HeroSectionProps) => {
-  const [backgroundImage, setBackgroundImage] = useState<string>("");
-  const [webpImage, setWebpImage] = useState<string>("");
+  const [backgroundImage, setBackgroundImage] = useState<string>('');
+  const [webpImage, setWebpImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -44,15 +44,15 @@ export const OptimizedHeroSection = ({
         // Determine if WebP is supported and set appropriate sources
         const optimizedSrc = await getOptimizedImageSrc(
           bestVariant.src,
-          bestVariant.webpSrc,
+          bestVariant.webpSrc
         );
 
         setBackgroundImage(bestVariant.src);
-        setWebpImage(bestVariant.webpSrc || "");
+        setWebpImage(bestVariant.webpSrc || '');
 
         setIsLoading(false);
       } catch (error) {
-        console.error("Failed to load hero image:", error);
+        console.error('Failed to load hero image:', error);
         setIsLoading(false);
       }
     };
@@ -76,7 +76,7 @@ export const OptimizedHeroSection = ({
               imageConfig.variants.find((v) => v.width >= 1920) ||
               imageConfig.variants[imageConfig.variants.length - 1];
             setBackgroundImage(desktopVariant.src);
-            setWebpImage(desktopVariant.webpSrc || "");
+            setWebpImage(desktopVariant.webpSrc || '');
           }
         } else if (window.innerWidth > 768) {
           // Tablet
@@ -86,7 +86,7 @@ export const OptimizedHeroSection = ({
               imageConfig.variants.find((v) => v.width >= 1200) ||
               imageConfig.variants[1];
             setBackgroundImage(tabletVariant.src);
-            setWebpImage(tabletVariant.webpSrc || "");
+            setWebpImage(tabletVariant.webpSrc || '');
           }
         } else {
           // Mobile
@@ -94,16 +94,16 @@ export const OptimizedHeroSection = ({
           if (imageConfig) {
             const mobileVariant = imageConfig.variants[0];
             setBackgroundImage(mobileVariant.src);
-            setWebpImage(mobileVariant.webpSrc || "");
+            setWebpImage(mobileVariant.webpSrc || '');
           }
         }
       }, 250);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
       clearTimeout(resizeTimer);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, [imageKey]);
 
@@ -122,13 +122,13 @@ export const OptimizedHeroSection = ({
         alt=""
         className="absolute inset-0 z-0"
         style={{
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
         }}
         priority={priority}
-        loading={priority ? "eager" : "lazy"}
+        loading={priority ? 'eager' : 'lazy'}
       />
 
       {/* Overlay */}
@@ -147,7 +147,7 @@ export const HeroTradingSection = ({
   children,
   className,
   ...props
-}: Omit<HeroSectionProps, "imageKey">) => (
+}: Omit<HeroSectionProps, 'imageKey'>) => (
   <OptimizedHeroSection
     imageKey="heroTrading"
     className={`pt-24 pb-16 sm:pt-32 sm:pb-20 ${className}`}
@@ -162,7 +162,7 @@ export const GlobalMarketsSection = ({
   children,
   className,
   ...props
-}: Omit<HeroSectionProps, "imageKey">) => (
+}: Omit<HeroSectionProps, 'imageKey'>) => (
   <OptimizedHeroSection
     imageKey="globalMarketsMap"
     className={`py-16 sm:py-20 ${className}`}
@@ -178,7 +178,7 @@ export const SecuritySection = ({
   children,
   className,
   ...props
-}: Omit<HeroSectionProps, "imageKey">) => (
+}: Omit<HeroSectionProps, 'imageKey'>) => (
   <OptimizedHeroSection
     imageKey="securityBg"
     className={`py-16 sm:py-20 bg-foreground ${className}`}

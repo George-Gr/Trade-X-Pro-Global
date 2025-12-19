@@ -1,17 +1,16 @@
-import React from "react";
-import { ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
-type SortKey = "created_at" | "symbol" | "quantity" | "status" | "realized_pnl";
-type SortOrder = "asc" | "desc";
+type SortKey = 'created_at' | 'symbol' | 'quantity' | 'status' | 'realized_pnl';
+type SortOrder = 'asc' | 'desc';
 
 interface OrdersTableHeaderProps {
   symbolSearch: string;
@@ -40,13 +39,13 @@ const SortButton: React.FC<{
   <button
     onClick={() => onSort(sortKey)}
     className="flex items-center gap-2 hover:text-foreground transition-colors font-semibold text-muted-foreground"
-    aria-label={`Sort by ${label}, currently ${isActive ? (direction === "asc" ? "ascending" : "descending") : "unsorted"}`}
+    aria-label={`Sort by ${label}, currently ${isActive ? (direction === 'asc' ? 'ascending' : 'descending') : 'unsorted'}`}
     aria-pressed={isActive}
   >
     {label}
     {isActive && (
       <ChevronDown
-        className={`h-5 w-5 transition-transform ${direction === "asc" ? "rotate-180" : ""}`}
+        className={`h-5 w-5 transition-transform ${direction === 'asc' ? 'rotate-180' : ''}`}
         aria-hidden="true"
       />
     )}
@@ -123,7 +122,7 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
               {uniqueStatuses.map((status) => (
                 <SelectItem key={status} value={status}>
                   {status.charAt(0).toUpperCase() +
-                    status.slice(1).replace("_", " ")}
+                    status.slice(1).replace('_', ' ')}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -137,7 +136,7 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
           <SortButton
             label="Symbol"
             sortKey="symbol"
-            isActive={sortKey === "symbol"}
+            isActive={sortKey === 'symbol'}
             direction={sortOrder}
             onSort={onSort}
           />
@@ -152,7 +151,7 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
           <SortButton
             label="Qty"
             sortKey="quantity"
-            isActive={sortKey === "quantity"}
+            isActive={sortKey === 'quantity'}
             direction={sortOrder}
             onSort={onSort}
           />
@@ -164,7 +163,7 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
           <SortButton
             label="Status"
             sortKey="status"
-            isActive={sortKey === "status"}
+            isActive={sortKey === 'status'}
             direction={sortOrder}
             onSort={onSort}
           />
@@ -176,7 +175,7 @@ export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
           <SortButton
             label="P&L"
             sortKey="realized_pnl"
-            isActive={sortKey === "realized_pnl"}
+            isActive={sortKey === 'realized_pnl'}
             direction={sortOrder}
             onSort={onSort}
           />

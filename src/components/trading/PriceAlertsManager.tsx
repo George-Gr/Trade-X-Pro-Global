@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Bell, TrendingUp, TrendingDown, Loader2 } from "lucide-react";
-import { PriceAlertDialog } from "./PriceAlertDialog";
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Trash2, Bell, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { PriceAlertDialog } from './PriceAlertDialog';
 
 interface PriceAlert {
   id: string;
@@ -30,18 +30,18 @@ export const PriceAlertsManager = () => {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from("price_alerts")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('price_alerts')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setAlerts(data || []);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error";
+      const message = err instanceof Error ? err.message : 'Unknown error';
       toast({
-        title: "Error loading alerts",
+        title: 'Error loading alerts',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -51,23 +51,23 @@ export const PriceAlertsManager = () => {
   const handleDeleteAlert = async (id: string) => {
     try {
       const { error } = await supabase
-        .from("price_alerts")
+        .from('price_alerts')
         .delete()
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw error;
 
       setAlerts(alerts.filter((a) => a.id !== id));
       toast({
-        title: "Alert deleted",
-        description: "Price alert has been removed.",
+        title: 'Alert deleted',
+        description: 'Price alert has been removed.',
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error deleting alert",
+        title: 'Error deleting alert',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -77,17 +77,17 @@ export const PriceAlertsManager = () => {
 
     // Subscribe to real-time updates
     const channel = supabase
-      .channel("price_alerts_changes")
+      .channel('price_alerts_changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "price_alerts",
+          event: '*',
+          schema: 'public',
+          table: 'price_alerts',
         },
         () => {
           fetchAlerts();
-        },
+        }
       )
       .subscribe();
 
@@ -140,20 +140,20 @@ export const PriceAlertsManager = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-4 mb-2">
                     <span className="font-semibold">{alert.symbol}</span>
-                    {alert.condition === "above" ? (
+                    {alert.condition === 'above' ? (
                       <TrendingUp className="h-4 w-4 text-profit" />
                     ) : (
                       <TrendingDown className="h-4 w-4 text-loss" />
                     )}
-                    <Badge variant={alert.triggered ? "secondary" : "default"}>
-                      {alert.triggered ? "Triggered" : "Active"}
+                    <Badge variant={alert.triggered ? 'secondary' : 'default'}>
+                      {alert.triggered ? 'Triggered' : 'Active'}
                     </Badge>
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Alert when price{" "}
-                    {alert.condition === "above"
-                      ? "rises above"
-                      : "falls below"}{" "}
+                    Alert when price{' '}
+                    {alert.condition === 'above'
+                      ? 'rises above'
+                      : 'falls below'}{' '}
                     <span className="font-mono font-semibold">
                       {alert.target_price.toFixed(5)}
                     </span>

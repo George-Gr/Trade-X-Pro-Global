@@ -7,11 +7,11 @@
  * - Recommended Actions
  */
 
-import React from "react";
-import { AlertTriangle, Activity, AlertCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { getRiskLevelDetails, formatCurrency } from "@/lib/risk/riskMetrics";
+import React from 'react';
+import { AlertTriangle, Activity, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { getRiskLevelDetails, formatCurrency } from '@/lib/risk/riskMetrics';
 
 interface RiskAlertsProps {
   riskLevel: string;
@@ -42,11 +42,7 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
 }) => {
   const riskLevelDetails = riskMetrics
     ? getRiskLevelDetails(
-        riskMetrics.riskLevel as
-          | "safe"
-          | "warning"
-          | "critical"
-          | "liquidation",
+        riskMetrics.riskLevel as 'safe' | 'warning' | 'critical' | 'liquidation'
       )
     : null;
 
@@ -56,39 +52,39 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
       {riskLevelDetails && (
         <Card
           className={`border-2 ${
-            riskMetrics?.riskLevel === "liquidation"
-              ? "border-sell bg-background"
-              : riskMetrics?.riskLevel === "critical"
-                ? "border-orange-500 bg-background"
-                : riskMetrics?.riskLevel === "warning"
-                  ? "border-yellow-500 bg-background"
-                  : "border-buy bg-background"
+            riskMetrics?.riskLevel === 'liquidation'
+              ? 'border-sell bg-background'
+              : riskMetrics?.riskLevel === 'critical'
+                ? 'border-orange-500 bg-background'
+                : riskMetrics?.riskLevel === 'warning'
+                  ? 'border-yellow-500 bg-background'
+                  : 'border-buy bg-background'
           }`}
         >
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                {riskMetrics?.riskLevel === "liquidation" && (
+                {riskMetrics?.riskLevel === 'liquidation' && (
                   <AlertTriangle className="h-6 w-6 text-sell" />
                 )}
-                {riskMetrics?.riskLevel === "critical" && (
+                {riskMetrics?.riskLevel === 'critical' && (
                   <AlertCircle className="h-6 w-6 text-orange-600" />
                 )}
-                {riskMetrics?.riskLevel === "warning" && (
+                {riskMetrics?.riskLevel === 'warning' && (
                   <AlertTriangle className="h-6 w-6 text-yellow-600" />
                 )}
-                {riskMetrics?.riskLevel === "safe" && (
+                {riskMetrics?.riskLevel === 'safe' && (
                   <Activity className="h-6 w-6 text-buy" />
                 )}
                 <CardTitle>{riskLevelDetails.description}</CardTitle>
               </div>
               <Badge
                 variant={
-                  riskMetrics?.riskLevel === "liquidation"
-                    ? "destructive"
-                    : riskMetrics?.riskLevel === "critical"
-                      ? "outline"
-                      : "secondary"
+                  riskMetrics?.riskLevel === 'liquidation'
+                    ? 'destructive'
+                    : riskMetrics?.riskLevel === 'critical'
+                      ? 'outline'
+                      : 'secondary'
                 }
               >
                 {riskMetrics?.riskLevel.toUpperCase()}
@@ -119,7 +115,7 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
               {portfolioMetrics?.winRate.toFixed(2)}%
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              {portfolioMetrics?.profitableTrades || 0} wins /{" "}
+              {portfolioMetrics?.profitableTrades || 0} wins /{' '}
               {portfolioMetrics?.totalTrades || 0} total
             </p>
           </CardContent>
@@ -134,7 +130,7 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
               {portfolioMetrics?.profitFactor.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Goal: {">"} 1.5 for profitability
+              Goal: {'>'} 1.5 for profitability
             </p>
           </CardContent>
         </Card>

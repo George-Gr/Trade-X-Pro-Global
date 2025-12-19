@@ -1,12 +1,3 @@
-import { useState, useMemo } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,21 +7,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { OrderRow, type Order } from "./OrderRow";
-import { OrdersTableHeader } from "./OrdersTableHeader";
-import { OrdersTableMobile } from "./OrdersTableMobile";
-import useOrdersTable from "@/hooks/useOrdersTable";
+} from '@/components/ui/alert-dialog';
 import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Loader2, AlertCircle } from "lucide-react";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import useOrdersTable from '@/hooks/useOrdersTable';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { OrderRow, type Order } from './OrderRow';
+import { OrdersTableHeader } from './OrdersTableHeader';
+import { OrdersTableMobile } from './OrdersTableMobile';
 
-type SortKey = "created_at" | "symbol" | "quantity" | "status" | "realized_pnl";
-type SortOrder = "asc" | "desc";
+type SortKey = 'created_at' | 'symbol' | 'quantity' | 'status' | 'realized_pnl';
+type SortOrder = 'asc' | 'desc';
 
 interface OrdersTableProps {
   orders: Order[];
@@ -66,10 +59,10 @@ export const OrdersTable = ({
   onCancel,
   onViewDetails,
 }: OrdersTableProps) => {
-  const [sortKey, setSortKey] = useState<SortKey>("created_at");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [symbolSearch, setSymbolSearch] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [symbolSearch, setSymbolSearch] = useState('');
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [selectedOrderToCancel, setSelectedOrderToCancel] =
     useState<Order | null>(null);
@@ -79,9 +72,9 @@ export const OrdersTable = ({
 
   // Filter orders
   const filteredOrders = useMemo(() => {
-    return sourceOrders.filter((order) => {
+    return sourceOrders.filter((order: { status: string; symbol: string }) => {
       const matchesStatus =
-        statusFilter === "all" || order.status === statusFilter;
+        statusFilter === 'all' || order.status === statusFilter;
       const matchesSymbol = order.symbol
         .toLowerCase()
         .includes(symbolSearch.toLowerCase());
@@ -96,7 +89,7 @@ export const OrdersTable = ({
       let bValue: string | number = b[sortKey] as string | number;
 
       // Handle different data types
-      if (sortKey === "created_at") {
+      if (sortKey === 'created_at') {
         aValue = new Date(a[sortKey] as string).getTime();
         bValue = new Date(b[sortKey] as string).getTime();
       }
@@ -104,8 +97,8 @@ export const OrdersTable = ({
       if (aValue === undefined || aValue === null) return 1;
       if (bValue === undefined || bValue === null) return -1;
 
-      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
 
@@ -114,10 +107,10 @@ export const OrdersTable = ({
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
       setSortKey(key);
-      setSortOrder("desc");
+      setSortOrder('desc');
     }
   };
 
@@ -134,20 +127,31 @@ export const OrdersTable = ({
     }
   };
 
-  const uniqueStatuses = Array.from(new Set(sourceOrders.map((o) => o.status)));
+  const uniqueStatuses = Array.from(
+    new Set(sourceOrders.map((o: { status: string }) => o.status))
+  );
 
   // Statistics
   const stats = useMemo(() => {
-    const filled = sourceOrders.filter((o) => o.status === "filled").length;
-    const open = sourceOrders.filter((o) =>
-      ["open", "partially_filled"].includes(o.status),
+    const filled = sourceOrders.filter(
+      (o: { status: string }) => o.status === 'filled'
+    ).length;
+    const open = sourceOrders.filter((o: { status: string }) =>
+      ['open', 'partially_filled'].includes(o.status)
     ).length;
     const cancelled = sourceOrders.filter(
-      (o) => o.status === "cancelled",
+      (o: { status: string }) => o.status === 'cancelled'
     ).length;
     const totalPnL = sourceOrders
-      .filter((o) => o.realized_pnl !== undefined)
-      .reduce((sum, o) => sum + (o.realized_pnl || 0), 0);
+      .filter(
+        (o: { realized_pnl: number | undefined }) =>
+          o.realized_pnl !== undefined
+      )
+      .reduce(
+        (sum: number, o: { realized_pnl: number }) =>
+          sum + (o.realized_pnl || 0),
+        0
+      );
 
     return { filled, open, cancelled, totalPnL };
   }, [sourceOrders]);
@@ -163,8 +167,8 @@ export const OrdersTable = ({
           <div className="flex items-center gap-4 text-destructive bg-background p-4 rounded-lg">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <span>
-              Error loading orders:{" "}
-              {error instanceof Error ? error.message : "Unknown error"}
+              Error loading orders:{' '}
+              {error instanceof Error ? error.message : 'Unknown error'}
             </span>
           </div>
         </CardContent>
@@ -187,9 +191,9 @@ export const OrdersTable = ({
           <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
             <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
             <span className="text-sm text-destructive">
-              Error loading orders:{" "}
+              Error loading orders:{' '}
               {(error as unknown as { message?: string })?.message ||
-                "Unknown error"}
+                'Unknown error'}
             </span>
           </div>
         )}
@@ -221,8 +225,8 @@ export const OrdersTable = ({
             <AlertCircle className="h-12 w-12 text-muted-foreground/50 mb-4 shrink-0" />
             <p className="text-muted-foreground">
               {orders.length === 0
-                ? "No orders yet. Start trading to see orders here."
-                : "No orders match your filters."}
+                ? 'No orders yet. Start trading to see orders here.'
+                : 'No orders match your filters.'}
             </p>
           </div>
         )}
@@ -236,7 +240,7 @@ export const OrdersTable = ({
                   {sortedOrders
                     .filter(
                       (order): order is Order =>
-                        "status" in order && typeof order.status === "string",
+                        'status' in order && typeof order.status === 'string'
                     )
                     .map((order) => (
                       <OrderRow
@@ -255,7 +259,7 @@ export const OrdersTable = ({
             <OrdersTableMobile
               orders={sortedOrders.filter(
                 (order): order is Order =>
-                  "status" in order && typeof order.status === "string",
+                  'status' in order && typeof order.status === 'string'
               )}
               onModify={onModify}
               onCancel={handleCancelClick}
@@ -278,8 +282,8 @@ export const OrdersTable = ({
                 </span>
                 <div className="font-bold text-primary">
                   {
-                    filteredOrders.filter((o) =>
-                      ["open", "partially_filled"].includes(o.status),
+                    filteredOrders.filter((o: { status: string }) =>
+                      ['open', 'partially_filled'].includes(o.status)
                     ).length
                   }
                 </div>
@@ -289,7 +293,11 @@ export const OrdersTable = ({
                   Filled:
                 </span>
                 <div className="font-bold text-buy">
-                  {filteredOrders.filter((o) => o.status === "filled").length}
+                  {
+                    filteredOrders.filter(
+                      (o: { status: string }) => o.status === 'filled'
+                    ).length
+                  }
                 </div>
               </div>
               {stats.totalPnL !== 0 && (
@@ -302,11 +310,11 @@ export const OrdersTable = ({
                     style={{
                       color:
                         stats.totalPnL > 0
-                          ? "hsl(var(--buy))"
-                          : "hsl(var(--sell))",
+                          ? 'hsl(var(--buy))'
+                          : 'hsl(var(--sell))',
                     }}
                   >
-                    {stats.totalPnL > 0 ? "+" : ""}${stats.totalPnL.toFixed(2)}
+                    {stats.totalPnL > 0 ? '+' : ''}${stats.totalPnL.toFixed(2)}
                   </div>
                 </div>
               )}
@@ -323,8 +331,8 @@ export const OrdersTable = ({
             <AlertDialogHeader>
               <AlertDialogTitle>Cancel Order?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to cancel the{" "}
-                {selectedOrderToCancel?.symbol}{" "}
+                Are you sure you want to cancel the{' '}
+                {selectedOrderToCancel?.symbol}{' '}
                 {selectedOrderToCancel?.side.toUpperCase()} order? This action
                 cannot be undone.
               </AlertDialogDescription>

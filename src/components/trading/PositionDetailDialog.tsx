@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import type { Position } from "@/types/position";
-import type { Json } from "@/integrations/supabase/types";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
+import type { Position } from '@/types/position';
+import { useState, type FC } from 'react';
 
-export const PositionDetailDialog: React.FC<{
+export const PositionDetailDialog: FC<{
   position: Position;
   onClose: () => void;
 }> = ({ position, onClose }) => {
   const [sl, setSl] = useState<number | undefined>(
-    (position as Record<string, unknown>).stop_loss as number,
+    (position as Record<string, unknown>).stop_loss as number
   );
   const [tp, setTp] = useState<number | undefined>(
-    (position as Record<string, unknown>).take_profit as number,
+    (position as Record<string, unknown>).take_profit as number
   );
   const [saving, setSaving] = useState(false);
 
@@ -22,10 +22,10 @@ export const PositionDetailDialog: React.FC<{
         data: { session },
       } = await supabase.auth.getSession();
       if (!session) {
-        throw new Error("Not authenticated");
+        throw new Error('Not authenticated');
       }
 
-      const response = await supabase.functions.invoke("modify-position", {
+      const response = await supabase.functions.invoke('modify-position', {
         body: {
           position_id: position.id,
           stop_loss: sl,
@@ -38,12 +38,12 @@ export const PositionDetailDialog: React.FC<{
       }
 
       if (!response.data?.success) {
-        throw new Error(response.data?.error || "Failed to update position");
+        throw new Error(response.data?.error || 'Failed to update position');
       }
     } catch (error) {
-      console.error("Failed to update position:", error);
+      logger.error('Failed to update position', error);
       alert(
-        error instanceof Error ? error.message : "Failed to update position",
+        error instanceof Error ? error.message : 'Failed to update position'
       );
     } finally {
       setSaving(false);
@@ -72,7 +72,7 @@ export const PositionDetailDialog: React.FC<{
           <label className="block text-sm">Stop Loss</label>
           <input
             type="number"
-            value={sl ?? ""}
+            value={sl ?? ''}
             onChange={(e) =>
               setSl(e.target.value ? Number(e.target.value) : undefined)
             }
@@ -83,7 +83,7 @@ export const PositionDetailDialog: React.FC<{
           <label className="block text-sm">Take Profit</label>
           <input
             type="number"
-            value={tp ?? ""}
+            value={tp ?? ''}
             onChange={(e) =>
               setTp(e.target.value ? Number(e.target.value) : undefined)
             }
@@ -96,7 +96,7 @@ export const PositionDetailDialog: React.FC<{
             Close
           </button>
           <button className="btn btn-primary" onClick={save} disabled={saving}>
-            {saving ? "Saving..." : "Save SL/TP"}
+            {saving ? 'Saving...' : 'Save SL/TP'}
           </button>
         </div>
       </div>

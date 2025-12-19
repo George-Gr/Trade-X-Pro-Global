@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
+import { Card, CardContent } from '@/components/ui/card';
+import { LucideIcon } from 'lucide-react';
 
 interface FeatureCardProps {
   /** Icon component from lucide-react */
@@ -16,7 +16,7 @@ export const FeatureCard = ({
   icon: Icon,
   title,
   description,
-  className = "",
+  className = '',
 }: FeatureCardProps) => {
   return (
     <Card

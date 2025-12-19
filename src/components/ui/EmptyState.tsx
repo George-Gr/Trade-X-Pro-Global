@@ -1,7 +1,7 @@
-import * as React from "react";
-import { LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { LucideIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
   icon?: LucideIcon;
@@ -12,7 +12,7 @@ interface EmptyStateProps {
     onClick: () => void;
   };
   className?: string;
-  variant?: "default" | "minimal";
+  variant?: 'default' | 'minimal';
 }
 
 /**
@@ -34,15 +34,15 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   description,
   action,
-  className = "",
-  variant = "default",
+  className = '',
+  variant = 'default',
 }) => {
-  if (variant === "minimal") {
+  if (variant === 'minimal') {
     return (
       <div
         className={cn(
-          "flex items-center justify-center py-8 text-center",
-          className,
+          'flex items-center justify-center py-8 text-center',
+          className
         )}
       >
         <div className="space-y-2">
@@ -55,7 +55,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   return (
     <div
-      className={cn("flex items-center justify-center py-12 px-4", className)}
+      className={cn('flex items-center justify-center py-12 px-4', className)}
     >
       <div className="text-center space-y-4 max-w-md">
         {Icon && (
@@ -86,7 +86,7 @@ export const TableEmptyState: React.FC<{
   onAction?: () => void;
   actionLabel?: string;
   message?: string;
-}> = ({ onAction, actionLabel = "Add Item", message = "No items found" }) => (
+}> = ({ onAction, actionLabel = 'Add Item', message = 'No items found' }) => (
   <EmptyState
     title={message}
     description="Get started by adding your first item"
@@ -102,7 +102,7 @@ export const SearchEmptyState: React.FC<{
   <EmptyState
     title={`No results for "${searchTerm}"`}
     description="Try adjusting your search or filter criteria"
-    action={{ label: "Clear Search", onClick: onClear }}
+    action={{ label: 'Clear Search', onClick: onClear }}
     variant="minimal"
   />
 );

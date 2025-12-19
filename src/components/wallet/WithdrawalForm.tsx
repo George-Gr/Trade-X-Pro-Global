@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,18 +18,18 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+} from '@/components/ui/card';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import { useQuery } from '@tanstack/react-query';
 import {
   Loader2,
   AlertTriangle,
@@ -38,9 +38,9 @@ import {
   DollarSign,
   TrendingDown,
   Shield,
-} from "lucide-react";
-import { useForm, Controller } from "react-hook-form";
-import { validationRules } from "@/lib/validationRules";
+} from 'lucide-react';
+import { useForm, Controller } from 'react-hook-form';
+import { validationRules } from '@/lib/validationRules';
 import {
   Form,
   FormField,
@@ -48,7 +48,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 
 interface WithdrawalFormProps {
   onSuccess?: () => void;
@@ -64,46 +64,46 @@ interface WithdrawalFormData {
 
 const SUPPORTED_CRYPTOS = [
   {
-    value: "BTC",
-    label: "Bitcoin (BTC)",
-    min: "0.001",
-    networkFee: "0.0001",
-    avgTime: "10-30 min",
+    value: 'BTC',
+    label: 'Bitcoin (BTC)',
+    min: '0.001',
+    networkFee: '0.0001',
+    avgTime: '10-30 min',
   },
   {
-    value: "ETH",
-    label: "Ethereum (ETH)",
-    min: "0.01",
-    networkFee: "0.005",
-    avgTime: "5-15 min",
+    value: 'ETH',
+    label: 'Ethereum (ETH)',
+    min: '0.01',
+    networkFee: '0.005',
+    avgTime: '5-15 min',
   },
   {
-    value: "USDT",
-    label: "Tether (USDT)",
-    min: "10",
-    networkFee: "1",
-    avgTime: "5-15 min",
+    value: 'USDT',
+    label: 'Tether (USDT)',
+    min: '10',
+    networkFee: '1',
+    avgTime: '5-15 min',
   },
   {
-    value: "USDC",
-    label: "USD Coin (USDC)",
-    min: "10",
-    networkFee: "1",
-    avgTime: "5-15 min",
+    value: 'USDC',
+    label: 'USD Coin (USDC)',
+    min: '10',
+    networkFee: '1',
+    avgTime: '5-15 min',
   },
   {
-    value: "LTC",
-    label: "Litecoin (LTC)",
-    min: "0.1",
-    networkFee: "0.001",
-    avgTime: "5-30 min",
+    value: 'LTC',
+    label: 'Litecoin (LTC)',
+    min: '0.1',
+    networkFee: '0.001',
+    avgTime: '5-30 min',
   },
   {
-    value: "BNB",
-    label: "Binance Coin (BNB)",
-    min: "0.01",
-    networkFee: "0.005",
-    avgTime: "1-3 min",
+    value: 'BNB',
+    label: 'Binance Coin (BNB)',
+    min: '0.01',
+    networkFee: '0.005',
+    avgTime: '1-3 min',
   },
 ];
 
@@ -122,12 +122,12 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   const [estimatedFee, setEstimatedFee] = useState(0);
 
   const form = useForm({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
-      currency: "BTC",
-      address: "",
-      amount: "",
-      twoFACode: "",
+      currency: 'BTC',
+      address: '',
+      amount: '',
+      twoFACode: '',
     },
   });
 
@@ -139,17 +139,17 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     reset,
     formState: { errors, isValid },
   } = form;
-  const currency = watch("currency");
-  const amount = watch("amount");
+  const currency = watch('currency');
+  const amount = watch('amount');
 
   // Fetch user profile for KYC status and withdrawal limits
   const { data: profile } = useQuery({
-    queryKey: ["profile", user?.id],
+    queryKey: ['profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user?.id!)
+        .from('profiles')
+        .select('*')
+        .eq('id', user?.id!)
         .single();
       if (error) throw error;
       return data;
@@ -159,18 +159,18 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
 
   // Fetch today's withdrawal total
   const { data: todayWithdrawals } = useQuery({
-    queryKey: ["today_withdrawals", user?.id],
+    queryKey: ['today_withdrawals', user?.id],
     queryFn: async () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
       const { data, error } = await supabase
-        .from("crypto_transactions")
-        .select("usd_amount")
-        .eq("user_id", user?.id ?? "")
-        .eq("transaction_type", "withdrawal")
-        .in("status", ["completed", "confirming"])
-        .gte("created_at", today.toISOString());
+        .from('crypto_transactions')
+        .select('usd_amount')
+        .eq('user_id', user?.id ?? '')
+        .eq('transaction_type', 'withdrawal')
+        .in('status', ['completed', 'confirming'])
+        .gte('created_at', today.toISOString());
 
       if (error) throw error;
       return data;
@@ -178,16 +178,16 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     enabled: !!user?.id,
   });
 
-  const watchedCurrency = watch("currency") || "BTC";
-  const watchedAmount = watch("amount") || "";
-  const watchedAddress = watch("address") || "";
-  const watchedTwoFA = watch("twoFACode") || "";
+  const watchedCurrency = watch('currency') || 'BTC';
+  const watchedAmount = watch('amount') || '';
+  const watchedAddress = watch('address') || '';
+  const watchedTwoFA = watch('twoFACode') || '';
 
   const selectedCrypto = SUPPORTED_CRYPTOS.find(
-    (c) => c.value === watchedCurrency,
+    (c) => c.value === watchedCurrency
   );
-  const networkFee = parseFloat(selectedCrypto?.networkFee || "0");
-  const totalWithdrawal = (parseFloat(watchedAmount || "0") || 0) + networkFee;
+  const networkFee = parseFloat(selectedCrypto?.networkFee || '0');
+  const totalWithdrawal = (parseFloat(watchedAmount || '0') || 0) + networkFee;
   const todayTotal =
     todayWithdrawals?.reduce((sum, t) => sum + (t.usd_amount || 0), 0) || 0;
   const remainingDailyLimit = WITHDRAWAL_LIMITS.daily - todayTotal;
@@ -215,27 +215,27 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     // Validate address format
     if (!formAddress || !formAddress.trim()) {
       toast({
-        title: "Invalid Address",
-        description: "Please enter a withdrawal address",
-        variant: "destructive",
+        title: 'Invalid Address',
+        description: 'Please enter a withdrawal address',
+        variant: 'destructive',
       });
       return;
     }
 
     if (!validateAddress(formAddress, formCurrency)) {
       toast({
-        title: "Invalid Address Format",
+        title: 'Invalid Address Format',
         description: `Please enter a valid ${formCurrency} address`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
 
     if (!formAmount || parseFloat(formAmount) <= 0) {
       toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid withdrawal amount",
-        variant: "destructive",
+        title: 'Invalid Amount',
+        description: 'Please enter a valid withdrawal amount',
+        variant: 'destructive',
       });
       return;
     }
@@ -245,9 +245,9 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     // Check balance
     if (withdrawAmount > balance) {
       toast({
-        title: "Insufficient Balance",
+        title: 'Insufficient Balance',
         description: `You only have $${balance.toFixed(2)} available`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
@@ -255,9 +255,9 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     // Check transaction limit
     if (withdrawAmount > WITHDRAWAL_LIMITS.perTransaction) {
       toast({
-        title: "Amount Exceeds Limit",
+        title: 'Amount Exceeds Limit',
         description: `Maximum per transaction: $${WITHDRAWAL_LIMITS.perTransaction}`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
@@ -265,19 +265,19 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     // Check daily limit
     if (todayTotal + withdrawAmount > WITHDRAWAL_LIMITS.daily) {
       toast({
-        title: "Daily Limit Exceeded",
+        title: 'Daily Limit Exceeded',
         description: `Remaining today: $${remainingDailyLimit.toFixed(2)}`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
 
     // Check KYC status
-    if (profile?.kyc_status !== "approved") {
+    if (profile?.kyc_status !== 'approved') {
       toast({
-        title: "KYC Required",
-        description: "Please complete KYC verification before withdrawing",
-        variant: "destructive",
+        title: 'KYC Required',
+        description: 'Please complete KYC verification before withdrawing',
+        variant: 'destructive',
       });
       return;
     }
@@ -290,7 +290,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     try {
       const formValues = form.getValues();
       const { data, error } = await supabase.functions.invoke(
-        "initiate-withdrawal",
+        'initiate-withdrawal',
         {
           body: {
             currency: formValues.currency,
@@ -298,13 +298,13 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
             amount: parseFloat(formValues.amount),
             twoFACode: formValues.twoFACode,
           },
-        },
+        }
       );
 
       if (error) throw error;
 
       toast({
-        title: "Withdrawal Initiated",
+        title: 'Withdrawal Initiated',
         description: `Your withdrawal of ${formValues.amount} ${formValues.currency} has been requested. It will be processed shortly.`,
       });
 
@@ -317,17 +317,17 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
       }
     } catch (err) {
       toast({
-        title: "Withdrawal Failed",
+        title: 'Withdrawal Failed',
         description:
-          err instanceof Error ? err.message : "Failed to process withdrawal",
-        variant: "destructive",
+          err instanceof Error ? err.message : 'Failed to process withdrawal',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const isKYCVerified = profile?.kyc_status === "approved";
+  const isKYCVerified = profile?.kyc_status === 'approved';
   const canWithdraw = balance > 0 && isKYCVerified;
 
   return (
@@ -404,7 +404,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                 />
                 {selectedCrypto && (
                   <p className="text-xs text-muted-foreground">
-                    Min: {selectedCrypto.min} {currency} • Network Fee:{" "}
+                    Min: {selectedCrypto.min} {currency} • Network Fee:{' '}
                     {selectedCrypto.networkFee} {currency} (~$
                     {(parseFloat(selectedCrypto.networkFee) * 1000).toFixed(0)})
                     • Est. Time: {selectedCrypto.avgTime}
@@ -422,8 +422,8 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                       <Input
                         id="address"
                         placeholder={`Enter your ${watchedCurrency} address`}
-                        {...register("address", {
-                          required: "Please enter a withdrawal address",
+                        {...register('address', {
+                          required: 'Please enter a withdrawal address',
                           validate: (val: string) =>
                             validateAddress(val, watchedCurrency) ||
                             `Please enter a valid ${watchedCurrency} address`,
@@ -453,7 +453,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                           id="amount"
                           type="number"
                           placeholder="0.00"
-                          {...register("amount", validationRules.amount)}
+                          {...register('amount', validationRules.amount)}
                           className="pl-8"
                           min="0"
                           step="0.01"
@@ -468,8 +468,8 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                           Network Fee: {networkFee} {watchedCurrency}
                         </span>
                         <span>
-                          Total:{" "}
-                          {(parseFloat(watchedAmount) + networkFee).toFixed(8)}{" "}
+                          Total:{' '}
+                          {(parseFloat(watchedAmount) + networkFee).toFixed(8)}{' '}
                           {watchedCurrency}
                         </span>
                       </div>
@@ -579,15 +579,15 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
                     <Input
                       id="twofa"
                       placeholder="Enter 6-digit code"
-                      {...register("twoFACode", {
-                        required: "2FA code is required",
+                      {...register('twoFACode', {
+                        required: '2FA code is required',
                         minLength: {
                           value: 6,
-                          message: "Enter a 6-digit code",
+                          message: 'Enter a 6-digit code',
                         },
                         maxLength: {
                           value: 6,
-                          message: "Enter a 6-digit code",
+                          message: 'Enter a 6-digit code',
                         },
                       })}
                       maxLength={6}
@@ -602,7 +602,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
             <Alert>
               <CheckCircle2 className="h-4 w-4" />
               <AlertDescription className="text-xs">
-                Withdrawal will be sent to address ending in{" "}
+                Withdrawal will be sent to address ending in{' '}
                 {watchedAddress.slice(-10)}
               </AlertDescription>
             </Alert>

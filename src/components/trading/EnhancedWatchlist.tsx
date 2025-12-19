@@ -1,34 +1,34 @@
-import { useState, lazy, Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, HelpCircle } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, lazy, Suspense } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search, HelpCircle } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useWatchlists } from "@/hooks/useWatchlists";
-import { usePriceUpdates } from "@/hooks/usePriceUpdates";
-import { CompareSymbolsDialog } from "./CompareSymbolsDialog";
-import CreateWatchlistDialog from "./CreateWatchlistDialog";
-import AddSymbolDialog from "./AddSymbolDialog";
-import DeleteWatchlistDialog from "./DeleteWatchlistDialog";
-import WatchlistItems from "./WatchlistItems";
+} from '@/components/ui/tooltip';
+import { useWatchlists } from '@/hooks/useWatchlists';
+import { usePriceUpdates } from '@/hooks/usePriceUpdates';
+import { CompareSymbolsDialog } from './CompareSymbolsDialog';
+import CreateWatchlistDialog from './CreateWatchlistDialog';
+import AddSymbolDialog from './AddSymbolDialog';
+import DeleteWatchlistDialog from './DeleteWatchlistDialog';
+import WatchlistItems from './WatchlistItems';
 
 // Lazy load heavy components
 const PriceAlertDialog = lazy(() =>
-  import("./PriceAlertDialog").then((mod) => ({
+  import('./PriceAlertDialog').then((mod) => ({
     default: mod.PriceAlertDialog,
-  })),
+  }))
 );
 
 interface EnhancedWatchlistProps {
   onSelectSymbol?: (symbol: string) => void;
-  onQuickTrade?: (symbol: string, side: "buy" | "sell") => void;
+  onQuickTrade?: (symbol: string, side: 'buy' | 'sell') => void;
 }
 
 /**
@@ -48,7 +48,7 @@ const EnhancedWatchlist = ({
   onSelectSymbol,
   onQuickTrade,
 }: EnhancedWatchlistProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const {
     watchlists,
@@ -81,8 +81,8 @@ const EnhancedWatchlist = ({
 
   const handleQuickTrade = (
     symbol: string,
-    side: "buy" | "sell",
-    e: React.MouseEvent,
+    side: 'buy' | 'sell',
+    e: React.MouseEvent
   ) => {
     e.stopPropagation();
     if (onQuickTrade) {
@@ -98,7 +98,7 @@ const EnhancedWatchlist = ({
   };
 
   const filteredItems = activeItems.filter((item) =>
-    item.symbol.toLowerCase().includes(searchQuery.toLowerCase()),
+    item.symbol.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (isLoading) {
@@ -221,7 +221,7 @@ const EnhancedWatchlist = ({
           />
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery("")}
+              onClick={() => setSearchQuery('')}
               className="absolute right-2 top-1/2 text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Clear search"
             >

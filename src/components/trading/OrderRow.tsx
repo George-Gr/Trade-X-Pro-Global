@@ -1,23 +1,23 @@
-import React, { memo } from "react";
-import { Button } from "@/components/ui/button";
-import { OrderStatusBadge } from "./OrderStatusBadge";
-import {
-  calculateFillPercentage,
-  type OrderStatus,
-} from "@/lib/trading/orderUtils";
-import { Copy, MoreHorizontal, Trash2, Edit } from "lucide-react";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
+import {
+  calculateFillPercentage,
+  type OrderStatus,
+} from '@/lib/trading/orderUtils';
+import { Copy, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
+import { memo } from 'react';
+import { OrderStatusBadge } from './OrderStatusBadge';
 
 export interface Order {
   id: string;
   symbol: string;
-  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
-  side: "buy" | "sell";
+  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
+  side: 'buy' | 'sell';
   quantity: number;
   filled_quantity: number;
   price?: number;
@@ -54,20 +54,20 @@ export const OrderRow = memo(
   ({ order, onModify, onCancel, onViewDetails }: OrderRowProps) => {
     const fillPercentage = calculateFillPercentage(
       order.filled_quantity,
-      order.quantity,
+      order.quantity
     );
 
-    const canModify = ["open", "partially_filled"].includes(order.status);
-    const canCancel = ["pending", "open", "partially_filled"].includes(
-      order.status,
+    const canModify = ['open', 'partially_filled'].includes(order.status);
+    const canCancel = ['pending', 'open', 'partially_filled'].includes(
+      order.status
     );
 
-    const sideColor = order.side === "buy" ? "text-buy" : "text-sell";
+    const sideColor = order.side === 'buy' ? 'text-buy' : 'text-sell';
     const typeLabel = order.type
-      .replace("_", "-")
-      .split("-")
+      .replace('_', '-')
+      .split('-')
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+      .join(' ');
 
     const copyOrderId = () => {
       navigator.clipboard.writeText(order.id);
@@ -140,7 +140,7 @@ export const OrderRow = memo(
                   <span className="text-sm text-foreground">
                     {order.average_fill_price
                       ? `Filled @ ${order.average_fill_price.toFixed(4)}`
-                      : order.type === "market"
+                      : order.type === 'market'
                         ? `Market`
                         : `${order.price.toFixed(4)}`}
                   </span>
@@ -183,10 +183,10 @@ export const OrderRow = memo(
               <div className="flex-1 min-w-0">
                 <span
                   className={`text-sm font-medium ${
-                    order.realized_pnl > 0 ? "text-buy" : "text-sell"
+                    order.realized_pnl > 0 ? 'text-buy' : 'text-sell'
                   }`}
                 >
-                  {order.realized_pnl > 0 ? "+" : ""}$
+                  {order.realized_pnl > 0 ? '+' : ''}$
                   {order.realized_pnl.toFixed(2)}
                 </span>
               </div>
@@ -236,7 +236,7 @@ export const OrderRow = memo(
 
           {/* Timestamp */}
           <div className="mt-2 text-xs text-muted-foreground">
-            Created: {new Date(order.created_at).toLocaleString()} • Updated:{" "}
+            Created: {new Date(order.created_at).toLocaleString()} • Updated:{' '}
             {new Date(order.updated_at).toLocaleString()}
           </div>
         </div>
@@ -265,5 +265,5 @@ export const OrderRow = memo(
       prevProps.onViewDetails !== nextProps.onViewDetails;
 
     return !orderChanged && !callbacksChanged;
-  },
+  }
 );

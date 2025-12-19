@@ -1,10 +1,3 @@
-import React, { useMemo, useState } from "react";
-import { PositionsGrid } from "./PositionsGrid";
-import type { Position } from "@/types/position";
-import { calculateUnrealizedPnL } from "@/lib/trading/positionUtils";
-import { useRealtimePositions } from "@/hooks/useRealtimePositions";
-import { PositionRow } from "./PositionRow";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,9 +5,15 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { TrendingDown, AlertCircle } from "lucide-react";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { usePositionClose } from '@/hooks/usePositionClose';
+import { useRealtimePositions } from '@/hooks/useRealtimePositions';
+import type { Position } from '@/types/position';
+import { AlertCircle, TrendingDown } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { PositionRow } from './PositionRow';
 
 export const PositionsTable: React.FC<{ userId: string | null }> = ({
   userId,
@@ -25,6 +24,7 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { closePosition } = usePositionClose();
 
   const rows = useMemo(() => positions || [], [positions]);
 
@@ -50,10 +50,6 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({
     setShowConfirmDialog(false);
 
     // naive bulk close using usePositionClose - call one by one
-    const { closePosition } = await import("@/hooks/usePositionClose").then(
-      (m) => m.usePositionClose(),
-    );
-
     for (const id of ids) {
       await closePosition({ position_id: id });
     }
@@ -75,8 +71,8 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">
             {isLoading
-              ? "Loading..."
-              : `${rows.length} position${rows.length !== 1 ? "s" : ""}`}
+              ? 'Loading...'
+              : `${rows.length} position${rows.length !== 1 ? 's' : ''}`}
           </span>
           {selectedCount > 0 && (
             <div className="flex items-center gap-2">
@@ -171,11 +167,11 @@ export const PositionsTable: React.FC<{ userId: string | null }> = ({
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent>
           <AlertDialogTitle>
-            Close {selectedCount} Position{selectedCount !== 1 ? "s" : ""}?
+            Close {selectedCount} Position{selectedCount !== 1 ? 's' : ''}?
           </AlertDialogTitle>
           <AlertDialogDescription>
             This action will close {selectedCount} selected position
-            {selectedCount !== 1 ? "s" : ""}. This cannot be undone.
+            {selectedCount !== 1 ? 's' : ''}. This cannot be undone.
           </AlertDialogDescription>
           <div className="flex gap-3 justify-end">
             <AlertDialogCancel>Cancel</AlertDialogCancel>

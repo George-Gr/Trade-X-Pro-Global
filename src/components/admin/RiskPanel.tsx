@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -12,8 +12,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/table';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -21,8 +21,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   AlertTriangle,
   Shield,
@@ -38,10 +38,10 @@ import {
   Zap,
   AlertCircle,
   RefreshCw,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { logger } from "@/lib/logger";
-import type { Json } from "@/integrations/supabase/types";
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { logger } from '@/lib/logger';
+import type { Json } from '@/integrations/supabase/types';
 
 interface RiskEvent {
   id: string;
@@ -106,10 +106,10 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Filters
-  const [searchTerm, setSearchTerm] = useState("");
-  const [severityFilter, setSeverityFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [severityFilter, setSeverityFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
 
   // Dialog states
   const [selectedEvent, setSelectedEvent] = useState<RiskEvent | null>(null);
@@ -121,7 +121,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
   }>({
     open: false,
     eventId: null,
-    resolution: "",
+    resolution: '',
   });
 
   const fetchData = useCallback(async () => {
@@ -134,7 +134,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
       const [riskEventsResponse, positionsResponse, marginCallsResponse] =
         await Promise.all([
           supabase
-            .from("risk_events")
+            .from('risk_events')
             .select(
               `
             *,
@@ -142,11 +142,11 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
               full_name,
               email
             )
-          `,
+          `
             )
-            .order("created_at", { ascending: false }),
+            .order('created_at', { ascending: false }),
           supabase
-            .from("positions")
+            .from('positions')
             .select(
               `
             *,
@@ -154,11 +154,11 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
               full_name,
               email
             )
-          `,
+          `
             )
-            .order("created_at", { ascending: false }),
+            .order('created_at', { ascending: false }),
           supabase
-            .from("margin_call_events")
+            .from('margin_call_events')
             .select(
               `
             *,
@@ -166,10 +166,10 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
               full_name,
               email
             )
-          `,
+          `
             )
-            .eq("status", "pending")
-            .order("triggered_at", { ascending: false }),
+            .eq('status', 'pending')
+            .order('triggered_at', { ascending: false }),
         ]);
 
       if (riskEventsResponse.data && !riskEventsResponse.error) {
@@ -186,9 +186,9 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
+        title: 'Error',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -205,7 +205,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
 
     try {
       const { error } = await supabase
-        .from("risk_events")
+        .from('risk_events')
         .update({
           resolved: true,
           details: {
@@ -214,23 +214,23 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
             resolved_by: user?.id,
           },
         })
-        .eq("id", resolutionDialog.eventId);
+        .eq('id', resolutionDialog.eventId);
 
       if (error) throw error;
 
       toast({
-        title: "Risk Event Resolved",
-        description: "The risk event has been marked as resolved",
+        title: 'Risk Event Resolved',
+        description: 'The risk event has been marked as resolved',
       });
 
-      setResolutionDialog({ open: false, eventId: null, resolution: "" });
+      setResolutionDialog({ open: false, eventId: null, resolution: '' });
       fetchData();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
+        title: 'Error',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -251,54 +251,54 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
       event.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesSeverity =
-      severityFilter === "all" || event.severity === severityFilter;
+      severityFilter === 'all' || event.severity === severityFilter;
     const matchesStatus =
-      statusFilter === "all" ||
-      (event.resolved ? "resolved" : "active") === statusFilter;
-    const matchesType = typeFilter === "all" || event.event_type === typeFilter;
+      statusFilter === 'all' ||
+      (event.resolved ? 'resolved' : 'active') === statusFilter;
+    const matchesType = typeFilter === 'all' || event.event_type === typeFilter;
 
     return matchesSearch && matchesSeverity && matchesStatus && matchesType;
   });
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "critical":
-        return "bg-red-500";
-      case "high":
-        return "bg-orange-500";
-      case "medium":
-        return "bg-yellow-500";
-      case "low":
-        return "bg-green-500";
+      case 'critical':
+        return 'bg-red-500';
+      case 'high':
+        return 'bg-orange-500';
+      case 'medium':
+        return 'bg-yellow-500';
+      case 'low':
+        return 'bg-green-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active":
-        return "bg-red-500";
-      case "resolved":
-        return "bg-green-500";
-      case "monitored":
-        return "bg-blue-500";
+      case 'active':
+        return 'bg-red-500';
+      case 'resolved':
+        return 'bg-green-500';
+      case 'monitored':
+        return 'bg-blue-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
   const getRiskTypeIcon = (type: string) => {
     switch (type) {
-      case "margin_call":
+      case 'margin_call':
         return <AlertTriangle className="h-4 w-4" />;
-      case "liquidation_risk":
+      case 'liquidation_risk':
         return <TrendingDown className="h-4 w-4" />;
-      case "suspicious_activity":
+      case 'suspicious_activity':
         return <Flag className="h-4 w-4" />;
-      case "system_error":
+      case 'system_error':
         return <Zap className="h-4 w-4" />;
-      case "compliance_violation":
+      case 'compliance_violation':
         return <AlertCircle className="h-4 w-4" />;
       default:
         return <Shield className="h-4 w-4" />;
@@ -308,7 +308,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
   const calculateRiskMetrics = () => {
     const totalEvents = riskEvents.length;
     const criticalEvents = riskEvents.filter(
-      (e) => e.severity === "critical",
+      (e) => e.severity === 'critical'
     ).length;
     const activeEvents = riskEvents.filter((e) => !e.resolved).length;
     const highRiskPositions = positions.filter((p) => {
@@ -398,7 +398,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                 className="flex items-center gap-2"
               >
                 <RefreshCw
-                  className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                  className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
                 />
                 Refresh
               </Button>
@@ -427,7 +427,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                       <TableCell className="text-right font-medium">
                         <Badge
                           variant={
-                            call.margin_level < 30 ? "destructive" : "outline"
+                            call.margin_level < 30 ? 'destructive' : 'outline'
                           }
                         >
                           {call.margin_level.toFixed(2)}%
@@ -449,8 +449,8 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                           onClick={() => {
                             // Navigate to user's account management
                             logger.addBreadcrumb(
-                              "risk_action",
-                              `Viewing margin call for user ${call.user_id}`,
+                              'risk_action',
+                              `Viewing margin call for user ${call.user_id}`
                             );
                           }}
                           className="flex items-center gap-1"
@@ -525,7 +525,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                 className="flex items-center gap-2"
               >
                 <RefreshCw
-                  className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                  className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
                 />
                 Refresh
               </Button>
@@ -567,7 +567,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                             className="flex items-center gap-1 capitalize"
                           >
                             {getRiskTypeIcon(event.event_type)}
-                            {event.event_type.replace(/_/g, " ")}
+                            {event.event_type.replace(/_/g, ' ')}
                           </Badge>
                         </TableCell>
                         <TableCell className="font-medium">
@@ -584,9 +584,9 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                         <TableCell>
                           <Badge variant="outline">
                             <span
-                              className={`inline-block w-2 h-2 rounded-full mr-2 ${event.resolved ? "bg-green-500" : "bg-red-500"}`}
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${event.resolved ? 'bg-green-500' : 'bg-red-500'}`}
                             />
-                            {event.resolved ? "Resolved" : "Active"}
+                            {event.resolved ? 'Resolved' : 'Active'}
                           </Badge>
                         </TableCell>
                         <TableCell
@@ -617,7 +617,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                                   setResolutionDialog({
                                     open: true,
                                     eventId: event.id,
-                                    resolution: "",
+                                    resolution: '',
                                   })
                                 }
                                 className="flex items-center gap-1"
@@ -670,7 +670,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                 <div>
                   <Label>Event Type</Label>
                   <p className="text-sm font-medium capitalize">
-                    {selectedEvent.event_type.replace(/_/g, " ")}
+                    {selectedEvent.event_type.replace(/_/g, ' ')}
                   </p>
                 </div>
               </div>
@@ -708,9 +708,9 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                   <Label>Status</Label>
                   <Badge variant="outline">
                     <span
-                      className={`inline-block w-2 h-2 rounded-full mr-2 ${selectedEvent.resolved ? "bg-green-500" : "bg-red-500"}`}
+                      className={`inline-block w-2 h-2 rounded-full mr-2 ${selectedEvent.resolved ? 'bg-green-500' : 'bg-red-500'}`}
                     />
-                    {selectedEvent.resolved ? "Resolved" : "Active"}
+                    {selectedEvent.resolved ? 'Resolved' : 'Active'}
                   </Badge>
                 </div>
               </div>
@@ -726,7 +726,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                   <div>
                     <Label>Resolved By</Label>
                     <p className="text-sm">
-                      {selectedEvent.resolved_by || "Unknown"}
+                      {selectedEvent.resolved_by || 'Unknown'}
                     </p>
                   </div>
                 </div>
@@ -741,7 +741,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
         open={resolutionDialog.open}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
-            setResolutionDialog({ open: false, eventId: null, resolution: "" });
+            setResolutionDialog({ open: false, eventId: null, resolution: '' });
           }
         }}
       >
@@ -777,7 +777,7 @@ const RiskPanel: React.FC<RiskPanelProps> = ({ refreshTrigger }) => {
                 setResolutionDialog({
                   open: false,
                   eventId: null,
-                  resolution: "",
+                  resolution: '',
                 })
               }
             >

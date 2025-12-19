@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 export type Position = {
   id: string;
@@ -6,7 +6,7 @@ export type Position = {
   quantity: number;
   entry_price: number;
   current_price: number;
-  side: "long" | "short";
+  side: 'long' | 'short';
   opened_at: Date;
   leverage: number;
   margin_used: number;
@@ -26,13 +26,13 @@ export type PositionMetricsData = {
 };
 
 export function calculateUnrealizedPnL(
-  args: Pick<Position, "side" | "quantity" | "entry_price" | "current_price">,
+  args: Pick<Position, 'side' | 'quantity' | 'entry_price' | 'current_price'>
 ): number;
 export function calculatePnLPercentage(
-  args: Pick<Position, "entry_price" | "current_price" | "leverage">,
+  args: Pick<Position, 'entry_price' | 'current_price' | 'leverage'>
 ): number;
 export function getPositionColor(
-  args: Pick<Position, "side" | "entry_price" | "current_price">,
+  args: Pick<Position, 'side' | 'entry_price' | 'current_price'>
 ): string;
 
 export const PositionCard: React.FC<{

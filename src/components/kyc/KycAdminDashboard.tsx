@@ -1,16 +1,16 @@
 // KycAdminDashboard: Comprehensive admin UI for reviewing KYC requests
-import React, { useEffect, useState, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import React, { useEffect, useState, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -18,10 +18,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -29,8 +29,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Loader2,
   Eye,
@@ -39,7 +39,7 @@ import {
   CheckCircle,
   Clock,
   X,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface KycDocument {
   id: string;
@@ -74,12 +74,12 @@ interface UserProfile {
 }
 
 type FilterStatus =
-  | "all"
-  | "pending"
-  | "submitted"
-  | "approved"
-  | "rejected"
-  | "manual_review";
+  | 'all'
+  | 'pending'
+  | 'submitted'
+  | 'approved'
+  | 'rejected'
+  | 'manual_review';
 
 const KycAdminDashboard: React.FC = () => {
   const { user, isAdmin, loading } = useAuth();
@@ -89,13 +89,13 @@ const KycAdminDashboard: React.FC = () => {
   const [loadingRequests, setLoadingRequests] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRequest, setSelectedRequest] = useState<
     (typeof requests)[0] | null
   >(null);
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [adminNotes, setAdminNotes] = useState("");
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [adminNotes, setAdminNotes] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   // Fetch all KYC requests with related data
@@ -110,13 +110,13 @@ const KycAdminDashboard: React.FC = () => {
         error: sessionError,
       } = await supabase.auth.getSession();
       if (sessionError || !session?.access_token) {
-        throw new Error("Failed to get user session");
+        throw new Error('Failed to get user session');
       }
 
       const { data: requestsData, error: requestsError } = await supabase
-        .from("kyc_documents")
-        .select("*")
-        .order("created_at", { ascending: false })
+        .from('kyc_documents')
+        .select('*')
+        .order('created_at', { ascending: false })
         .limit(100);
 
       if (requestsError) throw requestsError;
@@ -126,13 +126,13 @@ const KycAdminDashboard: React.FC = () => {
         (requestsData || []).map(async (req) => {
           const r = req as Record<string, unknown>;
           const { data: profile, error: profileError } = await supabase
-            .from("profiles")
-            .select("id, email, full_name, phone, kyc_status")
-            .eq("id", String(r.user_id))
+            .from('profiles')
+            .select('id, email, full_name, phone, kyc_status')
+            .eq('id', String(r.user_id))
             .single();
 
           if (profileError) {
-            console.error("Profile fetch error:", profileError);
+            console.error('Profile fetch error:', profileError);
           }
 
           return {
@@ -143,14 +143,14 @@ const KycAdminDashboard: React.FC = () => {
             userProfile?: UserProfile;
             kycDocuments?: KycDocument[];
           };
-        }),
+        })
       );
 
       setRequests(enrichedRequests);
     } catch (err: unknown) {
-      console.error("Failed to fetch kyc requests", err);
+      console.error('Failed to fetch kyc requests', err);
       const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage || "Failed to fetch requests");
+      setError(errorMessage || 'Failed to fetch requests');
     } finally {
       setLoadingRequests(false);
     }
@@ -168,33 +168,33 @@ const KycAdminDashboard: React.FC = () => {
   // Perform admin action
   const performAdminAction = async (
     kycRequestId: string,
-    action: "approve" | "reject" | "request_more_info",
-    notes?: string,
+    action: 'approve' | 'reject' | 'request_more_info',
+    notes?: string
   ) => {
     setError(null);
     setActionLoading(kycRequestId);
 
     try {
-      if (!user || !isAdmin) throw new Error("Admin access required");
+      if (!user || !isAdmin) throw new Error('Admin access required');
 
       const {
         data: { session },
         error: sessionError,
       } = await supabase.auth.getSession();
       if (sessionError || !session?.access_token) {
-        throw new Error("Failed to get user session token");
+        throw new Error('Failed to get user session token');
       }
 
       const statusMap = {
-        approve: "approved",
-        reject: "rejected",
-        request_more_info: "submitted",
+        approve: 'approved',
+        reject: 'rejected',
+        request_more_info: 'submitted',
       };
 
-      const resp = await fetch("/supabase/functions/admin/kyc-review", {
-        method: "POST",
+      const resp = await fetch('/supabase/functions/admin/kyc-review', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
@@ -207,7 +207,7 @@ const KycAdminDashboard: React.FC = () => {
 
       if (!resp.ok) {
         const body = await resp.json().catch(() => ({}));
-        throw new Error(body?.error || "Admin action failed");
+        throw new Error(body?.error || 'Admin action failed');
       }
 
       // Update local state
@@ -219,17 +219,17 @@ const KycAdminDashboard: React.FC = () => {
                 status: statusMap[action],
                 updated_at: new Date().toISOString(),
               }
-            : r,
-        ),
+            : r
+        )
       );
 
       setSelectedRequest(null);
-      setRejectionReason("");
-      setAdminNotes("");
+      setRejectionReason('');
+      setAdminNotes('');
     } catch (err: unknown) {
-      console.error("Admin action error", err);
+      console.error('Admin action error', err);
       const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage || "Action failed");
+      setError(errorMessage || 'Action failed');
     } finally {
       setActionLoading(null);
     }
@@ -237,7 +237,7 @@ const KycAdminDashboard: React.FC = () => {
 
   // Filter requests
   const filteredRequests = requests.filter((r) => {
-    const matchesStatus = filterStatus === "all" || r.status === filterStatus;
+    const matchesStatus = filterStatus === 'all' || r.status === filterStatus;
     const matchesSearch =
       r.userProfile?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       r.userProfile?.full_name
@@ -250,12 +250,12 @@ const KycAdminDashboard: React.FC = () => {
   // Get request statistics
   const stats = {
     pending: requests.filter(
-      (r) => r.status === "pending" || r.status === "submitted",
+      (r) => r.status === 'pending' || r.status === 'submitted'
     ).length,
-    approved: requests.filter((r) => r.status === "approved").length,
-    rejected: requests.filter((r) => r.status === "rejected").length,
+    approved: requests.filter((r) => r.status === 'approved').length,
+    rejected: requests.filter((r) => r.status === 'rejected').length,
     manual_review: requests.filter(
-      (r) => r.status === "manual_review" || r.status === "escalated",
+      (r) => r.status === 'manual_review' || r.status === 'escalated'
     ).length,
   };
 
@@ -278,14 +278,14 @@ const KycAdminDashboard: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "approved":
+      case 'approved':
         return <Badge className="bg-profit">Approved</Badge>;
-      case "rejected":
+      case 'rejected':
         return <Badge variant="destructive">Rejected</Badge>;
-      case "manual_review":
-      case "escalated":
+      case 'manual_review':
+      case 'escalated':
         return <Badge variant="outline">Manual Review</Badge>;
-      case "submitted":
+      case 'submitted':
         return <Badge className="bg-amber-500">Under Review</Badge>;
       default:
         return <Badge variant="secondary">Pending</Badge>;
@@ -294,11 +294,11 @@ const KycAdminDashboard: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "approved":
+      case 'approved':
         return <CheckCircle className="h-4 w-4 text-profit" />;
-      case "rejected":
+      case 'rejected':
         return <X className="h-4 w-4 text-destructive" />;
-      case "submitted":
+      case 'submitted':
         return <Clock className="h-4 w-4 text-amber-500" />;
       default:
         return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
@@ -423,7 +423,7 @@ const KycAdminDashboard: React.FC = () => {
                 Refreshing...
               </>
             ) : (
-              "Refresh Queue"
+              'Refresh Queue'
             )}
           </Button>
 
@@ -449,7 +449,7 @@ const KycAdminDashboard: React.FC = () => {
                   {filteredRequests.map((req) => (
                     <TableRow key={req.id}>
                       <TableCell className="font-medium">
-                        {req.userProfile?.full_name || "Unknown"}
+                        {req.userProfile?.full_name || 'Unknown'}
                       </TableCell>
                       <TableCell className="text-sm">
                         {req.userProfile?.email}
@@ -485,7 +485,7 @@ const KycAdminDashboard: React.FC = () => {
                             <DialogContent className="w-[calc(100%-2rem)] max-w-[90vw] md:max-w-3xl max-h-[90vh] overflow-y-auto">
                               <DialogHeader>
                                 <DialogTitle>
-                                  KYC Review:{" "}
+                                  KYC Review:{' '}
                                   {selectedRequest.userProfile?.full_name}
                                 </DialogTitle>
                                 <DialogDescription>
@@ -511,12 +511,12 @@ const KycAdminDashboard: React.FC = () => {
                                           >
                                             <div>
                                               <p className="text-sm font-medium capitalize">
-                                                {doc.type.replace(/_/g, " ")}
+                                                {doc.type.replace(/_/g, ' ')}
                                               </p>
                                               <p className="text-xs text-muted-foreground">
-                                                Uploaded:{" "}
+                                                Uploaded:{' '}
                                                 {new Date(
-                                                  doc.uploaded_at,
+                                                  doc.uploaded_at
                                                 ).toLocaleDateString()}
                                               </p>
                                             </div>
@@ -535,7 +535,7 @@ const KycAdminDashboard: React.FC = () => {
                                               </Button>
                                             </div>
                                           </div>
-                                        ),
+                                        )
                                       )}
                                     </div>
                                   ) : (
@@ -551,18 +551,18 @@ const KycAdminDashboard: React.FC = () => {
                                     Admin Decision
                                   </h4>
 
-                                  {selectedRequest.status === "rejected" && (
+                                  {selectedRequest.status === 'rejected' && (
                                     <Alert variant="destructive">
                                       <AlertCircle className="h-4 w-4" />
                                       <AlertDescription>
-                                        This request has been rejected.{" "}
+                                        This request has been rejected.{' '}
                                         {selectedRequest.notes &&
                                           `Reason: ${selectedRequest.notes}`}
                                       </AlertDescription>
                                     </Alert>
                                   )}
 
-                                  {selectedRequest.status === "approved" && (
+                                  {selectedRequest.status === 'approved' && (
                                     <Alert className="border-profit/20 bg-profit/5">
                                       <CheckCircle className="h-4 w-4 text-profit" />
                                       <AlertDescription>
@@ -571,8 +571,8 @@ const KycAdminDashboard: React.FC = () => {
                                     </Alert>
                                   )}
 
-                                  {!["approved", "rejected"].includes(
-                                    selectedRequest.status,
+                                  {!['approved', 'rejected'].includes(
+                                    selectedRequest.status
                                   ) && (
                                     <>
                                       <Textarea
@@ -585,7 +585,7 @@ const KycAdminDashboard: React.FC = () => {
                                       />
 
                                       {selectedRequest.status ===
-                                        "rejected" && (
+                                        'rejected' && (
                                         <Textarea
                                           placeholder="Rejection reason (required)"
                                           value={rejectionReason}
@@ -602,8 +602,8 @@ const KycAdminDashboard: React.FC = () => {
                                           onClick={() =>
                                             performAdminAction(
                                               selectedRequest.id,
-                                              "approve",
-                                              adminNotes,
+                                              'approve',
+                                              adminNotes
                                             )
                                           }
                                           disabled={
@@ -619,9 +619,9 @@ const KycAdminDashboard: React.FC = () => {
                                           onClick={() =>
                                             performAdminAction(
                                               selectedRequest.id,
-                                              "reject",
+                                              'reject',
                                               rejectionReason ||
-                                                "Document verification failed",
+                                                'Document verification failed'
                                             )
                                           }
                                           disabled={
@@ -637,8 +637,8 @@ const KycAdminDashboard: React.FC = () => {
                                           onClick={() =>
                                             performAdminAction(
                                               selectedRequest.id,
-                                              "request_more_info",
-                                              adminNotes,
+                                              'request_more_info',
+                                              adminNotes
                                             )
                                           }
                                           disabled={
@@ -677,7 +677,7 @@ const KycAdminDashboard: React.FC = () => {
               <DialogTitle>Document Preview</DialogTitle>
             </DialogHeader>
             <div className="flex justify-center items-center min-h-[400px] bg-muted rounded-lg">
-              {previewUrl.endsWith(".pdf") ? (
+              {previewUrl.endsWith('.pdf') ? (
                 <embed
                   src={previewUrl}
                   type="application/pdf"

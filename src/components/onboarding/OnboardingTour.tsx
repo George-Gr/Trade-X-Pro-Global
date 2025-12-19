@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback } from "react";
-import introJs from "intro.js";
-import "intro.js/introjs.css";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useEffect, useState, useCallback } from 'react';
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
 
 /**
  * Onboarding tour step configuration
@@ -11,7 +11,7 @@ interface TourStep {
   element?: string;
   intro: string;
   title?: string;
-  position?: "top" | "bottom" | "left" | "right" | "auto";
+  position?: 'top' | 'bottom' | 'left' | 'right' | 'auto';
 }
 
 /**
@@ -39,7 +39,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
         <li><strong>History</strong> - Past trades & reports</li>
       </ul>
     `,
-    position: "right",
+    position: 'right',
   },
   {
     element: '[data-tour="trading-panel"]',
@@ -53,7 +53,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
         <li>Set <strong>Take Profit</strong> to lock in gains</li>
       </ul>
     `,
-    position: "left",
+    position: 'left',
   },
   {
     element: '[data-tour="order-volume"]',
@@ -67,7 +67,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
       </ul>
       <p class="text-sm text-warning mt-2">⚠️ Larger lots = Higher risk & reward</p>
     `,
-    position: "bottom",
+    position: 'bottom',
   },
   {
     element: '[data-tour="buy-sell-buttons"]',
@@ -80,7 +80,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
       </ul>
       <p class="text-sm text-muted-foreground mt-2">You'll see a confirmation before execution.</p>
     `,
-    position: "top",
+    position: 'top',
   },
   {
     element: '[data-tour="chart"]',
@@ -94,7 +94,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
         <li>Real-time price updates</li>
       </ul>
     `,
-    position: "left",
+    position: 'left',
   },
   {
     element: '[data-tour="account-info"]',
@@ -108,7 +108,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
         <li><strong>Free Margin</strong> - Available for new trades</li>
       </ul>
     `,
-    position: "bottom",
+    position: 'bottom',
   },
   {
     element: '[data-tour="notifications"]',
@@ -122,7 +122,7 @@ const TRADING_TOUR_STEPS: TourStep[] = [
         <li>Account updates</li>
       </ul>
     `,
-    position: "bottom",
+    position: 'bottom',
   },
   {
     intro: `
@@ -163,7 +163,7 @@ const PORTFOLIO_TOUR_STEPS: TourStep[] = [
         <li>Close positions with one click</li>
       </ul>
     `,
-    position: "top",
+    position: 'top',
   },
   {
     element: '[data-tour="close-position"]',
@@ -172,13 +172,13 @@ const PORTFOLIO_TOUR_STEPS: TourStep[] = [
       <p>Click the X button to close a position and realize your P&L.</p>
       <p class="text-sm text-muted-foreground mt-2">You can also partially close positions.</p>
     `,
-    position: "left",
+    position: 'left',
   },
 ];
 
 interface OnboardingTourProps {
   /** Page context for tour selection */
-  page?: "trading" | "portfolio" | "history";
+  page?: 'trading' | 'portfolio' | 'history';
   /** Callback when tour completes */
   onComplete?: () => void;
   /** Force show tour even if previously completed */
@@ -205,7 +205,7 @@ interface OnboardingTourProps {
  * ```
  */
 export const OnboardingTour = ({
-  page = "trading",
+  page = 'trading',
   onComplete,
   forceShow = false,
 }: OnboardingTourProps) => {
@@ -224,7 +224,7 @@ export const OnboardingTour = ({
       const localKey = `onboarding_${page}_completed`;
       const localCompleted = localStorage.getItem(localKey);
 
-      if (localCompleted === "true" && !forceShow) {
+      if (localCompleted === 'true' && !forceShow) {
         setHasSeenTour(true);
         return;
       }
@@ -238,7 +238,7 @@ export const OnboardingTour = ({
   // Mark tour as completed
   const markTourCompleted = useCallback(async () => {
     const localKey = `onboarding_${page}_completed`;
-    localStorage.setItem(localKey, "true");
+    localStorage.setItem(localKey, 'true');
 
     setHasSeenTour(true);
     onComplete?.();
@@ -249,7 +249,7 @@ export const OnboardingTour = ({
     if (hasSeenTour !== false) return;
 
     const steps =
-      page === "portfolio" ? PORTFOLIO_TOUR_STEPS : TRADING_TOUR_STEPS;
+      page === 'portfolio' ? PORTFOLIO_TOUR_STEPS : TRADING_TOUR_STEPS;
 
     // Small delay to ensure DOM elements are rendered
     const timer = setTimeout(() => {
@@ -262,23 +262,23 @@ export const OnboardingTour = ({
             : undefined,
           intro: step.intro,
           title: step.title,
-          position: (step.position === "auto" ? "bottom" : step.position) as
-            | "top"
-            | "bottom"
-            | "left"
-            | "right",
+          position: (step.position === 'auto' ? 'bottom' : step.position) as
+            | 'top'
+            | 'bottom'
+            | 'left'
+            | 'right',
         })),
         showProgress: true,
         showBullets: true,
         exitOnOverlayClick: false,
         exitOnEsc: true,
-        doneLabel: "Finish",
-        nextLabel: "Next →",
-        prevLabel: "← Back",
-        skipLabel: "Skip Tour",
+        doneLabel: 'Finish',
+        nextLabel: 'Next →',
+        prevLabel: '← Back',
+        skipLabel: 'Skip Tour',
         hidePrev: true,
-        tooltipClass: "onboarding-tooltip",
-        highlightClass: "onboarding-highlight",
+        tooltipClass: 'onboarding-tooltip',
+        highlightClass: 'onboarding-highlight',
         scrollToElement: true,
         scrollPadding: 50,
       });
@@ -307,16 +307,16 @@ export const OnboardingTour = ({
 // eslint-disable-next-line react-refresh/only-export-components
 export const useOnboardingTour = () => {
   const startTour = useCallback(
-    (page: "trading" | "portfolio" | "history" = "trading") => {
+    (page: 'trading' | 'portfolio' | 'history' = 'trading') => {
       // Remove the completed flag to show tour again
       localStorage.removeItem(`onboarding_${page}_completed`);
 
       // Trigger a re-render by dispatching a custom event
       window.dispatchEvent(
-        new CustomEvent("restart-onboarding", { detail: { page } }),
+        new CustomEvent('restart-onboarding', { detail: { page } })
       );
     },
-    [],
+    []
   );
 
   return { startTour };

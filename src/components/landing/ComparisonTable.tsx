@@ -1,64 +1,63 @@
-import * as React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Check, X } from "lucide-react";
-import { motion } from "framer-motion";
-import { ScrollReveal, AnimatedSectionHeader } from "./ScrollReveal";
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Check, X } from 'lucide-react';
+import { AnimatedSectionHeader, ScrollReveal } from './ScrollReveal';
 
 const comparisonData = [
   {
-    feature: "Virtual Capital",
-    tradexPro: "$50,000",
-    competitorA: "$10,000",
-    competitorB: "$100,000",
+    feature: 'Virtual Capital',
+    tradexPro: '$50,000',
+    competitorA: '$10,000',
+    competitorB: '$100,000',
   },
   {
-    feature: "Trading Instruments",
-    tradexPro: "500+",
-    competitorA: "100+",
-    competitorB: "200+",
+    feature: 'Trading Instruments',
+    tradexPro: '500+',
+    competitorA: '100+',
+    competitorB: '200+',
   },
   {
-    feature: "Real-Time Data",
+    feature: 'Real-Time Data',
     tradexPro: true,
     competitorA: true,
-    competitorB: "Delayed",
+    competitorB: 'Delayed',
   },
   {
-    feature: "TradingView Charts",
+    feature: 'TradingView Charts',
     tradexPro: true,
     competitorA: false,
     competitorB: true,
   },
   {
-    feature: "Risk Management Tools",
+    feature: 'Risk Management Tools',
     tradexPro: true,
-    competitorA: "Basic",
+    competitorA: 'Basic',
     competitorB: true,
   },
   {
-    feature: "Mobile Responsive",
+    feature: 'Mobile Responsive',
     tradexPro: true,
     competitorA: true,
     competitorB: false,
   },
   {
-    feature: "Order Templates",
+    feature: 'Order Templates',
     tradexPro: true,
     competitorA: false,
     competitorB: false,
   },
   {
-    feature: "Trailing Stop-Loss",
+    feature: 'Trailing Stop-Loss',
     tradexPro: true,
     competitorA: false,
     competitorB: true,
   },
   {
-    feature: "Monthly Cost",
-    tradexPro: "Free",
-    competitorA: "$29/mo",
-    competitorB: "Free (ads)",
+    feature: 'Monthly Cost',
+    tradexPro: 'Free',
+    competitorA: '$29/mo',
+    competitorB: 'Free (ads)',
   },
 ];
 
@@ -69,10 +68,12 @@ const renderValue = (value: string | boolean, isTradeX: boolean = false) => {
         initial={{ scale: 0 }}
         whileInView={{ scale: 1 }}
         viewport={{ once: true }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <Check
-          className={`h-5 w-5 mx-auto ${isTradeX ? "text-gold" : "text-accent"}`}
+          className={`h-5 w-5 mx-auto ${
+            isTradeX ? 'text-gold' : 'text-accent'
+          }`}
         />
       </motion.div>
     );
@@ -83,14 +84,14 @@ const renderValue = (value: string | boolean, isTradeX: boolean = false) => {
         initial={{ scale: 0 }}
         whileInView={{ scale: 1 }}
         viewport={{ once: true }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <X className="h-5 w-5 text-destructive mx-auto" />
       </motion.div>
     );
   }
   return (
-    <span className={`text-sm ${isTradeX ? "font-semibold text-gold" : ""}`}>
+    <span className={`text-sm ${isTradeX ? 'font-semibold text-gold' : ''}`}>
       {value}
     </span>
   );
@@ -131,7 +132,7 @@ export function ComparisonTable() {
                             initial={{ scale: 0.8, opacity: 0 }}
                             whileInView={{ scale: 1, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.3, type: "spring" }}
+                            transition={{ delay: 0.3, type: 'spring' }}
                           >
                             <Badge className="bg-gold text-gold-foreground mb-1">
                               Recommended
@@ -153,13 +154,15 @@ export function ComparisonTable() {
                       {comparisonData.map((row, index) => (
                         <motion.tr
                           key={index}
-                          className={`border-b border-border/50 ${index % 2 === 0 ? "bg-background" : "bg-muted/20"}`}
+                          className={`border-b border-border/50 ${
+                            index % 2 === 0 ? 'bg-background' : 'bg-muted/20'
+                          }`}
                           initial={{ opacity: 0, x: -20 }}
                           whileInView={{ opacity: 1, x: 0 }}
                           viewport={{ once: true, amount: 0.5 }}
                           transition={{ delay: index * 0.05, duration: 0.4 }}
                           whileHover={{
-                            backgroundColor: "hsl(var(--muted) / 0.4)",
+                            backgroundColor: 'hsl(var(--muted) / 0.4)',
                           }}
                         >
                           <td className="p-4 font-medium">{row.feature}</td>

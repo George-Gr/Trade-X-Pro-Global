@@ -1,8 +1,8 @@
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowRight } from "lucide-react";
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ArrowRight } from 'lucide-react';
 import {
   Form,
   FormField,
@@ -10,17 +10,17 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import type { RegistrationFormData } from "./MultiStepRegistration";
+} from '@/components/ui/form';
+import type { RegistrationFormData } from './MultiStepRegistration';
 type StepOneFormValues = Pick<
   RegistrationFormData,
-  | "firstName"
-  | "lastName"
-  | "email"
-  | "phone"
-  | "address"
-  | "password"
-  | "confirmPassword"
+  | 'firstName'
+  | 'lastName'
+  | 'email'
+  | 'phone'
+  | 'address'
+  | 'password'
+  | 'confirmPassword'
 >;
 
 interface StepOneProps {
@@ -51,7 +51,7 @@ const StepOne: React.FC<StepOneProps> = ({
     watch,
     formState: { errors },
   } = form;
-  const password = watch("password");
+  const password = watch('password');
 
   const onSubmit = (data: StepOneFormValues) => {
     updateFormData(data);
@@ -59,7 +59,7 @@ const StepOne: React.FC<StepOneProps> = ({
   };
 
   const inputClass =
-    "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20";
+    'bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20';
 
   return (
     <Form {...form}>
@@ -68,7 +68,7 @@ const StepOne: React.FC<StepOneProps> = ({
           <FormField
             control={form.control}
             name="firstName"
-            rules={{ required: "First name is required" }}
+            rules={{ required: 'First name is required' }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-primary-foreground">
@@ -85,7 +85,7 @@ const StepOne: React.FC<StepOneProps> = ({
           <FormField
             control={form.control}
             name="lastName"
-            rules={{ required: "Last name is required" }}
+            rules={{ required: 'Last name is required' }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-primary-foreground">
@@ -104,10 +104,10 @@ const StepOne: React.FC<StepOneProps> = ({
           control={form.control}
           name="email"
           rules={{
-            required: "Email is required",
+            required: 'Email is required',
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Please enter a valid email address",
+              message: 'Please enter a valid email address',
             },
           }}
           render={({ field }) => (
@@ -131,7 +131,7 @@ const StepOne: React.FC<StepOneProps> = ({
         <FormField
           control={form.control}
           name="phone"
-          rules={{ required: "Phone number is required" }}
+          rules={{ required: 'Phone number is required' }}
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-primary-foreground">
@@ -153,7 +153,7 @@ const StepOne: React.FC<StepOneProps> = ({
         <FormField
           control={form.control}
           name="address"
-          rules={{ required: "Address is required" }}
+          rules={{ required: 'Address is required' }}
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-primary-foreground">Address</FormLabel>
@@ -173,14 +173,14 @@ const StepOne: React.FC<StepOneProps> = ({
           control={form.control}
           name="password"
           rules={{
-            required: "Password is required",
+            required: 'Password is required',
             minLength: {
               value: 8,
-              message: "Password must be at least 8 characters",
+              message: 'Password must be at least 8 characters',
             },
             pattern: {
               value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-              message: "Password must contain uppercase, lowercase, and number",
+              message: 'Password must contain uppercase, lowercase, and number',
             },
           }}
           render={({ field }) => (
@@ -205,8 +205,8 @@ const StepOne: React.FC<StepOneProps> = ({
           control={form.control}
           name="confirmPassword"
           rules={{
-            required: "Please confirm your password",
-            validate: (value) => value === password || "Passwords do not match",
+            required: 'Please confirm your password',
+            validate: (value) => value === password || 'Passwords do not match',
           }}
           render={({ field }) => (
             <FormItem>

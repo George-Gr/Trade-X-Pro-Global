@@ -3,12 +3,12 @@
  * Wraps routes that require specific user roles
  */
 
-import * as React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useRoleGuard } from "@/hooks/useRoleGuard";
-import { Loader2 } from "lucide-react";
+import * as React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useRoleGuard } from '@/hooks/useRoleGuard';
+import { Loader2 } from 'lucide-react';
 
-type AppRole = "admin" | "user";
+type AppRole = 'admin' | 'user';
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ interface RoleGuardProps {
 export function RoleGuard({
   children,
   requiredRole,
-  redirectTo = "/dashboard",
+  redirectTo = '/dashboard',
   fallback,
 }: RoleGuardProps) {
   const location = useLocation();
@@ -52,7 +52,7 @@ export function RoleGuard({
     return (
       <Navigate
         to="/login"
-        state={{ from: location, error: "Authentication required" }}
+        state={{ from: location, error: 'Authentication required' }}
         replace
       />
     );
@@ -63,7 +63,7 @@ export function RoleGuard({
     return (
       <Navigate
         to={redirectTo}
-        state={{ from: location, error: "Insufficient permissions" }}
+        state={{ from: location, error: 'Insufficient permissions' }}
         replace
       />
     );
@@ -77,9 +77,9 @@ export function RoleGuard({
  */
 export function AdminGuard({
   children,
-  redirectTo = "/dashboard",
+  redirectTo = '/dashboard',
   fallback,
-}: Omit<RoleGuardProps, "requiredRole">) {
+}: Omit<RoleGuardProps, 'requiredRole'>) {
   return (
     <RoleGuard requiredRole="admin" redirectTo={redirectTo} fallback={fallback}>
       {children}
@@ -92,9 +92,9 @@ export function AdminGuard({
  */
 export function UserGuard({
   children,
-  redirectTo = "/login",
+  redirectTo = '/login',
   fallback,
-}: Omit<RoleGuardProps, "requiredRole">) {
+}: Omit<RoleGuardProps, 'requiredRole'>) {
   return (
     <RoleGuard requiredRole="user" redirectTo={redirectTo} fallback={fallback}>
       {children}

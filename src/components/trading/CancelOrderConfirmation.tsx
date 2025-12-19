@@ -6,16 +6,16 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Loader2, AlertTriangle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { formatToastError } from "@/lib/errorMessageService";
+} from '@/components/ui/alert-dialog';
+import { Loader2, AlertTriangle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { formatToastError } from '@/lib/errorMessageService';
 
 export interface Order {
   id: string;
   symbol: string;
-  type: "market" | "limit" | "stop" | "stop_limit" | "trailing_stop";
-  side: "buy" | "sell";
+  type: 'market' | 'limit' | 'stop' | 'stop_limit' | 'trailing_stop';
+  side: 'buy' | 'sell';
   quantity: number;
   filled_quantity: number;
   price?: number;
@@ -68,17 +68,17 @@ export const CancelOrderConfirmation = ({
         onCancel();
       }
     } catch (err) {
-      const actionableError = formatToastError(err, "order_submission");
+      const actionableError = formatToastError(err, 'order_submission');
       toast({
         ...actionableError,
-        variant: actionableError.variant as "default" | "destructive",
+        variant: actionableError.variant as 'default' | 'destructive',
       });
     }
   };
 
   const remainingQuantity = order.quantity - order.filled_quantity;
   const isMostlyFilled = order.filled_quantity > order.quantity * 0.75;
-  const sideColor = order.side === "buy" ? "text-buy" : "text-sell";
+  const sideColor = order.side === 'buy' ? 'text-buy' : 'text-sell';
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onCancel}>
@@ -123,7 +123,7 @@ export const CancelOrderConfirmation = ({
               Type
             </span>
             <span className="text-sm font-semibold text-foreground">
-              {order.type.replace("_", " ").toUpperCase()}
+              {order.type.replace('_', ' ').toUpperCase()}
             </span>
           </div>
 
@@ -161,13 +161,13 @@ export const CancelOrderConfirmation = ({
             <p className="text-xs text-blue-700">
               <strong>Note:</strong> This order is mostly filled (
               {((order.filled_quantity / order.quantity) * 100).toFixed(0)}%).
-              Cancelling will only affect the remaining {remainingQuantity}{" "}
+              Cancelling will only affect the remaining {remainingQuantity}{' '}
               units.
             </p>
           </div>
         )}
 
-        {order.status === "partially_filled" && (
+        {order.status === 'partially_filled' && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-xs text-amber-700">
               <strong>Partial Fill:</strong> Existing filled quantity will
@@ -190,7 +190,7 @@ export const CancelOrderConfirmation = ({
                 Cancelling...
               </>
             ) : (
-              "Cancel Order"
+              'Cancel Order'
             )}
           </AlertDialogAction>
         </div>

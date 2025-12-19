@@ -1,7 +1,7 @@
-import { useEffect, useRef, memo, useState, useCallback } from "react";
-import { initTradingViewCompatibility } from "@/lib/tradingViewCompatibility";
-import { useDebouncedChartUpdate } from "@/hooks/useDebouncedChartUpdate";
-import { ProgressiveDataLoader } from "@/lib/chartPerformance";
+import { useEffect, useRef, memo, useState, useCallback } from 'react';
+import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
+import { useDebouncedChartUpdate } from '@/hooks/useDebouncedChartUpdate';
+import { ProgressiveDataLoader } from '@/lib/chartPerformance';
 
 interface TradingViewConfig {
   width: string;
@@ -36,49 +36,49 @@ const TradingViewWatchlist = () => {
     initTradingViewCompatibility();
 
     const container = containerRef.current;
-    container.textContent = "";
+    container.textContent = '';
 
     // Progressive loading configuration
     const config: TradingViewConfig = {
-      width: "100%",
-      height: "100%",
+      width: '100%',
+      height: '100%',
       symbolsGroups: [
         {
-          name: "Forex",
-          originalName: "Forex",
+          name: 'Forex',
+          originalName: 'Forex',
           symbols: [
-            { name: "FX:EURUSD", displayName: "EUR/USD" },
-            { name: "FX:GBPUSD", displayName: "GBP/USD" },
-            { name: "FX:USDJPY", displayName: "USD/JPY" },
-            { name: "FX:AUDUSD", displayName: "AUD/USD" },
+            { name: 'FX:EURUSD', displayName: 'EUR/USD' },
+            { name: 'FX:GBPUSD', displayName: 'GBP/USD' },
+            { name: 'FX:USDJPY', displayName: 'USD/JPY' },
+            { name: 'FX:AUDUSD', displayName: 'AUD/USD' },
           ],
         },
         {
-          name: "Stocks",
-          originalName: "Stocks",
+          name: 'Stocks',
+          originalName: 'Stocks',
           symbols: [
-            { name: "NASDAQ:AAPL", displayName: "Apple" },
-            { name: "NASDAQ:TSLA", displayName: "Tesla" },
-            { name: "NASDAQ:GOOGL", displayName: "Alphabet" },
-            { name: "NASDAQ:MSFT", displayName: "Microsoft" },
+            { name: 'NASDAQ:AAPL', displayName: 'Apple' },
+            { name: 'NASDAQ:TSLA', displayName: 'Tesla' },
+            { name: 'NASDAQ:GOOGL', displayName: 'Alphabet' },
+            { name: 'NASDAQ:MSFT', displayName: 'Microsoft' },
           ],
         },
         {
-          name: "Crypto",
-          originalName: "Crypto",
+          name: 'Crypto',
+          originalName: 'Crypto',
           symbols: [
-            { name: "BINANCE:BTCUSDT", displayName: "Bitcoin" },
-            { name: "BINANCE:ETHUSDT", displayName: "Ethereum" },
-            { name: "BINANCE:BNBUSDT", displayName: "BNB" },
-            { name: "BINANCE:SOLUSDT", displayName: "Solana" },
+            { name: 'BINANCE:BTCUSDT', displayName: 'Bitcoin' },
+            { name: 'BINANCE:ETHUSDT', displayName: 'Ethereum' },
+            { name: 'BINANCE:BNBUSDT', displayName: 'BNB' },
+            { name: 'BINANCE:SOLUSDT', displayName: 'Solana' },
           ],
         },
       ],
       showSymbolLogo: true,
       isTransparent: false,
-      colorTheme: "dark",
-      locale: "en",
-      backgroundColor: "hsl(var(--card))",
+      colorTheme: 'dark',
+      locale: 'en',
+      backgroundColor: 'hsl(var(--card))',
     };
 
     // Use progressive loading for symbols
@@ -90,12 +90,12 @@ const TradingViewWatchlist = () => {
         if (isComplete) {
           setIsLoading(false);
         }
-      },
+      }
     );
 
-    const script = document.createElement("script");
+    const script = document.createElement('script');
     script.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
+      'https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js';
     script.async = true;
     script.defer = true; // Load after page is ready
 
@@ -118,7 +118,7 @@ const TradingViewWatchlist = () => {
 
     return () => {
       if (container) {
-        container.textContent = "";
+        container.textContent = '';
       }
       loader.reset();
     };
@@ -129,7 +129,7 @@ const TradingViewWatchlist = () => {
     useCallback(() => {
       initializeTradingView();
     }, [initializeTradingView]),
-    { delay: 300 },
+    { delay: 300 }
   );
 
   const checkVisibility = useCallback(() => {
@@ -152,8 +152,8 @@ const TradingViewWatchlist = () => {
     const handleResize = () => checkVisibility();
 
     // Use passive listeners for better performance
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
 
     // Initial check
     const observer = new IntersectionObserver(
@@ -163,7 +163,7 @@ const TradingViewWatchlist = () => {
           debouncedUpdate();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.1 }
     );
 
     if (containerRef.current) {
@@ -171,8 +171,8 @@ const TradingViewWatchlist = () => {
     }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       observer.disconnect();
     };
   }, [checkVisibility, debouncedUpdate]);
@@ -182,7 +182,7 @@ const TradingViewWatchlist = () => {
     const container = containerRef.current;
     return () => {
       if (container) {
-        container.textContent = "";
+        container.textContent = '';
       }
     };
   }, []);

@@ -1,24 +1,24 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Save, Trash2, Bookmark } from "lucide-react";
-import { useOrderTemplates, OrderTemplate } from "@/hooks/useOrderTemplates";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/select';
+import { Save, Trash2, Bookmark } from 'lucide-react';
+import { useOrderTemplates, OrderTemplate } from '@/hooks/useOrderTemplates';
+import { Badge } from '@/components/ui/badge';
 
 interface OrderTemplatesDialogProps {
   onApplyTemplate?: (template: OrderTemplate) => void;
@@ -38,7 +38,7 @@ export const OrderTemplatesDialog = ({
 }: OrderTemplatesDialogProps) => {
   const [open, setOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [templateName, setTemplateName] = useState("");
+  const [templateName, setTemplateName] = useState('');
   const { templates, isLoading, createTemplate, deleteTemplate } =
     useOrderTemplates();
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
@@ -49,7 +49,7 @@ export const OrderTemplatesDialog = ({
     await createTemplate({
       name: templateName,
       symbol: currentValues.symbol,
-      order_type: currentValues.order_type as OrderTemplate["order_type"],
+      order_type: currentValues.order_type as OrderTemplate['order_type'],
       volume: parseFloat(currentValues.volume),
       leverage: parseFloat(currentValues.leverage),
       stop_loss: currentValues.stopLoss
@@ -61,7 +61,7 @@ export const OrderTemplatesDialog = ({
       is_default: false,
     });
 
-    setTemplateName("");
+    setTemplateName('');
     setIsCreating(false);
   };
 
@@ -168,7 +168,7 @@ export const OrderTemplatesDialog = ({
                         )}
                       </div>
                       <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
-                        <div>Symbol: {template.symbol || "Any"}</div>
+                        <div>Symbol: {template.symbol || 'Any'}</div>
                         <div>Type: {template.order_type}</div>
                         <div>Volume: {template.volume} lots</div>
                         <div>Leverage: 1:{template.leverage}</div>

@@ -1,24 +1,24 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Bell } from "lucide-react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
+} from '@/components/ui/select';
+import { Bell } from 'lucide-react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
 
 interface PriceAlertDialogProps {
   symbol: string;
@@ -32,8 +32,8 @@ export const PriceAlertDialog = ({
   onAlertCreated,
 }: PriceAlertDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [targetPrice, setTargetPrice] = useState("");
-  const [condition, setCondition] = useState<"above" | "below">("above");
+  const [targetPrice, setTargetPrice] = useState('');
+  const [condition, setCondition] = useState<'above' | 'below'>('above');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -44,9 +44,9 @@ export const PriceAlertDialog = ({
 
       if (isNaN(price) || price <= 0) {
         toast({
-          title: "Invalid price",
-          description: "Please enter a valid target price.",
-          variant: "destructive",
+          title: 'Invalid price',
+          description: 'Please enter a valid target price.',
+          variant: 'destructive',
         });
         return;
       }
@@ -54,9 +54,9 @@ export const PriceAlertDialog = ({
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      if (!user) throw new Error('Not authenticated');
 
-      const { error } = await supabase.from("price_alerts").insert({
+      const { error } = await supabase.from('price_alerts').insert({
         user_id: user.id,
         symbol,
         target_price: price,
@@ -66,19 +66,19 @@ export const PriceAlertDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Price alert created",
-        description: `You'll be notified when ${symbol} ${condition === "above" ? "rises above" : "falls below"} ${price.toFixed(5)}.`,
+        title: 'Price alert created',
+        description: `You'll be notified when ${symbol} ${condition === 'above' ? 'rises above' : 'falls below'} ${price.toFixed(5)}.`,
       });
 
       setOpen(false);
-      setTargetPrice("");
+      setTargetPrice('');
       if (onAlertCreated) onAlertCreated();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error creating alert",
+        title: 'Error creating alert',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
@@ -105,7 +105,7 @@ export const PriceAlertDialog = ({
             <Label>Condition</Label>
             <Select
               value={condition}
-              onValueChange={(v) => setCondition(v as "above" | "below")}
+              onValueChange={(v) => setCondition(v as 'above' | 'below')}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -131,7 +131,7 @@ export const PriceAlertDialog = ({
             disabled={isSubmitting}
             className="w-full"
           >
-            {isSubmitting ? "Creating..." : "Create Alert"}
+            {isSubmitting ? 'Creating...' : 'Create Alert'}
           </Button>
         </div>
       </DialogContent>

@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { FolderPlus } from "lucide-react";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { FolderPlus } from 'lucide-react';
 
 interface CreateWatchlistDialogProps {
   onCreateWatchlist: (name: string) => Promise<void>;
@@ -25,7 +25,7 @@ const CreateWatchlistDialog = ({
   onCreateWatchlist,
 }: CreateWatchlistDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreate = async () => {
@@ -33,7 +33,7 @@ const CreateWatchlistDialog = ({
       setIsLoading(true);
       try {
         await onCreateWatchlist(name);
-        setName("");
+        setName('');
         setOpen(false);
       } finally {
         setIsLoading(false);
@@ -60,7 +60,7 @@ const CreateWatchlistDialog = ({
               placeholder="e.g., Forex Pairs"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+              onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
               disabled={isLoading}
             />
           </div>
@@ -69,7 +69,7 @@ const CreateWatchlistDialog = ({
             className="w-full"
             disabled={isLoading || !name.trim()}
           >
-            {isLoading ? "Creating..." : "Create Watchlist"}
+            {isLoading ? 'Creating...' : 'Create Watchlist'}
           </Button>
         </div>
       </DialogContent>

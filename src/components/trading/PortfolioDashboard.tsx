@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { Card } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, PieChart } from "lucide-react";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
+import { useMemo } from 'react';
+import { Card } from '@/components/ui/card';
+import { TrendingUp, TrendingDown, PieChart } from 'lucide-react';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
 
 interface PortfolioDashboardProps {
   userId?: string;
@@ -59,7 +59,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
       const posValue = currentPrice * pos.quantity * 100000;
       const entryValue = entryPrice * pos.quantity * 100000;
       const pnl =
-        pos.side === "buy" ? posValue - entryValue : entryValue - posValue;
+        pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
       return sum + pnl;
     }, 0);
 
@@ -125,7 +125,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
   const performanceMetrics = useMemo(() => {
     const returns = (positions || []).map((pos) => {
       const pnl =
-        pos.side === "buy"
+        pos.side === 'buy'
           ? (pos.current_price - pos.entry_price) / pos.entry_price
           : (pos.entry_price - pos.current_price) / pos.entry_price;
       return pnl;
@@ -214,10 +214,10 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
               )}
               <p
                 className={`text-2xl font-bold font-mono ${
-                  metrics.totalPnL >= 0 ? "text-profit" : "text-loss"
+                  metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'
                 }`}
               >
-                {metrics.totalPnL >= 0 ? "+" : ""}
+                {metrics.totalPnL >= 0 ? '+' : ''}
                 {metrics.totalPnL.toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                 })}
@@ -225,7 +225,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
             </div>
             <p
               className={`text-xs font-semibold ${
-                metrics.roi >= 0 ? "text-profit" : "text-loss"
+                metrics.roi >= 0 ? 'text-profit' : 'text-loss'
               }`}
             >
               ROI: {metrics.roi.toFixed(2)}%
@@ -235,7 +235,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
 
         {/* Margin Status */}
         <Card
-          className={`p-4 ${metrics.marginLevel > 80 ? "border-yellow-500/30 bg-background/5" : "bg-card"}`}
+          className={`p-4 ${metrics.marginLevel > 80 ? 'border-yellow-500/30 bg-background/5' : 'bg-card'}`}
         >
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Margin Level</p>
@@ -246,10 +246,10 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
               <div
                 className={`h-full transition-colors ${
                   metrics.marginLevel > 90
-                    ? "bg-loss"
+                    ? 'bg-loss'
                     : metrics.marginLevel > 80
-                      ? "bg-background"
-                      : "bg-profit"
+                      ? 'bg-background'
+                      : 'bg-profit'
                 }`}
                 style={{ width: `${Math.min(metrics.marginLevel, 100)}%` }}
               />
@@ -278,7 +278,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 (
                   (metrics.totalAvailableMargin / metrics.totalBalance) *
                   100
-                ).toFixed(1) + "% available"}
+                ).toFixed(1) + '% available'}
             </p>
           </div>
         </Card>
@@ -295,9 +295,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 Unrealized P&L
               </span>
               <span
-                className={`font-semibold ${metrics.unrealizedPnL >= 0 ? "text-profit" : "text-loss"}`}
+                className={`font-semibold ${metrics.unrealizedPnL >= 0 ? 'text-profit' : 'text-loss'}`}
               >
-                {metrics.unrealizedPnL >= 0 ? "+" : ""}$
+                {metrics.unrealizedPnL >= 0 ? '+' : ''}$
                 {metrics.unrealizedPnL.toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                 })}
@@ -308,9 +308,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 Realized P&L
               </span>
               <span
-                className={`font-semibold ${metrics.realizedPnL >= 0 ? "text-profit" : "text-loss"}`}
+                className={`font-semibold ${metrics.realizedPnL >= 0 ? 'text-profit' : 'text-loss'}`}
               >
-                {metrics.realizedPnL >= 0 ? "+" : ""}$
+                {metrics.realizedPnL >= 0 ? '+' : ''}$
                 {metrics.realizedPnL.toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                 })}
@@ -319,9 +319,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
             <div className="border-t border-border pt-4 flex items-center justify-between">
               <span className="text-sm font-semibold">Total P&L</span>
               <span
-                className={`font-bold text-lg ${metrics.totalPnL >= 0 ? "text-profit" : "text-loss"}`}
+                className={`font-bold text-lg ${metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}
               >
-                {metrics.totalPnL >= 0 ? "+" : ""}$
+                {metrics.totalPnL >= 0 ? '+' : ''}$
                 {metrics.totalPnL.toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                 })}
@@ -339,13 +339,13 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
               <span className="font-semibold">
                 {performanceMetrics.totalTrades > 0
                   ? `${performanceMetrics.winRate}/${performanceMetrics.totalTrades}`
-                  : "-"}
+                  : '-'}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Avg Return</span>
               <span
-                className={`font-semibold ${performanceMetrics.avgReturn >= 0 ? "text-profit" : "text-loss"}`}
+                className={`font-semibold ${performanceMetrics.avgReturn >= 0 ? 'text-profit' : 'text-loss'}`}
               >
                 {performanceMetrics.avgReturn.toFixed(2)}%
               </span>
@@ -414,7 +414,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                         const entryValue =
                           pos.entry_price * pos.quantity * 100000;
                         const pnl =
-                          pos.side === "buy"
+                          pos.side === 'buy'
                             ? posValue - entryValue
                             : entryValue - posValue;
                         const roi =
@@ -442,20 +442,20 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                             <td className="text-right font-mono text-xs">
                               {pos.current_price
                                 ? pos.current_price.toFixed(5)
-                                : "0.00000"}
+                                : '0.00000'}
                             </td>
                             <td
-                              className={`text-right font-mono text-xs font-semibold ${pnl >= 0 ? "text-profit" : "text-loss"}`}
+                              className={`text-right font-mono text-xs font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}
                             >
-                              {pnl >= 0 ? "+" : ""}
+                              {pnl >= 0 ? '+' : ''}
                               {pnl.toLocaleString(undefined, {
                                 maximumFractionDigits: 2,
                               })}
                             </td>
                             <td
-                              className={`text-right font-mono text-xs font-semibold ${roi >= 0 ? "text-profit" : "text-loss"}`}
+                              className={`text-right font-mono text-xs font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}
                             >
-                              {roi >= 0 ? "+" : ""}
+                              {roi >= 0 ? '+' : ''}
                               {roi.toFixed(2)}%
                             </td>
                           </tr>
@@ -471,7 +471,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                     const posValue = pos.current_price * pos.quantity * 100000;
                     const entryValue = pos.entry_price * pos.quantity * 100000;
                     const pnl =
-                      pos.side === "buy"
+                      pos.side === 'buy'
                         ? posValue - entryValue
                         : entryValue - posValue;
                     const roi = entryValue > 0 ? (pnl / entryValue) * 100 : 0;
@@ -486,7 +486,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                             {pos.symbol}
                           </h4>
                           <span
-                            className={`text-xs px-2 py-1 rounded ${pos.side === "buy" ? "bg-buy/20 text-buy" : "bg-sell/20 text-sell"}`}
+                            className={`text-xs px-2 py-1 rounded ${pos.side === 'buy' ? 'bg-buy/20 text-buy' : 'bg-sell/20 text-sell'}`}
                           >
                             {pos.side.toUpperCase()}
                           </span>
@@ -513,23 +513,23 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                             <p className="font-mono font-semibold">
                               {pos.current_price
                                 ? pos.current_price.toFixed(5)
-                                : "0.00000"}
+                                : '0.00000'}
                             </p>
                           </div>
                           <div>
                             <span className="text-muted-foreground">ROI:</span>
                             <p
-                              className={`font-mono font-semibold ${roi >= 0 ? "text-profit" : "text-loss"}`}
+                              className={`font-mono font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}
                             >
-                              {roi >= 0 ? "+" : ""}
+                              {roi >= 0 ? '+' : ''}
                               {roi.toFixed(2)}%
                             </p>
                           </div>
                         </div>
                         <div
-                          className={`pt-2 border-t text-sm font-semibold ${pnl >= 0 ? "text-profit" : "text-loss"}`}
+                          className={`pt-2 border-t text-sm font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}
                         >
-                          P&L: {pnl >= 0 ? "+" : ""}
+                          P&L: {pnl >= 0 ? '+' : ''}
                           {pnl.toLocaleString(undefined, {
                             maximumFractionDigits: 2,
                           })}
@@ -567,7 +567,7 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                   </div>
                   <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
                     <div
-                      className={asset.side === "buy" ? "bg-profit" : "bg-loss"}
+                      className={asset.side === 'buy' ? 'bg-profit' : 'bg-loss'}
                       style={{ width: `${Math.min(asset.percentage, 100)}%` }}
                     />
                   </div>

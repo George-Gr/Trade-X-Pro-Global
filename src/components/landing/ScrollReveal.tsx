@@ -1,20 +1,20 @@
-import * as React from "react";
-import { motion, useInView, Variants } from "framer-motion";
+import * as React from 'react';
+import { motion, useInView, Variants } from 'framer-motion';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
   duration?: number;
-  direction?: "up" | "down" | "left" | "right" | "none";
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
   distance?: number;
   once?: boolean;
   threshold?: number;
 }
 
 const getVariants = (
-  direction: "up" | "down" | "left" | "right" | "none",
-  distance: number,
+  direction: 'up' | 'down' | 'left' | 'right' | 'none',
+  distance: number
 ): Variants => {
   const directions = {
     up: { y: distance },
@@ -39,10 +39,10 @@ const getVariants = (
 
 export function ScrollReveal({
   children,
-  className = "",
+  className = '',
   delay = 0,
   duration = 0.6,
-  direction = "up",
+  direction = 'up',
   distance = 40,
   once = true,
   threshold = 0.2,
@@ -59,7 +59,7 @@ export function ScrollReveal({
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={isInView ? 'visible' : 'hidden'}
       variants={variants}
       transition={{
         duration: animationDuration,
@@ -84,7 +84,7 @@ interface StaggerContainerProps {
 
 export function StaggerContainer({
   children,
-  className = "",
+  className = '',
   staggerDelay = 0.1,
   once = true,
   threshold = 0.1,
@@ -107,7 +107,7 @@ export function StaggerContainer({
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={isInView ? 'visible' : 'hidden'}
       variants={containerVariants}
       className={className}
     >
@@ -120,14 +120,14 @@ export function StaggerContainer({
 interface StaggerItemProps {
   children: React.ReactNode;
   className?: string;
-  direction?: "up" | "down" | "left" | "right" | "none";
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
   distance?: number;
 }
 
 export function StaggerItem({
   children,
-  className = "",
-  direction = "up",
+  className = '',
+  direction = 'up',
   distance = 30,
 }: StaggerItemProps) {
   const variants = getVariants(direction, distance);
@@ -164,7 +164,7 @@ export function AnimatedSectionHeader({
   title,
   subtitle,
   description,
-  className = "",
+  className = '',
 }: AnimatedSectionHeaderProps) {
   return (
     <div className={`text-center mb-16 ${className}`}>

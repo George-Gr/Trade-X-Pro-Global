@@ -1,7 +1,7 @@
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import {
   Form,
   FormField,
@@ -9,23 +9,23 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import type { RegistrationFormData } from "./MultiStepRegistration";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import type { RegistrationFormData } from './MultiStepRegistration';
 type StepTwoFormValues = Pick<
   RegistrationFormData,
-  | "tradingExperience"
-  | "occupation"
-  | "financialCapability"
-  | "reasonForJoining"
-  | "tradingGoals"
+  | 'tradingExperience'
+  | 'occupation'
+  | 'financialCapability'
+  | 'reasonForJoining'
+  | 'tradingGoals'
 >;
 
 interface StepTwoProps {
@@ -61,9 +61,9 @@ const StepTwo: React.FC<StepTwoProps> = ({
   };
 
   const selectClass =
-    "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground";
+    'bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground';
   const textareaClass =
-    "bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20 min-h-[80px]";
+    'bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:border-gold focus:ring-gold/20 min-h-[80px]';
 
   return (
     <Form {...form}>
@@ -71,7 +71,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
         <FormField
           control={form.control}
           name="tradingExperience"
-          rules={{ required: "Please select your trading experience" }}
+          rules={{ required: 'Please select your trading experience' }}
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-primary-foreground">
@@ -105,7 +105,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
         <FormField
           control={form.control}
           name="occupation"
-          rules={{ required: "Please select your occupation" }}
+          rules={{ required: 'Please select your occupation' }}
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-primary-foreground">
@@ -135,7 +135,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
         <FormField
           control={form.control}
           name="financialCapability"
-          rules={{ required: "Please select your financial capability" }}
+          rules={{ required: 'Please select your financial capability' }}
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-primary-foreground">
@@ -186,7 +186,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
         <FormField
           control={form.control}
           name="tradingGoals"
-          rules={{ required: "Please share your trading goals" }}
+          rules={{ required: 'Please share your trading goals' }}
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-primary-foreground">

@@ -1,7 +1,7 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import WatchlistRow from "./WatchlistRow";
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import WatchlistRow from './WatchlistRow';
 
 interface WatchlistItem {
   id: string;
@@ -11,15 +11,15 @@ interface WatchlistItem {
 interface WatchlistItemsProps {
   items: WatchlistItem[];
   getPrice: (
-    symbol: string,
+    symbol: string
   ) =>
     | { currentPrice: number; change: number; changePercent: number }
     | undefined;
   onSymbolClick: (symbol: string) => void;
   onQuickTrade: (
     symbol: string,
-    side: "buy" | "sell",
-    e: React.MouseEvent,
+    side: 'buy' | 'sell',
+    e: React.MouseEvent
   ) => void;
   onRemoveSymbol: (itemId: string, e: React.MouseEvent) => void;
   onAddSymbolClick: () => void;

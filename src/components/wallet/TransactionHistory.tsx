@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { format } from 'date-fns';
 import {
   ArrowUpRight,
   ArrowDownRight,
@@ -16,7 +16,7 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -64,33 +64,33 @@ export function TransactionHistory({
       string,
       {
         label: string;
-        variant: "default" | "secondary" | "destructive" | "outline";
+        variant: 'default' | 'secondary' | 'destructive' | 'outline';
         icon: React.ReactNode;
       }
     > = {
       pending: {
-        label: "Pending",
-        variant: "secondary",
+        label: 'Pending',
+        variant: 'secondary',
         icon: <Clock className="h-3 w-3 mr-2" />,
       },
       confirming: {
-        label: "Confirming",
-        variant: "default",
+        label: 'Confirming',
+        variant: 'default',
         icon: <AlertCircle className="h-3 w-3 mr-2" />,
       },
       completed: {
-        label: "Completed",
-        variant: "default",
+        label: 'Completed',
+        variant: 'default',
         icon: <CheckCircle2 className="h-3 w-3 mr-2" />,
       },
       failed: {
-        label: "Failed",
-        variant: "destructive",
+        label: 'Failed',
+        variant: 'destructive',
         icon: <XCircle className="h-3 w-3 mr-2" />,
       },
       expired: {
-        label: "Expired",
-        variant: "outline",
+        label: 'Expired',
+        variant: 'outline',
         icon: <XCircle className="h-3 w-3 mr-2" />,
       },
     };
@@ -123,7 +123,7 @@ export function TransactionHistory({
           <TableRow key={transaction.id}>
             <TableCell>
               <div className="flex items-center gap-4">
-                {transaction.transaction_type === "deposit" ? (
+                {transaction.transaction_type === 'deposit' ? (
                   <ArrowDownRight className="h-4 w-4 text-buy" />
                 ) : (
                   <ArrowUpRight className="h-4 w-4 text-sell" />
@@ -142,14 +142,14 @@ export function TransactionHistory({
               {transaction.amount.toFixed(8)}
             </TableCell>
             <TableCell>
-              ${transaction.usd_amount?.toFixed(2) || "0.00"}
+              ${transaction.usd_amount?.toFixed(2) || '0.00'}
             </TableCell>
             <TableCell>{getStatusBadge(transaction.status)}</TableCell>
             <TableCell>
               <Badge variant="outline">{transaction.confirmations}/3</Badge>
             </TableCell>
             <TableCell className="text-muted-foreground text-sm">
-              {format(new Date(transaction.created_at), "MMM dd, yyyy HH:mm")}
+              {format(new Date(transaction.created_at), 'MMM dd, yyyy HH:mm')}
             </TableCell>
           </TableRow>
         ))}

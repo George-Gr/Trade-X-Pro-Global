@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
-} from "react-router-dom";
-import { cn } from "@/lib/utils";
-import buttonVariants from "./buttonVariants";
-import { VariantProps } from "class-variance-authority";
+} from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import buttonVariants from './buttonVariants';
+import { VariantProps } from 'class-variance-authority';
 
 export interface LinkProps
   extends
-    Omit<RouterLinkProps, "to">,
-    Omit<VariantProps<typeof buttonVariants>, "variant"> {
+    Omit<RouterLinkProps, 'to'>,
+    Omit<VariantProps<typeof buttonVariants>, 'variant'> {
   to: string;
   external?: boolean;
   className?: string;
@@ -30,7 +30,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       return (
         <a
           href={to}
-          className={cn(buttonVariants({ variant: "link", size, className }))}
+          className={cn(buttonVariants({ variant: 'link', size, className }))}
           target="_blank"
           rel="noopener noreferrer"
           ref={ref}
@@ -44,16 +44,16 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     return (
       <RouterLink
         to={to}
-        className={cn(buttonVariants({ variant: "link", size, className }))}
+        className={cn(buttonVariants({ variant: 'link', size, className }))}
         ref={ref}
         {...props}
       >
         {children}
       </RouterLink>
     );
-  },
+  }
 );
 
-Link.displayName = "Link";
+Link.displayName = 'Link';
 
 export { Link };

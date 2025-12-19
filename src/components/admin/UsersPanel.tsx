@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { Button } from "@/components/ui/button";
-import { LoadingButton } from "@/components/ui/LoadingButton";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { Button } from '@/components/ui/button';
+import { LoadingButton } from '@/components/ui/LoadingButton';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -21,8 +21,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   DollarSign,
   Eye,
@@ -31,8 +31,8 @@ import {
   User,
   UserPlus,
   Filter,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface UserAccount {
   id: string;
@@ -60,15 +60,15 @@ const FundAccountDialog: React.FC<FundDialogProps> = ({
   onSuccess,
 }) => {
   const { toast } = useToast();
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState('');
   const [isFunding, setIsFunding] = useState(false);
 
   const handleFundAccount = async () => {
     if (!userId || !amount || isNaN(Number(amount))) {
       toast({
-        title: "Invalid amount",
-        description: "Please enter a valid number",
-        variant: "destructive",
+        title: 'Invalid amount',
+        description: 'Please enter a valid number',
+        variant: 'destructive',
       });
       return;
     }
@@ -77,18 +77,18 @@ const FundAccountDialog: React.FC<FundDialogProps> = ({
 
     if (fundAmount <= 0) {
       toast({
-        title: "Invalid amount",
-        description: "Amount must be positive",
-        variant: "destructive",
+        title: 'Invalid amount',
+        description: 'Amount must be positive',
+        variant: 'destructive',
       });
       return;
     }
 
     if (fundAmount > 100000) {
       toast({
-        title: "Amount too large",
-        description: "Maximum funding amount is $100,000 per operation",
-        variant: "destructive",
+        title: 'Amount too large',
+        description: 'Maximum funding amount is $100,000 per operation',
+        variant: 'destructive',
       });
       return;
     }
@@ -98,14 +98,14 @@ const FundAccountDialog: React.FC<FundDialogProps> = ({
 
       // Call secure edge function instead of direct database access
       const { data, error } = await supabase.functions.invoke(
-        "admin-fund-account",
+        'admin-fund-account',
         {
           body: {
             user_id: userId,
             amount: fundAmount,
-            description: "Admin manual funding",
+            description: 'Admin manual funding',
           },
-        },
+        }
       );
 
       if (error) throw error;
@@ -115,18 +115,18 @@ const FundAccountDialog: React.FC<FundDialogProps> = ({
       }
 
       toast({
-        title: "Account Funded",
+        title: 'Account Funded',
         description: `Added $${fundAmount.toFixed(2)} to account`,
       });
 
-      setAmount("");
+      setAmount('');
       onSuccess();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
-        description: message || "Failed to fund account",
-        variant: "destructive",
+        title: 'Error',
+        description: message || 'Failed to fund account',
+        variant: 'destructive',
       });
     } finally {
       setIsFunding(false);
@@ -184,11 +184,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
   const { toast } = useToast();
   const [userAccounts, setUserAccounts] = useState<UserAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [kycFilter, setKycFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("created_at");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [kycFilter, setKycFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('created_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [fundDialog, setFundDialog] = useState<{
     open: boolean;
@@ -204,25 +204,25 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .order(sortBy, { ascending: sortOrder === "asc" });
+        .from('profiles')
+        .select('*')
+        .order(sortBy, { ascending: sortOrder === 'asc' });
 
       if (data && !error) {
         setUserAccounts(data as typeof userAccounts);
       } else if (error) {
         toast({
-          title: "Error",
-          description: "Failed to fetch user accounts",
-          variant: "destructive",
+          title: 'Error',
+          description: 'Failed to fetch user accounts',
+          variant: 'destructive',
         });
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
+        title: 'Error',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -240,15 +240,15 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "User logged out from all devices",
+        title: 'Success',
+        description: 'User logged out from all devices',
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
+        title: 'Error',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -260,55 +260,55 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
         user.full_name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesStatus =
-      statusFilter === "all" || user.account_status === statusFilter;
-    const matchesKyc = kycFilter === "all" || user.kyc_status === kycFilter;
+      statusFilter === 'all' || user.account_status === statusFilter;
+    const matchesKyc = kycFilter === 'all' || user.kyc_status === kycFilter;
 
     return matchesSearch && matchesStatus && matchesKyc;
   });
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
-    if (sortBy === "balance") {
-      return sortOrder === "desc"
+    if (sortBy === 'balance') {
+      return sortOrder === 'desc'
         ? b.balance - a.balance
         : a.balance - b.balance;
     }
-    if (sortBy === "equity") {
-      return sortOrder === "desc" ? b.equity - a.equity : a.equity - b.equity;
+    if (sortBy === 'equity') {
+      return sortOrder === 'desc' ? b.equity - a.equity : a.equity - b.equity;
     }
     return 0;
   });
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
     }).format(amount);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active":
-        return "bg-green-500";
-      case "inactive":
-        return "bg-gray-500";
-      case "suspended":
-        return "bg-red-500";
+      case 'active':
+        return 'bg-green-500';
+      case 'inactive':
+        return 'bg-gray-500';
+      case 'suspended':
+        return 'bg-red-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
   const getKycColor = (status: string) => {
     switch (status) {
-      case "approved":
-        return "bg-green-500";
-      case "rejected":
-        return "bg-red-500";
-      case "pending":
-        return "bg-yellow-500";
+      case 'approved':
+        return 'bg-green-500';
+      case 'rejected':
+        return 'bg-red-500';
+      case 'pending':
+        return 'bg-yellow-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
@@ -392,11 +392,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
-                          setSortBy("full_name");
+                          setSortBy('full_name');
                           setSortOrder(
-                            sortOrder === "desc" && sortBy === "full_name"
-                              ? "asc"
-                              : "desc",
+                            sortOrder === 'desc' && sortBy === 'full_name'
+                              ? 'asc'
+                              : 'desc'
                           );
                         }}
                       >
@@ -405,11 +405,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
-                          setSortBy("email");
+                          setSortBy('email');
                           setSortOrder(
-                            sortOrder === "desc" && sortBy === "email"
-                              ? "asc"
-                              : "desc",
+                            sortOrder === 'desc' && sortBy === 'email'
+                              ? 'asc'
+                              : 'desc'
                           );
                         }}
                       >
@@ -418,11 +418,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50 text-right"
                         onClick={() => {
-                          setSortBy("balance");
+                          setSortBy('balance');
                           setSortOrder(
-                            sortOrder === "desc" && sortBy === "balance"
-                              ? "asc"
-                              : "desc",
+                            sortOrder === 'desc' && sortBy === 'balance'
+                              ? 'asc'
+                              : 'desc'
                           );
                         }}
                       >
@@ -431,11 +431,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50 text-right"
                         onClick={() => {
-                          setSortBy("equity");
+                          setSortBy('equity');
                           setSortOrder(
-                            sortOrder === "desc" && sortBy === "equity"
-                              ? "asc"
-                              : "desc",
+                            sortOrder === 'desc' && sortBy === 'equity'
+                              ? 'asc'
+                              : 'desc'
                           );
                         }}
                       >
@@ -444,11 +444,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => {
-                          setSortBy("created_at");
+                          setSortBy('created_at');
                           setSortOrder(
-                            sortOrder === "desc" && sortBy === "created_at"
-                              ? "asc"
-                              : "desc",
+                            sortOrder === 'desc' && sortBy === 'created_at'
+                              ? 'asc'
+                              : 'desc'
                           );
                         }}
                       >
@@ -463,7 +463,7 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                     {sortedUsers.map((account) => (
                       <TableRow key={account.id} className="hover:bg-muted/50">
                         <TableCell className="font-medium">
-                          {account.full_name || "N/A"}
+                          {account.full_name || 'N/A'}
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground font-mono">
                           {account.email}
@@ -509,7 +509,7 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                               <DollarSign className="h-3 w-3" />
                               Fund
                             </Button>
-                            {account.account_status === "active" && (
+                            {account.account_status === 'active' && (
                               <Button
                                 size="sm"
                                 variant="outline"

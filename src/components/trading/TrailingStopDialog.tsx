@@ -1,23 +1,23 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { TrendingUp } from "lucide-react";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { TrendingUp } from 'lucide-react';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
 
 interface TrailingStopDialogProps {
   positionId: string;
   symbol: string;
-  side: "buy" | "sell";
+  side: 'buy' | 'sell';
   currentPrice: number;
   trailingStopEnabled?: boolean;
   trailingStopDistance?: number;
@@ -34,7 +34,7 @@ export const TrailingStopDialog = ({
   const [open, setOpen] = useState(false);
   const [enabled, setEnabled] = useState(trailingStopEnabled);
   const [distance, setDistance] = useState(
-    trailingStopDistance?.toString() || "0.0010",
+    trailingStopDistance?.toString() || '0.0010'
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -46,9 +46,9 @@ export const TrailingStopDialog = ({
 
       if (enabled && (isNaN(distanceValue) || distanceValue <= 0)) {
         toast({
-          title: "Invalid distance",
-          description: "Please enter a valid trailing stop distance.",
-          variant: "destructive",
+          title: 'Invalid distance',
+          description: 'Please enter a valid trailing stop distance.',
+          variant: 'destructive',
         });
         return;
       }
@@ -66,35 +66,35 @@ export const TrailingStopDialog = ({
 
       // Initialize tracking prices if enabling for the first time
       if (enabled && !trailingStopEnabled) {
-        updates.highest_price = side === "buy" ? currentPrice : null;
-        updates.lowest_price = side === "sell" ? currentPrice : null;
+        updates.highest_price = side === 'buy' ? currentPrice : null;
+        updates.lowest_price = side === 'sell' ? currentPrice : null;
         updates.trailing_stop_price =
-          side === "buy"
+          side === 'buy'
             ? currentPrice - distanceValue
             : currentPrice + distanceValue;
       }
 
       const { error } = await supabase
-        .from("positions")
+        .from('positions')
         .update(updates)
-        .eq("id", positionId);
+        .eq('id', positionId);
 
       if (error) throw error;
 
       toast({
-        title: enabled ? "Trailing stop activated" : "Trailing stop disabled",
+        title: enabled ? 'Trailing stop activated' : 'Trailing stop disabled',
         description: enabled
           ? `Trailing stop will follow price at ${distanceValue.toFixed(5)} distance.`
-          : "Trailing stop has been disabled.",
+          : 'Trailing stop has been disabled.',
       });
 
       setOpen(false);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error updating trailing stop",
+        title: 'Error updating trailing stop',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
@@ -151,9 +151,9 @@ export const TrailingStopDialog = ({
                 <div className="font-semibold">How it works:</div>
                 <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                   <li>
-                    {side === "buy"
-                      ? "As price rises, stop loss moves up to lock in profits"
-                      : "As price falls, stop loss moves down to lock in profits"}
+                    {side === 'buy'
+                      ? 'As price rises, stop loss moves up to lock in profits'
+                      : 'As price falls, stop loss moves down to lock in profits'}
                   </li>
                   <li>Stop loss never moves against you</li>
                   <li>Updates automatically with real-time prices</li>
@@ -167,7 +167,7 @@ export const TrailingStopDialog = ({
             disabled={isSubmitting}
             className="w-full"
           >
-            {isSubmitting ? "Saving..." : "Save Settings"}
+            {isSubmitting ? 'Saving...' : 'Save Settings'}
           </Button>
         </div>
       </DialogContent>

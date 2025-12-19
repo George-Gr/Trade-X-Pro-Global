@@ -1,16 +1,16 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 interface Preferences {
   email_enabled: boolean;
@@ -42,9 +42,9 @@ export function NotificationPreferences() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from("notification_preferences")
-      .select("*")
-      .eq("user_id", user.id)
+      .from('notification_preferences')
+      .select('*')
+      .eq('user_id', user.id)
       .single();
 
     if (!error && data) {
@@ -62,21 +62,21 @@ export function NotificationPreferences() {
     if (!user) return;
 
     const { error } = await supabase
-      .from("notification_preferences")
+      .from('notification_preferences')
       .update({ [key]: value })
-      .eq("user_id", user.id);
+      .eq('user_id', user.id);
 
     if (error) {
       toast({
-        title: "Error",
-        description: "Failed to update preferences",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update preferences',
+        variant: 'destructive',
       });
     } else {
       setPreferences((prev) => ({ ...prev, [key]: value }));
       toast({
-        title: "Success",
-        description: "Notification preferences updated",
+        title: 'Success',
+        description: 'Notification preferences updated',
       });
     }
   };
@@ -124,7 +124,7 @@ export function NotificationPreferences() {
               id="email_enabled"
               checked={preferences.email_enabled}
               onCheckedChange={(checked) =>
-                updatePreference("email_enabled", checked)
+                updatePreference('email_enabled', checked)
               }
             />
           </div>
@@ -139,7 +139,7 @@ export function NotificationPreferences() {
               id="toast_enabled"
               checked={preferences.toast_enabled}
               onCheckedChange={(checked) =>
-                updatePreference("toast_enabled", checked)
+                updatePreference('toast_enabled', checked)
               }
             />
           </div>
@@ -161,7 +161,7 @@ export function NotificationPreferences() {
               id="order_notifications"
               checked={preferences.order_notifications}
               onCheckedChange={(checked) =>
-                updatePreference("order_notifications", checked)
+                updatePreference('order_notifications', checked)
               }
             />
           </div>
@@ -179,7 +179,7 @@ export function NotificationPreferences() {
               id="margin_notifications"
               checked={preferences.margin_notifications}
               onCheckedChange={(checked) =>
-                updatePreference("margin_notifications", checked)
+                updatePreference('margin_notifications', checked)
               }
             />
           </div>
@@ -197,7 +197,7 @@ export function NotificationPreferences() {
               id="pnl_notifications"
               checked={preferences.pnl_notifications}
               onCheckedChange={(checked) =>
-                updatePreference("pnl_notifications", checked)
+                updatePreference('pnl_notifications', checked)
               }
             />
           </div>
@@ -215,7 +215,7 @@ export function NotificationPreferences() {
               id="kyc_notifications"
               checked={preferences.kyc_notifications}
               onCheckedChange={(checked) =>
-                updatePreference("kyc_notifications", checked)
+                updatePreference('kyc_notifications', checked)
               }
             />
           </div>
@@ -233,7 +233,7 @@ export function NotificationPreferences() {
               id="price_alert_notifications"
               checked={preferences.price_alert_notifications}
               onCheckedChange={(checked) =>
-                updatePreference("price_alert_notifications", checked)
+                updatePreference('price_alert_notifications', checked)
               }
             />
           </div>
@@ -251,7 +251,7 @@ export function NotificationPreferences() {
               id="risk_notifications"
               checked={preferences.risk_notifications}
               onCheckedChange={(checked) =>
-                updatePreference("risk_notifications", checked)
+                updatePreference('risk_notifications', checked)
               }
             />
           </div>

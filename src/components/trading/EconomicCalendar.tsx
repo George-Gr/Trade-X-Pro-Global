@@ -1,6 +1,6 @@
-import { useEffect, useRef, memo } from "react";
-import { Card } from "@/components/ui/card";
-import { initTradingViewCompatibility } from "@/lib/tradingViewCompatibility";
+import { useEffect, useRef, memo } from 'react';
+import { Card } from '@/components/ui/card';
+import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
 
 const EconomicCalendar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,27 +12,27 @@ const EconomicCalendar = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    container.textContent = "";
+    container.textContent = '';
 
-    const script = document.createElement("script");
+    const script = document.createElement('script');
     script.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
+      'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
     script.async = true;
     script.textContent = JSON.stringify({
-      width: "100%",
-      height: "100%",
-      colorTheme: "dark",
+      width: '100%',
+      height: '100%',
+      colorTheme: 'dark',
       isTransparent: false,
-      locale: "en",
-      importanceFilter: "0,1",
-      countryFilter: "us,eu,gb,jp,cn,ca,au",
+      locale: 'en',
+      importanceFilter: '0,1',
+      countryFilter: 'us,eu,gb,jp,cn,ca,au',
     });
 
     container.appendChild(script);
 
     return () => {
       if (container) {
-        container.textContent = "";
+        container.textContent = '';
       }
     };
   }, []);

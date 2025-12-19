@@ -1,17 +1,17 @@
-import { ReactNode, useState, useEffect } from "react";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
-import { useNavigate } from "react-router-dom";
-import { User, Clock, RotateCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
-import { NotificationCenter } from "@/components/notifications/NotificationCenter";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { useSidebar } from "@/components/ui/sidebarContext";
-import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
-import { AppSidebar } from "./AppSidebar";
-import { MobileBottomNavigation } from "./MobileBottomNavigation";
-import { DemoModeIndicator } from "@/components/ui/DemoModeIndicator";
-import { AccessibilityNavigation } from "@/components/accessibility/AccessibilityNavigation";
+import { ReactNode, useState, useEffect } from 'react';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { useNavigate } from 'react-router-dom';
+import { User, Clock, RotateCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuthenticatedLayout } from '@/contexts/AuthenticatedLayoutContext';
+import { NotificationCenter } from '@/components/notifications/NotificationCenter';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { useSidebar } from '@/components/ui/sidebarContext';
+import { AutoBreadcrumb } from '@/components/ui/breadcrumb';
+import { AppSidebar } from './AppSidebar';
+import { MobileBottomNavigation } from './MobileBottomNavigation';
+import { DemoModeIndicator } from '@/components/ui/DemoModeIndicator';
+import { AccessibilityNavigation } from '@/components/accessibility/AccessibilityNavigation';
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
@@ -23,7 +23,7 @@ const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
 
   const handleLogoutClick = async () => {
     await handleLogout();
-    navigate("/login");
+    navigate('/login');
   };
 
   return (
@@ -51,7 +51,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
 }) => {
   const { state, open, isMobile } = useSidebar();
   const { setSidebarOpen } = useAuthenticatedLayout();
-  const [currentTime, setCurrentTime] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Update current time every minute
@@ -59,11 +59,11 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
     const updateTime = () => {
       const now = new Date();
       setCurrentTime(
-        now.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
+        now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
           hour12: true,
-        }),
+        })
       );
     };
     updateTime();
@@ -90,14 +90,14 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
       {/* Main Content Area - accounts for fixed sidebar on desktop with dynamic margin based on sidebar state */}
       <div
         className={`flex flex-col min-h-screen transition-[margin-left] duration-300 ease-in-out ${
-          isMobile ? "" : state === "expanded" ? "md:ml-64" : "md:ml-16"
+          isMobile ? '' : state === 'expanded' ? 'md:ml-64' : 'md:ml-16'
         }`}
         style={{
           marginLeft:
-            !isMobile && state === "expanded"
-              ? "var(--sidebar-width, 16rem)"
-              : !isMobile && state === "collapsed"
-                ? "var(--sidebar-width-icon, 4rem)"
+            !isMobile && state === 'expanded'
+              ? 'var(--sidebar-width, 16rem)'
+              : !isMobile && state === 'collapsed'
+                ? 'var(--sidebar-width-icon, 4rem)'
                 : undefined,
         }}
       >
@@ -118,7 +118,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
             {/* Last Updated Timestamp - hidden on mobile */}
             <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>Last updated: {currentTime || "--:-- --"}</span>
+              <span>Last updated: {currentTime || '--:-- --'}</span>
             </div>
 
             {/* Refresh Button */}
@@ -128,10 +128,10 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
               onClick={handleRefresh}
               disabled={isRefreshing}
               className="h-10 w-10"
-              aria-label={isRefreshing ? "Refreshing data..." : "Refresh data"}
+              aria-label={isRefreshing ? 'Refreshing data...' : 'Refresh data'}
             >
               <RotateCw
-                className={`h-5 w-5 ${isRefreshing ? "animate-spin" : ""} text-muted-foreground`}
+                className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''} text-muted-foreground`}
               />
             </Button>
 
@@ -139,7 +139,7 @@ const AuthenticatedLayoutContent: React.FC<AuthenticatedLayoutContentProps> = ({
             <div className="hidden lg:flex items-center gap-2 text-sm">
               <span className="text-muted-foreground">Account:</span>
               <span className="font-semibold text-foreground">
-                {user?.email || "Trading Account"}
+                {user?.email || 'Trading Account'}
               </span>
             </div>
 

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import type { Position } from "@/types/position";
+import React, { useState } from 'react';
+import type { Position } from '@/types/position';
 
 export const PositionCloseDialog: React.FC<{
   position: Position;
@@ -32,7 +32,7 @@ export const PositionCloseDialog: React.FC<{
           Quantity (leave blank to close full position)
         </p>
         <input
-          value={quantity ?? ""}
+          value={quantity ?? ''}
           onChange={(e) =>
             setQuantity(e.target.value ? Number(e.target.value) : undefined)
           }
@@ -49,7 +49,7 @@ export const PositionCloseDialog: React.FC<{
             onClick={submit}
             disabled={loading}
           >
-            {loading ? "Closing..." : "Confirm Close"}
+            {loading ? 'Closing...' : 'Confirm Close'}
           </button>
         </div>
       </div>

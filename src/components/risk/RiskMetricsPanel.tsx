@@ -8,16 +8,16 @@
  * - Capital at Risk
  */
 
-import React from "react";
+import React from 'react';
 import {
   Target,
   DollarSign,
   TrendingUp,
   TrendingDown,
   AlertTriangle,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatMarginLevel, formatCurrency } from "@/lib/risk/riskMetrics";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatMarginLevel, formatCurrency } from '@/lib/risk/riskMetrics';
 
 interface RiskMetricsPanelProps {
   riskMetrics: {
@@ -53,10 +53,10 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
           <div className="text-2xl font-bold">
             {riskMetrics
               ? formatMarginLevel(riskMetrics.currentMarginLevel)
-              : "N/A"}
+              : 'N/A'}
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            Call: {riskMetrics?.marginCallThreshold}% | Liquidation:{" "}
+            Call: {riskMetrics?.marginCallThreshold}% | Liquidation:{' '}
             {riskMetrics?.liquidationThreshold}%
           </p>
           {riskMetrics && (
@@ -64,15 +64,15 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
               <div
                 className={`h-2 rounded-full ${
                   riskMetrics.currentMarginLevel >= 200
-                    ? "bg-buy"
+                    ? 'bg-buy'
                     : riskMetrics.currentMarginLevel >= 100
-                      ? "bg-yellow-600"
-                      : "bg-sell"
+                      ? 'bg-yellow-600'
+                      : 'bg-sell'
                 }`}
                 style={{
                   width: `${Math.min(
                     (riskMetrics.currentMarginLevel / 300) * 100,
-                    100,
+                    100
                   )}%`,
                 }}
               />
@@ -110,7 +110,7 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
         <CardContent className="panel-content">
           <div
             className={`text-2xl font-bold ${
-              (portfolioMetrics?.totalPnL || 0) >= 0 ? "text-buy" : "text-sell"
+              (portfolioMetrics?.totalPnL || 0) >= 0 ? 'text-buy' : 'text-sell'
             }`}
           >
             {formatCurrency(portfolioMetrics?.totalPnL || 0)}

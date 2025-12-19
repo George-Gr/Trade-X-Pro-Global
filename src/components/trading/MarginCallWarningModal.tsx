@@ -12,7 +12,7 @@
  * - Modal that appears on margin call escalation
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,15 +21,15 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, AlertCircle, Clock, TrendingDown } from "lucide-react";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle, AlertCircle, Clock, TrendingDown } from 'lucide-react';
 import {
   MarginCallSeverity,
   MarginCallStatus,
-} from "@/lib/trading/marginCallDetection";
-import { cn } from "@/lib/utils";
+} from '@/lib/trading/marginCallDetection';
+import { cn } from '@/lib/utils';
 
 interface MarginCallWarningModalProps {
   isOpen: boolean;
@@ -78,10 +78,10 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   }, [isOpen, timeToLiquidationMinutes]);
 
   const getMarginColor = (level: number) => {
-    if (level >= 200) return "text-buy bg-background";
-    if (level >= 100) return "text-yellow-600 bg-background";
-    if (level >= 50) return "text-orange-600 bg-background";
-    return "text-sell bg-destructive/5";
+    if (level >= 200) return 'text-buy bg-background';
+    if (level >= 100) return 'text-yellow-600 bg-background';
+    if (level >= 50) return 'text-orange-600 bg-background';
+    return 'text-sell bg-destructive/5';
   };
 
   const getSeverityIcon = () => {
@@ -94,13 +94,13 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   const getSeverityTitle = () => {
     switch (severity) {
       case MarginCallSeverity.STANDARD:
-        return "Margin Call Warning";
+        return 'Margin Call Warning';
       case MarginCallSeverity.URGENT:
-        return "Urgent Margin Call";
+        return 'Urgent Margin Call';
       case MarginCallSeverity.CRITICAL:
-        return "🚨 Critical Liquidation Risk";
+        return '🚨 Critical Liquidation Risk';
       default:
-        return "Margin Alert";
+        return 'Margin Alert';
     }
   };
 
@@ -113,7 +113,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
       case MarginCallSeverity.CRITICAL:
         return `Your account is in CRITICAL condition at ${marginLevel.toFixed(2)}%. Liquidation may be triggered automatically if you don't act immediately.`;
       default:
-        return "Your account margin level is low.";
+        return 'Your account margin level is low.';
     }
   };
 
@@ -133,8 +133,8 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
         {/* Margin Level Display */}
         <div
           className={cn(
-            "p-4 rounded-lg font-mono text-lg",
-            getMarginColor(marginLevel),
+            'p-4 rounded-lg font-mono text-lg',
+            getMarginColor(marginLevel)
           )}
         >
           <div className="flex justify-between items-center">
@@ -165,7 +165,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
                   </div>
                   <div className="text-sell/80">
                     {Math.floor(countdownSeconds / 60)}:
-                    {String(countdownSeconds % 60).padStart(2, "0")}
+                    {String(countdownSeconds % 60).padStart(2, '0')}
                   </div>
                 </div>
               </div>
@@ -183,7 +183,7 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
                   <span className="text-sell font-bold">•</span>
                   <div>
                     <div className="font-medium capitalize">
-                      {action.action.replace(/_/g, " ")}
+                      {action.action.replace(/_/g, ' ')}
                     </div>
                     <div className="text-muted-foreground">
                       {action.description}

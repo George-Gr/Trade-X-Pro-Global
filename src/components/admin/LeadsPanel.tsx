@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { logger } from "@/lib/logger";
-import { Button } from "@/components/ui/button";
-import { LoadingButton } from "@/components/ui/LoadingButton";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
+import { LoadingButton } from '@/components/ui/LoadingButton';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -14,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -22,16 +22,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DollarSign,
   Eye,
@@ -41,8 +41,8 @@ import {
   User,
   Briefcase,
   Target,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface Lead {
   id: string;
@@ -89,8 +89,8 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
   const { toast } = useToast();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
@@ -104,7 +104,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     open: false,
     userId: null,
   });
-  const [fundAmount, setFundAmount] = useState("");
+  const [fundAmount, setFundAmount] = useState('');
   const [isFunding, setIsFunding] = useState(false);
 
   const fetchLeads = useCallback(async () => {
@@ -113,25 +113,25 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (data && !error) {
         setLeads(data as unknown as Lead[]);
       } else if (error) {
         toast({
-          title: "Error",
-          description: "Failed to fetch leads",
-          variant: "destructive",
+          title: 'Error',
+          description: 'Failed to fetch leads',
+          variant: 'destructive',
         });
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
+        title: 'Error',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -144,14 +144,14 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
     // Subscribe to leads changes
     const channel = supabase
-      .channel("leads-changes")
+      .channel('leads-changes')
       .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "leads" },
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'leads' },
         (payload) => {
-          logger.debug("Lead change", { metadata: payload });
+          logger.debug('Lead change', { metadata: payload });
           fetchLeads();
-        },
+        }
       )
       .subscribe();
 
@@ -166,9 +166,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
     // Fetch profile data
     const { data: profileData } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", lead.user_id)
+      .from('profiles')
+      .select('*')
+      .eq('id', lead.user_id)
       .single();
 
     if (profileData) {
@@ -177,10 +177,10 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
     // Fetch KYC documents
     const { data: kycData } = await supabase
-      .from("kyc_documents")
-      .select("*")
-      .eq("user_id", lead.user_id)
-      .order("created_at", { ascending: false });
+      .from('kyc_documents')
+      .select('*')
+      .eq('user_id', lead.user_id)
+      .order('created_at', { ascending: false });
 
     if (kycData) {
       setSelectedKYCDocs(kycData as unknown as KYCDocument[]);
@@ -190,9 +190,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
   const handleFundAccount = async () => {
     if (!fundDialog.userId || !fundAmount || isNaN(Number(fundAmount))) {
       toast({
-        title: "Invalid amount",
-        description: "Please enter a valid number",
-        variant: "destructive",
+        title: 'Invalid amount',
+        description: 'Please enter a valid number',
+        variant: 'destructive',
       });
       return;
     }
@@ -201,9 +201,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
     if (amount <= 0) {
       toast({
-        title: "Invalid amount",
-        description: "Amount must be positive",
-        variant: "destructive",
+        title: 'Invalid amount',
+        description: 'Amount must be positive',
+        variant: 'destructive',
       });
       return;
     }
@@ -212,14 +212,14 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       setIsFunding(true);
 
       const { data, error } = await supabase.functions.invoke(
-        "admin-fund-account",
+        'admin-fund-account',
         {
           body: {
             user_id: fundDialog.userId,
             amount: amount,
-            description: "Initial account funding via Lead Management",
+            description: 'Initial account funding via Lead Management',
           },
-        },
+        }
       );
 
       if (error) throw error;
@@ -229,19 +229,19 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       }
 
       toast({
-        title: "Account Funded",
+        title: 'Account Funded',
         description: `Added $${amount.toFixed(2)} to account`,
       });
 
-      setFundAmount("");
+      setFundAmount('');
       setFundDialog({ open: false, userId: null });
 
       // Refresh profile data if viewing lead details
       if (selectedLead && selectedLead.user_id === fundDialog.userId) {
         const { data: profileData } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", fundDialog.userId)
+          .from('profiles')
+          .select('*')
+          .eq('id', fundDialog.userId)
           .single();
 
         if (profileData) {
@@ -251,9 +251,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
-        description: message || "Failed to fund account",
-        variant: "destructive",
+        title: 'Error',
+        description: message || 'Failed to fund account',
+        variant: 'destructive',
       });
     } finally {
       setIsFunding(false);
@@ -262,33 +262,33 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
 
   const handleKYCAction = async (
     docId: string,
-    action: "approved" | "rejected",
-    reason?: string,
+    action: 'approved' | 'rejected',
+    reason?: string
   ) => {
     try {
       const { error } = await supabase
-        .from("kyc_documents")
+        .from('kyc_documents')
         .update({
-          status: action as "pending" | "approved" | "rejected" | "resubmitted",
-          rejection_reason: action === "rejected" ? reason : null,
+          status: action as 'pending' | 'approved' | 'rejected' | 'resubmitted',
+          rejection_reason: action === 'rejected' ? reason : null,
           reviewed_at: new Date().toISOString(),
         })
-        .eq("id" as const, docId as string);
+        .eq('id' as const, docId as string);
 
       if (error) throw error;
 
       toast({
-        title: "KYC Updated",
+        title: 'KYC Updated',
         description: `Document ${action}`,
       });
 
       // Refresh KYC docs
       if (selectedLead) {
         const { data: kycData } = await supabase
-          .from("kyc_documents")
-          .select("*")
-          .eq("user_id", selectedLead.user_id)
-          .order("created_at", { ascending: false });
+          .from('kyc_documents')
+          .select('*')
+          .eq('user_id', selectedLead.user_id)
+          .order('created_at', { ascending: false });
 
         if (kycData) {
           setSelectedKYCDocs(kycData as unknown as KYCDocument[]);
@@ -297,9 +297,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Error",
+        title: 'Error',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -313,65 +313,65 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
         .includes(searchTerm.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "all" || lead.status === statusFilter;
+      statusFilter === 'all' || lead.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
     }).format(amount);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "new":
-        return "bg-blue-500";
-      case "contacted":
-        return "bg-yellow-500";
-      case "qualified":
-        return "bg-green-500";
-      case "converted":
-        return "bg-purple-500";
+      case 'new':
+        return 'bg-blue-500';
+      case 'contacted':
+        return 'bg-yellow-500';
+      case 'qualified':
+        return 'bg-green-500';
+      case 'converted':
+        return 'bg-purple-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
   const getKycColor = (status: string) => {
     switch (status) {
-      case "approved":
-        return "bg-green-500";
-      case "rejected":
-        return "bg-red-500";
-      case "pending":
-        return "bg-yellow-500";
+      case 'approved':
+        return 'bg-green-500';
+      case 'rejected':
+        return 'bg-red-500';
+      case 'pending':
+        return 'bg-yellow-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
   const getExperienceLabel = (exp: string) => {
     const labels: Record<string, string> = {
-      none: "No Experience",
-      beginner: "Beginner (< 1 year)",
-      intermediate: "Intermediate (1-3 years)",
-      experienced: "Experienced (3-5 years)",
-      expert: "Expert (5+ years)",
+      none: 'No Experience',
+      beginner: 'Beginner (< 1 year)',
+      intermediate: 'Intermediate (1-3 years)',
+      experienced: 'Experienced (3-5 years)',
+      expert: 'Expert (5+ years)',
     };
     return labels[exp] || exp;
   };
 
   const getFinancialLabel = (fin: string) => {
     const labels: Record<string, string> = {
-      "under-1000": "Under $1,000",
-      "1000-5000": "$1,000 - $5,000",
-      "5000-25000": "$5,000 - $25,000",
-      "25000-100000": "$25,000 - $100,000",
-      "over-100000": "Over $100,000",
+      'under-1000': 'Under $1,000',
+      '1000-5000': '$1,000 - $5,000',
+      '5000-25000': '$5,000 - $25,000',
+      '25000-100000': '$25,000 - $100,000',
+      'over-100000': 'Over $100,000',
     };
     return labels[fin] || fin;
   };
@@ -571,13 +571,13 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                     <div>
                       <Label className="text-muted-foreground">Phone</Label>
                       <p className="font-medium">
-                        {selectedLead.phone || "N/A"}
+                        {selectedLead.phone || 'N/A'}
                       </p>
                     </div>
                     <div className="col-span-2">
                       <Label className="text-muted-foreground">Address</Label>
                       <p className="font-medium">
-                        {selectedLead.address || "N/A"}
+                        {selectedLead.address || 'N/A'}
                       </p>
                     </div>
                   </div>
@@ -654,7 +654,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                         Occupation
                       </Label>
                       <p className="font-medium capitalize">
-                        {selectedLead.occupation.replace("-", " ")}
+                        {selectedLead.occupation.replace('-', ' ')}
                       </p>
                     </div>
                     <div>
@@ -695,7 +695,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                         <Card key={doc.id} className="p-4">
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium capitalize">
-                              {doc.document_type.replace("_", " ")}
+                              {doc.document_type.replace('_', ' ')}
                             </span>
                             <Badge variant="outline" className="capitalize">
                               <span
@@ -705,17 +705,17 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground mb-3">
-                            Submitted:{" "}
+                            Submitted:{' '}
                             {new Date(doc.created_at).toLocaleDateString()}
                           </p>
-                          {doc.status === "pending" && (
+                          {doc.status === 'pending' && (
                             <div className="flex gap-2">
                               <Button
                                 size="sm"
                                 variant="default"
                                 className="flex-1"
                                 onClick={() =>
-                                  handleKYCAction(doc.id, "approved")
+                                  handleKYCAction(doc.id, 'approved')
                                 }
                               >
                                 Approve
@@ -727,8 +727,8 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                                 onClick={() =>
                                   handleKYCAction(
                                     doc.id,
-                                    "rejected",
-                                    "Document not valid",
+                                    'rejected',
+                                    'Document not valid'
                                   )
                                 }
                               >

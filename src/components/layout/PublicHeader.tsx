@@ -1,19 +1,19 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { TrendingUp } from "lucide-react";
+import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { TrendingUp } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+} from '@/components/ui/navigation-menu';
 import {
   TradingMenu,
   MarketsMenu,
   EducationMenu,
   CompanyMenu,
   LegalMenu,
-} from "./menus";
+} from './menus';
 
 export const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,12 +27,12 @@ export const PublicHeader = () => {
   // Close menu on ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setMenuOpen(false);
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
@@ -46,11 +46,11 @@ export const PublicHeader = () => {
           <Link
             to="/"
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2 py-1 -ml-2",
-              "transition-all duration-200",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-              "focus-visible:ring-primary focus-visible:ring-offset-background",
-              "hover:opacity-80",
+              'flex items-center gap-2.5 rounded-lg px-2 py-1 -ml-2',
+              'transition-all duration-200',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+              'focus-visible:ring-primary focus-visible:ring-offset-background',
+              'hover:opacity-80'
             )}
             aria-label="TradeX Pro - Home"
           >
@@ -68,7 +68,7 @@ export const PublicHeader = () => {
           {/* Navigation Menu */}
           <div className="hidden lg:flex items-center">
             <NavigationMenu
-              value={menuOpen ? "trigger" : ""}
+              value={menuOpen ? 'trigger' : ''}
               onValueChange={(val: string) => setMenuOpen(!!val)}
             >
               <NavigationMenuList>

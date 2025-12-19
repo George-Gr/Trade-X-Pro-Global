@@ -1,9 +1,8 @@
-import React, { useMemo, useState, CSSProperties } from "react";
-import { FixedSizeList as List } from "react-window";
-import type { Position } from "@/types/position";
-import { calculateUnrealizedPnL } from "@/lib/trading/positionUtils";
-import { useRealtimePositions } from "@/hooks/useRealtimePositions";
-import { PositionRow } from "./PositionRow";
+import { useRealtimePositions } from '@/hooks/useRealtimePositions';
+import type { Position } from '@/types/position';
+import { useMemo, useState, type CSSProperties } from 'react';
+import { FixedSizeList as List } from 'react-window';
+import { PositionRow } from './PositionRow';
 
 const ITEM_SIZE = 60; // height of each row in pixels
 
@@ -63,7 +62,7 @@ export const PositionsTableVirtualized: React.FC<{ userId: string | null }> = ({
     if (ids.length === 0) return;
 
     // Dynamic import to avoid circular dependency
-    const { usePositionClose } = await import("@/hooks/usePositionClose");
+    const { usePositionClose } = await import('@/hooks/usePositionClose');
     // Note: This is a workaround; for production, consider lifting state or using context
     for (const id of ids) {
       // Call via a proper hook in parent component
@@ -78,7 +77,7 @@ export const PositionsTableVirtualized: React.FC<{ userId: string | null }> = ({
       <div className="header flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium">Open Positions</h3>
         <div className="flex items-center gap-4">
-          <div>{isLoading ? "Loading..." : `${rows.length} positions`}</div>
+          <div>{isLoading ? 'Loading...' : `${rows.length} positions`}</div>
           <button
             onClick={bulkClose}
             disabled={Object.values(selectedIds).every((v) => !v)}
@@ -116,7 +115,7 @@ export const PositionsTableVirtualized: React.FC<{ userId: string | null }> = ({
         </List>
       ) : (
         <div className="text-center text-muted-foreground py-8">
-          {isLoading ? "Loading positions..." : "No open positions"}
+          {isLoading ? 'Loading positions...' : 'No open positions'}
         </div>
       )}
     </div>

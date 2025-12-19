@@ -1,6 +1,6 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useWatchlists } from "@/hooks/useWatchlists";
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useWatchlists } from '@/hooks/useWatchlists';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,17 +11,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import WatchlistItems from "./WatchlistItems";
+} from '@/components/ui/alert-dialog';
+import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import WatchlistItems from './WatchlistItems';
 
 interface WatchlistTabsProps {
   activeWatchlistId: string | null;
   onActiveWatchlistChange: (id: string) => void;
   onDeleteWatchlist: (id: string) => void;
   onSelectSymbol?: (symbol: string) => void;
-  onQuickTrade?: (symbol: string, side: "buy" | "sell") => void;
+  onQuickTrade?: (symbol: string, side: 'buy' | 'sell') => void;
 }
 
 export const WatchlistTabs = ({

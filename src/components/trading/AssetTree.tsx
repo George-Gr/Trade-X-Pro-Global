@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { useState } from 'react';
+import { ChevronRight, ChevronDown } from 'lucide-react';
 
 interface AssetTreeProps {
   onSelectSymbol: (symbol: string) => void;
@@ -13,58 +13,58 @@ interface AssetCategory {
 
 const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([
-    "Forex",
+    'Forex',
   ]);
 
   const categories: AssetCategory[] = [
     {
-      name: "Forex",
+      name: 'Forex',
       assets: [
-        { symbol: "EURUSD", name: "EUR/USD" },
-        { symbol: "GBPUSD", name: "GBP/USD" },
-        { symbol: "USDJPY", name: "USD/JPY" },
-        { symbol: "AUDUSD", name: "AUD/USD" },
-        { symbol: "USDCAD", name: "USD/CAD" },
+        { symbol: 'EURUSD', name: 'EUR/USD' },
+        { symbol: 'GBPUSD', name: 'GBP/USD' },
+        { symbol: 'USDJPY', name: 'USD/JPY' },
+        { symbol: 'AUDUSD', name: 'AUD/USD' },
+        { symbol: 'USDCAD', name: 'USD/CAD' },
       ],
     },
     {
-      name: "Stocks",
+      name: 'Stocks',
       assets: [
-        { symbol: "AAPL", name: "Apple Inc" },
-        { symbol: "TSLA", name: "Tesla Inc" },
-        { symbol: "GOOGL", name: "Alphabet Inc" },
-        { symbol: "MSFT", name: "Microsoft Corp" },
-        { symbol: "AMZN", name: "Amazon.com Inc" },
+        { symbol: 'AAPL', name: 'Apple Inc' },
+        { symbol: 'TSLA', name: 'Tesla Inc' },
+        { symbol: 'GOOGL', name: 'Alphabet Inc' },
+        { symbol: 'MSFT', name: 'Microsoft Corp' },
+        { symbol: 'AMZN', name: 'Amazon.com Inc' },
       ],
     },
     {
-      name: "Indices",
+      name: 'Indices',
       assets: [
-        { symbol: "US500", name: "S&P 500" },
-        { symbol: "US30", name: "Dow Jones" },
-        { symbol: "NAS100", name: "NASDAQ 100" },
-        { symbol: "UK100", name: "FTSE 100" },
-        { symbol: "GER40", name: "DAX 40" },
+        { symbol: 'US500', name: 'S&P 500' },
+        { symbol: 'US30', name: 'Dow Jones' },
+        { symbol: 'NAS100', name: 'NASDAQ 100' },
+        { symbol: 'UK100', name: 'FTSE 100' },
+        { symbol: 'GER40', name: 'DAX 40' },
       ],
     },
     {
-      name: "Commodities",
+      name: 'Commodities',
       assets: [
-        { symbol: "XAUUSD", name: "Gold" },
-        { symbol: "XAGUSD", name: "Silver" },
-        { symbol: "USOIL", name: "US Oil" },
-        { symbol: "UKOIL", name: "UK Oil" },
-        { symbol: "NATGAS", name: "Natural Gas" },
+        { symbol: 'XAUUSD', name: 'Gold' },
+        { symbol: 'XAGUSD', name: 'Silver' },
+        { symbol: 'USOIL', name: 'US Oil' },
+        { symbol: 'UKOIL', name: 'UK Oil' },
+        { symbol: 'NATGAS', name: 'Natural Gas' },
       ],
     },
     {
-      name: "Crypto",
+      name: 'Crypto',
       assets: [
-        { symbol: "BTCUSD", name: "Bitcoin" },
-        { symbol: "ETHUSD", name: "Ethereum" },
-        { symbol: "BNBUSD", name: "Binance Coin" },
-        { symbol: "SOLUSD", name: "Solana" },
-        { symbol: "XRPUSD", name: "Ripple" },
+        { symbol: 'BTCUSD', name: 'Bitcoin' },
+        { symbol: 'ETHUSD', name: 'Ethereum' },
+        { symbol: 'BNBUSD', name: 'Binance Coin' },
+        { symbol: 'SOLUSD', name: 'Solana' },
+        { symbol: 'XRPUSD', name: 'Ripple' },
       ],
     },
   ];
@@ -73,7 +73,7 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
     setExpandedCategories((prev) =>
       prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
-        : [...prev, categoryName],
+        : [...prev, categoryName]
     );
   };
 
@@ -110,8 +110,8 @@ const AssetTree = ({ onSelectSymbol, selectedSymbol }: AssetTreeProps) => {
                       onClick={() => onSelectSymbol(asset.symbol)}
                       className={`w-full flex items-center justify-between px-6 py-4 hover:bg-secondary/50 transition-colors text-left ${
                         selectedSymbol === asset.symbol
-                          ? "bg-primary/10 border-l-2 border-l-primary"
-                          : ""
+                          ? 'bg-primary/10 border-l-2 border-l-primary'
+                          : ''
                       }`}
                     >
                       <span className="text-sm font-medium">

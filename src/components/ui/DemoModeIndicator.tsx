@@ -4,10 +4,10 @@
  * Persistent banner indicating demo mode to prevent user confusion.
  * Shows clear distinction between virtual and real funds.
  */
-import { useState, useEffect } from "react";
-import { cn } from "../../lib/utils";
-import { AlertTriangle, X, Info } from "lucide-react";
-import { Button } from "./button";
+import { useState, useEffect } from 'react';
+import { cn } from '../../lib/utils';
+import { AlertTriangle, X, Info } from 'lucide-react';
+import { Button } from './button';
 
 interface DemoModeIndicatorProps {
   /** Whether demo mode is active */
@@ -19,10 +19,10 @@ interface DemoModeIndicatorProps {
   /** Custom class name */
   className?: string;
   /** Variant style */
-  variant?: "banner" | "badge" | "minimal";
+  variant?: 'banner' | 'badge' | 'minimal';
 }
 
-const DISMISS_STORAGE_KEY = "demo-mode-indicator-dismissed";
+const DISMISS_STORAGE_KEY = 'demo-mode-indicator-dismissed';
 const DISMISS_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 
 export const DemoModeIndicator = ({
@@ -30,7 +30,7 @@ export const DemoModeIndicator = ({
   virtualBalance,
   dismissible = true,
   className,
-  variant = "banner",
+  variant = 'banner',
 }: DemoModeIndicatorProps) => {
   const [isDismissed, setIsDismissed] = useState(false);
 
@@ -62,22 +62,22 @@ export const DemoModeIndicator = ({
 
   // Format virtual balance
   const formattedBalance = virtualBalance
-    ? new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
+    ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       }).format(virtualBalance)
     : null;
 
-  if (variant === "badge") {
+  if (variant === 'badge') {
     return (
       <div
         className={cn(
-          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full",
-          "bg-warning/20 text-warning border border-warning/30",
-          "text-xs font-medium",
-          className,
+          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full',
+          'bg-warning/20 text-warning border border-warning/30',
+          'text-xs font-medium',
+          className
         )}
         role="status"
         aria-label="Demo mode active"
@@ -91,14 +91,14 @@ export const DemoModeIndicator = ({
     );
   }
 
-  if (variant === "minimal") {
+  if (variant === 'minimal') {
     return (
       <div
         className={cn(
-          "flex items-center gap-2 px-3 py-1.5",
-          "bg-warning/10 border-l-4 border-warning",
-          "text-sm text-warning",
-          className,
+          'flex items-center gap-2 px-3 py-1.5',
+          'bg-warning/10 border-l-4 border-warning',
+          'text-sm text-warning',
+          className
         )}
         role="status"
         aria-label="Demo mode active"
@@ -116,11 +116,11 @@ export const DemoModeIndicator = ({
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center gap-3 px-4 py-2",
-        "bg-gradient-to-r from-warning/20 via-warning/15 to-warning/20",
-        "border-b border-warning/30",
-        "text-warning",
-        className,
+        'relative flex items-center justify-center gap-3 px-4 py-2',
+        'bg-gradient-to-r from-warning/20 via-warning/15 to-warning/20',
+        'border-b border-warning/30',
+        'text-warning',
+        className
       )}
       role="alert"
       aria-live="polite"

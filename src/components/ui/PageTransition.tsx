@@ -1,7 +1,7 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface PageTransitionProps {
   children: React.ReactNode;
@@ -60,7 +60,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
         initial="initial"
         animate="in"
         exit="out"
-        className={cn("h-full w-full", className)}
+        className={cn('h-full w-full', className)}
       >
         {children}
       </motion.div>
@@ -78,7 +78,7 @@ export const SimplePageTransition: React.FC<PageTransitionProps> = ({
   return (
     <div
       key={location.pathname}
-      className={cn("fade-in h-full w-full", className)}
+      className={cn('fade-in h-full w-full', className)}
     >
       {children}
     </div>

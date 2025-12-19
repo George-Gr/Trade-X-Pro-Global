@@ -10,25 +10,25 @@
  * - RiskChartsPanel: Tabbed visualization charts
  */
 
-import { useState, useMemo, useCallback } from "react";
-import { useRiskMetrics } from "@/hooks/useRiskMetrics";
-import { usePortfolioMetrics } from "@/hooks/usePortfolioMetrics";
-import { usePositionAnalysis } from "@/hooks/usePositionAnalysis";
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Download, RefreshCw } from "lucide-react";
-import { RiskMetricsPanel } from "@/components/risk/RiskMetricsPanel";
-import { RiskAlertsPanel } from "@/components/risk/RiskAlertsPanel";
-import { RiskChartsPanel } from "@/components/risk/RiskChartsPanel";
+import { useState, useMemo, useCallback } from 'react';
+import { useRiskMetrics } from '@/hooks/useRiskMetrics';
+import { usePortfolioMetrics } from '@/hooks/usePortfolioMetrics';
+import { usePositionAnalysis } from '@/hooks/usePositionAnalysis';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Download, RefreshCw } from 'lucide-react';
+import { RiskMetricsPanel } from '@/components/risk/RiskMetricsPanel';
+import { RiskAlertsPanel } from '@/components/risk/RiskAlertsPanel';
+import { RiskChartsPanel } from '@/components/risk/RiskChartsPanel';
 import {
   exportRiskDashboardToCSV,
   exportRiskDashboardToPDF,
   generateRiskDashboardHTMLReport,
   openRiskDashboardReport,
-} from "@/lib/risk/exportUtils";
+} from '@/lib/risk/exportUtils';
 
 interface RiskDashboardProps {
-  onExport?: (format: "csv" | "pdf") => void;
+  onExport?: (format: 'csv' | 'pdf') => void;
 }
 
 export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
@@ -66,17 +66,17 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         assetClassMetrics,
         concentration,
         stressTests,
-        `risk-dashboard-${new Date().toISOString().split("T")[0]}.csv`,
+        `risk-dashboard-${new Date().toISOString().split('T')[0]}.csv`
       );
       toast({
-        title: "Export Successful",
-        description: "Risk dashboard data exported to CSV",
+        title: 'Export Successful',
+        description: 'Risk dashboard data exported to CSV',
       });
     } catch (error) {
       toast({
-        title: "Export Failed",
-        description: "Failed to export to CSV",
-        variant: "destructive",
+        title: 'Export Failed',
+        description: 'Failed to export to CSV',
+        variant: 'destructive',
       });
     }
   }, [
@@ -97,18 +97,18 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
         drawdownAnalysis,
         assetClassMetrics,
         concentration,
-        stressTests,
+        stressTests
       );
       openRiskDashboardReport(html);
       toast({
-        title: "Report Generated",
-        description: "Risk dashboard report opened in new window",
+        title: 'Report Generated',
+        description: 'Risk dashboard report opened in new window',
       });
     } catch (error) {
       toast({
-        title: "Report Generation Failed",
-        description: "Failed to generate report",
-        variant: "destructive",
+        title: 'Report Generation Failed',
+        description: 'Failed to generate report',
+        variant: 'destructive',
       });
     }
   }, [
@@ -172,7 +172,7 @@ export const UserRiskDashboard = ({ onExport }: RiskDashboardProps) => {
 
       {/* Risk Alerts and Trade Stats */}
       <RiskAlertsPanel
-        riskLevel={riskMetrics?.riskLevel || "safe"}
+        riskLevel={riskMetrics?.riskLevel || 'safe'}
         riskMetrics={riskMetrics}
         portfolioMetrics={portfolioMetrics}
         drawdownAnalysis={drawdownAnalysis}

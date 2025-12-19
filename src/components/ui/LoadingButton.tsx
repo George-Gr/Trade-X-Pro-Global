@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { type ButtonProps } from "@/components/ui/buttonVariants";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { type ButtonProps } from '@/components/ui/buttonVariants';
+import { cn } from '@/lib/utils';
 
 export interface LoadingButtonProps extends ButtonProps {
   isLoading?: boolean;
@@ -24,9 +24,9 @@ export const LoadingButton = ({
   isLoading = false,
   isSuccess = false,
   isError = false,
-  loadingText = "Loading...",
-  successText = "Success!",
-  errorText = "Error",
+  loadingText = 'Loading...',
+  successText = 'Success!',
+  errorText = 'Error',
   loadingIcon,
   successIcon,
   errorIcon,
@@ -82,11 +82,11 @@ export const LoadingButton = ({
         className,
         (isLoading || isSuccess || isError) &&
           `transition-all duration-${animationDuration} ease-in-out`,
-        isLoading && "opacity-90 hover:opacity-90",
+        isLoading && 'opacity-90 hover:opacity-90',
         isSuccess &&
-          "bg-success-contrast text-success-contrast-foreground hover:bg-success-contrast/90",
+          'bg-success-contrast text-success-contrast-foreground hover:bg-success-contrast/90',
         isError &&
-          "bg-danger-contrast text-danger-contrast-foreground hover:bg-danger-contrast/90",
+          'bg-danger-contrast text-danger-contrast-foreground hover:bg-danger-contrast/90'
       )}
     >
       {getButtonContent()}
@@ -94,4 +94,4 @@ export const LoadingButton = ({
   );
 };
 
-LoadingButton.displayName = "LoadingButton";
+LoadingButton.displayName = 'LoadingButton';

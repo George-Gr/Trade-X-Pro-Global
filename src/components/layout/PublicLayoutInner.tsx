@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-import { TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -13,11 +13,11 @@ const PublicLayoutInner = ({ children }: PublicLayoutProps) => {
   const { toast } = useToast();
 
   const handleLoginClick = () => {
-    navigate("/login");
+    navigate('/login');
   };
 
   const handleRegisterClick = () => {
-    navigate("/register");
+    navigate('/register');
   };
 
   return (

@@ -1,7 +1,7 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import type { Position } from "@/types/position";
-import type { PositionPnLDetails } from "@/lib/trading/pnlCalculation";
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import type { Position } from '@/types/position';
+import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
 
 interface PositionsMetricsProps {
   positions: Position[];
@@ -36,8 +36,8 @@ export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({
   }, [positions]);
 
   // Count long/short positions
-  const longCount = positions.filter((p) => p.side === "long").length;
-  const shortCount = positions.filter((p) => p.side === "short").length;
+  const longCount = positions.filter((p) => p.side === 'long').length;
+  const shortCount = positions.filter((p) => p.side === 'short').length;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">

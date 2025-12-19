@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseBrowserClient";
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabaseBrowserClient';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
-import { Shield, Save, AlertTriangle } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
-import { validationRules } from "@/lib/validationRules";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
+import { Shield, Save, AlertTriangle } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { useForm } from 'react-hook-form';
+import { validationRules } from '@/lib/validationRules';
 
 interface RiskSettings {
   margin_call_level: number;
@@ -45,7 +45,7 @@ export const RiskSettingsForm = () => {
   });
 
   const form = useForm({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       margin_call_level: 50,
       stop_out_level: 20,
@@ -65,17 +65,17 @@ export const RiskSettingsForm = () => {
   } = form;
 
   const { data: userSettings, isLoading } = useQuery({
-    queryKey: ["risk-settings"],
+    queryKey: ['risk-settings'],
     queryFn: async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
-        .from("risk_settings")
-        .select("*")
-        .eq("user_id", user.id)
+        .from('risk_settings')
+        .select('*')
+        .eq('user_id', user.id)
         .single();
 
       if (error) throw error;
@@ -101,18 +101,18 @@ export const RiskSettingsForm = () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      if (!user) throw new Error('Not authenticated');
 
       const { error } = await supabase
-        .from("risk_settings")
+        .from('risk_settings')
         .update(newSettings)
-        .eq("user_id", user.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Risk settings updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["risk-settings"] });
+      toast.success('Risk settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['risk-settings'] });
     },
     onError: (error) => {
       toast.error(`Failed to update settings: ${error.message}`);
@@ -166,12 +166,12 @@ export const RiskSettingsForm = () => {
                   min="0"
                   max="100"
                   step="1"
-                  {...register("margin_call_level", {
-                    required: "Margin call level is required",
-                    min: { value: 0, message: "Must be at least 0" },
+                  {...register('margin_call_level', {
+                    required: 'Margin call level is required',
+                    min: { value: 0, message: 'Must be at least 0' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 0) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.margin_call_level}
                   onChange={(e) =>
@@ -204,12 +204,12 @@ export const RiskSettingsForm = () => {
                   min="0"
                   max="100"
                   step="1"
-                  {...register("stop_out_level", {
-                    required: "Stop out level is required",
-                    min: { value: 0, message: "Must be at least 0" },
+                  {...register('stop_out_level', {
+                    required: 'Stop out level is required',
+                    min: { value: 0, message: 'Must be at least 0' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 0) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.stop_out_level}
                   onChange={(e) =>
@@ -246,12 +246,12 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0.01"
                   step="0.01"
-                  {...register("max_position_size", {
-                    required: "Max position size is required",
-                    min: { value: 0.01, message: "Must be at least 0.01" },
+                  {...register('max_position_size', {
+                    required: 'Max position size is required',
+                    min: { value: 0.01, message: 'Must be at least 0.01' },
                     validate: (value: number) =>
                       (!isNaN(value) && value > 0) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.max_position_size}
                   onChange={(e) =>
@@ -275,12 +275,12 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
-                  {...register("max_positions", {
-                    required: "Max positions is required",
-                    min: { value: 1, message: "Must be at least 1" },
+                  {...register('max_positions', {
+                    required: 'Max positions is required',
+                    min: { value: 1, message: 'Must be at least 1' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 1) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.max_positions}
                   onChange={(e) =>
@@ -306,12 +306,12 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0"
                   step="1000"
-                  {...register("max_total_exposure", {
-                    required: "Max total exposure is required",
-                    min: { value: 0, message: "Must be at least 0" },
+                  {...register('max_total_exposure', {
+                    required: 'Max total exposure is required',
+                    min: { value: 0, message: 'Must be at least 0' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 0) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.max_total_exposure}
                   onChange={(e) =>
@@ -343,12 +343,12 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="0"
                   step="100"
-                  {...register("daily_loss_limit", {
-                    required: "Daily loss limit is required",
-                    min: { value: 0, message: "Must be at least 0" },
+                  {...register('daily_loss_limit', {
+                    required: 'Daily loss limit is required',
+                    min: { value: 0, message: 'Must be at least 0' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 0) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.daily_loss_limit}
                   onChange={(e) =>
@@ -375,12 +375,12 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
-                  {...register("daily_trade_limit", {
-                    required: "Daily trade limit is required",
-                    min: { value: 1, message: "Must be at least 1" },
+                  {...register('daily_trade_limit', {
+                    required: 'Daily trade limit is required',
+                    min: { value: 1, message: 'Must be at least 1' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 1) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.daily_trade_limit}
                   onChange={(e) =>
@@ -433,12 +433,12 @@ export const RiskSettingsForm = () => {
                   type="number"
                   min="1"
                   step="1"
-                  {...register("min_stop_loss_distance", {
-                    required: "Min stop loss distance is required",
-                    min: { value: 1, message: "Must be at least 1" },
+                  {...register('min_stop_loss_distance', {
+                    required: 'Min stop loss distance is required',
+                    min: { value: 1, message: 'Must be at least 1' },
                     validate: (value: number) =>
                       (!isNaN(value) && value >= 1) ||
-                      "Please enter a valid amount",
+                      'Please enter a valid amount',
                   })}
                   value={settings.min_stop_loss_distance}
                   onChange={(e) =>
@@ -460,7 +460,7 @@ export const RiskSettingsForm = () => {
           <div className="flex justify-end gap-4 pt-4">
             <Button type="submit" disabled={updateMutation.isPending}>
               <Save className="h-4 w-4 mr-2" />
-              {updateMutation.isPending ? "Saving..." : "Save Settings"}
+              {updateMutation.isPending ? 'Saving...' : 'Save Settings'}
             </Button>
           </div>
         </form>

@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { BarChart3, TrendingUp, TrendingDown } from "lucide-react";
-import { usePriceUpdates } from "@/hooks/usePriceUpdates";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+import { usePriceUpdates } from '@/hooks/usePriceUpdates';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 interface CompareSymbolsDialogProps {
   symbols: string[];
@@ -29,7 +29,7 @@ export const CompareSymbolsDialog = ({
   // Convert prices Map to array and sort by change percent
   const priceArray = symbols.map((symbol) => getPrice(symbol)).filter(Boolean);
   const sortedByChange = priceArray.sort(
-    (a, b) => (b?.changePercent || 0) - (a?.changePercent || 0),
+    (a, b) => (b?.changePercent || 0) - (a?.changePercent || 0)
   );
 
   return (
@@ -67,11 +67,11 @@ export const CompareSymbolsDialog = ({
                     </div>
                     <div
                       className={cn(
-                        "text-lg font-semibold font-mono",
-                        isPositive ? "text-profit" : "text-loss",
+                        'text-lg font-semibold font-mono',
+                        isPositive ? 'text-profit' : 'text-loss'
                       )}
                     >
-                      {isPositive ? "+" : ""}
+                      {isPositive ? '+' : ''}
                       {price.changePercent.toFixed(2)}%
                     </div>
                   </div>
@@ -103,11 +103,11 @@ export const CompareSymbolsDialog = ({
                       </div>
                       <div
                         className={cn(
-                          "font-mono font-medium",
-                          isPositive ? "text-profit" : "text-loss",
+                          'font-mono font-medium',
+                          isPositive ? 'text-profit' : 'text-loss'
                         )}
                       >
-                        {isPositive ? "+" : ""}
+                        {isPositive ? '+' : ''}
                         {price.change.toFixed(5)}
                       </div>
                     </div>
@@ -119,7 +119,7 @@ export const CompareSymbolsDialog = ({
                         Open
                       </div>
                       <div className="font-mono text-xs">
-                        {price.open?.toFixed(5) || "N/A"}
+                        {price.open?.toFixed(5) || 'N/A'}
                       </div>
                     </div>
                     <div>
@@ -127,7 +127,7 @@ export const CompareSymbolsDialog = ({
                         High
                       </div>
                       <div className="font-mono text-xs text-profit">
-                        {price.high?.toFixed(5) || "N/A"}
+                        {price.high?.toFixed(5) || 'N/A'}
                       </div>
                     </div>
                     <div>
@@ -135,7 +135,7 @@ export const CompareSymbolsDialog = ({
                         Low
                       </div>
                       <div className="font-mono text-xs text-loss">
-                        {price.low?.toFixed(5) || "N/A"}
+                        {price.low?.toFixed(5) || 'N/A'}
                       </div>
                     </div>
                     <div>
@@ -143,7 +143,7 @@ export const CompareSymbolsDialog = ({
                         Prev Close
                       </div>
                       <div className="font-mono text-xs">
-                        {price.previousClose?.toFixed(5) || "N/A"}
+                        {price.previousClose?.toFixed(5) || 'N/A'}
                       </div>
                     </div>
                   </div>
@@ -153,8 +153,8 @@ export const CompareSymbolsDialog = ({
                     <div className="h-2 bg-secondary rounded-full overflow-hidden">
                       <div
                         className={cn(
-                          "h-full transition-all",
-                          isPositive ? "bg-profit" : "bg-loss",
+                          'h-full transition-all',
+                          isPositive ? 'bg-profit' : 'bg-loss'
                         )}
                         style={{
                           width: `${Math.min(Math.abs(price.changePercent) * 10, 100)}%`,

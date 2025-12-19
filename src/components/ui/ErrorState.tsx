@@ -1,9 +1,9 @@
-import { AlertCircle, HelpCircle, RefreshCw, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertCircle, HelpCircle, RefreshCw, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   getActionableErrorMessage,
   type ActionableError,
-} from "@/lib/errorMessageService";
+} from '@/lib/errorMessageService';
 
 interface ErrorStateProps {
   error: Error | string | unknown;
@@ -14,7 +14,7 @@ interface ErrorStateProps {
   showRetry?: boolean;
   showSupport?: boolean;
   className?: string;
-  variant?: "default" | "minimal" | "card";
+  variant?: 'default' | 'minimal' | 'card';
 }
 
 /**
@@ -37,16 +37,16 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   context,
   onRetry,
   onContactSupport,
-  actionText = "Try Again",
+  actionText = 'Try Again',
   showRetry = false,
   showSupport = true,
-  className = "",
-  variant = "default",
+  className = '',
+  variant = 'default',
 }) => {
   const actionableError = getActionableErrorMessage(error, context);
 
   const getIcon = () => {
-    if (variant === "minimal") {
+    if (variant === 'minimal') {
       return <AlertCircle className="h-4 w-4 text-destructive" />;
     }
     return <AlertCircle className="h-6 w-6 text-destructive flex-shrink-0" />;
@@ -54,7 +54,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
   const getLayout = () => {
     switch (variant) {
-      case "minimal":
+      case 'minimal':
         return (
           <div
             className={`flex items-center gap-2 text-destructive ${className}`}
@@ -69,7 +69,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
           </div>
         );
 
-      case "card":
+      case 'card':
         return (
           <div
             className={`bg-destructive/5 border border-destructive/20 rounded-lg p-4 ${className}`}
@@ -85,7 +85,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
                 </p>
                 {actionableError.suggestion && (
                   <p className="text-xs text-muted-foreground mb-3 italic">
-                    <span className="font-medium">Suggestion:</span>{" "}
+                    <span className="font-medium">Suggestion:</span>{' '}
                     {actionableError.suggestion}
                   </p>
                 )}

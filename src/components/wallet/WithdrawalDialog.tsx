@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { WithdrawalForm } from "./WithdrawalForm";
+} from '@/components/ui/dialog';
+import { WithdrawalForm } from './WithdrawalForm';
 
 interface WithdrawalDialogProps {
   open: boolean;

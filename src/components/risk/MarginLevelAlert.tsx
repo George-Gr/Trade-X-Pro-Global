@@ -22,25 +22,25 @@
  * ```
  */
 
-import { useEffect, useState } from "react";
-import { AlertTriangle, TrendingDown, AlertCircle, Clock } from "lucide-react";
-import { useMarginMonitoring } from "@/hooks/useMarginMonitoring";
+import { useEffect, useState } from 'react';
+import { AlertTriangle, TrendingDown, AlertCircle, Clock } from 'lucide-react';
+import { useMarginMonitoring } from '@/hooks/useMarginMonitoring';
 import {
   MarginStatus,
   formatMarginLevel,
   formatMarginStatus,
-} from "@/lib/trading/marginMonitoring";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+} from '@/lib/trading/marginMonitoring';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 interface MarginLevelAlertProps {
   onStatusChange?: (status: MarginStatus) => void;
@@ -92,15 +92,15 @@ export function MarginLevelAlert({
   const getAlertClass = () => {
     switch (marginStatus) {
       case MarginStatus.SAFE:
-        return "border-[hsl(var(--status-safe-border))] bg-[hsl(var(--status-safe))] dark:border-[hsl(var(--status-safe-dark-border))] dark:bg-[hsl(var(--status-safe-dark))]";
+        return 'border-[hsl(var(--status-safe-border))] bg-[hsl(var(--status-safe))] dark:border-[hsl(var(--status-safe-dark-border))] dark:bg-[hsl(var(--status-safe-dark))]';
       case MarginStatus.WARNING:
-        return "border-[hsl(var(--status-warning-border))] bg-[hsl(var(--status-warning))] dark:border-[hsl(var(--status-warning-dark-border))] dark:bg-[hsl(var(--status-warning-dark))]";
+        return 'border-[hsl(var(--status-warning-border))] bg-[hsl(var(--status-warning))] dark:border-[hsl(var(--status-warning-dark-border))] dark:bg-[hsl(var(--status-warning-dark))]';
       case MarginStatus.CRITICAL:
-        return "border-[hsl(var(--status-critical-border))] bg-[hsl(var(--status-critical))] dark:border-[hsl(var(--status-critical-dark-border))] dark:bg-[hsl(var(--status-critical-dark))]";
+        return 'border-[hsl(var(--status-critical-border))] bg-[hsl(var(--status-critical))] dark:border-[hsl(var(--status-critical-dark-border))] dark:bg-[hsl(var(--status-critical-dark))]';
       case MarginStatus.LIQUIDATION:
-        return "border-[hsl(var(--status-error-border))] bg-[hsl(var(--status-error))] dark:border-[hsl(var(--status-error-dark-border))] dark:bg-[hsl(var(--status-error-dark))]";
+        return 'border-[hsl(var(--status-error-border))] bg-[hsl(var(--status-error))] dark:border-[hsl(var(--status-error-dark-border))] dark:bg-[hsl(var(--status-error-dark))]';
       default:
-        return "border-[hsl(var(--status-neutral-border))] bg-[hsl(var(--status-neutral))]";
+        return 'border-[hsl(var(--status-neutral-border))] bg-[hsl(var(--status-neutral))]';
     }
   };
 
@@ -130,30 +130,30 @@ export function MarginLevelAlert({
   const getStatusColor = () => {
     switch (marginStatus) {
       case MarginStatus.SAFE:
-        return "text-[hsl(var(--status-safe-foreground))] dark:text-[hsl(var(--status-safe-dark-foreground))]";
+        return 'text-[hsl(var(--status-safe-foreground))] dark:text-[hsl(var(--status-safe-dark-foreground))]';
       case MarginStatus.WARNING:
-        return "text-[hsl(var(--status-warning-foreground))] dark:text-[hsl(var(--status-warning-dark-foreground))]";
+        return 'text-[hsl(var(--status-warning-foreground))] dark:text-[hsl(var(--status-warning-dark-foreground))]';
       case MarginStatus.CRITICAL:
-        return "text-[hsl(var(--status-critical-foreground))] dark:text-[hsl(var(--status-critical-dark-foreground))]";
+        return 'text-[hsl(var(--status-critical-foreground))] dark:text-[hsl(var(--status-critical-dark-foreground))]';
       case MarginStatus.LIQUIDATION:
-        return "text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))]";
+        return 'text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))]';
       default:
-        return "text-[hsl(var(--status-neutral-foreground))]";
+        return 'text-[hsl(var(--status-neutral-foreground))]';
     }
   };
 
   const getProgressColor = () => {
     switch (marginStatus) {
       case MarginStatus.SAFE:
-        return "bg-[hsl(var(--status-safe-foreground))]";
+        return 'bg-[hsl(var(--status-safe-foreground))]';
       case MarginStatus.WARNING:
-        return "bg-[hsl(var(--status-warning-foreground))]";
+        return 'bg-[hsl(var(--status-warning-foreground))]';
       case MarginStatus.CRITICAL:
-        return "bg-[hsl(var(--status-critical-foreground))]";
+        return 'bg-[hsl(var(--status-critical-foreground))]';
       case MarginStatus.LIQUIDATION:
-        return "bg-[hsl(var(--status-error-foreground))]";
+        return 'bg-[hsl(var(--status-error-foreground))]';
       default:
-        return "bg-[hsl(var(--status-neutral-foreground))]";
+        return 'bg-[hsl(var(--status-neutral-foreground))]';
     }
   };
 
@@ -166,15 +166,15 @@ export function MarginLevelAlert({
     return (
       <div
         className={cn(
-          "flex items-center gap-4 px-4 py-4 rounded-md border",
+          'flex items-center gap-4 px-4 py-4 rounded-md border',
           getAlertClass(),
-          className,
+          className
         )}
       >
         {getStatusIcon()}
-        <span className={cn("text-sm font-medium", getStatusColor())}>
-          {formatMarginStatus(marginStatus)}:{" "}
-          {marginLevel ? formatMarginLevel(marginLevel) : "—"}
+        <span className={cn('text-sm font-medium', getStatusColor())}>
+          {formatMarginStatus(marginStatus)}:{' '}
+          {marginLevel ? formatMarginLevel(marginLevel) : '—'}
         </span>
         <Button
           variant="ghost"
@@ -182,7 +182,7 @@ export function MarginLevelAlert({
           onClick={() => setIsExpanded(!isExpanded)}
           className="ml-auto"
         >
-          {isExpanded ? "Hide" : "Show"}
+          {isExpanded ? 'Hide' : 'Show'}
         </Button>
       </div>
     );
@@ -192,15 +192,15 @@ export function MarginLevelAlert({
     <div
       className={cn(
         className,
-        "transition-all duration-300 ease-in-out",
-        isStatusChanging ? "ring-2 ring-primary/50 shadow-lg" : "",
+        'transition-all duration-300 ease-in-out',
+        isStatusChanging ? 'ring-2 ring-primary/50 shadow-lg' : ''
       )}
     >
       {/* Main Alert Card */}
       <Card
         className={cn(
-          "border-2 transition-all duration-300 ease-in-out",
-          getAlertClass(),
+          'border-2 transition-all duration-300 ease-in-out',
+          getAlertClass()
         )}
       >
         <CardHeader className="pb-4">
@@ -213,13 +213,13 @@ export function MarginLevelAlert({
                 </CardTitle>
                 <CardDescription className="text-xs">
                   {marginStatus === MarginStatus.SAFE &&
-                    "Your account is in good standing"}
+                    'Your account is in good standing'}
                   {marginStatus === MarginStatus.WARNING &&
-                    "Please monitor your margin closely"}
+                    'Please monitor your margin closely'}
                   {marginStatus === MarginStatus.CRITICAL &&
-                    "Take immediate action to reduce risk"}
+                    'Take immediate action to reduce risk'}
                   {marginStatus === MarginStatus.LIQUIDATION &&
-                    "Your account is at critical risk"}
+                    'Your account is at critical risk'}
                 </CardDescription>
               </div>
             </div>
@@ -236,8 +236,8 @@ export function MarginLevelAlert({
           <div className="space-y-2">
             <div className="flex justify-between items-baseline">
               <span className="text-sm font-medium">Margin Level</span>
-              <span className={cn("text-2xl font-bold", getStatusColor())}>
-                {marginLevel ? formatMarginLevel(marginLevel) : "—"}
+              <span className={cn('text-2xl font-bold', getStatusColor())}>
+                {marginLevel ? formatMarginLevel(marginLevel) : '—'}
               </span>
             </div>
             {marginLevel && (
@@ -276,23 +276,23 @@ export function MarginLevelAlert({
           {timeToLiquidation !== null && timeToLiquidation < Infinity && (
             <div
               className={cn(
-                "flex items-center gap-4 p-4 rounded-md",
+                'flex items-center gap-4 p-4 rounded-md',
                 timeToLiquidation <= 30
-                  ? "bg-[hsl(var(--status-error))] dark:bg-[hsl(var(--status-error-dark))]"
-                  : "bg-[hsl(var(--status-critical))] dark:bg-[hsl(var(--status-critical-dark))]",
+                  ? 'bg-[hsl(var(--status-error))] dark:bg-[hsl(var(--status-error-dark))]'
+                  : 'bg-[hsl(var(--status-critical))] dark:bg-[hsl(var(--status-critical-dark))]'
               )}
             >
               <Clock
                 className={cn(
-                  "h-5 w-5",
+                  'h-5 w-5',
                   timeToLiquidation <= 30
-                    ? "text-[hsl(var(--status-error-foreground))]"
-                    : "text-[hsl(var(--status-critical-foreground))]",
+                    ? 'text-[hsl(var(--status-error-foreground))]'
+                    : 'text-[hsl(var(--status-critical-foreground))]'
                 )}
               />
               <div className="text-sm">
                 <p className="font-medium">
-                  Est. Time to Liquidation:{" "}
+                  Est. Time to Liquidation:{' '}
                   <span className="font-bold">{timeToLiquidation} min</span>
                 </p>
               </div>
@@ -311,19 +311,19 @@ export function MarginLevelAlert({
                   >
                     <span
                       className={cn(
-                        "mt-2.5 h-2 w-2 rounded-full flex-shrink-0",
-                        action.urgency === "emergency"
-                          ? "bg-[hsl(var(--status-error-foreground))]"
-                          : action.urgency === "critical"
-                            ? "bg-[hsl(var(--status-critical-foreground))]"
-                            : action.urgency === "warning"
-                              ? "bg-[hsl(var(--status-warning-foreground))]"
-                              : "bg-[hsl(var(--status-info-foreground))]",
+                        'mt-2.5 h-2 w-2 rounded-full flex-shrink-0',
+                        action.urgency === 'emergency'
+                          ? 'bg-[hsl(var(--status-error-foreground))]'
+                          : action.urgency === 'critical'
+                            ? 'bg-[hsl(var(--status-critical-foreground))]'
+                            : action.urgency === 'warning'
+                              ? 'bg-[hsl(var(--status-warning-foreground))]'
+                              : 'bg-[hsl(var(--status-info-foreground))]'
                       )}
                     />
                     <div>
                       <p className="font-medium capitalize">
-                        {action.action.replace(/_/g, " ")}
+                        {action.action.replace(/_/g, ' ')}
                       </p>
                       {action.recommendation && (
                         <p className="text-xs text-muted-foreground">
@@ -376,7 +376,7 @@ export function MarginLevelAlert({
             </Button>
             {(isCritical || isLiquidationRisk) && (
               <Button
-                onClick={() => (window.location.href = "/risk-management")}
+                onClick={() => (window.location.href = '/risk-management')}
                 variant="destructive"
                 size="sm"
                 className="flex-1"
@@ -392,17 +392,17 @@ export function MarginLevelAlert({
       {prevStatus && prevStatus !== marginStatus && (
         <div
           className={cn(
-            "mt-2 p-4 rounded-md text-sm font-medium transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2",
+            'mt-2 p-4 rounded-md text-sm font-medium transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2',
             marginStatus === MarginStatus.LIQUIDATION
-              ? "bg-destructive/10 text-destructive-foreground border border-destructive/20"
+              ? 'bg-destructive/10 text-destructive-foreground border border-destructive/20'
               : marginStatus === MarginStatus.CRITICAL
-                ? "bg-warning/10 text-warning-foreground border border-warning/20"
+                ? 'bg-warning/10 text-warning-foreground border border-warning/20'
                 : marginStatus === MarginStatus.WARNING
-                  ? "bg-warning/10 text-warning-foreground border border-warning/20"
-                  : "bg-buy/5 text-buy-foreground border border-buy/20",
+                  ? 'bg-warning/10 text-warning-foreground border border-warning/20'
+                  : 'bg-buy/5 text-buy-foreground border border-buy/20'
           )}
         >
-          Status changed from {formatMarginStatus(prevStatus)} to{" "}
+          Status changed from {formatMarginStatus(prevStatus)} to{' '}
           {formatMarginStatus(marginStatus)}
         </div>
       )}

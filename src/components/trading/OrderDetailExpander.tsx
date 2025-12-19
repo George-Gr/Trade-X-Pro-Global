@@ -5,14 +5,15 @@
  * Shows entry/exit details, commission, and additional info
  */
 
-import React from "react";
-import type { OrderTableItem } from "@/hooks/useOrdersTable";
+import type { OrderTableItem } from '@/hooks/useOrdersTable';
+import { cn } from '@/lib/utils';
+import type { FC } from 'react';
 
 interface OrderDetailExpanderProps {
   order: OrderTableItem;
 }
 
-export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({
+export const OrderDetailExpander: FC<OrderDetailExpanderProps> = ({
   order,
 }) => {
   return (
@@ -59,15 +60,14 @@ export const OrderDetailExpander: React.FC<OrderDetailExpanderProps> = ({
         <div>
           <span className="text-muted-foreground text-xs">Realized P&L</span>
           <div
-            className="font-mono font-semibold"
-            style={{
-              color:
-                (order.realized_pnl ?? 0) >= 0
-                  ? "hsl(var(--buy))"
-                  : "hsl(var(--destructive))",
-            }}
+            className={cn(
+              'font-mono font-semibold',
+              (order.realized_pnl ?? 0) >= 0
+                ? 'text-[hsl(var(--buy))]'
+                : 'text-[hsl(var(--destructive))]'
+            )}
           >
-            ${order.realized_pnl?.toFixed(2) ?? "0.00"}
+            ${order.realized_pnl?.toFixed(2) ?? '0.00'}
           </div>
         </div>
       )}

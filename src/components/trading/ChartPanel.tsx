@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Maximize2 } from "lucide-react";
-import TradingViewAdvancedChart from "./TradingViewAdvancedChart";
-import TradingViewErrorBoundary from "@/components/TradingViewErrorBoundary";
+import { Button } from '@/components/ui/button';
+import { Maximize2 } from 'lucide-react';
+import TradingViewAdvancedChart from './TradingViewAdvancedChart';
+import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
 
 interface ChartPanelProps {
   symbol: string;

@@ -1,27 +1,27 @@
-import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2, Upload, FileText, CheckCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { validationRules } from "@/lib/validationRules";
+} from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Upload, FileText, CheckCircle } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { validationRules } from '@/lib/validationRules';
 import {
   Form,
   FormField,
@@ -29,7 +29,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 
 interface KYCSubmissionProps {
   onSuccess?: () => void;
@@ -48,7 +48,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
 
   const form = useForm({
     defaultValues: {
-      documentType: "",
+      documentType: '',
     },
   });
 
@@ -59,7 +59,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     reset,
     formState: { errors },
   } = form;
-  const documentType = watch("documentType");
+  const documentType = watch('documentType');
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -67,25 +67,25 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast({
-          title: "File too large",
-          description: "Please select a file smaller than 5MB",
-          variant: "destructive",
+          title: 'File too large',
+          description: 'Please select a file smaller than 5MB',
+          variant: 'destructive',
         });
         return;
       }
 
       // Validate file type
       const allowedTypes = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "application/pdf",
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'application/pdf',
       ];
       if (!allowedTypes.includes(file.type)) {
         toast({
-          title: "Invalid file type",
-          description: "Please select a JPG, PNG, or PDF file",
-          variant: "destructive",
+          title: 'Invalid file type',
+          description: 'Please select a JPG, PNG, or PDF file',
+          variant: 'destructive',
         });
         return;
       }
@@ -98,9 +98,9 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     // data contains documentType
     if (!user || !data.documentType || !selectedFile) {
       toast({
-        title: "Missing information",
-        description: "Please select document type and file",
-        variant: "destructive",
+        title: 'Missing information',
+        description: 'Please select document type and file',
+        variant: 'destructive',
       });
       return;
     }
@@ -110,54 +110,54 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     try {
       // Create FormData for server-side validation
       const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("documentType", data.documentType);
+      formData.append('file', selectedFile);
+      formData.append('documentType', data.documentType);
 
       // Get auth token
       const {
         data: { session },
       } = await supabase.auth.getSession();
       if (!session) {
-        throw new Error("Not authenticated");
+        throw new Error('Not authenticated');
       }
 
       // Call server-side validation function
       const { data: fnData, error } = await supabase.functions.invoke(
-        "validate-kyc-upload",
+        'validate-kyc-upload',
         {
           body: formData,
           headers: {
             Authorization: `Bearer ${session.access_token}`,
           },
-        },
+        }
       );
 
       if (error) throw error;
-      if (!fnData.success) throw new Error(fnData.error || "Upload failed");
+      if (!fnData.success) throw new Error(fnData.error || 'Upload failed');
 
       // Update profile KYC status if first submission
       const { error: profileError } = await supabase
-        .from("profiles")
-        .update({ kyc_status: "pending" })
-        .eq("id", user.id)
-        .neq("kyc_status", "pending");
+        .from('profiles')
+        .update({ kyc_status: 'pending' })
+        .eq('id', user.id)
+        .neq('kyc_status', 'pending');
 
-      if (profileError) console.warn("Profile update warning:", profileError);
+      if (profileError) console.warn('Profile update warning:', profileError);
 
       setSubmitted(true);
       toast({
-        title: "Document submitted",
-        description: "Your KYC document has been submitted for review",
+        title: 'Document submitted',
+        description: 'Your KYC document has been submitted for review',
       });
 
       onSuccess?.();
     } catch (err: unknown) {
-      console.error("KYC submission error:", err);
+      console.error('KYC submission error:', err);
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Submission failed",
-        description: message || "Failed to submit document",
-        variant: "destructive",
+        title: 'Submission failed',
+        description: message || 'Failed to submit document',
+        variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
@@ -217,8 +217,8 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
                   <FormControl>
                     <Select
                       {...register(
-                        "documentType",
-                        validationRules.documentType,
+                        'documentType',
+                        validationRules.documentType
                       )}
                     >
                       <SelectTrigger id="document-type">

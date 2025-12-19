@@ -1,45 +1,44 @@
-import * as React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
 import {
-  LineChart,
-  BarChart3,
-  Wallet,
-  TrendingUp,
-  Shield,
   ArrowRight,
+  BarChart3,
+  LineChart,
   Play,
-} from "lucide-react";
+  Shield,
+  TrendingUp,
+  Wallet,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 import {
+  AnimatedSectionHeader,
   ScrollReveal,
   StaggerContainer,
   StaggerItem,
-  AnimatedSectionHeader,
-} from "./ScrollReveal";
+} from './ScrollReveal';
 
 const platformFeatures = [
   {
     icon: LineChart,
-    title: "Advanced Charts",
-    description: "TradingView integration with 100+ indicators",
+    title: 'Advanced Charts',
+    description: 'TradingView integration with 100+ indicators',
   },
   {
     icon: BarChart3,
-    title: "Real-Time Data",
-    description: "Live market prices updated every second",
+    title: 'Real-Time Data',
+    description: 'Live market prices updated every second',
   },
   {
     icon: Wallet,
-    title: "Portfolio Tracking",
-    description: "Monitor P&L, margin, and positions",
+    title: 'Portfolio Tracking',
+    description: 'Monitor P&L, margin, and positions',
   },
   {
     icon: Shield,
-    title: "Risk Management",
-    description: "Stop-loss, take-profit & trailing stops",
+    title: 'Risk Management',
+    description: 'Stop-loss, take-profit & trailing stops',
   },
 ];
 
@@ -71,7 +70,7 @@ export function PlatformPreview() {
                 transition={{
                   duration: 4,
                   repeat: Infinity,
-                  ease: "easeInOut",
+                  ease: 'easeInOut',
                 }}
               />
               <motion.div
@@ -104,19 +103,19 @@ export function PlatformPreview() {
                       <div className="grid grid-cols-3 gap-4 mb-4">
                         {[
                           {
-                            label: "Balance",
-                            value: "$50,000.00",
-                            color: "text-gold",
+                            label: 'Balance',
+                            value: '$50,000.00',
+                            color: 'text-gold',
                           },
                           {
-                            label: "Equity",
-                            value: "$52,340.50",
-                            color: "text-accent",
+                            label: 'Equity',
+                            value: '$52,340.50',
+                            color: 'text-accent',
                           },
                           {
-                            label: "Profit",
-                            value: "+$2,340.50",
-                            color: "text-accent",
+                            label: 'Profit',
+                            value: '+$2,340.50',
+                            color: 'text-accent',
                           },
                         ].map((stat, index) => (
                           <motion.div
@@ -137,7 +136,7 @@ export function PlatformPreview() {
                               viewport={{ once: true }}
                               transition={{
                                 delay: 0.6 + index * 0.1,
-                                type: "spring",
+                                type: 'spring',
                               }}
                             >
                               {stat.value}
@@ -149,7 +148,7 @@ export function PlatformPreview() {
                       {/* Chart Placeholder with Animation */}
                       <motion.div
                         className="bg-muted/30 rounded-lg p-4 mb-4 h-32 flex items-center justify-center border border-border/50 relative overflow-hidden"
-                        whileHover={{ borderColor: "hsl(var(--primary))" }}
+                        whileHover={{ borderColor: 'hsl(var(--primary))' }}
                       >
                         {/* Animated chart line */}
                         <motion.div

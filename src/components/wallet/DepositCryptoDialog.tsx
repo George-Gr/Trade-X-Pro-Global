@@ -1,27 +1,27 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useForm, Controller } from "react-hook-form";
-import { validationRules } from "@/lib/validationRules";
+} from '@/components/ui/select';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, ExternalLink, Copy, CheckCircle2 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useForm, Controller } from 'react-hook-form';
+import { validationRules } from '@/lib/validationRules';
 
 interface DepositCryptoDialogProps {
   open: boolean;
@@ -30,12 +30,12 @@ interface DepositCryptoDialogProps {
 }
 
 const SUPPORTED_CRYPTOS = [
-  { value: "BTC", label: "Bitcoin (BTC)", icon: "₿" },
-  { value: "ETH", label: "Ethereum (ETH)", icon: "Ξ" },
-  { value: "USDT", label: "Tether (USDT)", icon: "₮" },
-  { value: "USDC", label: "USD Coin (USDC)", icon: "$" },
-  { value: "LTC", label: "Litecoin (LTC)", icon: "Ł" },
-  { value: "BNB", label: "Binance Coin (BNB)", icon: "BNB" },
+  { value: 'BTC', label: 'Bitcoin (BTC)', icon: '₿' },
+  { value: 'ETH', label: 'Ethereum (ETH)', icon: 'Ξ' },
+  { value: 'USDT', label: 'Tether (USDT)', icon: '₮' },
+  { value: 'USDC', label: 'USD Coin (USDC)', icon: '$' },
+  { value: 'LTC', label: 'Litecoin (LTC)', icon: 'Ł' },
+  { value: 'BNB', label: 'Binance Coin (BNB)', icon: 'BNB' },
 ];
 
 // Validate payment URL to prevent open redirect attacks
@@ -43,10 +43,10 @@ const isValidPaymentUrl = (url: string): boolean => {
   try {
     const parsed = new URL(url);
     // Only allow NowPayments domains
-    const allowedDomains = ["nowpayments.io", "sandbox.nowpayments.io"];
+    const allowedDomains = ['nowpayments.io', 'sandbox.nowpayments.io'];
     return allowedDomains.some(
       (domain) =>
-        parsed.hostname === domain || parsed.hostname.endsWith("." + domain),
+        parsed.hostname === domain || parsed.hostname.endsWith('.' + domain)
     );
   } catch {
     return false;
@@ -60,8 +60,8 @@ export function DepositCryptoDialog({
 }: DepositCryptoDialogProps) {
   const [loading, setLoading] = useState(false);
   const firstFocusableRef = useRef<HTMLSelectElement>(null);
-  const [amountPreview, setAmountPreview] = useState("");
-  const [currencyPreview, setCurrencyPreview] = useState("BTC");
+  const [amountPreview, setAmountPreview] = useState('');
+  const [currencyPreview, setCurrencyPreview] = useState('BTC');
   const [loadingState, setLoadingState] = useState(false);
   const [paymentData, setPaymentData] = useState<{
     amount?: number;
@@ -73,10 +73,10 @@ export function DepositCryptoDialog({
   const { toast } = useToast();
 
   const form = useForm({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
-      amount: "",
-      currency: "BTC",
+      amount: '',
+      currency: 'BTC',
     },
   });
 
@@ -87,8 +87,8 @@ export function DepositCryptoDialog({
     watch,
     formState: { errors },
   } = form;
-  const watchedAmount = watch("amount");
-  const watchedCurrency = watch("currency") || "BTC";
+  const watchedAmount = watch('amount');
+  const watchedCurrency = watch('currency') || 'BTC';
 
   interface DepositFormData {
     amount: string;
@@ -101,9 +101,9 @@ export function DepositCryptoDialog({
 
     if (!amt || parseFloat(amt) <= 0) {
       toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid deposit amount",
-        variant: "destructive",
+        title: 'Invalid Amount',
+        description: 'Please enter a valid deposit amount',
+        variant: 'destructive',
       });
       return;
     }
@@ -111,13 +111,13 @@ export function DepositCryptoDialog({
     setLoadingState(true);
     try {
       const { data, error } = await supabase.functions.invoke(
-        "create-crypto-payment",
+        'create-crypto-payment',
         {
           body: {
             amount: parseFloat(amt),
             currency: curr,
           },
-        },
+        }
       );
 
       if (error) throw error;
@@ -126,17 +126,17 @@ export function DepositCryptoDialog({
       setAmountPreview(String(data?.amount ?? amt));
       setCurrencyPreview(String(data?.currency ?? curr));
       toast({
-        title: "Payment Created",
+        title: 'Payment Created',
         description:
-          "Send crypto to the address below to complete your deposit",
+          'Send crypto to the address below to complete your deposit',
       });
     } catch (err: unknown) {
-      console.error("Error creating payment:", err);
+      console.error('Error creating payment:', err);
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Payment Failed",
-        description: message || "Failed to create payment. Please try again.",
-        variant: "destructive",
+        title: 'Payment Failed',
+        description: message || 'Failed to create payment. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setLoadingState(false);
@@ -148,8 +148,8 @@ export function DepositCryptoDialog({
       navigator.clipboard.writeText(paymentData.payment_address);
       setCopied(true);
       toast({
-        title: "Copied!",
-        description: "Payment address copied to clipboard",
+        title: 'Copied!',
+        description: 'Payment address copied to clipboard',
       });
       setTimeout(() => setCopied(false), 2000);
     }
@@ -181,8 +181,8 @@ export function DepositCryptoDialog({
           <DialogTitle>Deposit Cryptocurrency</DialogTitle>
           <DialogDescription>
             {paymentData
-              ? "Send cryptocurrency to the address below"
-              : "Choose your cryptocurrency and amount to deposit"}
+              ? 'Send cryptocurrency to the address below'
+              : 'Choose your cryptocurrency and amount to deposit'}
           </DialogDescription>
         </DialogHeader>
 
@@ -198,7 +198,7 @@ export function DepositCryptoDialog({
                   id="amount"
                   type="number"
                   placeholder="100.00"
-                  {...register("amount", validationRules.amount)}
+                  {...register('amount', validationRules.amount)}
                   min="1"
                   step="0.01"
                 />
@@ -270,10 +270,10 @@ export function DepositCryptoDialog({
             <Alert className="border-primary">
               <CheckCircle2 className="h-4 w-4" />
               <AlertDescription>
-                Payment request created successfully! Send exactly{" "}
+                Payment request created successfully! Send exactly{' '}
                 <strong>
                   {paymentData.amount} {paymentData.currency}
-                </strong>{" "}
+                </strong>{' '}
                 to the address below.
               </AlertDescription>
             </Alert>
@@ -319,13 +319,13 @@ export function DepositCryptoDialog({
                     paymentData.payment_url &&
                     isValidPaymentUrl(paymentData.payment_url)
                   ) {
-                    window.open(paymentData.payment_url, "_blank");
+                    window.open(paymentData.payment_url, '_blank');
                   } else {
                     toast({
-                      title: "Invalid Payment URL",
+                      title: 'Invalid Payment URL',
                       description:
-                        "The payment URL is not from a trusted source. Please contact support.",
-                      variant: "destructive",
+                        'The payment URL is not from a trusted source. Please contact support.',
+                      variant: 'destructive',
                     });
                   }
                 }}

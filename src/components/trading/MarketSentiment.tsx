@@ -1,7 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { TrendingUp, TrendingDown, Users } from "lucide-react";
-import { useMemo } from "react";
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { TrendingUp, TrendingDown, Users } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface MarketSentimentProps {
   symbol: string;
@@ -11,7 +11,7 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
   // Generate mock sentiment data based on symbol
   const sentimentData = useMemo(() => {
     const hash = symbol
-      .split("")
+      .split('')
       .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const random = (seed: number) => ((seed * 9301 + 49297) % 233280) / 233280;
 
@@ -23,7 +23,7 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
       bearish,
       volume: Math.floor(random(hash + 1) * 5000 + 1000),
       sentiment:
-        bullish > 55 ? "bullish" : bullish < 45 ? "bearish" : "neutral",
+        bullish > 55 ? 'bullish' : bullish < 45 ? 'bearish' : 'neutral',
     };
   }, [symbol]);
 
@@ -70,11 +70,11 @@ const MarketSentiment = ({ symbol }: MarketSentimentProps) => {
           <span className="text-muted-foreground">Overall Sentiment</span>
           <span
             className={`font-semibold capitalize ${
-              sentimentData.sentiment === "bullish"
-                ? "text-primary"
-                : sentimentData.sentiment === "bearish"
-                  ? "text-destructive"
-                  : "text-muted-foreground"
+              sentimentData.sentiment === 'bullish'
+                ? 'text-primary'
+                : sentimentData.sentiment === 'bearish'
+                  ? 'text-destructive'
+                  : 'text-muted-foreground'
             }`}
           >
             {sentimentData.sentiment}

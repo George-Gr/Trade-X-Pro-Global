@@ -3,16 +3,15 @@
  * Shows queue status and rate limit warnings
  */
 
-import * as React from "react";
-import { AlertCircle, Clock, Loader2 } from "lucide-react";
-import { useRateLimitStatus } from "@/hooks/useRateLimitStatus";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/tooltip';
+import { useRateLimitStatus } from '@/hooks/useRateLimitStatus';
+import { cn } from '@/lib/utils';
+import { AlertCircle, Clock, Loader2 } from 'lucide-react';
 
 interface RateLimitIndicatorProps {
   endpoint?: string;
@@ -20,11 +19,11 @@ interface RateLimitIndicatorProps {
   showAlways?: boolean;
 }
 
-export function RateLimitIndicator({
-  endpoint = "order",
+export const RateLimitIndicator: React.FC<RateLimitIndicatorProps> = ({
+  endpoint = 'order',
   className,
   showAlways = false,
-}: RateLimitIndicatorProps) {
+}) => {
   const { queueLength, isProcessing, getRemainingRequests, getResetTime } =
     useRateLimitStatus({
       endpoint,
@@ -47,11 +46,11 @@ export function RateLimitIndicator({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors",
-              isBlocked && "bg-destructive/10 text-destructive",
-              isWarning && "bg-warning/10 text-warning",
-              !isBlocked && !isWarning && "bg-muted text-muted-foreground",
-              className,
+              'flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors',
+              isBlocked && 'bg-destructive/10 text-destructive',
+              isWarning && 'bg-warning/10 text-warning',
+              !isBlocked && !isWarning && 'bg-muted text-muted-foreground',
+              className
             )}
           >
             {isProcessing ? (
@@ -94,6 +93,6 @@ export function RateLimitIndicator({
       </Tooltip>
     </TooltipProvider>
   );
-}
+};
 
 export default RateLimitIndicator;

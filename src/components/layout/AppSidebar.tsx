@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useMemo, useCallback } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo, useCallback } from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -10,22 +10,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from "@/components/ui/sidebar";
-import { useAuthenticatedLayout } from "@/contexts/AuthenticatedLayoutContext";
-import { useSidebar } from "@/components/ui/sidebarContext";
+} from '@/components/ui/sidebar';
+import { useAuthenticatedLayout } from '@/contexts/AuthenticatedLayoutContext';
+import { useSidebar } from '@/components/ui/sidebarContext';
 import {
   filterNavigationSectionsByRoles,
   isPathActive,
-} from "@/lib/navigationConfig";
-import { SidebarErrorBoundary } from "@/components/ui/SidebarErrorBoundary";
+} from '@/lib/navigationConfig';
+import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
 import {
   cn,
   handleMenuKeyboardNavigation,
   generateNavigationAriaLabel,
   getAriaCurrentState,
-} from "@/lib/utils";
-import { AlertCircle, TrendingUp, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from '@/lib/utils';
+import { AlertCircle, TrendingUp, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 /**
  * Skeleton loading state component
@@ -139,10 +139,10 @@ function AppSidebarContent() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, handleLogout, authLoading } = useAuthenticatedLayout();
-  const collapsed = state === "collapsed";
+  const collapsed = state === 'collapsed';
 
   // Build user roles array for permission-based filtering
-  const userRoles = user ? ["user", ...(isAdmin ? ["admin"] : [])] : [];
+  const userRoles = user ? ['user', ...(isAdmin ? ['admin'] : [])] : [];
 
   // Get filtered navigation sections based on user roles
   const navigationSections = filterNavigationSectionsByRoles(userRoles);
@@ -152,19 +152,19 @@ function AppSidebarContent() {
 
   // Separate main navigation from settings/actions
   const mainSection = useMemo(
-    () => navigationSections.find((section) => section.id === "main"),
-    [navigationSections],
+    () => navigationSections.find((section) => section.id === 'main'),
+    [navigationSections]
   );
 
   const settingsSection = useMemo(
-    () => navigationSections.find((section) => section.id === "settings"),
-    [navigationSections],
+    () => navigationSections.find((section) => section.id === 'settings'),
+    [navigationSections]
   );
 
   // Memoize isActive function
   const isActive = useCallback(
     (path: string) => isPathActive(activePath, path),
-    [activePath],
+    [activePath]
   );
 
   // Handle keyboard navigation
@@ -172,14 +172,14 @@ function AppSidebarContent() {
     (event: React.KeyboardEvent, path: string) => {
       handleMenuKeyboardNavigation(event, navigate, path);
     },
-    [navigate],
+    [navigate]
   );
 
   // Handle logout
   const handleLogoutClick = useCallback(() => {
     if (
       window.confirm(
-        "Are you sure you want to sign out? Any unsaved changes will be lost.",
+        'Are you sure you want to sign out? Any unsaved changes will be lost.'
       )
     ) {
       handleLogout();
@@ -188,12 +188,12 @@ function AppSidebarContent() {
 
   const handleLogoutKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === " ") {
+      if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         handleLogoutClick();
       }
     },
-    [handleLogoutClick],
+    [handleLogoutClick]
   );
 
   // Show skeleton loading state
@@ -216,8 +216,8 @@ function AppSidebarContent() {
         {/* Logo/Branding Section */}
         <div
           className={cn(
-            "flex items-center gap-3 px-4 py-4 border-b border-border/30",
-            collapsed && "justify-center px-2",
+            'flex items-center gap-3 px-4 py-4 border-b border-border/30',
+            collapsed && 'justify-center px-2'
           )}
         >
           <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
@@ -240,8 +240,8 @@ function AppSidebarContent() {
           <SidebarGroup className="py-4 flex-1">
             <SidebarGroupLabel
               className={cn(
-                "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
-                collapsed && "sr-only",
+                'text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2',
+                collapsed && 'sr-only'
               )}
             >
               {mainSection.label}
@@ -261,17 +261,17 @@ function AppSidebarContent() {
                         tooltip={collapsed ? item.label : undefined}
                         disabled={item.disabled}
                         className={cn(
-                          "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
-                          "hover:bg-sidebar-accent/50",
-                          collapsed && "justify-center px-2",
+                          'gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
+                          'hover:bg-sidebar-accent/50',
+                          collapsed && 'justify-center px-2',
                           active &&
-                            "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
-                          item.disabled && "opacity-50 cursor-not-allowed",
+                            'bg-primary/10 border-l-[3px] border-primary text-primary font-medium',
+                          item.disabled && 'opacity-50 cursor-not-allowed'
                         )}
                         aria-label={generateNavigationAriaLabel(
                           item.label,
                           active,
-                          item.disabled,
+                          item.disabled
                         )}
                         aria-current={getAriaCurrentState(active)}
                         role="menuitem"
@@ -280,17 +280,17 @@ function AppSidebarContent() {
                       >
                         <Icon
                           className={cn(
-                            "h-5 w-5 flex-shrink-0 transition-colors",
-                            active ? "text-primary" : "text-muted-foreground",
+                            'h-5 w-5 flex-shrink-0 transition-colors',
+                            active ? 'text-primary' : 'text-muted-foreground'
                           )}
                         />
                         <span
                           className={cn(
-                            "flex-1 truncate text-sm",
-                            collapsed && "sr-only",
+                            'flex-1 truncate text-sm',
+                            collapsed && 'sr-only',
                             active
-                              ? "text-primary font-medium"
-                              : "text-sidebar-foreground",
+                              ? 'text-primary font-medium'
+                              : 'text-sidebar-foreground'
                           )}
                         >
                           {item.label}
@@ -311,8 +311,8 @@ function AppSidebarContent() {
         <SidebarGroup className="py-3">
           <SidebarGroupLabel
             className={cn(
-              "text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2",
-              collapsed && "sr-only",
+              'text-muted-foreground font-semibold text-[11px] uppercase tracking-wider px-4 mb-2',
+              collapsed && 'sr-only'
             )}
           >
             Settings
@@ -322,7 +322,7 @@ function AppSidebarContent() {
               {/* Settings Items */}
               {settingsSection?.items.map((item) => {
                 const Icon = item.icon;
-                const active = isActive(item.path || "");
+                const active = isActive(item.path || '');
 
                 return (
                   <SidebarMenuItem key={item.id}>
@@ -335,17 +335,17 @@ function AppSidebarContent() {
                       tooltip={collapsed ? item.label : undefined}
                       disabled={item.disabled}
                       className={cn(
-                        "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
-                        "hover:bg-sidebar-accent/50",
-                        collapsed && "justify-center px-2",
+                        'gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
+                        'hover:bg-sidebar-accent/50',
+                        collapsed && 'justify-center px-2',
                         active &&
-                          "bg-primary/10 border-l-[3px] border-primary text-primary font-medium",
-                        item.disabled && "opacity-50 cursor-not-allowed",
+                          'bg-primary/10 border-l-[3px] border-primary text-primary font-medium',
+                        item.disabled && 'opacity-50 cursor-not-allowed'
                       )}
                       aria-label={generateNavigationAriaLabel(
                         item.label,
                         active,
-                        item.disabled,
+                        item.disabled
                       )}
                       aria-current={getAriaCurrentState(active)}
                       role="menuitem"
@@ -354,17 +354,17 @@ function AppSidebarContent() {
                     >
                       <Icon
                         className={cn(
-                          "h-5 w-5 flex-shrink-0 transition-colors",
-                          active ? "text-primary" : "text-muted-foreground",
+                          'h-5 w-5 flex-shrink-0 transition-colors',
+                          active ? 'text-primary' : 'text-muted-foreground'
                         )}
                       />
                       <span
                         className={cn(
-                          "flex-1 truncate text-sm",
-                          collapsed && "sr-only",
+                          'flex-1 truncate text-sm',
+                          collapsed && 'sr-only',
                           active
-                            ? "text-primary font-medium"
-                            : "text-sidebar-foreground",
+                            ? 'text-primary font-medium'
+                            : 'text-sidebar-foreground'
                         )}
                       >
                         {item.label}
@@ -379,11 +379,11 @@ function AppSidebarContent() {
                 <SidebarMenuButton
                   onClick={handleLogoutClick}
                   onKeyDown={handleLogoutKeyDown}
-                  tooltip={collapsed ? "Sign Out" : undefined}
+                  tooltip={collapsed ? 'Sign Out' : undefined}
                   className={cn(
-                    "gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
-                    "text-destructive hover:bg-destructive/10 hover:text-destructive",
-                    collapsed && "justify-center px-2",
+                    'gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
+                    'text-destructive hover:bg-destructive/10 hover:text-destructive',
+                    collapsed && 'justify-center px-2'
                   )}
                   aria-label="Sign out of your account"
                   aria-describedby="logout-description"
@@ -393,8 +393,8 @@ function AppSidebarContent() {
                   <LogOut className="h-5 w-5 flex-shrink-0" />
                   <span
                     className={cn(
-                      "flex-1 truncate text-sm",
-                      collapsed && "sr-only",
+                      'flex-1 truncate text-sm',
+                      collapsed && 'sr-only'
                     )}
                   >
                     Sign Out

@@ -1,6 +1,6 @@
-import * as React from "react";
-import { MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import * as React from 'react';
+import { MessageCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function LiveChatIndicator() {
   const [isOpen, setIsOpen] = React.useState(false);

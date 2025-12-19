@@ -1,7 +1,7 @@
-import React, { memo } from "react";
-import type { Position, PositionMetricsData } from "@/types/position";
+import type { Position, PositionMetricsData } from '@/types/position';
+import { type FC } from 'react';
 
-export const PositionCard: React.FC<{
+export const PositionCard: FC<{
   position: Position;
   onClose?: (id: string) => void;
   onModify?: (id: string) => void;
@@ -12,7 +12,7 @@ export const PositionCard: React.FC<{
   return <div>{position.symbol}</div>;
 };
 
-export const PositionMetrics: React.FC<{ metrics: PositionMetricsData }> = ({
+export const PositionMetrics: FC<{ metrics: PositionMetricsData }> = ({
   metrics,
 }) => {
   // Minimal stub for test compatibility

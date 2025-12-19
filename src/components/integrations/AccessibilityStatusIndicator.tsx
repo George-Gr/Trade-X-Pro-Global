@@ -1,9 +1,16 @@
-import React, { useState } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
+
+interface AccessibilityPreferences {
+  fontSize: number;
+  contrast: string;
+  fontFamily: string;
+  [key: string]: unknown;
+}
 
 interface AccessibilityStatusIndicatorProps {
   report: Record<string, unknown> | null;
-  preferences: ReturnType<any>;
+  preferences: AccessibilityPreferences;
 }
 
 export function AccessibilityStatusIndicator({
@@ -15,13 +22,13 @@ export function AccessibilityStatusIndicator({
   if (!report) return null;
 
   const compliance = report.compliance as Record<string, unknown>;
-  const score = typeof report.score === "number" ? report.score : 0;
+  const score = typeof report.score === 'number' ? report.score : 0;
   const issues = Array.isArray(report.issues) ? report.issues : [];
 
   const highContrast = preferences.highContrast === true;
   const largeFonts = preferences.largeFonts === true;
   const reducedMotion = preferences.reducedMotion === true;
-  const colorBlindMode = (preferences.colorBlindMode as string) || "none";
+  const colorBlindMode = (preferences.colorBlindMode as string) || 'none';
 
   return (
     <div className="accessibility-status fixed bottom-4 left-4 bg-white border border-gray-200 rounded-lg shadow-lg max-w-sm z-50">
@@ -31,7 +38,7 @@ export function AccessibilityStatusIndicator({
           onClick={() => setIsVisible(!isVisible)}
           className="text-gray-500 hover:text-gray-700"
         >
-          {isVisible ? "−" : "+"}
+          {isVisible ? '−' : '+'}
         </button>
       </div>
 
@@ -43,10 +50,10 @@ export function AccessibilityStatusIndicator({
               <span
                 className={`text-sm font-bold ${
                   score >= 95
-                    ? "text-green-600"
+                    ? 'text-green-600'
                     : score >= 90
-                      ? "text-yellow-600"
-                      : "text-red-600"
+                    ? 'text-yellow-600'
+                    : 'text-red-600'
                 }`}
               >
                 {score}/100
@@ -56,10 +63,10 @@ export function AccessibilityStatusIndicator({
               <div
                 className={`h-2 rounded-full ${
                   score >= 95
-                    ? "bg-green-500"
+                    ? 'bg-green-500'
                     : score >= 90
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
+                    ? 'bg-yellow-500'
+                    : 'bg-red-500'
                 }`}
                 style={{ width: `${score}%` }}
               />
@@ -69,36 +76,36 @@ export function AccessibilityStatusIndicator({
           <div className="grid grid-cols-3 gap-2 mb-3 text-xs">
             <div
               className={cn(
-                "p-2 rounded text-center",
+                'p-2 rounded text-center',
                 compliance.wcagAA
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800",
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
               )}
             >
               <div className="font-medium">WCAG AA</div>
-              <div>{compliance.wcagAA ? "✓" : "✗"}</div>
+              <div>{compliance.wcagAA ? '✓' : '✗'}</div>
             </div>
             <div
               className={cn(
-                "p-2 rounded text-center",
+                'p-2 rounded text-center',
                 compliance.wcagAAA
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800",
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
               )}
             >
               <div className="font-medium">WCAG AAA</div>
-              <div>{compliance.wcagAAA ? "✓" : "✗"}</div>
+              <div>{compliance.wcagAAA ? '✓' : '✗'}</div>
             </div>
             <div
               className={cn(
-                "p-2 rounded text-center",
+                'p-2 rounded text-center',
                 compliance.section508
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800",
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
               )}
             >
               <div className="font-medium">Section 508</div>
-              <div>{compliance.section508 ? "✓" : "✗"}</div>
+              <div>{compliance.section508 ? '✓' : '✗'}</div>
             </div>
           </div>
 
@@ -120,7 +127,7 @@ export function AccessibilityStatusIndicator({
             </div>
           )}
 
-          {colorBlindMode !== "none" && (
+          {colorBlindMode !== 'none' && (
             <div className="mb-2 p-2 bg-blue-50 text-blue-800 rounded text-xs">
               Color vision: {colorBlindMode}
             </div>

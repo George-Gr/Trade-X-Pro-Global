@@ -7,24 +7,24 @@
  * - Query timeouts
  */
 
-import * as React from "react";
-import { AlertCircle, WifiOff, RefreshCw, Zap } from "lucide-react";
+import * as React from 'react';
+import { AlertCircle, WifiOff, RefreshCw, Zap } from 'lucide-react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface ErrorUIProps {
   error?: string | null;
   onRetry?: () => void;
   title?: string;
   description?: string;
-  variant?: "inline" | "card" | "banner";
+  variant?: 'inline' | 'card' | 'banner';
   dismissible?: boolean;
   onDismiss?: () => void;
 }
@@ -35,7 +35,7 @@ interface ErrorUIProps {
 export const ErrorMessage: React.FC<ErrorUIProps> = ({
   error,
   onRetry,
-  title = "Error Loading Data",
+  title = 'Error Loading Data',
   description,
   dismissible = false,
   onDismiss,
@@ -168,8 +168,8 @@ export const DataLoadingFallback: React.FC<{
   description?: string;
   onRetry?: () => void;
 }> = ({
-  title = "Unable to Load Data",
-  description = "There was a problem loading this data. Please try again later.",
+  title = 'Unable to Load Data',
+  description = 'There was a problem loading this data. Please try again later.',
   onRetry,
 }) => {
   return (
@@ -201,18 +201,18 @@ export const ConnectionStatus: React.FC<{
     <div className="flex items-center gap-2">
       <div
         className={cn(
-          "h-2 w-2 rounded-full transition-colors",
-          isConnected ? "bg-green-500" : "bg-red-500",
+          'h-2 w-2 rounded-full transition-colors',
+          isConnected ? 'bg-green-500' : 'bg-red-500'
         )}
       />
       {showLabel && (
         <span
           className={cn(
-            "text-xs font-medium",
-            isConnected ? "text-green-700" : "text-red-700",
+            'text-xs font-medium',
+            isConnected ? 'text-green-700' : 'text-red-700'
           )}
         >
-          {isConnected ? "Connected" : "Disconnected"}
+          {isConnected ? 'Connected' : 'Disconnected'}
         </span>
       )}
     </div>

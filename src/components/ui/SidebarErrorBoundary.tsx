@@ -6,19 +6,19 @@
  * Implements graceful degradation and recovery mechanisms.
  */
 
-import * as React from "react";
-import { AlertTriangle, RefreshCw, Home, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import * as React from 'react';
+import { AlertTriangle, RefreshCw, Home, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { useToast, toast } from "@/hooks/use-toast";
+} from '@/components/ui/card';
+import { useToast, toast } from '@/hooks/use-toast';
 // Re-export navigation item helper boundary for compatibility with existing imports/tests
-export { NavigationItemErrorBoundary } from "@/lib/sidebarErrorHandling";
+export { NavigationItemErrorBoundary } from '@/lib/sidebarErrorHandling';
 
 interface SidebarErrorBoundaryState {
   hasError: boolean;
@@ -48,7 +48,7 @@ export class SidebarErrorBoundary extends React.Component<
   }
 
   static getDerivedStateFromError(
-    error: Error,
+    error: Error
   ): Partial<SidebarErrorBoundaryState> {
     return { hasError: true, error };
   }
@@ -69,14 +69,14 @@ export class SidebarErrorBoundary extends React.Component<
     }
 
     // Show toast notification for critical navigation errors (imperative toast for class components)
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // Use setTimeout to ensure toast is shown after re-render
       setTimeout(() => {
         toast({
-          title: "Navigation Error",
+          title: 'Navigation Error',
           description:
             "We're experiencing issues with the navigation menu. Please try refreshing the page.",
-          variant: "destructive",
+          variant: 'destructive',
         });
       }, 100);
     }
@@ -92,15 +92,15 @@ export class SidebarErrorBoundary extends React.Component<
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
       userAgent:
-        typeof window !== "undefined" ? window.navigator.userAgent : "server",
-      url: typeof window !== "undefined" ? window.location.href : "server",
+        typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
+      url: typeof window !== 'undefined' ? window.location.href : 'server',
       userId: this.getUserId(), // You could extract this from auth context
     };
 
     // Example: Send to console (replace with actual error tracking service)
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // In production, replace this with your error tracking service
-      console.error("🚨 Sidebar Error Report:", errorData);
+      console.error('🚨 Sidebar Error Report:', errorData);
     }
   };
 
@@ -119,7 +119,7 @@ export class SidebarErrorBoundary extends React.Component<
 
   handleReload = () => {
     // Force page reload to recover from error
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       window.location.reload();
       return;
     }

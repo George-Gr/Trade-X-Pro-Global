@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 interface SectionHeaderProps {
   /** Main title of the section */
@@ -10,9 +10,9 @@ interface SectionHeaderProps {
   /** Custom content to render below the headers (optional) */
   children?: ReactNode;
   /** Alignment of text (default: center) */
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   /** Size variant */
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const SectionHeader = ({
@@ -20,22 +20,22 @@ export const SectionHeader = ({
   subtitle,
   description,
   children,
-  align = "center",
-  size = "lg",
+  align = 'center',
+  size = 'lg',
 }: SectionHeaderProps) => {
   const alignClass = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
   }[align];
 
   const titleSize = {
-    sm: "text-2xl md:text-3xl",
-    md: "text-3xl md:text-4xl",
-    lg: "text-4xl md:text-5xl",
+    sm: 'text-2xl md:text-3xl',
+    md: 'text-3xl md:text-4xl',
+    lg: 'text-4xl md:text-5xl',
   }[size];
 
-  const descriptionMaxWidth = align === "center" ? "max-w-2xl mx-auto" : "";
+  const descriptionMaxWidth = align === 'center' ? 'max-w-2xl mx-auto' : '';
 
   return (
     <div className={`${alignClass} mb-8`}>

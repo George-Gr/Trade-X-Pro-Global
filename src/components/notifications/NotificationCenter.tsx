@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useCallback, memo } from "react";
-import { Bell, Check, CheckCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import { useAuthData } from "@/contexts/AuthenticatedLayoutContext";
-import { useNotifications } from "@/contexts/notificationContextHelpers";
-import { formatDistanceToNow } from "date-fns";
+} from '@/components/ui/dropdown-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuthData } from '@/contexts/AuthenticatedLayoutContext';
+import { useNotifications } from '@/contexts/notificationContextHelpers';
+import { supabase } from '@/integrations/supabase/client';
+import { formatDistanceToNow } from 'date-fns';
+import { Bell, Check, CheckCheck } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Notification {
   id: string;
@@ -34,10 +34,10 @@ export function NotificationCenter() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
+      .from('notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
       .limit(50);
 
     if (!error && data) {
@@ -52,18 +52,18 @@ export function NotificationCenter() {
     fetchNotifications();
 
     const channel = supabase
-      .channel("notification-center")
+      .channel('notification-center')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "notifications",
+          event: '*',
+          schema: 'public',
+          table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
         () => {
           fetchNotifications();
-        },
+        }
       )
       .subscribe();
 
@@ -79,26 +79,26 @@ export function NotificationCenter() {
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case "order_filled":
-      case "order_executed":
-        return "📊";
-      case "margin_warning":
-      case "margin_call":
-        return "⚠️";
-      case "stop_out":
-        return "🛑";
-      case "pnl_milestone":
-        return "🎯";
-      case "position_update":
-        return "📈";
-      case "kyc_update":
-        return "📄";
-      case "price_alert":
-        return "🔔";
-      case "risk_event":
-        return "⚡";
+      case 'order_filled':
+      case 'order_executed':
+        return '📊';
+      case 'margin_warning':
+      case 'margin_call':
+        return '⚠️';
+      case 'stop_out':
+        return '🛑';
+      case 'pnl_milestone':
+        return '🎯';
+      case 'position_update':
+        return '📈';
+      case 'kyc_update':
+        return '📄';
+      case 'price_alert':
+        return '🔔';
+      case 'risk_event':
+        return '⚡';
       default:
-        return "ℹ️";
+        return 'ℹ️';
     }
   };
 
@@ -112,7 +112,7 @@ export function NotificationCenter() {
               variant="destructive"
               className="absolute -top-4 -right-1 h-5 w-5 flex items-center justify-center p-4 text-xs"
             >
-              {unreadCount > 9 ? "9+" : unreadCount}
+              {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
         </Button>
@@ -146,7 +146,7 @@ export function NotificationCenter() {
               <DropdownMenuItem
                 key={notification.id}
                 className={`p-4 cursor-pointer ${
-                  !notification.read ? "bg-accent/50" : ""
+                  !notification.read ? 'bg-accent/50' : ''
                 }`}
               >
                 <div className="flex items-start gap-4 w-full">

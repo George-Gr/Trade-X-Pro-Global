@@ -1,47 +1,47 @@
-import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from '@/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 const skeletonVariants = cva(
-  "animate-pulse-slow bg-muted relative overflow-hidden",
+  'animate-pulse-slow bg-muted relative overflow-hidden',
   {
     variants: {
       variant: {
-        default: "rounded-md",
-        text: "rounded h-4 w-full",
-        heading: "rounded h-8 w-3/4",
-        subheading: "rounded h-6 w-2/3",
-        caption: "rounded h-3 w-1/2",
-        avatar: "rounded-full h-10 w-10",
-        avatarSm: "rounded-full h-8 w-8",
-        avatarLg: "rounded-full h-16 w-16",
-        avatarXl: "rounded-full h-20 w-20",
-        button: "rounded-md h-10 w-24",
-        buttonSm: "rounded-md h-8 w-20",
-        buttonLg: "rounded-md h-12 w-32",
-        card: "rounded-lg h-32 w-full",
-        cardSm: "rounded-lg h-24 w-full",
-        cardLg: "rounded-lg h-48 w-full",
-        table: "rounded h-12 w-full",
-        tableRow: "rounded h-16 w-full",
-        thumbnail: "rounded-md h-24 w-24",
-        thumbnailLg: "rounded-md h-32 w-32",
-        badge: "rounded-full h-6 w-16",
-        input: "rounded-md h-10 w-full",
-        inputLg: "rounded-md h-12 w-full",
-        metric: "rounded h-8 w-1/2",
-        metricLg: "rounded h-10 w-3/4",
-        status: "rounded-full h-4 w-4",
+        default: 'rounded-md',
+        text: 'rounded h-4 w-full',
+        heading: 'rounded h-8 w-3/4',
+        subheading: 'rounded h-6 w-2/3',
+        caption: 'rounded h-3 w-1/2',
+        avatar: 'rounded-full h-10 w-10',
+        avatarSm: 'rounded-full h-8 w-8',
+        avatarLg: 'rounded-full h-16 w-16',
+        avatarXl: 'rounded-full h-20 w-20',
+        button: 'rounded-md h-10 w-24',
+        buttonSm: 'rounded-md h-8 w-20',
+        buttonLg: 'rounded-md h-12 w-32',
+        card: 'rounded-lg h-32 w-full',
+        cardSm: 'rounded-lg h-24 w-full',
+        cardLg: 'rounded-lg h-48 w-full',
+        table: 'rounded h-12 w-full',
+        tableRow: 'rounded h-16 w-full',
+        thumbnail: 'rounded-md h-24 w-24',
+        thumbnailLg: 'rounded-md h-32 w-32',
+        badge: 'rounded-full h-6 w-16',
+        input: 'rounded-md h-10 w-full',
+        inputLg: 'rounded-md h-12 w-full',
+        metric: 'rounded h-8 w-1/2',
+        metricLg: 'rounded h-10 w-3/4',
+        status: 'rounded-full h-4 w-4',
       },
       shimmer: {
         true: "after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/40 after:to-transparent after:-translate-x-full after:animate-shimmer",
-        false: "",
+        false: '',
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: 'default',
       shimmer: false,
     },
-  },
+  }
 );
 
 export interface SkeletonProps
@@ -67,12 +67,12 @@ function SkeletonText({
   className?: string;
 }) {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {Array.from({ length: lines }).map((_, i) => (
         <Skeleton
           key={i}
           variant="text"
-          className={i === lines - 1 ? "w-2/3" : ""}
+          className={i === lines - 1 ? 'w-2/3' : ''}
         />
       ))}
     </div>
@@ -81,7 +81,7 @@ function SkeletonText({
 
 function SkeletonCard({ className }: { className?: string }) {
   return (
-    <div className={cn("space-y-3", className)}>
+    <div className={cn('space-y-3', className)}>
       <Skeleton variant="thumbnail" className="w-full h-48" />
       <Skeleton variant="heading" />
       <SkeletonText lines={2} />

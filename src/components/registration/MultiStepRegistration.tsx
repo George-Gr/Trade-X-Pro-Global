@@ -1,21 +1,13 @@
-import * as React from "react";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import {
-  TrendingUp,
-  ArrowRight,
-  ArrowLeft,
-  Check,
-  Loader2,
-} from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabaseBrowserClient";
-import StepOne from "./StepOne";
-import StepTwo from "./StepTwo";
-import RegistrationSuccess from "./RegistrationSuccess";
+import { Card } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import RegistrationSuccess from './RegistrationSuccess';
+import StepOne from './StepOne';
+import StepTwo from './StepTwo';
 
 export interface RegistrationFormData {
   // Step 1 - Personal Info
@@ -36,18 +28,18 @@ export interface RegistrationFormData {
 }
 
 const initialFormData: RegistrationFormData = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  address: "",
-  password: "",
-  confirmPassword: "",
-  tradingExperience: "",
-  occupation: "",
-  financialCapability: "",
-  reasonForJoining: "",
-  tradingGoals: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  address: '',
+  password: '',
+  confirmPassword: '',
+  tradingExperience: '',
+  occupation: '',
+  financialCapability: '',
+  reasonForJoining: '',
+  tradingGoals: '',
 };
 
 const MultiStepRegistration = () => {
@@ -77,7 +69,7 @@ const MultiStepRegistration = () => {
     try {
       // Call edge function to create user and lead
       const { data, error } = await supabase.functions.invoke(
-        "create-user-with-lead",
+        'create-user-with-lead',
         {
           body: {
             email: formData.email,
@@ -92,7 +84,7 @@ const MultiStepRegistration = () => {
             reasonForJoining: formData.reasonForJoining,
             tradingGoals: formData.tradingGoals,
           },
-        },
+        }
       );
 
       if (error) throw error;
@@ -103,16 +95,16 @@ const MultiStepRegistration = () => {
 
       setIsComplete(true);
       toast({
-        title: "Registration Successful!",
+        title: 'Registration Successful!',
         description:
-          "Your account has been created. Please check your email to verify your account.",
+          'Your account has been created. Please check your email to verify your account.',
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       toast({
-        title: "Registration Failed",
+        title: 'Registration Failed',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -132,12 +124,12 @@ const MultiStepRegistration = () => {
         <motion.div
           className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold/30 to-transparent blur-3xl"
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
           className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-accent/30 to-transparent blur-3xl"
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
         <div className="absolute inset-0 pattern-dots opacity-20" />
       </div>
@@ -170,11 +162,11 @@ const MultiStepRegistration = () => {
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
                 currentStep >= 1
-                  ? "bg-gold text-gold-foreground"
-                  : "bg-primary-foreground/20 text-primary-foreground/50"
+                  ? 'bg-gold text-gold-foreground'
+                  : 'bg-primary-foreground/20 text-primary-foreground/50'
               }`}
             >
-              {currentStep > 1 ? <Check className="h-5 w-5" /> : "1"}
+              {currentStep > 1 ? <Check className="h-5 w-5" /> : '1'}
             </div>
             <span className="ml-2 text-sm text-primary-foreground/70">
               Personal Info
@@ -182,15 +174,17 @@ const MultiStepRegistration = () => {
           </div>
           <div className="w-12 h-0.5 bg-primary-foreground/20">
             <div
-              className={`h-full bg-gold transition-all duration-300 ${currentStep > 1 ? "w-full" : "w-0"}`}
+              className={`h-full bg-gold transition-all duration-300 ${
+                currentStep > 1 ? 'w-full' : 'w-0'
+              }`}
             />
           </div>
           <div className="flex items-center">
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
                 currentStep >= 2
-                  ? "bg-gold text-gold-foreground"
-                  : "bg-primary-foreground/20 text-primary-foreground/50"
+                  ? 'bg-gold text-gold-foreground'
+                  : 'bg-primary-foreground/20 text-primary-foreground/50'
               }`}
             >
               2
@@ -253,7 +247,7 @@ const MultiStepRegistration = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <p className="text-sm text-primary-foreground/70">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link
               to="/login"
               className="text-gold hover:text-gold-hover font-medium transition-colors"

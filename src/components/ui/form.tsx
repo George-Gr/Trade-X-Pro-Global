@@ -1,6 +1,6 @@
-import * as React from "react";
-import * as LabelPrimitive from "@radix-ui/react-label";
-import { Slot } from "@radix-ui/react-slot";
+import * as React from 'react';
+import * as LabelPrimitive from '@radix-ui/react-label';
+import { Slot } from '@radix-ui/react-slot';
 import {
   Controller,
   ControllerProps,
@@ -8,10 +8,10 @@ import {
   FieldValues,
   FormProvider,
   useFormContext,
-} from "react-hook-form";
+} from 'react-hook-form';
 
-import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
+import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 const Form = FormProvider;
 
@@ -23,7 +23,7 @@ type FormFieldContextValue<
 };
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue,
+  {} as FormFieldContextValue
 );
 
 const FormField = <
@@ -47,7 +47,7 @@ const useFormField = () => {
   const fieldState = getFieldState(fieldContext.name, formState);
 
   if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>");
+    throw new Error('useFormField should be used within <FormField>');
   }
 
   const { id } = itemContext;
@@ -67,7 +67,7 @@ type FormItemContextValue = {
 };
 
 const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue,
+  {} as FormItemContextValue
 );
 
 const FormItem = React.forwardRef<
@@ -78,11 +78,11 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div ref={ref} className={cn('space-y-2', className)} {...props} />
     </FormItemContext.Provider>
   );
 });
-FormItem.displayName = "FormItem";
+FormItem.displayName = 'FormItem';
 
 interface FormLabelProps extends React.ComponentPropsWithoutRef<
   typeof LabelPrimitive.Root
@@ -100,10 +100,10 @@ const FormLabel = React.forwardRef<
     <Label
       ref={ref}
       className={cn(
-        "text-sm font-medium",
-        error ? "text-destructive font-semibold" : "text-foreground",
-        "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-        className,
+        'text-sm font-medium',
+        error ? 'text-destructive font-semibold' : 'text-foreground',
+        'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        className
       )}
       htmlFor={formItemId}
       {...props}
@@ -117,7 +117,7 @@ const FormLabel = React.forwardRef<
     </Label>
   );
 });
-FormLabel.displayName = "FormLabel";
+FormLabel.displayName = 'FormLabel';
 
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
@@ -131,8 +131,8 @@ const FormControl = React.forwardRef<
       ref={ref}
       id={formItemId}
       className={cn(
-        error && "form-field-error", // FE-012: Apply error state styling
-        className,
+        error && 'form-field-error', // FE-012: Apply error state styling
+        className
       )}
       aria-describedby={
         !error
@@ -144,7 +144,7 @@ const FormControl = React.forwardRef<
     />
   );
 });
-FormControl.displayName = "FormControl";
+FormControl.displayName = 'FormControl';
 
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -157,14 +157,14 @@ const FormDescription = React.forwardRef<
       ref={ref}
       id={formDescriptionId}
       className={cn(
-        "text-sm text-secondary-contrast leading-relaxed",
-        className,
+        'text-sm text-secondary-contrast leading-relaxed',
+        className
       )}
       {...props}
     />
   );
 });
-FormDescription.displayName = "FormDescription";
+FormDescription.displayName = 'FormDescription';
 
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
@@ -182,9 +182,9 @@ const FormMessage = React.forwardRef<
       ref={ref}
       id={formMessageId}
       className={cn(
-        "error-message", // FE-012: Use standardized error message styling
-        "text-sm font-medium",
-        className,
+        'error-message', // FE-012: Use standardized error message styling
+        'text-sm font-medium',
+        className
       )}
       role="alert"
       aria-live="polite"
@@ -205,7 +205,7 @@ const FormMessage = React.forwardRef<
     </p>
   );
 });
-FormMessage.displayName = "FormMessage";
+FormMessage.displayName = 'FormMessage';
 
 export {
   Form,

@@ -1,42 +1,42 @@
-import { lazy, Suspense, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useOrderExecution } from "@/hooks/useOrderExecution";
-import { usePriceUpdates } from "@/hooks/usePriceUpdates";
-import { useAssetSpecs } from "@/hooks/useAssetSpecs";
-import { useSLTPMonitoring } from "@/hooks/useSLTPMonitoring";
-import { OrderTemplate } from "@/hooks/useOrderTemplates";
-import { Card } from "@/components/ui/card";
+import { lazy, Suspense, useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { useOrderExecution } from '@/hooks/useOrderExecution';
+import { usePriceUpdates } from '@/hooks/usePriceUpdates';
+import { useAssetSpecs } from '@/hooks/useAssetSpecs';
+import { useSLTPMonitoring } from '@/hooks/useSLTPMonitoring';
+import { OrderTemplate } from '@/hooks/useOrderTemplates';
+import { Card } from '@/components/ui/card';
 import {
   Loader2,
   TrendingUp,
   TrendingDown,
   Signal,
   Bookmark,
-} from "lucide-react";
-import { OrderType } from "./OrderTypeSelector";
-import { OrderFormData } from "./OrderForm";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import { OrderType } from './OrderTypeSelector';
+import { OrderFormData } from './OrderForm';
+import { cn } from '@/lib/utils';
 
 const OrderTemplatesDialog = lazy(() =>
-  import("./OrderTemplatesDialog").then((module) => ({
+  import('./OrderTemplatesDialog').then((module) => ({
     default: module.OrderTemplatesDialog,
-  })),
+  }))
 );
 const OrderForm = lazy(() =>
-  import("./OrderForm").then((module) => ({ default: module.OrderForm })),
+  import('./OrderForm').then((module) => ({ default: module.OrderForm }))
 );
 const OrderPreview = lazy(() =>
-  import("./OrderPreview").then((module) => ({ default: module.OrderPreview })),
+  import('./OrderPreview').then((module) => ({ default: module.OrderPreview }))
 );
 const OrderTypeSelector = lazy(() =>
-  import("./OrderTypeSelector").then((module) => ({
+  import('./OrderTypeSelector').then((module) => ({
     default: module.OrderTypeSelector,
-  })),
+  }))
 );
 const AlertDialogComponent = lazy(() =>
-  import("./TradingPanelConfirmationDialog").then((module) => ({
+  import('./TradingPanelConfirmationDialog').then((module) => ({
     default: module.default,
-  })),
+  }))
 );
 
 interface TradingPanelProps {
@@ -44,17 +44,17 @@ interface TradingPanelProps {
 }
 
 const TradingPanel = ({ symbol }: TradingPanelProps) => {
-  const [orderType, setOrderType] = useState<OrderType>("market");
+  const [orderType, setOrderType] = useState<OrderType>('market');
   const [formData, setFormData] = useState<Partial<OrderFormData>>({
     symbol,
-    side: "buy",
+    side: 'buy',
     quantity: 0.01,
-    type: "market",
+    type: 'market',
   });
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<OrderFormData | null>(null);
-  const [activeView, setActiveView] = useState<"details" | "preview">(
-    "details",
+  const [activeView, setActiveView] = useState<'details' | 'preview'>(
+    'details'
   );
 
   const { toast } = useToast();
@@ -87,7 +87,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
 
   const handleFormSubmit = async (
     data: OrderFormData,
-    side: "buy" | "sell",
+    side: 'buy' | 'sell'
   ) => {
     setPendingOrder({ ...data, side });
     setConfirmDialogOpen(true);
@@ -99,21 +99,21 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     setConfirmDialogOpen(false);
 
     let orderPrice: number | undefined;
-    if (pendingOrder.type === "limit" && pendingOrder.limitPrice) {
+    if (pendingOrder.type === 'limit' && pendingOrder.limitPrice) {
       orderPrice = pendingOrder.limitPrice;
-    } else if (pendingOrder.type === "stop" && pendingOrder.stopPrice) {
+    } else if (pendingOrder.type === 'stop' && pendingOrder.stopPrice) {
       orderPrice = pendingOrder.stopPrice;
-    } else if (pendingOrder.type === "stop_limit" && pendingOrder.limitPrice) {
+    } else if (pendingOrder.type === 'stop_limit' && pendingOrder.limitPrice) {
       orderPrice = pendingOrder.limitPrice;
     }
 
     const result = await executeOrder({
       symbol: pendingOrder.symbol,
       order_type: pendingOrder.type as
-        | "market"
-        | "limit"
-        | "stop"
-        | "stop_limit",
+        | 'market'
+        | 'limit'
+        | 'stop'
+        | 'stop_limit',
       side: pendingOrder.side,
       quantity: pendingOrder.quantity,
       price: orderPrice,
@@ -124,12 +124,12 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     if (result) {
       setFormData({
         symbol,
-        side: "buy",
+        side: 'buy',
         quantity: 0.01,
-        type: "market",
+        type: 'market',
       });
       toast({
-        title: "Order Executed",
+        title: 'Order Executed',
         description: `${pendingOrder.side.toUpperCase()} order for ${pendingOrder.quantity} lots executed successfully.`,
       });
     }
@@ -146,13 +146,13 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
     setFormData((prev) => ({
       ...prev,
       quantity: template.volume,
-      type: template.order_type as "market" | "limit" | "stop" | "stop_limit",
+      type: template.order_type as 'market' | 'limit' | 'stop' | 'stop_limit',
       stopLossPrice: template.stop_loss || undefined,
       takeProfitPrice: template.take_profit ?? undefined,
     }));
     setOrderType(template.order_type as OrderType);
     toast({
-      title: "Template Applied",
+      title: 'Template Applied',
       description: `"${template.name}" settings loaded.`,
     });
   };
@@ -166,7 +166,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             <Signal className="h-3 w-3 text-status-info-foreground" />
             <p className="text-xs text-status-info-foreground">
               Monitoring {monitoredCount} position
-              {monitoredCount !== 1 ? "s" : ""}
+              {monitoredCount !== 1 ? 's' : ''}
             </p>
           </div>
         )}
@@ -185,10 +185,10 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
               <div className="flex items-center gap-2 mt-0.5">
                 <span
                   className={cn(
-                    "font-mono text-2xl font-bold tabular-nums",
+                    'font-mono text-2xl font-bold tabular-nums',
                     priceData?.isStale
-                      ? "text-muted-foreground"
-                      : "text-foreground",
+                      ? 'text-muted-foreground'
+                      : 'text-foreground'
                   )}
                 >
                   {currentPrice.toFixed(5)}
@@ -196,10 +196,10 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
 
                 <div
                   className={cn(
-                    "flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-semibold",
+                    'flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-semibold',
                     isPositiveChange
-                      ? "bg-profit/10 text-profit"
-                      : "bg-loss/10 text-loss",
+                      ? 'bg-profit/10 text-profit'
+                      : 'bg-loss/10 text-loss'
                   )}
                 >
                   {isPositiveChange ? (
@@ -208,7 +208,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                     <TrendingDown className="h-3 w-3" />
                   )}
                   <span>
-                    {isPositiveChange ? "+" : ""}
+                    {isPositiveChange ? '+' : ''}
                     {priceChangePercent.toFixed(2)}%
                   </span>
                 </div>
@@ -218,18 +218,18 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             <div className="flex items-center gap-1.5 text-xs">
               <span
                 className={cn(
-                  "w-2 h-2 rounded-full",
+                  'w-2 h-2 rounded-full',
                   isConnected
-                    ? "bg-profit animate-pulse"
-                    : "bg-muted-foreground",
+                    ? 'bg-profit animate-pulse'
+                    : 'bg-muted-foreground'
                 )}
               />
               <span
                 className={
-                  isConnected ? "text-profit" : "text-muted-foreground"
+                  isConnected ? 'text-profit' : 'text-muted-foreground'
                 }
               >
-                {isConnected ? "Live" : "Offline"}
+                {isConnected ? 'Live' : 'Offline'}
               </span>
             </div>
           </div>
@@ -254,23 +254,23 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
         <div className="md:hidden border-b border-border">
           <div className="grid grid-cols-2">
             <button
-              onClick={() => setActiveView("details")}
+              onClick={() => setActiveView('details')}
               className={cn(
-                "py-2.5 text-xs font-medium border-b-2 transition-colors",
-                activeView === "details"
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground",
+                'py-2.5 text-xs font-medium border-b-2 transition-colors',
+                activeView === 'details'
+                  ? 'border-primary text-foreground'
+                  : 'border-transparent text-muted-foreground'
               )}
             >
               Order Details
             </button>
             <button
-              onClick={() => setActiveView("preview")}
+              onClick={() => setActiveView('preview')}
               className={cn(
-                "py-2.5 text-xs font-medium border-b-2 transition-colors",
-                activeView === "preview"
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground",
+                'py-2.5 text-xs font-medium border-b-2 transition-colors',
+                activeView === 'preview'
+                  ? 'border-primary text-foreground'
+                  : 'border-transparent text-muted-foreground'
               )}
             >
               Order Preview
@@ -284,15 +284,15 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             {/* Order Form */}
             <div
               className={cn(
-                "md:border-r md:border-border p-4 h-full overflow-y-auto",
-                activeView === "details" ? "block" : "hidden md:block",
+                'md:border-r md:border-border p-4 h-full overflow-y-auto',
+                activeView === 'details' ? 'block' : 'hidden md:block'
               )}
             >
               {(isExecuting || isAssetLoading) && (
                 <div className="flex items-center gap-1.5 mb-3">
                   <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                   <span className="text-xs text-muted-foreground">
-                    {isExecuting ? "Executing..." : "Loading..."}
+                    {isExecuting ? 'Executing...' : 'Loading...'}
                   </span>
                 </div>
               )}
@@ -316,8 +316,8 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
             {/* Order Preview */}
             <div
               className={cn(
-                "p-4 bg-muted/10 h-full overflow-y-auto",
-                activeView === "preview" ? "block" : "hidden md:block",
+                'p-4 bg-muted/10 h-full overflow-y-auto',
+                activeView === 'preview' ? 'block' : 'hidden md:block'
               )}
             >
               <Suspense
@@ -330,7 +330,7 @@ const TradingPanel = ({ symbol }: TradingPanelProps) => {
                   currentPrice={currentPrice}
                   assetLeverage={assetLeverage}
                   commission={0.0005}
-                  slippage={orderType === "market" ? 0.0001 : 0}
+                  slippage={orderType === 'market' ? 0.0001 : 0}
                 />
               </Suspense>
             </div>

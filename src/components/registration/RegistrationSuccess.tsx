@@ -1,9 +1,9 @@
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { CheckCircle, Mail, ArrowRight, TrendingUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import * as React from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { CheckCircle, Mail, ArrowRight, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface RegistrationSuccessProps {
   email: string;
@@ -19,12 +19,12 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
         <motion.div
           className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold/30 to-transparent blur-3xl"
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
           className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-500/30 to-transparent blur-3xl"
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
         <div className="absolute inset-0 pattern-dots opacity-20" />
       </div>
@@ -40,7 +40,7 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ email }) => {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+              transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
               className="mb-6"
             >
               <div className="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center">

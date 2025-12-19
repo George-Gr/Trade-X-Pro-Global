@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, Star, TrendingUp, TrendingDown, Plus, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search, Star, TrendingUp, TrendingDown, Plus, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface WatchlistItem {
   symbol: string;
@@ -17,11 +17,11 @@ interface WatchlistItem {
 }
 
 const Watchlist = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([
     {
-      symbol: "EURUSD",
-      name: "Euro / US Dollar",
+      symbol: 'EURUSD',
+      name: 'Euro / US Dollar',
       bid: 1.0845,
       ask: 1.0847,
       change: 0.0012,
@@ -29,8 +29,8 @@ const Watchlist = () => {
       isFavorite: true,
     },
     {
-      symbol: "GBPUSD",
-      name: "British Pound / US Dollar",
+      symbol: 'GBPUSD',
+      name: 'British Pound / US Dollar',
       bid: 1.2634,
       ask: 1.2636,
       change: -0.0021,
@@ -38,8 +38,8 @@ const Watchlist = () => {
       isFavorite: true,
     },
     {
-      symbol: "USDJPY",
-      name: "US Dollar / Japanese Yen",
+      symbol: 'USDJPY',
+      name: 'US Dollar / Japanese Yen',
       bid: 149.82,
       ask: 149.85,
       change: 0.32,
@@ -47,8 +47,8 @@ const Watchlist = () => {
       isFavorite: true,
     },
     {
-      symbol: "AUDUSD",
-      name: "Australian Dollar / US Dollar",
+      symbol: 'AUDUSD',
+      name: 'Australian Dollar / US Dollar',
       bid: 0.6423,
       ask: 0.6425,
       change: 0.0008,
@@ -56,8 +56,8 @@ const Watchlist = () => {
       isFavorite: true,
     },
     {
-      symbol: "BTCUSD",
-      name: "Bitcoin / US Dollar",
+      symbol: 'BTCUSD',
+      name: 'Bitcoin / US Dollar',
       bid: 43250.0,
       ask: 43280.0,
       change: 850.0,
@@ -65,8 +65,8 @@ const Watchlist = () => {
       isFavorite: false,
     },
     {
-      symbol: "XAUUSD",
-      name: "Gold / US Dollar",
+      symbol: 'XAUUSD',
+      name: 'Gold / US Dollar',
       bid: 2045.8,
       ask: 2046.2,
       change: -5.4,
@@ -76,11 +76,11 @@ const Watchlist = () => {
   ]);
 
   const [availableSymbols] = useState([
-    { symbol: "EURGBP", name: "Euro / British Pound" },
-    { symbol: "EURJPY", name: "Euro / Japanese Yen" },
-    { symbol: "USDCHF", name: "US Dollar / Swiss Franc" },
-    { symbol: "NZDUSD", name: "New Zealand Dollar / US Dollar" },
-    { symbol: "ETHUSD", name: "Ethereum / US Dollar" },
+    { symbol: 'EURGBP', name: 'Euro / British Pound' },
+    { symbol: 'EURJPY', name: 'Euro / Japanese Yen' },
+    { symbol: 'USDCHF', name: 'US Dollar / Swiss Franc' },
+    { symbol: 'NZDUSD', name: 'New Zealand Dollar / US Dollar' },
+    { symbol: 'ETHUSD', name: 'Ethereum / US Dollar' },
   ]);
 
   // Simulate real-time price updates
@@ -88,9 +88,9 @@ const Watchlist = () => {
     const interval = setInterval(() => {
       setWatchlist((prev) =>
         prev.map((item) => {
-          const volatility = item.symbol.includes("BTC")
+          const volatility = item.symbol.includes('BTC')
             ? 100
-            : item.symbol.includes("XAU")
+            : item.symbol.includes('XAU')
               ? 2
               : 0.0002;
           const change = (Math.random() - 0.5) * volatility;
@@ -106,7 +106,7 @@ const Watchlist = () => {
             change: newChange,
             changePercent: newChangePercent,
           };
-        }),
+        })
       );
     }, 2000);
 
@@ -118,8 +118,8 @@ const Watchlist = () => {
       prev.map((item) =>
         item.symbol === symbol
           ? { ...item, isFavorite: !item.isFavorite }
-          : item,
-      ),
+          : item
+      )
     );
   };
 
@@ -148,20 +148,20 @@ const Watchlist = () => {
   const filteredWatchlist = watchlist.filter(
     (item) =>
       item.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const formatPrice = (price: number, symbol: string) => {
-    if (symbol.includes("JPY")) return price.toFixed(2);
-    if (symbol.includes("BTC") || symbol.includes("XAU"))
+    if (symbol.includes('JPY')) return price.toFixed(2);
+    if (symbol.includes('BTC') || symbol.includes('XAU'))
       return price.toFixed(2);
     return price.toFixed(4);
   };
 
   const getSpread = (bid: number, ask: number, symbol: string) => {
     const spread = ask - bid;
-    if (symbol.includes("JPY")) return spread.toFixed(2);
-    if (symbol.includes("BTC") || symbol.includes("XAU"))
+    if (symbol.includes('JPY')) return spread.toFixed(2);
+    if (symbol.includes('BTC') || symbol.includes('XAU'))
       return spread.toFixed(2);
     return spread.toFixed(4);
   };
@@ -204,10 +204,10 @@ const Watchlist = () => {
                   >
                     <Star
                       className={cn(
-                        "h-4 w-4 transition-colors",
+                        'h-4 w-4 transition-colors',
                         item.isFavorite
-                          ? "fill-primary text-primary"
-                          : "text-muted-foreground hover:text-foreground",
+                          ? 'fill-primary text-primary'
+                          : 'text-muted-foreground hover:text-foreground'
                       )}
                     />
                   </button>
@@ -220,8 +220,8 @@ const Watchlist = () => {
                       </span>
                       <TrendIcon
                         className={cn(
-                          "h-3 w-3",
-                          isPositive ? "text-profit" : "text-loss",
+                          'h-3 w-3',
+                          isPositive ? 'text-profit' : 'text-loss'
                         )}
                       />
                     </div>
@@ -256,20 +256,20 @@ const Watchlist = () => {
                   <div className="text-right min-w-[80px]">
                     <div
                       className={cn(
-                        "text-sm font-semibold font-mono",
-                        isPositive ? "text-profit" : "text-loss",
+                        'text-sm font-semibold font-mono',
+                        isPositive ? 'text-profit' : 'text-loss'
                       )}
                     >
-                      {isPositive ? "+" : ""}
+                      {isPositive ? '+' : ''}
                       {formatPrice(item.change, item.symbol)}
                     </div>
                     <div
                       className={cn(
-                        "text-xs font-medium",
-                        isPositive ? "text-profit" : "text-loss",
+                        'text-xs font-medium',
+                        isPositive ? 'text-profit' : 'text-loss'
                       )}
                     >
-                      {isPositive ? "+" : ""}
+                      {isPositive ? '+' : ''}
                       {item.changePercent.toFixed(2)}%
                     </div>
                   </div>

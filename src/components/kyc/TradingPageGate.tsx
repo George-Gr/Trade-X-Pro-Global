@@ -11,11 +11,11 @@
  * - Show notification hooks
  */
 
-import React from "react";
-import { useKycTrading } from "@/hooks/useKycTrading";
-import { useKycNotifications } from "@/hooks/useKycNotifications";
-import { KycRequired } from "./KycRequired";
-import { Loader2 } from "lucide-react";
+import React from 'react';
+import { useKycTrading } from '@/hooks/useKycTrading';
+import { useKycNotifications } from '@/hooks/useKycNotifications';
+import { KycRequired } from './KycRequired';
+import { Loader2 } from 'lucide-react';
 
 interface TradingPageGateProps {
   children?: React.ReactNode;

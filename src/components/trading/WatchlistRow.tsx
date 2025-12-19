@@ -1,8 +1,8 @@
-import React from "react";
-import { TrendingUp, TrendingDown, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { PriceAlertDialog } from "./PriceAlertDialog";
+import React from 'react';
+import { TrendingUp, TrendingDown, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { PriceAlertDialog } from './PriceAlertDialog';
 
 interface WatchlistRowProps {
   id: string;
@@ -15,8 +15,8 @@ interface WatchlistRowProps {
   onSymbolClick: (symbol: string) => void;
   onQuickTrade: (
     symbol: string,
-    side: "buy" | "sell",
-    e: React.MouseEvent,
+    side: 'buy' | 'sell',
+    e: React.MouseEvent
   ) => void;
   onRemove: (e: React.MouseEvent) => void;
 }
@@ -41,11 +41,11 @@ const WatchlistRow = React.memo(
     const TrendIcon = isPositive ? TrendingUp : TrendingDown;
 
     const formatPrice = (price: number) => {
-      if (symbol.includes("JPY")) return price.toFixed(2);
+      if (symbol.includes('JPY')) return price.toFixed(2);
       if (
-        symbol.includes("BTC") ||
-        symbol.includes("ETH") ||
-        symbol.includes("XAU")
+        symbol.includes('BTC') ||
+        symbol.includes('ETH') ||
+        symbol.includes('XAU')
       )
         return price.toFixed(2);
       return price.toFixed(5);
@@ -62,8 +62,8 @@ const WatchlistRow = React.memo(
             <span className="font-semibold text-sm">{symbol}</span>
             <TrendIcon
               className={cn(
-                "h-3 w-3",
-                isPositive ? "text-profit" : "text-loss",
+                'h-3 w-3',
+                isPositive ? 'text-profit' : 'text-loss'
               )}
             />
           </div>
@@ -81,11 +81,11 @@ const WatchlistRow = React.memo(
           {priceData ? (
             <div
               className={cn(
-                "text-xs font-medium",
-                isPositive ? "text-profit" : "text-loss",
+                'text-xs font-medium',
+                isPositive ? 'text-profit' : 'text-loss'
               )}
             >
-              {isPositive ? "+" : ""}
+              {isPositive ? '+' : ''}
               {priceData.changePercent.toFixed(2)}%
             </div>
           ) : (
@@ -98,7 +98,7 @@ const WatchlistRow = React.memo(
           <Button
             variant="ghost"
             size="sm"
-            onClick={(e) => onQuickTrade(symbol, "buy", e)}
+            onClick={(e) => onQuickTrade(symbol, 'buy', e)}
             className="h-7 px-4 text-xs bg-buy/10 hover:bg-buy/20 text-buy-foreground"
           >
             Buy
@@ -106,7 +106,7 @@ const WatchlistRow = React.memo(
           <Button
             variant="ghost"
             size="sm"
-            onClick={(e) => onQuickTrade(symbol, "sell", e)}
+            onClick={(e) => onQuickTrade(symbol, 'sell', e)}
             className="h-7 px-4 text-xs bg-sell/10 hover:bg-sell/20 text-sell-foreground"
           >
             Sell
@@ -139,9 +139,9 @@ const WatchlistRow = React.memo(
       prevProps.priceData?.currentPrice === nextProps.priceData?.currentPrice &&
       prevProps.priceData?.changePercent === nextProps.priceData?.changePercent
     );
-  },
+  }
 );
 
-WatchlistRow.displayName = "WatchlistRow";
+WatchlistRow.displayName = 'WatchlistRow';
 
 export default WatchlistRow;

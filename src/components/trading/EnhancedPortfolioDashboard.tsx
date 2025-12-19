@@ -1,48 +1,58 @@
-import * as React from "react";
-import { useMemo } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  TrendingUp,
-  TrendingDown,
-  Wallet,
-  ShieldCheck,
-  AlertTriangle,
-  Info,
-  LayoutList,
-  Clock,
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
-import { usePnLCalculations } from "@/hooks/usePnLCalculations";
-import EnhancedPositionsTable from "./EnhancedPositionsTable";
-import OrderHistory from "./OrderHistory";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/tooltip';
+import { usePnLCalculations } from '@/hooks/usePnLCalculations';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
+import { cn } from '@/lib/utils';
+import {
+  AlertTriangle,
+  Clock,
+  Info,
+  LayoutList,
+  ShieldCheck,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
+} from 'lucide-react';
+import * as React from 'react';
+import { useMemo } from 'react';
+import EnhancedPositionsTable from './EnhancedPositionsTable';
+import OrderHistory from './OrderHistory';
 
 const EnhancedPortfolioDashboard: React.FC = () => {
   const { profile, positions = [], loading, error } = usePortfolioData();
 
   const mappedPositions = useMemo(() => {
-    return positions.map((pos) => ({
-      ...pos,
-      entryPrice: pos.entry_price,
-      currentPrice: pos.current_price,
-      side: (pos.side === "buy" ? "long" : "short") as "long" | "short",
-      margin_required: pos.margin_used || 0,
-    }));
+    return positions.map(
+      (pos: {
+        entry_price: number;
+        current_price: number;
+        side: string;
+        margin_used: number;
+        [key: string]: any;
+      }) => ({
+        ...pos,
+        entryPrice: pos.entry_price,
+        currentPrice: pos.current_price,
+        side: (pos.side === 'buy' ? 'long' : 'short') as 'long' | 'short',
+        margin_required: pos.margin_used || 0,
+      })
+    );
   }, [positions]);
 
   const priceMap = useMemo(() => {
     const map = new Map<string, number>();
-    positions.forEach((pos) => {
-      if (pos.current_price !== null) {
-        map.set(pos.symbol, pos.current_price);
+    positions.forEach(
+      (pos: { symbol: string; current_price: number | null }) => {
+        if (pos.current_price !== null) {
+          map.set(pos.symbol, pos.current_price);
+        }
       }
-    });
+    );
     return map;
   }, [positions]);
 
@@ -50,7 +60,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     mappedPositions,
     priceMap,
     undefined,
-    {},
+    {}
   );
 
   const metrics = useMemo(() => {
@@ -70,14 +80,26 @@ const EnhancedPortfolioDashboard: React.FC = () => {
     const usedMargin = profile.margin_used || 0;
     const freeMargin = balance - usedMargin;
 
-    const unrealizedPnL = (positions || []).reduce((sum, pos) => {
-      const pnlData = positionPnLMap.get(pos.id);
-      if (pnlData) return sum + (pnlData.unrealizedPnL || 0);
-      const posValue = (pos.current_price || 0) * pos.quantity * 100000;
-      const entryValue = (pos.entry_price || 0) * pos.quantity * 100000;
-      const isLong = pos.side === "buy";
-      return sum + (isLong ? posValue - entryValue : entryValue - posValue);
-    }, 0);
+    const unrealizedPnL = (positions || []).reduce(
+      (
+        sum: number,
+        pos: {
+          id: string;
+          side: string;
+          current_price?: number;
+          entry_price?: number;
+          quantity: number;
+        }
+      ) => {
+        const pnlData = positionPnLMap.get(pos.id);
+        if (pnlData) return sum + (pnlData.unrealizedPnL || 0);
+        const posValue = (pos.current_price || 0) * pos.quantity * 100000;
+        const entryValue = (pos.entry_price || 0) * pos.quantity * 100000;
+        const isLong = pos.side === 'buy';
+        return sum + (isLong ? posValue - entryValue : entryValue - posValue);
+      },
+      0
+    );
 
     const equity = balance + unrealizedPnL;
     const marginLevel = usedMargin > 0 ? (equity / usedMargin) * 100 : 100;
@@ -96,10 +118,10 @@ const EnhancedPortfolioDashboard: React.FC = () => {
 
   const getMarginStatus = (level: number) => {
     if (level >= 100)
-      return { color: "text-profit", bg: "bg-profit", label: "Safe" };
+      return { color: 'text-profit', bg: 'bg-profit', label: 'Safe' };
     if (level >= 50)
-      return { color: "text-warning", bg: "bg-warning", label: "Warning" };
-    return { color: "text-loss", bg: "bg-loss", label: "Danger" };
+      return { color: 'text-warning', bg: 'bg-warning', label: 'Warning' };
+    return { color: 'text-loss', bg: 'bg-loss', label: 'Danger' };
   };
 
   const marginStatus = getMarginStatus(metrics.marginLevel);
@@ -112,7 +134,10 @@ const EnhancedPortfolioDashboard: React.FC = () => {
           {/* Equity */}
           <MetricItem
             label="Total Equity"
-            value={`$${metrics.equity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            value={`$${metrics.equity.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`}
             icon={<Wallet className="h-3.5 w-3.5" />}
             tooltip="Account value including unrealized P&L"
           />
@@ -120,7 +145,10 @@ const EnhancedPortfolioDashboard: React.FC = () => {
           {/* Balance */}
           <MetricItem
             label="Balance"
-            value={`$${metrics.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            value={`$${metrics.balance.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`}
             tooltip="Cash balance"
           />
 
@@ -134,9 +162,12 @@ const EnhancedPortfolioDashboard: React.FC = () => {
           {/* Free Margin */}
           <MetricItem
             label="Free Margin"
-            value={`$${metrics.freeMargin.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            value={`$${metrics.freeMargin.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`}
             valueClassName={
-              metrics.freeMargin < 100 ? "text-warning" : undefined
+              metrics.freeMargin < 100 ? 'text-warning' : undefined
             }
             tooltip="Available for new trades"
           />
@@ -144,8 +175,8 @@ const EnhancedPortfolioDashboard: React.FC = () => {
           {/* P&L */}
           <MetricItem
             label="Total P&L"
-            value={`${metrics.pnl >= 0 ? "+" : ""}$${metrics.pnl.toFixed(2)}`}
-            valueClassName={metrics.pnl >= 0 ? "text-profit" : "text-loss"}
+            value={`${metrics.pnl >= 0 ? '+' : ''}$${metrics.pnl.toFixed(2)}`}
+            valueClassName={metrics.pnl >= 0 ? 'text-profit' : 'text-loss'}
             icon={
               metrics.pnl >= 0 ? (
                 <TrendingUp className="h-3.5 w-3.5" />
@@ -159,8 +190,8 @@ const EnhancedPortfolioDashboard: React.FC = () => {
           {/* ROI */}
           <MetricItem
             label="ROI"
-            value={`${metrics.roi >= 0 ? "+" : ""}${metrics.roi.toFixed(2)}%`}
-            valueClassName={metrics.roi >= 0 ? "text-profit" : "text-loss"}
+            value={`${metrics.roi >= 0 ? '+' : ''}${metrics.roi.toFixed(2)}%`}
+            valueClassName={metrics.roi >= 0 ? 'text-profit' : 'text-loss'}
             tooltip="Return on investment"
           />
 
@@ -187,23 +218,23 @@ const EnhancedPortfolioDashboard: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               {metrics.marginLevel >= 100 ? (
-                <ShieldCheck className={cn("h-4 w-4", marginStatus.color)} />
+                <ShieldCheck className={cn('h-4 w-4', marginStatus.color)} />
               ) : (
-                <AlertTriangle className={cn("h-4 w-4", marginStatus.color)} />
+                <AlertTriangle className={cn('h-4 w-4', marginStatus.color)} />
               )}
               <span
                 className={cn(
-                  "font-mono text-sm font-bold",
-                  marginStatus.color,
+                  'font-mono text-sm font-bold',
+                  marginStatus.color
                 )}
               >
                 {metrics.marginLevel.toFixed(0)}%
               </span>
               <span
                 className={cn(
-                  "text-[10px] font-medium px-1.5 py-0.5 rounded",
+                  'text-[10px] font-medium px-1.5 py-0.5 rounded',
                   marginStatus.color,
-                  marginStatus.bg + "/10",
+                  marginStatus.bg + '/10'
                 )}
               >
                 {marginStatus.label}
@@ -212,8 +243,8 @@ const EnhancedPortfolioDashboard: React.FC = () => {
             <div className="mt-1.5 h-1 bg-muted rounded-full overflow-hidden">
               <div
                 className={cn(
-                  "h-full rounded-full transition-all",
-                  marginStatus.bg,
+                  'h-full rounded-full transition-all',
+                  marginStatus.bg
                 )}
                 style={{ width: `${Math.min(metrics.marginLevel, 100)}%` }}
               />
@@ -302,7 +333,7 @@ const MetricItem: React.FC<MetricItemProps> = ({
     </div>
     <div className="flex items-center gap-1.5">
       {icon && <span className={valueClassName}>{icon}</span>}
-      <span className={cn("font-mono text-sm font-semibold", valueClassName)}>
+      <span className={cn('font-mono text-sm font-semibold', valueClassName)}>
         {value}
       </span>
     </div>
