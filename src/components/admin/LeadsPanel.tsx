@@ -1,20 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { logger } from '@/lib/logger';
-import { Button } from '@/components/ui/button';
-import { LoadingButton } from '@/components/ui/LoadingButton';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -23,6 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { LoadingButton } from '@/components/ui/LoadingButton';
 import {
   Sheet,
   SheetContent,
@@ -30,19 +19,29 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
+import {
+  Briefcase,
   DollarSign,
   Eye,
+  FileCheck,
   Loader2,
   Search,
-  FileCheck,
   User,
-  Briefcase,
-  Target,
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Lead {
   id: string;
@@ -270,7 +269,7 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
         .from('kyc_documents')
         .update({
           status: action as 'pending' | 'approved' | 'rejected' | 'resubmitted',
-          rejection_reason: action === 'rejected' ? reason : null,
+          rejection_reason: action === 'rejected' ? reason || null : null,
           reviewed_at: new Date().toISOString(),
         })
         .eq('id' as const, docId as string);
@@ -475,7 +474,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                         <TableCell>
                           <Badge variant="outline" className="capitalize">
                             <span
-                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(lead.status)}`}
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(
+                                lead.status
+                              )}`}
                             />
                             {lead.status}
                           </Badge>
@@ -609,7 +610,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                           </Label>
                           <Badge variant="outline" className="capitalize mt-1">
                             <span
-                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(selectedProfile.kyc_status)}`}
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(
+                                selectedProfile.kyc_status
+                              )}`}
                             />
                             {selectedProfile.kyc_status}
                           </Badge>
@@ -699,7 +702,9 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
                             </span>
                             <Badge variant="outline" className="capitalize">
                               <span
-                                className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(doc.status)}`}
+                                className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(
+                                  doc.status
+                                )}`}
                               />
                               {doc.status}
                             </Badge>

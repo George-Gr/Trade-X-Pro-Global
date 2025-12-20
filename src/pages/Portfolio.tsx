@@ -1,4 +1,9 @@
-import { useEffect, useState } from 'react';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { PortfolioLoading } from '@/components/portfolio/PortfolioLoading';
+import { PriceAlertsManager } from '@/components/trading/PriceAlertsManager';
+import { TrailingStopDialog } from '@/components/trading/TrailingStopDialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -8,27 +13,31 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Loader2, X } from 'lucide-react';
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
-import { usePortfolioData } from '@/hooks/usePortfolioData';
-import { usePriceUpdates } from '@/hooks/usePriceUpdates';
-import { usePositionClose } from '@/hooks/usePositionClose';
-import { PortfolioLoading } from '@/components/portfolio/PortfolioLoading';
-import { usePnLCalculations } from '@/hooks/usePnLCalculations';
 import { useToast } from '@/hooks/use-toast';
-import { TrailingStopDialog } from '@/components/trading/TrailingStopDialog';
-import { PriceAlertsManager } from '@/components/trading/PriceAlertsManager';
+import { usePnLCalculations } from '@/hooks/usePnLCalculations';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
+import { usePositionClose } from '@/hooks/usePositionClose';
+import { usePriceUpdates } from '@/hooks/usePriceUpdates';
+import { formatCurrency, formatMarginLevel } from '@/lib/format';
+import { Loader2, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
+/**
+ * Portfolio component - Displays user's trading positions with real-time price updates and P&L calculations
+ *
+ * Manages position data, handles position closing operations, and displays portfolio metrics including
+ * equity, margin levels, and profit/loss. Subscribes to real-time price updates and automatically
+ * recalculates P&L values. Shows loading skeleton while fetching initial data.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered portfolio page with positions table and portfolio summary
+ */
 const Portfolio = () => {
   const { toast } = useToast();
   const {
     profile,
     positions,
     loading,
-    updatePositionPrices,
-    getTotalUnrealizedPnL,
     calculateEquity,
     calculateFreeMargin,
     calculateMarginLevel,
@@ -41,19 +50,24 @@ const Portfolio = () => {
     new Set()
   );
 
-  // Initialize P&L calculations with memoization
-  const mappedPositions = positions.map((position) => ({
-    ...position,
-    entryPrice: position.entry_price,
-    currentPrice: position.current_price,
-    side: (position.side === 'buy' ? 'long' : 'short') as 'long' | 'short', // Explicit type assertion
-  }));
-
-  const priceMap = new Map(
-    mappedPositions.map((p) => [p.symbol, p.currentPrice])
+  // Memoize position mapping to avoid unnecessary recalculations
+  const mappedPositions = useMemo(
+    () =>
+      positions.map((position) => ({
+        ...position,
+        entryPrice: position.entry_price,
+        currentPrice: position.current_price,
+        side: (position.side === 'buy' ? 'long' : 'short') as 'long' | 'short', // Explicit type assertion
+      })),
+    [positions]
   );
 
-  const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor, getPnLStatus } =
+  const priceMap = useMemo(
+    () => new Map(mappedPositions.map((p) => [p.symbol, p.currentPrice])),
+    [mappedPositions]
+  );
+
+  const { positionPnLMap, portfolioPnL, formatPnL, getPnLColor } =
     usePnLCalculations(
       mappedPositions.map((p) => ({
         ...p,
@@ -65,7 +79,7 @@ const Portfolio = () => {
     );
 
   const symbols = positions.map((p) => p.symbol);
-  const { prices, getPrice } = usePriceUpdates({
+  const { getPrice } = usePriceUpdates({
     symbols,
     intervalMs: 3000,
     enabled: symbols.length > 0 && !loading,
@@ -109,30 +123,10 @@ const Portfolio = () => {
     }
   };
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
-
-  const formatPrice = (value: number, symbol: string) => {
-    const isJpy = symbol.includes('JPY');
-    return value.toFixed(isJpy ? 3 : 5);
-  };
-
-  const formatMarginLevel = (level: number) => {
-    if (!isFinite(level)) return '∞';
-    return `${level.toFixed(0)}%`;
-  };
-
   const balance = profile?.balance || 0;
   const equity = calculateEquity();
   const marginUsed = profile?.margin_used || 0;
   const freeMargin = calculateFreeMargin();
-  const floatingPnL = getTotalUnrealizedPnL();
   const marginLevel = calculateMarginLevel();
 
   // Use memoized P&L calculations for portfolio metrics
@@ -140,7 +134,6 @@ const Portfolio = () => {
   const unrealizedPnL = portfolioPnL.totalUnrealizedPnL || 0;
   const totalPnL = unrealizedPnL + realizedPnL;
   const pnLColor = getPnLColor(totalPnL);
-  const pnLStatus = getPnLStatus(totalPnL);
 
   const portfolioMetrics = [
     { label: 'Balance', value: formatCurrency(balance) },
@@ -173,28 +166,22 @@ const Portfolio = () => {
           </div>
 
           {/* Account Metrics */}
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {portfolioMetrics.map((metric) => (
-                <Card key={metric.label}>
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xs font-medium text-muted-foreground">
-                      {metric.label}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className={`text-lg font-bold ${metric.color || ''}`}>
-                      {metric.value}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {portfolioMetrics.map((metric) => (
+              <Card key={metric.label}>
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xs font-medium text-muted-foreground">
+                    {metric.label}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className={`text-lg font-bold ${metric.color || ''}`}>
+                    {metric.value}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
           {/* Open Positions */}
           <Card>
@@ -202,11 +189,7 @@ const Portfolio = () => {
               <CardTitle>Open Positions</CardTitle>
             </CardHeader>
             <CardContent>
-              {loading ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : positions.length === 0 ? (
+              {positions.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <p className="text-lg">No open positions</p>
                   <p className="text-sm mt-2">
@@ -242,6 +225,33 @@ const Portfolio = () => {
                         position.current_price ||
                         position.entry_price;
 
+                      function formatPriceBySymbol(price: number, symbol: string): string {
+                        // Determine decimal places based on symbol type
+                        const symbolLower = symbol.toLowerCase();
+                        
+                        // Forex pairs typically use 4-5 decimal places
+                        if (symbolLower.includes('eur') || symbolLower.includes('usd') || 
+                            symbolLower.includes('gbp') || symbolLower.includes('jpy') ||
+                            symbolLower.includes('aud') || symbolLower.includes('nzd') ||
+                            symbolLower.includes('cad') || symbolLower.includes('chf')) {
+                          // JPY pairs use 2-3 decimal places, others use 4-5
+                          const isJPY = symbolLower.includes('jpy');
+                          const decimals = isJPY ? 2 : 4;
+                          return price.toFixed(decimals);
+                        }
+                        
+                        // Crypto typically uses 2-8 decimal places depending on the coin
+                        if (symbolLower.includes('btc') || symbolLower.includes('eth')) {
+                          return price.toFixed(2);
+                        }
+                        
+                        if (symbolLower.includes('ltc') || symbolLower.includes('xrp')) {
+                          return price.toFixed(4);
+                        }
+                        
+                        // Stocks and indices typically use 2 decimal places
+                        return price.toFixed(2);
+                      }
                       return (
                         <TableRow key={position.id}>
                           <TableCell className="font-medium">
@@ -260,10 +270,13 @@ const Portfolio = () => {
                           </TableCell>
                           <TableCell>{position.quantity.toFixed(2)}</TableCell>
                           <TableCell>
-                            {formatPrice(position.entry_price, position.symbol)}
+                            {formatPriceBySymbol(
+                              position.entry_price,
+                              position.symbol
+                            )}
                           </TableCell>
                           <TableCell>
-                            {formatPrice(currentPrice, position.symbol)}
+                            {formatPriceBySymbol(currentPrice, position.symbol)}
                           </TableCell>
                           <TableCell className={pnLColor}>
                             <div className="font-medium">
@@ -364,15 +377,15 @@ const Portfolio = () => {
                         marginLevel > 300
                           ? 'text-profit'
                           : marginLevel > 150
-                            ? 'text-yellow-500'
-                            : 'text-loss'
+                          ? 'text-yellow-500'
+                          : 'text-loss'
                       }`}
                     >
                       {marginLevel > 300
                         ? 'Low'
                         : marginLevel > 150
-                          ? 'Medium'
-                          : 'High'}
+                        ? 'Medium'
+                        : 'High'}
                     </div>
                   </div>
                 </div>
@@ -391,7 +404,9 @@ const Portfolio = () => {
                       Unrealized P&L
                     </div>
                     <div
-                      className={`text-2xl font-bold ${getPnLColor(unrealizedPnL)}`}
+                      className={`text-2xl font-bold ${getPnLColor(
+                        unrealizedPnL
+                      )}`}
                     >
                       {formatPnL(unrealizedPnL)}
                     </div>
@@ -401,7 +416,9 @@ const Portfolio = () => {
                       Realized P&L
                     </div>
                     <div
-                      className={`text-2xl font-bold ${getPnLColor(realizedPnL)}`}
+                      className={`text-2xl font-bold ${getPnLColor(
+                        realizedPnL
+                      )}`}
                     >
                       {formatPnL(realizedPnL)}
                     </div>

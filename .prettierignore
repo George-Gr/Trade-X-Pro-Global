@@ -35,7 +35,6 @@ supabase/functions/
 # Git and IDE
 .git/
 .github/
-.vscode/
 .husky/
 
 # Package files

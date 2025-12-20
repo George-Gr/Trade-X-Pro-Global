@@ -1,15 +1,7 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -18,16 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  AlertTriangle,
-  TrendingDown,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Activity,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Activity, AlertCircle, AlertTriangle } from 'lucide-react';
 
 import type { Database } from '@/integrations/supabase/types';
 type MarginCallEventWithProfiles =
@@ -43,7 +28,7 @@ type MarginCallEventWithProfiles =
 const AdminRiskDashboard = () => {
   const queryClient = useQueryClient();
 
-  const { data: marginCalls, isLoading } = useQuery({
+  const { data: marginCalls } = useQuery({
     queryKey: ['admin-margin-calls'],
     queryFn: async () => {
       const { data, error } = await supabase

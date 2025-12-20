@@ -11,13 +11,6 @@
  * - Action buttons for deposit, support, view history
  */
 
-import {
-  AlertCircle,
-  TrendingDown,
-  TrendingUp,
-  DollarSign,
-  X,
-} from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,8 +21,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
 import type { LiquidationExecutionResult } from '@/lib/trading/liquidationEngine';
+import { cn } from '@/lib/utils';
+import { AlertCircle, DollarSign, X } from 'lucide-react';
+import type { FC } from 'react';
 
 interface LiquidationAlertProps {
   result: LiquidationExecutionResult;
@@ -39,7 +34,7 @@ interface LiquidationAlertProps {
   onContactSupport?: () => void;
 }
 
-export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
+export const LiquidationAlert: FC<LiquidationAlertProps> = ({
   result,
   onDismiss,
   onDeposit,
@@ -50,7 +45,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
     <Alert className="border-sell/30 bg-background mb-4">
       <div className="flex items-start justify-between w-full gap-4">
         <div className="flex items-start gap-4 flex-1">
-          <AlertCircle className="h-4 w-4 text-sell flex-shrink-0 mt-2.5" />
+          <AlertCircle className="h-4 w-4 text-sell shrink-0 mt-2.5" />
           <div className="flex-1">
             <AlertTitle className="text-sell text-lg mb-2">
               Account Liquidation Executed
@@ -200,7 +195,7 @@ export const LiquidationAlert: React.FC<LiquidationAlertProps> = ({
         </div>
         <button
           onClick={onDismiss}
-          className="flex h-11 w-11 items-center justify-center flex-shrink-0 rounded-md text-sell hover:text-sell/80 hover:bg-sell/5 transition-colors"
+          className="flex h-11 w-11 items-center justify-center shrink-0 rounded-md text-sell hover:text-sell/80 hover:bg-sell/5 transition-colors"
           aria-label="Dismiss alert"
         >
           <X className="h-4 w-4" />

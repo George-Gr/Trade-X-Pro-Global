@@ -1,12 +1,12 @@
-import React from 'react';
+import type { FC } from 'react';
 import AccountSummary from './AccountSummary';
-import EquityChart from './EquityChart';
 import AssetAllocation from './AssetAllocation';
+import EquityChart from './EquityChart';
+import ExportToolbar from './ExportToolbar';
 import PerformanceMetrics from './PerformanceMetrics';
 import RecentPnLChart from './RecentPnLChart';
-import ExportToolbar from './ExportToolbar';
 
-export const PortfolioDashboardSummary: React.FC = () => {
+export const PortfolioDashboardSummary: FC = () => {
   return (
     <div className="space-y-6">
       {/* Export toolbar */}

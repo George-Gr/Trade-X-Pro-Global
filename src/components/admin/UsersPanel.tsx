@@ -1,19 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { Button } from '@/components/ui/button';
-import { LoadingButton } from '@/components/ui/LoadingButton';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -22,17 +9,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { LoadingButton } from '@/components/ui/LoadingButton';
 import {
-  DollarSign,
-  Eye,
-  Loader2,
-  Search,
-  User,
-  UserPlus,
-  Filter,
-} from 'lucide-react';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { DollarSign, Loader2, Search, User } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface UserAccount {
   id: string;
@@ -180,7 +172,7 @@ interface UsersPanelProps {
 }
 
 const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const { toast } = useToast();
   const [userAccounts, setUserAccounts] = useState<UserAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -480,7 +472,9 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                         <TableCell>
                           <Badge variant="outline" className="capitalize">
                             <span
-                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(account.kyc_status)}`}
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getKycColor(
+                                account.kyc_status
+                              )}`}
                             />
                             {account.kyc_status}
                           </Badge>
@@ -488,7 +482,9 @@ const UsersPanel: React.FC<UsersPanelProps> = ({ refreshTrigger }) => {
                         <TableCell>
                           <Badge variant="outline" className="capitalize">
                             <span
-                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(account.account_status)}`}
+                              className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(
+                                account.account_status
+                              )}`}
                             />
                             {account.account_status}
                           </Badge>

@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { WCAGAAAEnhancer } from '../accessibility/WCAGAAAEnhancer';
-import { cn } from '../../lib/utils';
 
+/**
+ * FontSizeControl component - Provides buttons to adjust document font size for accessibility
+ *
+ * Allows users to increase, decrease, or reset the base font size from 12px to 24px.
+ * Changes are applied to the document root and preferences are saved via WCAGAAAEnhancer.
+ *
+ * @component
+ * @returns {React.ReactElement} A div containing three buttons for font size adjustment
+ */
 export function FontSizeControl() {
   const wcagEnhancer = WCAGAAAEnhancer.getInstance();
-  const preferences = wcagEnhancer.getPreferences();
 
   const increaseFont = () => {
     const currentSize = parseInt(
@@ -31,21 +38,21 @@ export function FontSizeControl() {
     <div className="font-size-controls flex gap-2">
       <button
         onClick={decreaseFont}
-        className="px-3 py-1 border rounded hover:bg-gray-100"
+        className="px-3 py-1 border-[hsl(var(--border))] border rounded hover:bg-[hsl(var(--muted))]"
         aria-label="Decrease font size"
       >
         A-
       </button>
       <button
         onClick={resetFont}
-        className="px-3 py-1 border rounded hover:bg-gray-100"
+        className="px-3 py-1 border-[hsl(var(--border))] border rounded hover:bg-[hsl(var(--muted))]"
         aria-label="Reset font size"
       >
         A
       </button>
       <button
         onClick={increaseFont}
-        className="px-3 py-1 border rounded hover:bg-gray-100"
+        className="px-3 py-1 border-[hsl(var(--border))] border rounded hover:bg-[hsl(var(--muted))]"
         aria-label="Increase font size"
       >
         A+
@@ -54,9 +61,21 @@ export function FontSizeControl() {
   );
 }
 
+/**
+ * ColorBlindModeSelector component - Dropdown to select color vision simulation mode
+ *
+ * Displays a select dropdown with four color vision modes: Normal Vision, Deuteranopia,
+ * Protanopia, and Tritanopia. Selection updates user preferences and applies visual filters.
+ * Subscribes to accessibility preference changes to keep state synchronized.
+ *
+ * @component
+ * @returns {React.ReactElement} A select dropdown for color blindness mode selection
+ */
 export function ColorBlindModeSelector() {
   const wcagEnhancer = WCAGAAAEnhancer.getInstance();
-  const preferences = wcagEnhancer.getPreferences();
+  const [colorBlindMode, setColorBlindMode] = useState(
+    () => wcagEnhancer.getPreferences().colorBlindMode
+  );
 
   const modes = [
     { value: 'none', label: 'Normal Vision' },
@@ -65,20 +84,44 @@ export function ColorBlindModeSelector() {
     { value: 'tritanopia', label: 'Tritanopia (Blue-Blind)' },
   ];
 
+  useEffect(() => {
+    // Subscribe to preference changes
+    const handlePreferenceChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail?.preferences) {
+        setColorBlindMode(customEvent.detail.preferences.colorBlindMode);
+      }
+    };
+
+    document.addEventListener(
+      'accessibilityPreferenceChanged',
+      handlePreferenceChange
+    );
+
+    // Return cleanup function to unsubscribe
+    return () => {
+      document.removeEventListener(
+        'accessibilityPreferenceChanged',
+        handlePreferenceChange
+      );
+    };
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value as
+      | 'none'
+      | 'deuteranopia'
+      | 'protanopia'
+      | 'tritanopia';
+    setColorBlindMode(newValue);
+    wcagEnhancer.updatePreference('colorBlindMode', newValue);
+  };
+
   return (
     <select
-      value={preferences.colorBlindMode}
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-        wcagEnhancer.updatePreference(
-          'colorBlindMode',
-          e.target.value as
-            | 'none'
-            | 'deuteranopia'
-            | 'protanopia'
-            | 'tritanopia'
-        )
-      }
-      className="px-3 py-1 border rounded"
+      value={colorBlindMode}
+      onChange={handleChange}
+      className="px-3 py-1 border-[hsl(var(--border))] border rounded"
       aria-label="Select color vision mode"
     >
       {modes.map((mode) => (

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { ErrorBoundary } from '../ErrorBoundary';
 
 // Component that throws an error
@@ -142,7 +142,6 @@ describe('ErrorBoundary', () => {
     console.error = vi.fn();
 
     // Mock window.location (Jest/Vitest provide this in jsdom environment)
-    const originalLocation = window.location;
 
     render(
       <ErrorBoundary>

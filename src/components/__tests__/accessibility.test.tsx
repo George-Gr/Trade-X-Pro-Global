@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 /**
  * Accessibility Tests for Form Components
@@ -87,7 +87,7 @@ describe('Accessibility - Form Components', () => {
       const passwordInputs = screen.getAllByLabelText(/password/i);
       const confirmPasswordInput = passwordInputs[1];
       const ariaDescribedBy =
-        confirmPasswordInput.getAttribute('aria-describedby');
+        confirmPasswordInput?.getAttribute('aria-describedby');
 
       // The description should be linked via aria-describedby
       expect(ariaDescribedBy).toBeTruthy();

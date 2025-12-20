@@ -38,7 +38,7 @@ export function ABTestResultsPanel({ results }: ABTestResultsPanelProps) {
 
       {isVisible && (
         <div className="space-y-2 text-xs">
-          {results.map((result, index) => (
+          {results.map((result) => (
             <div
               key={result.variantId}
               className={cn(

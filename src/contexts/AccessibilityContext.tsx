@@ -15,6 +15,8 @@ type VisualPreferences = {
   highContrast: boolean;
   reduceMotion: boolean;
   largerText: boolean;
+  focusIndicator: boolean;
+  readingGuide: boolean;
 };
 
 export const useVisualAccessibilityPreferences = () => {
@@ -22,6 +24,8 @@ export const useVisualAccessibilityPreferences = () => {
     highContrast: false,
     reduceMotion: false,
     largerText: false,
+    focusIndicator: false,
+    readingGuide: false,
   }));
 
   const updatePreference = (key: keyof VisualPreferences, value: boolean) => {

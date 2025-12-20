@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
 import { cn } from '@/lib/utils';
-import React from 'react';
+import type { FC } from 'react';
 
 /**
  * PerformanceMetrics Component
@@ -12,7 +12,7 @@ import React from 'react';
  * @component
  * @returns {React.ReactElement} Performance metrics card with trading statistics
  */
-export const PerformanceMetrics: React.FC = () => {
+export const PerformanceMetrics: FC = () => {
   /**
    * usePortfolioData hook provides access to user's positions and profile data.
    * We rely on the positions array for calculating trade statistics and the

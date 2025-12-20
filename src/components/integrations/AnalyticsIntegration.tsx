@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from 'react';
 import {
   analyticsManager,
   useAnalytics,
-} from '../../lib/analytics/AnalyticsManager';
-import { performanceMonitoring } from '../../lib/performance/performanceMonitoring';
-import { cn } from '../../lib/utils';
+} from '@/lib/analytics/AnalyticsManager';
+import { cn } from '@/lib/utils';
+import React, { useEffect, useState } from 'react';
 
 interface AnalyticsIntegrationProps {
   children: React.ReactNode;
   enableAnalytics?: boolean;
-  enableHeatMapping?: boolean;
-  enableFunnelTracking?: boolean;
-  userId?: string;
 }
 
 export function AnalyticsIntegration({
   children,
   enableAnalytics = true,
-  enableHeatMapping = true,
-  enableFunnelTracking = true,
-  userId,
 }: AnalyticsIntegrationProps) {
   const [analyticsData, setAnalyticsData] = useState<Record<
     string,
@@ -75,6 +68,7 @@ export function AnalyticsIntegration({
         setIsRecording(false);
       };
     }
+    return undefined;
   }, [enableAnalytics]);
 
   return (
@@ -173,15 +167,12 @@ export function FunnelVisualization({
       <h3 className="text-lg font-semibold mb-4">{funnelData.name}</h3>
       <div className="space-y-3">
         {funnelData.steps.map(
-          (
-            step: {
-              id: string;
-              name: string;
-              actualCount: number;
-              dropOffRate?: number;
-            },
-            index: number
-          ) => {
+          (step: {
+            id: string;
+            name: string;
+            actualCount: number;
+            dropOffRate?: number;
+          }) => {
             const width =
               maxCount > 0 ? (step.actualCount / maxCount) * 100 : 0;
             const dropOffRate = step.dropOffRate || 0;
@@ -192,7 +183,7 @@ export function FunnelVisualization({
                   <span className="text-sm font-medium">{step.name}</span>
                   <span className="text-xs text-gray-500">
                     {step.actualCount} (
-                    {step.actualCount > 0
+                    {step.actualCount > 0 && funnelData.steps[0]
                       ? (
                           (step.actualCount / funnelData.steps[0].actualCount) *
                           100
@@ -453,6 +444,7 @@ export function PerformanceCorrelation() {
 
       return () => observer.disconnect();
     }
+    return undefined;
   }, []);
 
   if (!correlationData) return null;

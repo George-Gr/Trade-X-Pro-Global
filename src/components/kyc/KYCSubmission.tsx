@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,6 +6,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -19,17 +24,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, FileText, CheckCircle } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { validationRules } from '@/lib/validationRules';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
+import { CheckCircle, FileText, Loader2, Upload } from 'lucide-react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 interface KYCSubmissionProps {
   onSuccess?: () => void;
@@ -52,13 +52,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = form;
+  const { register, handleSubmit, watch, reset } = form;
   const documentType = watch('documentType');
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,7 +250,7 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
                 {selectedFile && (
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <FileText className="h-4 w-4" />
-                    <span className="truncate max-w-[200px]">
+                    <span className="truncate max-w-50">
                       {selectedFile.name}
                     </span>
                   </div>

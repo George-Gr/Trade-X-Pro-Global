@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
+import type { FC } from 'react';
 import React, { Suspense } from 'react';
 import type { PieProps } from 'recharts';
 // Dynamic import wrapper for recharts components
@@ -51,7 +52,7 @@ const ChartLoadingSkeleton = () => (
 
 const DEFAULT_ASSET_CLASS = 'OTHER';
 
-export const AssetAllocation: React.FC = () => {
+export const AssetAllocation: FC = () => {
   const { positions } = usePortfolioData();
 
   const groups = positions.reduce<Record<string, number>>(

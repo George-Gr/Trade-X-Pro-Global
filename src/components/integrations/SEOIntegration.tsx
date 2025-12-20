@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { seoManager, useSEO } from '../../lib/seo/SEOManager';
 
 interface SEOIntegrationProps {
@@ -25,7 +25,7 @@ export const SEOIntegration: React.FC<SEOIntegrationProps> = ({
     generateBreadcrumbs,
     generateFAQ,
     generateReviews,
-    getSEOReport,
+    // getSEOReport,
   } = useSEO();
 
   const setupPageSEO = useCallback(
@@ -314,8 +314,8 @@ function SEOHealthMonitor() {
                   typedSeoReport.score >= 90
                     ? 'text-green-600'
                     : typedSeoReport.score >= 70
-                      ? 'text-yellow-600'
-                      : 'text-red-600'
+                    ? 'text-yellow-600'
+                    : 'text-red-600'
                 }`}
               >
                 {typedSeoReport.score}/100
@@ -327,8 +327,8 @@ function SEOHealthMonitor() {
                   typedSeoReport.score >= 90
                     ? 'bg-green-500'
                     : typedSeoReport.score >= 70
-                      ? 'bg-yellow-500'
-                      : 'bg-red-500'
+                    ? 'bg-yellow-500'
+                    : 'bg-red-500'
                 }`}
                 style={{ width: `${typedSeoReport.score}%` }}
               />
@@ -399,8 +399,8 @@ export function DynamicMetaTags({
     updateSEO({
       title,
       description,
-      keywords,
-      image,
+      ...(keywords ? { keywords } : {}),
+      ...(image ? { image } : {}),
       type,
     });
   }, [title, description, keywords, image, type, updateSEO]);

@@ -352,8 +352,8 @@ class WebSocketManager {
       connectionId: connection.id,
       table,
       event,
-      filter,
       callback,
+      ...(filter ? { filter } : {}),
     };
 
     this.subscriptions.set(subscriptionId, subscription);

@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { useRef, useState } from 'react';
 import {
   useColorBlindMode,
@@ -31,7 +32,7 @@ interface TestResult {
 
 type ColorContrastTesterProps = {};
 
-export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
+export const ColorContrastTester: FC<ColorContrastTesterProps> = () => {
   const [activeTest, setActiveTest] = useState<ActiveTestKey>('compliance');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [selectedColors, setSelectedColors] = useState({

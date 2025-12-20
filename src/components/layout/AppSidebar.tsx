@@ -1,5 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useMemo, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Sidebar,
   SidebarContent,
@@ -11,21 +10,22 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { useAuthenticatedLayout } from '@/contexts/AuthenticatedLayoutContext';
 import { useSidebar } from '@/components/ui/sidebarContext';
+import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
+import { useAuthenticatedLayout } from '@/contexts/AuthenticatedLayoutContext';
 import {
   filterNavigationSectionsByRoles,
   isPathActive,
 } from '@/lib/navigationConfig';
-import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
 import {
   cn,
-  handleMenuKeyboardNavigation,
   generateNavigationAriaLabel,
   getAriaCurrentState,
+  handleMenuKeyboardNavigation,
 } from '@/lib/utils';
-import { AlertCircle, TrendingUp, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { AlertCircle, LogOut, TrendingUp } from 'lucide-react';
+import { useCallback, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
  * Skeleton loading state component
@@ -94,7 +94,7 @@ function AppSidebarError() {
       <SidebarContent className="text-sidebar-foreground bg-sidebar flex flex-col h-full">
         {/* Branding */}
         <div className="flex items-center gap-3 px-4 py-4 border-b border-border/30">
-          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 shrink-0">
             <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           <div className="flex flex-col">
@@ -220,7 +220,7 @@ function AppSidebarContent() {
             collapsed && 'justify-center px-2'
           )}
         >
-          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 flex-shrink-0">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 shrink-0">
             <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           {!collapsed && (
@@ -258,8 +258,10 @@ function AppSidebarContent() {
                         onClick={() => navigate(item.path)}
                         onKeyDown={(e) => handleNavigationKeyDown(e, item.path)}
                         isActive={active}
-                        tooltip={collapsed ? item.label : undefined}
-                        disabled={item.disabled}
+                        {...(collapsed ? { tooltip: item.label } : {})}
+                        {...(item.disabled !== undefined
+                          ? { disabled: item.disabled }
+                          : {})}
                         className={cn(
                           'gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
                           'hover:bg-sidebar-accent/50',
@@ -276,11 +278,13 @@ function AppSidebarContent() {
                         aria-current={getAriaCurrentState(active)}
                         role="menuitem"
                         tabIndex={0}
-                        aria-disabled={item.disabled}
+                        {...(item.disabled !== undefined
+                          ? { 'aria-disabled': item.disabled }
+                          : {})}
                       >
                         <Icon
                           className={cn(
-                            'h-5 w-5 flex-shrink-0 transition-colors',
+                            'h-5 w-5 shrink-0 transition-colors',
                             active ? 'text-primary' : 'text-muted-foreground'
                           )}
                         />
@@ -327,13 +331,17 @@ function AppSidebarContent() {
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
-                      onClick={() => item.path && navigate(item.path)}
-                      onKeyDown={(e) =>
-                        item.path && handleNavigationKeyDown(e, item.path)
-                      }
+                      onClick={() => {
+                        if (item.path) navigate(item.path);
+                      }}
+                      onKeyDown={(e) => {
+                        if (item.path) handleNavigationKeyDown(e, item.path);
+                      }}
                       isActive={active}
-                      tooltip={collapsed ? item.label : undefined}
-                      disabled={item.disabled}
+                      {...(collapsed ? { tooltip: item.label } : {})}
+                      {...(item.disabled !== undefined
+                        ? { disabled: item.disabled }
+                        : {})}
                       className={cn(
                         'gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
                         'hover:bg-sidebar-accent/50',
@@ -350,11 +358,13 @@ function AppSidebarContent() {
                       aria-current={getAriaCurrentState(active)}
                       role="menuitem"
                       tabIndex={0}
-                      aria-disabled={item.disabled}
+                      {...(item.disabled !== undefined
+                        ? { 'aria-disabled': item.disabled }
+                        : {})}
                     >
                       <Icon
                         className={cn(
-                          'h-5 w-5 flex-shrink-0 transition-colors',
+                          'h-5 w-5 shrink-0 transition-colors',
                           active ? 'text-primary' : 'text-muted-foreground'
                         )}
                       />
@@ -379,7 +389,7 @@ function AppSidebarContent() {
                 <SidebarMenuButton
                   onClick={handleLogoutClick}
                   onKeyDown={handleLogoutKeyDown}
-                  tooltip={collapsed ? 'Sign Out' : undefined}
+                  {...(collapsed ? { tooltip: 'Sign Out' } : {})}
                   className={cn(
                     'gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
                     'text-destructive hover:bg-destructive/10 hover:text-destructive',
@@ -390,7 +400,7 @@ function AppSidebarContent() {
                   role="menuitem"
                   tabIndex={0}
                 >
-                  <LogOut className="h-5 w-5 flex-shrink-0" />
+                  <LogOut className="h-5 w-5 shrink-0" />
                   <span
                     className={cn(
                       'flex-1 truncate text-sm',

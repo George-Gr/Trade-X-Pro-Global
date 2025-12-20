@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { AdvancedAccessibilityDashboard } from './AdvancedAccessibilityDashboard';
 // Import components with explicit paths to avoid resolution issues
 import { KeyboardNavigationTester } from './KeyboardNavigationTester';
@@ -26,7 +27,7 @@ type TestSectionKey =
 
 type AccessibilityTestingSuiteProps = Record<string, never>;
 
-export const AccessibilityTestingSuite: React.FC<
+export const AccessibilityTestingSuite: FC<
   AccessibilityTestingSuiteProps
 > = () => {
   const [activeTest, setActiveTest] = useState<TestSectionKey>('dashboard');

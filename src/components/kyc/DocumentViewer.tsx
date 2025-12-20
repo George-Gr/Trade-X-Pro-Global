@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { formatToastError } from '@/lib/errorMessageService';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Loader2, FileText, Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { formatToastError } from '@/lib/errorMessageService';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import { Download, FileText, Loader2 } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface DocumentViewerProps {
   filePath: string;
@@ -64,6 +64,7 @@ const DocumentViewer = ({
       }, 100);
       return () => clearTimeout(timeoutId);
     }
+    return undefined;
   }, [open]);
 
   useEffect(() => {
@@ -105,13 +106,13 @@ const DocumentViewer = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto min-h-[400px]">
+        <div className="flex-1 overflow-auto min-h-100">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : fileUrl ? (
-            <div className="aspect-[4/3] w-full">
+            <div className="aspect-4/3 w-full">
               {fileType === 'pdf' ? (
                 <iframe
                   src={fileUrl}

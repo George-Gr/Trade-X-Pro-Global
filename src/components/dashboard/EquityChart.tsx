@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
 import { formatTooltipValue } from '@/lib/chartUtils';
 import { ZoomIn, ZoomOut } from 'lucide-react';
+import type { FC } from 'react';
 import React, { Suspense, useMemo, useState } from 'react';
 
 // Dynamic import wrapper for recharts components
@@ -79,7 +80,7 @@ const TIMEFRAME_CONFIG: Record<Timeframe, { days: number; interval: string }> =
     '1Y': { days: 365, interval: 'monthly' },
   };
 
-export const EquityChart: React.FC = () => {
+export const EquityChart: FC = () => {
   const { profile, positions } = usePortfolioData();
   const [timeframe, setTimeframe] = useState<Timeframe>('1M');
   const [zoomLevel, setZoomLevel] = useState(1);

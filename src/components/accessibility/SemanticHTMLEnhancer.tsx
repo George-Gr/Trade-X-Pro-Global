@@ -113,7 +113,7 @@ export class SemanticHTMLManager {
           headingLevel={headingLevel}
           headingText={title}
           landmark={options.landmark || false}
-          className={options.className}
+          {...(options.className ? { className: options.className } : {})}
         >
           {content}
         </SemanticHTMLEnhancer>

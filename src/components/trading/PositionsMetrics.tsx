@@ -1,7 +1,8 @@
-import React from 'react';
 import { Card } from '@/components/ui/card';
-import type { Position } from '@/types/position';
 import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
+import type { Position } from '@/types/position';
+import type { FC } from 'react';
+import { useMemo } from 'react';
 
 interface PositionsMetricsProps {
   positions: Position[];
@@ -13,13 +14,13 @@ interface PositionsMetricsProps {
   getPnLColor: (pnl: number) => string;
 }
 
-export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({
+export const PositionsMetrics: FC<PositionsMetricsProps> = ({
   positions,
   positionPnLMap,
   getPnLColor,
 }) => {
   // Calculate total P&L
-  const totalPnL = React.useMemo(() => {
+  const totalPnL = useMemo(() => {
     let total = 0;
     positions.forEach((pos) => {
       const pnlData = positionPnLMap.get(pos.id);
@@ -31,7 +32,7 @@ export const PositionsMetrics: React.FC<PositionsMetricsProps> = ({
   }, [positions, positionPnLMap]);
 
   // Calculate total margin used
-  const totalMarginUsed = React.useMemo(() => {
+  const totalMarginUsed = useMemo(() => {
     return positions.reduce((sum, pos) => sum + (pos.margin_used || 0), 0);
   }, [positions]);
 

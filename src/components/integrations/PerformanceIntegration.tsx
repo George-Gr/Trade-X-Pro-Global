@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useWebVitalsEnhanced } from '../../hooks/useWebVitalsEnhanced';
-import { performanceMonitoring } from '../../lib/performance/performanceMonitoring';
 import { initializePreloading } from '../../lib/performance/dynamicImports';
+import { performanceMonitoring } from '../../lib/performance/performanceMonitoring';
 
 interface PerformanceIntegrationProps {
   children: React.ReactNode;
@@ -139,9 +139,7 @@ export class PerformanceBoundary extends React.Component<
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Performance Boundary caught an error:', error, errorInfo);
-
+  override componentDidCatch() {
     // Track performance-related errors
     performanceMonitoring.recordCustomTiming(
       'component_error',
@@ -150,7 +148,7 @@ export class PerformanceBoundary extends React.Component<
     );
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       const FallbackComponent =
         this.props.fallback ||

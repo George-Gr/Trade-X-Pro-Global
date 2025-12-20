@@ -1,71 +1,63 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import KYCPanel from '@/components/admin/KYCPanel';
+import LeadsPanel from '@/components/admin/LeadsPanel';
+import RiskPanel from '@/components/admin/RiskPanel';
+import UsersPanel from '@/components/admin/UsersPanel';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import {
-  TrendingUp,
-  Users,
   FileCheck,
-  Shield,
   LogOut,
   RefreshCw,
+  Shield,
+  TrendingUp,
   UserPlus,
+  Users,
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import UsersPanel from '@/components/admin/UsersPanel';
-import KYCPanel from '@/components/admin/KYCPanel';
-import RiskPanel from '@/components/admin/RiskPanel';
-import LeadsPanel from '@/components/admin/LeadsPanel';
-
-interface KYCDocument {
-  id: string;
-  user_id: string;
-  document_type: string;
-  file_path: string;
-  status: string;
-  created_at: string;
-  rejection_reason: string | null;
-  profiles: {
-    full_name: string | null;
-    email: string;
-    country: string | null;
-  };
-}
-
-interface UserAccount {
-  id: string;
-  full_name: string | null;
-  email: string;
-  balance: number;
-  equity: number;
-  account_status: string;
-  kyc_status: string;
-  created_at: string;
-}
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { user, isAdmin, signOut } = useAuth();
+  const { toast } = useToast();
   const [activePanel, setActivePanel] = useState('leads');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    if (!isAdmin) {
-      navigate('/dashboard');
-      return;
-    }
-  }, [user, isAdmin, navigate]);
+  // Early-return guard to prevent flash of admin content
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
+  if (isAdmin === undefined) {
+    // Still loading admin status
+    return null;
+  }
+
+  if (!isAdmin) {
+    navigate('/dashboard');
+    return null;
+  }
 
   const handleLogout = async () => {
-    await signOut();
-    navigate('/login');
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast({
+        title: 'Logout failed',
+        description:
+          'Please try again or contact support if the problem persists.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const handleRefresh = () => {
@@ -105,19 +97,18 @@ const Admin = () => {
             onClick={handleRefresh}
             className="flex items-center gap-2"
           >
-            <RefreshCw
-              className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className="h-4 w-4" />
             Refresh
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleLogout}
+            disabled={isLoggingOut}
             className="flex items-center gap-2"
           >
             <LogOut className="h-4 w-4" />
-            Logout
+            {isLoggingOut ? 'Logging out...' : 'Logout'}
           </Button>
         </div>
       </div>

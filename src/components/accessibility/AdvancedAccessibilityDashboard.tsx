@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
 import {
   highContrastStyles,
   useAccessibilityTesting,
   useColorBlindMode,
   useColorContrastVerification,
   useVisualAccessibilityPreferences,
-} from '../../lib/colorContrastVerification';
-import { useFormAccessibility } from '../../lib/completeAriaLabeling';
-import { useTradingKeyboardShortcuts } from '../../lib/tradingKeyboardNavigation';
+} from '@/lib/colorContrastVerification';
+import { useFormAccessibility } from '@/lib/completeAriaLabeling';
+import { useTradingKeyboardShortcuts } from '@/lib/tradingKeyboardNavigation';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AriaLabelsTab,
   ColorContrastTab,
@@ -82,13 +82,13 @@ export function AdvancedAccessibilityDashboard() {
         <div className="flex gap-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg font-medium"
+            className="px-4 py-2 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] rounded-lg font-medium"
           >
             {isExpanded ? 'Collapse' : 'Expand'} View
           </button>
           <button
             onClick={() => accessibilityTesting.runFullAudit()}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg font-medium"
+            className="px-4 py-2 bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] rounded-lg font-medium"
           >
             Run Full Audit
           </button>
@@ -147,8 +147,8 @@ export function AdvancedAccessibilityDashboard() {
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={`py-4 px-2 border-b-2 font-medium text-sm ${
                 activeTab === tab.key
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-[hsl(var(--primary))] text-[hsl(var(--primary))]'
+                  : 'border-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--border))]'
               }`}
             >
               {tab.label}
@@ -183,11 +183,7 @@ export function AdvancedAccessibilityDashboard() {
         )}
 
         {activeTab === 'contrast' && (
-          <ColorContrastTab
-            colorContrast={colorContrast}
-            colorBlindMode={colorBlindMode}
-            visualPreferences={visualPreferences}
-          />
+          <ColorContrastTab colorContrast={colorContrast} />
         )}
 
         {activeTab === 'aria' && (

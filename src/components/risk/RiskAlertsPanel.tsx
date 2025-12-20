@@ -7,11 +7,11 @@
  * - Recommended Actions
  */
 
-import React from 'react';
-import { AlertTriangle, Activity, AlertCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { getRiskLevelDetails, formatCurrency } from '@/lib/risk/riskMetrics';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency, getRiskLevelDetails } from '@/lib/risk/riskMetrics';
+import { Activity, AlertCircle, AlertTriangle } from 'lucide-react';
+import type { FC } from 'react';
 
 interface RiskAlertsProps {
   riskLevel: string;
@@ -33,18 +33,16 @@ interface RiskAlertsProps {
   } | null;
 }
 
-export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
+export const RiskAlertsPanel: FC<RiskAlertsProps> = ({
   riskLevel,
   riskMetrics,
   portfolioMetrics,
   drawdownAnalysis,
   portfolioRiskAssessment,
 }) => {
-  const riskLevelDetails = riskMetrics
-    ? getRiskLevelDetails(
-        riskMetrics.riskLevel as 'safe' | 'warning' | 'critical' | 'liquidation'
-      )
-    : null;
+  const riskLevelDetails = getRiskLevelDetails(
+    riskLevel as 'safe' | 'warning' | 'critical' | 'liquidation'
+  );
 
   return (
     <div className="space-y-4">
@@ -55,10 +53,10 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
             riskMetrics?.riskLevel === 'liquidation'
               ? 'border-sell bg-background'
               : riskMetrics?.riskLevel === 'critical'
-                ? 'border-orange-500 bg-background'
-                : riskMetrics?.riskLevel === 'warning'
-                  ? 'border-yellow-500 bg-background'
-                  : 'border-buy bg-background'
+              ? 'border-orange-500 bg-background'
+              : riskMetrics?.riskLevel === 'warning'
+              ? 'border-yellow-500 bg-background'
+              : 'border-buy bg-background'
           }`}
         >
           <CardHeader className="pb-4">
@@ -83,8 +81,8 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
                   riskMetrics?.riskLevel === 'liquidation'
                     ? 'destructive'
                     : riskMetrics?.riskLevel === 'critical'
-                      ? 'outline'
-                      : 'secondary'
+                    ? 'outline'
+                    : 'secondary'
                 }
               >
                 {riskMetrics?.riskLevel.toUpperCase()}
@@ -160,7 +158,7 @@ export const RiskAlertsPanel: React.FC<RiskAlertsProps> = ({
             <ul className="space-y-2">
               {portfolioRiskAssessment.recommendedActions.map((action, idx) => (
                 <li key={idx} className="flex items-start gap-4">
-                  <AlertCircle className="h-4 w-4 text-yellow-600 mt-2.5 flex-shrink-0" />
+                  <AlertCircle className="h-4 w-4 text-yellow-600 mt-2.5 shrink-0" />
                   <span className="text-sm">{action}</span>
                 </li>
               ))}

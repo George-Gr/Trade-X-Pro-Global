@@ -1,7 +1,7 @@
 // KycUploader: Comprehensive user UI for uploading KYC documents
-import React, { useState, useRef, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,20 +9,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/hooks/useAuth';
 import {
-  Upload,
-  CheckCircle,
   AlertCircle,
-  Loader2,
+  CheckCircle,
   FileText,
   Image as ImageIcon,
+  Loader2,
+  Upload,
   X,
 } from 'lucide-react';
+import React, { useCallback, useRef, useState } from 'react';
 
 interface DocumentUpload {
   id: string;
@@ -30,8 +29,8 @@ interface DocumentUpload {
   file: File | null;
   status: 'pending' | 'uploading' | 'validated' | 'error';
   progress: number;
-  error?: string;
-  thumbnail?: string;
+  error: string | undefined;
+  thumbnail: string | undefined;
 }
 
 interface DocumentRequirement {
@@ -157,9 +156,10 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               id: `${documentType}_${Date.now()}`,
               type: documentType,
               file,
-              status: 'pending',
+              status: 'pending' as const,
               progress: 0,
               thumbnail,
+              error: undefined,
             },
           ]);
         }
@@ -317,7 +317,9 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     const missing = requiredDocs.filter((d) => !uploadedTypes.includes(d.type));
     if (missing.length > 0) {
       setGlobalError(
-        `Please upload all required documents: ${missing.map((d) => d.label).join(', ')}`
+        `Please upload all required documents: ${missing
+          .map((d) => d.label)
+          .join(', ')}`
       );
       return;
     }
@@ -448,7 +450,11 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                       isDragActive
                         ? 'border-primary bg-primary/5 scale-105'
                         : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2'
-                    } ${upload?.status === 'validated' ? 'bg-buy/5 border-buy/30' : ''}`}
+                    } ${
+                      upload?.status === 'validated'
+                        ? 'bg-buy/5 border-buy/30'
+                        : ''
+                    }`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}

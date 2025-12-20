@@ -12,7 +12,7 @@
  * - Modal that appears on margin call escalation
  */
 
-import React, { useEffect, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,13 +23,14 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, AlertCircle, Clock, TrendingDown } from 'lucide-react';
 import {
   MarginCallSeverity,
   MarginCallStatus,
 } from '@/lib/trading/marginCallDetection';
 import { cn } from '@/lib/utils';
+import { AlertCircle, AlertTriangle, Clock, TrendingDown } from 'lucide-react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 
 interface MarginCallWarningModalProps {
   isOpen: boolean;
@@ -49,7 +50,7 @@ interface MarginCallWarningModalProps {
   onViewRisk?: () => void;
 }
 
-export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
+export const MarginCallWarningModal: FC<MarginCallWarningModalProps> = ({
   isOpen,
   onClose,
   marginLevel,
@@ -107,11 +108,17 @@ export const MarginCallWarningModal: React.FC<MarginCallWarningModalProps> = ({
   const getSeverityDescription = () => {
     switch (severity) {
       case MarginCallSeverity.STANDARD:
-        return `Your account margin level is ${marginLevel.toFixed(2)}%. Add funds or close positions to prevent escalation.`;
+        return `Your account margin level is ${marginLevel.toFixed(
+          2
+        )}%. Add funds or close positions to prevent escalation.`;
       case MarginCallSeverity.URGENT:
-        return `Your account is in URGENT margin call status at ${marginLevel.toFixed(2)}%. You can only close positions. Add funds immediately.`;
+        return `Your account is in URGENT margin call status at ${marginLevel.toFixed(
+          2
+        )}%. You can only close positions. Add funds immediately.`;
       case MarginCallSeverity.CRITICAL:
-        return `Your account is in CRITICAL condition at ${marginLevel.toFixed(2)}%. Liquidation may be triggered automatically if you don't act immediately.`;
+        return `Your account is in CRITICAL condition at ${marginLevel.toFixed(
+          2
+        )}%. Liquidation may be triggered automatically if you don't act immediately.`;
       default:
         return 'Your account margin level is low.';
     }

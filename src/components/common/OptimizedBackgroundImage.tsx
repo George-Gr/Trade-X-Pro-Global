@@ -18,7 +18,7 @@ export const OptimizedBackgroundImage = ({
   alt,
   className,
   style = {},
-  loading = 'lazy',
+  // loading = 'lazy',
   priority = false,
   onLoad,
   onError,

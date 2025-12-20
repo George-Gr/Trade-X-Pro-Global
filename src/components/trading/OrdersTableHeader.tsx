@@ -1,5 +1,3 @@
-import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -8,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ChevronDown } from 'lucide-react';
+import type { FC } from 'react';
 
 type SortKey = 'created_at' | 'symbol' | 'quantity' | 'status' | 'realized_pnl';
 type SortOrder = 'asc' | 'desc';
@@ -29,7 +29,7 @@ interface OrdersTableHeaderProps {
   };
 }
 
-const SortButton: React.FC<{
+const SortButton: FC<{
   label: string;
   sortKey: SortKey;
   isActive: boolean;
@@ -39,20 +39,24 @@ const SortButton: React.FC<{
   <button
     onClick={() => onSort(sortKey)}
     className="flex items-center gap-2 hover:text-foreground transition-colors font-semibold text-muted-foreground"
-    aria-label={`Sort by ${label}, currently ${isActive ? (direction === 'asc' ? 'ascending' : 'descending') : 'unsorted'}`}
+    aria-label={`Sort by ${label}, currently ${
+      isActive ? (direction === 'asc' ? 'ascending' : 'descending') : 'unsorted'
+    }`}
     aria-pressed={isActive}
   >
     {label}
     {isActive && (
       <ChevronDown
-        className={`h-5 w-5 transition-transform ${direction === 'asc' ? 'rotate-180' : ''}`}
+        className={`h-5 w-5 transition-transform ${
+          direction === 'asc' ? 'rotate-180' : ''
+        }`}
         aria-hidden="true"
       />
     )}
   </button>
 );
 
-export const OrdersTableHeader: React.FC<OrdersTableHeaderProps> = ({
+export const OrdersTableHeader: FC<OrdersTableHeaderProps> = ({
   symbolSearch,
   onSymbolSearchChange,
   statusFilter,

@@ -1,5 +1,6 @@
 import { useRealtimePositions } from '@/hooks/useRealtimePositions';
 import type { Position } from '@/types/position';
+import type { FC } from 'react';
 import { useMemo, useState, type CSSProperties } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import { PositionRow } from './PositionRow';
@@ -17,7 +18,7 @@ interface VirtualizedRowProps {
   };
 }
 
-const VirtualizedPositionRow: React.FC<VirtualizedRowProps> = ({
+const VirtualizedPositionRow: FC<VirtualizedRowProps> = ({
   index,
   style,
   data,
@@ -39,7 +40,7 @@ const VirtualizedPositionRow: React.FC<VirtualizedRowProps> = ({
   );
 };
 
-export const PositionsTableVirtualized: React.FC<{ userId: string | null }> = ({
+export const PositionsTableVirtualized: FC<{ userId: string | null }> = ({
   userId,
 }) => {
   const { positions, isLoading } = useRealtimePositions(userId || null, {

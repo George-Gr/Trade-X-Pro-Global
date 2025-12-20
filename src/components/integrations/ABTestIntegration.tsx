@@ -145,7 +145,11 @@ export function QuickSignupCTA({
   const { text, className } = getCTAContent();
 
   return (
-    <TradingSignupCTA userId={userId} onSignup={onSignup} className={className}>
+    <TradingSignupCTA
+      userId={userId}
+      {...(onSignup ? { onSignup } : {})}
+      className={className}
+    >
       {text}
     </TradingSignupCTA>
   );
@@ -159,7 +163,7 @@ export function QuickDepositCTA({
   onDeposit?: () => void;
 }) {
   return (
-    <DepositCTA userId={userId} onDeposit={onDeposit}>
+    <DepositCTA userId={userId} {...(onDeposit ? { onDeposit } : {})}>
       Make Deposit
     </DepositCTA>
   );
@@ -173,7 +177,7 @@ export function QuickDownloadCTA({
   onDownload?: () => void;
 }) {
   return (
-    <DownloadAppCTA userId={userId} onDownload={onDownload}>
+    <DownloadAppCTA userId={userId} {...(onDownload ? { onDownload } : {})}>
       Download App
     </DownloadAppCTA>
   );

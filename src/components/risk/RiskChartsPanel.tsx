@@ -8,22 +8,7 @@
  * - Diversification: Diversification score, stats, and top positions
  */
 
-import React, { useState, useMemo } from 'react';
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from 'recharts';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -32,9 +17,24 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { AlertCircle } from 'lucide-react';
 import { formatCurrency } from '@/lib/risk/riskMetrics';
+import type { FC } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 interface RiskChartsPanelProps {
   equityHistory: number[] | null;
@@ -81,7 +81,7 @@ interface RiskChartsPanelProps {
   } | null;
 }
 
-export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
+export const RiskChartsPanel: FC<RiskChartsPanelProps> = ({
   equityHistory,
   assetClassMetrics,
   stressTests,
@@ -403,13 +403,16 @@ export const RiskChartsPanel: React.FC<RiskChartsPanelProps> = ({
                             pos.risk === 'critical'
                               ? 'bg-sell'
                               : pos.risk === 'high'
-                                ? 'bg-orange-600'
-                                : pos.risk === 'medium'
-                                  ? 'bg-yellow-600'
-                                  : 'bg-buy'
+                              ? 'bg-orange-600'
+                              : pos.risk === 'medium'
+                              ? 'bg-yellow-600'
+                              : 'bg-buy'
                           }`}
                           style={{
-                            width: `${Math.min(pos.percentageOfPortfolio, 100)}%`,
+                            width: `${Math.min(
+                              pos.percentageOfPortfolio,
+                              100
+                            )}%`,
                           }}
                         />
                       </div>

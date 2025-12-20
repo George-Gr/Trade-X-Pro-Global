@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
 import type { Position } from '@/types/position';
+import type { FC } from 'react';
+import { useState } from 'react';
 
-export const PositionCloseDialog: React.FC<{
+export const PositionCloseDialog: FC<{
   position: Position;
   onClose: () => void;
   onConfirm: (quantity?: number) => Promise<void>;

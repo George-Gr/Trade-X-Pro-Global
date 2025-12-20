@@ -1,8 +1,8 @@
-import React from 'react';
 import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
+import type { FC } from 'react';
 
-export const AccountSummary: React.FC = () => {
+export const AccountSummary: FC = () => {
   const {
     profile,
     calculateEquity,

@@ -1,13 +1,14 @@
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Edit, X, Copy } from 'lucide-react';
-import { OrderStatusBadge } from './OrderStatusBadge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   calculateFillPercentage,
   type OrderStatus,
 } from '@/lib/trading/orderUtils';
+import { Copy, Edit, X } from 'lucide-react';
+import type { FC } from 'react';
 import type { Order } from './OrderRow';
+import { OrderStatusBadge } from './OrderStatusBadge';
 
 interface OrdersTableMobileProps {
   orders: Order[];
@@ -16,7 +17,7 @@ interface OrdersTableMobileProps {
   onViewDetails?: (order: Order) => void;
 }
 
-export const OrdersTableMobile: React.FC<OrdersTableMobileProps> = ({
+export const OrdersTableMobile: FC<OrdersTableMobileProps> = ({
   orders,
   onModify,
   onCancel,

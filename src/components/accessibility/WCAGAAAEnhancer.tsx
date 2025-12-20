@@ -1,5 +1,5 @@
 import { useAccessibilityPreferences } from '@/hooks/useAccessibilityPreferences';
-import React from 'react';
+import type { FC } from 'react';
 
 const cn = (...classes: (string | undefined | false)[]): string =>
   classes.filter(Boolean).join(' ');
@@ -236,9 +236,9 @@ export class WCAGAAAEnhancer {
     }
 
     // Clear references
-    this.boundEventHandlers.reducedMotion = undefined;
-    this.boundEventHandlers.highContrast = undefined;
-    this.boundEventHandlers.keyboard = undefined;
+    delete this.boundEventHandlers.reducedMotion;
+    delete this.boundEventHandlers.highContrast;
+    delete this.boundEventHandlers.keyboard;
 
     // Reset singleton instance
     WCAGAAAEnhancer.instance = null as unknown as WCAGAAAEnhancer;
@@ -648,7 +648,7 @@ interface AccessibilitySettingsPanelProps {
   className?: string;
 }
 
-export const AccessibilitySettingsPanel: React.FC<
+export const AccessibilitySettingsPanel: FC<
   AccessibilitySettingsPanelProps
 > = ({ className }) => {
   const { preferences, updatePreference } = useAccessibilityPreferences();

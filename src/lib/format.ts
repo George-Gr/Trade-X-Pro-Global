@@ -190,3 +190,34 @@ export function formatPnL(
 
   return { formatted, type };
 }
+
+/**
+ * Format currency for USD display with 2 decimal places
+ * Used in portfolio views (Balance, Equity, Margin, etc.)
+ */
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+/**
+ * Format price with appropriate decimal places based on symbol
+ * JPY pairs use 3 decimals, others use 5 decimals
+ */
+export function formatPriceBySymbol(value: number, symbol: string): string {
+  const isJpy = symbol.includes('JPY');
+  return value.toFixed(isJpy ? 3 : 5);
+}
+
+/**
+ * Format margin level percentage
+ * Returns "∞" for infinite values, otherwise returns level as percentage
+ */
+export function formatMarginLevel(level: number): string {
+  if (!isFinite(level)) return '∞';
+  return `${level.toFixed(0)}%`;
+}

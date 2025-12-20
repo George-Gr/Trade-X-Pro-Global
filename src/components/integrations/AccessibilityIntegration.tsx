@@ -9,7 +9,10 @@ import {
   AccessibilitySettingsPanel,
   WCAGAAAEnhancer,
 } from '../accessibility/WCAGAAAEnhancer';
-import { AccessibilityStatusIndicator } from './AccessibilityStatusIndicator';
+import {
+  AccessibilityStatusIndicator,
+  type AccessibilityPreferences,
+} from './AccessibilityStatusIndicator';
 import { EnhancedAccessibilityFeatures } from './EnhancedAccessibilityFeatures';
 
 interface AccessibilityIntegrationProps {
@@ -136,7 +139,9 @@ export function AccessibilityIntegration({
       {enableAccessibility && (
         <AccessibilityStatusIndicator
           report={accessibilityReport}
-          preferences={wcagEnhancer.getPreferences()}
+          preferences={
+            wcagEnhancer.getPreferences() as unknown as AccessibilityPreferences
+          }
         />
       )}
 
@@ -164,7 +169,7 @@ export function AccessibleSection({
     <ArticleSection
       title={title}
       headingLevel={level}
-      id={id}
+      {...(id ? { id } : {})}
       landmark={landmark}
       ariaLabel={title}
     >

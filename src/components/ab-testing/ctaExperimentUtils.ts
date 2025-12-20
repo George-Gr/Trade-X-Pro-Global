@@ -29,7 +29,7 @@ export function createCTAExperiment(
       id: `variant_${index}`,
       name: v.name,
       weight: v.weight,
-      description: v.description,
+      ...(v.description !== undefined && { description: v.description }),
       config: v.config as unknown as Record<string, unknown>,
     })),
     targetMetric: 'conversion_rate',

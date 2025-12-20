@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
-interface AccessibilityPreferences {
+export interface AccessibilityPreferences {
   fontSize: number;
   contrast: string;
   fontFamily: string;

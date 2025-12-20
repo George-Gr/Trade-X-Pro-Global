@@ -1,6 +1,6 @@
+import { cn } from '@/lib/utils';
 import { useCallback, useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
-import { cn } from '@/lib/utils';
 
 /**
  * Column definition for virtualized table
@@ -87,6 +87,17 @@ export function VirtualizedTable<T>({
   const Row = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
       const item = data[index];
+      if (!item) {
+        return (
+          <div
+            style={style}
+            className="flex items-center justify-center text-muted-foreground"
+          >
+            Loading...
+          </div>
+        );
+      }
+
       const rowKey = getRowKey(item, index);
 
       return (

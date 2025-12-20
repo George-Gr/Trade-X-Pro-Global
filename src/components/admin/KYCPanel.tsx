@@ -1,19 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { Button } from '@/components/ui/button';
-import { LoadingButton } from '@/components/ui/LoadingButton';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -22,25 +9,35 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LoadingButton } from '@/components/ui/LoadingButton';
 import {
-  FileCheck,
-  Users,
-  DollarSign,
-  TrendingUp,
-  Eye,
-  Loader2,
-  Search,
-  Filter,
-  Clock,
-  CheckCircle,
-  XCircle,
-  RefreshCw,
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import type { FC } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
 import DocumentViewer from '@/components/kyc/DocumentViewer';
+import { useToast } from '@/hooks/use-toast';
+import {
+  CheckCircle,
+  Clock,
+  Eye,
+  FileCheck,
+  Loader2,
+  RefreshCw,
+  Search,
+  XCircle,
+} from 'lucide-react';
 
 interface KYCDocument {
   id: string;
@@ -67,9 +64,9 @@ interface RejectionDialogProps {
   isLoading: boolean;
 }
 
-const RejectionDialog: React.FC<RejectionDialogProps> = ({
+const RejectionDialog: FC<RejectionDialogProps> = ({
   open,
-  docId,
+  // docId,
   onClose,
   onSubmit,
   isLoading,
@@ -142,7 +139,7 @@ interface KYCPanelProps {
   refreshTrigger?: number;
 }
 
-const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
+const KYCPanel: FC<KYCPanelProps> = ({ refreshTrigger }) => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   const [kycDocuments, setKycDocuments] = useState<KYCDocument[]>([]);
@@ -271,12 +268,12 @@ const KYCPanel: React.FC<KYCPanelProps> = ({ refreshTrigger }) => {
         .update({
           status: 'rejected' as const,
           reviewed_at: new Date().toISOString(),
-          reviewed_by: user?.id,
+          reviewed_by: user?.id ?? null,
           rejection_reason: reason,
         } as {
           status: 'pending' | 'approved' | 'rejected' | 'resubmitted';
           reviewed_at: string;
-          reviewed_by: string | undefined;
+          reviewed_by: string | null;
           rejection_reason: string;
         })
         .eq('id' as const, rejectionDialog.docId as string);

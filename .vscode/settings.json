@@ -130,7 +130,7 @@
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5",
   "prettier.bracketSpacing": true,
-  "prettier.jsxBracketSameLine": false,
+  "prettier.bracketSameLine": false,
   "prettier.arrowParens": "always",
 
   /* ========== ESLint Configuration ========== */
@@ -157,7 +157,6 @@
   "editor.suggest.shareSuggestSelections": true,
   "editor.suggest.preview": true,
   "editor.suggest.showStatusBar": true,
-  "editor.suggest.maxVisibleSuggestions": 12,
   "editor.suggest.localityBonus": true,
   "editor.suggest.filterGraceful": true,
 
@@ -194,7 +193,7 @@
   /* ========== Editor Performance Optimization ========== */
   "editor.largeFileOptimizations": true,
   "editor.maxTokenizationLineLength": 20000,
-  "editor.wordBasedSuggestions": "matchingLines",
+  "editor.wordBasedSuggestions": "matchingDocuments",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
 

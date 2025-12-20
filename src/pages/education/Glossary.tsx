@@ -1,23 +1,23 @@
-import * as React from 'react';
-import { PublicHeader } from '@/components/layout/PublicHeader';
 import { PublicFooter } from '@/components/layout/PublicFooter';
-import { Card, CardContent } from '@/components/ui/card';
+import { PublicHeader } from '@/components/layout/PublicHeader';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
-import {
-  BookOpen,
-  Search,
-  ChevronDown,
-  ChevronUp,
-  HelpCircle,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import {
+  BookOpen,
+  ChevronDown,
+  ChevronUp,
+  HelpCircle,
+  Search,
+} from 'lucide-react';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 interface GlossaryTerm {
   term: string;
@@ -331,13 +331,10 @@ export default function Glossary() {
     });
   };
 
-  const groupedTerms = categories.reduce(
-    (acc, category) => {
-      acc[category] = filteredTerms.filter((t) => t.category === category);
-      return acc;
-    },
-    {} as Record<string, GlossaryTerm[]>
-  );
+  const groupedTerms = categories.reduce((acc, category) => {
+    acc[category] = filteredTerms.filter((t) => t.category === category);
+    return acc;
+  }, {} as Record<string, GlossaryTerm[]>);
 
   return (
     <div className="min-h-screen bg-background">
@@ -345,7 +342,7 @@ export default function Glossary() {
 
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
+        <section className="bg-linear-to-br from-primary/10 to-primary-glow/5 py-16 mb-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
@@ -356,7 +353,7 @@ export default function Glossary() {
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
                 Trading Glossary
-                <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                <span className="block mt-2 bg-linear-to-r from-primary to-primary-glow bg-clip-text text-transparent">
                   {glossaryTerms.length}+ Essential Terms
                 </span>
               </h1>
@@ -383,7 +380,7 @@ export default function Glossary() {
         {/* Glossary Content */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
           {categories.map((category) => {
-            const terms = groupedTerms[category];
+            const terms = groupedTerms[category] || [];
             if (terms.length === 0) return null;
 
             const isExpanded = expandedCategories.has(category);
@@ -395,7 +392,7 @@ export default function Glossary() {
                   className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-lg bg-linear-to-br from-primary to-primary-glow flex items-center justify-center">
                       <BookOpen className="h-5 w-5 text-primary-foreground" />
                     </div>
                     <h2 className="text-xl font-semibold text-foreground">
@@ -457,7 +454,7 @@ export default function Glossary() {
           )}
 
           {/* CTA Section */}
-          <Card className="mt-12 bg-gradient-to-br from-primary/10 to-primary-glow/5 border-primary/20">
+          <Card className="mt-12 bg-linear-to-br from-primary/10 to-primary-glow/5 border-primary/20">
             <CardContent className="p-8 text-center">
               <h2 className="text-3xl font-bold mb-4">
                 Ready to Start Trading?
@@ -469,7 +466,7 @@ export default function Glossary() {
                 <Link to="/register">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-primary to-primary-glow"
+                    className="bg-linear-to-r from-primary to-primary-glow"
                   >
                     Create Free Account
                   </Button>

@@ -201,7 +201,7 @@ class APIErrorBoundary extends React.Component<
   };
 
   override render() {
-    const { critical = false, endpoint } = this.props;
+    const { endpoint } = this.props;
     const { isOffline, retryCount } = this.state;
 
     if (this.state.hasError && this.state.error) {
@@ -234,7 +234,7 @@ class APIErrorBoundary extends React.Component<
 
       // Default fallback UI with API-specific styling
       return (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
+        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
           <Card className="w-full max-w-md shadow-lg border-2 border-destructive/20">
             <CardHeader className="border-b bg-destructive/5">
               <div className="flex items-center gap-4">
@@ -249,10 +249,10 @@ class APIErrorBoundary extends React.Component<
                     {isNetworkError
                       ? 'Unable to connect to the trading servers'
                       : isServerError
-                        ? 'Server is experiencing issues'
-                        : isAuthError
-                          ? 'Authentication required'
-                          : 'API service is temporarily unavailable'}
+                      ? 'Server is experiencing issues'
+                      : isAuthError
+                      ? 'Authentication required'
+                      : 'API service is temporarily unavailable'}
                   </p>
                 </div>
               </div>
@@ -270,8 +270,8 @@ class APIErrorBoundary extends React.Component<
                     {isServerError
                       ? 'Our servers are currently experiencing issues. Please try again in a few minutes.'
                       : isAuthError
-                        ? 'Your session may have expired. Please refresh the page to continue.'
-                        : 'The API service is temporarily unavailable. Your data is safe and will be restored when service resumes.'}
+                      ? 'Your session may have expired. Please refresh the page to continue.'
+                      : 'The API service is temporarily unavailable. Your data is safe and will be restored when service resumes.'}
                   </p>
                 )}
 
@@ -369,7 +369,7 @@ class APIErrorBoundary extends React.Component<
                       Technical Details
                     </summary>
                     <div className="bg-destructive/5 dark:bg-destructive/10 rounded-lg p-4 mt-2 border border-destructive/20">
-                      <p className="font-mono text-sm break-words">
+                      <p className="font-mono text-sm wrap-break-word">
                         <strong>Error:</strong> {this.state.error.toString()}
                       </p>
                       <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
@@ -397,7 +397,7 @@ class APIErrorBoundary extends React.Component<
                           <summary className="cursor-pointer text-destructive font-semibold mt-2">
                             Component Stack
                           </summary>
-                          <pre className="mt-2 text-destructive overflow-auto max-h-40 font-mono text-xs whitespace-pre-wrap break-words">
+                          <pre className="mt-2 text-destructive overflow-auto max-h-40 font-mono text-xs whitespace-pre-wrap wrap-break-word">
                             {this.state.errorInfo.componentStack}
                           </pre>
                         </details>

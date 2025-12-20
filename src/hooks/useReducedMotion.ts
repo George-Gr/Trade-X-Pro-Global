@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { createElement, useEffect, useState } from 'react';
 
 /**
@@ -62,7 +63,7 @@ export const shouldReduceMotion = (): boolean => {
 export const withReducedMotion = <P extends object>(
   Component: React.ComponentType<P>,
   fallbackProps?: Partial<P>
-): React.FC<P> => {
+): FC<P> => {
   return (props: P) => {
     const reducedMotion = useReducedMotion();
 

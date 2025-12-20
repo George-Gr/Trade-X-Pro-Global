@@ -1,38 +1,37 @@
+import MarginLevelCard from '@/components/dashboard/MarginLevelCard';
+import RiskAlertsCard from '@/components/dashboard/RiskAlertsCard';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import TradingViewWatchlist from '@/components/trading/TradingViewWatchlist';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
   Activity,
-  BarChart3,
-  Clock,
-  AlertCircle,
   ArrowRight,
+  TrendingDown,
+  TrendingUp,
   Wallet,
   Zap,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
-import TradingViewWatchlist from '@/components/trading/TradingViewWatchlist';
-import MarginLevelCard from '@/components/dashboard/MarginLevelCard';
-import RiskAlertsCard from '@/components/dashboard/RiskAlertsCard';
 // removed incorrect RiskAlert import — use events returned from useRiskEvents instead
-import ProfitLossCard from '@/components/dashboard/ProfitLossCard';
-import { ErrorMessage, RealtimeErrorAlert } from '@/components/ui/ErrorUI';
-import { useRiskMetrics } from '@/hooks/useRiskMetrics';
-import useRiskEvents from '@/hooks/useRiskEvents';
-import { useProfitLossData } from '@/hooks/useProfitLossData';
 import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
 import { DashboardLoading } from '@/components/dashboard/DashboardLoading';
+import ProfitLossCard from '@/components/dashboard/ProfitLossCard';
+import { ErrorMessage, RealtimeErrorAlert } from '@/components/ui/ErrorUI';
+import { useProfitLossData } from '@/hooks/useProfitLossData';
+import useRiskEvents from '@/hooks/useRiskEvents';
+import { useRiskMetrics } from '@/hooks/useRiskMetrics';
+
+const mapEventSeverity = (
+  severity: string
+): 'critical' | 'warning' | 'info' => {
+  if (severity === 'critical' || severity === 'danger') return 'critical';
+  if (severity === 'warning') return 'warning';
+  return 'info';
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const currentTime = new Date().toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
 
   type StatTrend = 'up' | 'down' | 'neutral';
 
@@ -93,8 +92,6 @@ const Dashboard = () => {
 
   // Use profit/loss data hook for enhanced chart visualization
   const {
-    metrics: profitLossMetrics,
-    chartData: profitLossData,
     loading: profitLossLoading,
     error: profitLossError,
     refetch: refetchProfitLoss,
@@ -122,10 +119,6 @@ const Dashboard = () => {
         {stats.map((stat) => {
           const Icon = stat.icon;
           const isEmptyState = 'empty' in stat && stat.empty;
-          const isNeutral =
-            stat.trend === 'neutral' &&
-            !stat.change.includes('+') &&
-            !stat.change.includes('-');
 
           return (
             <Card
@@ -146,7 +139,7 @@ const Dashboard = () => {
                   )}
                 </div>
                 <Icon
-                  className="h-5 w-5 text-primary flex-shrink-0 ml-4"
+                  className="h-5 w-5 text-primary shrink-0 ml-4"
                   aria-hidden="true"
                 />
               </CardHeader>
@@ -172,7 +165,7 @@ const Dashboard = () => {
                   <div className="flex items-center gap-2 mt-1">
                     {stat.change.includes('+') ? (
                       <>
-                        <TrendingUp className="h-4 w-4 text-success-contrast flex-shrink-0" />
+                        <TrendingUp className="h-4 w-4 text-success-contrast shrink-0" />
                         <p className="text-xs font-medium text-success-contrast">
                           {stat.change}
                         </p>
@@ -180,7 +173,7 @@ const Dashboard = () => {
                     ) : stat.change.includes('-') &&
                       !stat.change.includes('0%') ? (
                       <>
-                        <TrendingDown className="h-4 w-4 text-danger-contrast flex-shrink-0" />
+                        <TrendingDown className="h-4 w-4 text-danger-contrast shrink-0" />
                         <p className="text-xs font-medium text-danger-contrast">
                           {stat.change}
                         </p>
@@ -243,12 +236,7 @@ const Dashboard = () => {
               loading={alertsLoading}
               alerts={alertsData?.map((e) => ({
                 id: e.id,
-                level:
-                  e.severity === 'critical' || e.severity === 'danger'
-                    ? 'critical'
-                    : e.severity === 'warning'
-                      ? 'warning'
-                      : 'info',
+                level: mapEventSeverity(e.severity),
                 title: e.event_type
                   ? String(e.event_type).replace(/_/g, ' ')
                   : e.description || 'Risk event',
@@ -266,7 +254,7 @@ const Dashboard = () => {
             Market Watch
           </CardTitle>
         </CardHeader>
-        <CardContent className="h-[400px]">
+        <CardContent className="h-100">
           <TradingViewErrorBoundary widgetType="Watchlist">
             <TradingViewWatchlist />
           </TradingViewErrorBoundary>
@@ -321,7 +309,7 @@ const Dashboard = () => {
               </p>
               <div className="bg-quick-actions/50 rounded-lg p-lg border border-primary/20 space-y-md">
                 <div className="flex items-start gap-md">
-                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm shrink-0" />
                   <div>
                     <p className="font-medium text-sm text-primary-contrast">
                       Choose Your Instrument
@@ -333,7 +321,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-md">
-                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm shrink-0" />
                   <div>
                     <p className="font-medium text-sm text-primary-contrast">
                       Set Your Trade Parameters
@@ -344,7 +332,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-md">
-                  <ArrowRight className="h-5 w-5 text-primary mt-sm flex-shrink-0" />
+                  <ArrowRight className="h-5 w-5 text-primary mt-sm shrink-0" />
                   <div>
                     <p className="font-medium text-sm text-primary-contrast">
                       Execute Your Trade

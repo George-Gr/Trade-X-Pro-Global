@@ -2,8 +2,7 @@
  * Shared TypeScript types and interfaces for accessibility testing components
  */
 
-import type { MutableRefObject, FormEvent } from 'react';
-import type { ScreenReaderTest } from '../../lib/advancedAccessibility';
+import React, { type MutableRefObject } from 'react';
 
 /**
  * Type definitions for accessibility hook returns and tab component props
@@ -13,7 +12,7 @@ export interface AccessibilityTestingType {
   runFullAudit: () => { overallScore: number };
   headings: HTMLElement[];
   liveRegions: HTMLElement[];
-  tests: ScreenReaderTest[];
+  tests: Array<{ id: string; passed: boolean; message: string }>;
   isValid: boolean;
   getHeadingStats: () => Record<string, number>;
 }
@@ -55,7 +54,7 @@ export interface ColorBlindModeType {
     {
       readonly type: 'achromatopsia';
       readonly name: 'Complete Color Blindness';
-    },
+    }
   ];
   colorBlindMode: ColorBlindMode;
   applyColorBlindSimulation: (mode: ColorBlindMode) => void;
@@ -76,7 +75,7 @@ export interface VisualPreferencesType {
       | 'reduceMotion'
       | 'largerText'
       | 'focusIndicator'
-      | 'readingGuide',
+      | 'readingGuide'
   >(
     key: K,
     value: boolean

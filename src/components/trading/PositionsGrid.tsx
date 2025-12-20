@@ -7,7 +7,7 @@ export const PositionCard: FC<{
   onModify?: (id: string) => void;
   isUpdating?: boolean;
   isLocked?: boolean;
-}> = ({ position, onClose, onModify, isUpdating, isLocked }) => {
+}> = ({ position }) => {
   // Minimal stub for test compatibility
   return <div>{position.symbol}</div>;
 };
@@ -19,7 +19,7 @@ export const PositionMetrics: FC<{ metrics: PositionMetricsData }> = ({
   return <div>Total Positions: {metrics.totalPositions}</div>;
 };
 
-export const PositionsGrid: React.FC<{
+export const PositionsGrid: FC<{
   positions: Position[];
   isLoading?: boolean;
   error?: Error;

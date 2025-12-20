@@ -8,16 +8,16 @@
  * - Capital at Risk
  */
 
-import React from 'react';
-import {
-  Target,
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
-  AlertTriangle,
-} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatMarginLevel, formatCurrency } from '@/lib/risk/riskMetrics';
+import { formatCurrency, formatMarginLevel } from '@/lib/risk/riskMetrics';
+import {
+  AlertTriangle,
+  DollarSign,
+  Target,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
+import type { FC } from 'react';
 
 interface RiskMetricsPanelProps {
   riskMetrics: {
@@ -37,7 +37,7 @@ interface RiskMetricsPanelProps {
   } | null;
 }
 
-export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
+export const RiskMetricsPanel: FC<RiskMetricsPanelProps> = ({
   riskMetrics,
   portfolioMetrics,
 }) => {
@@ -66,8 +66,8 @@ export const RiskMetricsPanel: React.FC<RiskMetricsPanelProps> = ({
                   riskMetrics.currentMarginLevel >= 200
                     ? 'bg-buy'
                     : riskMetrics.currentMarginLevel >= 100
-                      ? 'bg-yellow-600'
-                      : 'bg-sell'
+                    ? 'bg-yellow-600'
+                    : 'bg-sell'
                 }`}
                 style={{
                   width: `${Math.min(

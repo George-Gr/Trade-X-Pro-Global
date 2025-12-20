@@ -12,12 +12,11 @@ import { usePositionClose } from '@/hooks/usePositionClose';
 import { useRealtimePositions } from '@/hooks/useRealtimePositions';
 import type { Position } from '@/types/position';
 import { AlertCircle, TrendingDown } from 'lucide-react';
+import type { FC } from 'react';
 import { useMemo, useState } from 'react';
 import { PositionRow } from './PositionRow';
 
-export const PositionsTable: React.FC<{ userId: string | null }> = ({
-  userId,
-}) => {
+export const PositionsTable: FC<{ userId: string | null }> = ({ userId }) => {
   const { positions, isLoading } = useRealtimePositions(userId || null, {
     autoSubscribe: true,
   });

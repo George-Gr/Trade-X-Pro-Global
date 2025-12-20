@@ -1,17 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import { ChevronDown, Loader2, AlertCircle } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { useOrdersTable, type OrderTableItem } from '@/hooks/useOrdersTable';
-import { useToast } from '@/hooks/use-toast';
-import {
-  OrderFilter,
-  type OrderFilterType,
-} from '@/components/trading/OrderFilter';
-import { OrderDetailExpander } from '@/components/trading/OrderDetailExpander';
 import DesktopOrderTable, {
   type OrderSortKey,
 } from '@/components/trading/DesktopOrderTable';
 import MobileOrderCards from '@/components/trading/MobileOrderCards';
+import { OrderDetailExpander } from '@/components/trading/OrderDetailExpander';
+import {
+  OrderFilter,
+  type OrderFilterType,
+} from '@/components/trading/OrderFilter';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +17,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
+import { useOrdersTable, type OrderTableItem } from '@/hooks/useOrdersTable';
+import { AlertCircle, ChevronDown, Loader2 } from 'lucide-react';
+import type { FC } from 'react';
+import { useMemo, useState } from 'react';
 
 interface SortConfig {
   key: 'created_at' | 'symbol' | 'quantity' | 'price';
@@ -41,7 +41,7 @@ type Order = OrderTableItem;
  * - Mobile responsive design (card layout)
  * - Color-coded status badges
  */
-const OrderHistory: React.FC = () => {
+const OrderHistory: FC = () => {
   const { orders = [], loading } = useOrdersTable();
   const { toast } = useToast();
 
@@ -102,7 +102,9 @@ const OrderHistory: React.FC = () => {
 
       toast({
         title: 'Order Resubmitted',
-        description: `${selectedForReorder.symbol} ${selectedForReorder.side.toUpperCase()} order placed`,
+        description: `${
+          selectedForReorder.symbol
+        } ${selectedForReorder.side.toUpperCase()} order placed`,
       });
 
       setShowReorderConfirm(false);
@@ -160,7 +162,13 @@ const OrderHistory: React.FC = () => {
       <button
         onClick={() => handleSort(sortKey)}
         className="flex items-center gap-4 hover:text-primary transition-colors text-sm"
-        aria-label={`Sort by ${label}, currently ${isActive ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'unsorted'}`}
+        aria-label={`Sort by ${label}, currently ${
+          isActive
+            ? sortConfig.direction === 'asc'
+              ? 'ascending'
+              : 'descending'
+            : 'unsorted'
+        }`}
         aria-pressed={isActive}
       >
         {label}

@@ -3,6 +3,7 @@ import {
   useNetworkStatus,
   usePerformanceMonitor,
 } from '@/lib/performance';
+import type { FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Bar,
@@ -35,7 +36,24 @@ interface BundleChunk {
   modules: number;
 }
 
-export function PerformanceDashboard() {
+interface PerformanceMemory {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
+interface NetworkConnection {
+  effectiveType: string;
+  downlink: number;
+  rtt: number;
+  saveData: boolean;
+  addEventListener(type: string, listener: EventListener): void;
+  removeEventListener(type: string, listener: EventListener): void;
+}
+
+interface PerformanceDashboardProps {}
+
+export const PerformanceDashboard: FC<PerformanceDashboardProps> = () => {
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
   const [bundleStats, setBundleStats] = useState<BundleChunk[]>([]);
   const [isMonitoring, setIsMonitoring] = useState(true);
@@ -43,10 +61,31 @@ export function PerformanceDashboard() {
   const memory = useMemoryMonitor();
   const network = useNetworkStatus();
 
+  // Precompute memory metrics to avoid repeated casts
+  const memoryMetrics = useMemo(() => {
+    if (
+      !memory ||
+      typeof memory.usedJSHeapSize !== 'number' ||
+      typeof memory.totalJSHeapSize !== 'number'
+    ) {
+      return null;
+    }
+
+    const usedHeapMB = (memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
+    const totalHeapMB = (memory.totalJSHeapSize / 1024 / 1024).toFixed(2);
+    const usagePercent = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
+
+    return {
+      usedHeapMB,
+      totalHeapMB,
+      usagePercent,
+    };
+  }, [memory]);
+
   // Performance monitoring hook
   usePerformanceMonitor('PerformanceDashboard');
 
-  // Collect performance metrics callback
+  // Collect performance metrics function
   const collectPerformanceMetrics = useCallback((): PerformanceMetric[] => {
     const now = Date.now();
     const entries = performance.getEntriesByType('navigation');
@@ -106,15 +145,22 @@ export function PerformanceDashboard() {
 
     // Memory metrics
     if (memory) {
+      const mem = memory as PerformanceMemory;
+      if (
+        typeof mem.usedJSHeapSize !== 'number' ||
+        typeof mem.totalJSHeapSize !== 'number'
+      ) {
+        return metrics;
+      }
       metrics.push({
         timestamp: now,
-        value: memory.usedJSHeapSize / 1024 / 1024, // MB
+        value: mem.usedJSHeapSize / 1024 / 1024, // MB
         label: 'Memory Usage',
       });
 
       metrics.push({
         timestamp: now,
-        value: memory.totalJSHeapSize / 1024 / 1024, // MB
+        value: mem.totalJSHeapSize / 1024 / 1024, // MB
         label: 'Total Memory',
       });
     }
@@ -132,7 +178,7 @@ export function PerformanceDashboard() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isMonitoring, collectPerformanceMetrics]);
+  }, [isMonitoring, memory, collectPerformanceMetrics]);
 
   // Collect bundle statistics
   useEffect(() => {
@@ -140,9 +186,28 @@ export function PerformanceDashboard() {
     setBundleStats(stats);
   }, []);
 
-  const performanceSummary = useMemo(() => {
-    return calculatePerformanceSummary(metrics);
-  }, [metrics]);
+  // Debounced performance summary calculation to reduce expensive computations
+  const [performanceSummary, setPerformanceSummary] = useState<
+    Record<string, { avg: number; min: number; max: number }>
+  >({});
+
+  // Extract recent metrics slice to avoid complex expression in dependency array
+  const recentMetrics = useMemo(() => metrics.slice(-20), [metrics]);
+
+  // Memoized calculation with selective dependency on recent metrics only
+  const memoizedCalculateSummary = useMemo(() => {
+    // Only use the last 20 metrics to reduce computation overhead
+    return calculatePerformanceSummary(recentMetrics);
+  }, [recentMetrics]);
+
+  useEffect(() => {
+    // Debounce the calculation to run every 2 seconds instead of every second
+    const timeoutId = setTimeout(() => {
+      setPerformanceSummary(memoizedCalculateSummary);
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [memoizedCalculateSummary]);
 
   const collectBundleStats = (): BundleChunk[] => {
     // This would integrate with webpack-bundle-analyzer data
@@ -156,14 +221,11 @@ export function PerformanceDashboard() {
   };
 
   const calculatePerformanceSummary = (metrics: PerformanceMetric[]) => {
-    const byLabel = metrics.reduce(
-      (acc, metric) => {
-        if (!acc[metric.label]) acc[metric.label] = [];
-        acc[metric.label].push(metric.value);
-        return acc;
-      },
-      {} as Record<string, number[]>
-    );
+    const byLabel = metrics.reduce((acc, metric) => {
+      const label = metric.label;
+      (acc[label] ||= []).push(metric.value);
+      return acc;
+    }, {} as Record<string, number[]>);
 
     const summary: Record<string, { avg: number; min: number; max: number }> =
       {};
@@ -246,8 +308,8 @@ export function PerformanceDashboard() {
                 performanceScore.avg >= 90
                   ? 'bg-green-100'
                   : performanceScore.avg >= 75
-                    ? 'bg-yellow-100'
-                    : 'bg-red-100'
+                  ? 'bg-yellow-100'
+                  : 'bg-red-100'
               }`}
             >
               <svg
@@ -280,19 +342,19 @@ export function PerformanceDashboard() {
         {/* Memory Usage */}
         <div className="md:col-span-2 bg-card rounded-lg p-6 border">
           <h3 className="font-semibold mb-4">Memory Usage</h3>
-          {memory ? (
+          {memoryMetrics ? (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-muted rounded">
                   <p className="text-sm text-muted-foreground">Used Heap</p>
                   <p className="text-2xl font-bold">
-                    {(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB
+                    {memoryMetrics.usedHeapMB} MB
                   </p>
                 </div>
                 <div className="p-4 bg-muted rounded">
                   <p className="text-sm text-muted-foreground">Total Heap</p>
                   <p className="text-2xl font-bold">
-                    {(memory.totalJSHeapSize / 1024 / 1024).toFixed(2)} MB
+                    {memoryMetrics.totalHeapMB} MB
                   </p>
                 </div>
               </div>
@@ -300,9 +362,7 @@ export function PerformanceDashboard() {
                 <div
                   className="bg-blue-600 h-2 rounded-full"
                   style={{
-                    width: `${
-                      (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100
-                    }%`,
+                    width: `${memoryMetrics.usagePercent.toFixed(1)}%`,
                   }}
                 />
               </div>
@@ -316,41 +376,53 @@ export function PerformanceDashboard() {
         <div className="md:col-span-2 bg-card rounded-lg p-6 border">
           <h3 className="font-semibold mb-4">Network Status</h3>
           <div className="space-y-4">
-            <div
-              className={`flex items-center gap-3 p-3 rounded ${
-                network.isOnline
-                  ? 'bg-green-50 border border-green-200'
-                  : 'bg-red-50 border border-red-200'
-              }`}
-            >
-              <div
-                className={`w-3 h-3 rounded-full ${
-                  network.isOnline ? 'bg-green-500' : 'bg-red-500'
-                }`}
-              />
-              <span className="font-medium">
-                {network.isOnline ? 'Online' : 'Offline'}
-              </span>
-            </div>
+            {(() => {
+              const connection = network.connection as
+                | NetworkConnection
+                | undefined;
 
-            {network.connection && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-muted rounded">
-                  <p className="text-sm text-muted-foreground">
-                    Effective Type
-                  </p>
-                  <p className="font-semibold">
-                    {network.connection.effectiveType}
-                  </p>
-                </div>
-                <div className="p-3 bg-muted rounded">
-                  <p className="text-sm text-muted-foreground">Downlink</p>
-                  <p className="font-semibold">
-                    {network.connection.downlink} Mbps
-                  </p>
-                </div>
-              </div>
-            )}
+              return (
+                <>
+                  <div
+                    className={`flex items-center gap-3 p-3 rounded ${
+                      network.isOnline
+                        ? 'bg-green-50 border border-green-200'
+                        : 'bg-red-50 border border-red-200'
+                    }`}
+                  >
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        network.isOnline ? 'bg-green-500' : 'bg-red-500'
+                      }`}
+                    />
+                    <span className="font-medium">
+                      {network.isOnline ? 'Online' : 'Offline'}
+                    </span>
+                  </div>
+
+                  {connection && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-3 bg-muted rounded">
+                        <p className="text-sm text-muted-foreground">
+                          Effective Type
+                        </p>
+                        <p className="font-semibold">
+                          {connection.effectiveType}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-muted rounded">
+                        <p className="text-sm text-muted-foreground">
+                          Downlink
+                        </p>
+                        <p className="font-semibold">
+                          {connection.downlink} Mbps
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -457,6 +529,6 @@ export function PerformanceDashboard() {
       </div>
     </div>
   );
-}
+};
 
 export default PerformanceDashboard;

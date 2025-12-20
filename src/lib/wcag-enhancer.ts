@@ -816,9 +816,7 @@ export class WCAGAAAEnhancer {
     }
 
     // Clear references
-    this.boundEventHandlers.reducedMotion = undefined;
-    this.boundEventHandlers.highContrast = undefined;
-    this.boundEventHandlers.keyboard = undefined;
+    this.boundEventHandlers = {};
 
     // Reset singleton instance
     WCAGAAAEnhancer.instance = undefined;

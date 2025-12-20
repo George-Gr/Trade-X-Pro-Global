@@ -1,7 +1,7 @@
 // KycAdminDashboard: Comprehensive admin UI for reviewing KYC requests
-import React, { useEffect, useState, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,19 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -30,16 +17,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import {
-  Loader2,
-  Eye,
-  ChevronDown,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseBrowserClient';
+import {
   AlertCircle,
   CheckCircle,
+  ChevronDown,
   Clock,
+  Eye,
+  Loader2,
   X,
 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface KycDocument {
   id: string;
@@ -163,6 +163,7 @@ const KycAdminDashboard: React.FC = () => {
       const interval = setInterval(fetchRequests, 30000);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [loading, isAdmin, user, fetchRequests]);
 
   // Perform admin action

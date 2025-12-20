@@ -17,7 +17,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * Screen Reader Testing Utilities
  */
 
-interface ScreenReaderTest extends Record<string, unknown> {
+export interface ScreenReaderTest extends Record<string, unknown> {
   id: string;
   name: string;
   description: string;
@@ -210,14 +210,11 @@ export function useHeadingHierarchy() {
     isValid,
     issues,
     getHeadingStats: () => {
-      const stats = headings.reduce(
-        (acc, heading) => {
-          const level = parseInt(heading.tagName.charAt(1));
-          acc[level] = (acc[level] || 0) + 1;
-          return acc;
-        },
-        {} as Record<number, number>
-      );
+      const stats = headings.reduce((acc, heading) => {
+        const level = parseInt(heading.tagName.charAt(1));
+        acc[level] = (acc[level] || 0) + 1;
+        return acc;
+      }, {} as Record<number, number>);
 
       return stats;
     },
@@ -274,9 +271,9 @@ export function useKeyboardNavigation() {
       );
 
       if (currentIndex >= 0 && currentIndex < focusable.length - 1) {
-        focusable[currentIndex + 1].focus();
+        focusable[currentIndex + 1]?.focus();
       } else if (currentIndex === -1 && focusable.length > 0) {
-        focusable[0].focus();
+        focusable[0]?.focus();
       }
     },
     [getFocusableElements]
@@ -290,7 +287,7 @@ export function useKeyboardNavigation() {
       );
 
       if (currentIndex > 0) {
-        focusable[currentIndex - 1].focus();
+        focusable[currentIndex - 1]?.focus();
       }
     },
     [getFocusableElements]
@@ -300,7 +297,7 @@ export function useKeyboardNavigation() {
     (container?: HTMLElement) => {
       const focusable = getFocusableElements(container);
       if (focusable.length > 0) {
-        focusable[0].focus();
+        focusable[0]?.focus();
       }
     },
     [getFocusableElements]
@@ -354,7 +351,7 @@ export function useColorContrast() {
       const [rs, gs, bs] = [r, g, b].map((c) => {
         c = c / 255;
         return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-      });
+      }) as [number, number, number];
       return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
     },
     []

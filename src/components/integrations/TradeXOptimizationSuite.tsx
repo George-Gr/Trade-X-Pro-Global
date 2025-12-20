@@ -1,22 +1,22 @@
-import React, { useEffect } from 'react';
-import {
-  PerformanceIntegration,
-  PerformanceDashboard,
-} from './PerformanceIntegration';
-import { ABTestIntegration, QuickSignupCTA } from './ABTestIntegration';
-import { initializeCTAExperiments } from '../../lib/ab-testing/ctaExperiments';
+import { ABTestIntegration } from '@/components/integrations/ABTestIntegration';
+import { AccessibilityIntegration } from '@/components/integrations/AccessibilityIntegration';
 import {
   AnalyticsIntegration,
-  QuickAnalyticsSetup,
   PerformanceCorrelation,
-} from './AnalyticsIntegration';
-import { SEOIntegration, QuickSEOSetup, TradingSEO } from './SEOIntegration';
+  QuickAnalyticsSetup,
+} from '@/components/integrations/AnalyticsIntegration';
 import {
-  AccessibilityIntegration,
-  QuickAccessibilitySetup,
-} from './AccessibilityIntegration';
-import { GranularSkeleton } from '../ui/GranularSkeleton';
-import { cn } from '../../lib/utils';
+  PerformanceDashboard,
+  PerformanceIntegration,
+} from '@/components/integrations/PerformanceIntegration';
+import {
+  SEOIntegration,
+  TradingSEO,
+} from '@/components/integrations/SEOIntegration';
+import { GranularSkeleton } from '@/components/ui/GranularSkeleton';
+import { initializeCTAExperiments } from '@/lib/ab-testing/ctaExperiments';
+import { cn } from '@/lib/utils';
+import React, { useEffect } from 'react';
 
 interface TradeXOptimizationSuiteProps {
   children: React.ReactNode;
@@ -406,6 +406,7 @@ function OptimizationStatusIndicator({
       const timer = setTimeout(() => setIsVisible(false), 3000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [isInitialized]);
 
   if (!isVisible) return null;

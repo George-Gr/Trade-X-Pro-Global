@@ -1,27 +1,3 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { X, Edit2, Loader2, AlertCircle } from 'lucide-react';
-import { FixedSizeList as List } from 'react-window';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { useRealtimePositions } from '@/hooks/useRealtimePositions';
-import { usePnLCalculations } from '@/hooks/usePnLCalculations';
-import { usePositionClose } from '@/hooks/usePositionClose';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-import {
-  PositionsHeader,
-  SortHeader,
-  type SortConfig,
-} from './PositionsHeader';
-import { PositionsMetrics } from './PositionsMetrics';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,8 +8,32 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import type { Position } from '@/types/position';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { usePnLCalculations } from '@/hooks/usePnLCalculations';
+import { usePositionClose } from '@/hooks/usePositionClose';
+import { useRealtimePositions } from '@/hooks/useRealtimePositions';
 import type { PositionPnLDetails } from '@/lib/trading/pnlCalculation';
+import type { Position } from '@/types/position';
+import { AlertCircle, Edit2, Loader2, X } from 'lucide-react';
+import type { FC } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  PositionsHeader,
+  SortHeader,
+  type SortConfig,
+} from './PositionsHeader';
+import { PositionsMetrics } from './PositionsMetrics';
 
 type FilterType = 'all' | 'long' | 'short' | 'profit' | 'loss';
 
@@ -51,7 +51,7 @@ type FilterType = 'all' | 'long' | 'short' | 'profit' | 'loss';
  * - Margin level indicators
  * - Split components: Header, Metrics, Row
  */
-const EnhancedPositionsTable: React.FC = () => {
+const EnhancedPositionsTable: FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { positions, isLoading: positionsLoading } = useRealtimePositions(
@@ -636,12 +636,12 @@ const EnhancedPositionsTable: React.FC = () => {
  * PositionDetails Sub-component
  * Displays expanded details for a position
  */
-const PositionDetails: React.FC<{
+const PositionDetails: FC<{
   position: Position;
   pnlData:
     | PositionPnLDetails
     | { unrealizedPnL: number; unrealizedPnLPercentage: number };
-}> = ({ position, pnlData }) => {
+}> = ({ position }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
       <div>

@@ -1,7 +1,7 @@
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { useColorContrastVerification } from '@/lib/colorContrastVerification';
+
 import { useTradingKeyboardShortcuts } from '@/lib/tradingKeyboardNavigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Type definitions for market data
@@ -25,10 +25,9 @@ export function TradingDashboard() {
   >('overview');
   const [selectedSymbol, setSelectedSymbol] = useState<MarketSymbol>('AAPL');
   const [isLive, setIsLive] = useState(true);
-  const [refreshCount, setRefreshCount] = useState(0);
 
   const keyboardShortcuts = useTradingKeyboardShortcuts();
-  const colorContrast = useColorContrastVerification();
+
   const { visualPreferences, complianceScore, screenReaderEnabled } =
     useAccessibility();
 
@@ -104,7 +103,7 @@ export function TradingDashboard() {
     ],
   };
 
-  const marketDataRef = useRef<MarketData>({
+  const [marketData, setMarketData] = useState<MarketData>({
     AAPL: { price: 150.75, change: 0.5, changePercent: 0.33 },
     MSFT: { price: 302.5, change: 2.5, changePercent: 0.83 },
     GOOGL: { price: 2795.0, change: -5.0, changePercent: -0.18 },
@@ -118,18 +117,21 @@ export function TradingDashboard() {
 
     const interval = setInterval(() => {
       // Simulate price updates
-      (Object.keys(marketDataRef.current) as MarketSymbol[]).forEach(
-        (symbol) => {
+      setMarketData((prev) => {
+        const updated = { ...prev };
+        (Object.keys(updated) as MarketSymbol[]).forEach((symbol) => {
           const change = (Math.random() - 0.5) * 2; // Random change between -1 and +1
-          const curr = marketDataRef.current[symbol];
+          const curr = updated[symbol];
           const newPrice = Math.max(1, curr.price + change);
-          curr.change = change;
-          curr.changePercent = (change / (newPrice - change)) * 100;
-          curr.price = newPrice;
-        }
-      );
-
-      setRefreshCount((prev) => prev + 1);
+          updated[symbol] = {
+            ...curr,
+            price: newPrice,
+            change: change,
+            changePercent: (change / (newPrice - change)) * 100,
+          };
+        });
+        return updated;
+      });
     }, 3000);
 
     return () => clearInterval(interval);
@@ -185,7 +187,6 @@ export function TradingDashboard() {
           </button>
 
           <button
-            onClick={() => setRefreshCount((prev) => prev + 1)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg font-medium"
             aria-label="Refresh data"
           >
@@ -333,73 +334,71 @@ export function TradingDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(marketDataRef.current).map(
-                      ([symbol, data]) => (
-                        <tr key={symbol} className="border-b">
-                          <td className="py-3">
-                            <div>
-                              <div className="font-semibold">{symbol}</div>
-                              <div className="text-sm text-muted-foreground">
-                                {symbol === 'AAPL'
-                                  ? 'Apple Inc.'
-                                  : symbol === 'MSFT'
-                                  ? 'Microsoft Corporation'
-                                  : symbol === 'GOOGL'
-                                  ? 'Alphabet Inc.'
-                                  : symbol === 'AMZN'
-                                  ? 'Amazon.com, Inc.'
-                                  : 'Tesla, Inc.'}
-                              </div>
+                    {Object.entries(marketData).map(([symbol, data]) => (
+                      <tr key={symbol} className="border-b">
+                        <td className="py-3">
+                          <div>
+                            <div className="font-semibold">{symbol}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {symbol === 'AAPL'
+                                ? 'Apple Inc.'
+                                : symbol === 'MSFT'
+                                ? 'Microsoft Corporation'
+                                : symbol === 'GOOGL'
+                                ? 'Alphabet Inc.'
+                                : symbol === 'AMZN'
+                                ? 'Amazon.com, Inc.'
+                                : 'Tesla, Inc.'}
                             </div>
-                          </td>
-                          <td
-                            className={`py-3 text-right font-semibold ${getChangeColor(
-                              data.change
-                            )}`}
-                          >
-                            {formatCurrency(data.price)}
-                          </td>
-                          <td
-                            className={`py-3 text-right ${getChangeColor(
-                              data.change
-                            )}`}
-                          >
-                            {getChangeArrow(data.change)}{' '}
-                            {formatCurrency(Math.abs(data.change))}
-                          </td>
-                          <td
-                            className={`py-3 text-right ${getChangeColor(
-                              data.change
-                            )}`}
-                          >
-                            {getChangeArrow(data.change)}{' '}
-                            {Math.abs(data.changePercent).toFixed(2)}%
-                          </td>
-                          <td className="py-3 text-right">
-                            <div className="flex justify-end space-x-2">
-                              <button
-                                onClick={() =>
-                                  setSelectedSymbol(symbol as MarketSymbol)
-                                }
-                                className="px-3 py-1 bg-green-500 text-white rounded text-sm"
-                                aria-label={`Buy ${symbol}`}
-                              >
-                                Buy
-                              </button>
-                              <button
-                                onClick={() =>
-                                  setSelectedSymbol(symbol as MarketSymbol)
-                                }
-                                className="px-3 py-1 bg-red-500 text-white rounded text-sm"
-                                aria-label={`Sell ${symbol}`}
-                              >
-                                Sell
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    )}
+                          </div>
+                        </td>
+                        <td
+                          className={`py-3 text-right font-semibold ${getChangeColor(
+                            data.change
+                          )}`}
+                        >
+                          {formatCurrency(data.price)}
+                        </td>
+                        <td
+                          className={`py-3 text-right ${getChangeColor(
+                            data.change
+                          )}`}
+                        >
+                          {getChangeArrow(data.change)}{' '}
+                          {formatCurrency(Math.abs(data.change))}
+                        </td>
+                        <td
+                          className={`py-3 text-right ${getChangeColor(
+                            data.change
+                          )}`}
+                        >
+                          {getChangeArrow(data.change)}{' '}
+                          {Math.abs(data.changePercent).toFixed(2)}%
+                        </td>
+                        <td className="py-3 text-right">
+                          <div className="flex justify-end space-x-2">
+                            <button
+                              onClick={() =>
+                                setSelectedSymbol(symbol as MarketSymbol)
+                              }
+                              className="px-3 py-1 bg-green-500 text-white rounded text-sm"
+                              aria-label={`Buy ${symbol}`}
+                            >
+                              Buy
+                            </button>
+                            <button
+                              onClick={() =>
+                                setSelectedSymbol(symbol as MarketSymbol)
+                              }
+                              className="px-3 py-1 bg-red-500 text-white rounded text-sm"
+                              aria-label={`Sell ${symbol}`}
+                            >
+                              Sell
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -620,7 +619,7 @@ export function TradingDashboard() {
                     className="p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     aria-label="Select symbol for chart"
                   >
-                    {(Object.keys(marketDataRef.current) as MarketSymbol[]).map(
+                    {(Object.keys(marketData) as MarketSymbol[]).map(
                       (symbol) => (
                         <option key={symbol} value={symbol}>
                           {symbol}
@@ -647,24 +646,20 @@ export function TradingDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">
-                      {formatCurrency(
-                        marketDataRef.current[selectedSymbol].price
-                      )}
+                      {formatCurrency(marketData[selectedSymbol].price)}
                     </p>
                     <p
                       className={`text-sm ${getChangeColor(
-                        marketDataRef.current[selectedSymbol].change
+                        marketData[selectedSymbol].change
                       )}`}
                     >
-                      {getChangeArrow(
-                        marketDataRef.current[selectedSymbol].change
-                      )}{' '}
+                      {getChangeArrow(marketData[selectedSymbol].change)}{' '}
                       {formatCurrency(
-                        Math.abs(marketDataRef.current[selectedSymbol].change)
+                        Math.abs(marketData[selectedSymbol].change)
                       )}{' '}
                       (
                       {Math.abs(
-                        marketDataRef.current[selectedSymbol].changePercent
+                        marketData[selectedSymbol].changePercent
                       ).toFixed(2)}
                       %)
                     </p>
@@ -676,9 +671,7 @@ export function TradingDashboard() {
                   {[...Array(10)].map((_, i) => (
                     <div key={i} className="flex items-center space-x-4">
                       <span className="text-xs text-muted-foreground w-12">
-                        {Math.round(
-                          marketDataRef.current[selectedSymbol].price - 5 + i
-                        )}
+                        {Math.round(marketData[selectedSymbol].price - 5 + i)}
                       </span>
                       <div className="flex-1 bg-gray-200 rounded-full h-2">
                         <div

@@ -18,12 +18,12 @@ import {
   TrendingUp,
   Wallet,
 } from 'lucide-react';
-import * as React from 'react';
+import type { FC } from 'react';
 import { useMemo } from 'react';
 import EnhancedPositionsTable from './EnhancedPositionsTable';
 import OrderHistory from './OrderHistory';
 
-const EnhancedPortfolioDashboard: React.FC = () => {
+const EnhancedPortfolioDashboard: FC = () => {
   const { profile, positions = [], loading, error } = usePortfolioData();
 
   const mappedPositions = useMemo(() => {
@@ -306,7 +306,7 @@ interface MetricItemProps {
   valueClassName?: string;
 }
 
-const MetricItem: React.FC<MetricItemProps> = ({
+const MetricItem: FC<MetricItemProps> = ({
   label,
   value,
   tooltip,

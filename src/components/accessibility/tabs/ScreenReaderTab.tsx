@@ -1,5 +1,5 @@
 import type { AccessibilityTestingType } from '@/components/accessibility/types';
-import React from 'react';
+import type { FC } from 'react';
 
 export interface ScreenReaderTabProps {
   accessibilityTesting: AccessibilityTestingType;
@@ -17,7 +17,7 @@ export interface ScreenReaderTabProps {
  * @param {AccessibilityTestingType} props.accessibilityTesting - Accessibility testing data and utilities
  * @returns {JSX.Element} Screen reader testing dashboard
  */
-export const ScreenReaderTab: React.FC<ScreenReaderTabProps> = ({
+export const ScreenReaderTab: FC<ScreenReaderTabProps> = ({
   accessibilityTesting,
 }) => {
   return (

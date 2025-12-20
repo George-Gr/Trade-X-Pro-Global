@@ -1,5 +1,6 @@
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -117,7 +118,7 @@ export const DEFAULT_FORM_VALUES: TradeData = {
  * @component
  * @returns {JSX.Element} The trading form with accessibility features
  */
-export const TradingForm: React.FC = () => {
+export const TradingForm: FC = () => {
   const {
     register,
     handleSubmit,

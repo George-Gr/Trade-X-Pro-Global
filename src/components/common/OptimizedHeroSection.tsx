@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
 import { OptimizedBackgroundImage } from '@/components/common/OptimizedBackgroundImage';
 import { HERO_IMAGES, getOptimizedImageSrc } from '@/lib/imageOptimization';
+import { logger } from '@/lib/logger';
+import { useEffect, useState } from 'react';
 
 interface HeroSectionProps {
   children: React.ReactNode;
@@ -23,37 +24,41 @@ export const OptimizedHeroSection = ({
 }: HeroSectionProps) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [webpImage, setWebpImage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadImage = async () => {
-      setIsLoading(true);
       const imageConfig = HERO_IMAGES[imageKey];
 
       if (!imageConfig) {
-        console.error(`Image configuration not found for key: ${imageKey}`);
-        setIsLoading(false);
+        logger.error(
+          `Image configuration not found for key: ${imageKey}`,
+          undefined,
+          {
+            component: 'OptimizedHeroSection',
+            imageKey,
+          }
+        );
         return;
       }
 
       try {
-        // Get the best variant based on current viewport
-        const bestVariant =
-          imageConfig.variants[imageConfig.variants.length - 1]; // Use largest for now
+        if (imageConfig.variants.length > 0) {
+          const bestVariant =
+            imageConfig.variants[imageConfig.variants.length - 1]; // Use largest for now
 
-        // Determine if WebP is supported and set appropriate sources
-        const optimizedSrc = await getOptimizedImageSrc(
-          bestVariant.src,
-          bestVariant.webpSrc
-        );
+          if (bestVariant) {
+            // Determine if WebP is supported and set appropriate sources
+            await getOptimizedImageSrc(bestVariant.src, bestVariant.webpSrc);
 
-        setBackgroundImage(bestVariant.src);
-        setWebpImage(bestVariant.webpSrc || '');
-
-        setIsLoading(false);
+            setBackgroundImage(bestVariant.src);
+            setWebpImage(bestVariant.webpSrc || '');
+          }
+        }
       } catch (error) {
-        console.error('Failed to load hero image:', error);
-        setIsLoading(false);
+        logger.error('Failed to load hero image', error, {
+          component: 'OptimizedHeroSection',
+          imageKey,
+        });
       }
     };
 
@@ -62,7 +67,7 @@ export const OptimizedHeroSection = ({
 
   // Handle window resize for responsive images
   useEffect(() => {
-    let resizeTimer: number;
+    let resizeTimer: ReturnType<typeof setTimeout>;
 
     const handleResize = () => {
       clearTimeout(resizeTimer);
@@ -75,8 +80,11 @@ export const OptimizedHeroSection = ({
             const desktopVariant =
               imageConfig.variants.find((v) => v.width >= 1920) ||
               imageConfig.variants[imageConfig.variants.length - 1];
-            setBackgroundImage(desktopVariant.src);
-            setWebpImage(desktopVariant.webpSrc || '');
+
+            if (desktopVariant) {
+              setBackgroundImage(desktopVariant.src);
+              setWebpImage(desktopVariant.webpSrc || '');
+            }
           }
         } else if (window.innerWidth > 768) {
           // Tablet
@@ -85,16 +93,21 @@ export const OptimizedHeroSection = ({
             const tabletVariant =
               imageConfig.variants.find((v) => v.width >= 1200) ||
               imageConfig.variants[1];
-            setBackgroundImage(tabletVariant.src);
-            setWebpImage(tabletVariant.webpSrc || '');
+
+            if (tabletVariant) {
+              setBackgroundImage(tabletVariant.src);
+              setWebpImage(tabletVariant.webpSrc || '');
+            }
           }
         } else {
           // Mobile
           const imageConfig = HERO_IMAGES[imageKey];
           if (imageConfig) {
             const mobileVariant = imageConfig.variants[0];
-            setBackgroundImage(mobileVariant.src);
-            setWebpImage(mobileVariant.webpSrc || '');
+            if (mobileVariant) {
+              setBackgroundImage(mobileVariant.src);
+              setWebpImage(mobileVariant.webpSrc || '');
+            }
           }
         }
       }, 250);
