@@ -225,8 +225,8 @@ If strict mode causes too many issues:
 ## Quick Reference
 
 | Issue Type          | Command to Find                  | Fix Pattern                |
-| ------------------- | -------------------------------- | -------------------------- | ----- |
-| Optional properties | `grep "?: " src/`                | Add `                      | null` |
+| ------------------- | -------------------------------- | -------------------------- |
+| Optional properties | `grep "?: " src/`                | Add `` `\| null` ``        |
 | Any types           | `grep ": any" src/`              | Replace with specific type |
 | React hooks         | `grep "useMemo\|useEffect" src/` | Add missing dependencies   |
 | Object spread       | `grep "\.\.\." src/`             | Add explicit types         |

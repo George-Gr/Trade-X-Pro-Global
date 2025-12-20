@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
-import { FormsTab } from "./feature/FormsTab";
-import { RolesTab } from "./feature/RolesTab";
-import { LiveRegionsTab } from "./feature/LiveRegionsTab";
-import { ValidationTab } from "./feature/ValidationTab";
-import { TestResults } from "./feature/TestResults";
-import type { TestResult, FormData, FormErrors, InputRefs } from "./types";
+import React, { useState, useRef } from 'react';
+import { FormsTab } from './feature/FormsTab';
+import { RolesTab } from './feature/RolesTab';
+import { LiveRegionsTab } from './feature/LiveRegionsTab';
+import { ValidationTab } from './feature/ValidationTab';
+import { TestResults } from './feature/TestResults';
+import type { TestResult, FormData, FormErrors, InputRefs } from './types';
 
 /**
  * ARIA Label Tester Component
@@ -16,18 +16,18 @@ import type { TestResult, FormData, FormErrors, InputRefs } from "./types";
  */
 export function AriaLabelTester() {
   const [activeTest, setActiveTest] = useState<
-    "forms" | "roles" | "live" | "validation"
-  >("forms");
+    'forms' | 'roles' | 'live' | 'validation'
+  >('forms');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [formData, setFormData] = useState<FormData>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
     terms: false,
     newsletter: false,
-    country: "",
-    bio: "",
+    country: '',
+    bio: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const inputRefs = useRef<InputRefs>({});
@@ -37,31 +37,31 @@ export function AriaLabelTester() {
     const newErrors: FormErrors = {};
 
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+      newErrors.username = 'Username is required';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = 'Email is invalid';
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     if (!formData.country) {
-      newErrors.country = "Please select a country";
+      newErrors.country = 'Please select a country';
     }
 
     if (!formData.terms) {
-      newErrors.terms = "You must accept the terms";
+      newErrors.terms = 'You must accept the terms';
     }
 
     setErrors(newErrors);
@@ -71,43 +71,43 @@ export function AriaLabelTester() {
   // Update form field and clear associated error
   const updateForm = (
     field: keyof FormData,
-    value: FormData[keyof FormData],
+    value: FormData[keyof FormData]
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
   // Test ARIA label on element - checks for proper label association patterns
   const testAriaLabel = (element: HTMLElement, fieldName: string) => {
     const elementId = element.id;
-    const ariaLabel = element.getAttribute("aria-label");
-    const ariaLabelledby = element.getAttribute("aria-labelledby");
+    const ariaLabel = element.getAttribute('aria-label');
+    const ariaLabelledby = element.getAttribute('aria-labelledby');
 
     // Check for aria-label (explicit label)
     const hasAriaLabel = !!ariaLabel && ariaLabel.trim().length > 0;
 
     // Check for aria-labelledby (label reference)
     let hasAriaLabelledby = false;
-    let ariaLabelledbyText = "";
+    let ariaLabelledbyText = '';
     if (ariaLabelledby) {
       const labelElement = document.getElementById(ariaLabelledby);
       if (labelElement) {
-        ariaLabelledbyText = labelElement.textContent?.trim() || "";
+        ariaLabelledbyText = labelElement.textContent?.trim() || '';
         hasAriaLabelledby = ariaLabelledbyText.length > 0;
       }
     }
 
     // Check for associated label element via htmlFor/id pairing
     let hasAssociatedLabel = false;
-    let associatedLabelText = "";
+    let associatedLabelText = '';
     if (elementId) {
       const associatedLabel = document.querySelector(
-        `label[for="${elementId}"]`,
+        `label[for="${elementId}"]`
       );
       if (associatedLabel) {
-        associatedLabelText = associatedLabel.textContent?.trim() || "";
+        associatedLabelText = associatedLabel.textContent?.trim() || '';
         hasAssociatedLabel = associatedLabelText.length > 0;
       }
     }
@@ -117,20 +117,20 @@ export function AriaLabelTester() {
       hasAriaLabel || hasAriaLabelledby || hasAssociatedLabel;
 
     const labelingMethod = hasAriaLabel
-      ? "aria-label"
+      ? 'aria-label'
       : hasAriaLabelledby
-        ? "aria-labelledby"
+        ? 'aria-labelledby'
         : hasAssociatedLabel
-          ? "label-htmlFor"
-          : "none";
+          ? 'label-htmlFor'
+          : 'none';
 
     const actualLabel =
-      ariaLabel || ariaLabelledbyText || associatedLabelText || "";
+      ariaLabel || ariaLabelledbyText || associatedLabelText || '';
 
     setTestResults((prev) => [
       ...prev,
       {
-        type: "aria_label",
+        type: 'aria_label',
         element: element.tagName.toLowerCase(),
         expected: `${fieldName} (any valid label)`,
         actual: actualLabel || `(no label found - ${labelingMethod})`,
@@ -156,8 +156,8 @@ export function AriaLabelTester() {
     setTestResults((prev) => [
       ...prev,
       {
-        type: "form_test",
-        message: "Form accessibility test completed",
+        type: 'form_test',
+        message: 'Form accessibility test completed',
         timestamp: new Date().toLocaleTimeString(),
       },
     ]);
@@ -170,7 +170,7 @@ export function AriaLabelTester() {
 
   // Announce message to screen reader
   const announceToScreenReader = (message: string) => {
-    if ("speechSynthesis" in window) {
+    if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(message);
       utterance.rate = 0.9;
       utterance.pitch = 1;
@@ -186,16 +186,16 @@ export function AriaLabelTester() {
       setTestResults((prev) => [
         ...prev,
         {
-          type: "form_submit",
-          message: "Form submitted successfully",
+          type: 'form_submit',
+          message: 'Form submitted successfully',
           data: formData,
           timestamp: new Date().toLocaleTimeString(),
         },
       ]);
 
-      announceToScreenReader("Form submitted successfully");
+      announceToScreenReader('Form submitted successfully');
     } else {
-      announceToScreenReader("Please fix the form errors before submitting");
+      announceToScreenReader('Please fix the form errors before submitting');
     }
   };
 
@@ -245,18 +245,18 @@ export function AriaLabelTester() {
       <div className="border-b">
         <div className="flex space-x-8">
           {[
-            { key: "forms", label: "Form Accessibility" },
-            { key: "roles", label: "ARIA Roles" },
-            { key: "live", label: "Live Regions" },
-            { key: "validation", label: "Error Validation" },
+            { key: 'forms', label: 'Form Accessibility' },
+            { key: 'roles', label: 'ARIA Roles' },
+            { key: 'live', label: 'Live Regions' },
+            { key: 'validation', label: 'Error Validation' },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTest(tab.key as typeof activeTest)}
               className={`py-4 px-2 border-b-2 font-medium text-sm ${
                 activeTest === tab.key
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               {tab.label}
@@ -267,10 +267,10 @@ export function AriaLabelTester() {
 
       {/* Tab Content */}
       <div className="space-y-6">
-        {activeTest === "forms" && <FormsTab {...tabProps} />}
-        {activeTest === "roles" && <RolesTab {...tabProps} />}
-        {activeTest === "live" && <LiveRegionsTab {...tabProps} />}
-        {activeTest === "validation" && <ValidationTab {...tabProps} />}
+        {activeTest === 'forms' && <FormsTab {...tabProps} />}
+        {activeTest === 'roles' && <RolesTab {...tabProps} />}
+        {activeTest === 'live' && <LiveRegionsTab {...tabProps} />}
+        {activeTest === 'validation' && <ValidationTab {...tabProps} />}
       </div>
 
       {/* Test Results */}

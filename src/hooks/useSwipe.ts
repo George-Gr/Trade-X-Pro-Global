@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export interface SwipeConfig {
   onSwipeLeft?: () => void;
@@ -65,6 +65,7 @@ export const useSwipe = (config: SwipeConfig = {}): SwipeReturn => {
 
       isSwipingRef.current = true;
       const touch = e.touches[0];
+      if (!touch) return;
       touchStartRef.current = { x: touch.clientX, y: touch.clientY };
       touchEndRef.current = null;
     },
@@ -78,6 +79,7 @@ export const useSwipe = (config: SwipeConfig = {}): SwipeReturn => {
       }
 
       const touch = e.touches[0];
+      if (!touch) return;
       touchEndRef.current = { x: touch.clientX, y: touch.clientY };
     },
     [preventDefault]

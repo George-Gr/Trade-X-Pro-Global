@@ -5,17 +5,11 @@
  * Provides detailed error logging and retry mechanisms for network failures.
  */
 
-import React from "react";
-import {
-  Wifi,
-  WifiOff,
-  RefreshCw,
-  ExternalLink,
-  AlertTriangle,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { logger } from "@/lib/logger";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
+import { AlertTriangle, ExternalLink, RefreshCw, WifiOff } from 'lucide-react';
+import React from 'react';
 
 interface APIErrorBoundaryState {
   hasError: boolean;
@@ -50,34 +44,36 @@ class APIErrorBoundary extends React.Component<
     this.state = {
       hasError: false,
       error: null,
-      errorId: "",
+      errorId: '',
       retryCount: 0,
       isOffline: !navigator.onLine,
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // Listen for network status changes
     this.networkStatusHandler = () => {
       this.setState({ isOffline: !navigator.onLine });
     };
 
-    window.addEventListener("online", this.networkStatusHandler);
-    window.addEventListener("offline", this.networkStatusHandler);
+    window.addEventListener('online', this.networkStatusHandler);
+    window.addEventListener('offline', this.networkStatusHandler);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.networkStatusHandler) {
-      window.removeEventListener("online", this.networkStatusHandler);
-      window.removeEventListener("offline", this.networkStatusHandler);
+      window.removeEventListener('online', this.networkStatusHandler);
+      window.removeEventListener('offline', this.networkStatusHandler);
     }
   }
 
   static getDerivedStateFromError(
-    error: Error,
+    error: Error
   ): Partial<APIErrorBoundaryState> {
     // Generate unique error ID for tracking
-    const errorId = `api-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const errorId = `api-${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 8)}`;
 
     return {
       hasError: true,
@@ -86,7 +82,7 @@ class APIErrorBoundary extends React.Component<
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     const { endpoint, critical = false } = this.props;
 
     // Enhanced API error logging
@@ -94,8 +90,8 @@ class APIErrorBoundary extends React.Component<
       `API Error Boundary caught an error: ${error.message}`,
       error,
       {
-        component: "APIErrorBoundary",
-        action: "api_error_boundary_catch",
+        component: 'APIErrorBoundary',
+        action: 'api_error_boundary_catch',
         metadata: {
           errorId: this.state.errorId,
           endpoint,
@@ -113,25 +109,25 @@ class APIErrorBoundary extends React.Component<
                 navigator as unknown as {
                   connection?: { effectiveType?: string };
                 }
-              ).connection?.effectiveType || "unknown",
+              ).connection?.effectiveType || 'unknown',
             referrer: document.referrer,
           },
         },
-      },
+      }
     );
 
     // Add breadcrumb for API error tracking
     logger.addBreadcrumb(
-      "api_error",
-      `API call failed${endpoint ? ` to ${endpoint}` : ""}: ${error.message}`,
-      critical ? "error" : "warning",
+      'api_error',
+      `API call failed${endpoint ? ` to ${endpoint}` : ''}: ${error.message}`,
+      critical ? 'error' : 'warning'
     );
 
     // Log network status if offline
     if (this.state.isOffline) {
       logger.addBreadcrumb(
-        "network",
-        "Network connection lost during API call",
+        'network',
+        'Network connection lost during API call'
       );
     }
 
@@ -149,9 +145,9 @@ class APIErrorBoundary extends React.Component<
     const { maxRetries = 3 } = this.props;
 
     if (retryCount >= maxRetries) {
-      logger.warn("Maximum retry attempts reached for API call", {
-        component: "APIErrorBoundary",
-        action: "max_api_retries_exceeded",
+      logger.warn('Maximum retry attempts reached for API call', {
+        component: 'APIErrorBoundary',
+        action: 'max_api_retries_exceeded',
         metadata: {
           retryCount,
           maxRetries,
@@ -161,9 +157,9 @@ class APIErrorBoundary extends React.Component<
       return;
     }
 
-    logger.info("Retrying API call", {
-      component: "APIErrorBoundary",
-      action: "api_retry_attempt",
+    logger.info('Retrying API call', {
+      component: 'APIErrorBoundary',
+      action: 'api_retry_attempt',
       metadata: {
         retryCount: retryCount + 1,
         endpoint: this.props.endpoint,
@@ -174,7 +170,7 @@ class APIErrorBoundary extends React.Component<
     this.setState({
       hasError: false,
       error: null,
-      errorId: "",
+      errorId: '',
       retryCount: retryCount + 1,
     });
   };
@@ -184,24 +180,27 @@ class APIErrorBoundary extends React.Component<
     if (navigator.onLine) {
       this.handleRetry();
     } else {
-      logger.info("User attempted retry while offline", {
-        component: "APIErrorBoundary",
-        action: "offline_retry_attempted",
+      logger.info('User attempted retry while offline', {
+        component: 'APIErrorBoundary',
+        action: 'offline_retry_attempted',
       });
     }
   };
 
   handleOpenSupport = () => {
-    logger.info("User opened support from API error", {
-      component: "APIErrorBoundary",
-      action: "open_api_support",
+    logger.info('User opened support from API error', {
+      component: 'APIErrorBoundary',
+      action: 'open_api_support',
     });
 
     // In a real app, this would open documentation or support
-    window.open("https://docs.tradexpro.com/api", "_blank");
+    window.open(
+      import.meta.env.VITE_DOCS_URL || 'https://docs.tradexpro.com/api',
+      '_blank'
+    );
   };
 
-  render() {
+  override render() {
     const { critical = false, endpoint } = this.props;
     const { isOffline, retryCount } = this.state;
 
@@ -221,15 +220,15 @@ class APIErrorBoundary extends React.Component<
       // Determine error type and icon
       const isNetworkError =
         isOffline ||
-        this.state.error.message.includes("fetch") ||
-        this.state.error.message.includes("network");
+        this.state.error.message.includes('fetch') ||
+        this.state.error.message.includes('network');
       const isServerError =
-        this.state.error.message.includes("500") ||
-        this.state.error.message.includes("502") ||
-        this.state.error.message.includes("503");
+        this.state.error.message.includes('500') ||
+        this.state.error.message.includes('502') ||
+        this.state.error.message.includes('503');
       const isAuthError =
-        this.state.error.message.includes("401") ||
-        this.state.error.message.includes("403");
+        this.state.error.message.includes('401') ||
+        this.state.error.message.includes('403');
 
       const ErrorIcon = isNetworkError ? WifiOff : AlertTriangle;
 
@@ -243,17 +242,17 @@ class APIErrorBoundary extends React.Component<
                 <div>
                   <CardTitle className="text-destructive">
                     {isNetworkError
-                      ? "Connection Error"
-                      : "Service Unavailable"}
+                      ? 'Connection Error'
+                      : 'Service Unavailable'}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     {isNetworkError
-                      ? "Unable to connect to the trading servers"
+                      ? 'Unable to connect to the trading servers'
                       : isServerError
-                        ? "Server is experiencing issues"
+                        ? 'Server is experiencing issues'
                         : isAuthError
-                          ? "Authentication required"
-                          : "API service is temporarily unavailable"}
+                          ? 'Authentication required'
+                          : 'API service is temporarily unavailable'}
                   </p>
                 </div>
               </div>
@@ -263,16 +262,16 @@ class APIErrorBoundary extends React.Component<
                 {isNetworkError ? (
                   <p className="text-sm text-slate-600 dark:text-slate-300">
                     {isOffline
-                      ? "You appear to be offline. Please check your internet connection and try again."
-                      : "Unable to establish a connection to our servers. This might be due to network issues or server maintenance."}
+                      ? 'You appear to be offline. Please check your internet connection and try again.'
+                      : 'Unable to establish a connection to our servers. This might be due to network issues or server maintenance.'}
                   </p>
                 ) : (
                   <p className="text-sm text-slate-600 dark:text-slate-300">
                     {isServerError
-                      ? "Our servers are currently experiencing issues. Please try again in a few minutes."
+                      ? 'Our servers are currently experiencing issues. Please try again in a few minutes.'
                       : isAuthError
-                        ? "Your session may have expired. Please refresh the page to continue."
-                        : "The API service is temporarily unavailable. Your data is safe and will be restored when service resumes."}
+                        ? 'Your session may have expired. Please refresh the page to continue.'
+                        : 'The API service is temporarily unavailable. Your data is safe and will be restored when service resumes.'}
                   </p>
                 )}
 
@@ -299,7 +298,7 @@ class APIErrorBoundary extends React.Component<
                         disabled={isOffline}
                       >
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        {isOffline ? "Check Connection" : "Try Again"}
+                        {isOffline ? 'Check Connection' : 'Try Again'}
                         {retryCount > 0 &&
                           ` (${retryCount}/${this.props.maxRetries || 3})`}
                       </Button>
@@ -329,15 +328,15 @@ class APIErrorBoundary extends React.Component<
                     size="sm"
                     className="flex-1"
                     onClick={() => {
-                      logger.info("User continued without API data", {
-                        component: "APIErrorBoundary",
-                        action: "continue_without_data",
+                      logger.info('User continued without API data', {
+                        component: 'APIErrorBoundary',
+                        action: 'continue_without_data',
                       });
                       // Continue with limited functionality
                       this.setState({
                         hasError: false,
                         error: null,
-                        errorId: "",
+                        errorId: '',
                         retryCount: 0,
                       });
                     }}
@@ -359,12 +358,12 @@ class APIErrorBoundary extends React.Component<
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-mono text-center mt-2">
                     Error ID: {this.state.errorId}
                     {retryCount > 0 && ` (Retry: ${retryCount})`}
-                    {isOffline && " (Offline)"}
+                    {isOffline && ' (Offline)'}
                   </p>
                 )}
 
                 {/* Error details in development */}
-                {import.meta.env.MODE === "development" && this.state.error && (
+                {import.meta.env.MODE === 'development' && this.state.error && (
                   <details className="mt-4 text-xs">
                     <summary className="cursor-pointer text-destructive font-semibold">
                       Technical Details
@@ -375,22 +374,22 @@ class APIErrorBoundary extends React.Component<
                       </p>
                       <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
                         <span>
-                          <strong>Endpoint:</strong> {endpoint || "Unknown"}
+                          <strong>Endpoint:</strong> {endpoint || 'Unknown'}
                         </span>
                         <span>
-                          <strong>Offline:</strong>{" "}
-                          {this.state.isOffline ? "Yes" : "No"}
+                          <strong>Offline:</strong>{' '}
+                          {this.state.isOffline ? 'Yes' : 'No'}
                         </span>
                         <span>
                           <strong>Retries:</strong> {retryCount}
                         </span>
                         <span>
-                          <strong>Connection:</strong>{" "}
+                          <strong>Connection:</strong>{' '}
                           {(
                             navigator as unknown as {
                               connection?: { effectiveType?: string };
                             }
-                          ).connection?.effectiveType || "unknown"}
+                          ).connection?.effectiveType || 'unknown'}
                         </span>
                       </div>
                       {this.state.errorInfo?.componentStack && (

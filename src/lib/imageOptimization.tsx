@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
  * Image Optimization Utilities
@@ -18,7 +18,7 @@ export interface ResponsiveImageProps {
   height?: number;
   placeholder?: string;
   sizes?: string;
-  loading?: "lazy" | "eager";
+  loading?: 'lazy' | 'eager';
   priority?: boolean;
   quality?: number;
   onLoad?: () => void;
@@ -32,8 +32,8 @@ export function ResponsiveImage({
   width,
   height,
   placeholder,
-  sizes = "100vw",
-  loading = "lazy",
+  sizes = '100vw',
+  loading = 'lazy',
   priority = false,
   quality = 80,
   onLoad,
@@ -75,18 +75,18 @@ export function ResponsiveImage({
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? "eager" : loading}
+        loading={priority ? 'eager' : loading}
         decoding="async"
         className={`
-          ${isLoaded ? "opacity-100" : "opacity-0"}
-          ${hasError ? "hidden" : ""}
+          ${isLoaded ? 'opacity-100' : 'opacity-0'}
+          ${hasError ? 'hidden' : ''}
           transition-opacity duration-300
-          ${className || ""}
+          ${className || ''}
         `}
         onLoad={handleLoad}
         onError={handleError}
         style={{
-          transition: "opacity 300ms ease-in-out",
+          transition: 'opacity 300ms ease-in-out',
         }}
       />
 
@@ -96,7 +96,7 @@ export function ResponsiveImage({
           src={placeholder}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "blur(2px)" }}
+          style={{ filter: 'blur(2px)' }}
         />
       )}
 
@@ -119,18 +119,18 @@ function generateImageSources(src: string, quality: number) {
   try {
     // Check if we're using a CDN that supports image optimization
     const isCDN =
-      src.includes("cdn") ||
-      src.includes("cloudfront") ||
-      src.includes("vercel");
+      src.includes('cdn') ||
+      src.includes('cloudfront') ||
+      src.includes('vercel');
 
     if (isCDN) {
       // CDN optimization parameters
       const params = `?q=${quality}&fm=webp`;
       sources.webp = src + params;
-      sources.avif = src + "?q=" + quality + "&fm=avif";
+      sources.avif = src + '?q=' + quality + '&fm=avif';
     } else {
       // For local images, try to find optimized versions
-      const baseName = src.replace(/\.[^/.]+$/, "");
+      const baseName = src.replace(/\.[^/.]+$/, '');
 
       sources.webp = `${baseName}.webp`;
       sources.avif = `${baseName}.avif`;
@@ -160,9 +160,9 @@ export function useImageLazyLoading() {
         }
       },
       {
-        rootMargin: "50px 0px",
+        rootMargin: '50px 0px',
         threshold: 0.01,
-      },
+      }
     );
 
     observer.observe(element);
@@ -189,7 +189,7 @@ export function SvgOptimizer({
   children,
   className,
   title,
-  preserveAspectRatio = "xMidYMid meet",
+  preserveAspectRatio = 'xMidYMid meet',
 }: SvgOptimizerProps) {
   return (
     <svg
@@ -237,7 +237,7 @@ export class ImagePreloader {
         reject(new Error(`Failed to load image: ${src}`));
       };
 
-      img.decoding = "async";
+      img.decoding = 'async';
       img.src = src;
     });
 
@@ -266,10 +266,10 @@ export const ImageOptimizer = {
   // Optimize image for different screen densities
   getOptimizedSrc: (
     src: string,
-    density: number = window.devicePixelRatio || 1,
+    density: number = window.devicePixelRatio || 1
   ) => {
-    const baseName = src.replace(/\.[^/.]+$/, "");
-    const extension = src.split(".").pop();
+    const baseName = src.replace(/\.[^/.]+$/, '');
+    const extension = src.split('.').pop();
 
     // For high DPI screens, try to get higher resolution images
     if (density >= 3) {
@@ -282,12 +282,12 @@ export const ImageOptimizer = {
   },
   // Generate responsive image srcSet
   generateSrcSet: (src: string, sizes: number[]) => {
-    return sizes.map((size) => `${src} ${size}w`).join(", ");
+    return sizes.map((size) => `${src} ${size}w`).join(', ');
   },
 
   // Check if WebP is supported
   supportsWebP: async (): Promise<boolean> => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
 
     return new Promise((resolve) => {
       const webP = new Image();
@@ -295,13 +295,13 @@ export const ImageOptimizer = {
         resolve(webP.height === 2);
       };
       webP.src =
-        "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
+        'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
     });
   },
 
   // Check if AVIF is supported
   supportsAVIF: async (): Promise<boolean> => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
 
     return new Promise((resolve) => {
       const avif = new Image();
@@ -309,7 +309,7 @@ export const ImageOptimizer = {
         resolve(avif.height === 2);
       };
       avif.src =
-        "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgABogQEAwgMg8f8D///8WfhwB8+ErK42A=";
+        'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgABogQEAwgMg8f8D///8WfhwB8+ErK42A=';
     });
   },
 };
@@ -336,13 +336,13 @@ export function BlurHashPlaceholder({
   // For now, provide a simple fallback
   return (
     <div
-      className={`bg-gradient-to-br from-primary/20 to-secondary/20 ${className}`}
+      className={`bg-linear-to-br from-primary/20 to-secondary/20 ${className}`}
       style={{
         width,
         height,
-        backgroundSize: "cover",
-        filter: "blur(1px)",
-        transform: "scale(1.05)",
+        backgroundSize: 'cover',
+        filter: 'blur(1px)',
+        transform: 'scale(1.05)',
       }}
     />
   );
@@ -385,7 +385,7 @@ export function ProgressiveImage({
         src={lowQualitySrc}
         alt=""
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-          isLQLoaded ? "opacity-100" : "opacity-0"
+          isLQLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={() => setIsLQLoaded(true)}
       />
@@ -395,7 +395,7 @@ export function ProgressiveImage({
         src={highQualitySrc}
         alt={alt}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-          isHQLoaded ? "opacity-100" : "opacity-0"
+          isHQLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={() => setIsHQLoaded(true)}
       />

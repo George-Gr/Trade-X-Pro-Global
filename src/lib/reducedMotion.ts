@@ -2,7 +2,7 @@
  * Hook to detect reduced motion preference
  */
 export const useReducedMotion = () => {
-  if (typeof window === "undefined") return false;
+  if (typeof window === 'undefined') return false;
 
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };

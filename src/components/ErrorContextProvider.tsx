@@ -1,6 +1,6 @@
-import { useCallback, ReactNode } from "react";
-import { logger, LogContext } from "@/lib/logger";
-import { ErrorContext, ErrorContextType } from "@/contexts/ErrorContext";
+import { useCallback, ReactNode } from 'react';
+import { logger, LogContext } from '@/lib/logger';
+import { ErrorContext, ErrorContextType } from '@/contexts/ErrorContext';
 
 /**
  * Provider component for error tracking context

@@ -1,13 +1,25 @@
-import React from "react";
-import type { AccessibilityTestingType } from "../types";
+import type { AccessibilityTestingType } from '@/components/accessibility/types';
+import React from 'react';
 
 export interface ScreenReaderTabProps {
   accessibilityTesting: AccessibilityTestingType;
 }
 
-export function ScreenReaderTab({
+/**
+ * Screen Reader Tab Component
+ *
+ * Displays accessibility testing metrics for screen reader compatibility including
+ * heading hierarchy validation, ARIA live regions count, and automated test results.
+ * Shows detailed heading statistics (H1-H6 distribution) for semantic structure analysis.
+ *
+ * @component
+ * @param {ScreenReaderTabProps} props - Component props
+ * @param {AccessibilityTestingType} props.accessibilityTesting - Accessibility testing data and utilities
+ * @returns {JSX.Element} Screen reader testing dashboard
+ */
+export const ScreenReaderTab: React.FC<ScreenReaderTabProps> = ({
   accessibilityTesting,
-}: ScreenReaderTabProps) {
+}) => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -18,8 +30,8 @@ export function ScreenReaderTab({
           </p>
           <p className="text-sm text-muted-foreground">
             {accessibilityTesting.isValid
-              ? "Valid hierarchy"
-              : "Issues detected"}
+              ? 'Valid hierarchy'
+              : 'Issues detected'}
           </p>
         </div>
 
@@ -48,12 +60,12 @@ export function ScreenReaderTab({
             ([level, count]: [string, number]) => (
               <div key={level} className="text-center p-4 bg-muted rounded">
                 <p className="font-semibold">H{level.charAt(1)}</p>
-                <p className="text-2xl font-bold">{count as number}</p>
+                <p className="text-2xl font-bold">{count}</p>
               </div>
-            ),
+            )
           )}
         </div>
       </div>
     </div>
   );
-}
+};

@@ -1,13 +1,23 @@
-import React, { useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Download, FileText } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
 import {
   downloadCSV,
   downloadPDF,
   type PortfolioExportData,
-} from "@/lib/export/portfolioExport";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
+} from '@/lib/export/portfolioExport';
+import { Download, FileText } from 'lucide-react';
+import { useCallback } from 'react';
 
+/**
+ * Export Toolbar Component
+ *
+ * Provides buttons to export portfolio data to CSV and PDF formats.
+ * Calculates portfolio metrics (balance, equity, margin level, P&L, ROI) and
+ * formats position data for export with timestamped filenames.
+ *
+ * @component
+ * @returns {JSX.Element} Toolbar with CSV and PDF export buttons
+ */
 export const ExportToolbar: React.FC = () => {
   const { profile, positions, calculateEquity, calculateMarginLevel } =
     usePortfolioData();
@@ -21,7 +31,7 @@ export const ExportToolbar: React.FC = () => {
       const posValue = (pos.current_price || 0) * pos.quantity * 100000;
       const entryValue = (pos.entry_price || 0) * pos.quantity * 100000;
       const pnl =
-        pos.side === "buy" ? posValue - entryValue : entryValue - posValue;
+        pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
       return sum + pnl;
     }, 0);
 
@@ -38,19 +48,19 @@ export const ExportToolbar: React.FC = () => {
         quantity: pos.quantity,
         entryPrice: pos.entry_price,
         currentPrice: pos.current_price ?? 0,
-        side: pos.side as "buy" | "sell",
+        side: pos.side as 'buy' | 'sell',
         pnl:
           pos.current_price != null
             ? (pos.current_price - pos.entry_price) *
               pos.quantity *
               100000 *
-              (pos.side === "buy" ? 1 : -1)
+              (pos.side === 'buy' ? 1 : -1)
             : 0,
       })),
       timestamp: new Date(),
     };
 
-    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
     downloadCSV(exportData, `portfolio-export-${timestamp}.csv`);
   }, [profile, positions, calculateEquity, calculateMarginLevel]);
 
@@ -63,7 +73,7 @@ export const ExportToolbar: React.FC = () => {
       const posValue = (pos.current_price || 0) * pos.quantity * 100000;
       const entryValue = (pos.entry_price || 0) * pos.quantity * 100000;
       const pnl =
-        pos.side === "buy" ? posValue - entryValue : entryValue - posValue;
+        pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
       return sum + pnl;
     }, 0);
 
@@ -80,19 +90,19 @@ export const ExportToolbar: React.FC = () => {
         quantity: pos.quantity,
         entryPrice: pos.entry_price,
         currentPrice: pos.current_price ?? 0,
-        side: pos.side as "buy" | "sell",
+        side: pos.side as 'buy' | 'sell',
         pnl:
           pos.current_price != null
             ? (pos.current_price - pos.entry_price) *
               pos.quantity *
               100000 *
-              (pos.side === "buy" ? 1 : -1)
+              (pos.side === 'buy' ? 1 : -1)
             : 0,
       })),
       timestamp: new Date(),
     };
 
-    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
     downloadPDF(exportData, `portfolio-export-${timestamp}.pdf`);
   }, [profile, positions, calculateEquity, calculateMarginLevel]);
 

@@ -1,33 +1,33 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function getRiskLevelColors(
-  riskLevel: "safe" | "warning" | "critical" | "liquidation",
+  riskLevel: 'safe' | 'warning' | 'critical' | 'liquidation'
 ) {
   const colors = {
     safe: {
-      text: "text-status-safe",
-      bg: "bg-status-safe",
-      border: "border-status-safe",
+      text: 'text-status-safe',
+      bg: 'bg-status-safe',
+      border: 'border-status-safe',
     },
     warning: {
-      text: "text-status-warning",
-      bg: "bg-status-warning",
-      border: "border-status-warning",
+      text: 'text-status-warning',
+      bg: 'bg-status-warning',
+      border: 'border-status-warning',
     },
     critical: {
-      text: "text-status-critical",
-      bg: "bg-status-critical",
-      border: "border-status-critical",
+      text: 'text-status-critical',
+      bg: 'bg-status-critical',
+      border: 'border-status-critical',
     },
     liquidation: {
-      text: "text-status-error",
-      bg: "bg-status-error",
-      border: "border-status-error",
+      text: 'text-status-error',
+      bg: 'bg-status-error',
+      border: 'border-status-error',
     },
   };
   return colors[riskLevel];
@@ -44,7 +44,7 @@ export function getRiskLevelColors(
  */
 export function focusNextMenuItem(
   currentItem: HTMLElement,
-  containerSelector: string = '[role="menu"], [data-sidebar="content"]',
+  containerSelector: string = '[role="menu"], [data-sidebar="content"]'
 ) {
   const container =
     currentItem.closest(containerSelector) ||
@@ -52,15 +52,15 @@ export function focusNextMenuItem(
   if (!container) return;
 
   const menuItems = Array.from(
-    container.querySelectorAll('[role="menuitem"][tabIndex="0"]'),
+    container.querySelectorAll('[role="menuitem"][tabIndex="0"]')
   ) as HTMLElement[];
   const currentIndex = menuItems.indexOf(currentItem);
 
   if (currentIndex >= 0 && currentIndex < menuItems.length - 1) {
-    menuItems[currentIndex + 1].focus();
+    menuItems[currentIndex + 1]?.focus();
   } else if (currentIndex === menuItems.length - 1 && menuItems.length > 0) {
     // Wrap to first item
-    menuItems[0].focus();
+    menuItems[0]?.focus();
   }
 }
 
@@ -71,7 +71,7 @@ export function focusNextMenuItem(
  */
 export function focusPrevMenuItem(
   currentItem: HTMLElement,
-  containerSelector: string = '[role="menu"], [data-sidebar="content"]',
+  containerSelector: string = '[role="menu"], [data-sidebar="content"]'
 ) {
   const container =
     currentItem.closest(containerSelector) ||
@@ -79,15 +79,15 @@ export function focusPrevMenuItem(
   if (!container) return;
 
   const menuItems = Array.from(
-    container.querySelectorAll('[role="menuitem"][tabIndex="0"]'),
+    container.querySelectorAll('[role="menuitem"][tabIndex="0"]')
   ) as HTMLElement[];
   const currentIndex = menuItems.indexOf(currentItem);
 
   if (currentIndex > 0) {
-    menuItems[currentIndex - 1].focus();
+    menuItems[currentIndex - 1]?.focus();
   } else if (currentIndex === 0 && menuItems.length > 0) {
     // Wrap to last item
-    menuItems[menuItems.length - 1].focus();
+    menuItems[menuItems.length - 1]?.focus();
   }
 }
 
@@ -96,13 +96,13 @@ export function focusPrevMenuItem(
  * @param containerSelector - CSS selector for the container with menu items
  */
 export function focusFirstMenuItem(
-  containerSelector: string = '[role="menu"], [data-sidebar="content"]',
+  containerSelector: string = '[role="menu"], [data-sidebar="content"]'
 ) {
   const container = document.querySelector(containerSelector);
   if (!container) return;
 
   const firstItem = container.querySelector(
-    '[role="menuitem"][tabIndex="0"]',
+    '[role="menuitem"][tabIndex="0"]'
   ) as HTMLElement;
   firstItem?.focus();
 }
@@ -112,13 +112,13 @@ export function focusFirstMenuItem(
  * @param containerSelector - CSS selector for the container with menu items
  */
 export function focusLastMenuItem(
-  containerSelector: string = '[role="menu"], [data-sidebar="content"]',
+  containerSelector: string = '[role="menu"], [data-sidebar="content"]'
 ) {
   const container = document.querySelector(containerSelector);
   if (!container) return;
 
   const menuItems = Array.from(
-    container.querySelectorAll('[role="menuitem"][tabIndex="0"]'),
+    container.querySelectorAll('[role="menuitem"][tabIndex="0"]')
   ) as HTMLElement[];
   const lastItem = menuItems[menuItems.length - 1];
   lastItem?.focus();
@@ -135,32 +135,32 @@ export function handleMenuKeyboardNavigation(
   event: React.KeyboardEvent,
   navigate?: (path: string) => void,
   path?: string,
-  containerSelector: string = '[role="menu"], [data-sidebar="content"]',
+  containerSelector: string = '[role="menu"], [data-sidebar="content"]'
 ) {
   const { key } = event;
   const currentTarget = event.currentTarget as HTMLElement;
 
   switch (key) {
-    case "Enter":
-    case " ":
+    case 'Enter':
+    case ' ':
       if (path && navigate) {
         event.preventDefault();
         navigate(path);
       }
       break;
-    case "ArrowDown":
+    case 'ArrowDown':
       event.preventDefault();
       focusNextMenuItem(currentTarget, containerSelector);
       break;
-    case "ArrowUp":
+    case 'ArrowUp':
       event.preventDefault();
       focusPrevMenuItem(currentTarget, containerSelector);
       break;
-    case "Home":
+    case 'Home':
       event.preventDefault();
       focusFirstMenuItem(containerSelector);
       break;
-    case "End":
+    case 'End':
       event.preventDefault();
       focusLastMenuItem(containerSelector);
       break;
@@ -176,9 +176,9 @@ export function handleMenuKeyboardNavigation(
  */
 export function getAriaCurrentState(
   isActive: boolean,
-  isPage: boolean = true,
-): "page" | "step" | undefined {
-  return isActive ? (isPage ? "page" : "step") : undefined;
+  isPage: boolean = true
+): 'page' | 'step' | undefined {
+  return isActive ? (isPage ? 'page' : 'step') : undefined;
 }
 
 /**
@@ -190,16 +190,16 @@ export function getAriaCurrentState(
 export function generateNavigationAriaLabel(
   baseLabel: string,
   isActive: boolean = false,
-  isDisabled: boolean = false,
+  isDisabled: boolean = false
 ): string {
   let label = `Navigate to ${baseLabel}`;
 
   if (isActive) {
-    label += " (current page)";
+    label += ' (current page)';
   }
 
   if (isDisabled) {
-    label += " (disabled)";
+    label += ' (disabled)';
   }
 
   return label;

@@ -5,8 +5,8 @@
  * Prevents memory leaks and ensures proper cleanup
  */
 
-import type { RealtimeChannel } from "@supabase/supabase-js";
-import { logger } from "./logger";
+import type { RealtimeChannel } from '@supabase/supabase-js';
+import { logger } from './logger';
 
 interface SubscriptionConfig {
   id: string;
@@ -132,7 +132,7 @@ class SubscriptionManager {
     }
 
     if (this.options.debugMode) {
-      logger.info("All subscriptions removed");
+      logger.info('All subscriptions removed');
     }
   }
 
@@ -170,7 +170,7 @@ class SubscriptionManager {
         this.unsubscribe(id);
         if (this.options.debugMode) {
           logger.info(`Cleaned up idle subscription: ${id}`, {
-            metadata: { idleTime: Math.round(idleTime / 1000) + "s" },
+            metadata: { idleTime: Math.round(idleTime / 1000) + 's' },
           });
         }
       }

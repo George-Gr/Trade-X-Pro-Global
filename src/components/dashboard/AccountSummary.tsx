@@ -1,6 +1,6 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
 
 export const AccountSummary: React.FC = () => {
   const {
@@ -27,7 +27,7 @@ export const AccountSummary: React.FC = () => {
             })}
           </p>
           <p className="text-xs text-muted-foreground">
-            Equity:{" "}
+            Equity:{' '}
             <span className="font-mono">
               ${equity.toLocaleString(undefined, { maximumFractionDigits: 2 })}
             </span>
@@ -37,10 +37,10 @@ export const AccountSummary: React.FC = () => {
         <div className="text-right space-y-2">
           <p className="text-sm text-muted-foreground">Margin Level</p>
           <p className="font-mono font-semibold">
-            {Number.isFinite(marginLevel) ? `${marginLevel.toFixed(1)}%` : "—"}
+            {Number.isFinite(marginLevel) ? `${marginLevel.toFixed(1)}%` : '—'}
           </p>
           <p className="text-xs text-muted-foreground">
-            Free:{" "}
+            Free:{' '}
             <span className="font-mono">
               $
               {freeMargin.toLocaleString(undefined, {

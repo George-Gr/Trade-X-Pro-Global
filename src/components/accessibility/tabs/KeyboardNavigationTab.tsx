@@ -1,11 +1,10 @@
-import React from "react";
 import type {
   ColorBlindMode,
   ColorBlindModeType,
   KeyboardShortcutsType,
-  VisualPreferencesType,
   TradingShortcut,
-} from "../types";
+  VisualPreferencesType,
+} from '../types';
 
 export interface KeyboardNavigationTabProps {
   keyboardShortcuts: KeyboardShortcutsType;
@@ -25,7 +24,7 @@ export function KeyboardNavigationTab({
         <h4 className="font-semibold mb-4">Trading Keyboard Shortcuts</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {keyboardShortcuts
-            .getShortcutsByCategory("trading")
+            .getShortcutsByCategory('trading')
             .map((shortcut: TradingShortcut, index: number) => (
               <div
                 key={index}
@@ -62,7 +61,7 @@ export function KeyboardNavigationTab({
                     checked={colorBlindMode.colorBlindMode.type === mode.type}
                     onChange={(e) =>
                       colorBlindMode.applyColorBlindSimulation({
-                        type: e.target.value as ColorBlindMode["type"],
+                        type: e.target.value as ColorBlindMode['type'],
                         intensity: colorBlindMode.colorBlindMode.intensity,
                       })
                     }
@@ -70,7 +69,7 @@ export function KeyboardNavigationTab({
                   />
                   <span>{mode.name}</span>
                 </label>
-              ),
+              )
             )}
           </div>
         </div>
@@ -90,8 +89,8 @@ export function KeyboardNavigationTab({
                 checked={visualPreferences.preferences.highContrast}
                 onChange={(e) =>
                   visualPreferences.updatePreference(
-                    "highContrast",
-                    e.target.checked,
+                    'highContrast',
+                    e.target.checked
                   )
                 }
                 className="text-blue-600"
@@ -110,8 +109,8 @@ export function KeyboardNavigationTab({
                 checked={visualPreferences.preferences.reduceMotion}
                 onChange={(e) =>
                   visualPreferences.updatePreference(
-                    "reduceMotion",
-                    e.target.checked,
+                    'reduceMotion',
+                    e.target.checked
                   )
                 }
                 className="text-blue-600"
@@ -130,8 +129,8 @@ export function KeyboardNavigationTab({
                 checked={visualPreferences.preferences.largerText}
                 onChange={(e) =>
                   visualPreferences.updatePreference(
-                    "largerText",
-                    e.target.checked,
+                    'largerText',
+                    e.target.checked
                   )
                 }
                 className="text-blue-600"

@@ -1,67 +1,73 @@
-import React, { useMemo, Suspense } from "react";
-import { Card } from "@/components/ui/card";
-import { formatTooltipValue } from "@/lib/chartUtils";
+import { Card } from '@/components/ui/card';
+import { formatTooltipValue } from '@/lib/chartUtils';
+import { cn } from '@/lib/utils';
+import React, { Suspense, useMemo } from 'react';
 
 // Dynamic import wrapper for recharts components
 const DynamicBarChart = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.BarChart as React.ComponentType<
       React.ComponentProps<typeof m.BarChart>
     >,
-  })),
+  }))
 );
 
 const DynamicBar = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.Bar as React.ComponentType<React.ComponentProps<typeof m.Bar>>,
-  })),
+  }))
 );
 
 const DynamicXAxis = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.XAxis as React.ComponentType<
       React.ComponentProps<typeof m.XAxis>
     >,
-  })),
+  }))
 );
 
 const DynamicYAxis = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.YAxis as React.ComponentType<
       React.ComponentProps<typeof m.YAxis>
     >,
-  })),
+  }))
 );
 
 const DynamicTooltip = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.Tooltip as React.ComponentType<
       React.ComponentProps<typeof m.Tooltip>
     >,
-  })),
+  }))
 );
 
 const DynamicResponsiveContainer = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.ResponsiveContainer as React.ComponentType<
       React.ComponentProps<typeof m.ResponsiveContainer>
     >,
-  })),
+  }))
 );
 
 const DynamicCartesianGrid = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.CartesianGrid as React.ComponentType<
       React.ComponentProps<typeof m.CartesianGrid>
     >,
-  })),
+  }))
 );
 
 const DynamicCell = React.lazy(() =>
-  import("recharts").then((m) => ({
+  import('recharts').then((m) => ({
     default: m.Cell as React.ComponentType<React.ComponentProps<typeof m.Cell>>,
-  })),
+  }))
 );
+
+// Color constants for profit/loss visualization
+// Color constants for profit/loss visualization
+const PROFIT_COLOR = 'hsl(var(--profit))';
+const LOSS_COLOR = 'hsl(var(--loss))';
 
 // Loading component for charts
 const ChartLoadingSkeleton = () => (
@@ -149,15 +155,15 @@ export const RecentPnLChart: React.FC = () => {
                 <DynamicTooltip
                   formatter={(value: unknown) => formatTooltipValue(value)}
                   contentStyle={{
-                    backgroundColor: "var(--background)",
-                    border: "1px solid var(--border)",
+                    backgroundColor: 'var(--background)',
+                    border: '1px solid var(--border)',
                   }}
                 />
                 <DynamicBar dataKey="pnl" isAnimationActive={false}>
                   {data.map((entry, index) => (
                     <DynamicCell
                       key={`cell-${index}`}
-                      fill={entry.isProfit ? "#4ade80" : "#f87171"}
+                      fill={entry.isProfit ? PROFIT_COLOR : LOSS_COLOR}
                     />
                   ))}
                 </DynamicBar>
@@ -171,9 +177,10 @@ export const RecentPnLChart: React.FC = () => {
           <div className="p-4 bg-secondary/50 rounded">
             <p className="text-muted-foreground">Total P&L</p>
             <p
-              className={`font-semibold ${
-                stats.totalPnL >= 0 ? "text-profit" : "text-loss"
-              }`}
+              className={cn(
+                'font-semibold',
+                stats.totalPnL >= 0 ? 'text-profit' : 'text-loss'
+              )}
             >
               ${stats.totalPnL.toLocaleString()}
             </p>

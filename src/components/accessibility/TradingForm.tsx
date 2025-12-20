@@ -1,34 +1,34 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useAccessibility } from "@/contexts/AccessibilityContext";
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 /**
  * Zod schema for trade form validation
  */
 const tradeSchema = z
   .object({
-    symbol: z.enum(["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]).default("AAPL"),
+    symbol: z.enum(['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA']).default('AAPL'),
     quantity: z
       .string()
-      .min(1, "Quantity is required")
+      .min(1, 'Quantity is required')
       .refine(
         (val) => /^\d+$/.test(val) && parseInt(val) > 0,
-        "Quantity must be greater than 0",
+        'Quantity must be greater than 0'
       ),
-    price: z.string().optional().default(""),
-    orderType: z.enum(["market", "limit", "stop"]).default("market"),
-    timeInForce: z.enum(["day", "gtc", "ioc", "fok"]).default("day"),
-    stopLoss: z.string().optional().default(""),
-    takeProfit: z.string().optional().default(""),
-    notes: z.string().optional().default(""),
+    price: z.string().optional().default(''),
+    orderType: z.enum(['market', 'limit', 'stop']).default('market'),
+    timeInForce: z.enum(['day', 'gtc', 'ioc', 'fok']).default('day'),
+    stopLoss: z.string().optional().default(''),
+    takeProfit: z.string().optional().default(''),
+    notes: z.string().optional().default(''),
   })
   .refine(
     (data) => {
       // Price is required for limit and stop orders
       if (
-        (data.orderType === "limit" || data.orderType === "stop") &&
+        (data.orderType === 'limit' || data.orderType === 'stop') &&
         !data.price
       ) {
         return false;
@@ -36,9 +36,9 @@ const tradeSchema = z
       return true;
     },
     {
-      message: "Price is required for limit and stop orders",
-      path: ["price"],
-    },
+      message: 'Price is required for limit and stop orders',
+      path: ['price'],
+    }
   )
   .refine(
     (data) => {
@@ -52,9 +52,9 @@ const tradeSchema = z
       return true;
     },
     {
-      message: "Price must be a valid number greater than 0",
-      path: ["price"],
-    },
+      message: 'Price must be a valid number greater than 0',
+      path: ['price'],
+    }
   )
   .refine(
     (data) => {
@@ -68,9 +68,9 @@ const tradeSchema = z
       return true;
     },
     {
-      message: "Stop loss must be a valid number greater than 0",
-      path: ["stopLoss"],
-    },
+      message: 'Stop loss must be a valid number greater than 0',
+      path: ['stopLoss'],
+    }
   )
   .refine(
     (data) => {
@@ -84,21 +84,40 @@ const tradeSchema = z
       return true;
     },
     {
-      message: "Take profit must be a valid number greater than 0",
-      path: ["takeProfit"],
-    },
+      message: 'Take profit must be a valid number greater than 0',
+      path: ['takeProfit'],
+    }
   );
 
 type TradeData = z.infer<typeof tradeSchema>;
 
 /**
+ * Default form values for the trading form
+ * Used for initialization and reset operations
+ */
+// eslint-disable-next-line react-refresh/only-export-components
+export const DEFAULT_FORM_VALUES: TradeData = {
+  symbol: 'AAPL',
+  quantity: '',
+  price: '',
+  orderType: 'market',
+  timeInForce: 'day',
+  stopLoss: '',
+  takeProfit: '',
+  notes: '',
+};
+
+/**
  * Accessible Trading Form Component
  *
- * Comprehensive trading form with full accessibility support.
- * Includes ARIA labeling, keyboard navigation, and screen reader support.
+ * A comprehensive trading form with full accessibility support including ARIA labeling,
+ * keyboard navigation, and screen reader announcements via ARIA live regions.
+ * Supports market, limit, and stop orders with optional stop-loss and take-profit levels.
+ *
+ * @component
+ * @returns {JSX.Element} The trading form with accessibility features
  */
-
-export function TradingForm() {
+export const TradingForm: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -108,24 +127,15 @@ export function TradingForm() {
     setValue,
   } = useForm<TradeData>({
     resolver: zodResolver(tradeSchema),
-    defaultValues: {
-      symbol: "AAPL",
-      quantity: "",
-      price: "",
-      orderType: "market",
-      timeInForce: "day",
-      stopLoss: "",
-      takeProfit: "",
-      notes: "",
-    },
+    defaultValues: DEFAULT_FORM_VALUES,
   });
 
-  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitMessage, setSubmitMessage] = useState('');
   const { visualPreferences, complianceScore } = useAccessibility();
 
-  const orderType = watch("orderType");
-  const quantity = watch("quantity");
-  const price = watch("price");
+  const orderType = watch('orderType');
+  const quantity = watch('quantity');
+  const price = watch('price');
 
   // Refs for timer cleanup to prevent state updates on unmounted components
   const submitTimeoutRef = useRef<number | null>(null);
@@ -144,42 +154,42 @@ export function TradingForm() {
 
   const orderTypes = [
     {
-      value: "market",
-      label: "Market Order",
-      description: "Execute at current market price",
+      value: 'market',
+      label: 'Market Order',
+      description: 'Execute at current market price',
     },
     {
-      value: "limit",
-      label: "Limit Order",
-      description: "Execute at specified price or better",
+      value: 'limit',
+      label: 'Limit Order',
+      description: 'Execute at specified price or better',
     },
     {
-      value: "stop",
-      label: "Stop Order",
-      description: "Execute when price reaches stop level",
+      value: 'stop',
+      label: 'Stop Order',
+      description: 'Execute when price reaches stop level',
     },
   ];
 
   const timeInForceOptions = [
     {
-      value: "day",
-      label: "Day",
-      description: "Valid for the current trading day",
+      value: 'day',
+      label: 'Day',
+      description: 'Valid for the current trading day',
     },
     {
-      value: "gtc",
-      label: "Good Till Cancelled",
-      description: "Remains active until filled or cancelled",
+      value: 'gtc',
+      label: 'Good Till Cancelled',
+      description: 'Remains active until filled or cancelled',
     },
     {
-      value: "ioc",
-      label: "Immediate or Cancel",
-      description: "Fill immediately or cancel",
+      value: 'ioc',
+      label: 'Immediate or Cancel',
+      description: 'Fill immediately or cancel',
     },
     {
-      value: "fok",
-      label: "Fill or Kill",
-      description: "Fill completely or cancel",
+      value: 'fok',
+      label: 'Fill or Kill',
+      description: 'Fill completely or cancel',
     },
   ];
 
@@ -188,9 +198,9 @@ export function TradingForm() {
     return parseFloat(quantity) * parseFloat(price);
   };
 
-  const onSubmit = async (data: TradeData) => {
-    setSubmitMessage("Submitting order...");
-    announceToScreenReader("Submitting order");
+  const onSubmit = async (_data: TradeData) => {
+    setSubmitMessage('Submitting order...');
+    announceToScreenReader('Submitting order');
 
     // Clear any existing timeout before starting a new one
     if (submitTimeoutRef.current) {
@@ -202,70 +212,62 @@ export function TradingForm() {
     await new Promise<void>((resolve) => {
       submitTimeoutRef.current = window.setTimeout(() => {
         if (isMountedRef.current) {
-          setSubmitMessage("Order submitted successfully!");
-          announceToScreenReader("Order submitted successfully");
-          reset({
-            symbol: "AAPL",
-            quantity: "",
-            price: "",
-            orderType: "market",
-            timeInForce: "day",
-            stopLoss: "",
-            takeProfit: "",
-            notes: "",
-          });
+          setSubmitMessage('Order submitted successfully!');
+          announceToScreenReader('Order submitted successfully');
+          reset(DEFAULT_FORM_VALUES);
         }
         resolve();
       }, 2000);
     });
   };
 
+  /**
+   * Announce message to screen readers via ARIA live region
+   * Note: This function is intentionally a no-op as announcements are handled
+   * by the ARIA live region (role="status" aria-live="polite") in the UI.
+   * The message parameter is kept for API compatibility.
+   */
+  const [screenReaderMessage, setScreenReaderMessage] = useState('');
+
+  /**
+   * Announce message to screen readers via ARIA live region
+   */
   const announceToScreenReader = (message: string) => {
-    if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(message);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      speechSynthesis.speak(utterance);
-    }
+    setScreenReaderMessage(message);
+    // Clear the message after a short delay to ensure it can be announced again if repeated
+    setTimeout(() => {
+      setScreenReaderMessage('');
+    }, 1000);
   };
 
-  const quickFill = (preset: "buy" | "sell" | "clear") => {
-    if (preset === "clear") {
-      reset({
-        symbol: "AAPL",
-        quantity: "",
-        price: "",
-        orderType: "market",
-        timeInForce: "day",
-        stopLoss: "",
-        takeProfit: "",
-        notes: "",
-      });
-      announceToScreenReader("Form cleared");
+  const quickFill = (preset: 'buy' | 'sell' | 'clear') => {
+    if (preset === 'clear') {
+      reset(DEFAULT_FORM_VALUES);
+      announceToScreenReader('Form cleared');
       return;
     }
 
     const samplePrice = 150.25;
-    setValue("quantity", "100");
-    setValue("price", samplePrice.toString());
-    setValue("orderType", "limit");
+    setValue('quantity', '100');
+    setValue('price', samplePrice.toString());
+    setValue('orderType', 'limit');
     setValue(
-      "stopLoss",
-      preset === "buy"
+      'stopLoss',
+      preset === 'buy'
         ? (samplePrice * 0.95).toFixed(2)
-        : (samplePrice * 1.05).toFixed(2),
+        : (samplePrice * 1.05).toFixed(2)
     );
     setValue(
-      "takeProfit",
-      preset === "buy"
+      'takeProfit',
+      preset === 'buy'
         ? (samplePrice * 1.1).toFixed(2)
-        : (samplePrice * 0.9).toFixed(2),
+        : (samplePrice * 0.9).toFixed(2)
     );
     setValue(
-      "notes",
-      preset === "buy"
-        ? "Buy position with stop loss and take profit"
-        : "Sell position with stop loss and take profit",
+      'notes',
+      preset === 'buy'
+        ? 'Buy position with stop loss and take profit'
+        : 'Sell position with stop loss and take profit'
     );
 
     announceToScreenReader(`Quick fill ${preset} completed`);
@@ -283,21 +285,21 @@ export function TradingForm() {
 
         <div className="flex space-x-2">
           <button
-            onClick={() => quickFill("buy")}
+            onClick={() => quickFill('buy')}
             className="px-4 py-2 bg-green-500 text-white rounded-lg font-medium"
             aria-label="Quick fill buy order"
           >
             Quick Buy
           </button>
           <button
-            onClick={() => quickFill("sell")}
+            onClick={() => quickFill('sell')}
             className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium"
             aria-label="Quick fill sell order"
           >
             Quick Sell
           </button>
           <button
-            onClick={() => quickFill("clear")}
+            onClick={() => quickFill('clear')}
             className="px-4 py-2 bg-gray-500 text-white rounded-lg font-medium"
             aria-label="Clear form"
           >
@@ -333,10 +335,10 @@ export function TradingForm() {
             </span>
             <span className="text-sm text-blue-800">
               {visualPreferences.preferences.highContrast
-                ? "High contrast mode enabled"
+                ? 'High contrast mode enabled'
                 : visualPreferences.preferences.largerText
-                  ? "Larger text enabled"
-                  : "Standard accessibility settings"}
+                ? 'Larger text enabled'
+                : 'Standard accessibility settings'}
             </span>
           </div>
           <div className="text-sm text-blue-800">
@@ -354,7 +356,7 @@ export function TradingForm() {
               Trading Symbol
             </label>
             <select
-              {...register("symbol")}
+              {...register('symbol')}
               id="symbol"
               aria-describedby="symbol-help"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -381,7 +383,7 @@ export function TradingForm() {
               Order Type
             </label>
             <select
-              {...register("orderType")}
+              {...register('orderType')}
               id="orderType"
               aria-describedby="orderType-help"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -414,15 +416,15 @@ export function TradingForm() {
               </span>
             </label>
             <input
-              {...register("quantity")}
+              {...register('quantity')}
               id="quantity"
               type="text"
               aria-describedby={
-                errors.quantity ? "quantity-error" : "quantity-help"
+                errors.quantity ? 'quantity-error' : 'quantity-help'
               }
               aria-required="true"
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.quantity ? "border-red-500" : "border-gray-300"
+                errors.quantity ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Enter quantity"
             />
@@ -447,30 +449,30 @@ export function TradingForm() {
           <div>
             <label htmlFor="price" className="block text-sm font-medium mb-2">
               Price
-              {orderType !== "market" && (
+              {orderType !== 'market' && (
                 <span className="text-red-500 ml-1" aria-hidden="true">
                   *
                 </span>
               )}
             </label>
             <input
-              {...register("price")}
+              {...register('price')}
               id="price"
               type="text"
-              aria-describedby={errors.price ? "price-error" : "price-help"}
-              aria-required={orderType !== "market"}
+              aria-describedby={errors.price ? 'price-error' : 'price-help'}
+              aria-required={orderType !== 'market'}
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.price ? "border-red-500" : "border-gray-300"
+                errors.price ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder={
-                orderType === "market" ? "Market price" : "Enter price"
+                orderType === 'market' ? 'Market price' : 'Enter price'
               }
-              disabled={orderType === "market"}
+              disabled={orderType === 'market'}
             />
             <div id="price-help" className="text-sm text-muted-foreground mt-1">
-              {orderType === "market"
-                ? "Market orders execute at current price"
-                : "Specify the price for limit/stop orders"}
+              {orderType === 'market'
+                ? 'Market orders execute at current price'
+                : 'Specify the price for limit/stop orders'}
             </div>
             {errors.price && (
               <div
@@ -495,7 +497,7 @@ export function TradingForm() {
               Time in Force
             </label>
             <select
-              {...register("timeInForce")}
+              {...register('timeInForce')}
               id="timeInForce"
               aria-describedby="timeInForce-help"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -511,7 +513,7 @@ export function TradingForm() {
               className="text-sm text-muted-foreground mt-1"
             >
               {
-                timeInForceOptions.find((t) => t.value === watch("timeInForce"))
+                timeInForceOptions.find((t) => t.value === watch('timeInForce'))
                   ?.description
               }
             </div>
@@ -542,14 +544,14 @@ export function TradingForm() {
               Stop Loss
             </label>
             <input
-              {...register("stopLoss")}
+              {...register('stopLoss')}
               id="stopLoss"
               type="text"
               aria-describedby={
-                errors.stopLoss ? "stopLoss-error" : "stopLoss-help"
+                errors.stopLoss ? 'stopLoss-error' : 'stopLoss-help'
               }
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.stopLoss ? "border-red-500" : "border-gray-300"
+                errors.stopLoss ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Optional stop loss price"
             />
@@ -579,14 +581,14 @@ export function TradingForm() {
               Take Profit
             </label>
             <input
-              {...register("takeProfit")}
+              {...register('takeProfit')}
               id="takeProfit"
               type="text"
               aria-describedby={
-                errors.takeProfit ? "takeProfit-error" : "takeProfit-help"
+                errors.takeProfit ? 'takeProfit-error' : 'takeProfit-help'
               }
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                errors.takeProfit ? "border-red-500" : "border-gray-300"
+                errors.takeProfit ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Optional take profit price"
             />
@@ -615,7 +617,7 @@ export function TradingForm() {
             Notes
           </label>
           <textarea
-            {...register("notes")}
+            {...register('notes')}
             id="notes"
             aria-describedby="notes-help"
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
@@ -633,14 +635,14 @@ export function TradingForm() {
             <h3 className="text-lg font-semibold">Review Order</h3>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
-                Order Type:{" "}
+                Order Type:{' '}
                 {orderTypes.find((t) => t.value === orderType)?.label}
               </span>
               <span className="text-sm text-muted-foreground">
-                Time in Force:{" "}
+                Time in Force:{' '}
                 {
                   timeInForceOptions.find(
-                    (t) => t.value === watch("timeInForce"),
+                    (t) => t.value === watch('timeInForce')
                   )?.label
                 }
               </span>
@@ -650,16 +652,16 @@ export function TradingForm() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div className="p-4 bg-blue-50 border border-blue-200 rounded">
               <p className="text-sm text-muted-foreground">Symbol</p>
-              <p className="text-lg font-semibold">{watch("symbol")}</p>
+              <p className="text-lg font-semibold">{watch('symbol')}</p>
             </div>
             <div className="p-4 bg-green-50 border border-green-200 rounded">
               <p className="text-sm text-muted-foreground">Quantity</p>
-              <p className="text-lg font-semibold">{quantity || "0"}</p>
+              <p className="text-lg font-semibold">{quantity || '0'}</p>
             </div>
             <div className="p-4 bg-purple-50 border border-purple-200 rounded">
               <p className="text-sm text-muted-foreground">Price</p>
               <p className="text-lg font-semibold">
-                {price ? `$${parseFloat(price).toLocaleString()}` : "Market"}
+                {price ? `$${parseFloat(price).toLocaleString()}` : 'Market'}
               </p>
             </div>
             <div className="p-4 bg-orange-50 border border-orange-200 rounded">
@@ -676,28 +678,19 @@ export function TradingForm() {
               disabled={isSubmitting}
               className={`px-6 py-3 rounded-lg font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                 isSubmitting
-                  ? "bg-gray-500 text-white cursor-not-allowed"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? 'bg-gray-500 text-white cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
               }`}
               aria-describedby="submit-help"
             >
-              {isSubmitting ? "Submitting..." : "Submit Order"}
+              {isSubmitting ? 'Submitting...' : 'Submit Order'}
             </button>
 
             <button
               type="button"
               onClick={() => {
-                reset({
-                  symbol: "AAPL",
-                  quantity: "",
-                  price: "",
-                  orderType: "market",
-                  timeInForce: "day",
-                  stopLoss: "",
-                  takeProfit: "",
-                  notes: "",
-                });
-                announceToScreenReader("Form reset to defaults");
+                reset(DEFAULT_FORM_VALUES);
+                announceToScreenReader('Form reset to defaults');
               }}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg font-medium focus:ring-2 focus:ring-gray-500 focus:outline-none"
             >
@@ -713,9 +706,9 @@ export function TradingForm() {
           {submitMessage && (
             <div
               className={`mt-4 p-3 rounded ${
-                submitMessage.includes("successfully")
-                  ? "bg-green-50 border border-green-200 text-green-800"
-                  : "bg-blue-50 border border-blue-200 text-blue-800"
+                submitMessage.includes('successfully')
+                  ? 'bg-green-50 border border-green-200 text-green-800'
+                  : 'bg-blue-50 border border-blue-200 text-blue-800'
               }`}
               role="status"
               aria-live="polite"
@@ -724,9 +717,14 @@ export function TradingForm() {
             </div>
           )}
         </div>
+
+        {/* Screen Reader Announcements */}
+        <div role="status" aria-live="polite" className="sr-only">
+          {screenReaderMessage}
+        </div>
       </form>
     </div>
   );
-}
+};
 
 export default TradingForm;

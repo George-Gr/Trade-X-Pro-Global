@@ -6,10 +6,10 @@
  * and WCAG compliance functions
  */
 
-import { useEffect, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef } from 'react';
 
 // Mock vitest for testing environment when needed
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   (window as Window & { vi?: unknown }).vi =
     (window as Window & { vi?: unknown }).vi || undefined;
 }
@@ -21,23 +21,38 @@ if (typeof window !== "undefined") {
 
 export const useAnnouncement = () => {
   const liveRegionRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   const announce = useCallback(
-    (message: string, priority: "polite" | "assertive" = "polite") => {
+    (message: string, priority: 'polite' | 'assertive' = 'polite') => {
       if (liveRegionRef.current) {
-        liveRegionRef.current.setAttribute("aria-live", priority);
+        liveRegionRef.current.setAttribute('aria-live', priority);
         liveRegionRef.current.textContent = message;
 
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
         // Clear after a brief delay to allow for re-announcements
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
           if (liveRegionRef.current) {
-            liveRegionRef.current.textContent = "";
+            liveRegionRef.current.textContent = '';
           }
         }, 1000);
       }
     },
-    [],
+    []
   );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const LiveRegion = () => (
     <div
@@ -73,7 +88,7 @@ export const useFocusManagement = () => {
     if (!container) return;
 
     const focusableElement = container.querySelector(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as HTMLElement;
 
     if (focusableElement) {
@@ -85,7 +100,7 @@ export const useFocusManagement = () => {
     if (!container) return;
 
     const focusableElements = container.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
 
     const lastElement = focusableElements[focusableElements.length - 1];
@@ -113,10 +128,10 @@ export const useSkipLink = (targetId: string) => {
       const target = document.getElementById(targetId);
       if (target) {
         target.focus();
-        target.scrollIntoView({ behavior: "smooth" });
+        target.scrollIntoView({ behavior: 'smooth' });
       }
     },
-    [targetId],
+    [targetId]
   );
 
   return { handleClick };
@@ -139,7 +154,7 @@ export const useScreenReader = () => {
       }
 
       // Check for specific CSS media queries
-      const mediaQuery = window.matchMedia("(forced-colors: active)");
+      const mediaQuery = window.matchMedia('(forced-colors: active)');
       if (mediaQuery.matches) {
         isScreenReaderDetected.current = true;
       }
@@ -150,10 +165,10 @@ export const useScreenReader = () => {
 
   const announceToScreenReader = useCallback((message: string) => {
     // Create a temporary element for screen reader announcement
-    const element = document.createElement("div");
-    element.setAttribute("aria-live", "polite");
-    element.setAttribute("aria-atomic", "true");
-    element.className = "sr-only";
+    const element = document.createElement('div');
+    element.setAttribute('aria-live', 'polite');
+    element.setAttribute('aria-atomic', 'true');
+    element.className = 'sr-only';
     element.textContent = message;
 
     document.body.appendChild(element);
@@ -188,45 +203,45 @@ export const useKeyboardNavigation = () => {
         onArrowDown?: (e: React.KeyboardEvent) => void;
         onArrowLeft?: (e: React.KeyboardEvent) => void;
         onArrowRight?: (e: React.KeyboardEvent) => void;
-      },
+      }
     ) => {
       switch (e.key) {
-        case "Enter":
+        case 'Enter':
           if (handlers.onEnter) {
             handlers.onEnter(e);
             e.preventDefault();
           }
           break;
-        case "Escape":
+        case 'Escape':
           if (handlers.onEscape) {
             handlers.onEscape(e);
             e.preventDefault();
           }
           break;
-        case "Tab":
+        case 'Tab':
           if (handlers.onTab) {
             handlers.onTab(e);
           }
           break;
-        case "ArrowUp":
+        case 'ArrowUp':
           if (handlers.onArrowUp) {
             handlers.onArrowUp(e);
             e.preventDefault();
           }
           break;
-        case "ArrowDown":
+        case 'ArrowDown':
           if (handlers.onArrowDown) {
             handlers.onArrowDown(e);
             e.preventDefault();
           }
           break;
-        case "ArrowLeft":
+        case 'ArrowLeft':
           if (handlers.onArrowLeft) {
             handlers.onArrowLeft(e);
             e.preventDefault();
           }
           break;
-        case "ArrowRight":
+        case 'ArrowRight':
           if (handlers.onArrowRight) {
             handlers.onArrowRight(e);
             e.preventDefault();
@@ -234,7 +249,7 @@ export const useKeyboardNavigation = () => {
           break;
       }
     },
-    [],
+    []
   );
 
   return { handleKeyDown };
@@ -252,9 +267,9 @@ export const useContrastChecker = () => {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result
           ? {
-              r: parseInt(result[1], 16),
-              g: parseInt(result[3], 16),
-              b: parseInt(result[5], 16),
+              r: parseInt(result[1] ?? '0', 16),
+              g: parseInt(result[2] ?? '0', 16),
+              b: parseInt(result[3] ?? '0', 16),
             }
           : { r: 0, g: 0, b: 0 };
       };
@@ -265,7 +280,7 @@ export const useContrastChecker = () => {
           c = c / 255;
           return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
         });
-        return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        return 0.2126 * (rs ?? 0) + 0.7152 * (gs ?? 0) + 0.0722 * (bs ?? 0);
       };
 
       const fg = hexToRgb(foreground);
@@ -279,25 +294,25 @@ export const useContrastChecker = () => {
 
       return (brightest + 0.05) / (darkest + 0.05);
     },
-    [],
+    []
   );
 
   const isContrastSufficient = useCallback(
     (
       foreground: string,
       background: string,
-      level: "AA" | "AAA" = "AA",
-      size: "normal" | "large" = "normal",
+      level: 'AA' | 'AAA' = 'AA',
+      size: 'normal' | 'large' = 'normal'
     ): boolean => {
       const ratio = checkContrast(foreground, background);
 
-      if (level === "AA") {
-        return size === "normal" ? ratio >= 4.5 : ratio >= 3;
+      if (level === 'AA') {
+        return size === 'normal' ? ratio >= 4.5 : ratio >= 3;
       } else {
-        return size === "normal" ? ratio >= 7 : ratio >= 4.5;
+        return size === 'normal' ? ratio >= 7 : ratio >= 4.5;
       }
     },
-    [checkContrast],
+    [checkContrast]
   );
 
   return { checkContrast, isContrastSufficient };
@@ -318,14 +333,22 @@ export const useTouchTarget = () => {
 
     if (rect.width < 44) {
       const padding = (44 - rect.width) / 2;
-      element.style.paddingLeft = `calc(${window.getComputedStyle(element).paddingLeft} + ${padding}px)`;
-      element.style.paddingRight = `calc(${window.getComputedStyle(element).paddingRight} + ${padding}px)`;
+      element.style.paddingLeft = `calc(${
+        window.getComputedStyle(element).paddingLeft
+      } + ${padding}px)`;
+      element.style.paddingRight = `calc(${
+        window.getComputedStyle(element).paddingRight
+      } + ${padding}px)`;
     }
 
     if (rect.height < 44) {
       const padding = (44 - rect.height) / 2;
-      element.style.paddingTop = `calc(${window.getComputedStyle(element).paddingTop} + ${padding}px)`;
-      element.style.paddingBottom = `calc(${window.getComputedStyle(element).paddingBottom} + ${padding}px)`;
+      element.style.paddingTop = `calc(${
+        window.getComputedStyle(element).paddingTop
+      } + ${padding}px)`;
+      element.style.paddingBottom = `calc(${
+        window.getComputedStyle(element).paddingBottom
+      } + ${padding}px)`;
     }
   }, []);
 
@@ -340,15 +363,15 @@ export const useReducedMotion = () => {
   const prefersReducedMotion = useRef(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     prefersReducedMotion.current = mediaQuery.matches;
 
     const handler = (e: MediaQueryListEvent) => {
       prefersReducedMotion.current = e.matches;
     };
 
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
   return { prefersReducedMotion: prefersReducedMotion.current };
@@ -362,15 +385,15 @@ export const useHighContrast = () => {
   const prefersHighContrast = useRef(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-contrast: high)");
+    const mediaQuery = window.matchMedia('(prefers-contrast: high)');
     prefersHighContrast.current = mediaQuery.matches;
 
     const handler = (e: MediaQueryListEvent) => {
       prefersHighContrast.current = e.matches;
     };
 
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
   return { prefersHighContrast: prefersHighContrast.current };
@@ -385,7 +408,7 @@ export const useHighContrast = () => {
  * Ensures consistency between design system and accessibility module
  */
 const getDesignSystemColor = (variableName: string): string => {
-  if (typeof window === "undefined") return "#000000";
+  if (typeof window === 'undefined') return '#000000';
 
   const root = document.documentElement;
   const cssVariable = getComputedStyle(root)
@@ -396,12 +419,14 @@ const getDesignSystemColor = (variableName: string): string => {
   if (cssVariable) {
     const hslMatch = cssVariable.match(/(\d+)\s+(\d+)%\s+(\d+)%/);
     if (hslMatch) {
-      const [, h, s, l] = hslMatch.map(Number);
+      const h = Number(hslMatch[1] ?? 0);
+      const s = Number(hslMatch[2] ?? 0);
+      const l = Number(hslMatch[3] ?? 0);
       return hslToHex(h, s, l);
     }
   }
 
-  return "#000000";
+  return '#000000';
 };
 
 /**
@@ -415,29 +440,35 @@ const hslToHex = (h: number, s: number, l: number): string => {
     const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
     return Math.round(255 * color)
       .toString(16)
-      .padStart(2, "0");
+      .padStart(2, '0');
   };
 
   return `#${f(0)}${f(8)}${f(4)}`;
 };
 
+/**
+ * Generate accessible colors based on a base color.
+ * @param baseColor The base color to generate variations from
+ * @param _targetContrast Placeholder for target contrast ratio (future implementation)
+ * @todo Implement contrast-aware adjustments to meet _targetContrast
+ */
 export const generateAccessibleColors = (
   baseColor: string,
-  targetContrast: number = 4.5,
+  _targetContrast: number = 4.5
 ) => {
   // This is a simplified version - in a real implementation,
   // you'd want more sophisticated color generation logic
   const colors = {
     primary: baseColor,
-    primaryContrast: getDesignSystemColor("primary-contrast"),
-    secondary: getDesignSystemColor("foreground-secondary"),
-    secondaryContrast: getDesignSystemColor("secondary-contrast"),
-    success: getDesignSystemColor("success"),
-    successContrast: getDesignSystemColor("success-contrast"),
-    warning: getDesignSystemColor("warning"),
-    warningContrast: getDesignSystemColor("warning-contrast"),
-    danger: getDesignSystemColor("destructive"),
-    dangerContrast: getDesignSystemColor("danger-contrast"),
+    primaryContrast: getDesignSystemColor('primary-contrast'),
+    secondary: getDesignSystemColor('foreground-secondary'),
+    secondaryContrast: getDesignSystemColor('secondary-contrast'),
+    success: getDesignSystemColor('success'),
+    successContrast: getDesignSystemColor('success-contrast'),
+    warning: getDesignSystemColor('warning'),
+    warningContrast: getDesignSystemColor('warning-contrast'),
+    danger: getDesignSystemColor('destructive'),
+    dangerContrast: getDesignSystemColor('danger-contrast'),
   };
 
   return colors;
@@ -457,7 +488,7 @@ export const checkWCAGCompliance = (element: HTMLElement) => {
   // Check if text meets AA standards
   const isLargeText =
     fontSize >= 18 ||
-    (fontSize >= 14 && (fontWeight === "bold" || parseInt(fontWeight) >= 700));
+    (fontSize >= 14 && (fontWeight === 'bold' || parseInt(fontWeight) >= 700));
 
   return {
     color,
@@ -476,48 +507,48 @@ export const checkWCAGCompliance = (element: HTMLElement) => {
 
 export const getDefaultAriaAttributes = (
   role: string,
-  props: Record<string, unknown> = {},
+  props: Record<string, unknown> = {}
 ) => {
   const defaults = {
     button: {
-      role: "button",
+      role: 'button',
       tabIndex: 0,
-      "aria-disabled": false,
+      'aria-disabled': false,
       ...props,
     },
     link: {
-      role: "link",
+      role: 'link',
       tabIndex: 0,
       ...props,
     },
     dialog: {
-      role: "dialog",
-      "aria-modal": true,
-      "aria-labelledby": props.labelId || undefined,
-      "aria-describedby": props.descriptionId || undefined,
+      role: 'dialog',
+      'aria-modal': true,
+      'aria-labelledby': props.labelId || undefined,
+      'aria-describedby': props.descriptionId || undefined,
       ...props,
     },
     menu: {
-      role: "menu",
-      "aria-orientation": "vertical",
+      role: 'menu',
+      'aria-orientation': 'vertical',
       ...props,
     },
     menuItem: {
-      role: "menuitem",
+      role: 'menuitem',
       tabIndex: -1,
       ...props,
     },
     tab: {
-      role: "tab",
+      role: 'tab',
       tabIndex: -1,
-      "aria-selected": false,
-      "aria-controls": props.panelId || undefined,
+      'aria-selected': false,
+      'aria-controls': props.panelId || undefined,
       ...props,
     },
     tabPanel: {
-      role: "tabpanel",
-      "aria-labelledby": props.tabId || undefined,
-      "aria-hidden": true,
+      role: 'tabpanel',
+      'aria-labelledby': props.tabId || undefined,
+      'aria-hidden': true,
       ...props,
     },
   };

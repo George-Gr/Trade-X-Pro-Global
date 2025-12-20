@@ -3,13 +3,13 @@
  * Ensures order operations are not duplicated during network retries
  */
 
-import { logger } from "./logger";
+import { logger } from './logger';
 
 interface PendingRequest {
   key: string;
   timestamp: number;
   endpoint: string;
-  status: "pending" | "completed" | "failed";
+  status: 'pending' | 'completed' | 'failed';
 }
 
 // Store pending requests to prevent duplicates
@@ -33,7 +33,7 @@ const CLEANUP_INTERVAL = 60 * 1000;
 export function generateIdempotencyKey(
   userId: string,
   action: string,
-  params: Record<string, unknown>,
+  params: Record<string, unknown>
 ): string {
   const paramsString = JSON.stringify(params, Object.keys(params).sort());
   const data = `${userId}:${action}:${paramsString}:${Date.now()}`;
@@ -62,7 +62,7 @@ export function isRequestPending(key: string): boolean {
     return false;
   }
 
-  return request.status === "pending";
+  return request.status === 'pending';
 }
 
 /**
@@ -89,7 +89,7 @@ export function markRequestPending(key: string, endpoint: string): void {
     key,
     timestamp: Date.now(),
     endpoint,
-    status: "pending",
+    status: 'pending',
   });
 
   logger.debug(`Request marked pending: ${key}`);
@@ -101,7 +101,7 @@ export function markRequestPending(key: string, endpoint: string): void {
 export function markRequestCompleted<T>(key: string, result: T): void {
   const request = pendingRequests.get(key);
   if (request) {
-    request.status = "completed";
+    request.status = 'completed';
   }
 
   completedRequests.set(key, {
@@ -118,7 +118,7 @@ export function markRequestCompleted<T>(key: string, result: T): void {
 export function markRequestFailed(key: string): void {
   const request = pendingRequests.get(key);
   if (request) {
-    request.status = "failed";
+    request.status = 'failed';
   }
 
   // Remove from pending after failure so retry is possible
@@ -133,7 +133,7 @@ export function markRequestFailed(key: string): void {
 export async function executeWithIdempotency<T>(
   key: string,
   endpoint: string,
-  requestFn: () => Promise<T>,
+  requestFn: () => Promise<T>
 ): Promise<T> {
   // Check for cached completed response
   const cached = getCompletedRequest<T>(key);
@@ -145,7 +145,7 @@ export async function executeWithIdempotency<T>(
   // Check if request is already pending
   if (isRequestPending(key)) {
     logger.warn(`Duplicate request blocked: ${key}`);
-    throw new Error("Request is already being processed. Please wait.");
+    throw new Error('Request is already being processed. Please wait.');
   }
 
   // Mark as pending
@@ -181,8 +181,32 @@ function cleanupExpiredRequests(): void {
 }
 
 // Start cleanup interval
-if (typeof window !== "undefined") {
-  setInterval(cleanupExpiredRequests, CLEANUP_INTERVAL);
+let cleanupIntervalId: ReturnType<typeof setInterval> | null = null;
+
+if (typeof window !== 'undefined') {
+  cleanupIntervalId = setInterval(cleanupExpiredRequests, CLEANUP_INTERVAL);
+}
+
+/**
+ * Stop the cleanup interval (safe to call multiple times)
+ */
+export function stopCleanupInterval(): void {
+  if (cleanupIntervalId !== null) {
+    clearInterval(cleanupIntervalId);
+    cleanupIntervalId = null;
+  }
+}
+
+// HMR cleanup to prevent duplicate intervals
+if (
+  typeof module !== 'undefined' &&
+  (module as unknown as { hot?: unknown }).hot
+) {
+  (
+    module as unknown as { hot: { dispose: (fn: () => void) => void } }
+  ).hot.dispose(() => {
+    stopCleanupInterval();
+  });
 }
 
 export default {
@@ -193,4 +217,5 @@ export default {
   markRequestCompleted,
   markRequestFailed,
   executeWithIdempotency,
+  stopCleanupInterval,
 };

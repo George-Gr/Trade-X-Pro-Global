@@ -53,7 +53,7 @@ npm install
 ### Usage
 
 ```tsx
-import { AccessibilityTestingSuite } from "./components/accessibility/AccessibilityTestingSuite";
+import { AccessibilityTestingSuite } from './components/accessibility/AccessibilityTestingSuite';
 
 function App() {
   return <AccessibilityTestingSuite />;
@@ -200,9 +200,9 @@ const accessibilityConfig = {
   },
   keyboard: {
     shortcuts: {
-      "trade.buy": "Ctrl+B",
-      "trade.sell": "Ctrl+S",
-      "trade.close": "Ctrl+C",
+      'trade.buy': 'Ctrl+B',
+      'trade.sell': 'Ctrl+S',
+      'trade.close': 'Ctrl+C',
     },
   },
   screenReader: {

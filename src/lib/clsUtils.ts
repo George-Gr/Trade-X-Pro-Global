@@ -10,19 +10,19 @@
  */
 export const ASPECT_RATIOS = {
   // Video/Chart ratios
-  VIDEO: "16/9",
-  SQUARE: "1/1",
-  PORTRAIT: "4/3",
-  WIDE: "21/9",
+  VIDEO: '16/9',
+  SQUARE: '1/1',
+  PORTRAIT: '4/3',
+  WIDE: '21/9',
 
   // Image ratios
-  INSTAGRAM: "1/1",
-  STORY: "9/16",
-  BANNER: "3/1",
+  INSTAGRAM: '1/1',
+  STORY: '9/16',
+  BANNER: '3/1',
 
   // Document ratios
-  A4: "1/1.414",
-  LETTER: "1/1.294",
+  A4: '1/1.414',
+  LETTER: '1/1.294',
 } as const;
 
 /**
@@ -30,20 +30,20 @@ export const ASPECT_RATIOS = {
  */
 export const CLS_DIMENSIONS = {
   // Charts
-  CHART_HEIGHT: "280px",
-  CHART_MIN_HEIGHT: "200px",
+  CHART_HEIGHT: '280px',
+  CHART_MIN_HEIGHT: '200px',
 
   // Images
-  IMAGE_HEIGHT: "200px",
-  PROFILE_IMAGE_HEIGHT: "80px",
+  IMAGE_HEIGHT: '200px',
+  PROFILE_IMAGE_HEIGHT: '80px',
 
   // Cards
-  CARD_MIN_HEIGHT: "120px",
-  FEATURE_CARD_HEIGHT: "160px",
+  CARD_MIN_HEIGHT: '120px',
+  FEATURE_CARD_HEIGHT: '160px',
 
   // Lists
-  LIST_ITEM_HEIGHT: "48px",
-  TABLE_ROW_HEIGHT: "40px",
+  LIST_ITEM_HEIGHT: '48px',
+  TABLE_ROW_HEIGHT: '40px',
 } as const;
 
 /**
@@ -59,7 +59,7 @@ export const getAspectRatioClass = (ratio: string): string => {
 export const getMinHeightStyle = (height: string): React.CSSProperties => {
   return {
     minHeight: height,
-    minWidth: "100%",
+    minWidth: '100%',
   };
 };
 
@@ -67,13 +67,13 @@ export const getMinHeightStyle = (height: string): React.CSSProperties => {
  * Utility to get chart container styles
  */
 export const getChartContainerStyles = (
-  height: string = CLS_DIMENSIONS.CHART_HEIGHT,
+  height: string = CLS_DIMENSIONS.CHART_HEIGHT
 ): React.CSSProperties => {
   return {
     height,
     minHeight: height,
-    width: "100%",
-    position: "relative",
+    width: '100%',
+    position: 'relative',
   };
 };
 
@@ -82,10 +82,10 @@ export const getChartContainerStyles = (
  */
 export const getSkeletonStyles = (
   height: string | number,
-  width: string | number,
+  width: string | number
 ): React.CSSProperties => {
-  const heightValue = typeof height === "string" ? height : `${height}px`;
-  const widthValue = typeof width === "string" ? width : `${width}px`;
+  const heightValue = typeof height === 'string' ? height : `${height}px`;
+  const widthValue = typeof width === 'string' ? width : `${width}px`;
 
   return {
     height: heightValue,
@@ -99,12 +99,12 @@ export const getSkeletonStyles = (
  * Utility to prevent layout shifts during image loading
  */
 export const getImageLoadingStyles = (
-  aspectRatio: string,
+  aspectRatio: string
 ): React.CSSProperties => {
   return {
     aspectRatio,
     minHeight: CLS_DIMENSIONS.IMAGE_HEIGHT,
-    width: "100%",
+    width: '100%',
   };
 };
 

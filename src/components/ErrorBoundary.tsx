@@ -1,8 +1,8 @@
-import React from "react";
-import { AlertTriangle, RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { logger } from "@/lib/logger";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
+import { AlertTriangle, RotateCcw } from 'lucide-react';
+import React from 'react';
 
 interface Props {
   children: React.ReactNode;
@@ -42,22 +42,24 @@ export class ErrorBoundary extends React.Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: "",
+      errorId: '',
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<State> {
+  static getDerivedStateFromError(_error: Error): Partial<State> {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Generate unique error ID for tracking
-    const errorId = `ERR-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const errorId = `ERR-${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 11)}`;
 
     // Log error with full context
     logger.error(`ErrorBoundary caught an error: ${error.message}`, error, {
-      component: this.props.componentName || "Unknown",
-      action: "error_boundary_catch",
+      component: this.props.componentName || 'Unknown',
+      action: 'error_boundary_catch',
       metadata: {
         errorId,
         componentStack: errorInfo?.componentStack,
@@ -67,8 +69,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
     // Add breadcrumb for error tracking
     logger.addBreadcrumb(
-      "error",
-      `Component ${this.props.componentName || "Unknown"} threw error: ${error.message}`,
+      'error',
+      `Component ${this.props.componentName || 'Unknown'} threw error: ${
+        error.message
+      }`
     );
 
     // Call optional error handler prop for custom logging (e.g., Sentry)
@@ -89,11 +93,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: "",
+      errorId: '',
     });
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       // Use custom fallback if provided
       if (this.props.fallback) {
@@ -102,7 +106,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
       // Default error UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
           <Card className="w-full max-w-md shadow-lg">
             <CardHeader className="border-b">
               <div className="flex items-center gap-4">
@@ -127,9 +131,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
                 )}
 
                 {/* Error details in development */}
-                {import.meta.env.MODE === "development" && this.state.error && (
+                {import.meta.env.MODE === 'development' && this.state.error && (
                   <div className="bg-[hsl(var(--status-error))] dark:bg-[hsl(var(--status-error-dark))] rounded-lg p-4 space-y-2">
-                    <p className="text-xs font-mono text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] break-words">
+                    <p className="text-xs font-mono text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] wrap-break-word">
                       <strong>Error:</strong> {this.state.error.toString()}
                     </p>
                     {this.state.errorInfo?.componentStack && (
@@ -137,7 +141,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                         <summary className="cursor-pointer text-destructive font-semibold">
                           Component Stack
                         </summary>
-                        <pre className="mt-2 text-destructive overflow-auto max-h-40 font-mono text-xs whitespace-pre-wrap break-words">
+                        <pre className="mt-2 text-destructive overflow-auto max-h-40 font-mono text-xs whitespace-pre-wrap wrap-break-word">
                           {this.state.errorInfo.componentStack}
                         </pre>
                       </details>
@@ -155,7 +159,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                     Try Again
                   </Button>
                   <Button
-                    onClick={() => (window.location.href = "/")}
+                    onClick={() => (window.location.href = '/')}
                     variant="outline"
                     className="flex-1"
                     size="sm"

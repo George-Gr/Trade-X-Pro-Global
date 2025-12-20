@@ -1,11 +1,7 @@
-import { useMemo } from 'react';
 import { Card } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, PieChart } from 'lucide-react';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
-
-interface PortfolioDashboardProps {
-  userId?: string;
-}
+import { PieChart, TrendingDown, TrendingUp } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface PortfolioMetrics {
   totalEquity: number;
@@ -29,7 +25,7 @@ interface PortfolioMetrics {
  * - Holdings table with real-time updates
  * - Equity curve visualization data
  */
-export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
+export const PortfolioDashboard = () => {
   const { profile, positions, loading, error } = usePortfolioData();
 
   // Calculate comprehensive portfolio metrics
@@ -53,15 +49,26 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
     const availableMargin = balance - usedMargin;
 
     // Calculate unrealized P&L from positions
-    const unrealizedPnL = (positions || []).reduce((sum, pos) => {
-      const currentPrice = pos.current_price ?? 0;
-      const entryPrice = pos.entry_price ?? 0;
-      const posValue = currentPrice * pos.quantity * 100000;
-      const entryValue = entryPrice * pos.quantity * 100000;
-      const pnl =
-        pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
-      return sum + pnl;
-    }, 0);
+    const unrealizedPnL = (positions || []).reduce(
+      (
+        sum: number,
+        pos: {
+          current_price: number;
+          entry_price: number;
+          quantity: number;
+          side: string;
+        }
+      ) => {
+        const currentPrice = pos.current_price ?? 0;
+        const entryPrice = pos.entry_price ?? 0;
+        const posValue = currentPrice * pos.quantity * 100000;
+        const entryValue = entryPrice * pos.quantity * 100000;
+        const pnl =
+          pos.side === 'buy' ? posValue - entryValue : entryValue - posValue;
+        return sum + pnl;
+      },
+      0
+    );
 
     const realizedPnL =
       (
@@ -101,52 +108,66 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
   const assetAllocation = useMemo(() => {
     if (!positions || positions.length === 0) return [];
 
-    const totalValue = positions.reduce((sum, pos) => {
-      const currentPrice = pos.current_price ?? 0;
-      const value = Math.abs(currentPrice * pos.quantity * 100000);
-      return sum + value;
-    }, 0);
-
-    return positions
-      .map((pos) => {
+    const totalValue = positions.reduce(
+      (sum: number, pos: { current_price: number; quantity: number }) => {
         const currentPrice = pos.current_price ?? 0;
         const value = Math.abs(currentPrice * pos.quantity * 100000);
-        return {
-          symbol: pos.symbol,
-          value,
-          percentage: totalValue > 0 ? (value / totalValue) * 100 : 0,
-          side: pos.side,
-        };
-      })
-      .sort((a, b) => b.value - a.value);
+        return sum + value;
+      },
+      0
+    );
+
+    return positions
+      .map(
+        (pos: {
+          symbol: string;
+          current_price: number;
+          quantity: number;
+          side: string;
+        }) => {
+          const currentPrice = pos.current_price ?? 0;
+          const value = Math.abs(currentPrice * pos.quantity * 100000);
+          return {
+            symbol: pos.symbol,
+            value,
+            percentage: totalValue > 0 ? (value / totalValue) * 100 : 0,
+            side: pos.side,
+          };
+        }
+      )
+      .sort((a: { value: number }, b: { value: number }) => b.value - a.value);
   }, [positions]);
 
   // Calculate performance metrics
   const performanceMetrics = useMemo(() => {
-    const returns = (positions || []).map((pos) => {
-      const pnl =
-        pos.side === 'buy'
-          ? (pos.current_price - pos.entry_price) / pos.entry_price
-          : (pos.entry_price - pos.current_price) / pos.entry_price;
-      return pnl;
-    });
+    const returns = (positions || []).map(
+      (pos: { side: string; current_price: number; entry_price: number }) => {
+        const pnl =
+          pos.side === 'buy'
+            ? (pos.current_price - pos.entry_price) / pos.entry_price
+            : (pos.entry_price - pos.current_price) / pos.entry_price;
+        return pnl;
+      }
+    );
 
     const avgReturn =
       returns.length > 0
-        ? returns.reduce((a, b) => a + b, 0) / returns.length
+        ? returns.reduce((a: number, b: number) => a + b, 0) / returns.length
         : 0;
 
     // Simple Sharpe ratio approximation
     const variance =
       returns.length > 0
-        ? returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) /
-          returns.length
+        ? returns.reduce(
+            (sum: number, r: number) => sum + Math.pow(r - avgReturn, 2),
+            0
+          ) / returns.length
         : 0;
     const stdDev = Math.sqrt(variance);
     const sharpeRatio = stdDev > 0 ? avgReturn / stdDev : 0;
 
     return {
-      winRate: returns.filter((r) => r > 0).length,
+      winRate: returns.filter((r: number) => r > 0).length,
       totalTrades: returns.length,
       avgReturn: avgReturn * 100,
       sharpeRatio,
@@ -235,7 +256,11 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
 
         {/* Margin Status */}
         <Card
-          className={`p-4 ${metrics.marginLevel > 80 ? 'border-yellow-500/30 bg-background/5' : 'bg-card'}`}
+          className={`p-4 ${
+            metrics.marginLevel > 80
+              ? 'border-yellow-500/30 bg-background/5'
+              : 'bg-card'
+          }`}
         >
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Margin Level</p>
@@ -248,8 +273,8 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                   metrics.marginLevel > 90
                     ? 'bg-loss'
                     : metrics.marginLevel > 80
-                      ? 'bg-background'
-                      : 'bg-profit'
+                    ? 'bg-background'
+                    : 'bg-profit'
                 }`}
                 style={{ width: `${Math.min(metrics.marginLevel, 100)}%` }}
               />
@@ -295,7 +320,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 Unrealized P&L
               </span>
               <span
-                className={`font-semibold ${metrics.unrealizedPnL >= 0 ? 'text-profit' : 'text-loss'}`}
+                className={`font-semibold ${
+                  metrics.unrealizedPnL >= 0 ? 'text-profit' : 'text-loss'
+                }`}
               >
                 {metrics.unrealizedPnL >= 0 ? '+' : ''}$
                 {metrics.unrealizedPnL.toLocaleString(undefined, {
@@ -308,7 +335,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                 Realized P&L
               </span>
               <span
-                className={`font-semibold ${metrics.realizedPnL >= 0 ? 'text-profit' : 'text-loss'}`}
+                className={`font-semibold ${
+                  metrics.realizedPnL >= 0 ? 'text-profit' : 'text-loss'
+                }`}
               >
                 {metrics.realizedPnL >= 0 ? '+' : ''}$
                 {metrics.realizedPnL.toLocaleString(undefined, {
@@ -319,7 +348,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
             <div className="border-t border-border pt-4 flex items-center justify-between">
               <span className="text-sm font-semibold">Total P&L</span>
               <span
-                className={`font-bold text-lg ${metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}
+                className={`font-bold text-lg ${
+                  metrics.totalPnL >= 0 ? 'text-profit' : 'text-loss'
+                }`}
               >
                 {metrics.totalPnL >= 0 ? '+' : ''}$
                 {metrics.totalPnL.toLocaleString(undefined, {
@@ -345,7 +376,11 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Avg Return</span>
               <span
-                className={`font-semibold ${performanceMetrics.avgReturn >= 0 ? 'text-profit' : 'text-loss'}`}
+                className={`font-semibold ${
+                  performanceMetrics.avgReturn >= 0
+                    ? 'text-profit'
+                    : 'text-loss'
+                }`}
               >
                 {performanceMetrics.avgReturn.toFixed(2)}%
               </span>
@@ -403,64 +438,77 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                           P&L
                         </th>
                         <th className="text-right py-4 text-muted-foreground font-medium">
-                          ROI%
+                          ROI
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {positions.map((pos) => {
-                        const posValue =
-                          (pos.current_price ?? 0) * pos.quantity * 100000;
-                        const entryValue =
-                          pos.entry_price * pos.quantity * 100000;
-                        const pnl =
-                          pos.side === 'buy'
-                            ? posValue - entryValue
-                            : entryValue - posValue;
-                        const roi =
-                          entryValue > 0 ? (pnl / entryValue) * 100 : 0;
+                      {positions.map(
+                        (pos: {
+                          id: string;
+                          symbol: string;
+                          side: string;
+                          current_price: number;
+                          entry_price: number;
+                          quantity: number;
+                        }) => {
+                          const posValue =
+                            (pos.current_price ?? 0) * pos.quantity * 100000;
+                          const entryValue =
+                            pos.entry_price * pos.quantity * 100000;
+                          const pnl =
+                            pos.side === 'buy'
+                              ? posValue - entryValue
+                              : entryValue - posValue;
+                          const roi =
+                            entryValue > 0 ? (pnl / entryValue) * 100 : 0;
 
-                        return (
-                          <tr
-                            key={pos.id}
-                            className="border-b border-border/50 hover:bg-secondary/30"
-                          >
-                            <td className="py-4">
-                              <span className="font-semibold">
-                                {pos.symbol}
-                              </span>
-                              <span className="text-xs text-muted-foreground ml-2">
-                                ({pos.side})
-                              </span>
-                            </td>
-                            <td className="text-right font-mono text-xs">
-                              {pos.quantity}
-                            </td>
-                            <td className="text-right font-mono text-xs">
-                              {pos.entry_price.toFixed(5)}
-                            </td>
-                            <td className="text-right font-mono text-xs">
-                              {pos.current_price
-                                ? pos.current_price.toFixed(5)
-                                : '0.00000'}
-                            </td>
-                            <td
-                              className={`text-right font-mono text-xs font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}
+                          return (
+                            <tr
+                              key={pos.id}
+                              className="border-b border-border/50 hover:bg-secondary/30"
                             >
-                              {pnl >= 0 ? '+' : ''}
-                              {pnl.toLocaleString(undefined, {
-                                maximumFractionDigits: 2,
-                              })}
-                            </td>
-                            <td
-                              className={`text-right font-mono text-xs font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}
-                            >
-                              {roi >= 0 ? '+' : ''}
-                              {roi.toFixed(2)}%
-                            </td>
-                          </tr>
-                        );
-                      })}
+                              <td className="py-4">
+                                <span className="font-semibold">
+                                  {pos.symbol}
+                                </span>
+                                <span className="text-xs text-muted-foreground ml-2">
+                                  ({pos.side})
+                                </span>
+                              </td>
+                              <td className="text-right font-mono text-xs">
+                                {pos.quantity}
+                              </td>
+                              <td className="text-right font-mono text-xs">
+                                {pos.entry_price.toFixed(5)}
+                              </td>
+                              <td className="text-right font-mono text-xs">
+                                {pos.current_price
+                                  ? pos.current_price.toFixed(5)
+                                  : '0.00000'}
+                              </td>
+                              <td
+                                className={`text-right font-mono text-xs font-semibold ${
+                                  pnl >= 0 ? 'text-profit' : 'text-loss'
+                                }`}
+                              >
+                                {pnl >= 0 ? '+' : ''}
+                                {pnl.toLocaleString(undefined, {
+                                  maximumFractionDigits: 2,
+                                })}
+                              </td>
+                              <td
+                                className={`text-right font-mono text-xs font-semibold ${
+                                  roi >= 0 ? 'text-profit' : 'text-loss'
+                                }`}
+                              >
+                                {roi >= 0 ? '+' : ''}
+                                {roi.toFixed(2)}%
+                              </td>
+                            </tr>
+                          );
+                        }
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -486,7 +534,11 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                             {pos.symbol}
                           </h4>
                           <span
-                            className={`text-xs px-2 py-1 rounded ${pos.side === 'buy' ? 'bg-buy/20 text-buy' : 'bg-sell/20 text-sell'}`}
+                            className={`text-xs px-2 py-1 rounded ${
+                              pos.side === 'buy'
+                                ? 'bg-buy/20 text-buy'
+                                : 'bg-sell/20 text-sell'
+                            }`}
                           >
                             {pos.side.toUpperCase()}
                           </span>
@@ -519,7 +571,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                           <div>
                             <span className="text-muted-foreground">ROI:</span>
                             <p
-                              className={`font-mono font-semibold ${roi >= 0 ? 'text-profit' : 'text-loss'}`}
+                              className={`font-mono font-semibold ${
+                                roi >= 0 ? 'text-profit' : 'text-loss'
+                              }`}
                             >
                               {roi >= 0 ? '+' : ''}
                               {roi.toFixed(2)}%
@@ -527,7 +581,9 @@ export const PortfolioDashboard = ({ userId }: PortfolioDashboardProps) => {
                           </div>
                         </div>
                         <div
-                          className={`pt-2 border-t text-sm font-semibold ${pnl >= 0 ? 'text-profit' : 'text-loss'}`}
+                          className={`pt-2 border-t text-sm font-semibold ${
+                            pnl >= 0 ? 'text-profit' : 'text-loss'
+                          }`}
                         >
                           P&L: {pnl >= 0 ? '+' : ''}
                           {pnl.toLocaleString(undefined, {

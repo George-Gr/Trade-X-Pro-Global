@@ -33,7 +33,7 @@ const EnhancedPortfolioDashboard: React.FC = () => {
         current_price: number;
         side: string;
         margin_used: number;
-        [key: string]: any;
+        [key: string]: unknown;
       }) => ({
         ...pos,
         entryPrice: pos.entry_price,

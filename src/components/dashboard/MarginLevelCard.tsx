@@ -1,15 +1,15 @@
-import * as React from "react";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Placeholder } from "@/components/ui/Placeholder";
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+} from '@/components/ui/card';
+import { Placeholder } from '@/components/ui/Placeholder';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
+import * as React from 'react';
 
 interface MarginLevelCardProps {
   loading?: boolean;
@@ -17,6 +17,18 @@ interface MarginLevelCardProps {
   trend?: number[];
 }
 
+/**
+ * Margin Level Card Component
+ *
+ * Displays the current margin usage percentage with visual indicators, trend analysis,
+ * and risk level classification. Shows a loading skeleton when data is being fetched
+ * and a placeholder when no trend data is available.
+ *
+ * @param {boolean} [loading=false] - Shows loading skeleton when true
+ * @param {number} [marginLevel=72] - Current margin usage percentage (0-100)
+ * @param {number[]} [trend=[]] - Array of historical margin values for trend visualization
+ * @returns {JSX.Element} Rendered margin level card with progress bar and trend chart
+ */
 export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
   loading = false,
   marginLevel = 72,
@@ -24,31 +36,39 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
 }) => {
   const [trendData, setTrendData] = React.useState({
     changePercentage: 0,
-    changeDirection: "neutral" as "up" | "down" | "neutral",
+    changeDirection: 'neutral' as 'up' | 'down' | 'neutral',
   });
 
   React.useEffect(() => {
     if (trend && trend.length > 1) {
       const firstValue = trend[0];
       const lastValue = trend[trend.length - 1];
-      const change = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
 
-      let direction: "up" | "down" | "neutral" = "neutral";
-      if (change > 0.1) {
-        direction = "up";
-      } else if (change < -0.1) {
-        direction = "down";
+      // Guard against undefined values
+      if (
+        firstValue !== undefined &&
+        lastValue !== undefined &&
+        firstValue !== 0
+      ) {
+        const change = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
+
+        let direction: 'up' | 'down' | 'neutral' = 'neutral';
+        if (change > 0.1) {
+          direction = 'up';
+        } else if (change < -0.1) {
+          direction = 'down';
+        }
+
+        setTrendData({ changePercentage: change, changeDirection: direction });
       }
-
-      setTrendData({ changePercentage: change, changeDirection: direction });
     }
   }, [trend]);
 
   const getTrendIcon = () => {
     switch (trendData.changeDirection) {
-      case "up":
+      case 'up':
         return <TrendingUp className="h-4 w-4 text-warning-contrast" />;
-      case "down":
+      case 'down':
         return <TrendingDown className="h-4 w-4 text-success-contrast" />;
       default:
         return <Minus className="h-4 w-4 text-secondary-contrast" />;
@@ -57,12 +77,12 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
 
   const getChangeClassName = () => {
     switch (trendData.changeDirection) {
-      case "up":
-        return "text-warning-contrast font-medium";
-      case "down":
-        return "text-success-contrast font-medium";
+      case 'up':
+        return 'text-warning-contrast font-medium';
+      case 'down':
+        return 'text-success-contrast font-medium';
       default:
-        return "text-secondary-contrast font-medium";
+        return 'text-secondary-contrast font-medium';
     }
   };
 
@@ -126,13 +146,13 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
             <div className="flex items-center gap-1">
               {getTrendIcon()}
               <span className={getChangeClassName()}>
-                {trendData.changeDirection !== "neutral" && (
+                {trendData.changeDirection !== 'neutral' && (
                   <>
-                    {trendData.changeDirection === "up" ? "+" : ""}
+                    {trendData.changeDirection === 'up' ? '+' : ''}
                     {Math.abs(trendData.changePercentage).toFixed(1)}%
                   </>
                 )}
-                {trendData.changeDirection === "neutral" && "0.0%"}
+                {trendData.changeDirection === 'neutral' && '0.0%'}
               </span>
               <span className="text-xs text-secondary-contrast">
                 vs period start
@@ -187,12 +207,12 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
                     const range = max - min || 1;
                     const pts = values.map((v, i) => {
                       const x = Math.round(
-                        (i / (values.length - 1 || 1)) * 100,
+                        (i / (values.length - 1 || 1)) * 100
                       );
                       const y = Math.round((1 - (v - min) / range) * 30);
                       return `${x},${y}`;
                     });
-                    return pts.join(" ");
+                    return pts.join(' ');
                   })()}
                 />
               </svg>

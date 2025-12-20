@@ -1,19 +1,19 @@
-import React from "react";
-import { ErrorMessage } from "@/components/ui/ErrorUI";
+import type { ComponentType } from 'react';
+import { ErrorMessage } from '@/components/ui/ErrorUI';
 
 /**
  * HOC to wrap components with error boundary and retry logic
  */
 export const withErrorHandling = <P extends {}>(
-  Component: React.ComponentType<P>,
+  Component: ComponentType<P>,
   options?: {
     title?: string;
     description?: string;
     showRetry?: boolean;
-  },
-): React.ComponentType<P> => {
+  }
+): ComponentType<P> => {
   return function WithErrorHandling(
-    props: P & { error?: string; onRetry?: () => void },
+    props: P & { error?: string; onRetry?: () => void }
   ) {
     const { error, onRetry, ...componentProps } = props;
 

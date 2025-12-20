@@ -6,19 +6,7 @@ import type { TabComponentProps } from '@/components/accessibility/types';
  * Demonstrates form validation and error handling patterns.
  * Shows error states, success states, and validation summary.
  */
-export function ValidationTab({
-  formData,
-  setFormData,
-  errors,
-  setErrors,
-  inputRefs,
-  testResults,
-  setTestResults,
-  onValidateForm,
-  onUpdateForm,
-  onAnnounceToScreenReader,
-  onSubmitForm,
-}: TabComponentProps) {
+export function ValidationTab(_props: TabComponentProps) {
   return (
     <div className="space-y-6">
       {/* Error Validation Testing */}

@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from '@/lib/utils';
+import React, { useEffect, useState } from 'react';
 
 export interface SemanticHTMLProps {
   children: React.ReactNode;
   className?: string;
   as?:
-    | "article"
-    | "section"
-    | "aside"
-    | "nav"
-    | "header"
-    | "footer"
-    | "main"
-    | "div";
+    | 'article'
+    | 'section'
+    | 'aside'
+    | 'nav'
+    | 'header'
+    | 'footer'
+    | 'main'
+    | 'div';
   role?: string;
   ariaLabel?: string;
   ariaDescription?: string;
@@ -50,19 +50,18 @@ export interface CreateContentSectionOptions {
 
 // Semantic HTML element mapper
 const ELEMENT_MAP = {
-  article: "article",
-  section: "section",
-  aside: "aside",
-  nav: "nav",
-  header: "header",
-  footer: "footer",
-  main: "main",
-  div: "div",
+  article: 'article',
+  section: 'section',
+  aside: 'aside',
+  nav: 'nav',
+  header: 'header',
+  footer: 'footer',
+  main: 'main',
+  div: 'div',
 } as const;
 
 export class SemanticHTMLManager {
   private static instance: SemanticHTMLManager;
-  private config: SemanticHTMLConfig;
   private sectionIds: Set<string> = new Set();
 
   static getInstance(): SemanticHTMLManager {
@@ -73,20 +72,14 @@ export class SemanticHTMLManager {
   }
 
   private constructor() {
-    this.config = {
-      enableLandmarks: true,
-      enableHeadings: true,
-      enableProgressiveEnhancement: true,
-      enableMobileOptimization: true,
-      autoGenerateIds: true,
-    };
+    // Placeholder constructor for singleton initialization
   }
 
   generateSectionId(title: string): string {
     let id = title
       .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
       .trim();
 
     // Ensure uniqueness
@@ -105,7 +98,7 @@ export class SemanticHTMLManager {
     title: string,
     content: React.ReactNode,
     headingLevel: 1 | 2 | 3 | 4 | 5 | 6 = 2,
-    options: CreateContentSectionOptions = {},
+    options: CreateContentSectionOptions = {}
   ): ContentSection {
     const id = options.id || this.generateSectionId(title);
 
@@ -133,7 +126,7 @@ export class SemanticHTMLManager {
 
   getPageStructure(): ContentSection[] {
     // Detect existing content structure on the page
-    const headings = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
     const sections: ContentSection[] = [];
 
     headings.forEach((heading, index) => {
@@ -155,10 +148,10 @@ export class SemanticHTMLManager {
         // Convert DOM Node to React element
         const nodeString = current.outerHTML;
         content.push(
-          React.createElement("div", {
+          React.createElement('div', {
             key: content.length,
             dangerouslySetInnerHTML: { __html: nodeString },
-          }),
+          })
         );
         current = current.nextElementSibling;
       }
@@ -182,42 +175,42 @@ export class SemanticHTMLManager {
 
   applyProgressiveEnhancement(container: HTMLElement) {
     // Add progressive enhancement classes
-    container.classList.add("progressive-enhanced");
+    container.classList.add('progressive-enhanced');
 
     // Enhance images with proper alt text validation
-    const images = container.querySelectorAll("img");
+    const images = container.querySelectorAll('img');
     images.forEach((img) => {
       if (!img.alt) {
-        img.setAttribute("alt", "");
-        img.setAttribute("role", "presentation");
+        img.setAttribute('alt', '');
+        img.setAttribute('role', 'presentation');
       }
     });
 
     // Enhance forms with proper labels
-    const inputs = container.querySelectorAll("input, textarea, select");
+    const inputs = container.querySelectorAll('input, textarea, select');
     inputs.forEach((input) => {
       if (
-        !input.getAttribute("aria-label") &&
-        !input.getAttribute("aria-labelledby")
+        !input.getAttribute('aria-label') &&
+        !input.getAttribute('aria-labelledby')
       ) {
         const label = container.querySelector(`label[for="${input.id}"]`);
         if (!label) {
           input.setAttribute(
-            "aria-label",
-            input.getAttribute("placeholder") || "Input field",
+            'aria-label',
+            input.getAttribute('placeholder') || 'Input field'
           );
         }
       }
     });
 
     // Enhance links without descriptive text
-    const links = container.querySelectorAll("a[href]");
+    const links = container.querySelectorAll('a[href]');
     links.forEach((link) => {
       const text = link.textContent?.trim();
-      if (!text || text === link.getAttribute("href")) {
+      if (!text || text === link.getAttribute('href')) {
         link.setAttribute(
-          "aria-label",
-          "Link: " + (link.getAttribute("href") || "unknown destination"),
+          'aria-label',
+          'Link: ' + (link.getAttribute('href') || 'unknown destination')
         );
       }
     });
@@ -225,11 +218,11 @@ export class SemanticHTMLManager {
 
   optimizeForMobile(container: HTMLElement) {
     // Add mobile-specific optimizations
-    container.classList.add("mobile-optimized");
+    container.classList.add('mobile-optimized');
 
     // Ensure touch targets are at least 44px
     const interactiveElements = container.querySelectorAll(
-      "button, a, input, textarea, select, [tabindex]",
+      'button, a, input, textarea, select, [tabindex]'
     );
     interactiveElements.forEach((element) => {
       const style = getComputedStyle(element);
@@ -237,23 +230,23 @@ export class SemanticHTMLManager {
       const minWidth = parseInt(style.minWidth) || 0;
 
       if (minHeight < 44) {
-        element.classList.add("min-h-[44px]");
+        element.classList.add('min-h-[44px]');
       }
       if (minWidth < 44) {
-        element.classList.add("min-w-[44px]");
+        element.classList.add('min-w-[44px]');
       }
     });
 
     // Optimize text for mobile reading
-    const textElements = container.querySelectorAll("p, li, td, th");
+    const textElements = container.querySelectorAll('p, li, td, th');
     textElements.forEach((element) => {
       const fontSize = parseFloat(getComputedStyle(element).fontSize);
       if (fontSize < 16) {
-        element.classList.add("text-base");
+        element.classList.add('text-base');
       }
       const lineHeight = parseFloat(getComputedStyle(element).lineHeight);
       if (lineHeight < 1.5) {
-        element.classList.add("leading-relaxed");
+        element.classList.add('leading-relaxed');
       }
     });
   }
@@ -263,7 +256,7 @@ export class SemanticHTMLManager {
 export function SemanticHTMLEnhancer({
   children,
   className,
-  as = "div",
+  as = 'div',
   role,
   ariaLabel,
   ariaDescription,
@@ -281,20 +274,22 @@ export function SemanticHTMLEnhancer({
   // Detect mobile device using viewport-based approach
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+      setIsMobile(window.matchMedia('(max-width: 767px)').matches);
     };
 
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Apply progressive enhancement on mount
   useEffect(() => {
-    if (progressiveEnhancement && typeof document !== "undefined") {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    if (progressiveEnhancement && typeof document !== 'undefined') {
       // This will be applied to the rendered element after it's in the DOM
-      const timeoutId = setTimeout(() => {
-        const elementId = typeof props.id === "string" ? props.id : "";
+      timeoutId = setTimeout(() => {
+        const elementId = typeof props.id === 'string' ? props.id : '';
         const element = document.getElementById(elementId);
         if (element) {
           manager.applyProgressiveEnhancement(element);
@@ -303,27 +298,30 @@ export function SemanticHTMLEnhancer({
           }
         }
       }, 100);
-      return () => clearTimeout(timeoutId);
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [progressiveEnhancement, mobileOptimized, isMobile, manager, props.id]);
 
-  const ElementType = ELEMENT_MAP[as] || "div";
+  const ElementType = ELEMENT_MAP[as] || 'div';
 
   const semanticProps = {
     className: cn(
-      "semantic-html",
+      'semantic-html',
       {
         landmark: landmark,
-        "content-group": contentGrouping,
-        "progressive-enhanced": progressiveEnhancement,
-        "mobile-optimized": mobileOptimized && isMobile,
-        "is-mobile": isMobile,
+        'content-group': contentGrouping,
+        'progressive-enhanced': progressiveEnhancement,
+        'mobile-optimized': mobileOptimized && isMobile,
+        'is-mobile': isMobile,
       },
-      className,
+      className
     ),
-    role: role || (landmark ? "region" : undefined),
-    "aria-label": ariaLabel,
-    "aria-describedby": ariaDescription,
+    role: role || (landmark ? 'region' : undefined),
+    'aria-label': ariaLabel,
+    'aria-describedby': ariaDescription,
     ...props,
   };
 
@@ -334,10 +332,10 @@ export function SemanticHTMLEnhancer({
         React.createElement(
           `h${headingLevel}`,
           {
-            id: `${props.id || "heading"}-title`,
-            className: "semantic-heading",
+            id: `${props.id || 'heading'}-title`,
+            className: 'semantic-heading',
           },
-          headingText,
+          headingText
         )}
       {children}
     </>
@@ -348,18 +346,14 @@ export function SemanticHTMLEnhancer({
 
 // Predefined semantic components for common use cases
 // Props interfaces for semantic components
-interface MainContentProps extends Omit<
-  SemanticHTMLProps,
-  "as" | "landmark" | "headingLevel"
-> {
+interface MainContentProps
+  extends Omit<SemanticHTMLProps, 'as' | 'landmark' | 'headingLevel'> {
   children: React.ReactNode;
   className?: string;
 }
 
-interface ArticleSectionProps extends Omit<
-  SemanticHTMLProps,
-  "as" | "headingLevel" | "headingText"
-> {
+interface ArticleSectionProps
+  extends Omit<SemanticHTMLProps, 'as' | 'headingLevel' | 'headingText'> {
   children: React.ReactNode;
   title: string;
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -367,34 +361,26 @@ interface ArticleSectionProps extends Omit<
   id?: string;
 }
 
-interface NavigationSectionProps extends Omit<
-  SemanticHTMLProps,
-  "as" | "landmark"
-> {
+interface NavigationSectionProps
+  extends Omit<SemanticHTMLProps, 'as' | 'landmark'> {
   children: React.ReactNode;
   className?: string;
 }
 
-interface SidebarContentProps extends Omit<
-  SemanticHTMLProps,
-  "as" | "landmark"
-> {
+interface SidebarContentProps
+  extends Omit<SemanticHTMLProps, 'as' | 'landmark'> {
   children: React.ReactNode;
   className?: string;
 }
 
-interface ContentHeaderProps extends Omit<
-  SemanticHTMLProps,
-  "as" | "landmark"
-> {
+interface ContentHeaderProps
+  extends Omit<SemanticHTMLProps, 'as' | 'landmark'> {
   children: React.ReactNode;
   className?: string;
 }
 
-interface ContentFooterProps extends Omit<
-  SemanticHTMLProps,
-  "as" | "landmark"
-> {
+interface ContentFooterProps
+  extends Omit<SemanticHTMLProps, 'as' | 'landmark'> {
   children: React.ReactNode;
   className?: string;
 }
@@ -410,7 +396,7 @@ export function MainContent({
       landmark={true}
       role="main"
       ariaLabel="Main content"
-      className={cn("main-content", className)}
+      className={cn('main-content', className)}
       {...props}
     >
       {children}
@@ -434,7 +420,7 @@ export function ArticleSection({
       headingLevel={headingLevel}
       headingText={title}
       ariaLabel={title}
-      className={cn("article-section", className)}
+      className={cn('article-section', className)}
       {...props}
     >
       {children}
@@ -453,7 +439,7 @@ export function NavigationSection({
       landmark={true}
       role="navigation"
       ariaLabel="Navigation"
-      className={cn("navigation-section", className)}
+      className={cn('navigation-section', className)}
       {...props}
     >
       {children}
@@ -472,7 +458,7 @@ export function SidebarContent({
       landmark={true}
       role="complementary"
       ariaLabel="Sidebar"
-      className={cn("sidebar-content", className)}
+      className={cn('sidebar-content', className)}
       {...props}
     >
       {children}
@@ -491,7 +477,7 @@ export function ContentHeader({
       landmark={true}
       role="banner"
       ariaLabel="Page header"
-      className={cn("content-header", className)}
+      className={cn('content-header', className)}
       {...props}
     >
       {children}
@@ -510,7 +496,7 @@ export function ContentFooter({
       landmark={true}
       role="contentinfo"
       ariaLabel="Page footer"
-      className={cn("content-footer", className)}
+      className={cn('content-footer', className)}
       {...props}
     >
       {children}
@@ -527,7 +513,6 @@ export function MobileOptimizedHero({
   subtitle,
   backgroundImage,
   className,
-  ...props
 }: {
   children?: React.ReactNode;
   title: string;
@@ -543,8 +528,8 @@ export function MobileOptimizedHero({
       setIsMobile(window.innerWidth < 768);
     };
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const heroContent = (
@@ -560,9 +545,9 @@ export function MobileOptimizedHero({
     return (
       <section
         className={cn(
-          "hero-section mobile-optimized",
-          { "image-loaded": imageLoaded },
-          className,
+          'hero-section mobile-optimized',
+          { 'image-loaded': imageLoaded },
+          className
         )}
         role="banner"
         aria-label="Hero section"
@@ -581,7 +566,7 @@ export function MobileOptimizedHero({
         </div>
 
         {/* Progressive enhancement: Hide visual elements on very small screens */}
-        <div className={cn("hero-content-container", "progressive-hidden-xs")}>
+        <div className={cn('hero-content-container', 'progressive-hidden-xs')}>
           {heroContent}
         </div>
 
@@ -595,9 +580,9 @@ export function MobileOptimizedHero({
   return (
     <section
       className={cn(
-        "hero-section desktop-version",
-        { "image-loaded": imageLoaded },
-        className,
+        'hero-section desktop-version',
+        { 'image-loaded': imageLoaded },
+        className
       )}
       role="banner"
       aria-label="Hero section"

@@ -89,7 +89,7 @@ We have successfully implemented a comprehensive accessibility system for the Tr
 ### Basic Integration
 
 ```tsx
-import { AccessibilityTestingSuite } from "./components/accessibility/AccessibilityTestingSuite";
+import { AccessibilityTestingSuite } from './components/accessibility/AccessibilityTestingSuite';
 
 function App() {
   return <AccessibilityTestingSuite />;
@@ -99,10 +99,10 @@ function App() {
 ### Individual Component Usage
 
 ```tsx
-import { ScreenReaderTester } from "./components/accessibility/ScreenReaderTester";
-import { KeyboardNavigationTester } from "./components/accessibility/KeyboardNavigationTester";
-import { ColorContrastTester } from "./components/accessibility/ColorContrastTester";
-import { AriaLabelTester } from "./components/accessibility/AriaLabelTester";
+import { ScreenReaderTester } from './components/accessibility/ScreenReaderTester';
+import { KeyboardNavigationTester } from './components/accessibility/KeyboardNavigationTester';
+import { ColorContrastTester } from './components/accessibility/ColorContrastTester';
+import { AriaLabelTester } from './components/accessibility/AriaLabelTester';
 
 function AccessibilityPage() {
   return (
@@ -119,7 +119,7 @@ function AccessibilityPage() {
 ### Advanced Dashboard Integration
 
 ```tsx
-import { AdvancedAccessibilityDashboard } from "./components/accessibility/AdvancedAccessibilityDashboard";
+import { AdvancedAccessibilityDashboard } from './components/accessibility/AdvancedAccessibilityDashboard';
 
 function AdminPanel() {
   return <AdvancedAccessibilityDashboard />;
@@ -178,9 +178,9 @@ const accessibilityConfig = {
   },
   keyboard: {
     shortcuts: {
-      "trade.buy": "Ctrl+B",
-      "trade.sell": "Ctrl+S",
-      "trade.close": "Ctrl+C",
+      'trade.buy': 'Ctrl+B',
+      'trade.sell': 'Ctrl+S',
+      'trade.close': 'Ctrl+C',
     },
   },
   screenReader: {

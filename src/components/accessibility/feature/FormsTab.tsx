@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import type { TabComponentProps } from '../types';
+import type { FormData, TabComponentProps } from '../types';
 
 /**
  * FormsTab Component
@@ -17,10 +17,6 @@ export function FormsTab({
   errors: externalErrors,
   setErrors,
   inputRefs,
-  testResults,
-  setTestResults,
-  onValidateForm,
-  onUpdateForm,
   onAnnounceToScreenReader,
   onSubmitForm,
 }: TabComponentProps) {
@@ -52,7 +48,6 @@ export function FormsTab({
     handleSubmit,
     reset,
     formState: { errors },
-    control,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -90,8 +85,19 @@ export function FormsTab({
   }, [externalErrors]);
 
   const onSubmit = (values: FormValues) => {
-    // propagate validated values to parent
-    setFormData?.(values as FormValues);
+    // Build a well-typed FormData payload and propagate validated values to parent
+    const payload: FormData = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirmPassword: values.confirmPassword,
+      country: values.country,
+      bio: values.bio ?? '',
+      terms: values.terms,
+      newsletter: !!values.newsletter,
+    };
+
+    setFormData?.(payload);
 
     // clear any previous external errors
     setErrors?.({});
@@ -401,7 +407,7 @@ export function FormsTab({
                     {...rest}
                     ref={(el) => {
                       ref(el);
-                      if (inputRefs?.current)
+                      if (el && inputRefs?.current)
                         (
                           inputRefs.current as Record<string, HTMLElement>
                         ).terms = el;
@@ -450,7 +456,7 @@ export function FormsTab({
                     {...rest}
                     ref={(el) => {
                       ref(el);
-                      if (inputRefs?.current)
+                      if (el && inputRefs?.current)
                         (
                           inputRefs.current as Record<string, HTMLElement>
                         ).newsletter = el;

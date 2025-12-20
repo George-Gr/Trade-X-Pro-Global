@@ -3,7 +3,13 @@
  * Prevents DoS attacks, order spamming, and API cost overruns
  */
 
-import { logger } from "./logger";
+import { logger } from '@/lib/logger';
+
+export interface RateLimitStatus {
+  queueLength: number;
+  isProcessing: boolean;
+  endpoints: Record<string, { remaining: number; resetIn: number }>;
+}
 
 interface RateLimitConfig {
   maxRequests: number;
@@ -52,11 +58,11 @@ class RateLimiter {
 
     // Clean old requests outside the window
     this.requestHistory = this.requestHistory.filter(
-      (r) => r.endpoint === endpoint && now - r.timestamp < config.windowMs,
+      (r) => r.endpoint === endpoint && now - r.timestamp < config.windowMs
     );
 
     const recentRequests = this.requestHistory.filter(
-      (r) => r.endpoint === endpoint,
+      (r) => r.endpoint === endpoint
     );
     return recentRequests.length < config.maxRequests;
   }
@@ -80,7 +86,7 @@ class RateLimiter {
     const now = Date.now();
 
     const recentRequests = this.requestHistory.filter(
-      (r) => r.endpoint === endpoint && now - r.timestamp < config.windowMs,
+      (r) => r.endpoint === endpoint && now - r.timestamp < config.windowMs
     );
 
     return Math.max(0, config.maxRequests - recentRequests.length);
@@ -94,7 +100,7 @@ class RateLimiter {
     const now = Date.now();
 
     const endpointRequests = this.requestHistory.filter(
-      (r) => r.endpoint === endpoint,
+      (r) => r.endpoint === endpoint && now - r.timestamp < config.windowMs
     );
     if (endpointRequests.length === 0) return 0;
 
@@ -110,10 +116,12 @@ class RateLimiter {
   async execute<T>(
     endpoint: string,
     requestFn: () => Promise<T>,
-    priority: number = 5,
+    priority: number = 5
   ): Promise<T> {
     return new Promise((resolve, reject) => {
-      const id = `${endpoint}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const id = `${endpoint}-${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2)}`;
 
       const queuedRequest: QueuedRequest<T> = {
         id,
@@ -144,40 +152,64 @@ class RateLimiter {
     while (this.requestQueue.length > 0) {
       const request = this.requestQueue[0];
 
-      if (!this.canMakeRequest(request.endpoint)) {
-        const resetTime = this.getResetTime(request.endpoint);
-        logger.warn(
-          `Rate limit reached for ${request.endpoint}, waiting ${resetTime}ms`,
-        );
-
-        // Wait with progressive backoff
-        const waitTime = Math.min(resetTime, 1000 * this.backoffMultiplier);
-        await this.sleep(waitTime);
-        this.backoffMultiplier = Math.min(
-          this.backoffMultiplier * 2,
-          this.maxBackoffMultiplier,
-        );
-        continue;
-      }
-
-      // Reset backoff on successful request allowance
-      this.backoffMultiplier = 1;
-
       // Remove from queue
       this.requestQueue.shift();
 
+      if (!request) continue;
+
       try {
+        if (!this.canMakeRequest(request.endpoint)) {
+          const resetTime = this.getResetTime(request.endpoint);
+          logger.warn(
+            `Rate limit reached for ${request.endpoint}, waiting ${resetTime}ms`
+          );
+
+          // Wait with progressive backoff
+          const waitTime = Math.min(resetTime, 1000 * this.backoffMultiplier);
+          await this.sleep(waitTime);
+          this.backoffMultiplier = Math.min(
+            this.backoffMultiplier * 2,
+            this.maxBackoffMultiplier
+          );
+          continue;
+        }
+
+        // Record request BEFORE execution to prevent race conditions
+        // where multiple parallel requests could pass the check before any are recorded
         this.recordRequest(request.endpoint);
-        const result = await request.execute();
-        request.resolve(result);
+
+        try {
+          const result = await request.execute();
+          request.resolve(result);
+        } catch (error) {
+          // If request failed, we might want to "refund" the rate limit token
+          // depending on policy. For now, we'll keep it recorded as a consumed attempt
+          // to prevent spamming failed requests, coupled with the backoff below.
+
+          // However, the prompt specifically asked to "ensure you clean up the pending/provisional entry on errors"
+          // so we will remove the specific entry we just added.
+          const entryIndex = this.requestHistory.findIndex(
+            (r) =>
+              r.endpoint === request.endpoint &&
+              Math.abs(r.timestamp - Date.now()) < 5000 // fuzzy match recent
+          );
+          if (entryIndex !== -1) {
+            this.requestHistory.splice(entryIndex, 1);
+          }
+
+          // Apply backoff on failure
+          this.backoffMultiplier = Math.min(
+            this.backoffMultiplier * 2,
+            this.maxBackoffMultiplier
+          );
+          request.reject(
+            error instanceof Error ? error : new Error(String(error))
+          );
+        }
       } catch (error) {
-        // Apply backoff on failure
-        this.backoffMultiplier = Math.min(
-          this.backoffMultiplier * 2,
-          this.maxBackoffMultiplier,
-        );
+        // Handle any errors that occur outside the execution phase
         request.reject(
-          error instanceof Error ? error : new Error(String(error)),
+          error instanceof Error ? error : new Error(String(error))
         );
       }
 
@@ -196,16 +228,13 @@ class RateLimiter {
     return {
       queueLength: this.requestQueue.length,
       isProcessing: this.isProcessing,
-      endpoints: Object.keys(DEFAULT_LIMITS).reduce(
-        (acc, endpoint) => {
-          acc[endpoint] = {
-            remaining: this.getRemainingRequests(endpoint),
-            resetIn: this.getResetTime(endpoint),
-          };
-          return acc;
-        },
-        {} as Record<string, { remaining: number; resetIn: number }>,
-      ),
+      endpoints: Object.keys(DEFAULT_LIMITS).reduce((acc, endpoint) => {
+        acc[endpoint] = {
+          remaining: this.getRemainingRequests(endpoint),
+          resetIn: this.getResetTime(endpoint),
+        };
+        return acc;
+      }, {} as Record<string, { remaining: number; resetIn: number }>),
     };
   }
 
@@ -224,8 +253,9 @@ class RateLimiter {
 
   private getConfig(endpoint: string): RateLimitConfig {
     // Extract endpoint type from full endpoint path
-    const endpointType = endpoint.split("/")[0] || endpoint;
-    return DEFAULT_LIMITS[endpointType] || DEFAULT_LIMITS["default"];
+    const endpointType = endpoint.split('/')[0] || endpoint;
+    const config = DEFAULT_LIMITS[endpointType];
+    return config ?? DEFAULT_LIMITS['default']!;
   }
 
   private sleep(ms: number): Promise<void> {
@@ -241,12 +271,6 @@ class RateLimiter {
     this.isProcessing = false;
     this.backoffMultiplier = 1;
   }
-}
-
-export interface RateLimitStatus {
-  queueLength: number;
-  isProcessing: boolean;
-  endpoints: Record<string, { remaining: number; resetIn: number }>;
 }
 
 // Singleton instance

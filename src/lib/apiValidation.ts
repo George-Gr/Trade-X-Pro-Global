@@ -5,9 +5,9 @@
  * Ensures type safety and catches data inconsistencies early
  */
 
-import { z } from "zod";
-import { logger } from "./logger";
-import { reportError } from "./errorService";
+import { reportError } from '@/lib/errorService';
+import { logger } from '@/lib/logger';
+import { z } from 'zod';
 
 // Base schemas for common types
 const uuidSchema = z.string().uuid();
@@ -27,9 +27,9 @@ export const profileSchema = z.object({
   free_margin: z.number().nullable(),
   margin_level: z.number().nullable(),
   kyc_status: z
-    .enum(["pending", "approved", "rejected", "resubmitted"])
+    .enum(['pending', 'approved', 'rejected', 'resubmitted'])
     .nullable(),
-  account_status: z.enum(["active", "suspended", "closed"]).nullable(),
+  account_status: z.enum(['active', 'suspended', 'closed']).nullable(),
   country: z.string().nullable(),
   phone: z.string().nullable(),
   created_at: timestampSchema.nullable(),
@@ -41,14 +41,14 @@ export const positionSchema = z.object({
   id: uuidSchema,
   user_id: uuidSchema,
   symbol: z.string(),
-  side: z.enum(["buy", "sell"]),
+  side: z.enum(['buy', 'sell']),
   quantity: z.number().positive(),
   entry_price: z.number().positive(),
   current_price: z.number().nullable(),
   unrealized_pnl: z.number().nullable(),
   realized_pnl: z.number().nullable(),
   margin_used: z.number(),
-  status: z.enum(["open", "closed"]).nullable(),
+  status: z.enum(['open', 'closed']).nullable(),
   opened_at: timestampSchema.nullable(),
   closed_at: timestampSchema.nullable(),
   trailing_stop_enabled: z.boolean(),
@@ -63,15 +63,15 @@ export const orderSchema = z.object({
   id: uuidSchema,
   user_id: uuidSchema,
   symbol: z.string(),
-  order_type: z.enum(["market", "limit", "stop", "stop_limit"]),
-  side: z.enum(["buy", "sell"]),
+  order_type: z.enum(['market', 'limit', 'stop', 'stop_limit']),
+  side: z.enum(['buy', 'sell']),
   quantity: z.number().positive(),
   price: z.number().nullable(),
   fill_price: z.number().nullable(),
   stop_loss: z.number().nullable(),
   take_profit: z.number().nullable(),
   status: z
-    .enum(["pending", "filled", "partial", "cancelled", "rejected"])
+    .enum(['pending', 'filled', 'partial', 'cancelled', 'rejected'])
     .nullable(),
   commission: z.number().nullable(),
   idempotency_key: z.string(),
@@ -96,13 +96,13 @@ export const ledgerSchema = z.object({
   id: uuidSchema,
   user_id: uuidSchema,
   transaction_type: z.enum([
-    "deposit",
-    "withdrawal",
-    "commission",
-    "profit",
-    "loss",
-    "swap",
-    "adjustment",
+    'deposit',
+    'withdrawal',
+    'commission',
+    'profit',
+    'loss',
+    'swap',
+    'adjustment',
   ]),
   amount: z.number(),
   balance_before: z.number(),
@@ -185,7 +185,7 @@ export const closePositionResultSchema = z.object({
       entry_price: z.number(),
       exit_price: z.number(),
       pnl: z.number(),
-    }),
+    })
   ),
   position_status: z.string(),
 });
@@ -212,7 +212,7 @@ interface ValidationResult<T> {
 export function validateData<T>(
   schema: z.ZodType<T>,
   data: unknown,
-  context?: { source: string; userId?: string },
+  context?: { source: string; userId?: string }
 ): ValidationResult<T> {
   const result = schema.safeParse(data);
 
@@ -221,7 +221,7 @@ export function validateData<T>(
   }
 
   // Log validation errors
-  logger.warn("API response validation failed", {
+  logger.warn('API response validation failed', {
     metadata: {
       errors: result.error.errors,
       source: context?.source,
@@ -247,7 +247,7 @@ export function validateData<T>(
 export function validateWithFallback<T>(
   schema: z.ZodType<T>,
   data: unknown,
-  context?: { source: string; userId?: string },
+  context?: { source: string; userId?: string }
 ): T | null {
   const result = validateData(schema, data, context);
 
@@ -257,7 +257,7 @@ export function validateWithFallback<T>(
 
   // In development, still return data for easier debugging
   if (import.meta.env.DEV) {
-    logger.warn("Returning unvalidated data in dev mode", {
+    logger.warn('Returning unvalidated data in dev mode', {
       metadata: { source: context?.source },
     });
     return data as T;
@@ -272,7 +272,7 @@ export function validateWithFallback<T>(
 export function validateArrayPartial<T>(
   itemSchema: z.ZodType<T>,
   data: unknown[],
-  context?: { source: string; userId?: string },
+  context?: { source: string; userId?: string }
 ): T[] {
   const validItems: T[] = [];
   const invalidIndices: number[] = [];
@@ -287,7 +287,7 @@ export function validateArrayPartial<T>(
   });
 
   if (invalidIndices.length > 0) {
-    logger.warn("Some array items failed validation", {
+    logger.warn('Some array items failed validation', {
       metadata: {
         source: context?.source,
         invalidCount: invalidIndices.length,

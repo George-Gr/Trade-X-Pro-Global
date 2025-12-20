@@ -1,16 +1,22 @@
-import React from "react";
-import { SidebarErrorBoundary } from "@/components/ui/SidebarErrorBoundary";
+import {
+  useState,
+  type FC,
+  type ComponentType,
+  type ErrorInfo,
+  type ReactNode,
+} from 'react';
+import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
 
 /**
  * HOC to wrap components with sidebar error boundary
  */
 export const withSidebarErrorBoundary = <P extends {}>(
-  Component: React.ComponentType<P>,
+  Component: ComponentType<P>,
   options?: {
     enableLogging?: boolean;
-    fallback?: React.ComponentType<{ error?: Error; onRetry?: () => void }>;
-    onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  },
+    fallback?: ComponentType<{ error?: Error; onRetry?: () => void }>;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  }
 ) => {
   return function WithSidebarErrorBoundary(props: P) {
     return (
@@ -24,14 +30,14 @@ export const withSidebarErrorBoundary = <P extends {}>(
 /**
  * Error boundary specifically for navigation items
  */
-export const NavigationItemErrorBoundary: React.FC<{
-  children: React.ReactNode;
+export const NavigationItemErrorBoundary: FC<{
+  children: ReactNode;
   itemName: string;
   onError?: (error: Error, itemName: string) => void;
 }> = ({ children, itemName, onError }) => {
-  const [hasError, setHasError] = React.useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
+  const handleError = (error: Error, errorInfo: ErrorInfo) => {
     setHasError(true);
 
     // Log the specific navigation item error

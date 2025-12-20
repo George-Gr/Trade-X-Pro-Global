@@ -167,7 +167,7 @@ interface AccessibilityContextType {
 1. **Context Usage**: Use `useAccessibility()` hook in components
 
 ```tsx
-import { useAccessibility } from "@/contexts/AccessibilityContext";
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 const { visualPreferences, complianceScore } = useAccessibility();
 ```

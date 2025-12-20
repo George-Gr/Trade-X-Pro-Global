@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import { useRef, useState } from 'react';
 import {
-  useColorContrastVerification,
   useColorBlindMode,
+  useColorContrastVerification,
   useVisualAccessibilityPreferences,
-} from "../../lib/colorContrastVerification";
+} from '../../lib/colorContrastVerification';
 
 /**
  * Color Contrast Tester Component
@@ -15,10 +15,10 @@ import {
 /**
  * Union type for active test tabs
  */
-type ActiveTestKey = "compliance" | "simulation" | "preferences";
+type ActiveTestKey = 'compliance' | 'simulation' | 'preferences';
 
 interface TestResult {
-  type: "color_contrast" | "page_contrast" | "highlight" | "clear_highlight";
+  type: 'color_contrast' | 'page_contrast' | 'highlight' | 'clear_highlight';
   foreground?: string;
   background?: string;
   ratio?: string;
@@ -32,16 +32,16 @@ interface TestResult {
 type ColorContrastTesterProps = {};
 
 export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
-  const [activeTest, setActiveTest] = useState<ActiveTestKey>("compliance");
+  const [activeTest, setActiveTest] = useState<ActiveTestKey>('compliance');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [selectedColors, setSelectedColors] = useState({
-    foreground: "#000000",
-    background: "#ffffff",
+    foreground: '#000000',
+    background: '#ffffff',
   });
   const [customElement, setCustomElement] = useState({
-    text: "Sample Text",
+    text: 'Sample Text',
     fontSize: 16,
-    fontWeight: "normal",
+    fontWeight: 'normal',
   });
 
   const colorContrast = useColorContrastVerification();
@@ -57,10 +57,18 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
       if (!rgb) return 0;
 
       const { r, g, b } = rgb;
-      const [rs, gs, bs] = [r, g, b].map((c) => {
-        c = c / 255;
-        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-      });
+      const rs =
+        r / 255 <= 0.03928
+          ? r / 255 / 12.92
+          : Math.pow((r / 255 + 0.055) / 1.055, 2.4);
+      const gs =
+        g / 255 <= 0.03928
+          ? g / 255 / 12.92
+          : Math.pow((g / 255 + 0.055) / 1.055, 2.4);
+      const bs =
+        b / 255 <= 0.03928
+          ? b / 255 / 12.92
+          : Math.pow((b / 255 + 0.055) / 1.055, 2.4);
 
       return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
     };
@@ -69,9 +77,9 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
+            r: parseInt(result[1] ?? '0', 16),
+            g: parseInt(result[2] ?? '0', 16),
+            b: parseInt(result[3] ?? '0', 16),
           }
         : null;
     };
@@ -85,26 +93,26 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
   };
 
   const getContrastLevel = (ratio: number) => {
-    if (ratio >= 7) return "AAA";
-    if (ratio >= 4.5) return "AA";
-    if (ratio >= 3) return "AA Large";
-    return "Fail";
+    if (ratio >= 7) return 'AAA';
+    if (ratio >= 4.5) return 'AA';
+    if (ratio >= 3) return 'AA Large';
+    return 'Fail';
   };
 
   const testColorCombination = () => {
     const ratio = calculateContrast(
       selectedColors.foreground,
-      selectedColors.background,
+      selectedColors.background
     );
     const level = getContrastLevel(ratio);
 
     const result = {
-      type: "color_contrast" as const,
+      type: 'color_contrast' as const,
       foreground: selectedColors.foreground,
       background: selectedColors.background,
       ratio: ratio.toFixed(2),
       level,
-      passed: level !== "Fail",
+      passed: level !== 'Fail',
       timestamp: new Date().toLocaleTimeString(),
     };
 
@@ -112,7 +120,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
 
     // Announce result
     const message = `Contrast ratio ${ratio.toFixed(2)}:1, level ${level}`;
-    if ("speechSynthesis" in window) {
+    if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(message);
       speechSynthesis.speak(utterance);
     }
@@ -123,7 +131,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
     setTestResults((prev) => [
       ...prev,
       {
-        type: "page_contrast",
+        type: 'page_contrast',
         message: `Checked ${results.length} elements on page`,
         results: results,
         timestamp: new Date().toLocaleTimeString(),
@@ -136,8 +144,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
     setTestResults((prev) => [
       ...prev,
       {
-        type: "highlight",
-        message: "Highlighted failing elements on page",
+        type: 'highlight',
+        message: 'Highlighted failing elements on page',
         timestamp: new Date().toLocaleTimeString(),
       },
     ]);
@@ -148,8 +156,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
     setTestResults((prev) => [
       ...prev,
       {
-        type: "clear_highlight",
-        message: "Cleared highlights",
+        type: 'clear_highlight',
+        message: 'Cleared highlights',
         timestamp: new Date().toLocaleTimeString(),
       },
     ]);
@@ -161,50 +169,50 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
 
   const sampleColorCombinations = [
     {
-      name: "Dark Text on Light Background",
-      fg: "#000000",
-      bg: "#ffffff",
-      expected: "AAA",
+      name: 'Dark Text on Light Background',
+      fg: '#000000',
+      bg: '#ffffff',
+      expected: 'AAA',
     },
     {
-      name: "Light Text on Dark Background",
-      fg: "#ffffff",
-      bg: "#000000",
-      expected: "AAA",
+      name: 'Light Text on Dark Background',
+      fg: '#ffffff',
+      bg: '#000000',
+      expected: 'AAA',
     },
     {
-      name: "Gray Text on White",
-      fg: "#666666",
-      bg: "#ffffff",
-      expected: "AA",
+      name: 'Gray Text on White',
+      fg: '#666666',
+      bg: '#ffffff',
+      expected: 'AA',
     },
     {
-      name: "Blue Link on White",
-      fg: "#1976d2",
-      bg: "#ffffff",
-      expected: "AA",
+      name: 'Blue Link on White',
+      fg: '#1976d2',
+      bg: '#ffffff',
+      expected: 'AA',
     },
-    { name: "Red Error Text", fg: "#d32f2f", bg: "#ffffff", expected: "AA" },
+    { name: 'Red Error Text', fg: '#d32f2f', bg: '#ffffff', expected: 'AA' },
     {
-      name: "Green Success Text",
-      fg: "#2e7d32",
-      bg: "#ffffff",
-      expected: "AA",
-    },
-    {
-      name: "Orange Warning Text",
-      fg: "#ef6c00",
-      bg: "#ffffff",
-      expected: "AA",
+      name: 'Green Success Text',
+      fg: '#2e7d32',
+      bg: '#ffffff',
+      expected: 'AA',
     },
     {
-      name: "Purple Accent Text",
-      fg: "#7b1fa2",
-      bg: "#ffffff",
-      expected: "AA",
+      name: 'Orange Warning Text',
+      fg: '#ef6c00',
+      bg: '#ffffff',
+      expected: 'AA',
     },
-    { name: "Teal Info Text", fg: "#00695c", bg: "#ffffff", expected: "AA" },
-    { name: "Brown Text", fg: "#5d4037", bg: "#ffffff", expected: "AA" },
+    {
+      name: 'Purple Accent Text',
+      fg: '#7b1fa2',
+      bg: '#ffffff',
+      expected: 'AA',
+    },
+    { name: 'Teal Info Text', fg: '#00695c', bg: '#ffffff', expected: 'AA' },
+    { name: 'Brown Text', fg: '#5d4037', bg: '#ffffff', expected: 'AA' },
   ];
 
   return (
@@ -243,17 +251,17 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
       <div className="border-b">
         <div className="flex space-x-8">
           {[
-            { key: "compliance" as const, label: "WCAG Compliance" },
-            { key: "simulation" as const, label: "Color Blind Simulation" },
-            { key: "preferences" as const, label: "Visual Preferences" },
+            { key: 'compliance' as const, label: 'WCAG Compliance' },
+            { key: 'simulation' as const, label: 'Color Blind Simulation' },
+            { key: 'preferences' as const, label: 'Visual Preferences' },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTest(tab.key)}
               className={`py-4 px-2 border-b-2 font-medium text-sm ${
                 activeTest === tab.key
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               {tab.label}
@@ -264,7 +272,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
 
       {/* Tab Content */}
       <div className="space-y-6">
-        {activeTest === "compliance" && (
+        {activeTest === 'compliance' && (
           <div className="space-y-6">
             {/* Color Picker */}
             <div className="bg-card rounded-lg p-6 border">
@@ -414,7 +422,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                 {sampleColorCombinations.map((combo, index) => {
                   const ratio = calculateContrast(combo.fg, combo.bg);
                   const level = getContrastLevel(ratio);
-                  const passed = level !== "Fail";
+                  const passed = level !== 'Fail';
 
                   return (
                     <div key={index} className="p-4 border rounded">
@@ -423,7 +431,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                         style={{
                           backgroundColor: combo.bg,
                           color: combo.fg,
-                          border: "1px solid #e5e7eb",
+                          border: '1px solid #e5e7eb',
                         }}
                       >
                         <p className="font-semibold">{combo.name}</p>
@@ -439,11 +447,11 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                         <span
                           className={`px-2 py-1 rounded text-xs font-medium ${
                             passed
-                              ? "bg-green-200 text-green-800"
-                              : "bg-red-200 text-red-800"
+                              ? 'bg-green-200 text-green-800'
+                              : 'bg-red-200 text-red-800'
                           }`}
                         >
-                          {passed ? "PASS" : "FAIL"}
+                          {passed ? 'PASS' : 'FAIL'}
                         </span>
                       </div>
 
@@ -467,7 +475,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
           </div>
         )}
 
-        {activeTest === "simulation" && (
+        {activeTest === 'simulation' && (
           <div className="space-y-6">
             {/* Color Blind Simulation */}
             <div className="bg-card rounded-lg p-6 border">
@@ -497,10 +505,10 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                         onChange={(e) =>
                           colorBlindMode.applyColorBlindSimulation({
                             type: e.target.value as
-                              | "none"
-                              | "deuteranopia"
-                              | "protanopia"
-                              | "tritanopia",
+                              | 'none'
+                              | 'deuteranopia'
+                              | 'protanopia'
+                              | 'tritanopia',
                             intensity: colorBlindMode.colorBlindMode.intensity,
                           })
                         }
@@ -539,7 +547,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                   <button
                     onClick={() =>
                       colorBlindMode.applyColorBlindSimulation({
-                        type: "none",
+                        type: 'none',
                         intensity: 0,
                       })
                     }
@@ -635,7 +643,7 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
           </div>
         )}
 
-        {activeTest === "preferences" && (
+        {activeTest === 'preferences' && (
           <div className="space-y-6">
             {/* Visual Preferences */}
             <div className="bg-card rounded-lg p-6 border">
@@ -656,8 +664,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                     checked={visualPreferences.preferences.highContrast}
                     onChange={(e) =>
                       visualPreferences.updatePreference(
-                        "highContrast",
-                        e.target.checked,
+                        'highContrast',
+                        e.target.checked
                       )
                     }
                     className="text-blue-600"
@@ -676,8 +684,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                     checked={visualPreferences.preferences.reduceMotion}
                     onChange={(e) =>
                       visualPreferences.updatePreference(
-                        "reduceMotion",
-                        e.target.checked,
+                        'reduceMotion',
+                        e.target.checked
                       )
                     }
                     className="text-blue-600"
@@ -696,8 +704,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                     checked={visualPreferences.preferences.largerText}
                     onChange={(e) =>
                       visualPreferences.updatePreference(
-                        "largerText",
-                        e.target.checked,
+                        'largerText',
+                        e.target.checked
                       )
                     }
                     className="text-blue-600"
@@ -716,8 +724,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                     checked={visualPreferences.preferences.focusIndicator}
                     onChange={(e) =>
                       visualPreferences.updatePreference(
-                        "focusIndicator",
-                        e.target.checked,
+                        'focusIndicator',
+                        e.target.checked
                       )
                     }
                     className="text-blue-600"
@@ -736,8 +744,8 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
                     checked={visualPreferences.preferences.readingGuide}
                     onChange={(e) =>
                       visualPreferences.updatePreference(
-                        "readingGuide",
-                        e.target.checked,
+                        'readingGuide',
+                        e.target.checked
                       )
                     }
                     className="text-blue-600"
@@ -832,29 +840,29 @@ export const ColorContrastTester: React.FC<ColorContrastTesterProps> = () => {
               <div
                 key={index}
                 className={`p-4 rounded-lg border ${
-                  result.type === "color_contrast"
+                  result.type === 'color_contrast'
                     ? result.passed
-                      ? "bg-green-50 border-green-200"
-                      : "bg-red-50 border-red-200"
-                    : "bg-blue-50 border-blue-200"
+                      ? 'bg-green-50 border-green-200'
+                      : 'bg-red-50 border-red-200'
+                    : 'bg-blue-50 border-blue-200'
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-semibold">
-                      {result.type.replace("_", " ").toUpperCase()}
+                      {result.type.replace('_', ' ').toUpperCase()}
                     </h4>
-                    {result.type === "color_contrast" ? (
+                    {result.type === 'color_contrast' ? (
                       <div className="text-sm text-muted-foreground mt-1">
                         <p>
-                          Foreground: {result.foreground} | Background:{" "}
+                          Foreground: {result.foreground} | Background:{' '}
                           {result.background}
                         </p>
                         <p>
                           Ratio: {result.ratio}:1 | Level: {result.level}
                         </p>
                         <p>
-                          {result.passed ? "✓ PASSED" : "✗ FAILED"} WCAG
+                          {result.passed ? '✓ PASSED' : '✗ FAILED'} WCAG
                           compliance
                         </p>
                       </div>

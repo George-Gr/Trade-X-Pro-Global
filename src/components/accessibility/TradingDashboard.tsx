@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useTradingKeyboardShortcuts } from "@/lib/tradingKeyboardNavigation";
-import { useColorContrastVerification } from "@/lib/colorContrastVerification";
-import { useAccessibility } from "@/contexts/AccessibilityContext";
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { useColorContrastVerification } from '@/lib/colorContrastVerification';
+import { useTradingKeyboardShortcuts } from '@/lib/tradingKeyboardNavigation';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Type definitions for market data
  */
-export type MarketSymbol = "AAPL" | "MSFT" | "GOOGL" | "AMZN" | "TSLA";
+export type MarketSymbol = 'AAPL' | 'MSFT' | 'GOOGL' | 'AMZN' | 'TSLA';
 export type MarketData = Record<
   MarketSymbol,
   { price: number; change: number; changePercent: number }
@@ -21,9 +21,9 @@ export type MarketData = Record<
 
 export function TradingDashboard() {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "positions" | "orders" | "charts"
-  >("overview");
-  const [selectedSymbol, setSelectedSymbol] = useState<MarketSymbol>("AAPL");
+    'overview' | 'positions' | 'orders' | 'charts'
+  >('overview');
+  const [selectedSymbol, setSelectedSymbol] = useState<MarketSymbol>('AAPL');
   const [isLive, setIsLive] = useState(true);
   const [refreshCount, setRefreshCount] = useState(0);
 
@@ -38,35 +38,35 @@ export function TradingDashboard() {
     dailyChange: 1250,
     positions: [
       {
-        symbol: "AAPL",
+        symbol: 'AAPL',
         quantity: 100,
         avgPrice: 150.25,
         currentPrice: 150.75,
         value: 15075,
       },
       {
-        symbol: "MSFT",
+        symbol: 'MSFT',
         quantity: 50,
         avgPrice: 300.0,
         currentPrice: 302.5,
         value: 15125,
       },
       {
-        symbol: "GOOGL",
+        symbol: 'GOOGL',
         quantity: 25,
         avgPrice: 2800.0,
         currentPrice: 2795.0,
         value: 69875,
       },
       {
-        symbol: "AMZN",
+        symbol: 'AMZN',
         quantity: 30,
         avgPrice: 175.0,
         currentPrice: 177.5,
         value: 5325,
       },
       {
-        symbol: "TSLA",
+        symbol: 'TSLA',
         quantity: 20,
         avgPrice: 250.0,
         currentPrice: 248.75,
@@ -75,31 +75,31 @@ export function TradingDashboard() {
     ],
     recentOrders: [
       {
-        id: "ORD001",
-        symbol: "AAPL",
-        type: "Buy",
+        id: 'ORD001',
+        symbol: 'AAPL',
+        type: 'Buy',
         quantity: 100,
         price: 150.25,
-        status: "Filled",
-        time: "10:30 AM",
+        status: 'Filled',
+        time: '10:30 AM',
       },
       {
-        id: "ORD002",
-        symbol: "MSFT",
-        type: "Sell",
+        id: 'ORD002',
+        symbol: 'MSFT',
+        type: 'Sell',
         quantity: 50,
         price: 302.5,
-        status: "Filled",
-        time: "10:15 AM",
+        status: 'Filled',
+        time: '10:15 AM',
       },
       {
-        id: "ORD003",
-        symbol: "GOOGL",
-        type: "Buy",
+        id: 'ORD003',
+        symbol: 'GOOGL',
+        type: 'Buy',
         quantity: 25,
         price: 2800.0,
-        status: "Pending",
-        time: "09:45 AM",
+        status: 'Pending',
+        time: '09:45 AM',
       },
     ],
   };
@@ -126,7 +126,7 @@ export function TradingDashboard() {
           curr.change = change;
           curr.changePercent = (change / (newPrice - change)) * 100;
           curr.price = newPrice;
-        },
+        }
       );
 
       setRefreshCount((prev) => prev + 1);
@@ -136,23 +136,23 @@ export function TradingDashboard() {
   }, [isLive]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
     }).format(amount);
   };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat("en-US").format(num);
+    return new Intl.NumberFormat('en-US').format(num);
   };
 
   const getChangeColor = (change: number) => {
-    return change >= 0 ? "text-green-600" : "text-red-600";
+    return change >= 0 ? 'text-green-600' : 'text-red-600';
   };
 
   const getChangeArrow = (change: number) => {
-    return change >= 0 ? "▲" : "▼";
+    return change >= 0 ? '▲' : '▼';
   };
 
   return (
@@ -174,14 +174,14 @@ export function TradingDashboard() {
           <button
             onClick={() => setIsLive((prev) => !prev)}
             className={`px-4 py-2 rounded-lg font-medium ${
-              isLive ? "bg-green-500 text-white" : "bg-gray-500 text-white"
+              isLive ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'
             }`}
             aria-pressed={isLive}
             aria-label={
-              isLive ? "Live updates enabled" : "Live updates disabled"
+              isLive ? 'Live updates enabled' : 'Live updates disabled'
             }
           >
-            {isLive ? "Live: ON" : "Live: OFF"}
+            {isLive ? 'Live: ON' : 'Live: OFF'}
           </button>
 
           <button
@@ -205,33 +205,33 @@ export function TradingDashboard() {
             <span
               className={`px-3 py-1 rounded-full text-sm font-medium ${
                 screenReaderEnabled
-                  ? "bg-green-100 text-green-800"
-                  : "bg-gray-100 text-gray-800"
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-gray-100 text-gray-800'
               }`}
             >
-              {screenReaderEnabled ? "Screen Reader: ON" : "Screen Reader: OFF"}
+              {screenReaderEnabled ? 'Screen Reader: ON' : 'Screen Reader: OFF'}
             </span>
             <span
               className={`px-3 py-1 rounded-full text-sm font-medium ${
                 visualPreferences.preferences.highContrast
-                  ? "bg-purple-100 text-purple-800"
-                  : "bg-gray-100 text-gray-800"
+                  ? 'bg-purple-100 text-purple-800'
+                  : 'bg-gray-100 text-gray-800'
               }`}
             >
               {visualPreferences.preferences.highContrast
-                ? "High Contrast: ON"
-                : "High Contrast: OFF"}
+                ? 'High Contrast: ON'
+                : 'High Contrast: OFF'}
             </span>
             <span
               className={`px-3 py-1 rounded-full text-sm font-medium ${
                 visualPreferences.preferences.largerText
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-gray-100 text-gray-800"
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-gray-100 text-gray-800'
               }`}
             >
               {visualPreferences.preferences.largerText
-                ? "Larger Text: ON"
-                : "Larger Text: OFF"}
+                ? 'Larger Text: ON'
+                : 'Larger Text: OFF'}
             </span>
           </div>
           <div className="text-sm text-muted-foreground">
@@ -250,9 +250,11 @@ export function TradingDashboard() {
             {formatCurrency(portfolioData.totalValue)}
           </p>
           <p
-            className={`text-sm mt-2 ${getChangeColor(portfolioData.dailyChange)}`}
+            className={`text-sm mt-2 ${getChangeColor(
+              portfolioData.dailyChange
+            )}`}
           >
-            {getChangeArrow(portfolioData.dailyChange)}{" "}
+            {getChangeArrow(portfolioData.dailyChange)}{' '}
             {formatCurrency(portfolioData.dailyChange)} today
           </p>
         </div>
@@ -282,20 +284,20 @@ export function TradingDashboard() {
       <div className="border-b">
         <div className="flex space-x-8 overflow-x-auto">
           {[
-            { key: "overview", label: "Overview", icon: "📊" },
-            { key: "positions", label: "Positions", icon: "💼" },
-            { key: "orders", label: "Orders", icon: "📋" },
-            { key: "charts", label: "Charts", icon: "📈" },
+            { key: 'overview', label: 'Overview', icon: '📊' },
+            { key: 'positions', label: 'Positions', icon: '💼' },
+            { key: 'orders', label: 'Orders', icon: '📋' },
+            { key: 'charts', label: 'Charts', icon: '📈' },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={`py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
                 activeTab === tab.key
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
-              aria-current={activeTab === tab.key ? "page" : undefined}
+              aria-current={activeTab === tab.key ? 'page' : undefined}
             >
               <span className="mr-2" aria-hidden="true">
                 {tab.icon}
@@ -308,7 +310,7 @@ export function TradingDashboard() {
 
       {/* Tab Content */}
       <div className="space-y-6">
-        {activeTab === "overview" && (
+        {activeTab === 'overview' && (
           <div className="space-y-6">
             {/* Market Overview */}
             <div className="bg-card rounded-lg p-6 border">
@@ -338,33 +340,39 @@ export function TradingDashboard() {
                             <div>
                               <div className="font-semibold">{symbol}</div>
                               <div className="text-sm text-muted-foreground">
-                                {symbol === "AAPL"
-                                  ? "Apple Inc."
-                                  : symbol === "MSFT"
-                                    ? "Microsoft Corporation"
-                                    : symbol === "GOOGL"
-                                      ? "Alphabet Inc."
-                                      : symbol === "AMZN"
-                                        ? "Amazon.com, Inc."
-                                        : "Tesla, Inc."}
+                                {symbol === 'AAPL'
+                                  ? 'Apple Inc.'
+                                  : symbol === 'MSFT'
+                                  ? 'Microsoft Corporation'
+                                  : symbol === 'GOOGL'
+                                  ? 'Alphabet Inc.'
+                                  : symbol === 'AMZN'
+                                  ? 'Amazon.com, Inc.'
+                                  : 'Tesla, Inc.'}
                               </div>
                             </div>
                           </td>
                           <td
-                            className={`py-3 text-right font-semibold ${getChangeColor(data.change)}`}
+                            className={`py-3 text-right font-semibold ${getChangeColor(
+                              data.change
+                            )}`}
                           >
                             {formatCurrency(data.price)}
                           </td>
                           <td
-                            className={`py-3 text-right ${getChangeColor(data.change)}`}
+                            className={`py-3 text-right ${getChangeColor(
+                              data.change
+                            )}`}
                           >
-                            {getChangeArrow(data.change)}{" "}
+                            {getChangeArrow(data.change)}{' '}
                             {formatCurrency(Math.abs(data.change))}
                           </td>
                           <td
-                            className={`py-3 text-right ${getChangeColor(data.change)}`}
+                            className={`py-3 text-right ${getChangeColor(
+                              data.change
+                            )}`}
                           >
-                            {getChangeArrow(data.change)}{" "}
+                            {getChangeArrow(data.change)}{' '}
                             {Math.abs(data.changePercent).toFixed(2)}%
                           </td>
                           <td className="py-3 text-right">
@@ -390,7 +398,7 @@ export function TradingDashboard() {
                             </div>
                           </td>
                         </tr>
-                      ),
+                      )
                     )}
                   </tbody>
                 </table>
@@ -430,7 +438,7 @@ export function TradingDashboard() {
           </div>
         )}
 
-        {activeTab === "positions" && (
+        {activeTab === 'positions' && (
           <div className="space-y-6">
             {/* Open Positions */}
             <div className="bg-card rounded-lg p-6 border">
@@ -487,9 +495,11 @@ export function TradingDashboard() {
                             {formatCurrency(position.value)}
                           </td>
                           <td
-                            className={`py-3 text-right ${pnl >= 0 ? "text-green-600" : "text-red-600"}`}
+                            className={`py-3 text-right ${
+                              pnl >= 0 ? 'text-green-600' : 'text-red-600'
+                            }`}
                           >
-                            {pnl >= 0 ? "▲" : "▼"}{" "}
+                            {pnl >= 0 ? '▲' : '▼'}{' '}
                             {formatCurrency(Math.abs(pnl))} (
                             {Math.abs(pnlPercent).toFixed(2)}%)
                           </td>
@@ -519,7 +529,7 @@ export function TradingDashboard() {
           </div>
         )}
 
-        {activeTab === "orders" && (
+        {activeTab === 'orders' && (
           <div className="space-y-6">
             {/* Recent Orders */}
             <div className="bg-card rounded-lg p-6 border">
@@ -551,9 +561,9 @@ export function TradingDashboard() {
                         <td className="py-3 font-semibold">{order.symbol}</td>
                         <td
                           className={`py-3 ${
-                            order.type === "Buy"
-                              ? "text-green-600"
-                              : "text-red-600"
+                            order.type === 'Buy'
+                              ? 'text-green-600'
+                              : 'text-red-600'
                           }`}
                         >
                           {order.type}
@@ -567,11 +577,11 @@ export function TradingDashboard() {
                         <td className="py-3">
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium ${
-                              order.status === "Filled"
-                                ? "bg-green-100 text-green-800"
-                                : order.status === "Pending"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-red-100 text-red-800"
+                              order.status === 'Filled'
+                                ? 'bg-green-100 text-green-800'
+                                : order.status === 'Pending'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-red-100 text-red-800'
                             }`}
                           >
                             {order.status}
@@ -595,7 +605,7 @@ export function TradingDashboard() {
           </div>
         )}
 
-        {activeTab === "charts" && (
+        {activeTab === 'charts' && (
           <div className="space-y-6">
             {/* Chart Controls */}
             <div className="bg-card rounded-lg p-6 border">
@@ -615,7 +625,7 @@ export function TradingDashboard() {
                         <option key={symbol} value={symbol}>
                           {symbol}
                         </option>
-                      ),
+                      )
                     )}
                   </select>
                   <button className="px-4 py-2 bg-blue-500 text-white rounded-lg">
@@ -638,21 +648,23 @@ export function TradingDashboard() {
                   <div className="text-right">
                     <p className="font-semibold">
                       {formatCurrency(
-                        marketDataRef.current[selectedSymbol].price,
+                        marketDataRef.current[selectedSymbol].price
                       )}
                     </p>
                     <p
-                      className={`text-sm ${getChangeColor(marketDataRef.current[selectedSymbol].change)}`}
+                      className={`text-sm ${getChangeColor(
+                        marketDataRef.current[selectedSymbol].change
+                      )}`}
                     >
                       {getChangeArrow(
-                        marketDataRef.current[selectedSymbol].change,
-                      )}{" "}
+                        marketDataRef.current[selectedSymbol].change
+                      )}{' '}
                       {formatCurrency(
-                        Math.abs(marketDataRef.current[selectedSymbol].change),
-                      )}{" "}
+                        Math.abs(marketDataRef.current[selectedSymbol].change)
+                      )}{' '}
                       (
                       {Math.abs(
-                        marketDataRef.current[selectedSymbol].changePercent,
+                        marketDataRef.current[selectedSymbol].changePercent
                       ).toFixed(2)}
                       %)
                     </p>
@@ -665,7 +677,7 @@ export function TradingDashboard() {
                     <div key={i} className="flex items-center space-x-4">
                       <span className="text-xs text-muted-foreground w-12">
                         {Math.round(
-                          marketDataRef.current[selectedSymbol].price - 5 + i,
+                          marketDataRef.current[selectedSymbol].price - 5 + i
                         )}
                       </span>
                       <div className="flex-1 bg-gray-200 rounded-full h-2">
@@ -693,19 +705,24 @@ export function TradingDashboard() {
       <div className="bg-card rounded-lg p-6 border">
         <h3 className="font-semibold mb-4">Keyboard Shortcuts</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {keyboardShortcuts.shortcuts.map((shortcut, index) => (
-            <div key={index} className="p-4 border rounded">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold">{shortcut.description}</span>
-                <span className="px-2 py-1 bg-blue-600 text-white rounded text-sm font-mono">
-                  {shortcut.key}
-                </span>
+          {keyboardShortcuts.shortcuts.map(
+            (
+              shortcut: { description: string; key: string; category: string },
+              index: number
+            ) => (
+              <div key={index} className="p-4 border rounded">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold">{shortcut.description}</span>
+                  <span className="px-2 py-1 bg-blue-600 text-white rounded text-sm font-mono">
+                    {shortcut.key}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {shortcut.category}
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {shortcut.category}
-              </p>
-            </div>
-          ))}
+            )
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Advanced Accessibility System for TradeX Pro
@@ -22,7 +22,7 @@ interface ScreenReaderTest extends Record<string, unknown> {
   name: string;
   description: string;
   testFn: () => boolean;
-  priority: "high" | "medium" | "low";
+  priority: 'high' | 'medium' | 'low';
 }
 
 export function useScreenReaderTesting() {
@@ -85,11 +85,11 @@ export function useLiveRegion() {
   useEffect(() => {
     // Create live region if it doesn't exist
     if (!liveRegionRef.current) {
-      const liveRegion = document.createElement("div");
-      liveRegion.setAttribute("aria-live", "polite");
-      liveRegion.setAttribute("aria-atomic", "true");
-      liveRegion.className = "sr-only";
-      liveRegion.id = "accessibility-live-region";
+      const liveRegion = document.createElement('div');
+      liveRegion.setAttribute('aria-live', 'polite');
+      liveRegion.setAttribute('aria-atomic', 'true');
+      liveRegion.className = 'sr-only';
+      liveRegion.id = 'accessibility-live-region';
       document.body.appendChild(liveRegion);
       liveRegionRef.current = liveRegion;
     }
@@ -106,9 +106,9 @@ export function useLiveRegion() {
   }, []);
 
   const announce = useCallback(
-    (message: string, priority: "polite" | "assertive" = "polite") => {
+    (message: string, priority: 'polite' | 'assertive' = 'polite') => {
       if (liveRegionRef.current) {
-        liveRegionRef.current.setAttribute("aria-live", priority);
+        liveRegionRef.current.setAttribute('aria-live', priority);
         liveRegionRef.current.textContent = message;
         // Clear any existing timeout
         if (timeoutRef.current !== null) {
@@ -117,34 +117,34 @@ export function useLiveRegion() {
         }
         timeoutRef.current = window.setTimeout(() => {
           if (liveRegionRef.current) {
-            liveRegionRef.current.textContent = "";
+            liveRegionRef.current.textContent = '';
           }
           timeoutRef.current = null;
         }, 1000);
       }
     },
-    [],
+    []
   );
 
   const announceError = useCallback(
     (message: string) => {
-      announce(`Error: ${message}`, "assertive");
+      announce(`Error: ${message}`, 'assertive');
     },
-    [announce],
+    [announce]
   );
 
   const announceSuccess = useCallback(
     (message: string) => {
-      announce(`Success: ${message}`, "polite");
+      announce(`Success: ${message}`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceLoading = useCallback(
     (message: string) => {
-      announce(`Loading: ${message}`, "polite");
+      announce(`Loading: ${message}`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   return {
@@ -166,7 +166,7 @@ export function useHeadingHierarchy() {
   useEffect(() => {
     const updateHeadings = () => {
       const headingElements = Array.from(
-        document.querySelectorAll("h1, h2, h3, h4, h5, h6"),
+        document.querySelectorAll('h1, h2, h3, h4, h5, h6')
       ) as HTMLHeadingElement[];
 
       setHeadings(headingElements);
@@ -181,7 +181,9 @@ export function useHeadingHierarchy() {
         // Check for proper hierarchy
         if (currentLevel > expectedLevel + 1) {
           issues.push(
-            `Heading level ${currentLevel} at position ${index + 1} skips level ${expectedLevel + 1}`,
+            `Heading level ${currentLevel} at position ${
+              index + 1
+            } skips level ${expectedLevel + 1}`
           );
         }
 
@@ -193,12 +195,12 @@ export function useHeadingHierarchy() {
     };
 
     updateHeadings();
-    window.addEventListener("load", updateHeadings);
+    window.addEventListener('load', updateHeadings);
     const observer = new MutationObserver(updateHeadings);
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      window.removeEventListener("load", updateHeadings);
+      window.removeEventListener('load', updateHeadings);
       observer.disconnect();
     };
   }, []);
@@ -214,7 +216,7 @@ export function useHeadingHierarchy() {
           acc[level] = (acc[level] || 0) + 1;
           return acc;
         },
-        {} as Record<number, number>,
+        {} as Record<number, number>
       );
 
       return stats;
@@ -241,10 +243,10 @@ export function useKeyboardNavigation() {
       });
     };
 
-    document.addEventListener("focus", handleFocus, true);
+    document.addEventListener('focus', handleFocus, true);
 
     return () => {
-      document.removeEventListener("focus", handleFocus, true);
+      document.removeEventListener('focus', handleFocus, true);
     };
   }, []);
 
@@ -254,21 +256,21 @@ export function useKeyboardNavigation() {
 
       return Array.from(
         root.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        ),
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
       ).filter((element) => {
         const style = window.getComputedStyle(element);
-        return style.display !== "none" && style.visibility !== "hidden";
+        return style.display !== 'none' && style.visibility !== 'hidden';
       }) as HTMLElement[];
     },
-    [],
+    []
   );
 
   const focusNext = useCallback(
     (container?: HTMLElement) => {
       const focusable = getFocusableElements(container);
       const currentIndex = focusable.indexOf(
-        document.activeElement as HTMLElement,
+        document.activeElement as HTMLElement
       );
 
       if (currentIndex >= 0 && currentIndex < focusable.length - 1) {
@@ -277,21 +279,21 @@ export function useKeyboardNavigation() {
         focusable[0].focus();
       }
     },
-    [getFocusableElements],
+    [getFocusableElements]
   );
 
   const focusPrevious = useCallback(
     (container?: HTMLElement) => {
       const focusable = getFocusableElements(container);
       const currentIndex = focusable.indexOf(
-        document.activeElement as HTMLElement,
+        document.activeElement as HTMLElement
       );
 
       if (currentIndex > 0) {
         focusable[currentIndex - 1].focus();
       }
     },
-    [getFocusableElements],
+    [getFocusableElements]
   );
 
   const focusFirst = useCallback(
@@ -301,17 +303,17 @@ export function useKeyboardNavigation() {
         focusable[0].focus();
       }
     },
-    [getFocusableElements],
+    [getFocusableElements]
   );
 
   const focusLast = useCallback(
     (container?: HTMLElement) => {
       const focusable = getFocusableElements(container);
       if (focusable.length > 0) {
-        focusable[focusable.length - 1].focus();
+        focusable[focusable.length - 1]?.focus();
       }
     },
-    [getFocusableElements],
+    [getFocusableElements]
   );
 
   return {
@@ -338,13 +340,13 @@ export function useColorContrast() {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
+            r: parseInt(result[1] ?? '0', 16),
+            g: parseInt(result[2] ?? '0', 16),
+            b: parseInt(result[3] ?? '0', 16),
           }
         : null;
     },
-    [],
+    []
   );
 
   const getLuminance = useCallback(
@@ -355,7 +357,7 @@ export function useColorContrast() {
       });
       return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
     },
-    [],
+    []
   );
 
   const getContrastRatio = useCallback(
@@ -373,7 +375,7 @@ export function useColorContrast() {
 
       return (brightest + 0.05) / (darkest + 0.05);
     },
-    [hexToRgb, getLuminance],
+    [hexToRgb, getLuminance]
   );
 
   const rgbToHex = useCallback((rgb: string): string | null => {
@@ -381,14 +383,14 @@ export function useColorContrast() {
     if (!result || result.length < 3) return null;
 
     return (
-      "#" +
+      '#' +
       result
         .slice(0, 3)
         .map((x) => {
           const hex = parseInt(x).toString(16);
-          return hex.length === 1 ? "0" + hex : hex;
+          return hex.length === 1 ? '0' + hex : hex;
         })
-        .join("")
+        .join('')
     );
   }, []);
 
@@ -407,12 +409,12 @@ export function useColorContrast() {
       const ratio = getContrastRatio(colorHex, bgHex);
       return ratio;
     },
-    [getContrastRatio, rgbToHex],
+    [getContrastRatio, rgbToHex]
   );
 
   const checkPageContrast = useCallback(() => {
     const textElements = document.querySelectorAll(
-      "p, h1, h2, h3, h4, h5, h6, span, div, a, button",
+      'p, h1, h2, h3, h4, h5, h6, span, div, a, button'
     );
     const results: Record<string, number> = {};
 
@@ -426,9 +428,9 @@ export function useColorContrast() {
   }, [checkElementContrast]);
 
   const getContrastStatus = useCallback((ratio: number) => {
-    if (ratio >= 4.5) return "wcag-aa";
-    if (ratio >= 3) return "wcag-a";
-    return "fail";
+    if (ratio >= 4.5) return 'wcag-aa';
+    if (ratio >= 3) return 'wcag-a';
+    return 'fail';
   }, []);
 
   return {
@@ -459,7 +461,7 @@ export function useAriaLabels() {
   useEffect(() => {
     const checkAriaLabels = () => {
       const interactiveElements = document.querySelectorAll(
-        'button, input, textarea, select, a, [role="button"], [role="link"], [role="textbox"]',
+        'button, input, textarea, select, a, [role="button"], [role="link"], [role="textbox"]'
       );
 
       const issues: string[] = [];
@@ -468,13 +470,13 @@ export function useAriaLabels() {
 
       interactiveElements.forEach((element, index) => {
         const hasLabel =
-          element.getAttribute("aria-label") ||
-          element.getAttribute("aria-labelledby") ||
-          element.getAttribute("title") ||
+          element.getAttribute('aria-label') ||
+          element.getAttribute('aria-labelledby') ||
+          element.getAttribute('title') ||
           (element as HTMLInputElement).placeholder ||
           element.textContent?.trim() ||
-          element.querySelector("label") ||
-          element.closest("label");
+          element.querySelector('label') ||
+          element.closest('label');
 
         if (hasLabel) {
           labeled++;
@@ -528,7 +530,7 @@ export function useAccessibilityTesting() {
     const auditResults = {
       headingHierarchy: headingHierarchy.isValid,
       colorContrast: Object.values(contrastResults).every(
-        (ratio) => ratio >= 4.5,
+        (ratio) => ratio >= 4.5
       ),
       ariaLabels: ariaLabels.getLabelCoverage() >= 95,
       keyboardNavigation: true, // Would need more complex testing

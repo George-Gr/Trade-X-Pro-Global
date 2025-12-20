@@ -6,9 +6,9 @@
  * Note: Error notifications are displayed via the UI fallback, not toast.
  */
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 interface TradingViewErrorBoundaryState {
   hasError: boolean;
@@ -36,12 +36,12 @@ class TradingViewErrorBoundary extends React.Component<
     this.state = {
       hasError: false,
       error: null,
-      errorId: "",
+      errorId: '',
     };
   }
 
   static getDerivedStateFromError(
-    error: Error,
+    error: Error
   ): Partial<TradingViewErrorBoundaryState> {
     // Generate unique error ID for tracking
     const errorId = `tv-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
@@ -56,9 +56,9 @@ class TradingViewErrorBoundary extends React.Component<
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error for debugging and monitoring
     console.error(
-      "TradingView Error Boundary caught an error:",
+      'TradingView Error Boundary caught an error:',
       error,
-      errorInfo,
+      errorInfo
     );
 
     // Call custom error handler if provided (e.g., for logging services)
@@ -73,14 +73,14 @@ class TradingViewErrorBoundary extends React.Component<
     this.setState({
       hasError: false,
       error: null,
-      errorId: "",
+      errorId: '',
     });
   };
 
   handleGoHome = () => {
     // Navigate to home page
-    if (typeof window !== "undefined") {
-      window.location.href = "/";
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
     }
   };
 
@@ -111,7 +111,7 @@ class TradingViewErrorBoundary extends React.Component<
             </h3>
 
             <p className="text-sm text-muted-foreground text-center mb-4">
-              The {this.props.widgetType || "chart widget"} encountered an error
+              The {this.props.widgetType || 'chart widget'} encountered an error
               and has been temporarily disabled.
             </p>
 
@@ -143,7 +143,7 @@ class TradingViewErrorBoundary extends React.Component<
             )}
 
             {/* Error details in development */}
-            {import.meta.env.MODE === "development" && this.state.error && (
+            {import.meta.env.MODE === 'development' && this.state.error && (
               <details className="mt-4 text-xs">
                 <summary className="cursor-pointer text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] font-semibold">
                   Technical Details
@@ -154,7 +154,7 @@ class TradingViewErrorBoundary extends React.Component<
                   </p>
                   {this.state.error
                     .toString()
-                    .includes("Symbol.toStringTag") && (
+                    .includes('Symbol.toStringTag') && (
                     <p className="text-xs text-destructive mt-2">
                       This appears to be a TradingView compatibility issue. The
                       compatibility layer should handle this automatically.

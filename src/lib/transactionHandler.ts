@@ -3,8 +3,8 @@
  * Ensures database operations are handled gracefully with proper error recovery
  */
 
-import { logger } from "./logger";
-import { toast } from "sonner";
+import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
 interface RetryConfig {
   maxRetries: number;
@@ -18,13 +18,13 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
   baseDelayMs: 1000,
   maxDelayMs: 10000,
   retryableErrors: [
-    "network",
-    "timeout",
-    "connection",
-    "PGRST",
-    "could not connect",
-    "socket",
-    "ECONNREFUSED",
+    'network',
+    'timeout',
+    'connection',
+    'PGRST',
+    'could not connect',
+    'socket',
+    'ECONNREFUSED',
   ],
 };
 
@@ -45,7 +45,7 @@ function isRetryableError(error: unknown, config: RetryConfig): boolean {
       ? error.message.toLowerCase()
       : String(error).toLowerCase();
   return config.retryableErrors.some((keyword) =>
-    errorMessage.includes(keyword.toLowerCase()),
+    errorMessage.includes(keyword.toLowerCase())
   );
 }
 
@@ -72,7 +72,7 @@ function sleep(ms: number): Promise<void> {
 export async function executeTransaction<T>(
   operation: () => Promise<T>,
   operationName: string,
-  customConfig?: Partial<RetryConfig>,
+  customConfig?: Partial<RetryConfig>
 ): Promise<TransactionResult<T>> {
   const config = { ...DEFAULT_RETRY_CONFIG, ...customConfig };
   let lastError: unknown;
@@ -98,7 +98,7 @@ export async function executeTransaction<T>(
         error instanceof Error ? error.message : String(error);
 
       logger.warn(
-        `${operationName} failed on attempt ${attempts}: ${errorMessage}`,
+        `${operationName} failed on attempt ${attempts}: ${errorMessage}`
       );
 
       // Check if we should retry
@@ -135,6 +135,7 @@ export function handleTransactionResult<T>(
   result: TransactionResult<T>,
   successMessage: string,
   errorMessage: string,
+  onRetry?: () => void
 ): T | null {
   if (result.success && result.data !== undefined) {
     toast.success(successMessage);
@@ -144,15 +145,17 @@ export function handleTransactionResult<T>(
   // Show appropriate error message
   if (result.recoverable) {
     toast.error(`${errorMessage}. Please try again.`, {
-      description: "The operation failed due to a temporary issue.",
-      action: {
-        label: "Retry",
-        onClick: () => window.location.reload(),
-      },
+      description: 'The operation failed due to a temporary issue.',
+      action: onRetry
+        ? {
+            label: 'Retry',
+            onClick: onRetry,
+          }
+        : undefined,
     });
   } else {
     toast.error(errorMessage, {
-      description: result.error || "An unexpected error occurred.",
+      description: result.error || 'An unexpected error occurred.',
     });
   }
 
@@ -166,7 +169,7 @@ export async function executeTradingOperation<T>(
   operation: () => Promise<T>,
   operationName: string,
   onSuccess?: (result: T) => void,
-  onFailure?: (error: string) => void,
+  onFailure?: (error: string) => void
 ): Promise<T | null> {
   const result = await executeTransaction(operation, operationName, {
     maxRetries: 2, // Fewer retries for trading operations
@@ -189,7 +192,7 @@ export async function executeTradingOperation<T>(
     },
   });
 
-  onFailure?.(result.error || "Operation failed");
+  onFailure?.(result.error || 'Operation failed');
   return null;
 }
 
@@ -198,7 +201,7 @@ export async function executeTradingOperation<T>(
  */
 export async function safeRpcCall<T>(
   rpcCall: () => Promise<{ data: T | null; error: { message: string } | null }>,
-  operationName: string,
+  operationName: string
 ): Promise<TransactionResult<T>> {
   return executeTransaction(async () => {
     const { data, error } = await rpcCall();
@@ -208,7 +211,7 @@ export async function safeRpcCall<T>(
     }
 
     if (data === null) {
-      throw new Error("No data returned from operation");
+      throw new Error('No data returned from operation');
     }
 
     return data;

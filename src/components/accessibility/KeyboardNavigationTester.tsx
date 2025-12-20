@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useTradingKeyboardShortcuts } from "@/lib/tradingKeyboardNavigation";
 import {
   useColorBlindMode,
   useVisualAccessibilityPreferences,
-} from "@/lib/colorContrastVerification";
+} from '@/lib/colorContrastVerification';
+import { useTradingKeyboardShortcuts } from '@/lib/tradingKeyboardNavigation';
+import { useEffect, useRef, useState } from 'react';
+import type { ColorBlindMode } from './types';
 
 /**
  * Test result interface for type-safe keyboard navigation testing
@@ -30,8 +31,8 @@ export interface TestResult {
 
 export function KeyboardNavigationTester() {
   const [activeTest, setActiveTest] = useState<
-    "shortcuts" | "focus" | "navigation"
-  >("shortcuts");
+    'shortcuts' | 'focus' | 'navigation'
+  >('shortcuts');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedKeys, setRecordedKeys] = useState<string[]>([]);
@@ -60,15 +61,17 @@ export function KeyboardNavigationTester() {
 
       setRecordedKeys((prev) => [
         ...prev,
-        `${keyInfo.ctrlKey ? "Ctrl+" : ""}${keyInfo.shiftKey ? "Shift+" : ""}${keyInfo.altKey ? "Alt+" : ""}${keyInfo.key}`,
+        `${keyInfo.ctrlKey ? 'Ctrl+' : ''}${keyInfo.shiftKey ? 'Shift+' : ''}${
+          keyInfo.altKey ? 'Alt+' : ''
+        }${keyInfo.key}`,
       ]);
 
       // Test if it matches a known shortcut
       const shortcut = keyboardShortcuts.shortcuts.find(
         (s) =>
           s.key.toLowerCase() === keyInfo.key.toLowerCase() &&
-          s.modifiers.ctrl === keyInfo.ctrlKey &&
-          s.modifiers.shift === keyInfo.shiftKey,
+          (s.modifiers.ctrl ?? false) === keyInfo.ctrlKey &&
+          (s.modifiers.shift ?? false) === keyInfo.shiftKey
       );
 
       if (shortcut) {
@@ -76,7 +79,7 @@ export function KeyboardNavigationTester() {
           ...prev,
           {
             id: `shortcut-${Date.now()}`,
-            testName: "Shortcut Match",
+            testName: 'Shortcut Match',
             passed: true,
             details: `Shortcut activated: ${shortcut.description}`,
             timestamp: Date.now(),
@@ -90,8 +93,8 @@ export function KeyboardNavigationTester() {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isRecording, keyboardShortcuts.shortcuts]);
 
   const testShortcut = (shortcut: {
@@ -103,7 +106,7 @@ export function KeyboardNavigationTester() {
       ...prev,
       {
         id: `test-${Date.now()}`,
-        testName: "Shortcut Test",
+        testName: 'Shortcut Test',
         passed: true,
         details: `Testing: ${shortcut.description}`,
         timestamp: Date.now(),
@@ -126,11 +129,11 @@ export function KeyboardNavigationTester() {
 
   const focusNextElement = () => {
     const focusableElements = document.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     if (focusableElements.length === 0) return;
     const currentIndex = Array.from(focusableElements).indexOf(
-      document.activeElement as Element,
+      document.activeElement as Element
     );
     const nextIndex = (currentIndex + 1) % focusableElements.length;
     (focusableElements[nextIndex] as HTMLElement).focus();
@@ -138,11 +141,11 @@ export function KeyboardNavigationTester() {
 
   const focusPreviousElement = () => {
     const focusableElements = document.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     if (focusableElements.length === 0) return;
     const currentIndex = Array.from(focusableElements).indexOf(
-      document.activeElement as Element,
+      document.activeElement as Element
     );
     const prevIndex =
       currentIndex <= 0 ? focusableElements.length - 1 : currentIndex - 1;
@@ -153,7 +156,7 @@ export function KeyboardNavigationTester() {
       ...prev,
       {
         id: `trade-${Date.now()}`,
-        testName: "Trade Action Simulation",
+        testName: 'Trade Action Simulation',
         passed: true,
         details: `Simulating: ${action}`,
         timestamp: Date.now(),
@@ -176,10 +179,10 @@ export function KeyboardNavigationTester() {
           <button
             onClick={() => setIsRecording(!isRecording)}
             className={`px-4 py-2 rounded-lg font-medium ${
-              isRecording ? "bg-red-500 text-white" : "bg-blue-500 text-white"
+              isRecording ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
             }`}
           >
-            {isRecording ? "Stop Recording" : "Start Recording"}
+            {isRecording ? 'Stop Recording' : 'Start Recording'}
           </button>
 
           <button
@@ -195,17 +198,17 @@ export function KeyboardNavigationTester() {
       <div className="border-b">
         <div className="flex space-x-8">
           {[
-            { key: "shortcuts", label: "Shortcuts" },
-            { key: "focus", label: "Focus Management" },
-            { key: "navigation", label: "Navigation Patterns" },
+            { key: 'shortcuts', label: 'Shortcuts' },
+            { key: 'focus', label: 'Focus Management' },
+            { key: 'navigation', label: 'Navigation Patterns' },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTest(tab.key as typeof activeTest)}
               className={`py-4 px-2 border-b-2 font-medium text-sm ${
                 activeTest === tab.key
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               {tab.label}
@@ -216,14 +219,14 @@ export function KeyboardNavigationTester() {
 
       {/* Tab Content */}
       <div className="space-y-6">
-        {activeTest === "shortcuts" && (
+        {activeTest === 'shortcuts' && (
           <div className="space-y-6">
             {/* Trading Shortcuts */}
             <div className="bg-card rounded-lg p-6 border">
               <h3 className="font-semibold mb-4">Trading Shortcuts</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {keyboardShortcuts
-                  .getShortcutsByCategory("trading")
+                  .getShortcutsByCategory('trading')
                   .map((shortcut, index) => (
                     <div
                       key={index}
@@ -256,7 +259,7 @@ export function KeyboardNavigationTester() {
               <h3 className="font-semibold mb-4">System Shortcuts</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {keyboardShortcuts
-                  .getShortcutsByCategory("general")
+                  .getShortcutsByCategory('general')
                   .map((shortcut, index) => (
                     <div
                       key={index}
@@ -294,7 +297,7 @@ export function KeyboardNavigationTester() {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <button
-                  onClick={() => simulateTradeAction("Buy Order")}
+                  onClick={() => simulateTradeAction('Buy Order')}
                   className="p-4 bg-green-500 text-white rounded-lg font-semibold"
                   title="Global shortcut: Ctrl+B"
                 >
@@ -302,7 +305,7 @@ export function KeyboardNavigationTester() {
                 </button>
 
                 <button
-                  onClick={() => simulateTradeAction("Sell Order")}
+                  onClick={() => simulateTradeAction('Sell Order')}
                   className="p-4 bg-red-500 text-white rounded-lg font-semibold"
                   title="Global shortcut: Ctrl+S"
                 >
@@ -310,7 +313,7 @@ export function KeyboardNavigationTester() {
                 </button>
 
                 <button
-                  onClick={() => simulateTradeAction("Close Position")}
+                  onClick={() => simulateTradeAction('Close Position')}
                   className="p-4 bg-orange-500 text-white rounded-lg font-semibold"
                   title="Global shortcut: Ctrl+C"
                 >
@@ -318,7 +321,7 @@ export function KeyboardNavigationTester() {
                 </button>
 
                 <button
-                  onClick={() => simulateTradeAction("Quick Trade")}
+                  onClick={() => simulateTradeAction('Quick Trade')}
                   className="p-4 bg-purple-500 text-white rounded-lg font-semibold"
                   title="Global shortcut: Ctrl+Q"
                 >
@@ -329,7 +332,7 @@ export function KeyboardNavigationTester() {
           </div>
         )}
 
-        {activeTest === "focus" && (
+        {activeTest === 'focus' && (
           <div className="space-y-6">
             {/* Focus Management Demo */}
             <div className="bg-card rounded-lg p-6 border">
@@ -357,9 +360,9 @@ export function KeyboardNavigationTester() {
                         ...prev,
                         {
                           id: `focus-${Date.now()}`,
-                          testName: "Focus Test",
+                          testName: 'Focus Test',
                           passed: true,
-                          details: "Button clicked via keyboard",
+                          details: 'Button clicked via keyboard',
                           timestamp: Date.now(),
                         },
                       ])
@@ -375,9 +378,9 @@ export function KeyboardNavigationTester() {
                         ...prev,
                         {
                           id: `focus-secondary-${Date.now()}`,
-                          testName: "Focus Test",
+                          testName: 'Focus Test',
                           passed: true,
-                          details: "Secondary button clicked",
+                          details: 'Secondary button clicked',
                           timestamp: Date.now(),
                         },
                       ])
@@ -456,7 +459,7 @@ export function KeyboardNavigationTester() {
           </div>
         )}
 
-        {activeTest === "navigation" && (
+        {activeTest === 'navigation' && (
           <div className="space-y-6">
             {/* Navigation Patterns */}
             <div className="bg-card rounded-lg p-6 border">
@@ -554,7 +557,7 @@ export function KeyboardNavigationTester() {
                           }
                           onChange={(e) =>
                             colorBlindMode.applyColorBlindSimulation({
-                              type: e.target.value as ColorBlindMode["type"],
+                              type: e.target.value as ColorBlindMode['type'],
                               intensity:
                                 colorBlindMode.colorBlindMode.intensity,
                             })
@@ -582,8 +585,8 @@ export function KeyboardNavigationTester() {
                         checked={visualPreferences.preferences.highContrast}
                         onChange={(e) =>
                           visualPreferences.updatePreference(
-                            "highContrast",
-                            e.target.checked,
+                            'highContrast',
+                            e.target.checked
                           )
                         }
                         className="text-blue-600"
@@ -602,8 +605,8 @@ export function KeyboardNavigationTester() {
                         checked={visualPreferences.preferences.reduceMotion}
                         onChange={(e) =>
                           visualPreferences.updatePreference(
-                            "reduceMotion",
-                            e.target.checked,
+                            'reduceMotion',
+                            e.target.checked
                           )
                         }
                         className="text-blue-600"
@@ -645,9 +648,11 @@ export function KeyboardNavigationTester() {
                     <h4 className="font-semibold text-blue-900">
                       {result.testName}
                       <span
-                        className={`ml-2 text-xs ${result.passed ? "text-green-700" : "text-red-700"}`}
+                        className={`ml-2 text-xs ${
+                          result.passed ? 'text-green-700' : 'text-red-700'
+                        }`}
                       >
-                        [{result.passed ? "PASSED" : "FAILED"}]
+                        [{result.passed ? 'PASSED' : 'FAILED'}]
                       </span>
                     </h4>
                     <p className="text-sm text-muted-foreground mt-1">
@@ -663,7 +668,7 @@ export function KeyboardNavigationTester() {
                   <span className="text-xs text-muted-foreground">
                     {result.timestamp
                       ? new Date(result.timestamp).toLocaleTimeString()
-                      : "N/A"}
+                      : 'N/A'}
                   </span>
                 </div>
               </div>

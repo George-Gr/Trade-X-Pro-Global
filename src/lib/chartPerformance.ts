@@ -3,7 +3,7 @@
  * Provides virtualization, animation frame management, and performance optimizations
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface ChartPerformanceConfig {
   maxDataPoints: number;
@@ -184,7 +184,7 @@ export class ChartPool {
   setMaxSize(size: number): void {
     this.maxSize = size;
     // Clean up excess items
-    for (const [key, poolItems] of this.pool) {
+    for (const [_key, poolItems] of this.pool) {
       while (poolItems.length > size) {
         poolItems.pop();
       }
@@ -200,8 +200,8 @@ export class ChartPool {
         const aId = (a as { _poolId?: string })?._poolId;
         const bId = (b as { _poolId?: string })?._poolId;
         return (
-          (this.lastUsed.get(aId || "") || 0) -
-          (this.lastUsed.get(bId || "") || 0)
+          (this.lastUsed.get(aId || '') || 0) -
+          (this.lastUsed.get(bId || '') || 0)
         );
       });
       const instance = pool.pop()! as T;
@@ -218,7 +218,9 @@ export class ChartPool {
 
     // Create new instance
     const newInstance = factory();
-    const poolId = `${key}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const poolId = `${key}_${Date.now()}_${Math.random()
+      .toString(36)
+      .slice(2, 11)}`;
 
     // Add pool metadata
     (newInstance as { _poolId: string })._poolId = poolId;
@@ -231,7 +233,7 @@ export class ChartPool {
   release(key: string, instance: unknown): void {
     const poolId = (instance as { _poolId?: string })?._poolId;
     if (!poolId) {
-      console.warn("Attempting to release non-pooled instance");
+      console.warn('Attempting to release non-pooled instance');
       return;
     }
 
@@ -249,20 +251,20 @@ export class ChartPool {
   private resetInstance(instance: unknown): void {
     // Reset common chart instance properties
     const inst = instance as Record<string, unknown>;
-    if (typeof inst.clear === "function") {
+    if (typeof inst.clear === 'function') {
       (inst.clear as () => void)();
     }
-    if (typeof inst.reset === "function") {
+    if (typeof inst.reset === 'function') {
       (inst.reset as () => void)();
     }
     // Reset canvas context if applicable
-    if (typeof inst.getContext === "function") {
-      const ctx = (inst.getContext as (contextId: string) => unknown)("2d") as {
+    if (typeof inst.getContext === 'function') {
+      const ctx = (inst.getContext as (contextId: string) => unknown)('2d') as {
         clearRect: (x: number, y: number, w: number, h: number) => void;
       } | null;
       if (ctx) {
-        const w = typeof inst.width === "number" ? inst.width : 0;
-        const h = typeof inst.height === "number" ? inst.height : 0;
+        const w = typeof inst.width === 'number' ? inst.width : 0;
+        const h = typeof inst.height === 'number' ? inst.height : 0;
         ctx.clearRect(0, 0, w, h);
       }
     }
@@ -287,13 +289,13 @@ export class ChartPool {
       const pool = this.pool.get(key) || [];
       const usageCounts = pool.map((item) => {
         const poolId = (item as Record<string, unknown>)._poolId;
-        return typeof poolId === "string"
+        return typeof poolId === 'string'
           ? this.usageCount.get(poolId) || 0
           : 0;
       });
       const totalUsage = usageCounts.reduce(
-        (sum: number, count) => sum + (typeof count === "number" ? count : 0),
-        0,
+        (sum: number, count) => sum + (typeof count === 'number' ? count : 0),
+        0
       );
 
       return {
@@ -309,8 +311,8 @@ export class ChartPool {
     allPools.forEach((item) => {
       const poolId = (item as Record<string, unknown>)._poolId;
       const count =
-        typeof poolId === "string" ? this.usageCount.get(poolId) || 0 : 0;
-      totalUsageSum += typeof count === "number" ? count : 0;
+        typeof poolId === 'string' ? this.usageCount.get(poolId) || 0 : 0;
+      totalUsageSum += typeof count === 'number' ? count : 0;
     });
 
     return {
@@ -329,7 +331,7 @@ export class ChartPool {
       const activeItems = pool.filter((item) => {
         const poolId = (item as Record<string, unknown>)._poolId;
         const lastUsed =
-          typeof poolId === "string" ? this.lastUsed.get(poolId) || 0 : 0;
+          typeof poolId === 'string' ? this.lastUsed.get(poolId) || 0 : 0;
         return now - lastUsed < maxAge;
       });
 
@@ -339,7 +341,7 @@ export class ChartPool {
       pool.forEach((item) => {
         if (!activeItems.includes(item)) {
           const poolId = (item as Record<string, unknown>)._poolId;
-          if (typeof poolId === "string") {
+          if (typeof poolId === 'string') {
             this.usageCount.delete(poolId);
             this.lastUsed.delete(poolId);
           }
@@ -370,7 +372,7 @@ export class ChartFactory {
 
   registerChartType(
     type: string,
-    factory: (...args: unknown[]) => unknown,
+    factory: (...args: unknown[]) => unknown
   ): void {
     this.factories.set(type, factory);
   }
@@ -381,12 +383,11 @@ export class ChartFactory {
     }
 
     // Try to acquire from pool first
-    const factoryFn = this.factories.get(type)!;
     const chart = this.pool.acquire(type, () => ({}));
 
     // Initialize chart with arguments
     const chartObj = chart as unknown as Record<string, unknown>;
-    if (typeof chartObj.initialize === "function") {
+    if (typeof chartObj.initialize === 'function') {
       (chartObj.initialize as (...args: unknown[]) => void)(...args);
     }
 
@@ -411,14 +412,14 @@ export class ChartFactory {
  */
 export const useChartPerformance = (
   data: unknown[],
-  config: Partial<ChartPerformanceConfig> = DEFAULT_PERFORMANCE_CONFIG,
+  config: Partial<ChartPerformanceConfig> = DEFAULT_PERFORMANCE_CONFIG
 ) => {
   const mergedConfig = { ...DEFAULT_PERFORMANCE_CONFIG, ...config };
   const [visibleData, setVisibleData] = useState<unknown[]>(data);
   const [isVirtualized, setIsVirtualized] = useState(false);
 
   const virtualizerRef = useRef<ChartDataVirtualizer>(
-    new ChartDataVirtualizer(data, mergedConfig.virtualizationThreshold),
+    new ChartDataVirtualizer(data, mergedConfig.virtualizationThreshold)
   );
   const frameManagerRef = useRef<AnimationFrameManager>();
   const debouncerRef = useRef<DebouncedChartUpdater>();
@@ -428,7 +429,7 @@ export const useChartPerformance = (
   useEffect(() => {
     virtualizerRef.current = new ChartDataVirtualizer(
       data,
-      mergedConfig.virtualizationThreshold,
+      mergedConfig.virtualizationThreshold
     );
     setIsVirtualized(virtualizerRef.current.needsVirtualization());
 
@@ -444,13 +445,13 @@ export const useChartPerformance = (
       virtualizerRef.current.setViewport(offset, size);
       setVisibleData(virtualizerRef.current.getVisibleData());
     },
-    [isVirtualized],
+    [isVirtualized]
   );
 
   const startAnimation = useCallback(() => {
     if (frameManagerRef.current?.isAnimating()) return;
 
-    frameManagerRef.current = new AnimationFrameManager((timestamp) => {
+    frameManagerRef.current = new AnimationFrameManager((_timestamp) => {
       // Animation logic can be added here
       // For now, we just ensure smooth 60fps updates
     });
@@ -468,18 +469,18 @@ export const useChartPerformance = (
     <T>(callback: (...args: T[]) => void, ...args: T[]) => {
       const updater = new DebouncedChartUpdater(
         () => callback(...(args as T[])),
-        mergedConfig.debounceDelay,
+        mergedConfig.debounceDelay
       );
       updater.update();
     },
-    [mergedConfig.debounceDelay],
+    [mergedConfig.debounceDelay]
   );
 
   const acquireFromPool = useCallback(
     <T extends { _poolId?: string }>(key: string, factory: () => T): T => {
       return poolRef.current.acquire(key, factory) as T;
     },
-    [],
+    []
   );
 
   const releaseToPool = useCallback((key: string, instance: unknown) => {
@@ -497,7 +498,8 @@ export const useChartPerformance = (
         currentDebouncer.flush();
       }
     };
-  }, [stopAnimation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     visibleData,
@@ -526,7 +528,7 @@ export class ProgressiveDataLoader {
   constructor(
     data: unknown[],
     chunkSize: number,
-    onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void,
+    onChunkLoaded: (chunk: unknown[], isComplete: boolean) => void
   ) {
     this.data = data;
     this.chunkSize = chunkSize;
@@ -539,7 +541,7 @@ export class ProgressiveDataLoader {
     this.isLoading = true;
     const endIndex = Math.min(
       this.currentIndex + this.chunkSize,
-      this.data.length,
+      this.data.length
     );
     const chunk = this.data.slice(this.currentIndex, endIndex);
 
@@ -609,7 +611,7 @@ export class ChartPerformanceMonitor {
 
   getLatestTime(operation: string): number {
     const times = this.measurements.get(operation) || [];
-    return times.length > 0 ? times[times.length - 1] : 0;
+    return times.length > 0 ? times[times.length - 1] ?? 0 : 0;
   }
 
   clear(): void {
@@ -622,7 +624,7 @@ export class ChartPerformanceMonitor {
  */
 export const optimizeChartData = (
   data: unknown[],
-  config: ChartPerformanceConfig = DEFAULT_PERFORMANCE_CONFIG,
+  config: ChartPerformanceConfig = DEFAULT_PERFORMANCE_CONFIG
 ): unknown[] => {
   if (data.length <= config.maxDataPoints) {
     return data;

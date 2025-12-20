@@ -1,5 +1,6 @@
 import { logger } from '@/lib/logger';
-import React, { ComponentProps, ComponentType, Suspense, lazy } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
+import React, { Suspense, lazy } from 'react';
 
 // NodeJS namespace for timeout types
 declare global {
@@ -18,6 +19,7 @@ declare global {
 /**
  * Lazy Load Component with Error Boundary and Fallback
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createLazyComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   fallback?: React.ComponentType
@@ -62,7 +64,8 @@ export function createLazyComponent<T extends ComponentType<any>>(
             )
           }
         >
-          <LazyComponent {...(props as ComponentProps<T>)} />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <LazyComponent {...(props as any)} />
         </Suspense>
       </ErrorBoundary>
     );

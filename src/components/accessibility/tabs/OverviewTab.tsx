@@ -1,11 +1,10 @@
-import React from "react";
 import type {
-  ContrastResult,
   AccessibilityTestingType,
   ColorContrastType,
-  KeyboardShortcutsType,
+  ContrastResult,
   FormAccessibilityType,
-} from "../types";
+  KeyboardShortcutsType,
+} from '../types';
 
 export interface OverviewTabProps {
   accessibilityTesting: AccessibilityTestingType;
@@ -16,6 +15,11 @@ export interface OverviewTabProps {
   onShowFormAccessibility: () => void;
 }
 
+/**
+ * OverviewTab component displays an overview of accessibility features and metrics
+ * @param props - Component props containing accessibility data and handlers
+ * @returns JSX.Element
+ */
 export function OverviewTab({
   accessibilityTesting,
   colorContrast,
@@ -76,7 +80,7 @@ export function OverviewTab({
         <h3 className="font-semibold mb-4">Recent Accessibility Issues</h3>
         <div className="space-y-3">
           {colorContrast.contrastResults
-            .filter((result: ContrastResult) => result.wcag === "fail")
+            .filter((result: ContrastResult) => result.wcag === 'fail')
             .slice(0, 5)
             .map((result: ContrastResult, index: number) => (
               <div

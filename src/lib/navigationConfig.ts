@@ -10,7 +10,7 @@ import {
   Wallet,
   User,
   LogOut,
-} from "lucide-react";
+} from 'lucide-react';
 
 /**
  * Navigation item interface defining the structure for menu items
@@ -18,7 +18,7 @@ import {
 export interface NavigationItem {
   id: string;
   path: string;
-  icon: React.ComponentType<React.ComponentProps<"svg">>;
+  icon: React.ComponentType<React.ComponentProps<'svg'>>;
   label: string;
   requiredRoles?: string[];
   order?: number;
@@ -34,105 +34,105 @@ export interface NavigationItem {
 export const NAVIGATION_CONFIG = {
   main: [
     {
-      id: "dashboard",
-      path: "/dashboard",
+      id: 'dashboard',
+      path: '/dashboard',
       icon: LayoutDashboard,
-      label: "Dashboard",
-      requiredRoles: ["user", "admin"],
+      label: 'Dashboard',
+      requiredRoles: ['user', 'admin'],
       order: 1,
       isVisible: true,
     },
     {
-      id: "trade",
-      path: "/trade",
+      id: 'trade',
+      path: '/trade',
       icon: TrendingUp,
-      label: "Trade",
-      requiredRoles: ["user", "admin"],
+      label: 'Trade',
+      requiredRoles: ['user', 'admin'],
       order: 2,
       isVisible: true,
     },
     {
-      id: "portfolio",
-      path: "/portfolio",
+      id: 'portfolio',
+      path: '/portfolio',
       icon: Briefcase,
-      label: "Portfolio",
-      requiredRoles: ["user", "admin"],
+      label: 'Portfolio',
+      requiredRoles: ['user', 'admin'],
       order: 3,
       isVisible: true,
     },
     {
-      id: "wallet",
-      path: "/wallet",
+      id: 'wallet',
+      path: '/wallet',
       icon: Wallet,
-      label: "Wallet",
-      requiredRoles: ["user", "admin"],
+      label: 'Wallet',
+      requiredRoles: ['user', 'admin'],
       order: 4,
       isVisible: true,
     },
     {
-      id: "history",
-      path: "/history",
+      id: 'history',
+      path: '/history',
       icon: History,
-      label: "History",
-      requiredRoles: ["user", "admin"],
+      label: 'History',
+      requiredRoles: ['user', 'admin'],
       order: 5,
       isVisible: true,
     },
     {
-      id: "pending-orders",
-      path: "/pending-orders",
+      id: 'pending-orders',
+      path: '/pending-orders',
       icon: Clock,
-      label: "Pending Orders",
-      requiredRoles: ["user", "admin"],
+      label: 'Pending Orders',
+      requiredRoles: ['user', 'admin'],
       order: 6,
       isVisible: true,
     },
     {
-      id: "risk-management",
-      path: "/risk-management",
+      id: 'risk-management',
+      path: '/risk-management',
       icon: Shield,
-      label: "Risk Management",
-      requiredRoles: ["user", "admin"],
+      label: 'Risk Management',
+      requiredRoles: ['user', 'admin'],
       order: 7,
       isVisible: true,
     },
     {
-      id: "notifications",
-      path: "/notifications",
+      id: 'notifications',
+      path: '/notifications',
       icon: Bell,
-      label: "Notifications",
-      requiredRoles: ["user", "admin"],
+      label: 'Notifications',
+      requiredRoles: ['user', 'admin'],
       order: 8,
       isVisible: true,
     },
   ],
   settings: [
     {
-      id: "settings",
-      path: "/settings",
+      id: 'settings',
+      path: '/settings',
       icon: Settings,
-      label: "Settings",
-      requiredRoles: ["user", "admin"],
+      label: 'Settings',
+      requiredRoles: ['user', 'admin'],
       order: 1,
       isVisible: true,
     },
     {
-      id: "profile",
-      path: "/settings/profile",
+      id: 'profile',
+      path: '/settings/profile',
       icon: User,
-      label: "Profile",
-      requiredRoles: ["user", "admin"],
+      label: 'Profile',
+      requiredRoles: ['user', 'admin'],
       order: 2,
       isVisible: true,
     },
   ],
   actions: [
     {
-      id: "logout",
-      path: "",
+      id: 'logout',
+      path: '',
       icon: LogOut,
-      label: "Sign Out",
-      requiredRoles: ["user", "admin"],
+      label: 'Sign Out',
+      requiredRoles: ['user', 'admin'],
       order: 1,
       isVisible: true,
       disabled: false,
@@ -145,20 +145,20 @@ export const NAVIGATION_CONFIG = {
  */
 export const NAVIGATION_SECTIONS = {
   main: {
-    id: "main",
-    label: "Main Navigation",
+    id: 'main',
+    label: 'Main Navigation',
     order: 1,
     items: NAVIGATION_CONFIG.main,
   },
   settings: {
-    id: "settings",
-    label: "Settings",
+    id: 'settings',
+    label: 'Settings',
     order: 2,
     items: NAVIGATION_CONFIG.settings,
   },
   actions: {
-    id: "actions",
-    label: "Actions",
+    id: 'actions',
+    label: 'Actions',
     order: 3,
     items: NAVIGATION_CONFIG.actions,
   },
@@ -179,10 +179,10 @@ export const getAllNavigationItems = (): NavigationItem[] => {
  * Get navigation items for a specific section
  */
 export const getNavigationItemsBySection = (
-  section: keyof typeof NAVIGATION_CONFIG,
+  section: keyof typeof NAVIGATION_CONFIG
 ): NavigationItem[] => {
   return NAVIGATION_CONFIG[section].sort(
-    (a, b) => (a.order || 999) - (b.order || 999),
+    (a, b) => (a.order || 999) - (b.order || 999)
   );
 };
 
@@ -198,7 +198,7 @@ export const getNavigationSections = () => {
  */
 export const isNavItemVisible = (
   item: NavigationItem,
-  userRoles: string[] = [],
+  userRoles: string[] = []
 ): boolean => {
   // If item is explicitly hidden, don't show it
   if (item.isVisible === false) {
@@ -217,7 +217,7 @@ export const isNavItemVisible = (
 
   // Check if user has any of the required roles
   const hasRequiredRole = userRoles.some((role) =>
-    item.requiredRoles?.includes(role),
+    item.requiredRoles?.includes(role)
   );
 
   return hasRequiredRole;
@@ -228,7 +228,7 @@ export const isNavItemVisible = (
  */
 export const filterNavigationItemsByRoles = (
   items: NavigationItem[],
-  userRoles: string[] = [],
+  userRoles: string[] = []
 ): NavigationItem[] => {
   return items.filter((item) => isNavItemVisible(item, userRoles));
 };
@@ -265,13 +265,13 @@ export const findNavItemById = (id: string): NavigationItem | undefined => {
  * Check if path is active (for highlighting)
  */
 export const isPathActive = (currentPath: string, navPath: string): boolean => {
-  if (!navPath || navPath === "/") return currentPath === "/";
+  if (!navPath || navPath === '/') return currentPath === '/';
 
   // Handle exact matches
   if (currentPath === navPath) return true;
 
   // Handle nested routes (e.g., /settings/profile matches /settings)
-  return currentPath.startsWith(navPath + "/") && navPath !== "/";
+  return currentPath.startsWith(navPath + '/') && navPath !== '/';
 };
 
 /**
@@ -279,14 +279,14 @@ export const isPathActive = (currentPath: string, navPath: string): boolean => {
  */
 export const getBackwardCompatibleNavItems = () => {
   return [
-    { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/trade", icon: TrendingUp, label: "Trade" },
-    { path: "/portfolio", icon: Briefcase, label: "Portfolio" },
-    { path: "/wallet", icon: Wallet, label: "Wallet" },
-    { path: "/history", icon: History, label: "History" },
-    { path: "/pending-orders", icon: Clock, label: "Pending Orders" },
-    { path: "/risk-management", icon: Shield, label: "Risk Management" },
-    { path: "/notifications", icon: Bell, label: "Notifications" },
-    { path: "/settings", icon: Settings, label: "Settings" },
+    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/trade', icon: TrendingUp, label: 'Trade' },
+    { path: '/portfolio', icon: Briefcase, label: 'Portfolio' },
+    { path: '/wallet', icon: Wallet, label: 'Wallet' },
+    { path: '/history', icon: History, label: 'History' },
+    { path: '/pending-orders', icon: Clock, label: 'Pending Orders' },
+    { path: '/risk-management', icon: Shield, label: 'Risk Management' },
+    { path: '/notifications', icon: Bell, label: 'Notifications' },
+    { path: '/settings', icon: Settings, label: 'Settings' },
   ];
 };

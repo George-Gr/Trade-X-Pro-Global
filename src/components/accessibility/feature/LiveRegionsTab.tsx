@@ -8,17 +8,7 @@ import type { TabComponentProps } from '../types';
  * Tests progress indicators, status messages, and modal dialogs.
  */
 export function LiveRegionsTab({
-  formData,
-  setFormData,
-  errors,
-  setErrors,
-  inputRefs,
-  testResults,
-  setTestResults,
-  onValidateForm,
-  onUpdateForm,
   onAnnounceToScreenReader,
-  onSubmitForm,
 }: TabComponentProps) {
   return (
     <div className="space-y-6">

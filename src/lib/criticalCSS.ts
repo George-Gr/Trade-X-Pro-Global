@@ -16,7 +16,7 @@
  * - Malformed CSS may not be parsed correctly
  */
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
 
 // Webpack plugin types for CriticalCSSPlugin
 interface WebpackCompilation {
@@ -31,8 +31,8 @@ interface WebpackCompiler {
         name: string,
         fn: (
           compilation: WebpackCompilation,
-          callback: (err?: Error) => void,
-        ) => void,
+          callback: (err?: Error) => void
+        ) => void
       ) => void;
     };
   };
@@ -42,11 +42,10 @@ interface WebpackCompiler {
  * Critical CSS Extractor
  */
 export class CriticalCSSExtractor {
-  private criticalRules: Set<string> = new Set();
   private allRules: Map<string, CSSStyleRule> = new Map();
 
   constructor() {
-    if (typeof document !== "undefined") {
+    if (typeof document !== 'undefined') {
       this.extractAllCSSRules();
     }
   }
@@ -73,7 +72,10 @@ export class CriticalCSSExtractor {
         }
       });
     } catch (error) {
-      console.warn("Failed to extract CSS rules:", error);
+      // Fallback to console if logger is not available
+      if (typeof console !== 'undefined') {
+        console.warn('Failed to extract CSS rules:', error);
+      }
     }
   }
 
@@ -109,46 +111,46 @@ export class CriticalCSSExtractor {
     // Focus on semantic containers and media elements that are most likely to be visible
     const likelyAboveFoldSelector = [
       // Semantic containers most likely to be above the fold
-      "header",
-      "main",
-      "section.hero",
-      "section.hero *",
-      "section.banner",
-      "section.banner *",
-      "article.hero",
-      "article.featured",
-      "div.hero",
-      "div.hero *",
-      "div.banner",
-      "div.banner *",
+      'header',
+      'main',
+      'section.hero',
+      'section.hero *',
+      'section.banner',
+      'section.banner *',
+      'article.hero',
+      'article.featured',
+      'div.hero',
+      'div.hero *',
+      'div.banner',
+      'div.banner *',
 
       // Key content elements
-      "h1",
-      "h2",
-      "h3",
-      "p.lead",
-      "p.hero",
-      "div.hero-content *",
+      'h1',
+      'h2',
+      'h3',
+      'p.lead',
+      'p.hero',
+      'div.hero-content *',
 
       // Media elements that are typically above the fold
-      "img.hero",
-      "img.banner",
-      "img.featured",
-      "video.hero",
-      "video.banner",
+      'img.hero',
+      'img.banner',
+      'img.featured',
+      'video.hero',
+      'video.banner',
 
       // Interactive elements in primary areas
-      "button.hero",
-      "button.primary",
-      "a.hero",
-      "a.cta",
+      'button.hero',
+      'button.primary',
+      'a.hero',
+      'a.cta',
 
       // Navigation and key UI
-      "nav.primary",
-      "nav.main",
-      "nav.header",
-      "nav.primary *",
-    ].join(", ");
+      'nav.primary',
+      'nav.main',
+      'nav.header',
+      'nav.primary *',
+    ].join(', ');
 
     try {
       const allElements = document.querySelectorAll(likelyAboveFoldSelector);
@@ -161,28 +163,30 @@ export class CriticalCSSExtractor {
       ) {
         const element = allElements[i];
 
-        try {
-          const rect = element.getBoundingClientRect();
+        if (element) {
+          try {
+            const rect = element.getBoundingClientRect();
 
-          // Check if element is in viewport or near it (1.5x viewport buffer)
-          if (
-            rect.top < viewportHeight * 1.5 &&
-            rect.left < viewportWidth * 1.5 &&
-            rect.bottom > 0 &&
-            rect.right > 0
-          ) {
-            elements.push(element);
+            // Check if element is in viewport or near it (1.5x viewport buffer)
+            if (
+              rect.top < viewportHeight * 1.5 &&
+              rect.left < viewportWidth * 1.5 &&
+              rect.bottom > 0 &&
+              rect.right > 0
+            ) {
+              elements.push(element);
+            }
+          } catch (error) {
+            // Skip elements that can't be measured
+            continue;
           }
-        } catch (error) {
-          // Skip elements that can't be measured
-          continue;
         }
       }
     } catch (error) {
       // Fallback to original broad selector if narrowed selector fails
       try {
         const fallbackSelector =
-          "div, section, article, header, main, nav, aside, footer, p, h1, h2, h3, h4, h5, h6, img, button";
+          'div, section, article, header, main, nav, aside, footer, p, h1, h2, h3, h4, h5, h6, img, button';
         const fallbackElements = document.querySelectorAll(fallbackSelector);
 
         for (
@@ -193,18 +197,20 @@ export class CriticalCSSExtractor {
         ) {
           const element = fallbackElements[i];
 
-          try {
-            const rect = element.getBoundingClientRect();
-            if (
-              rect.top < viewportHeight * 1.5 &&
-              rect.left < viewportWidth * 1.5 &&
-              rect.bottom > 0 &&
-              rect.right > 0
-            ) {
-              elements.push(element);
+          if (element) {
+            try {
+              const rect = element.getBoundingClientRect();
+              if (
+                rect.top < viewportHeight * 1.5 &&
+                rect.left < viewportWidth * 1.5 &&
+                rect.bottom > 0 &&
+                rect.right > 0
+              ) {
+                elements.push(element);
+              }
+            } catch (error) {
+              continue;
             }
-          } catch (error) {
-            continue;
           }
         }
       } catch (fallbackError) {
@@ -227,11 +233,11 @@ export class CriticalCSSExtractor {
       rootMargin?: string;
       maxElements?: number;
       timeout?: number;
-    } = {},
+    } = {}
   ): void {
     const {
       threshold = 0.1,
-      rootMargin = "100px",
+      rootMargin = '100px',
       maxElements = 100,
       timeout = 3000,
     } = options;
@@ -242,38 +248,38 @@ export class CriticalCSSExtractor {
 
     // Use the same narrowed selector for performance
     const likelyAboveFoldSelector = [
-      "header",
-      "main",
-      "section.hero",
-      "section.hero *",
-      "section.banner",
-      "section.banner *",
-      "article.hero",
-      "article.featured",
-      "div.hero",
-      "div.hero *",
-      "div.banner",
-      "div.banner *",
-      "h1",
-      "h2",
-      "h3",
-      "p.lead",
-      "p.hero",
-      "div.hero-content *",
-      "img.hero",
-      "img.banner",
-      "img.featured",
-      "video.hero",
-      "video.banner",
-      "button.hero",
-      "button.primary",
-      "a.hero",
-      "a.cta",
-      "nav.primary",
-      "nav.main",
-      "nav.header",
-      "nav.primary *",
-    ].join(", ");
+      'header',
+      'main',
+      'section.hero',
+      'section.hero *',
+      'section.banner',
+      'section.banner *',
+      'article.hero',
+      'article.featured',
+      'div.hero',
+      'div.hero *',
+      'div.banner',
+      'div.banner *',
+      'h1',
+      'h2',
+      'h3',
+      'p.lead',
+      'p.hero',
+      'div.hero-content *',
+      'img.hero',
+      'img.banner',
+      'img.featured',
+      'video.hero',
+      'video.banner',
+      'button.hero',
+      'button.primary',
+      'a.hero',
+      'a.cta',
+      'nav.primary',
+      'nav.main',
+      'nav.header',
+      'nav.primary *',
+    ].join(', ');
 
     try {
       const targetElements = document.querySelectorAll(likelyAboveFoldSelector);
@@ -303,7 +309,7 @@ export class CriticalCSSExtractor {
         {
           threshold,
           rootMargin,
-        },
+        }
       );
 
       // Observe all target elements
@@ -338,7 +344,7 @@ export class CriticalCSSExtractor {
   private findSelectorsForElement(element: Element): string[] {
     const selectors: string[] = [];
 
-    this.allRules.forEach((rule, selector) => {
+    this.allRules.forEach((_rule, selector) => {
       try {
         if (element.matches && element.matches(selector)) {
           selectors.push(selector);
@@ -365,7 +371,7 @@ export class CriticalCSSExtractor {
       }
     });
 
-    return criticalCSS.join("\n");
+    return criticalCSS.join('\n');
   }
 
   /**
@@ -377,8 +383,8 @@ export class CriticalCSSExtractor {
     if (!criticalCSS) return;
 
     // Create style element
-    const style = document.createElement("style");
-    style.id = "critical-css";
+    const style = document.createElement('style');
+    style.id = 'critical-css';
     style.textContent = criticalCSS;
 
     // Insert before other styles
@@ -390,7 +396,7 @@ export class CriticalCSSExtractor {
     }
 
     // Mark as critical
-    style.setAttribute("data-critical", "true");
+    style.setAttribute('data-critical', 'true');
   }
 
   /**
@@ -404,7 +410,7 @@ export class CriticalCSSExtractor {
       rootMargin?: string;
       maxElements?: number;
       timeout?: number;
-    } = {},
+    } = {}
   ): void {
     this.getViewportElementsAsync((elements) => {
       const criticalSelectors = new Set<string>();
@@ -424,7 +430,7 @@ export class CriticalCSSExtractor {
         }
       });
 
-      callback(criticalCSS.join("\n"));
+      callback(criticalCSS.join('\n'));
     }, options);
   }
 
@@ -437,18 +443,18 @@ export class CriticalCSSExtractor {
       rootMargin?: string;
       maxElements?: number;
       timeout?: number;
-    } = {},
+    } = {}
   ): void {
     this.extractCriticalCSSAsync((criticalCSS) => {
       if (!criticalCSS) return;
 
-      const style = document.createElement("style");
-      style.id = "critical-css";
+      const style = document.createElement('style');
+      style.id = 'critical-css';
       style.textContent = criticalCSS;
-      style.setAttribute("data-critical", "true");
+      style.setAttribute('data-critical', 'true');
 
       const firstStyle = document.querySelector(
-        'style, link[rel="stylesheet"]',
+        'style, link[rel="stylesheet"]'
       );
       if (firstStyle && firstStyle.parentNode) {
         firstStyle.parentNode.insertBefore(style, firstStyle);
@@ -469,9 +475,9 @@ export class CriticalCSSExtractor {
 
       // Skip if already critical or already deferred
       if (
-        href.includes("critical") ||
-        link.getAttribute("data-critical") === "true" ||
-        link.getAttribute("data-deferred") === "true"
+        href.includes('critical') ||
+        link.getAttribute('data-critical') === 'true' ||
+        link.getAttribute('data-deferred') === 'true'
       ) {
         return;
       }
@@ -485,16 +491,16 @@ export class CriticalCSSExtractor {
    * Defer individual stylesheet
    */
   private deferStylesheet(link: HTMLLinkElement): void {
-    const newLink = document.createElement("link");
-    newLink.rel = "stylesheet";
+    const newLink = document.createElement('link');
+    newLink.rel = 'stylesheet';
     newLink.href = link.href;
-    newLink.media = "print"; // Load without blocking
+    newLink.media = 'print'; // Load without blocking
     newLink.onload = () => {
-      newLink.media = "all";
+      newLink.media = 'all';
     };
 
     link.parentNode?.insertBefore(newLink, link.nextSibling);
-    link.setAttribute("data-deferred", "true");
+    link.setAttribute('data-deferred', 'true');
   }
 
   /**
@@ -521,7 +527,7 @@ export class CriticalCSSExtractor {
       throw new Error(
         `Viewport mismatch: Requested ${viewport.width}x${viewport.height} ` +
           `but actual viewport is ${actualWidth}x${actualHeight}. ` +
-          `For different viewport sizes, use a headless browser approach during build time.`,
+          `For different viewport sizes, use a headless browser approach during build time.`
       );
     }
 
@@ -542,7 +548,7 @@ export const CSSOptimizer = {
    * Detect if current position starts a media query
    */
   isMediaQueryStart: (index: number, css: string): boolean => {
-    return css.substring(index, index + 7).toLowerCase() === "@media ";
+    return css.substring(index, index + 7).toLowerCase() === '@media ';
   },
 
   /**
@@ -592,19 +598,22 @@ export const CSSOptimizer = {
    * Strips pseudo-classes/elements and checks against usedSet
    */
   shouldPreserveRule: (ruleText: string, usedSet: Set<string>): boolean => {
-    const ruleContent = ruleText.substring(0, ruleText.lastIndexOf("{"));
-    const selectors = ruleContent.split(",").map((s) => s.trim());
+    const lastBraceIndex = ruleText.lastIndexOf('{');
+    if (lastBraceIndex === -1) return false;
+
+    const ruleContent = ruleText.substring(0, lastBraceIndex);
+    const selectors = ruleContent.split(',').map((s) => s.trim());
 
     // Check if any selector in this rule is used
     return selectors.some((selector) => {
       // Handle pseudo-classes and pseudo-elements by taking base selector
-      const baseSelector = selector.split(":")[0].trim();
+      const baseSelector = selector.split(':')[0]?.trim() || '';
       return usedSet.has(baseSelector) || usedSet.has(selector);
     });
   },
 
   removeUnusedCSS: (css: string, usedSelectors: string[]): string => {
-    if (!css || !usedSelectors.length) return css;
+    if (!css || !usedSelectors || !usedSelectors.length) return '';
 
     const usedSet = new Set(usedSelectors);
     const result: string[] = [];
@@ -613,7 +622,7 @@ export const CSSOptimizer = {
     const state = {
       i: 0,
       braceDepth: 0,
-      currentRule: "",
+      currentRule: '',
       inMediaQuery: false,
       mediaQueryStack: [] as string[],
       preserveCurrentBlock: false,
@@ -624,9 +633,9 @@ export const CSSOptimizer = {
       const char = css[state.i];
       state.currentRule += char;
 
-      if (char === "{") {
+      if (char === '{') {
         CSSOptimizer.onOpenBrace(state);
-      } else if (char === "}") {
+      } else if (char === '}') {
         CSSOptimizer.onCloseBrace(state);
 
         if (state.braceDepth === 0) {
@@ -634,18 +643,18 @@ export const CSSOptimizer = {
           if (state.preserveCurrentBlock || state.inMediaQuery) {
             result.push(state.currentRule);
           }
-          state.currentRule = "";
+          state.currentRule = '';
           state.preserveCurrentBlock = false;
         }
-      } else if (char === "@" && CSSOptimizer.isMediaQueryStart(state.i, css)) {
+      } else if (char === '@' && CSSOptimizer.isMediaQueryStart(state.i, css)) {
         // Start of media query
         state.inMediaQuery = true;
-        state.mediaQueryStack.push("@media");
+        state.mediaQueryStack.push('@media');
         state.preserveStack.push(state.preserveCurrentBlock);
       }
 
       // Check if we should preserve this rule (only when entering a block at depth 1)
-      if (state.braceDepth === 1 && state.currentRule.includes("{")) {
+      if (state.braceDepth === 1 && state.currentRule.includes('{')) {
         if (CSSOptimizer.shouldPreserveRule(state.currentRule, usedSet)) {
           state.preserveCurrentBlock = true;
         }
@@ -661,7 +670,7 @@ export const CSSOptimizer = {
       }
     }
 
-    return result.join("").trim();
+    return result.join('').trim();
   },
 
   /**
@@ -669,12 +678,12 @@ export const CSSOptimizer = {
    */
   minifyCSS: (css: string): string => {
     return css
-      .replace(/\s+/g, " ")
-      .replace(/;\s*}/g, "}")
-      .replace(/{\s*/g, "{")
-      .replace(/}\s*/g, "}")
-      .replace(/:\s*/g, ":")
-      .replace(/,\s*/g, ",")
+      .replace(/\s+/g, ' ')
+      .replace(/;\s*}/g, '}')
+      .replace(/{\s*/g, '{')
+      .replace(/}\s*/g, '}')
+      .replace(/:\s*/g, ':')
+      .replace(/,\s*/g, ',')
       .trim();
   },
 
@@ -700,9 +709,16 @@ export const CSSOptimizer = {
 
 /**
  * Critical CSS Hook for React
+ *
+ * Manages loading state for critical CSS extraction and inlining.
+ * Automatically extracts and inlines critical above-the-fold CSS on mount,
+ * then removes it after the full CSS loads (3 second delay after page load).
+ * This improves First Contentful Paint (FCP) and Largest Contentful Paint (LCP).
+ *
+ * @returns {void}
  */
 export function useCriticalCSS() {
-  const [isCriticalLoaded, setIsCriticalLoaded] = useState(false);
+  const [, setIsCriticalLoaded] = useState(false);
 
   useEffect(() => {
     // Extract and inline critical CSS
@@ -715,17 +731,17 @@ export function useCriticalCSS() {
     const handleLoad = () => {
       // Remove critical CSS from head after full CSS loads
       timeoutId = setTimeout(() => {
-        const criticalStyle = document.getElementById("critical-css");
+        const criticalStyle = document.getElementById('critical-css');
         if (criticalStyle) {
           criticalStyle.remove();
         }
       }, 3000);
     };
 
-    window.addEventListener("load", handleLoad);
+    window.addEventListener('load', handleLoad);
 
     return () => {
-      window.removeEventListener("load", handleLoad);
+      window.removeEventListener('load', handleLoad);
       if (timeoutId !== null) {
         clearTimeout(timeoutId);
       }
@@ -737,24 +753,14 @@ export function useCriticalCSS() {
  * Critical CSS Webpack Plugin (for build-time extraction)
  */
 export class CriticalCSSPlugin {
-  constructor(
-    private options: {
-      base: string;
-      src: string;
-      dest: string;
-      width?: number;
-      height?: number;
-    },
-  ) {}
-
   apply(compiler: WebpackCompiler) {
     compiler.hooks.emit.tapAsync(
-      "CriticalCSSPlugin",
-      (compilation: WebpackCompilation, callback: (err?: Error) => void) => {
+      'CriticalCSSPlugin',
+      (_compilation: WebpackCompilation, callback: (err?: Error) => void) => {
         // This would be implemented in a webpack environment
         // For now, provide a placeholder
         callback();
-      },
+      }
     );
   }
 }

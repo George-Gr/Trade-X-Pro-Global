@@ -113,7 +113,14 @@ export const EquityChart: React.FC = () => {
         }
 
         const equityFluctuation = (positions || []).reduce(
-          (sum: number, pos: any) => {
+          (
+            sum: number,
+            pos: {
+              current_price?: number | null;
+              entry_price?: number | null;
+              quantity: number;
+            }
+          ) => {
             const volatility =
               ((pos.current_price || 0) - (pos.entry_price || 0)) *
               pos.quantity *

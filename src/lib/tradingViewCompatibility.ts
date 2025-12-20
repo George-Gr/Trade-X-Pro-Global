@@ -33,7 +33,7 @@ function fixDataViewSymbolToStringTag(): void {
   // Store original descriptor
   const originalDescriptor = Object.getOwnPropertyDescriptor(
     DataView.prototype,
-    Symbol.toStringTag,
+    Symbol.toStringTag
   );
 
   try {
@@ -50,7 +50,7 @@ function fixDataViewSymbolToStringTag(): void {
     try {
       // This is the specific assignment that TradingView tries to make
       Object.defineProperty(DataView.prototype, Symbol.toStringTag, {
-        value: "DataView",
+        value: 'DataView',
         writable: true,
         configurable: true,
         enumerable: false,
@@ -59,12 +59,10 @@ function fixDataViewSymbolToStringTag(): void {
       // If assignment fails due to read-only property, log and continue
       if (
         error instanceof TypeError &&
-        error.message.includes("Cannot assign to read only property") &&
-        error.message.includes("Symbol.toStringTag")
+        error.message.includes('Cannot assign to read only property') &&
+        error.message.includes('Symbol.toStringTag')
       ) {
-        console.warn(
-          "TradingView: DataView Symbol.toStringTag assignment blocked (expected in modern environments)",
-        );
+        // TradingView: DataView Symbol.toStringTag assignment blocked (expected in modern environments)
       } else {
         throw error;
       }
@@ -73,28 +71,25 @@ function fixDataViewSymbolToStringTag(): void {
     // Override property assignment attempts
     const originalSet = Object.getOwnPropertyDescriptor(
       DataView.prototype,
-      Symbol.toStringTag,
+      Symbol.toStringTag
     )?.set;
     if (!originalSet) {
       Object.defineProperty(DataView.prototype, Symbol.toStringTag, {
         set(value: unknown) {
           // Silently ignore assignments in modern environments
-          if (typeof value === "string") {
-            console.warn(
-              "TradingView: Ignoring DataView Symbol.toStringTag assignment:",
-              value,
-            );
+          if (typeof value === 'string') {
+            // TradingView: Ignoring DataView Symbol.toStringTag assignment
           }
         },
         get(this: unknown): string {
-          return "DataView";
+          return 'DataView';
         },
         configurable: true,
         enumerable: false,
       });
     }
   } catch (error) {
-    console.warn("TradingView compatibility fix failed:", error);
+    console.warn('TradingView compatibility fix failed:', error);
     // Fallback: at least try to prevent the error from propagating
   } finally {
     // Restore original descriptor if needed
@@ -103,10 +98,10 @@ function fixDataViewSymbolToStringTag(): void {
         Object.defineProperty(
           DataView.prototype,
           Symbol.toStringTag,
-          originalDescriptor,
+          originalDescriptor
         );
       } catch (error) {
-        console.warn("Could not restore original DataView descriptor:", error);
+        // Could not restore original DataView descriptor
       }
     }
   }
@@ -124,17 +119,15 @@ function patchCommonAssignmentPatterns(): void {
       return originalAssign.call(
         this as unknown,
         target as Record<string, unknown>,
-        ...(sources as Record<string, unknown>[]),
+        ...(sources as Record<string, unknown>[])
       );
     } catch (error) {
       if (
         error instanceof TypeError &&
-        error.message.includes("Cannot assign to read only property") &&
+        error.message.includes('Cannot assign to read only property') &&
         target === DataView.prototype
       ) {
-        console.warn(
-          "TradingView: Blocked read-only property assignment to DataView.prototype",
-        );
+        // TradingView: Blocked read-only property assignment to DataView.prototype
         return target;
       }
       throw error;
@@ -145,7 +138,7 @@ function patchCommonAssignmentPatterns(): void {
 /**
  * Initialize compatibility layer
  */
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   // Auto-initialize in browser environment
   initTradingViewCompatibility();
 }

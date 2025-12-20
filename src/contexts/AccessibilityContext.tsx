@@ -61,7 +61,7 @@ export const useColorBlindMode = () => {
   };
 
   // Add availableModes property that AccessibilityNavigation expects
-  const availableModes = [
+  const availableModes: Array<{ type: ColorBlindType; name: string }> = [
     { type: 'none', name: 'None' },
     { type: 'protanopia', name: 'Protanopia (Red-Blind)' },
     { type: 'deuteranopia', name: 'Deuteranopia (Green-Blind)' },
@@ -214,7 +214,7 @@ interface AccessibilityContextType {
   // Quick Actions
   toggleHighContrast: () => void;
   toggleReduceMotion: () => void;
-  toggleColorBlindMode: (mode: string) => void;
+  toggleColorBlindMode: (mode: ColorBlindType) => void;
 
   // Compliance Score
   complianceScore: number;
@@ -299,22 +299,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   // Memoize color blind mode toggle
   // Don't depend on colorBlindMode object
   const toggleColorBlindMode = useCallback(
-    (mode: string) => {
-      const validModes = [
-        'none',
-        'protanopia',
-        'deuteranopia',
-        'tritanopia',
-        'achromatopsia',
-      ] as const;
-      const isValidMode = (m: string): m is (typeof validModes)[number] =>
-        validModes.includes(m as (typeof validModes)[number]);
-
-      if (!isValidMode(mode)) {
-        console.warn(`Invalid color blind mode: ${mode}`);
-        return;
-      }
-
+    (mode: ColorBlindType) => {
       if (colorBlindMode.colorBlindMode.type === mode) {
         colorBlindMode.applyColorBlindSimulation({
           type: 'none',

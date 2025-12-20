@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { AdvancedAccessibilityDashboard } from "./AdvancedAccessibilityDashboard";
+import React, { useEffect, useState } from 'react';
+import { AdvancedAccessibilityDashboard } from './AdvancedAccessibilityDashboard';
 // Import components with explicit paths to avoid resolution issues
-import { KeyboardNavigationTester } from "./KeyboardNavigationTester";
+import { KeyboardNavigationTester } from './KeyboardNavigationTester';
 
 /**
  * Accessibility Testing Suite
@@ -18,25 +18,25 @@ interface TestSection {
 }
 
 type TestSectionKey =
-  | "dashboard"
-  | "screen-reader"
-  | "keyboard"
-  | "contrast"
-  | "trading";
+  | 'dashboard'
+  | 'screen-reader'
+  | 'keyboard'
+  | 'contrast'
+  | 'trading';
 
-interface AccessibilityTestingSuiteProps {}
+type AccessibilityTestingSuiteProps = Record<string, never>;
 
 export const AccessibilityTestingSuite: React.FC<
   AccessibilityTestingSuiteProps
 > = () => {
-  const [activeTest, setActiveTest] = useState<TestSectionKey>("dashboard");
+  const [activeTest, setActiveTest] = useState<TestSectionKey>('dashboard');
   const [isTestingMode, setIsTestingMode] = useState(false);
 
   useEffect(() => {
     // Announce test mode changes to screen readers
     if (isTestingMode) {
       const announcement = new SpeechSynthesisUtterance(
-        "Accessibility testing mode activated",
+        'Accessibility testing mode activated'
       );
       speechSynthesis.speak(announcement);
     }
@@ -47,11 +47,11 @@ export const AccessibilityTestingSuite: React.FC<
     };
   }, [isTestingMode]);
   const testSections: TestSection[] = [
-    { key: "dashboard", label: "Accessibility Dashboard", icon: "📊" },
-    { key: "screen-reader", label: "Screen Reader Tests", icon: "🔊" },
-    { key: "keyboard", label: "Keyboard Navigation", icon: "⌨️" },
-    { key: "contrast", label: "Color Contrast", icon: "🎨" },
-    { key: "trading", label: "Trading Demo", icon: "📈" },
+    { key: 'dashboard', label: 'Accessibility Dashboard', icon: '📊' },
+    { key: 'screen-reader', label: 'Screen Reader Tests', icon: '🔊' },
+    { key: 'keyboard', label: 'Keyboard Navigation', icon: '⌨️' },
+    { key: 'contrast', label: 'Color Contrast', icon: '🎨' },
+    { key: 'trading', label: 'Trading Demo', icon: '📈' },
   ];
 
   return (
@@ -78,16 +78,18 @@ export const AccessibilityTestingSuite: React.FC<
                   className="sr-only"
                 />
                 <div
-                  className={`w-12 h-6 rounded-full transition-colors ${isTestingMode ? "bg-[hsl(var(--accent))]" : "bg-gray-300"}`}
+                  className={`w-12 h-6 rounded-full transition-colors ${
+                    isTestingMode ? 'bg-[hsl(var(--accent))]' : 'bg-gray-300'
+                  }`}
                 >
                   <div
                     className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
-                      isTestingMode ? "translate-x-6" : "translate-x-1"
+                      isTestingMode ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
                 </div>
                 <span className="text-sm font-medium">
-                  {isTestingMode ? "Testing Mode: ON" : "Testing Mode: OFF"}
+                  {isTestingMode ? 'Testing Mode: ON' : 'Testing Mode: OFF'}
                 </span>
               </label>
 
@@ -95,7 +97,7 @@ export const AccessibilityTestingSuite: React.FC<
                 onClick={() => {
                   // Trigger screen reader announcement
                   const announcement = new SpeechSynthesisUtterance(
-                    "Accessibility testing suite loaded. Use keyboard navigation to explore all features.",
+                    'Accessibility testing suite loaded. Use keyboard navigation to explore all features.'
                   );
                   speechSynthesis.speak(announcement);
                 }}
@@ -119,10 +121,10 @@ export const AccessibilityTestingSuite: React.FC<
                 onClick={() => setActiveTest(section.key)}
                 className={`py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
                   activeTest === section.key
-                    ? "border-[hsl(var(--primary))] text-[hsl(var(--primary))]"
-                    : "border-transparent text-gray-500 hover:text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--muted))]"
+                    ? 'border-[hsl(var(--primary))] text-[hsl(var(--primary))]'
+                    : 'border-transparent text-gray-500 hover:text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--muted))]'
                 }`}
-                aria-current={activeTest === section.key ? "page" : undefined}
+                aria-current={activeTest === section.key ? 'page' : undefined}
               >
                 <span className="mr-2" aria-hidden="true">
                   {section.icon}
@@ -159,9 +161,9 @@ export const AccessibilityTestingSuite: React.FC<
         )}
 
         {/* Test Content */}
-        {activeTest === "dashboard" && <AdvancedAccessibilityDashboard />}
+        {activeTest === 'dashboard' && <AdvancedAccessibilityDashboard />}
 
-        {activeTest === "screen-reader" && (
+        {activeTest === 'screen-reader' && (
           <div className="p-6 bg-card rounded-lg border">
             <h2 className="text-2xl font-bold mb-4">Screen Reader Tests</h2>
             <p className="text-muted-foreground">
@@ -170,9 +172,9 @@ export const AccessibilityTestingSuite: React.FC<
           </div>
         )}
 
-        {activeTest === "keyboard" && <KeyboardNavigationTester />}
+        {activeTest === 'keyboard' && <KeyboardNavigationTester />}
 
-        {activeTest === "contrast" && (
+        {activeTest === 'contrast' && (
           <div className="p-6 bg-card rounded-lg border">
             <h2 className="text-2xl font-bold mb-4">Color Contrast Tester</h2>
             <p className="text-muted-foreground">
@@ -181,7 +183,7 @@ export const AccessibilityTestingSuite: React.FC<
           </div>
         )}
 
-        {activeTest === "trading" && <TradingDemo />}
+        {activeTest === 'trading' && <TradingDemo />}
       </main>
 
       {/* Footer */}

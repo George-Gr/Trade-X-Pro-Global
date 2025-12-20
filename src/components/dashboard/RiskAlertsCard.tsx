@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Card,
   CardHeader,
@@ -6,14 +6,14 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { cn } from '@/lib/utils';
 
 interface AlertItem {
   id: string;
-  level: "info" | "warning" | "critical";
+  level: 'info' | 'warning' | 'critical';
   title: string;
   details?: string;
 }
@@ -23,15 +23,15 @@ interface RiskAlertsCardProps {
   alerts?: AlertItem[];
 }
 
-const LevelBadge: React.FC<{ level: AlertItem["level"] }> = ({ level }) => {
+const LevelBadge: React.FC<{ level: AlertItem['level'] }> = ({ level }) => {
   const map = {
-    info: "bg-blue-100 text-blue-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    critical: "bg-red-100 text-red-800",
+    info: 'bg-blue-100 text-blue-800',
+    warning: 'bg-yellow-100 text-yellow-800',
+    critical: 'bg-red-100 text-red-800',
   } as const;
   return (
     <span
-      className={cn("px-2 py-1 rounded-full text-xs font-medium", map[level])}
+      className={cn('px-2 py-1 rounded-full text-xs font-medium', map[level])}
     >
       {level}
     </span>
@@ -102,7 +102,7 @@ export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({
                 )}
               </div>
               <div className="text-sm text-muted-foreground">
-                {a.level === "critical" ? "Immediate" : "Monitor"}
+                {a.level === 'critical' ? 'Immediate' : 'Monitor'}
               </div>
             </div>
           ))}

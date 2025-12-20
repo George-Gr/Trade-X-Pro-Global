@@ -52,8 +52,7 @@
  * ```
  */
 
-import * as Sentry from "@sentry/react";
-import { Transaction, Span } from "@sentry/types";
+import * as Sentry from '@sentry/react';
 
 /**
  * Log context information
@@ -107,7 +106,7 @@ export interface SupabaseQueryInfo {
  */
 export interface RiskEventInfo {
   type: string;
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
   userId?: string;
   details: Record<string, unknown>;
   timestamp: string;
@@ -131,11 +130,11 @@ export interface Breadcrumb {
   timestamp: string;
   category: string;
   message: string;
-  level: "info" | "warning" | "error";
+  level: 'info' | 'warning' | 'error';
 }
 
-const isDevelopment = import.meta.env.MODE === "development";
-const isProduction = import.meta.env.MODE === "production";
+const isDevelopment = import.meta.env.MODE === 'development';
+const isProduction = import.meta.env.MODE === 'production';
 
 /**
  * Production noop - all console methods become silent in production
@@ -199,25 +198,25 @@ export function initializeSentry(): void {
 
       // Sync current global context to Sentry
       Sentry.setContext(
-        "application",
-        globalContext as Record<string, unknown>,
+        'application',
+        globalContext as Record<string, unknown>
       );
       if (globalContext.userId) {
         Sentry.setUser({ id: globalContext.userId });
       }
 
       if (isDevelopment) {
-        console.warn("[Logger] Sentry is configured and logger is active");
+        console.warn('[Logger] Sentry is configured and logger is active');
       }
     } else if (isDevelopment) {
       console.warn(
-        "[Logger] Sentry not configured (no DSN) — running in dev mode",
+        '[Logger] Sentry not configured (no DSN) — running in dev mode'
       );
     }
   } catch (err) {
     // Defensive: do not let logger initialization throw application errors
     if (isDevelopment) {
-      console.error("[Logger] Failed to initialize Sentry integration", err);
+      console.error('[Logger] Failed to initialize Sentry integration', err);
     }
     sentryInitialized = false;
   }
@@ -236,11 +235,11 @@ function getTimestamp(): string {
 function formatLogMessage(
   level: string,
   message: string,
-  context?: LogContext,
+  context?: LogContext
 ): string {
   const timestamp = context?.timestamp || getTimestamp();
-  const contextStr = context?.component ? ` [${context.component}]` : "";
-  const actionStr = context?.action ? ` {${context.action}}` : "";
+  const contextStr = context?.component ? ` [${context.component}]` : '';
+  const actionStr = context?.action ? ` {${context.action}}` : '';
   return `[${timestamp}] [${level}]${contextStr}${actionStr} ${message}`;
 }
 
@@ -266,8 +265,8 @@ export const logger = {
     globalContext = { ...globalContext, ...context };
     if (isSentryActive()) {
       Sentry.setContext(
-        "application",
-        globalContext as Record<string, unknown>,
+        'application',
+        globalContext as Record<string, unknown>
       );
     }
   },
@@ -278,7 +277,7 @@ export const logger = {
   clearGlobalContext(): void {
     globalContext = {};
     if (isSentryActive()) {
-      Sentry.setContext("application", {});
+      Sentry.setContext('application', {});
     }
   },
 
@@ -295,7 +294,7 @@ export const logger = {
   addBreadcrumb(
     category: string,
     message: string,
-    level: "info" | "warning" | "error" = "info",
+    level: 'info' | 'warning' | 'error' = 'info'
   ): void {
     const breadcrumb: Breadcrumb = {
       timestamp: getTimestamp(),
@@ -317,7 +316,7 @@ export const logger = {
       Sentry.addBreadcrumb({
         category,
         message,
-        level: level as "info" | "warning" | "error",
+        level: level as 'info' | 'warning' | 'error',
         timestamp: Date.now() / 1000,
       });
     }
@@ -344,12 +343,12 @@ export const logger = {
     const fullContext = mergeContext(context);
 
     if (isDevelopment) {
-      const formatted = formatLogMessage("INFO", message, fullContext);
+      const formatted = formatLogMessage('INFO', message, fullContext);
       console.warn(formatted, fullContext.metadata || {});
     }
 
     if (isSentryActive()) {
-      Sentry.captureMessage(message, "info");
+      Sentry.captureMessage(message, 'info');
       if (fullContext.userId) {
         Sentry.setUser({ id: fullContext.userId });
       }
@@ -363,14 +362,14 @@ export const logger = {
     const fullContext = mergeContext(context);
 
     if (isDevelopment) {
-      const formatted = formatLogMessage("WARN", message, fullContext);
+      const formatted = formatLogMessage('WARN', message, fullContext);
       console.warn(formatted, fullContext.metadata || {});
     }
 
-    this.addBreadcrumb("warning", message, "warning");
+    this.addBreadcrumb('warning', message, 'warning');
 
     if (isSentryActive()) {
-      Sentry.captureMessage(message, "warning");
+      Sentry.captureMessage(message, 'warning');
       if (fullContext.userId) {
         Sentry.setUser({ id: fullContext.userId });
       }
@@ -384,7 +383,7 @@ export const logger = {
     const fullContext = mergeContext(context);
 
     if (isDevelopment) {
-      const formatted = formatLogMessage("ERROR", message, fullContext);
+      const formatted = formatLogMessage('ERROR', message, fullContext);
       if (error instanceof Error) {
         console.error(formatted, {
           name: error.name,
@@ -397,7 +396,7 @@ export const logger = {
       }
     }
 
-    this.addBreadcrumb("error", message, "error");
+    this.addBreadcrumb('error', message, 'error');
 
     if (isSentryActive()) {
       if (error instanceof Error) {
@@ -419,7 +418,7 @@ export const logger = {
           extra: fullContext.metadata,
         });
       } else {
-        Sentry.captureMessage(`${message}: ${JSON.stringify(error)}`, "error");
+        Sentry.captureMessage(`${message}: ${JSON.stringify(error)}`, 'error');
       }
 
       if (fullContext.userId) {
@@ -434,7 +433,7 @@ export const logger = {
   debug(message: string, context?: LogContext): void {
     if (isDevelopment) {
       const fullContext = mergeContext(context);
-      const formatted = formatLogMessage("DEBUG", message, fullContext);
+      const formatted = formatLogMessage('DEBUG', message, fullContext);
       console.error(formatted, fullContext.metadata || {});
     }
   },
@@ -445,10 +444,12 @@ export const logger = {
   startTransaction(
     name: string,
     operation: string,
-    context?: LogContext,
+    context?: LogContext
   ): string {
     const startTime = performance.now();
-    const transactionId = `${name}-${startTime}-${Math.random().toString(36).substring(2, 8)}`;
+    const transactionId = `${name}-${startTime}-${Math.random()
+      .toString(36)
+      .substring(2, 8)}`;
 
     const transaction: PerformanceTransaction = {
       name,
@@ -486,8 +487,10 @@ export const logger = {
 
     // Add breadcrumb for completed transaction
     this.addBreadcrumb(
-      "performance",
-      `${transaction.operation}: ${transaction.name} completed in ${duration.toFixed(2)}ms`,
+      'performance',
+      `${transaction.operation}: ${
+        transaction.name
+      } completed in ${duration.toFixed(2)}ms`
     );
 
     // Log slow transactions as warnings
@@ -503,7 +506,7 @@ export const logger = {
             duration,
             operation: transaction.operation,
           },
-        },
+        }
       );
     }
 
@@ -516,7 +519,7 @@ export const logger = {
           duration: `${duration.toFixed(2)}ms`,
           operation: transaction.operation,
           context: fullContext.metadata || {},
-        },
+        }
       );
     }
   },
@@ -529,7 +532,7 @@ export const logger = {
     url: string,
     duration: number,
     status?: number,
-    error?: string,
+    error?: string
   ): void {
     const apiCall: APICallInfo = {
       method,
@@ -548,11 +551,13 @@ export const logger = {
 
     if (isSentryActive()) {
       // Add breadcrumb for API call
-      const message = `${method} ${url} - ${status || "unknown"} (${duration.toFixed(2)}ms)`;
+      const message = `${method} ${url} - ${
+        status || 'unknown'
+      } (${duration.toFixed(2)}ms)`;
       Sentry.addBreadcrumb({
-        category: "http",
+        category: 'http',
         message,
-        level: apiCall.success ? "info" : "error",
+        level: apiCall.success ? 'info' : 'error',
         data: {
           method,
           url,
@@ -567,26 +572,28 @@ export const logger = {
       if (duration > 2000) {
         // API calls slower than 2 seconds
         Sentry.addBreadcrumb({
-          category: "performance",
-          message: `Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`,
-          level: "warning",
+          category: 'performance',
+          message: `Slow API call: ${method} ${url} took ${duration.toFixed(
+            2
+          )}ms`,
+          level: 'warning',
           timestamp: Date.now() / 1000,
         });
       }
     }
 
     // Add breadcrumb for API call
-    const statusText = status ? `(${status})` : "";
+    const statusText = status ? `(${status})` : '';
     const message = `${method} ${url} ${statusText} - ${duration.toFixed(2)}ms`;
-    this.addBreadcrumb("api", message, apiCall.success ? "info" : "error");
+    this.addBreadcrumb('api', message, apiCall.success ? 'info' : 'error');
 
     // Log slow API calls
     if (duration > 2000) {
       this.warn(
         `Slow API call: ${method} ${url} took ${duration.toFixed(2)}ms`,
         {
-          component: "API",
-          action: "api_slow_response",
+          component: 'API',
+          action: 'api_slow_response',
           metadata: {
             method,
             url,
@@ -594,19 +601,19 @@ export const logger = {
             status,
             error,
           },
-        },
+        }
       );
     }
 
     if (isDevelopment) {
-      const logLevel = apiCall.success ? "warn" : "error";
+      const logLevel = apiCall.success ? 'warn' : 'error';
       // eslint-disable-next-line no-console
       console[logLevel](`[API] ${message}`, {
         method,
         url,
         status,
         duration,
-        error: error || "none",
+        error: error || 'none',
       });
     }
   },
@@ -620,7 +627,7 @@ export const logger = {
     duration: number,
     success: boolean,
     error?: string,
-    rowsAffected?: number,
+    rowsAffected?: number
   ): void {
     const query: SupabaseQueryInfo = {
       table,
@@ -641,9 +648,9 @@ export const logger = {
       // Add breadcrumb for Supabase query
       const message = `${operation} ${table} - ${duration.toFixed(2)}ms`;
       Sentry.addBreadcrumb({
-        category: "supabase",
+        category: 'supabase',
         message,
-        level: success ? "info" : "error",
+        level: success ? 'info' : 'error',
         data: {
           table,
           operation,
@@ -659,35 +666,39 @@ export const logger = {
       if (duration > 1000) {
         // Queries slower than 1 second
         this.warn(
-          `Slow Supabase query: ${operation} ${table} took ${duration.toFixed(2)}ms`,
+          `Slow Supabase query: ${operation} ${table} took ${duration.toFixed(
+            2
+          )}ms`,
           {
-            component: "Supabase",
-            action: "slow_query",
+            component: 'Supabase',
+            action: 'slow_query',
             metadata: {
               table,
               operation,
               duration,
               rowsAffected,
             },
-          },
+          }
         );
       }
     }
 
     // Add breadcrumb for Supabase query
-    const statusText = success ? "✓" : "✗";
-    const message = `${statusText} ${operation} ${table} - ${duration.toFixed(2)}ms`;
-    this.addBreadcrumb("supabase", message, success ? "info" : "error");
+    const statusText = success ? '✓' : '✗';
+    const message = `${statusText} ${operation} ${table} - ${duration.toFixed(
+      2
+    )}ms`;
+    this.addBreadcrumb('supabase', message, success ? 'info' : 'error');
 
     if (isDevelopment) {
-      const logLevel = success ? "warn" : "error";
+      const logLevel = success ? 'warn' : 'error';
       // eslint-disable-next-line no-console
       console[logLevel](`[SUPABASE] ${message}`, {
         table,
         operation,
         duration,
         success,
-        error: error || "none",
+        error: error || 'none',
         rowsAffected,
       });
     }
@@ -698,9 +709,9 @@ export const logger = {
    */
   logRiskEvent(
     type: string,
-    severity: "low" | "medium" | "high" | "critical",
+    severity: 'low' | 'medium' | 'high' | 'critical',
     details: Record<string, unknown>,
-    userId?: string,
+    userId?: string
   ): void {
     const riskEvent: RiskEventInfo = {
       type,
@@ -727,18 +738,18 @@ export const logger = {
     if (isSentryActive()) {
       // Capture as Sentry event with appropriate level
       const sentryLevel =
-        severity === "critical"
-          ? "fatal"
-          : severity === "high"
-            ? "error"
-            : "warning";
+        severity === 'critical'
+          ? 'fatal'
+          : severity === 'high'
+          ? 'error'
+          : 'warning';
       Sentry.captureMessage(
         message,
-        sentryLevel as "fatal" | "error" | "warning",
+        sentryLevel as 'fatal' | 'error' | 'warning'
       );
 
       // Add context
-      Sentry.setContext("risk_event", {
+      Sentry.setContext('risk_event', {
         type,
         severity,
         userId,
@@ -749,13 +760,13 @@ export const logger = {
 
     // Add breadcrumb for risk event
     this.addBreadcrumb(
-      "risk",
+      'risk',
       `${severity}: ${type}`,
-      severity === "critical"
-        ? "error"
-        : severity === "high"
-          ? "error"
-          : "warning",
+      severity === 'critical'
+        ? 'error'
+        : severity === 'high'
+        ? 'error'
+        : 'warning'
     );
   },
 
@@ -766,7 +777,7 @@ export const logger = {
     name: string,
     value: number,
     unit: string,
-    context?: Record<string, unknown>,
+    context?: Record<string, unknown>
   ): void {
     const metric: PerformanceMetric = {
       name,
@@ -792,19 +803,19 @@ export const logger = {
         name,
         value,
         unit as
-          | "nanosecond"
-          | "microsecond"
-          | "millisecond"
-          | "second"
-          | "minute"
-          | "hour"
-          | "day"
-          | "week"
-          | "custom",
+          | 'nanosecond'
+          | 'microsecond'
+          | 'millisecond'
+          | 'second'
+          | 'minute'
+          | 'hour'
+          | 'day'
+          | 'week'
+          | 'custom'
       );
 
       // Add breadcrumb
-      this.addBreadcrumb("metric", `${name}: ${value}${unit}`);
+      this.addBreadcrumb('metric', `${name}: ${value}${unit}`);
     }
   },
 
@@ -856,24 +867,24 @@ export const logger = {
   recordUserAction(
     action: string,
     duration?: number,
-    context?: LogContext,
+    context?: LogContext
   ): void {
     const fullContext = mergeContext(context);
     const message = duration ? `${action} (${duration.toFixed(2)}ms)` : action;
 
-    this.addBreadcrumb("user_action", message);
+    this.addBreadcrumb('user_action', message);
 
     if (isSentryActive()) {
       // Sentry handles this automatically via BrowserTracing
       if (duration) {
         this.recordMetric(
-          `user_action_${action.replace(/\s+/g, "_").toLowerCase()}`,
+          `user_action_${action.replace(/\s+/g, '_').toLowerCase()}`,
           duration,
-          "ms",
+          'ms',
           {
             action,
             ...fullContext.metadata,
-          },
+          }
         );
       }
     }
@@ -893,7 +904,7 @@ export const logger = {
     if (isDevelopment) {
       console.warn(
         `[USER ACTION START] ${action} (${actionId})`,
-        context?.metadata || {},
+        context?.metadata || {}
       );
     }
 
@@ -904,7 +915,7 @@ export const logger = {
    * End a user action timing
    */
   endUserAction(actionId: string, action: string, context?: LogContext): void {
-    const startTime = parseFloat(actionId.split("-")[1]);
+    const startTime = parseFloat(actionId.split('-')[1]);
     if (isNaN(startTime)) return;
 
     const duration = performance.now() - startTime;
@@ -912,7 +923,7 @@ export const logger = {
 
     if (isDevelopment) {
       console.error(
-        `[USER ACTION END] ${action} (${actionId}) - ${duration.toFixed(2)}ms`,
+        `[USER ACTION END] ${action} (${actionId}) - ${duration.toFixed(2)}ms`
       );
     }
   },
@@ -930,14 +941,14 @@ export const logger = {
       if (isDevelopment) {
         console.warn(
           `[PERF] ${label}: ${duration.toFixed(2)}ms`,
-          fullContext.metadata || {},
+          fullContext.metadata || {}
         );
       }
       this.recordMetric(
-        `operation_${label.replace(/\s+/g, "_").toLowerCase()}`,
+        `operation_${label.replace(/\s+/g, '_').toLowerCase()}`,
         duration,
-        "ms",
-        fullContext.metadata,
+        'ms',
+        fullContext.metadata
       );
     }
   },
@@ -948,7 +959,7 @@ export const logger = {
   async timeAsync<T>(
     label: string,
     operation: () => Promise<T>,
-    context?: LogContext,
+    context?: LogContext
   ): Promise<T> {
     const start = performance.now();
     try {
@@ -959,14 +970,14 @@ export const logger = {
       if (isDevelopment) {
         console.warn(
           `[PERF] ${label}: ${duration.toFixed(2)}ms`,
-          fullContext.metadata || {},
+          fullContext.metadata || {}
         );
       }
       this.recordMetric(
-        `async_${label.replace(/\s+/g, "_").toLowerCase()}`,
+        `async_${label.replace(/\s+/g, '_').toLowerCase()}`,
         duration,
-        "ms",
-        fullContext.metadata,
+        'ms',
+        fullContext.metadata
       );
     }
   },

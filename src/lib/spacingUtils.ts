@@ -14,11 +14,11 @@ export const SPACING_SCALE = {
   base: 16, // 1rem
   lg: 24, // 1.5rem
   xl: 32, // 2rem
-  "2xl": 48, // 3rem
-  "3xl": 56, // 3.5rem
-  "4xl": 64, // 4rem
-  "5xl": 80, // 5rem
-  "6xl": 96, // 6rem
+  '2xl': 48, // 3rem
+  '3xl': 56, // 3.5rem
+  '4xl': 64, // 4rem
+  '5xl': 80, // 5rem
+  '6xl': 96, // 6rem
   // Numeric aliases for backward compatibility or direct grid unit access (multiples of 4px)
   1: 4,
   2: 8,
@@ -46,8 +46,8 @@ export const PADDING_VALUES = {
   base: 16, // var(--padding-base)
   lg: 24, // var(--padding-lg)
   xl: 32, // var(--padding-xl)
-  "2xl": 48, // var(--padding-2xl)
-  "3xl": 64, // var(--padding-3xl)
+  '2xl': 48, // var(--padding-2xl)
+  '3xl': 64, // var(--padding-3xl)
 } as const;
 
 /**
@@ -60,8 +60,8 @@ export const MARGIN_VALUES = {
   base: 16, // var(--margin-base)
   lg: 24, // var(--margin-lg)
   xl: 32, // var(--margin-xl)
-  "2xl": 48, // var(--margin-2xl)
-  "3xl": 64, // var(--margin-3xl)
+  '2xl': 48, // var(--margin-2xl)
+  '3xl': 64, // var(--margin-3xl)
 } as const;
 
 /**
@@ -74,7 +74,7 @@ export const GAP_VALUES = {
   base: 16, // var(--gap-base)
   lg: 24, // var(--gap-lg)
   xl: 32, // var(--gap-xl)
-  "2xl": 48, // var(--gap-2xl)
+  '2xl': 48, // var(--gap-2xl)
 } as const;
 
 /**
@@ -128,12 +128,12 @@ export const COMPONENT_SPACING = {
  * @returns boolean indicating if the value follows the grid system
  */
 export function validateSpacing(value: number | string): boolean {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     // Convert rem to pixels (assuming 16px base font size)
-    if (value.endsWith("rem")) {
+    if (value.endsWith('rem')) {
       const remValue = parseFloat(value);
       value = remValue * 16;
-    } else if (value.endsWith("px")) {
+    } else if (value.endsWith('px')) {
       value = parseFloat(value);
     } else {
       return false; // Invalid format
@@ -152,8 +152,8 @@ export function validateSpacing(value: number | string): boolean {
  * @returns CSS custom property string
  */
 export function getSpacingCSS(
-  type: "margin" | "padding" | "gap",
-  size: keyof typeof SPACING_SCALE,
+  type: 'margin' | 'padding' | 'gap',
+  size: keyof typeof SPACING_SCALE
 ): string {
   const cssMap = {
     margin: `var(--margin-${size})`,
@@ -191,13 +191,13 @@ export function getSpacingRem(size: keyof typeof SPACING_SCALE): string {
  */
 export function getResponsiveSpacing(
   baseSize: keyof typeof SPACING_SCALE,
-  mobileReduction: number = 1,
+  mobileReduction: number = 1
 ): { base: string; mobile: string } {
   const basePixels = SPACING_SCALE[baseSize];
   const mobilePixels = Math.max(0, basePixels - mobileReduction * 4);
 
   return {
-    base: getSpacingCSS("padding", baseSize),
+    base: getSpacingCSS('padding', baseSize),
     mobile: `${mobilePixels / 16}rem`,
   };
 }
@@ -208,7 +208,7 @@ export function getResponsiveSpacing(
  * @returns Array of validation errors
  */
 export function validateComponentSpacing(
-  componentSpacing: Record<string, number | string>,
+  componentSpacing: Record<string, number | string>
 ): string[] {
   const errors: string[] = [];
 
@@ -229,9 +229,9 @@ export function validateComponentSpacing(
  */
 export function generateComponentSpacingClasses(
   componentName: string,
-  spacingConfig: Record<string, keyof typeof SPACING_SCALE>,
+  spacingConfig: Record<string, keyof typeof SPACING_SCALE>
 ): string {
-  let css = "";
+  let css = '';
 
   Object.entries(spacingConfig).forEach(([variant, size]) => {
     css += `.${componentName}-${variant} {\n`;
@@ -249,7 +249,7 @@ export function generateComponentSpacingClasses(
  * @returns Array of consistency issues
  */
 export function checkSpacingConsistency(
-  components: Record<string, Record<string, string>>[],
+  components: Record<string, Record<string, string>>[]
 ): string[] {
   const issues: string[] = [];
   const allSpacingValues: string[] = [];
@@ -281,45 +281,45 @@ export function checkSpacingConsistency(
 export function getSpacingForContext(context: string, variant: string): string {
   const contextMap: Record<string, Record<string, string>> = {
     card: {
-      padding: "var(--card-padding)",
-      margin: "var(--card-margin)",
-      gap: "var(--card-gap)",
+      padding: 'var(--card-padding)',
+      margin: 'var(--card-margin)',
+      gap: 'var(--card-gap)',
     },
     button: {
-      padding: "var(--button-padding-y) var(--button-padding-x)",
-      margin: "var(--button-margin)",
+      padding: 'var(--button-padding-y) var(--button-padding-x)',
+      margin: 'var(--button-margin)',
     },
     input: {
-      padding: "var(--input-padding-y) var(--input-padding-x)",
-      margin: "var(--input-margin)",
+      padding: 'var(--input-padding-y) var(--input-padding-x)',
+      margin: 'var(--input-margin)',
     },
     form: {
-      field: "var(--form-field-margin)",
-      section: "var(--form-section-margin)",
+      field: 'var(--form-field-margin)',
+      section: 'var(--form-section-margin)',
     },
     header: {
-      padding: "var(--header-padding)",
-      margin: "var(--header-margin)",
+      padding: 'var(--header-padding)',
+      margin: 'var(--header-margin)',
     },
     sidebar: {
-      padding: "var(--sidebar-padding)",
-      gap: "var(--sidebar-gap)",
+      padding: 'var(--sidebar-padding)',
+      gap: 'var(--sidebar-gap)',
     },
     dashboard: {
-      grid: "var(--dashboard-grid-gap)",
-      cardPadding: "var(--dashboard-card-padding)",
-      cardMargin: "var(--dashboard-card-margin)",
+      grid: 'var(--dashboard-grid-gap)',
+      cardPadding: 'var(--dashboard-card-padding)',
+      cardMargin: 'var(--dashboard-card-margin)',
     },
     layout: {
-      padding: "var(--layout-padding)",
-      margin: "var(--layout-margin)",
+      padding: 'var(--layout-padding)',
+      margin: 'var(--layout-margin)',
     },
     section: {
-      spacing: "var(--section-spacing)",
+      spacing: 'var(--section-spacing)',
     },
   };
 
-  return contextMap[context]?.[variant] || "var(--space-base)"; // Default to 16px
+  return contextMap[context]?.[variant] || 'var(--space-base)'; // Default to 16px
 }
 
 /**

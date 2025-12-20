@@ -1,8 +1,23 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
+import { Card } from '@/components/ui/card';
+import { usePortfolioData } from '@/hooks/usePortfolioData';
+import { cn } from '@/lib/utils';
+import React from 'react';
 
+/**
+ * PerformanceMetrics Component
+ *
+ * Displays key performance metrics for the user's trading portfolio including
+ * total trades, win rate, total return, and Sharpe ratio.
+ *
+ * @component
+ * @returns {React.ReactElement} Performance metrics card with trading statistics
+ */
 export const PerformanceMetrics: React.FC = () => {
+  /**
+   * usePortfolioData hook provides access to user's positions and profile data.
+   * We rely on the positions array for calculating trade statistics and the
+   * profile.balance field for computing total return percentages.
+   */
   const { positions, profile } = usePortfolioData();
 
   const totalTrades = positions.length;
@@ -36,7 +51,10 @@ export const PerformanceMetrics: React.FC = () => {
         <div>
           <p className="text-muted-foreground">Total Return</p>
           <p
-            className={`font-semibold ${totalReturn >= 0 ? "text-profit" : "text-loss"}`}
+            className={cn(
+              'font-semibold',
+              totalReturn >= 0 ? 'text-profit' : 'text-loss'
+            )}
           >
             {totalReturn.toFixed(2)}%
           </p>

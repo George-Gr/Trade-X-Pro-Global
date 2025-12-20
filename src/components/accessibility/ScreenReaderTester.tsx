@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { useAccessibilityTesting } from "@/lib/colorContrastVerification";
+import { useAccessibilityTesting } from '@/lib/colorContrastVerification';
+import { useState } from 'react';
 
 /**
  * Test result details interface
  */
-interface TestResultDetails {
-  [key: string]: unknown;
-}
+export type TestResultDetails = unknown[] | Record<string, unknown>;
 
 /**
  * Test case interface for screen reader testing
@@ -43,7 +41,7 @@ export interface TestResult {
 
 export function ScreenReaderTester() {
   const [isTesting, setIsTesting] = useState(false);
-  const [currentTest, setCurrentTest] = useState<string>("");
+  const [currentTest, setCurrentTest] = useState<string>('');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
 
@@ -52,9 +50,9 @@ export function ScreenReaderTester() {
   // Test cases for screen reader functionality
   const testCases: TestCase[] = [
     {
-      id: "heading-hierarchy",
-      title: "Heading Hierarchy Test",
-      description: "Tests proper H1-H6 structure and semantic organization",
+      id: 'heading-hierarchy',
+      title: 'Heading Hierarchy Test',
+      description: 'Tests proper H1-H6 structure and semantic organization',
       action: () => {
         const stats = accessibilityTesting.getHeadingStats();
         const isValid = accessibilityTesting.isValid;
@@ -62,15 +60,15 @@ export function ScreenReaderTester() {
           passed: isValid,
           details: stats,
           message: isValid
-            ? "Heading hierarchy is valid"
-            : "Heading hierarchy has issues",
+            ? 'Heading hierarchy is valid'
+            : 'Heading hierarchy has issues',
         };
       },
     },
     {
-      id: "live-regions",
-      title: "Live Regions Test",
-      description: "Tests ARIA live regions for dynamic content updates",
+      id: 'live-regions',
+      title: 'Live Regions Test',
+      description: 'Tests ARIA live regions for dynamic content updates',
       action: () => {
         const hasLiveRegions = accessibilityTesting.liveRegions.length > 0;
         return {
@@ -78,17 +76,17 @@ export function ScreenReaderTester() {
           details: accessibilityTesting.liveRegions,
           message: hasLiveRegions
             ? `Found ${accessibilityTesting.liveRegions.length} live regions`
-            : "No live regions detected",
+            : 'No live regions detected',
         };
       },
     },
     {
-      id: "semantic-structure",
-      title: "Semantic Structure Test",
-      description: "Tests proper use of semantic HTML elements",
+      id: 'semantic-structure',
+      title: 'Semantic Structure Test',
+      description: 'Tests proper use of semantic HTML elements',
       action: () => {
         const elements = document.querySelectorAll(
-          "main, nav, aside, section, article, header, footer",
+          'main, nav, aside, section, article, header, footer'
         );
         const hasSemanticStructure = elements.length > 0;
         return {
@@ -96,18 +94,18 @@ export function ScreenReaderTester() {
           details: Array.from(elements).map((el) => el.tagName.toLowerCase()),
           message: hasSemanticStructure
             ? `Found ${elements.length} semantic elements`
-            : "No semantic structure detected",
+            : 'No semantic structure detected',
         };
       },
     },
     {
-      id: "alt-text",
-      title: "Alternative Text Test",
-      description: "Tests image alternative text for screen readers",
+      id: 'alt-text',
+      title: 'Alternative Text Test',
+      description: 'Tests image alternative text for screen readers',
       action: () => {
-        const images = document.querySelectorAll("img");
+        const images = document.querySelectorAll('img');
         const imagesWithAlt = Array.from(images).filter(
-          (img) => img.alt && img.alt.trim() !== "",
+          (img) => img.alt && img.alt.trim() !== ''
         );
         const hasAltText =
           imagesWithAlt.length === images.length && images.length > 0;
@@ -125,12 +123,12 @@ export function ScreenReaderTester() {
       },
     },
     {
-      id: "focus-management",
-      title: "Focus Management Test",
-      description: "Tests keyboard focus indicators and management",
+      id: 'focus-management',
+      title: 'Focus Management Test',
+      description: 'Tests keyboard focus indicators and management',
       action: () => {
         const focusableElements = document.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
         const hasFocusManagement = focusableElements.length > 0;
         return {
@@ -138,19 +136,19 @@ export function ScreenReaderTester() {
           details: {
             total: focusableElements.length,
             elements: Array.from(focusableElements).map((el) =>
-              el.tagName.toLowerCase(),
+              el.tagName.toLowerCase()
             ),
           },
           message: hasFocusManagement
             ? `Found ${focusableElements.length} focusable elements`
-            : "No focusable elements detected",
+            : 'No focusable elements detected',
         };
       },
     },
   ];
 
   const announceToScreenReader = (message: string) => {
-    if (voiceEnabled && "speechSynthesis" in window) {
+    if (voiceEnabled && 'speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(message);
       utterance.rate = 0.9;
       utterance.pitch = 1;
@@ -180,7 +178,7 @@ export function ScreenReaderTester() {
 
     announceToScreenReader(`${testCase.title}. ${result.message}`);
     setIsTesting(false);
-    setCurrentTest("");
+    setCurrentTest('');
   };
 
   const runAllTests = async () => {
@@ -193,7 +191,7 @@ export function ScreenReaderTester() {
 
   const clearResults = () => {
     setTestResults([]);
-    announceToScreenReader("Test results cleared");
+    announceToScreenReader('Test results cleared');
   };
 
   return (
@@ -216,12 +214,12 @@ export function ScreenReaderTester() {
             />
             <div
               className={`w-12 h-6 rounded-full transition-colors ${
-                voiceEnabled ? "bg-green-500" : "bg-gray-300"
+                voiceEnabled ? 'bg-green-500' : 'bg-gray-300'
               }`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
-                  voiceEnabled ? "translate-x-6" : "translate-x-1"
+                  voiceEnabled ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
             </div>
@@ -233,7 +231,7 @@ export function ScreenReaderTester() {
             disabled={isTesting}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg font-medium"
           >
-            {isTesting ? "Running Tests..." : "Run All Tests"}
+            {isTesting ? 'Running Tests...' : 'Run All Tests'}
           </button>
         </div>
       </div>
@@ -255,7 +253,7 @@ export function ScreenReaderTester() {
                 disabled={isTesting}
                 className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium"
               >
-                {currentTest === testCase.id ? "Running..." : "Run Test"}
+                {currentTest === testCase.id ? 'Running...' : 'Run Test'}
               </button>
             </div>
           </div>
@@ -277,7 +275,7 @@ export function ScreenReaderTester() {
               onClick={() => {
                 const results = JSON.stringify(testResults, null, 2);
                 navigator.clipboard.writeText(results);
-                announceToScreenReader("Test results copied to clipboard");
+                announceToScreenReader('Test results copied to clipboard');
               }}
               className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm"
             >
@@ -297,15 +295,15 @@ export function ScreenReaderTester() {
                 key={result.id}
                 className={`p-4 rounded-lg border ${
                   result.passed
-                    ? "bg-green-50 border-green-200"
-                    : "bg-red-50 border-red-200"
+                    ? 'bg-green-50 border-green-200'
+                    : 'bg-red-50 border-red-200'
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
                     <h4
                       className={`font-semibold ${
-                        result.passed ? "text-green-900" : "text-red-900"
+                        result.passed ? 'text-green-900' : 'text-red-900'
                       }`}
                     >
                       {result.testName}
@@ -317,11 +315,11 @@ export function ScreenReaderTester() {
                   <span
                     className={`px-2 py-1 rounded text-xs font-medium ${
                       result.passed
-                        ? "bg-green-200 text-green-800"
-                        : "bg-red-200 text-red-800"
+                        ? 'bg-green-200 text-green-800'
+                        : 'bg-red-200 text-red-800'
                     }`}
                   >
-                    {result.passed ? "PASSED" : "FAILED"}
+                    {result.passed ? 'PASSED' : 'FAILED'}
                   </span>
                 </div>
 
@@ -352,7 +350,7 @@ export function ScreenReaderTester() {
           <div>
             <button
               onClick={() => {
-                const message = "Price updated: AAPL is now $150.25";
+                const message = 'Price updated: AAPL is now $150.25';
                 announceToScreenReader(message);
               }}
               aria-live="polite"
@@ -368,7 +366,7 @@ export function ScreenReaderTester() {
           <div>
             <button
               onClick={() => {
-                const message = "ALERT: Market closed due to volatility";
+                const message = 'ALERT: Market closed due to volatility';
                 announceToScreenReader(message);
               }}
               aria-live="assertive"
@@ -385,7 +383,7 @@ export function ScreenReaderTester() {
             <button
               onClick={() => {
                 const message =
-                  "Order executed: 100 shares of AAPL bought at $150.25";
+                  'Order executed: 100 shares of AAPL bought at $150.25';
                 announceToScreenReader(message);
               }}
               aria-live="polite"

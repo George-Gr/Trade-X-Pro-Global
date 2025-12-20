@@ -2,8 +2,8 @@
  * Shared TypeScript types and interfaces for accessibility testing components
  */
 
-import type { MutableRefObject, FormEvent } from "react";
-import type { ScreenReaderTest } from "../../lib/advancedAccessibility";
+import type { MutableRefObject, FormEvent } from 'react';
+import type { ScreenReaderTest } from '../../lib/advancedAccessibility';
 
 /**
  * Type definitions for accessibility hook returns and tab component props
@@ -19,7 +19,7 @@ export interface AccessibilityTestingType {
 }
 
 export interface ContrastResult {
-  wcag: "fail" | "aa" | "aaa";
+  wcag: 'fail' | 'aa' | 'aaa';
   ratio: number;
   element: { tagName: string };
   text: string;
@@ -39,22 +39,22 @@ export interface ColorContrastType {
 }
 
 export interface ColorBlindMode {
-  type: "none" | "protanopia" | "deuteranopia" | "tritanopia" | "achromatopsia";
+  type: 'none' | 'protanopia' | 'deuteranopia' | 'tritanopia' | 'achromatopsia';
   intensity: number;
 }
 
 export interface ColorBlindModeType {
   availableModes: readonly [
-    { readonly type: "none"; readonly name: "Normal Vision" },
-    { readonly type: "protanopia"; readonly name: "Red-Green (Protanopia)" },
+    { readonly type: 'none'; readonly name: 'Normal Vision' },
+    { readonly type: 'protanopia'; readonly name: 'Red-Green (Protanopia)' },
     {
-      readonly type: "deuteranopia";
-      readonly name: "Red-Green (Deuteranopia)";
+      readonly type: 'deuteranopia';
+      readonly name: 'Red-Green (Deuteranopia)';
     },
-    { readonly type: "tritanopia"; readonly name: "Blue-Yellow (Tritanopia)" },
+    { readonly type: 'tritanopia'; readonly name: 'Blue-Yellow (Tritanopia)' },
     {
-      readonly type: "achromatopsia";
-      readonly name: "Complete Color Blindness";
+      readonly type: 'achromatopsia';
+      readonly name: 'Complete Color Blindness';
     },
   ];
   colorBlindMode: ColorBlindMode;
@@ -72,14 +72,14 @@ export interface VisualPreferencesType {
   };
   updatePreference: <
     K extends
-      | "highContrast"
-      | "reduceMotion"
-      | "largerText"
-      | "focusIndicator"
-      | "readingGuide",
+      | 'highContrast'
+      | 'reduceMotion'
+      | 'largerText'
+      | 'focusIndicator'
+      | 'readingGuide',
   >(
     key: K,
-    value: boolean,
+    value: boolean
   ) => void;
 }
 
@@ -88,18 +88,18 @@ export interface TradingShortcut {
   modifiers: { ctrl?: boolean; alt?: boolean; shift?: boolean; meta?: boolean };
   description: string;
   action: () => void;
-  category: "trading" | "navigation" | "charts" | "general";
+  category: 'trading' | 'navigation' | 'charts' | 'general';
 }
 
 export interface KeyboardShortcutsType {
   shortcuts: TradingShortcut[];
   getShortcutsByCategory: (
-    category: "trading" | "navigation" | "charts" | "general",
+    category: 'trading' | 'navigation' | 'charts' | 'general'
   ) => TradingShortcut[];
   addShortcut: (shortcut: TradingShortcut) => void;
   removeShortcut: (
     key: string,
-    modifiers: TradingShortcut["modifiers"],
+    modifiers: TradingShortcut['modifiers']
   ) => void;
 }
 
@@ -176,7 +176,7 @@ export interface TabComponentProps {
   onValidateForm: () => boolean;
   onUpdateForm: (
     field: keyof FormData,
-    value: FormData[keyof FormData],
+    value: FormData[keyof FormData]
   ) => void;
   onAnnounceToScreenReader: (message: string) => void;
   onSubmitForm?: (e?: React.FormEvent) => void;

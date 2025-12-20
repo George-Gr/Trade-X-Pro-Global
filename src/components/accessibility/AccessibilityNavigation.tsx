@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { useAccessibility } from "@/contexts/AccessibilityContext";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-  Eye,
-  EyeOff,
-  Monitor,
-  Palette,
-  Keyboard,
-  Volume2,
-  Settings,
-  Menu,
-  X,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
-} from "@/components/ui/drawer";
+  Eye,
+  EyeOff,
+  Keyboard,
+  Monitor,
+  Palette,
+  Settings,
+  Volume2,
+  X,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 /**
  * Accessibility Navigation Component
@@ -55,32 +54,32 @@ export function AccessibilityNavigation() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Toggle accessibility menu: Ctrl+Shift+A
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
         e.preventDefault();
         setIsOpen((prev) => !prev);
       }
 
       // Quick toggle high contrast: Ctrl+Shift+H
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "h") {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'h') {
         e.preventDefault();
         toggleHighContrast();
       }
 
       // Quick toggle reduce motion: Ctrl+Shift+M
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "m") {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'm') {
         e.preventDefault();
         toggleReduceMotion();
       }
 
       // Quick toggle screen reader: Ctrl+Shift+S
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "s") {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
         e.preventDefault();
         setScreenReaderEnabled(!screenReaderEnabled);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     toggleHighContrast,
     toggleReduceMotion,
@@ -96,7 +95,7 @@ export function AccessibilityNavigation() {
             <TooltipTrigger asChild>
               <Button
                 onClick={() => setIsVisible(true)}
-                className="rounded-full w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white shadow-lg"
+                className="rounded-full w-14 h-14 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))/90] text-[hsl(var(--primary-foreground))] shadow-lg"
                 aria-label="Show accessibility menu"
               >
                 <Settings className="w-6 h-6" />
@@ -121,11 +120,11 @@ export function AccessibilityNavigation() {
             <TooltipTrigger asChild>
               <Button
                 onClick={() => setIsOpen(true)}
-                className="rounded-full w-16 h-16 bg-blue-500 hover:bg-blue-600 text-white shadow-lg"
+                className="rounded-full w-16 h-16 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))/90] text-[hsl(var(--primary-foreground))] shadow-lg"
                 aria-label="Open accessibility settings"
               >
                 <Palette className="w-8 h-8" />
-                <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs">
+                <Badge className="absolute -top-2 -right-2 bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))] text-xs">
                   {complianceScore}%
                 </Badge>
               </Button>
@@ -180,7 +179,7 @@ export function AccessibilityNavigation() {
               {/* Visual Preferences */}
               <div className="bg-card rounded-lg p-6 border">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Monitor className="w-6 h-6 text-blue-600" />
+                  <Monitor className="w-6 h-6 text-[hsl(var(--primary))]" />
                   <h3 className="text-lg font-semibold">Visual Preferences</h3>
                 </div>
 
@@ -196,15 +195,15 @@ export function AccessibilityNavigation() {
                       onClick={toggleHighContrast}
                       variant={
                         visualPreferences.preferences.highContrast
-                          ? "default"
-                          : "outline"
+                          ? 'default'
+                          : 'outline'
                       }
                       className="gap-2"
                     >
                       <Eye className="w-4 h-4" />
                       {visualPreferences.preferences.highContrast
-                        ? "On"
-                        : "Off"}
+                        ? 'On'
+                        : 'Off'}
                     </Button>
                   </div>
 
@@ -219,15 +218,15 @@ export function AccessibilityNavigation() {
                       onClick={toggleReduceMotion}
                       variant={
                         visualPreferences.preferences.reduceMotion
-                          ? "default"
-                          : "outline"
+                          ? 'default'
+                          : 'outline'
                       }
                       className="gap-2"
                     >
                       <Monitor className="w-4 h-4" />
                       {visualPreferences.preferences.reduceMotion
-                        ? "On"
-                        : "Off"}
+                        ? 'On'
+                        : 'Off'}
                     </Button>
                   </div>
 
@@ -241,19 +240,19 @@ export function AccessibilityNavigation() {
                     <Button
                       onClick={() =>
                         visualPreferences.updatePreference(
-                          "largerText",
-                          !visualPreferences.preferences.largerText,
+                          'largerText',
+                          !visualPreferences.preferences.largerText
                         )
                       }
                       variant={
                         visualPreferences.preferences.largerText
-                          ? "default"
-                          : "outline"
+                          ? 'default'
+                          : 'outline'
                       }
                       className="gap-2"
                     >
                       <Monitor className="w-4 h-4" />
-                      {visualPreferences.preferences.largerText ? "On" : "Off"}
+                      {visualPreferences.preferences.largerText ? 'On' : 'Off'}
                     </Button>
                   </div>
                 </div>
@@ -262,7 +261,7 @@ export function AccessibilityNavigation() {
               {/* Color Blind Mode */}
               <div className="bg-card rounded-lg p-6 border">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Palette className="w-6 h-6 text-purple-600" />
+                  <Palette className="w-6 h-6 text-[hsl(var(--secondary))]" />
                   <h3 className="text-lg font-semibold">Color Blind Mode</h3>
                 </div>
 
@@ -273,8 +272,8 @@ export function AccessibilityNavigation() {
                       onClick={() => toggleColorBlindMode(mode.type)}
                       variant={
                         colorBlindMode.colorBlindMode.type === mode.type
-                          ? "default"
-                          : "outline"
+                          ? 'default'
+                          : 'outline'
                       }
                       className="w-full justify-start"
                     >
@@ -287,7 +286,7 @@ export function AccessibilityNavigation() {
               {/* Keyboard Shortcuts */}
               <div className="bg-card rounded-lg p-6 border">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Keyboard className="w-6 h-6 text-green-600" />
+                  <Keyboard className="w-6 h-6 text-[hsl(var(--success))]" />
                   <h3 className="text-lg font-semibold">Keyboard Shortcuts</h3>
                 </div>
 
@@ -316,7 +315,7 @@ export function AccessibilityNavigation() {
               {/* Screen Reader */}
               <div className="bg-card rounded-lg p-6 border">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Volume2 className="w-6 h-6 text-orange-600" />
+                  <Volume2 className="w-6 h-6 text-[hsl(var(--warning))]" />
                   <h3 className="text-lg font-semibold">Screen Reader</h3>
                 </div>
 
@@ -332,17 +331,19 @@ export function AccessibilityNavigation() {
                       onClick={() =>
                         setScreenReaderEnabled(!screenReaderEnabled)
                       }
-                      variant={screenReaderEnabled ? "default" : "outline"}
+                      variant={screenReaderEnabled ? 'default' : 'outline'}
                       className="gap-2"
                     >
                       <Volume2 className="w-4 h-4" />
-                      {screenReaderEnabled ? "Enabled" : "Disabled"}
+                      {screenReaderEnabled ? 'Enabled' : 'Disabled'}
                     </Button>
                   </div>
 
-                  <div className="p-4 bg-blue-50 border border-blue-200 rounded">
-                    <p className="font-medium text-blue-900">Quick Tips:</p>
-                    <ul className="text-sm text-blue-700 space-y-1 mt-2">
+                  <div className="p-4 bg-[hsl(var(--info)/0.1)] border border-[hsl(var(--info)/0.3)] rounded">
+                    <p className="font-medium text-[hsl(var(--info-foreground))]">
+                      Quick Tips:
+                    </p>
+                    <ul className="text-sm text-[hsl(var(--info-foreground)/0.8)] space-y-1 mt-2">
                       <li>• Use Tab to navigate through elements</li>
                       <li>• Use H to navigate headings</li>
                       <li>• Use R to navigate regions</li>
@@ -355,7 +356,7 @@ export function AccessibilityNavigation() {
               {/* Compliance Score */}
               <div className="bg-card rounded-lg p-6 border">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Settings className="w-6 h-6 text-red-600" />
+                  <Settings className="w-6 h-6 text-[hsl(var(--destructive))]" />
                   <h3 className="text-lg font-semibold">Accessibility Score</h3>
                 </div>
 
@@ -378,10 +379,10 @@ export function AccessibilityNavigation() {
                         style={{ width: `${complianceScore}%` }}
                         className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${
                           complianceScore >= 90
-                            ? "bg-green-500"
+                            ? 'bg-[hsl(var(--success))]'
                             : complianceScore >= 75
-                              ? "bg-yellow-500"
-                              : "bg-red-500"
+                            ? 'bg-[hsl(var(--warning))]'
+                            : 'bg-[hsl(var(--destructive))]'
                         }`}
                       />
                     </div>
@@ -391,13 +392,13 @@ export function AccessibilityNavigation() {
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Visual</span>
                       <span className="font-medium">
-                        {categoryScores?.visual ?? "—"}%
+                        {categoryScores?.visual ?? '—'}%
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Keyboard</span>
                       <span className="font-medium">
-                        {categoryScores?.keyboard ?? "—"}%
+                        {categoryScores?.keyboard ?? '—'}%
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -405,13 +406,13 @@ export function AccessibilityNavigation() {
                         Screen Reader
                       </span>
                       <span className="font-medium">
-                        {categoryScores?.screenReader ?? "—"}%
+                        {categoryScores?.screenReader ?? '—'}%
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Forms</span>
                       <span className="font-medium">
-                        {categoryScores?.forms ?? "—"}%
+                        {categoryScores?.forms ?? '—'}%
                       </span>
                     </div>
                   </div>
@@ -431,7 +432,7 @@ export function AccessibilityNavigation() {
                       toggleHighContrast();
                       toggleReduceMotion();
                     }}
-                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                    className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))/90] text-[hsl(var(--primary-foreground))]"
                   >
                     Optimize View
                   </Button>
@@ -439,18 +440,18 @@ export function AccessibilityNavigation() {
                   <Button
                     onClick={() => {
                       setScreenReaderEnabled(true);
-                      visualPreferences.updatePreference("largerText", true);
+                      visualPreferences.updatePreference('largerText', true);
                     }}
-                    className="bg-green-500 hover:bg-green-600 text-white"
+                    className="bg-[hsl(var(--success))] hover:bg-[hsl(var(--success))/90] text-[hsl(var(--success-foreground))]"
                   >
                     Screen Reader Mode
                   </Button>
 
                   <Button
                     onClick={() => {
-                      toggleColorBlindMode("deuteranopia");
+                      toggleColorBlindMode('deuteranopia');
                     }}
-                    className="bg-purple-500 hover:bg-purple-600 text-white"
+                    className="bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--secondary))/90] text-[hsl(var(--secondary-foreground))]"
                   >
                     Color Blind Test
                   </Button>
@@ -458,11 +459,11 @@ export function AccessibilityNavigation() {
                   <Button
                     onClick={() => {
                       // Reset all accessibility settings
-                      visualPreferences.updatePreference("highContrast", false);
-                      visualPreferences.updatePreference("reduceMotion", false);
-                      visualPreferences.updatePreference("largerText", false);
+                      visualPreferences.updatePreference('highContrast', false);
+                      visualPreferences.updatePreference('reduceMotion', false);
+                      visualPreferences.updatePreference('largerText', false);
                       colorBlindMode.applyColorBlindSimulation({
-                        type: "none",
+                        type: 'none',
                         intensity: 0,
                       });
                       setScreenReaderEnabled(false);

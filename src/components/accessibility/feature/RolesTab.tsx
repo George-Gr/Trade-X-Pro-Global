@@ -7,19 +7,7 @@ import { useState, type KeyboardEvent, type MouseEvent } from 'react';
  * Demonstrates ARIA roles and their usage.
  * Includes examples of interactive elements, navigation, and live regions.
  */
-export function RolesTab({
-  formData,
-  setFormData,
-  errors,
-  setErrors,
-  inputRefs,
-  testResults,
-  setTestResults,
-  onValidateForm,
-  onUpdateForm,
-  onAnnounceToScreenReader,
-  onSubmitForm,
-}: TabComponentProps) {
+export function RolesTab(_props: TabComponentProps) {
   // State for the interactive slider
   const [sliderValue, setSliderValue] = useState(50);
   const sliderMin = 0;

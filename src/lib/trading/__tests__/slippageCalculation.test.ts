@@ -1,15 +1,15 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
+  ASSET_SLIPPAGE_CONFIG,
+  calculateAfterHoursPenalty,
+  calculateBaseSlippage,
+  calculateSizeMultiplier,
   calculateSlippage,
   calculateVolatilityMultiplier,
-  calculateSizeMultiplier,
-  calculateBaseSlippage,
-  calculateAfterHoursPenalty,
-  getExecutionPrice,
   getAssetSlippageConfig,
+  getExecutionPrice,
   getSupportedAssets,
   SlippageCalculationError,
-  ASSET_SLIPPAGE_CONFIG,
 } from '../slippageCalculation';
 
 describe('Slippage Calculation Engine', () => {
@@ -83,6 +83,9 @@ describe('Slippage Calculation Engine', () => {
   describe('calculateBaseSlippage', () => {
     it('returns valid slippage within configured range', () => {
       const config = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+      expect(config).toBeDefined();
+      if (!config) throw new Error('Config undefined');
+
       const randomFunc = () => 0.5;
       const result = calculateBaseSlippage(config, randomFunc);
 
@@ -95,7 +98,9 @@ describe('Slippage Calculation Engine', () => {
       let counter = 0;
       const deterministicRandom = () => (counter++ % 10) / 10;
 
-      const results = [];
+      const results: number[] = [];
+      if (!config) throw new Error('Config undefined');
+
       for (let i = 0; i < 5; i++) {
         counter = 0; // Reset counter for each call
         results.push(calculateBaseSlippage(config, deterministicRandom));
@@ -112,12 +117,14 @@ describe('Slippage Calculation Engine', () => {
   describe('calculateAfterHoursPenalty', () => {
     it('returns 1x during normal hours', () => {
       const config = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+      if (!config) throw new Error('Config undefined');
       const result = calculateAfterHoursPenalty(config, false);
       expect(result).toBe(1);
     });
 
     it('applies penalty multiplier after hours', () => {
       const config = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+      if (!config) return;
       const result = calculateAfterHoursPenalty(config, true);
       expect(result).toBe(config.afterHoursPenalty);
       expect(result).toBeGreaterThan(1);
@@ -149,8 +156,11 @@ describe('Slippage Calculation Engine', () => {
       expect(result).toHaveProperty('executionPrice');
       expect(result).toHaveProperty('slippageInPrice');
 
+      const eurUsdConfig = ASSET_SLIPPAGE_CONFIG['EURUSD'];
+      if (!eurUsdConfig) throw new Error('EURUSD config not found');
+
       expect(result.totalSlippage).toBeLessThanOrEqual(
-        ASSET_SLIPPAGE_CONFIG['EURUSD'].maxSlippage * 2
+        eurUsdConfig.maxSlippage * 2
       );
       expect(result.executionPrice).toBeGreaterThan(result.baseSlippage); // Buy slips up
     });

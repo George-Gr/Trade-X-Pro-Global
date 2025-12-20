@@ -1,5 +1,4 @@
-import React from "react";
-import type { FormAccessibilityType, FormField } from "../types";
+import type { FormAccessibilityType, FormField } from '../types';
 
 export interface AriaLabelsTabProps {
   formAccessibility: FormAccessibilityType;

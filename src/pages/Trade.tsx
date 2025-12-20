@@ -1,25 +1,24 @@
-import { useState, useRef, Suspense, lazy } from 'react';
 import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/hooks/use-toast';
-import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
-import {
-  Drawer,
-  DrawerTrigger,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerClose,
-} from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
-import { Menu, X, HelpCircle } from 'lucide-react';
-import { TradeLoading } from '@/components/trading/TradeLoading';
 import {
   OnboardingTour,
   useOnboardingTour,
 } from '@/components/onboarding/OnboardingTour';
+import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
+import { Button } from '@/components/ui/button';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ProModeOnly, ViewModeToggle } from '@/components/ui/ViewModeToggle';
 import { useViewModeSafe } from '@/contexts/ViewModeContext';
-import { ViewModeToggle, ProModeOnly } from '@/components/ui/ViewModeToggle';
+import { useToast } from '@/hooks/use-toast';
+import { HelpCircle, Menu, X } from 'lucide-react';
+import { Suspense, lazy, useRef, useState } from 'react';
 
 // Lazy load heavy components for better bundle splitting
 const EnhancedWatchlist = lazy(
@@ -61,7 +60,7 @@ const Trade = () => {
   const tradingPanelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { startTour } = useOnboardingTour();
-  const { isProMode, isBasicMode } = useViewModeSafe();
+  const { isBasicMode } = useViewModeSafe();
 
   const handleQuickTrade = (symbol: string, side: 'buy' | 'sell') => {
     setSelectedSymbol(symbol);
@@ -77,7 +76,9 @@ const Trade = () => {
 
     toast({
       title: 'Symbol selected',
-      description: `${symbol} is ready for ${side === 'buy' ? 'buying' : 'selling'}`,
+      description: `${symbol} is ready for ${
+        side === 'buy' ? 'buying' : 'selling'
+      }`,
     });
   };
 
@@ -95,7 +96,7 @@ const Trade = () => {
         data-tour="trading-page"
       >
         {/* KYC Status Banner with View Mode Toggle and Help Button */}
-        <div className="flex-shrink-0 px-4 pt-4 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="shrink-0 px-4 pt-4 flex items-center justify-between gap-2 sm:gap-4">
           <div className="flex-1 min-w-0">
             <Suspense
               fallback={
@@ -127,7 +128,7 @@ const Trade = () => {
         <div className="flex-1 flex flex-col sm:flex-row md:flex-row lg:flex-row overflow-hidden gap-0">
           {/* Left Sidebar - Enhanced Watchlist */}
           <div
-            className="hidden lg:flex w-80 border-r border-border flex-shrink-0 overflow-hidden"
+            className="hidden lg:flex w-80 border-r border-border shrink-0 overflow-hidden"
             data-tour="watchlist"
           >
             <Suspense
@@ -145,7 +146,7 @@ const Trade = () => {
           {/* Center - Chart & Trading (primary content) */}
           <div className="flex-1 flex flex-col overflow-hidden min-w-0">
             {/* Mobile & Tablet Control Buttons (hidden on desktop lg+) */}
-            <div className="lg:hidden flex gap-2 px-4 py-2.5 border-b border-border flex-shrink-0 bg-background/80 backdrop-blur-sm">
+            <div className="lg:hidden flex gap-2 px-4 py-2.5 border-b border-border shrink-0 bg-background/80 backdrop-blur-sm">
               <Drawer
                 open={showWatchlistDrawer}
                 onOpenChange={setShowWatchlistDrawer}
@@ -154,7 +155,7 @@ const Trade = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 h-11 min-h-[44px] font-medium transition-all hover:bg-primary/10 active:scale-95"
+                    className="flex-1 h-11 min-h-11 font-medium transition-all hover:bg-primary/10 active:scale-95"
                     tabIndex={0}
                     aria-label="Open watchlist"
                   >
@@ -200,7 +201,7 @@ const Trade = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 h-11 min-h-[44px] font-medium transition-all hover:bg-primary/10 active:scale-95"
+                    className="flex-1 h-11 min-h-11 font-medium transition-all hover:bg-primary/10 active:scale-95"
                     tabIndex={0}
                     aria-label="Open trading panel"
                   >
@@ -262,7 +263,7 @@ const Trade = () => {
             </div>
 
             {/* Portfolio Dashboard - Responsive height */}
-            <div className="h-64 md:h-80 lg:h-96 border-t border-border flex-shrink-0 overflow-hidden">
+            <div className="h-64 md:h-80 lg:h-96 border-t border-border shrink-0 overflow-hidden">
               <Suspense
                 fallback={
                   <div className="w-full h-full bg-muted/50 animate-pulse rounded" />
@@ -275,7 +276,7 @@ const Trade = () => {
 
           {/* Right Sidebar - Analysis Tools & Trading Panel */}
           {/* Shown on md+ but narrower on md, full width on lg */}
-          <div className="hidden md:flex w-64 lg:w-96 border-l border-border flex-col flex-shrink-0 overflow-hidden max-w-[min(100%,384px)]">
+          <div className="hidden md:flex w-64 lg:w-96 border-l border-border flex-col shrink-0 overflow-hidden max-w-[min(100%,384px)]">
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}

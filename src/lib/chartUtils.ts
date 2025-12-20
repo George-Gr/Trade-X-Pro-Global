@@ -8,14 +8,14 @@
  */
 export const formatTooltipValue = (
   value: unknown,
-  fractionDigits: number = 2,
+  fractionDigits: number = 2
 ): string => {
   // Recharts tooltip value can be number, string, array or other shapes depending on payload.
-  if (typeof value === "number") {
+  if (typeof value === 'number') {
     return `${Number(value).toLocaleString(undefined, { maximumFractionDigits: fractionDigits })}`;
   }
 
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     const n = Number(value);
     if (!Number.isNaN(n))
       return `${n.toLocaleString(undefined, { maximumFractionDigits: fractionDigits })}`;
@@ -24,7 +24,7 @@ export const formatTooltipValue = (
 
   if (Array.isArray(value) && value.length > 0) {
     const first = value[0];
-    if (typeof first === "number" || typeof first === "string") {
+    if (typeof first === 'number' || typeof first === 'string') {
       const n = Number(first);
       if (!Number.isNaN(n))
         return `${n.toLocaleString(undefined, { maximumFractionDigits: fractionDigits })}`;
@@ -32,5 +32,5 @@ export const formatTooltipValue = (
     }
   }
 
-  return String(value ?? "");
+  return String(value ?? '');
 };
