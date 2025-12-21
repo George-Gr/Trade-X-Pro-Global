@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Watchlist {
   id: string;

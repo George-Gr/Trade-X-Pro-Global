@@ -1,61 +1,11 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, AlertCircle, Info } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-
-interface RiskEvent {
-  id: string;
-  event_type: string;
-  severity: string;
-  description: string;
-  details: unknown;
-  resolved: boolean;
-  created_at: string;
-}
+import { useRiskEvents } from '@/hooks/useRiskEvents';
+import { AlertCircle, AlertTriangle, Info } from 'lucide-react';
 
 export const RiskAlerts = () => {
   const { user } = useAuth();
-  const [events, setEvents] = useState<RiskEvent[]>([]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchEvents = async () => {
-      const { data } = await supabase
-        .from('risk_events')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('resolved', false)
-        .order('created_at', { ascending: false })
-        .limit(5);
-
-      if (data) setEvents(data);
-    };
-
-    fetchEvents();
-
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel('risk-events')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'risk_events',
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          setEvents((prev) => [payload.new as RiskEvent, ...prev].slice(0, 5));
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user]);
+  const { events } = useRiskEvents(user?.id);
 
   // Return null to let parent handle the empty state display
   if (events.length === 0) return null;

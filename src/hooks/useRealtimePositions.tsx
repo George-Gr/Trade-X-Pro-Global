@@ -5,10 +5,164 @@
  * Provides live position updates as prices and P&L change in real-time.
  */
 
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useAuth } from './useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 import type { Position } from '@/types/position';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAuth } from './useAuth';
+
+// Debug flag for realtime logging
+const DEBUG_REALTIME = process.env.NODE_ENV === 'development';
+
+// WebSocket connection management utility
+class WebSocketConnectionManager {
+  private static instance: WebSocketConnectionManager;
+  private connections = new Map<
+    string,
+    {
+      url: string;
+      connectedAt: number;
+      lastActivity: number;
+      connection: import('@supabase/supabase-js').RealtimeChannel | null;
+      isClosed: boolean;
+    }
+  >();
+  private connectionLimit = 5; // Maximum concurrent connections
+
+  static getInstance(): WebSocketConnectionManager {
+    if (!WebSocketConnectionManager.instance) {
+      WebSocketConnectionManager.instance = new WebSocketConnectionManager();
+    }
+    return WebSocketConnectionManager.instance;
+  }
+
+  registerConnection(
+    id: string,
+    url: string,
+    connection: import('@supabase/supabase-js').RealtimeChannel
+  ): void {
+    if (this.connections.size >= this.connectionLimit) {
+      this.cleanupOldestConnection();
+    }
+
+    this.connections.set(id, {
+      url,
+      connectedAt: Date.now(),
+      lastActivity: Date.now(),
+      connection,
+      isClosed: false,
+    });
+
+    if (DEBUG_REALTIME) {
+      console.warn(
+        `🔗 Registered WebSocket connection ${id}. Active: ${this.connections.size}/${this.connectionLimit}`
+      );
+    }
+  }
+
+  updateActivity(
+    id: string,
+    connection: import('@supabase/supabase-js').RealtimeChannel
+  ): void {
+    const conn = this.connections.get(id);
+    if (conn) {
+      conn.lastActivity = Date.now();
+      conn.connection = connection;
+    }
+  }
+
+  unregisterConnection(id: string): void {
+    const conn = this.connections.get(id);
+    if (conn && conn.connection && !conn.isClosed) {
+      try {
+        // Close the connection if it exists and isn't already closed
+        supabase.removeChannel(conn.connection);
+        conn.isClosed = true;
+        if (DEBUG_REALTIME) {
+          console.warn(`🔌 Closed WebSocket connection ${id}`);
+        }
+      } catch (error) {
+        if (DEBUG_REALTIME) {
+          console.warn(
+            `⚠️  Failed to close WebSocket connection ${id}:`,
+            error
+          );
+        }
+      }
+    }
+
+    this.connections.delete(id);
+    if (DEBUG_REALTIME) {
+      console.warn(
+        `🔌 Unregistered WebSocket connection ${id}. Active: ${this.connections.size}/${this.connectionLimit}`
+      );
+    }
+  }
+
+  cleanupOldestConnection(): void {
+    let oldestId: string | null = null;
+    let oldestTime = Date.now();
+
+    this.connections.forEach((connection, id) => {
+      if (connection.lastActivity < oldestTime) {
+        oldestTime = connection.lastActivity;
+        oldestId = id;
+      }
+    });
+
+    if (oldestId) {
+      const conn = this.connections.get(oldestId);
+
+      if (conn && conn.connection && !conn.isClosed) {
+        if (DEBUG_REALTIME) {
+          console.warn(
+            `⚠️  Closing oldest WebSocket connection ${oldestId} to make room for new connection`
+          );
+        }
+
+        try {
+          // Close the connection before removing from map
+          supabase.removeChannel(conn.connection);
+          conn.isClosed = true;
+          if (DEBUG_REALTIME) {
+            console.warn(
+              `🔌 Successfully closed WebSocket connection ${oldestId}`
+            );
+          }
+        } catch (error) {
+          if (DEBUG_REALTIME) {
+            console.warn(
+              `⚠️  Failed to close WebSocket connection ${oldestId}:`,
+              error
+            );
+          }
+        }
+      }
+
+      // Directly remove from connections map and emit debug logs
+      this.connections.delete(oldestId);
+      if (DEBUG_REALTIME) {
+        console.warn(
+          `🔌 Removed WebSocket connection ${oldestId} from tracking. Active: ${this.connections.size}/${this.connectionLimit}`
+        );
+      }
+    }
+  }
+
+  getConnectionStats(): { total: number; oldest: number; averageAge: number } {
+    const now = Date.now();
+    const connections = Array.from(this.connections.values());
+    const ages = connections.map((c) => now - c.connectedAt);
+
+    return {
+      total: connections.length,
+      oldest: Math.max(...ages, 0),
+      averageAge:
+        ages.length > 0 ? ages.reduce((a, b) => a + b, 0) / ages.length : 0,
+    };
+  }
+}
+
+const connectionManager = WebSocketConnectionManager.getInstance();
 
 export interface RealtimePositionUpdate {
   type: 'INSERT' | 'UPDATE' | 'DELETE';
@@ -51,6 +205,8 @@ export function useRealtimePositions(
   } = options;
 
   const { user } = useAuth();
+
+  // State management
   const [positions, setPositions] = useState<Position[]>([]);
   const positionsRef = useRef<Position[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +216,13 @@ export function useRealtimePositions(
     'connected' | 'connecting' | 'disconnected' | 'error'
   >('disconnected');
 
+  // Enhanced subscription management with cleanup verification
   const subscriptionRef = useRef<unknown>(null);
+  const cleanupTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const subscriptionStartTimeRef = useRef<number>(0);
+  const memoryLeakDetectorRef = useRef<NodeJS.Timeout | null>(null);
+  const subscriptionIdRef = useRef<string>(crypto.randomUUID());
+
   // Mutable ref to hold a reference to the subscribe function. This
   // helps break circular dependencies when other callbacks need to call subscribe
   const subscribeRef = useRef<((filter?: string) => Promise<void>) | null>(
@@ -69,6 +231,43 @@ export function useRealtimePositions(
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttemptsRef = useRef(5);
+
+  // Memory leak detection and cleanup verification
+  const verifySubscriptionCleanup = useCallback(async () => {
+    if (subscriptionRef.current) {
+      const currentSubscriptionId = subscriptionIdRef.current;
+      if (DEBUG_REALTIME) {
+        console.warn(
+          `⚠️  Subscription cleanup verification failed for ${currentSubscriptionId}`
+        );
+        console.warn(
+          `Subscription has been active for ${
+            Date.now() - subscriptionStartTimeRef.current
+          }ms`
+        );
+      }
+
+      // Force cleanup if subscription is still active after 5 minutes
+      if (Date.now() - subscriptionStartTimeRef.current > 300000) {
+        if (DEBUG_REALTIME) {
+          console.error(
+            `🚨 Force unsubscribing stale subscription ${currentSubscriptionId}`
+          );
+        }
+        try {
+          await supabase.removeChannel(
+            subscriptionRef.current as import('@supabase/supabase-js').RealtimeChannel
+          );
+        } catch (err) {
+          if (DEBUG_REALTIME) {
+            console.error('Failed to force unsubscribe:', err);
+          }
+        }
+        subscriptionRef.current = null;
+        setIsSubscribed(false);
+      }
+    }
+  }, []);
 
   const loadPositions = useCallback(async () => {
     if (!userId) return;
@@ -249,7 +448,7 @@ export function useRealtimePositions(
       setTimeout(() => {
         const fn = subscribeRef.current;
         if (fn) {
-          fn().catch((err: Error) => {
+          fn().catch(() => {
             // Reconnection failed
             setConnectionStatus('error');
           });
@@ -278,6 +477,54 @@ export function useRealtimePositions(
     }
   }, [onError]);
 
+  // Enhanced subscription cleanup with verification
+  const unsubscribe = useCallback(async () => {
+    if (subscriptionRef.current) {
+      try {
+        if (DEBUG_REALTIME) {
+          console.warn(
+            `📤 Unsubscribing from positions realtime ${subscriptionIdRef.current}`
+          );
+        }
+        await supabase.removeChannel(
+          subscriptionRef.current as import('@supabase/supabase-js').RealtimeChannel
+        );
+        subscriptionRef.current = null;
+        setIsSubscribed(false);
+        setConnectionStatus('disconnected');
+
+        // Clear cleanup timer
+        if (cleanupTimerRef.current) {
+          clearTimeout(cleanupTimerRef.current);
+          cleanupTimerRef.current = null;
+        }
+
+        // Clear memory leak detector
+        if (memoryLeakDetectorRef.current) {
+          clearInterval(memoryLeakDetectorRef.current);
+          memoryLeakDetectorRef.current = null;
+        }
+
+        // Unregister from connection manager
+        connectionManager.unregisterConnection(subscriptionIdRef.current);
+
+        if (DEBUG_REALTIME) {
+          console.warn(
+            `✅ Successfully unsubscribed from positions realtime ${subscriptionIdRef.current}`
+          );
+        }
+      } catch (err) {
+        if (DEBUG_REALTIME) {
+          console.error(
+            `❌ Failed to unsubscribe from positions realtime ${subscriptionIdRef.current}:`,
+            err
+          );
+        }
+        setError(err instanceof Error ? err : new Error(String(err)));
+      }
+    }
+  }, []);
+
   const subscribe = useCallback(
     async (filter?: string) => {
       if (!userId) {
@@ -285,6 +532,7 @@ export function useRealtimePositions(
       }
 
       try {
+        // Clean up existing subscription
         if (subscriptionRef.current) {
           await supabase.removeChannel(
             subscriptionRef.current as import('@supabase/supabase-js').RealtimeChannel
@@ -293,6 +541,7 @@ export function useRealtimePositions(
 
         setConnectionStatus('connecting');
         reconnectAttemptsRef.current = 0;
+        subscriptionStartTimeRef.current = Date.now();
 
         const channel = supabase
           .channel(`positions:${userId}`)
@@ -313,12 +562,49 @@ export function useRealtimePositions(
               }, debounceMs);
             }
           )
-          .subscribe((status) => {
+          .subscribe((status: string) => {
             if (status === 'SUBSCRIBED') {
               // Position realtime subscription established
               setConnectionStatus('connected');
               setIsSubscribed(true);
               setError(null);
+
+              // Start memory leak detection
+              if (memoryLeakDetectorRef.current) {
+                clearInterval(memoryLeakDetectorRef.current);
+              }
+              memoryLeakDetectorRef.current = setInterval(() => {
+                const activeTime =
+                  Date.now() - subscriptionStartTimeRef.current;
+                if (activeTime > 1800000) {
+                  if (DEBUG_REALTIME) {
+                    console.warn(
+                      `⚠️  Position subscription ${
+                        subscriptionIdRef.current
+                      } has been active for ${Math.floor(
+                        activeTime / 60000
+                      )} minutes`
+                    );
+                  }
+                }
+              }, 300000); // Check every 5 minutes
+
+              // Register with connection manager
+              connectionManager.registerConnection(
+                subscriptionIdRef.current,
+                `supabase:positions:${userId}`,
+                channel
+              );
+              connectionManager.updateActivity(
+                subscriptionIdRef.current,
+                channel
+              );
+
+              if (DEBUG_REALTIME) {
+                console.warn(
+                  `📥 Subscribed to positions realtime ${subscriptionIdRef.current}`
+                );
+              }
             } else if (status === 'CHANNEL_ERROR') {
               handleSubscriptionError();
             }
@@ -344,25 +630,6 @@ export function useRealtimePositions(
   // from handleSubscriptionError callback (breaking circular deps).
   subscribeRef.current = subscribe;
 
-  const unsubscribe = useCallback(async () => {
-    if (subscriptionRef.current) {
-      try {
-        await supabase.removeChannel(
-          subscriptionRef.current as ReturnType<typeof supabase.channel>
-        );
-        subscriptionRef.current = null;
-        setIsSubscribed(false);
-        setConnectionStatus('disconnected');
-      } catch (err) {
-        console.error('Error unsubscribing:', err);
-      }
-    }
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-  }, []);
-
   const refresh = useCallback(async () => {
     await loadPositions();
   }, [loadPositions]);
@@ -374,7 +641,7 @@ export function useRealtimePositions(
       if (autoSubscribe) {
         const fn = subscribeRef.current;
         if (fn) {
-          fn().catch((err) => {
+          fn().catch(() => {
             // Failed to subscribe to realtime updates
           });
         }
@@ -382,11 +649,40 @@ export function useRealtimePositions(
     });
 
     return () => {
+      // Clear debounce timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+
+      // Enhanced cleanup with verification
+      // Note: Removed console.warn to avoid React hooks exhaustive-deps warnings
+      // The unsubscribe function handles cleanup verification internally
+
       unsubscribe().catch((err) => {
-        // Error during cleanup
+        if (DEBUG_REALTIME) {
+          console.error(`❌ Error during cleanup of subscription:`, err);
+        }
+      });
+
+      // Call verifySubscriptionCleanup to ensure proper cleanup
+      verifySubscriptionCleanup().catch((err) => {
+        if (DEBUG_REALTIME) {
+          console.error(
+            `❌ Error during subscription cleanup verification:`,
+            err
+          );
+        }
       });
     };
-  }, [userId, user, autoSubscribe, loadPositions, unsubscribe]);
+  }, [
+    userId,
+    user,
+    autoSubscribe,
+    loadPositions,
+    unsubscribe,
+    verifySubscriptionCleanup,
+  ]);
 
   return {
     positions,

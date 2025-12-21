@@ -3,32 +3,69 @@
  *
  * Real-time portfolio performance metrics and P&L tracking
  * Calculates win rate, profit factor, drawdown, ROI, and other portfolio statistics
+ *
+ * This hook provides comprehensive portfolio analytics with real-time updates
+ * through Supabase Realtime subscriptions. It automatically subscribes to
+ * profile and position changes to keep metrics current.
+ *
+ * @returns {UsePortfolioMetricsReturn} Object containing:
+ *   - portfolioMetrics: PortfolioMetrics | null - Core performance metrics including win rate, profit factor, ROI
+ *   - drawdownAnalysis: DrawdownAnalysis | null - Maximum drawdown, recovery time, and drawdown statistics
+ *   - assetClassMetrics: AssetClassMetrics - Performance breakdown by asset class (forex, crypto, stocks, indices)
+ *   - equityHistory: number[] - Array of equity values over time for charting
+ *   - loading: boolean - Loading state during initial data fetch
+ *   - error: string | null - Error message if data fetching fails
+ *   - refetch: () => Promise<void> - Function to manually refresh all metrics
+ *
+ * @example
+ * ```tsx
+ * const {
+ *   portfolioMetrics,
+ *   drawdownAnalysis,
+ *   assetClassMetrics,
+ *   equityHistory,
+ *   loading,
+ *   error,
+ *   refetch
+ * } = usePortfolioMetrics();
+ *
+ * if (loading) return <LoadingSpinner />;
+ * if (error) return <ErrorMessage message={error} />;
+ *
+ * return (
+ *   <div>
+ *     <h3>Win Rate: {portfolioMetrics?.winRate}%</h3>
+ *     <h3>Profit Factor: {portfolioMetrics?.profitFactor}</h3>
+ *     <h3>Max Drawdown: {drawdownAnalysis?.maxDrawdown}%</h3>
+ *     <EquityChart data={equityHistory} />
+ *   </div>
+ * );
+ * ```
+ *
+ * @sideEffects
+ * - Automatically subscribes to Supabase Realtime channels for 'profiles' and 'positions' tables
+ * - Subscriptions are automatically cleaned up when component unmounts or user changes
+ * - Real-time updates trigger automatic metric recalculation
+ *
+ * @see UsePortfolioMetricsReturn - Type definition for return object
+ * @see PortfolioMetrics - Core metrics interface
+ * @see DrawdownAnalysis - Drawdown analysis interface
+ * @see AssetClassMetrics - Asset class breakdown interface
  */
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useAuth } from './useAuth';
-import {
-  calculatePortfolioMetrics,
-  analyzeDrawdown,
-  breakdownByAssetClass,
-  PortfolioMetrics,
-  DrawdownAnalysis,
-  AssetClassMetrics,
-} from '@/lib/risk/portfolioMetrics';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
+import {
+  analyzeDrawdown,
+  AssetClassMetrics,
+  breakdownByAssetClass,
+  calculatePortfolioMetrics,
+  DrawdownAnalysis,
+  PortfolioMetrics,
+} from '@/lib/risk/portfolioMetrics';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAuth } from './useAuth';
 type Position = Database['public']['Tables']['positions']['Row'];
-
-// Database interfaces
-interface DatabasePortfolioHistory {
-  equity: number;
-  date: string;
-  error?: boolean;
-}
-
-interface DatabaseClosedPosition {
-  realized_pnl?: number;
-}
 
 interface UsePortfolioMetricsReturn {
   portfolioMetrics: PortfolioMetrics | null;
@@ -52,6 +89,14 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
   const [equityHistory, setEquityHistory] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Refs for subscription channels to prevent re-subscription issues
+  const profileChannelRef = useRef<
+    import('@supabase/supabase-js').RealtimeChannel | null
+  >(null);
+  const positionsChannelRef = useRef<
+    import('@supabase/supabase-js').RealtimeChannel | null
+  >(null);
 
   const fetchPortfolioMetrics = useCallback(async () => {
     if (!user) {
@@ -217,10 +262,21 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
   useEffect(() => {
     fetchPortfolioMetrics();
 
-    if (!user) return;
+    if (!user) {
+      // Reset refs when user is not present
+      if (profileChannelRef.current) {
+        profileChannelRef.current.unsubscribe();
+        profileChannelRef.current = null;
+      }
+      if (positionsChannelRef.current) {
+        positionsChannelRef.current.unsubscribe();
+        positionsChannelRef.current = null;
+      }
+      return;
+    }
 
     // Subscribe to profile changes
-    const profileChannel = supabase
+    profileChannelRef.current = supabase
       .channel(`portfolio-profile-${user.id}`)
       .on(
         'postgres_changes',
@@ -237,7 +293,7 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       .subscribe();
 
     // Subscribe to position changes
-    const positionsChannel = supabase
+    positionsChannelRef.current = supabase
       .channel(`portfolio-positions-${user.id}`)
       .on(
         'postgres_changes',
@@ -254,8 +310,15 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       .subscribe();
 
     return () => {
-      profileChannel.unsubscribe();
-      positionsChannel.unsubscribe();
+      // Cleanup subscriptions using refs
+      if (profileChannelRef.current) {
+        profileChannelRef.current.unsubscribe();
+        profileChannelRef.current = null;
+      }
+      if (positionsChannelRef.current) {
+        positionsChannelRef.current.unsubscribe();
+        positionsChannelRef.current = null;
+      }
     };
   }, [user, fetchPortfolioMetrics]);
 
@@ -272,7 +335,45 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
 
 /**
  * Hook: useDrawdownAnalysis
+ *
  * Specialized hook for detailed drawdown analysis with real-time updates
+ *
+ * This hook provides comprehensive drawdown analysis including maximum drawdown,
+ * recovery time, and drawdown frequency. It automatically subscribes to profile
+ * changes to keep the analysis current and recalculates when equity data changes.
+ *
+ * @returns {Object} Object containing:
+ *   - drawdownData: DrawdownAnalysis | null - Detailed drawdown metrics including:
+ *     - maxDrawdown: number - Maximum drawdown percentage
+ *     - maxDrawdownAmount: number - Maximum drawdown in monetary terms
+ *     - recoveryTime: number - Time to recover from maximum drawdown (days)
+ *     - currentDrawdown: number - Current drawdown percentage
+ *     - drawdownFrequency: number - Number of drawdown events
+ *     - averageDrawdown: number - Average drawdown percentage
+ *   - loading: boolean - Loading state during initial data fetch
+ *
+ * @example
+ * ```tsx
+ * const { drawdownData, loading } = useDrawdownAnalysis();
+ *
+ * if (loading) return <LoadingSpinner />;
+ *
+ * return (
+ *   <div>
+ *     <h3>Max Drawdown: {drawdownData?.maxDrawdown}%</h3>
+ *     <h3>Recovery Time: {drawdownData?.recoveryTime} days</h3>
+ *     <h3>Current Drawdown: {drawdownData?.currentDrawdown}%</h3>
+ *   </div>
+ * );
+ * ```
+ *
+ * @sideEffects
+ * - Automatically subscribes to Supabase Realtime channel for 'profiles' table
+ * - Subscription is automatically cleaned up when component unmounts or user changes
+ * - Real-time updates trigger automatic drawdown recalculation
+ *
+ * @see DrawdownAnalysis - Type definition for drawdown analysis
+ * @see analyzeDrawdown - Core drawdown calculation function
  */
 export const useDrawdownAnalysis = () => {
   const { user } = useAuth();
@@ -280,6 +381,11 @@ export const useDrawdownAnalysis = () => {
     null
   );
   const [loading, setLoading] = useState(true);
+
+  // Ref for subscription channel to prevent re-subscription issues
+  const drawdownSubscriptionRef = useRef<
+    import('@supabase/supabase-js').RealtimeChannel | null
+  >(null);
 
   useEffect(() => {
     if (!user) {
@@ -327,7 +433,7 @@ export const useDrawdownAnalysis = () => {
 
     fetchDrawdownData();
 
-    const subscription = supabase
+    drawdownSubscriptionRef.current = supabase
       .channel(`drawdown-${user.id}`)
       .on(
         'postgres_changes',
@@ -342,7 +448,10 @@ export const useDrawdownAnalysis = () => {
       .subscribe();
 
     return () => {
-      subscription.unsubscribe();
+      if (drawdownSubscriptionRef.current) {
+        drawdownSubscriptionRef.current.unsubscribe();
+        drawdownSubscriptionRef.current = null;
+      }
     };
   }, [user]);
 

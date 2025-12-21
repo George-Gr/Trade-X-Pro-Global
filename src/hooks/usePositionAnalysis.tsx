@@ -4,20 +4,19 @@
  * Detailed position analysis including concentration, correlation, and stress testing
  */
 
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useAuth } from './useAuth';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import type { Position } from '@/integrations/supabase/types/tables';
 import {
   analyzeConcentration,
-  buildCorrelationMatrix,
-  runStressTests,
   assessDiversification,
   ConcentrationAnalysis,
   CorrelationMatrix,
-  StressTestResults,
   DiversificationMetrics,
+  runStressTests,
+  StressTestResults,
 } from '@/lib/risk/positionAnalysis';
-import type { Position } from '@/integrations/supabase/types/tables';
+import { useCallback, useEffect, useState } from 'react';
 
 interface UsePositionAnalysisReturn {
   concentration: ConcentrationAnalysis | null;

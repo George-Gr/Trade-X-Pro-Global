@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -16,9 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Bell } from 'lucide-react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Bell } from 'lucide-react';
+import { useState } from 'react';
 
 interface PriceAlertDialogProps {
   symbol: string;
@@ -67,7 +67,9 @@ export const PriceAlertDialog = ({
 
       toast({
         title: 'Price alert created',
-        description: `You'll be notified when ${symbol} ${condition === 'above' ? 'rises above' : 'falls below'} ${price.toFixed(5)}.`,
+        description: `You'll be notified when ${symbol} ${
+          condition === 'above' ? 'rises above' : 'falls below'
+        } ${price.toFixed(5)}.`,
       });
 
       setOpen(false);

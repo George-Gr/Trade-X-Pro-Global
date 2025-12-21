@@ -4,9 +4,9 @@
  * Enhanced version with throttling, batching, and memory optimization
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 import { throttle } from '@/lib/performanceUtils';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface PriceData {
   symbol: string;

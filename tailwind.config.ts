@@ -26,6 +26,19 @@ const config: Config = {
       },
     },
     extend: {
+      width: {
+        '100': '25rem', // 400px
+        '120': '30rem', // 480px
+      },
+
+      height: {
+        '100': '25rem', // 400px
+      },
+
+      minHeight: {
+        '100': '25rem', // 400px
+      },
+
       fontFamily: {
         // Neo-Digital Premium Typography System
         // Display: Sora - geometric, modern, bold for headlines

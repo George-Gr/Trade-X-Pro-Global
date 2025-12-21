@@ -34,6 +34,9 @@ export interface Profile {
   free_margin?: number;
   margin_level?: number;
   kyc_status: 'pending' | 'approved' | 'rejected' | 'resubmitted';
+  kyc_rejected_at?: string;
+  kyc_approved_at?: string;
+  kyc_rejection_reason?: string;
   account_status: 'active' | 'suspended' | 'closed';
   created_at: string;
   updated_at: string;

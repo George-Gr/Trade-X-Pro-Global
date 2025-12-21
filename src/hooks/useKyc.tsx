@@ -1,6 +1,6 @@
 // useKyc: Hook for KYC status and actions
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface KycRequestData {
   id: string;

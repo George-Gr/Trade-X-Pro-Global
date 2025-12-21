@@ -11,10 +11,10 @@
  * - Clear action messages
  */
 
+import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useRef } from 'react';
-import { useAuth } from './useAuth';
 import { useToast } from './use-toast';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { useAuth } from './useAuth';
 
 interface NotificationPayload {
   kyc_status?: string;

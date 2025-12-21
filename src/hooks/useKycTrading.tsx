@@ -29,9 +29,68 @@
  * }
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+
+interface ProfileKycData {
+  kyc_status: string | null;
+  kyc_rejected_at: string | null;
+  kyc_approved_at: string | null;
+  kyc_rejection_reason: string | null;
+}
+
+// Type guard to validate the payload shape
+const isValidProfileKycPayload = (
+  payload: unknown
+): payload is ProfileKycData => {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  const obj = payload as Record<string, unknown>;
+  const kycStatus = obj.kyc_status;
+  const kycRejectedAt = obj.kyc_rejected_at;
+  const kycApprovedAt = obj.kyc_approved_at;
+  const kycRejectionReason = obj.kyc_rejection_reason;
+
+  return (
+    (kycStatus === null || typeof kycStatus === 'string') &&
+    (kycRejectedAt === null || typeof kycRejectedAt === 'string') &&
+    (kycApprovedAt === null || typeof kycApprovedAt === 'string') &&
+    (kycRejectionReason === null || typeof kycRejectionReason === 'string')
+  );
+};
+
+/**
+ * Helper function to calculate resubmit status based on rejection status and date
+ */
+const calculateResubmitStatus = (
+  isRejected: boolean,
+  rejectedAt: string | null
+): { canResubmit: boolean; daysUntilResubmit: number | null } => {
+  let canResubmit = false;
+  let daysUntilResubmit: number | null = null;
+
+  if (isRejected && rejectedAt) {
+    const rejectedDate = new Date(rejectedAt);
+    const resubmitDate = new Date(
+      rejectedDate.getTime() + 7 * 24 * 60 * 60 * 1000
+    );
+    const now = new Date();
+
+    if (now >= resubmitDate) {
+      canResubmit = true;
+    } else {
+      const daysRemaining = Math.ceil(
+        (resubmitDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)
+      );
+      daysUntilResubmit = daysRemaining;
+    }
+  }
+
+  return { canResubmit, daysUntilResubmit };
+};
 
 interface KycTradingState {
   kycStatus:
@@ -106,9 +165,16 @@ export const useKycTrading = (): KycTradingState => {
         return;
       }
 
+      // Type-safe mapping from Supabase result to ProfileKycData
+      const profileData: ProfileKycData = {
+        kyc_status: profile.kyc_status || null,
+        kyc_rejected_at: profile.kyc_rejected_at || null,
+        kyc_approved_at: profile.kyc_approved_at || null,
+        kyc_rejection_reason: profile.kyc_rejection_reason || null,
+      };
+
       // Defensive: Only access properties if profile is not an error
-      const kycStatus =
-        (profile as unknown as Record<string, unknown>).kyc_status || 'pending';
+      const kycStatus = profileData.kyc_status || 'pending';
       const isApproved = kycStatus === 'approved';
       const isRejected =
         kycStatus === 'rejected' || kycStatus === 'requires_resubmit';
@@ -117,31 +183,10 @@ export const useKycTrading = (): KycTradingState => {
       const isPending = kycStatus === 'pending';
 
       // Calculate days until resubmit allowed (7 days after rejection)
-      let canResubmit = false;
-      let daysUntilResubmit: number | null = null;
-
-      if (
-        isRejected &&
-        (profile as unknown as Record<string, unknown>).kyc_rejected_at
-      ) {
-        const rejectedDate = new Date(
-          (profile as unknown as Record<string, unknown>)
-            .kyc_rejected_at as string
-        );
-        const resubmitDate = new Date(
-          rejectedDate.getTime() + 7 * 24 * 60 * 60 * 1000
-        );
-        const now = new Date();
-
-        if (now >= resubmitDate) {
-          canResubmit = true;
-        } else {
-          const daysRemaining = Math.ceil(
-            (resubmitDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)
-          );
-          daysUntilResubmit = daysRemaining;
-        }
-      }
+      const { canResubmit, daysUntilResubmit } = calculateResubmitStatus(
+        isRejected,
+        profileData.kyc_rejected_at
+      );
 
       setState({
         kycStatus: kycStatus as KycTradingState['kycStatus'],
@@ -152,15 +197,9 @@ export const useKycTrading = (): KycTradingState => {
         isUnderReview,
         canResubmit,
         daysUntilResubmit,
-        rejectionReason:
-          ((profile as unknown as Record<string, unknown>)
-            .kyc_rejection_reason as string) || null,
-        rejectedAt:
-          ((profile as unknown as Record<string, unknown>)
-            .kyc_rejected_at as string) || null,
-        approvedAt:
-          ((profile as unknown as Record<string, unknown>)
-            .kyc_approved_at as string) || null,
+        rejectionReason: profileData.kyc_rejection_reason || null,
+        rejectedAt: profileData.kyc_rejected_at || null,
+        approvedAt: profileData.kyc_approved_at || null,
         isLoading: false,
         error: null,
       });
@@ -190,12 +229,18 @@ export const useKycTrading = (): KycTradingState => {
           filter: `id=eq.${user.id}`,
         },
         (payload) => {
+          // Validate the payload before treating it as ProfileKycData
+          if (!isValidProfileKycPayload(payload.new)) {
+            console.warn('Invalid KYC payload received:', payload.new);
+            return;
+          }
+
           const {
             kyc_status,
             kyc_rejected_at,
             kyc_approved_at,
             kyc_rejection_reason,
-          } = (payload.new as Record<string, unknown>) || {};
+          } = payload.new;
 
           if (kyc_status) {
             const status = kyc_status as KycTradingState['kycStatus'];
@@ -207,26 +252,10 @@ export const useKycTrading = (): KycTradingState => {
             const isPending = status === 'pending';
 
             // Calculate days until resubmit allowed
-            let canResubmit = false;
-            let daysUntilResubmit: number | null = null;
-
-            if (isRejected && kyc_rejected_at) {
-              const rejectedDate = new Date(kyc_rejected_at as string);
-              const resubmitDate = new Date(
-                rejectedDate.getTime() + 7 * 24 * 60 * 60 * 1000
-              );
-              const now = new Date();
-
-              if (now >= resubmitDate) {
-                canResubmit = true;
-              } else {
-                const daysRemaining = Math.ceil(
-                  (resubmitDate.getTime() - now.getTime()) /
-                    (24 * 60 * 60 * 1000)
-                );
-                daysUntilResubmit = daysRemaining;
-              }
-            }
+            const { canResubmit, daysUntilResubmit } = calculateResubmitStatus(
+              isRejected,
+              kyc_rejected_at
+            );
 
             setState({
               kycStatus: status,
@@ -237,9 +266,9 @@ export const useKycTrading = (): KycTradingState => {
               isUnderReview,
               canResubmit,
               daysUntilResubmit,
-              rejectionReason: (kyc_rejection_reason as string) || null,
-              rejectedAt: (kyc_rejected_at as string) || null,
-              approvedAt: (kyc_approved_at as string) || null,
+              rejectionReason: kyc_rejection_reason || null,
+              rejectedAt: kyc_rejected_at || null,
+              approvedAt: kyc_approved_at || null,
               isLoading: false,
               error: null,
             });

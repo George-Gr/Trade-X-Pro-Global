@@ -5,9 +5,9 @@
  * and other common TradingView widget issues in modern JavaScript environments.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
 import TradingViewErrorBoundary from '@/components/TradingViewErrorBoundary';
+import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('TradingView Compatibility Layer', () => {
   let originalDefineProperty: typeof Object.defineProperty;
@@ -21,7 +21,7 @@ describe('TradingView Compatibility Layer', () => {
 
     // Mock console.warn to capture warnings
     consoleWarnings = [];
-    console.warn = vi.fn((...args: any[]) => {
+    console.warn = vi.fn((...args: unknown[]) => {
       consoleWarnings.push(args.join(' '));
     });
 

@@ -1,17 +1,14 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { formatToastError } from '@/lib/errorMessageService';
 import {
-  getActionableErrorMessage,
-  formatToastError,
-} from '@/lib/errorMessageService';
-import { rateLimiter, checkRateLimit } from '@/lib/rateLimiter';
-import {
-  generateIdempotencyKey,
   executeWithIdempotency,
+  generateIdempotencyKey,
 } from '@/lib/idempotency';
-import { sanitizeSymbol, sanitizeNumber } from '@/lib/sanitize';
 import { logger } from '@/lib/logger';
+import { checkRateLimit, rateLimiter } from '@/lib/rateLimiter';
+import { sanitizeNumber, sanitizeSymbol } from '@/lib/sanitize';
+import { useCallback, useState } from 'react';
 
 /**
  * Request payload for executing a trading order
@@ -114,7 +111,9 @@ export const useOrderExecution = () => {
       if (!rateCheck.allowed) {
         toast({
           title: 'Rate Limit Exceeded',
-          description: `Please wait ${Math.ceil(rateCheck.resetIn / 1000)} seconds before placing another order.`,
+          description: `Please wait ${Math.ceil(
+            rateCheck.resetIn / 1000
+          )} seconds before placing another order.`,
           variant: 'destructive',
         });
         logger.warn('Order rate limit exceeded', {
@@ -217,7 +216,9 @@ export const useOrderExecution = () => {
 
         toast({
           title: 'Order Executed',
-          description: `${orderRequest.side.toUpperCase()} ${orderRequest.quantity} ${orderRequest.symbol} at ${orderData.execution_price.toFixed(4)}`,
+          description: `${orderRequest.side.toUpperCase()} ${
+            orderRequest.quantity
+          } ${orderRequest.symbol} at ${orderData.execution_price.toFixed(4)}`,
         });
 
         logger.info('Order executed successfully', {

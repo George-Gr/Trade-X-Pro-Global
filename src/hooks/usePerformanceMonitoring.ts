@@ -1,5 +1,5 @@
-import { useEffect, useRef, useCallback } from 'react';
 import { logger } from '@/lib/logger';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * Performance monitoring hook to prevent extension host unresponsiveness
@@ -8,7 +8,7 @@ import { logger } from '@/lib/logger';
 export const usePerformanceMonitoring = () => {
   const listenersRef = useRef<Map<string, number>>(new Map());
   const timersRef = useRef<Map<string, number>>(new Map());
-  const memoryRef = useRef<number | null>(null);
+  const memoryRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Track event listeners to prevent leaks
   const trackListener = useCallback((type: string, add: boolean = true) => {
@@ -55,15 +55,27 @@ export const usePerformanceMonitoring = () => {
   // Monitor memory usage
   const monitorMemory = useCallback(() => {
     if (typeof performance !== 'undefined' && 'memory' in performance) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const memory = (performance as any).memory;
+      const memory = (
+        performance as Performance & {
+          memory?: {
+            usedJSHeapSize: number;
+            totalJSHeapSize: number;
+            jsHeapSizeLimit: number;
+          };
+        }
+      ).memory;
+
+      if (!memory) return;
+
       const usedMB = memory.usedJSHeapSize / 1024 / 1024;
       const totalMB = memory.totalJSHeapSize / 1024 / 1024;
       const percentage = (usedMB / totalMB) * 100;
 
       if (percentage > 80) {
         logger.warn(
-          `High memory usage detected: ${percentage.toFixed(1)}% (${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB)`
+          `High memory usage detected: ${percentage.toFixed(
+            1
+          )}% (${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB)`
         );
       }
     }
@@ -86,7 +98,6 @@ export const usePerformanceMonitoring = () => {
 
   useEffect(() => {
     // Start memory monitoring
-    const currentMemoryRef = memoryRef.current;
     memoryRef.current = setInterval(monitorMemory, 5000);
 
     // Cleanup on unmount

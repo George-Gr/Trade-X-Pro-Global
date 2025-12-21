@@ -1,6 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './useAuth';
+import { useRealtimeOrders } from './useRealtimeOrders';
+import { useRealtimePositions } from './useRealtimePositions';
 
 /**
  * Represents a closed trade with P&L information
@@ -293,47 +295,11 @@ export const useTradingHistory = () => {
 
   useEffect(() => {
     fetchTradingHistory();
-
-    // Set up real-time subscriptions
-    const positionsChannel = supabase
-      .channel('closed-positions-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'positions',
-          filter: `user_id=eq.${user?.id}`,
-        },
-        () => {
-          fetchTradingHistory();
-        }
-      )
-      .subscribe();
-
-    const ordersChannel = supabase
-      .channel('orders-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'orders',
-          filter: `user_id=eq.${user?.id}`,
-        },
-        () => {
-          fetchTradingHistory();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      positionsChannel.unsubscribe();
-      ordersChannel.unsubscribe();
-      supabase.removeChannel(positionsChannel);
-      supabase.removeChannel(ordersChannel);
-    };
   }, [user, fetchTradingHistory]);
+
+  // Set up real-time subscriptions using dedicated hooks
+  useRealtimePositions(user?.id, fetchTradingHistory);
+  useRealtimeOrders(user?.id, fetchTradingHistory);
 
   return {
     /** Array of closed positions with P&L details */

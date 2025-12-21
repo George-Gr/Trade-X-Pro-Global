@@ -1,5 +1,6 @@
+import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { z } from 'zod';
 import { useAuth } from './useAuth';
 
 export interface RiskLimits {
@@ -20,6 +21,18 @@ export interface RiskCheckResult {
   violations: string[];
 }
 
+const riskLimitsSchema = z.object({
+  margin_call_level: z.number(),
+  stop_out_level: z.number(),
+  max_position_size: z.number(),
+  max_total_exposure: z.number(),
+  max_positions: z.number(),
+  daily_loss_limit: z.number(),
+  daily_trade_limit: z.number(),
+  enforce_stop_loss: z.boolean(),
+  min_stop_loss_distance: z.number(),
+});
+
 export const useRiskLimits = () => {
   const { user } = useAuth();
 
@@ -35,7 +48,7 @@ export const useRiskLimits = () => {
         .single();
 
       if (error) throw error;
-      return data as RiskLimits;
+      return riskLimitsSchema.parse(data);
     },
     enabled: !!user,
   });
@@ -62,7 +75,7 @@ export const useRiskLimits = () => {
     queryFn: async () => {
       if (!user) return null;
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date().toISOString().split('T')[0] as string;
 
       const { data, error } = await supabase
         .from('daily_pnl_tracking')
@@ -115,7 +128,7 @@ export const useRiskLimits = () => {
 
     return {
       allowed: violations.length === 0,
-      reason: violations.length > 0 ? violations[0] : undefined,
+      ...(violations.length > 0 ? { reason: violations[0] } : {}),
       violations,
     };
   };
@@ -149,7 +162,7 @@ export const useRiskLimits = () => {
 
     return {
       allowed: violations.length === 0,
-      reason: violations.length > 0 ? violations[0] : undefined,
+      ...(violations.length > 0 ? { reason: violations[0] } : {}),
       violations,
     };
   };
@@ -169,7 +182,7 @@ export const useRiskLimits = () => {
 
     return {
       allowed: allViolations.length === 0,
-      reason: allViolations.length > 0 ? allViolations[0] : undefined,
+      ...(allViolations.length > 0 ? { reason: allViolations[0] } : {}),
       violations: allViolations,
     };
   };

@@ -31,6 +31,25 @@ export default [
       'src/hooks/useAccessibilityPreferences.tsx',
     ],
   },
+  // Hooks: treat hook files without type-aware parsing to avoid TS project inclusion errors
+  {
+    files: ['src/hooks/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.test.{ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      // No parserOptions.project here — prevents typescript-eslint from requiring
+      // the files to be part of the `tsconfig.eslint.json` project
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
   // Primary linting configuration for source files
   {
     files: ['src/**/*.{ts,tsx}'],
@@ -46,7 +65,7 @@ export default [
       parserOptions: {
         // Type-aware linting with project reference for better type checking
         // Uses dedicated tsconfig.eslint.json that only includes src files
-        project: './tsconfig.eslint.json',
+        project: ['./tsconfig.eslint.json', './tsconfig.eslint.hooks.json'],
         tsconfigRootDir: __dirname,
       },
       globals: {

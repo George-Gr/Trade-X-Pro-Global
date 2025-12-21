@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { WalletLoading } from '@/components/common/PageLoadingStates';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,33 +9,34 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/components/ui/use-toast';
+import { DepositCryptoDialog } from '@/components/wallet/DepositCryptoDialog';
+import { TransactionHistory } from '@/components/wallet/TransactionHistory';
+import { WithdrawalDialog } from '@/components/wallet/WithdrawalDialog';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import {
-  Wallet as WalletIcon,
-  TrendingUp,
+  ArrowDownLeft,
+  ArrowUpRight,
   History,
   Plus,
   RefreshCw,
-  ArrowUpRight,
-  ArrowDownLeft,
+  TrendingUp,
+  Wallet as WalletIcon,
 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { DepositCryptoDialog } from '@/components/wallet/DepositCryptoDialog';
-import { WithdrawalDialog } from '@/components/wallet/WithdrawalDialog';
-import { TransactionHistory } from '@/components/wallet/TransactionHistory';
-import { Skeleton } from '@/components/ui/skeleton';
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
-import { useAuth } from '@/hooks/useAuth';
-import { WalletLoading } from '@/components/common/PageLoadingStates';
+import { useState } from 'react';
 
 const Wallet = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [depositDialogOpen, setDepositDialogOpen] = useState(false);
   const [withdrawalDialogOpen, setWithdrawalDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('deposits');
+
+  // Feature flag for withdrawals (can be replaced with actual permission check)
+  const IS_WITHDRAWALS_ENABLED = false;
 
   // Fetch user profile
   const {
@@ -79,35 +83,16 @@ const Wallet = () => {
     return <WalletLoading />;
   }
 
-  // Fetch withdrawal requests
-  // Withdrawal requests - feature disabled (table does not exist in current schema)
-  // const { data: withdrawals, isLoading: withdrawalsLoading, refetch: refetchWithdrawals } = useQuery({
-  //   queryKey: ['withdrawal_requests', user?.id],
-  //   queryFn: async () => {
-  //     const { data, error } = await supabase
-  //       .from('withdrawal_requests')
-  //       .select('*')
-  //       .eq('user_id', user?.id)
-  //       .order('created_at', { ascending: false });
-  //
-  //     if (error) throw error;
-  //     return data;
-  //   },
-  //   enabled: !!user?.id,
-  // });
+  // TODO: Add withdrawal requests functionality - see issue #1234
+  // Implement withdrawal request form, validation, and processing workflow
 
   const pendingTransactions =
     transactions?.filter((t) => ['pending', 'confirming'].includes(t.status))
       .length || 0;
 
-  // const pendingWithdrawals = withdrawals?.filter((w: any) =>
-  //   ['pending', 'approved', 'processing'].includes(w.status)
-  // ).length || 0;
-
   const handleRefresh = () => {
     refetchProfile();
     refetchTransactions();
-    // refetchWithdrawals(); // Feature disabled
   };
 
   return (
@@ -151,13 +136,9 @@ const Wallet = () => {
                 <WalletIcon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                {profileLoading ? (
-                  <Skeleton className="h-10 w-48" />
-                ) : (
-                  <div className="text-3xl font-bold gradient-text">
-                    ${profile?.balance?.toFixed(2) || '0.00'}
-                  </div>
-                )}
+                <div className="text-3xl font-bold gradient-text">
+                  ${profile?.balance?.toFixed(2) || '0.00'}
+                </div>
               </CardContent>
             </Card>
 
@@ -169,16 +150,9 @@ const Wallet = () => {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                {profileLoading ? (
-                  <Skeleton className="h-10 w-48" />
-                ) : (
-                  <div className="text-3xl font-bold gradient-text">
-                    ${(0).toFixed(2)}
-                  </div>
-                )}
-                <p className="text-xs text-muted-foreground mt-1">
-                  In pending withdrawals (feature disabled)
-                </p>
+                <div className="text-3xl font-bold gradient-text">
+                  ${(0).toFixed(2)}
+                </div>
               </CardContent>
             </Card>
 
@@ -358,14 +332,23 @@ const Wallet = () => {
             onSuccess={() => refetchTransactions()}
           />
 
-          <WithdrawalDialog
-            open={withdrawalDialogOpen}
-            onOpenChange={setWithdrawalDialogOpen}
-            onSuccess={() => {
-              /* Feature disabled */
-            }}
-            balance={profile?.balance || 0}
-          />
+          {IS_WITHDRAWALS_ENABLED && (
+            <WithdrawalDialog
+              open={withdrawalDialogOpen}
+              onOpenChange={setWithdrawalDialogOpen}
+              onSuccess={() => {
+                toast({
+                  title: 'Withdrawal Request Submitted',
+                  description:
+                    'Your withdrawal request has been submitted for processing.',
+                });
+                setWithdrawalDialogOpen(false);
+                refetchProfile();
+                refetchTransactions();
+              }}
+              balance={profile?.balance || 0}
+            />
+          )}
         </div>
       </div>
     </AuthenticatedLayout>

@@ -29,7 +29,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import {
   AlertCircle,
   CheckCircle,
@@ -132,7 +133,7 @@ const KycAdminDashboard: React.FC = () => {
             .single();
 
           if (profileError) {
-            console.error('Profile fetch error:', profileError);
+            logger.error('Profile fetch error', profileError);
           }
 
           return {
@@ -148,7 +149,7 @@ const KycAdminDashboard: React.FC = () => {
 
       setRequests(enrichedRequests);
     } catch (err: unknown) {
-      console.error('Failed to fetch kyc requests', err);
+      logger.error('Failed to fetch kyc requests', err);
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage || 'Failed to fetch requests');
     } finally {
@@ -228,7 +229,7 @@ const KycAdminDashboard: React.FC = () => {
       setRejectionReason('');
       setAdminNotes('');
     } catch (err: unknown) {
-      console.error('Admin action error', err);
+      logger.error('Admin action error', err);
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage || 'Action failed');
     } finally {
@@ -677,7 +678,7 @@ const KycAdminDashboard: React.FC = () => {
             <DialogHeader>
               <DialogTitle>Document Preview</DialogTitle>
             </DialogHeader>
-            <div className="flex justify-center items-center min-h-[400px] bg-muted rounded-lg">
+            <div className="flex justify-center items-center min-h-100 bg-muted rounded-lg">
               {previewUrl.endsWith('.pdf') ? (
                 <embed
                   src={previewUrl}

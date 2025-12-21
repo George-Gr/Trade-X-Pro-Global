@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,13 +6,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { TrendingUp } from 'lucide-react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { TrendingUp } from 'lucide-react';
+import { useState } from 'react';
 
 interface TrailingStopDialogProps {
   positionId: string;
@@ -23,14 +23,18 @@ interface TrailingStopDialogProps {
   trailingStopDistance?: number;
 }
 
-export const TrailingStopDialog = ({
+/**
+ * Dialog component for configuring trailing stop loss on trading positions.
+ * Allows users to enable/disable trailing stops and set the trailing distance.
+ */
+export const TrailingStopDialog: React.FC<TrailingStopDialogProps> = ({
   positionId,
   symbol,
   side,
   currentPrice,
   trailingStopEnabled = false,
   trailingStopDistance,
-}: TrailingStopDialogProps) => {
+}) => {
   const [open, setOpen] = useState(false);
   const [enabled, setEnabled] = useState(trailingStopEnabled);
   const [distance, setDistance] = useState(
@@ -84,7 +88,9 @@ export const TrailingStopDialog = ({
       toast({
         title: enabled ? 'Trailing stop activated' : 'Trailing stop disabled',
         description: enabled
-          ? `Trailing stop will follow price at ${distanceValue.toFixed(5)} distance.`
+          ? `Trailing stop will follow price at ${distanceValue.toFixed(
+              5
+            )} distance.`
           : 'Trailing stop has been disabled.',
       });
 

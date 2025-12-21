@@ -22,10 +22,14 @@
  * }
  */
 
-import { useCallback, useState, useRef } from 'react';
-import { useAuth } from './useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 import type { LiquidationExecutionResult } from '@/lib/trading/liquidationEngine';
+import { useCallback, useRef, useState } from 'react';
+import { useAuth } from './useAuth';
+
+// Module-level constants for liquidation execution retry configuration
+const DEFAULT_MAX_RETRIES = 3;
+const DEFAULT_RETRY_DELAY_MS = 200;
 
 interface LiquidationExecutionParams {
   positionIds: string[];
@@ -60,8 +64,8 @@ async function executeLiquidationViaEdgeFunction(
   reason: string,
   currentPrices: Record<string, number>,
   idempotencyKey: string,
-  maxRetries: number = 3,
-  retryDelayMs: number = 200
+  maxRetries: number = DEFAULT_MAX_RETRIES,
+  retryDelayMs: number = DEFAULT_RETRY_DELAY_MS
 ): Promise<LiquidationExecutionResult> {
   let lastError: Error | null = null;
 
@@ -119,7 +123,9 @@ async function executeLiquidationViaEdgeFunction(
   }
 
   throw new Error(
-    `Liquidation failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`
+    `Liquidation failed after ${maxRetries} attempts: ${
+      lastError?.message || 'Unknown error'
+    }`
   );
 }
 
@@ -254,7 +260,7 @@ export function useLiquidationExecution() {
 }
 
 export type {
-  LiquidationExecutionParams,
   ExecutionState,
+  LiquidationExecutionParams,
   LiquidationExecutionResult,
 };

@@ -4,9 +4,9 @@
  * Cursor-based pagination for Supabase queries
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/lib/logger';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface PaginationOptions {
   table: string;

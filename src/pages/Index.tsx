@@ -1,6 +1,7 @@
 import { ComparisonTable } from '@/components/landing/ComparisonTable';
 import { FAQSection } from '@/components/landing/FAQSection';
 import { HeroSection } from '@/components/landing/HeroSection';
+import { KeyBenefitsSection } from '@/components/landing/KeyBenefitsSection';
 import { LiveChatIndicator } from '@/components/landing/LiveChatIndicator';
 import { PlatformPreview } from '@/components/landing/PlatformPreview';
 import { CompactRiskDisclaimer } from '@/components/landing/RiskDisclaimer';
@@ -10,6 +11,7 @@ import {
   StaggerContainer,
   StaggerItem,
 } from '@/components/landing/ScrollReveal';
+import { StatisticsSection } from '@/components/landing/StatisticsSection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { PublicFooter } from '@/components/layout/PublicFooter';
 import { PublicHeader } from '@/components/layout/PublicHeader';
@@ -44,6 +46,12 @@ export default function Index() {
 
       {/* Hero Section - Asymmetric 60/40 Layout with Animated Background */}
       <HeroSection />
+
+      {/* Key Benefits Section */}
+      <KeyBenefitsSection />
+
+      {/* Statistics Section - Organized metrics replacing floating cards */}
+      <StatisticsSection />
 
       {/* Trust & Security Stats Section */}
       <section className="py-12 bg-card border-b border-border/50 overflow-hidden">
@@ -85,7 +93,7 @@ export default function Index() {
                   transition={{ duration: 0.2 }}
                 >
                   <motion.div
-                    className={`h-12 w-12 rounded-lg bg-gradient-to-br ${stat.gradient} flex items-center justify-center flex-shrink-0`}
+                    className={`h-12 w-12 rounded-lg bg-linear-to-br ${stat.gradient} flex items-center justify-center shrink-0`}
                     whileHover={{ rotate: 5 }}
                   >
                     <stat.icon className="h-6 w-6 text-primary-foreground" />
@@ -174,7 +182,7 @@ export default function Index() {
                   <Card className="h-full group hover:shadow-xl transition-shadow duration-300 border-border bg-card">
                     <CardContent className="p-8">
                       <motion.div
-                        className={`h-16 w-16 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6`}
+                        className={`h-16 w-16 rounded-lg bg-linear-to-br ${feature.gradient} flex items-center justify-center mb-6`}
                         whileHover={{ scale: 1.15, rotate: 5 }}
                         transition={{ duration: 0.3 }}
                       >
@@ -270,7 +278,7 @@ export default function Index() {
                           {step.step}
                         </motion.div>
                         <motion.div
-                          className="h-16 w-16 rounded-lg bg-gradient-to-br from-primary to-gold flex items-center justify-center mx-auto mb-6"
+                          className="h-16 w-16 rounded-lg bg-linear-to-br from-primary to-gold flex items-center justify-center mx-auto mb-6"
                           whileHover={{ scale: 1.15, rotate: 5 }}
                           transition={{ duration: 0.3 }}
                         >
@@ -401,7 +409,7 @@ export default function Index() {
                   <Card className="h-full group hover:shadow-xl transition-shadow duration-300 border-border bg-card">
                     <CardContent className="p-6 text-center">
                       <motion.div
-                        className={`h-14 w-14 rounded-lg bg-gradient-to-br ${asset.gradient} flex items-center justify-center mx-auto mb-4`}
+                        className={`h-14 w-14 rounded-lg bg-linear-to-br ${asset.gradient} flex items-center justify-center mx-auto mb-4`}
                         whileHover={{ scale: 1.2, rotate: 10 }}
                         transition={{ duration: 0.3 }}
                       >
@@ -504,7 +512,7 @@ export default function Index() {
                       transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                       whileHover={{ x: 8 }}
                     >
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <motion.div
                           className="h-12 w-12 rounded-lg bg-gold flex items-center justify-center"
                           whileHover={{ scale: 1.15, rotate: 5 }}
@@ -602,7 +610,7 @@ export default function Index() {
                         >
                           <Button
                             size="lg"
-                            className="w-full bg-gradient-to-r from-gold to-gold-hover text-primary hover:opacity-90 py-7 text-lg font-bold shadow-xl"
+                            className="w-full bg-linear-to-r from-gold to-gold-hover text-primary hover:opacity-90 py-7 text-lg font-bold shadow-xl"
                           >
                             Get Started Free
                             <ArrowRight className="ml-2 h-5 w-5" />
@@ -628,7 +636,7 @@ export default function Index() {
       <FAQSection />
 
       {/* Final CTA Section */}
-      <section className="py-20 md:py-24 bg-gradient-to-br from-primary via-primary-glow to-accent overflow-hidden relative">
+      <section className="py-20 md:py-24 bg-linear-to-br from-primary via-primary-glow to-accent overflow-hidden relative">
         {/* Animated background elements */}
         <motion.div
           className="absolute inset-0 opacity-20"

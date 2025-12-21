@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from '@/hooks/use-toast';
-import { rateLimiter, checkRateLimit } from '@/lib/rateLimiter';
+import { supabase } from '@/integrations/supabase/client';
 import {
-  generateIdempotencyKey,
   executeWithIdempotency,
+  generateIdempotencyKey,
 } from '@/lib/idempotency';
-import { sanitizeText, sanitizeNumber } from '@/lib/sanitize';
 import { logger } from '@/lib/logger';
+import { checkRateLimit, rateLimiter } from '@/lib/rateLimiter';
+import { sanitizeNumber, sanitizeText } from '@/lib/sanitize';
+import { useCallback, useState } from 'react';
 
 /**
  * Request payload for closing a position
@@ -108,7 +108,9 @@ export const usePositionClose = () => {
       if (!rateCheck.allowed) {
         toast({
           title: 'Rate Limit Exceeded',
-          description: `Please wait ${Math.ceil(rateCheck.resetIn / 1000)} seconds before closing another position.`,
+          description: `Please wait ${Math.ceil(
+            rateCheck.resetIn / 1000
+          )} seconds before closing another position.`,
           variant: 'destructive',
         });
         logger.warn('Close position rate limit exceeded', {

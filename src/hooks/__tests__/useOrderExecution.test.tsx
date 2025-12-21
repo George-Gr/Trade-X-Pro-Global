@@ -16,6 +16,40 @@ vi.mock('@/lib/supabaseBrowserClient', () => ({
 
 const { supabase } = await import('@/lib/supabaseBrowserClient');
 
+// Test-specific type interfaces for mocking
+interface MockSession {
+  data: {
+    session: {
+      user: { id: string };
+    } | null;
+  };
+}
+
+interface MockFunctionResponse<T = unknown> {
+  data: {
+    data: T;
+  };
+}
+
+interface MockErrorResponse {
+  data: {
+    error: string;
+  };
+}
+
+interface MockOrderResponse {
+  success: boolean;
+  order_id: string;
+  symbol: string;
+  side: string;
+  quantity: number;
+  execution_price: number;
+  margin_required: number;
+  status: string;
+  new_balance: number;
+  new_margin_level: number;
+}
+
 // Mock useToast hook
 vi.mock('@/hooks/use-toast', () => ({
   useToast: () => ({
@@ -44,7 +78,7 @@ describe('useOrderExecution', () => {
     const mockGetSession = vi.spyOn(supabase.auth, 'getSession');
     mockGetSession.mockResolvedValueOnce({
       data: { session: null },
-    } as any);
+    } as { data: { session: null } });
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -74,7 +108,7 @@ describe('useOrderExecution', () => {
       data: {
         error: 'Insufficient balance',
       },
-    } as any);
+    } as { data: { error: string } });
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -119,7 +153,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as MockFunctionResponse<MockOrderResponse>);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -150,7 +184,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as MockSession);
 
     const mockOrderResponse = {
       success: true,
@@ -172,7 +206,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as MockFunctionResponse<MockOrderResponse>);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -222,7 +256,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as MockFunctionResponse<MockOrderResponse>);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -259,7 +293,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as MockSession);
 
     const mockOrderResponse = {
       success: true,
@@ -281,7 +315,7 @@ describe('useOrderExecution', () => {
       data: {
         data: mockOrderResponse,
       },
-    } as any);
+    } as MockFunctionResponse<MockOrderResponse>);
 
     const { result } = renderHook(() => useOrderExecution());
 
@@ -343,7 +377,7 @@ describe('useOrderExecution', () => {
           user: { id: 'user-123' },
         },
       },
-    } as any);
+    } as MockSession);
 
     const mockInvoke = vi.spyOn(supabase.functions, 'invoke');
     mockInvoke.mockResolvedValue({
@@ -363,7 +397,7 @@ describe('useOrderExecution', () => {
           new_margin_level: 500,
         },
       },
-    } as any);
+    } as MockFunctionResponse<MockOrderResponse>);
 
     const { result } = renderHook(() => useOrderExecution());
 

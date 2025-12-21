@@ -10,11 +10,12 @@
  * Single source of truth for trading data with unified subscriptions
  */
 
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useAuth } from './useAuth';
-import { getSubscriptionManager } from '@/lib/subscriptionManager';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import type { Position as DBPosition } from '@/integrations/supabase/types/tables';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRealtimePositions } from './useRealtimePositions';
+import { useRealtimeProfile } from './useRealtimeProfile';
 
 // Types
 interface ProfileData {
@@ -162,55 +163,19 @@ export function useTradingData(): TradingDataReturn {
     }
   }, [user]);
 
-  // Set up subscriptions
+  // Set up subscriptions using dedicated hooks
   useEffect(() => {
     isMountedRef.current = true;
     fetchData();
 
-    if (!user) return;
-
-    const manager = getSubscriptionManager();
-    const profileId = `trading-profile-${user.id}`;
-    const positionsId = `trading-positions-${user.id}`;
-
-    // Profile subscription
-    const profileChannel = supabase
-      .channel(profileId)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'profiles',
-          filter: `id=eq.${user.id}`,
-        },
-        fetchData
-      )
-      .subscribe();
-    manager.register(profileId, profileChannel, 'profiles');
-
-    // Positions subscription
-    const positionsChannel = supabase
-      .channel(positionsId)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'positions',
-          filter: `user_id=eq.${user.id}`,
-        },
-        fetchData
-      )
-      .subscribe();
-    manager.register(positionsId, positionsChannel, 'positions');
-
     return () => {
       isMountedRef.current = false;
-      manager.unsubscribe(profileId);
-      manager.unsubscribe(positionsId);
     };
   }, [user, fetchData]);
+
+  // Set up real-time subscriptions using dedicated hooks
+  useRealtimeProfile(user?.id, fetchData);
+  useRealtimePositions(user?.id, fetchData);
 
   // Calculate unrealized PnL for a position
   const calculateUnrealizedPnL = useCallback(

@@ -1,17 +1,11 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { Button } from '@/components/ui/button';
 import { useAuthData } from '@/contexts/AuthenticatedLayoutContext';
-import {
-  AlertCircle,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  ArrowRight,
-} from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
+import { AlertCircle, ArrowRight, Clock, XCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function KYCStatusBanner() {
   const { user } = useAuthData();

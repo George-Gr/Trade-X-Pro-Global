@@ -12,9 +12,9 @@
  * - React Query for caching and invalidation
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from './useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
 
 // ============================================================================
 // TYPES

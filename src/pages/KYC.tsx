@@ -1,9 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { KYCLoading } from '@/components/common/PageLoadingStates';
 import KycUploader from '@/components/kyc/KycUploader';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -11,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -20,16 +18,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import type { KYCDocument } from '@/integrations/supabase/types/tables';
 import {
-  Loader2,
   AlertCircle,
   CheckCircle,
   Clock,
+  Loader2,
   XCircle,
 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { KYCLoading } from '@/components/common/PageLoadingStates';
-import type { KYCDocument } from '@/integrations/supabase/types/tables';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const KYC = () => {
   const { user } = useAuth();

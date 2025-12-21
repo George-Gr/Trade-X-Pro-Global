@@ -12,8 +12,25 @@
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
-    "types": ["vitest/globals", "vite/client"]
+    "types": ["vitest/globals", "vite/client"],
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/assets/*": ["src/assets/*"],
+      "@/components/*": ["src/components/*"],
+      "@/contexts/*": ["src/contexts/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/integrations/*": ["src/integrations/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/styles/*": ["src/styles/*"],
+      "@/test/*": ["src/test/*"],
+      "@/test-utils/*": ["src/test-utils/*"],
+      "@/types/*": ["src/types/*"],
+      "@/workers/*": ["src/workers/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["./src"],
   "exclude": ["node_modules", "dist", "build", "supabase", "e2e", "docs"]
 }

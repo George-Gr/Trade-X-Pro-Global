@@ -19,7 +19,7 @@ import { DashboardLoading } from '@/components/dashboard/DashboardLoading';
 import ProfitLossCard from '@/components/dashboard/ProfitLossCard';
 import { ErrorMessage, RealtimeErrorAlert } from '@/components/ui/ErrorUI';
 import { useProfitLossData } from '@/hooks/useProfitLossData';
-import useRiskEvents from '@/hooks/useRiskEvents';
+import { useRiskEvents } from '@/hooks/useRiskEvents';
 import { useRiskMetrics } from '@/hooks/useRiskMetrics';
 
 const mapEventSeverity = (

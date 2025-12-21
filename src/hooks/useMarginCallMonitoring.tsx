@@ -25,24 +25,23 @@
  * }
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { useAuth } from './useAuth';
-import { useMarginMonitoring } from './useMarginMonitoring';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import {
-  detectMarginCall,
-  shouldEscalateToLiquidation,
-  getRecommendedActions,
-  generateMarginCallNotification,
-  shouldRestrictNewTrading,
-  shouldEnforceCloseOnly,
-  classifyMarginCallSeverity,
-  type MarginCallEvent,
-  MarginCallStatus,
-  MarginCallSeverity,
-  type MarginCallAction,
+import { useAuth } from '@/hooks/useAuth';
+import { useMarginMonitoring } from '@/hooks/useMarginMonitoring';
+import type {
+  MarginCallAction,
+  MarginCallEvent,
 } from '@/lib/trading/marginCallDetection';
+import {
+  MarginCallSeverity,
+  MarginCallStatus,
+  generateMarginCallNotification,
+  getRecommendedActions,
+  shouldEnforceCloseOnly,
+  shouldEscalateToLiquidation,
+  shouldRestrictNewTrading,
+} from '@/lib/trading/marginCallDetection';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface MarginCallState {
   marginStatus: MarginCallStatus;
@@ -92,6 +91,7 @@ export function useMarginCallMonitoring(
     isWarning,
     isCritical,
     isLiquidationRisk,
+    error: marginMonitoringError,
   } = useMarginMonitoring({
     enabled,
     refreshInterval: escalationCheckInterval,
@@ -119,8 +119,8 @@ export function useMarginCallMonitoring(
     severity: (isCritical
       ? MarginCallSeverity.URGENT
       : isWarning
-        ? MarginCallSeverity.STANDARD
-        : null) as MarginCallSeverity | null,
+      ? MarginCallSeverity.STANDARD
+      : null) as MarginCallSeverity | null,
     timeInCallMinutes: null,
     shouldEscalate: Boolean(isLiquidationRisk),
     shouldEnforceCloseOnly: Boolean(isLiquidationRisk),
@@ -131,6 +131,29 @@ export function useMarginCallMonitoring(
     lastNotificationTime: null,
     marginCallEventId: null,
   });
+
+  // Refs to store volatile values for stable callback dependencies
+  const marginLevelRef = useRef(marginLevel);
+  const isLiquidationRiskRef = useRef(isLiquidationRisk);
+  const stateRef = useRef(state);
+
+  // Update refs when values change
+  useEffect(() => {
+    marginLevelRef.current = marginLevel;
+    isLiquidationRiskRef.current = isLiquidationRisk;
+    stateRef.current = state;
+  });
+
+  // Propagate margin monitoring errors to state
+  useEffect(() => {
+    if (marginMonitoringError) {
+      setState((prev) => ({
+        ...prev,
+        error: marginMonitoringError,
+        isLoading: false,
+      }));
+    }
+  }, [marginMonitoringError]);
 
   const marginCallStartTimeRef = useRef<number | null>(null);
   const notificationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -152,38 +175,26 @@ export function useMarginCallMonitoring(
    * Detect margin call and classify severity
    */
   const detectMarginCallEvent = useCallback((): MarginCallEvent => {
-    const detection = detectMarginCall(
-      state.marginLevel > 0 ? 1000 * (100 / state.marginLevel) : 0, // Assume $1000 equity per margin %
-      1000 * (100 / Math.max(state.marginLevel, 1)) // Estimate margin used
-    );
-
+    const currentState = stateRef.current;
     return {
       id: `margin-call-${Date.now()}`,
       userId: user?.id || '',
       triggeredAt: new Date(),
-      marginLevelAtTrigger: state.marginLevel,
+      marginLevelAtTrigger: currentState.marginLevel,
       status: MarginCallStatus.NOTIFIED,
-      severity: state.severity || MarginCallSeverity.STANDARD,
+      severity: currentState.severity || MarginCallSeverity.STANDARD,
       positionsAtRisk: 0,
-      recommendedActions: state.recommendedActions.map((a) => a.action),
-      escalatedToLiquidationAt: state.shouldEscalate ? new Date() : null,
+      recommendedActions: currentState.recommendedActions.map((a) => a.action),
+      escalatedToLiquidationAt: currentState.shouldEscalate ? new Date() : null,
       resolvedAt: null,
       resolutionType: null,
       notes: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      timeInCallMinutes: getTimeInCall() ?? undefined,
-      estimatedTimeToLiquidationMinutes: isLiquidationRisk ? 30 : undefined,
+      timeInCallMinutes: getTimeInCall() ?? 0,
+      estimatedTimeToLiquidationMinutes: isLiquidationRiskRef.current ? 30 : 0,
     };
-  }, [
-    state.marginLevel,
-    state.severity,
-    state.shouldEscalate,
-    state.recommendedActions,
-    user?.id,
-    getTimeInCall,
-    isLiquidationRisk,
-  ]);
+  }, [user?.id, getTimeInCall]);
 
   /**
    * Track margin call entry and escalation
@@ -200,8 +211,8 @@ export function useMarginCallMonitoring(
       const severity = isLiquidationRisk
         ? MarginCallSeverity.CRITICAL
         : isCritical
-          ? MarginCallSeverity.URGENT
-          : MarginCallSeverity.STANDARD;
+        ? MarginCallSeverity.URGENT
+        : MarginCallSeverity.STANDARD;
 
       setState((prev) => {
         const newActions = getRecommendedActions(marginLevel ?? 0, 5); // Assume 5 positions

@@ -1,8 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Onboarding tour step configuration

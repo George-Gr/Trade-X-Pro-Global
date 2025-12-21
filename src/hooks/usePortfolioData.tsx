@@ -1,7 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useAuth } from './useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import type { Position } from '@/integrations/supabase/types/tables';
+import { logger } from '@/lib/logger';
+import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from './useAuth';
 
 interface ProfileData {
   balance: number;
@@ -64,7 +65,10 @@ export const usePortfolioData = () => {
           ...pos,
           opened_at: (() => {
             if (!pos.opened_at) {
-              console.warn(`Position ${pos.id} missing opened_at timestamp`);
+              logger.warn(`Position ${pos.id} missing opened_at timestamp`, {
+                userId: user?.id,
+                component: 'usePortfolioData',
+              });
             }
             return (pos.opened_at ?? new Date().toISOString()) as string;
           })(),
@@ -133,7 +137,7 @@ export const usePortfolioData = () => {
   }, [user, fetchPortfolioData]);
 
   const calculateUnrealizedPnL = useCallback(
-    (position: Position, currentPrice: number): number => {
+    (position: PositionWithPnL, currentPrice: number): number => {
       const contractSize = 100000;
       const priceDiff =
         position.side === 'buy'

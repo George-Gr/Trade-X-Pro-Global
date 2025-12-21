@@ -1,52 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Bell, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { usePriceAlerts } from '@/hooks/usePriceAlerts';
+import { supabase } from '@/integrations/supabase/client';
+import { Bell, Loader2, Trash2, TrendingDown, TrendingUp } from 'lucide-react';
 import { PriceAlertDialog } from './PriceAlertDialog';
 
-interface PriceAlert {
-  id: string;
-  symbol: string;
-  target_price: number;
-  condition: string;
-  triggered: boolean;
-  created_at: string;
-  triggered_at: string | null;
-}
-
 export const PriceAlertsManager = () => {
-  const [alerts, setAlerts] = useState<PriceAlert[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { alerts, loading, refresh } = usePriceAlerts();
   const { toast } = useToast();
-
-  const fetchAlerts = useCallback(async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('price_alerts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setAlerts(data || []);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
-      toast({
-        title: 'Error loading alerts',
-        description: message,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
 
   const handleDeleteAlert = async (id: string) => {
     try {
@@ -57,7 +20,7 @@ export const PriceAlertsManager = () => {
 
       if (error) throw error;
 
-      setAlerts(alerts.filter((a) => a.id !== id));
+      refresh();
       toast({
         title: 'Alert deleted',
         description: 'Price alert has been removed.',
@@ -71,30 +34,6 @@ export const PriceAlertsManager = () => {
       });
     }
   };
-
-  useEffect(() => {
-    fetchAlerts();
-
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel('price_alerts_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'price_alerts',
-        },
-        () => {
-          fetchAlerts();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [fetchAlerts]);
 
   if (loading) {
     return (
@@ -117,7 +56,7 @@ export const PriceAlertsManager = () => {
           <PriceAlertDialog
             symbol="EURUSD"
             currentPrice={1.0856}
-            onAlertCreated={fetchAlerts}
+            onAlertCreated={refresh}
           />
         </div>
       </CardHeader>

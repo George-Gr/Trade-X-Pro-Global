@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -16,12 +16,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ExternalLink, Copy, CheckCircle2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useForm, Controller } from 'react-hook-form';
+import { supabase } from '@/integrations/supabase/client';
 import { validationRules } from '@/lib/validationRules';
+import { CheckCircle2, Copy, ExternalLink, Loader2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 interface DepositCryptoDialogProps {
   open: boolean;

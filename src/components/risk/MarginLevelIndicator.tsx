@@ -1,9 +1,35 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/hooks/useAuth';
-import { AlertTriangle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState } from 'react';
+
+// Define the expected shape of the realtime payload
+interface ProfileUpdatePayload {
+  equity: number;
+  margin_used: number;
+}
+
+// Type guard to validate the payload shape
+const isValidProfilePayload = (
+  payload: unknown
+): payload is ProfileUpdatePayload => {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  const obj = payload as Record<string, unknown>;
+  const equity = obj.equity;
+  const marginUsed = obj.margin_used;
+
+  return (
+    typeof equity === 'number' &&
+    typeof marginUsed === 'number' &&
+    !isNaN(equity) &&
+    !isNaN(marginUsed) &&
+    isFinite(equity) &&
+    isFinite(marginUsed)
+  );
+};
 
 export const MarginLevelIndicator = () => {
   const { user } = useAuth();
@@ -55,11 +81,14 @@ export const MarginLevelIndicator = () => {
           table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        (payload) => {
-          const { equity, margin_used } = payload.new;
-          if (margin_used > 0) {
-            setMarginLevel((equity / margin_used) * 100);
-            setHasData(true);
+        (payload: { new: unknown }) => {
+          // Type-safe payload validation
+          if (isValidProfilePayload(payload.new)) {
+            const { equity, margin_used } = payload.new;
+            if (margin_used > 0) {
+              setMarginLevel((equity / margin_used) * 100);
+              setHasData(true);
+            }
           }
         }
       )

@@ -1,28 +1,74 @@
 // Browser-facing Supabase client wrapper
-// Provides fallback values for the preview environment when env vars aren't injected
+// Strict environment validation - no fallback credentials for security
 // Note: The anon key is a PUBLISHABLE key (like Stripe's publishable key) - designed to be public
 // Security is enforced via Row Level Security (RLS) policies, not by hiding this key
 
 import type { Database } from '@/integrations/supabase/types';
 import { createClient } from '@supabase/supabase-js';
 
-// Fallback values for Lovable Cloud preview environment
-const FALLBACK_URL = 'https://oaegicsinxhpilsihjxv.supabase.co';
-const FALLBACK_PUBLISHABLE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hZWdpY3NpbnhocGlsc2loanh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNDQxMTgsImV4cCI6MjA3NzkyMDExOH0.mnOyTKuVlVFMW3CrsI4bSccAq1F8eTSmM1IFHsP3ItU';
+/**
+ * Get required environment variable with validation
+ * Throws error if variable is missing to prevent fallback credentials
+ */
+const getRequiredEnvVar = (key: string): string => {
+  const value = (import.meta.env as Record<string, string>)?.[key];
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable: ${key}. ` +
+        'Please ensure .env.local is properly configured with your Supabase credentials.'
+    );
+  }
+  return value;
+};
 
-const getEnvVar = (key: string): string | undefined => {
+/**
+ * Validate Supabase URL format
+ */
+const validateSupabaseUrl = (url: string): void => {
   try {
-    return (import.meta.env as Record<string, string>)?.[key];
-  } catch {
-    return undefined;
+    const urlObj = new URL(url);
+
+    // Skip validation in development or for localhost URLs
+    if (
+      import.meta.env?.DEV ||
+      urlObj.hostname === 'localhost' ||
+      urlObj.hostname === '127.0.0.1' ||
+      urlObj.hostname === '::1'
+    ) {
+      return;
+    }
+
+    if (
+      !urlObj.hostname.endsWith('.supabase.co') &&
+      !urlObj.hostname.endsWith('.supabase.in')
+    ) {
+      throw new Error(
+        'Invalid Supabase URL format. Must be a valid Supabase project URL.'
+      );
+    }
+  } catch (error) {
+    throw new Error(
+      `Invalid Supabase URL: ${url}. ${
+        error instanceof Error ? error.message : ''
+      }`
+    );
   }
 };
 
-const SUPABASE_URL = getEnvVar('VITE_SUPABASE_URL') || FALLBACK_URL;
-const SUPABASE_PUBLISHABLE_KEY =
-  getEnvVar('VITE_SUPABASE_PUBLISHABLE_KEY') || FALLBACK_PUBLISHABLE_KEY;
+const SUPABASE_URL = getRequiredEnvVar('VITE_SUPABASE_URL');
+const SUPABASE_PUBLISHABLE_KEY = getRequiredEnvVar(
+  'VITE_SUPABASE_PUBLISHABLE_KEY'
+);
 
+// Validate configuration
+validateSupabaseUrl(SUPABASE_URL);
+
+/**
+ * Supabase client instance for browser usage with optimized configuration.
+ *
+ * @export
+ * @type {SupabaseClient<Database>}
+ */
 export const supabase = createClient<Database>(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY,

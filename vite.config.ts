@@ -42,13 +42,18 @@ const corsMiddleware = (): Plugin => ({
         res.setHeader('Access-Control-Allow-Origin', origin);
       } else if (!isProd) {
         // In development, allow localhost origins by default for convenience
-        // but log warnings for unknown origins
-        const isLocalhost = origin && (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1'));
-        if (isLocalhost) {
-          res.setHeader('Access-Control-Allow-Origin', origin);
+        // but log warnings only for explicitly unknown origins (not undefined)
+        if (origin === undefined) {
+          // No origin header - same-origin request, allow it
+          res.setHeader('Access-Control-Allow-Origin', '*');
         } else {
-          console.warn(`⚠️  CORS: Unknown origin blocked: ${origin}`);
-          res.setHeader('Access-Control-Allow-Origin', 'null');
+          const isLocalhost = origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1');
+          if (isLocalhost) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+          } else {
+            console.warn(`⚠️  CORS: Unknown origin blocked: ${origin}`);
+            res.setHeader('Access-Control-Allow-Origin', 'null');
+          }
         }
       }
 

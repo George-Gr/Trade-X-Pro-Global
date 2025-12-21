@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface PriceData {
   symbol: string;
@@ -21,7 +21,7 @@ interface UsePriceUpdatesOptions {
   enabled?: boolean;
 }
 
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 
 const CACHE_DURATION_MS = 1000; // Cache prices for 1 second to avoid excessive API calls
 

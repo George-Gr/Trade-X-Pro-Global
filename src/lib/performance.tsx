@@ -64,8 +64,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
             )
           }
         >
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <LazyComponent {...(props as any)} />
+          <LazyComponent {...(props as ComponentProps<T>)} />
         </Suspense>
       </ErrorBoundary>
     );

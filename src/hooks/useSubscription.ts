@@ -4,9 +4,9 @@
  * Simplified wrapper for Supabase real-time subscriptions
  */
 
-import { useEffect, useRef, useCallback } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { supabase } from '@/integrations/supabase/client';
 import { getSubscriptionManager } from '@/lib/subscriptionManager';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface UseSubscriptionOptions {
   table: string;

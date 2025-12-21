@@ -1,14 +1,3 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   AlertDialog,
@@ -19,36 +8,40 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useAuth } from '@/hooks/useAuth';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { validationRules } from '@/lib/validationRules';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Loader2,
   AlertTriangle,
   CheckCircle2,
   Clock,
   DollarSign,
-  TrendingDown,
+  Loader2,
   Shield,
 } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
-import { validationRules } from '@/lib/validationRules';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 interface WithdrawalFormProps {
   onSuccess?: () => void;
@@ -119,7 +112,6 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
 
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [estimatedFee, setEstimatedFee] = useState(0);
 
   const form = useForm({
     mode: 'onChange',
@@ -131,16 +123,21 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    reset,
-    formState: { errors, isValid },
-  } = form;
+  const { register, handleSubmit, control, watch, reset } = form;
   const currency = watch('currency');
   const amount = watch('amount');
+
+  // Register address field with validation
+  const watchedCurrency = watch('currency');
+  const addressValidation = {
+    required: 'Please enter a withdrawal address',
+    validate: (val: string) =>
+      validateAddress(val, watchedCurrency) ||
+      `Please enter a valid ${watchedCurrency} address`,
+  };
+
+  // Register the address field with validation
+  form.register('address', addressValidation);
 
   // Fetch user profile for KYC status and withdrawal limits
   const { data: profile } = useQuery({
@@ -178,7 +175,6 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     enabled: !!user?.id,
   });
 
-  const watchedCurrency = watch('currency') || 'BTC';
   const watchedAmount = watch('amount') || '';
   const watchedAddress = watch('address') || '';
   const watchedTwoFA = watch('twoFACode') || '';
@@ -187,7 +183,6 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
     (c) => c.value === watchedCurrency
   );
   const networkFee = parseFloat(selectedCrypto?.networkFee || '0');
-  const totalWithdrawal = (parseFloat(watchedAmount || '0') || 0) + networkFee;
   const todayTotal =
     todayWithdrawals?.reduce((sum, t) => sum + (t.usd_amount || 0), 0) || 0;
   const remainingDailyLimit = WITHDRAWAL_LIMITS.daily - todayTotal;
@@ -305,7 +300,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
 
       toast({
         title: 'Withdrawal Initiated',
-        description: `Your withdrawal of ${formValues.amount} ${formValues.currency} has been requested. It will be processed shortly.`,
+        description: `Your withdrawal of ${formValues.amount} ${formValues.currency} has been requested. Withdrawal ID: ${data?.withdrawal_id}. It will be processed shortly.`,
       });
 
       // Reset form
@@ -381,7 +376,7 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
       {isKYCVerified && (
         <div className="space-y-4">
           <Form {...form}>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="currency">Cryptocurrency</Label>
                 <Controller
@@ -415,19 +410,14 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
               <FormField
                 control={form.control}
                 name="address"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel htmlFor="address">Withdrawal Address</FormLabel>
                     <FormControl>
                       <Input
                         id="address"
                         placeholder={`Enter your ${watchedCurrency} address`}
-                        {...register('address', {
-                          required: 'Please enter a withdrawal address',
-                          validate: (val: string) =>
-                            validateAddress(val, watchedCurrency) ||
-                            `Please enter a valid ${watchedCurrency} address`,
-                        })}
+                        {...field}
                         className="font-mono text-sm"
                       />
                     </FormControl>
@@ -481,7 +471,6 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
               {/* Form submission button */}
               <Button
                 type="submit"
-                onClick={() => handleSubmit(onSubmit)()}
                 disabled={!canWithdraw || loading}
                 className="w-full"
               >

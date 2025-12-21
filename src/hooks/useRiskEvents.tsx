@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState } from 'react';
 
 export interface RiskEvent {
   id: string;

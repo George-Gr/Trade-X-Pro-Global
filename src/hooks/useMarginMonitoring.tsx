@@ -30,21 +30,21 @@
  * }
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { useAuth } from './useAuth';
-import { useRealtimePositions } from './useRealtimePositions';
+import { useAuth } from '@/hooks/useAuth';
+import { useRealtimePositions } from '@/hooks/useRealtimePositions';
+import { supabase } from '@/integrations/supabase/client';
+import type { MarginAction } from '@/lib/trading/marginMonitoring';
 import {
   MarginStatus,
-  getMarginStatus,
   calculateMarginLevel,
-  isMarginWarning,
-  isMarginCritical,
-  isLiquidationRisk,
-  getMarginActionRequired,
   estimateTimeToLiquidation,
-  type MarginAction,
+  getMarginActionRequired,
+  getMarginStatus,
+  isLiquidationRisk,
+  isMarginCritical,
+  isMarginWarning,
 } from '@/lib/trading/marginMonitoring';
-import { supabase } from '@/lib/supabaseBrowserClient';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface MarginMonitoringState {
   marginLevel: number | null;
@@ -292,7 +292,7 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
    * Acknowledge a margin alert (mark as read)
    * Note: This will be implemented once margin_alerts table is added to Supabase types
    */
-  const acknowledgeAlert = useCallback(async (alertId: string) => {
+  const acknowledgeAlert = useCallback(async (_alertId: string) => {
     // Alert acknowledgment will be implemented after schema migration
     // Feature flagged for future release
   }, []);

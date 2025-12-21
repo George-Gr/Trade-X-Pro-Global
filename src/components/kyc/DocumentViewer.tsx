@@ -7,8 +7,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { formatToastError } from '@/lib/errorMessageService';
-import { supabase } from '@/lib/supabaseBrowserClient';
 import { Download, FileText, Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 

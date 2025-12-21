@@ -1,18 +1,18 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { TrendingUp } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
+import { cn } from '@/lib/utils';
+import { TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
-  TradingMenu,
-  MarketsMenu,
-  EducationMenu,
   CompanyMenu,
+  EducationMenu,
   LegalMenu,
+  MarketsMenu,
+  TradingMenu,
 } from './menus';
 
 export const PublicHeader = () => {
@@ -46,21 +46,21 @@ export const PublicHeader = () => {
           <Link
             to="/"
             className={cn(
-              'flex items-center gap-2.5 rounded-lg px-2 py-1 -ml-2',
+              'flex items-center gap-3 rounded-lg px-3 py-2',
               'transition-all duration-200',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
               'focus-visible:ring-primary focus-visible:ring-offset-background',
-              'hover:opacity-80'
+              'hover:bg-accent/50 hover:shadow-sm'
             )}
             aria-label="TradeX Pro - Home"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-glow">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary-glow shadow-lg">
               <TrendingUp
-                className="h-5 w-5 text-primary-foreground"
+                className="h-6 w-6 text-primary-foreground"
                 aria-hidden="true"
               />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               TradeX Pro
             </span>
           </Link>
@@ -71,15 +71,11 @@ export const PublicHeader = () => {
               value={menuOpen ? 'trigger' : ''}
               onValueChange={(val: string) => setMenuOpen(!!val)}
             >
-              <NavigationMenuList>
+              <NavigationMenuList className="gap-1">
                 <TradingMenu />
-
                 <MarketsMenu />
-
                 <EducationMenu />
-
                 <CompanyMenu />
-
                 <LegalMenu />
               </NavigationMenuList>
             </NavigationMenu>
@@ -91,7 +87,7 @@ export const PublicHeader = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden sm:inline-flex focus-visible:ring-2 focus-visible:ring-primary"
+                className="hidden sm:inline-flex focus-visible:ring-2 focus-visible:ring-primary hover:bg-accent/80 transition-colors font-medium"
               >
                 Login
               </Button>
@@ -99,7 +95,7 @@ export const PublicHeader = () => {
             <Link to="/register">
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-primary to-primary-glow hover:opacity-90 transition-opacity"
+                className="bg-linear-to-r from-gold to-gold-hover text-white hover:shadow-[0_4px_15px_rgba(255,193,7,0.4)] transition-all duration-300 hover:scale-105 font-semibold"
               >
                 Get Started
               </Button>

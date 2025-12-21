@@ -1,4 +1,3 @@
-import { useEffect, useState, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -8,9 +7,10 @@ import {
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { supabase } from '@/lib/supabaseBrowserClient';
-import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Preferences {
   email_enabled: boolean;
