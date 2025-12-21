@@ -1,9 +1,14 @@
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
+import { AsyncLocalStorage } from 'async_hooks';
+import crypto from 'crypto';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
+
+// Async local storage for per-request nonce tracking
+const asyncLocalStorage = new AsyncLocalStorage<{ nonce: string }>();
 
 // CORS middleware for development - handles cross-origin requests securely
 const corsMiddleware = (): Plugin => ({
@@ -84,6 +89,43 @@ const corsMiddleware = (): Plugin => ({
   },
 });
 
+// CSP Nonce generation middleware - generates one nonce per request
+// and makes it available to both CSP header and HTML transformation
+const cspNonceMiddleware = (): Plugin => ({
+  name: 'csp-nonce-middleware',
+  apply: 'serve',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      // Generate unique nonce for each request
+      const nonce = crypto.randomBytes(16).toString('base64');
+      
+      // Store nonce in async local storage for access by transformIndexHtml hook
+      asyncLocalStorage.run({ nonce }, () => {
+        // Set CSP header with nonce (report-only mode for development)
+        res.setHeader(
+          'Content-Security-Policy-Report-Only',
+          `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com; report-uri /csp-report; report-to csp-endpoint`
+        );
+        
+        next();
+      });
+    });
+  },
+  // Use Vite's transformIndexHtml hook to inject nonce into HTML
+  // This properly handles all SPA routes and index.html requests
+  transformIndexHtml: {
+    order: 'post',
+    handler(html) {
+      // Retrieve nonce from async local storage (set by middleware)
+      const store = asyncLocalStorage.getStore();
+      const nonce = store?.nonce || crypto.randomBytes(16).toString('base64');
+      
+      // Replace all {CSP_NONCE} placeholders with actual nonce value
+      return html.replace(/{CSP_NONCE}/g, nonce);
+    },
+  },
+});
+
 // Safely load lovable-tagger plugin - fails gracefully if not available
 let componentTaggerPlugin: Plugin | undefined = undefined;
 (async () => {
@@ -126,6 +168,7 @@ export default defineConfig(() => ({
   plugins: [
     react(),
     corsMiddleware(),
+    cspNonceMiddleware(),
     componentTaggerPlugin,
     // Bundle size monitoring and budgets
     {

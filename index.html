@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <!-- Conditionally load manifest only in production or when not in auth flow -->
-    <script>
+    <script nonce="{CSP_NONCE}">
       // Only load manifest if not being redirected for auth
       if (
         !window.location.href.includes('pf-signin') &&
@@ -29,13 +29,14 @@
     <meta name="msapplication-TileColor" content="#3b82f6" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" nonce="{CSP_NONCE}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin nonce="{CSP_NONCE}" />
     <!-- Neo-Digital Premium Typography: Sora (display) + Space Grotesk (body) + JetBrains Mono (data) -->
     <link
       rel="preload"
       href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       as="style"
+      nonce="{CSP_NONCE}"
       onload="
         this.onload = null;
         this.rel = 'stylesheet';
@@ -51,6 +52,7 @@
       href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
       media="print"
+      nonce="{CSP_NONCE}"
       onload="
         this.media = 'all';
         this.onload = null;
@@ -71,6 +73,18 @@
     />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tradexpro.com/" />
+    
+    <!-- CSP Nonce for inline scripts -->
+    <script nonce="{CSP_NONCE}">
+      // Inline script with nonce for CSP compliance
+      window.__CSP_NONCE__ = '{CSP_NONCE}';
+      
+      // Initialize nonce for dynamic content
+      document.addEventListener('DOMContentLoaded', function() {
+        // Store nonce globally for dynamic script injection
+        window.CSP_NONCE = '{CSP_NONCE}';
+      });
+    </script>
 
     <!-- Open Graph / Facebook -->
     <meta
@@ -105,7 +119,7 @@
     />
 
     <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="{CSP_NONCE}">
       {
         "@context": "https://schema.org",
         "@type": "FinancialService",
@@ -136,6 +150,6 @@
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx" nonce="{CSP_NONCE}"></script>
   </body>
 </html>
