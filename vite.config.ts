@@ -95,7 +95,7 @@ const cspNonceMiddleware = (): Plugin => ({
   name: 'csp-nonce-middleware',
   apply: 'serve',
   configureServer(server) {
-    server.middlewares.use((req, res, next) => {
+    server.middlewares.use((_req, res, next) => {
       // Generate unique nonce for each request
       const nonce = crypto.randomBytes(16).toString('base64');
       
