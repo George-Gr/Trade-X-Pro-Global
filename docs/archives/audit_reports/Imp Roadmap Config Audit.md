@@ -98,6 +98,40 @@ Conclusion: Task 1 is complete from the repository housekeeping perspective. **N
   - `functions-lint-test` run in CI and produces actionable findings.
   - After fixes, CI fails when server-side lint/TS tests fail (hard-fail).
 
+**Status (Task 2): In-progress (scripts prepared)**
+
+Automation artifacts added:
+- `scripts/generate-client-ip-key.sh` — simple helper to generate a secure `CLIENT_IP_ENCRYPTION_KEY` (openssl-based).
+- `scripts/update-github-secrets.sh` — automated script that reads a `.env.rotate` file and sets repository secrets using the `gh` CLI (preferred). The script:
+  - Attempts to infer `GITHUB_REPOSITORY` from env or git remote
+  - Sets the following secrets when present: `SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `VITE_SENTRY_DSN`, `CLIENT_IP_ENCRYPTION_KEY`, `VITE_API_URL`, `VITE_WS_URL`
+  - Provides clear fallback instructions if `gh` is not installed
+
+How to use (manual operator steps):
+1. Rotate keys in Supabase Dashboard → Project Settings → API (manually rotate `SUPABASE_SERVICE_ROLE_KEY` and `VITE_SUPABASE_PUBLISHABLE_KEY`).
+2. Create a temporary `.env.rotate` file with the new secrets (keep file local and secure):
+
+   SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=eyJ...new...
+   SUPABASE_SERVICE_ROLE_KEY=eyJ...new...
+   VITE_SENTRY_DSN=https://... (optional)
+   CLIENT_IP_ENCRYPTION_KEY=$(./scripts/generate-client-ip-key.sh)
+
+3. Run the script (requires `gh` CLI authenticated as a user with repo admin privileges):
+
+   ./scripts/update-github-secrets.sh .env.rotate
+
+4. Verify secrets in GitHub Settings → Secrets (or using `gh secret list --repo owner/repo`).
+5. Securely delete the `.env.rotate` file: `shred -u .env.rotate` or `rm -f .env.rotate` and ensure it is not stored elsewhere.
+
+Notes & Limitations:
+- This repo cannot rotate Supabase keys via API automatically (requires platform-level admin APIs or `supabase` CLI access with appropriate tokens). The recommended approach is to rotate keys in the Supabase dashboard (or using your preferred secret rotation automation), then run `scripts/update-github-secrets.sh` to propagate new keys to GitHub secrets.
+- For full automation (rotate->propagate), consider building an authenticated runner with `SUPABASE_ACCESS_TOKEN` and using the Supabase Platform API / CLI (requires security review). I can draft that flow if you provide access or confirm the intended automation approach.
+
+Next steps (recommended):
+- Manual: Rotate keys in Supabase and run the `update-github-secrets.sh` script as described.
+- Automation (optional): Add a secure CI job (protected by manual approval) that integrates with the Supabase API to rotate keys and calls this script to update GitHub secrets automatically. This requires additional security review and an admin token stored in a vault.
+
 ---
 
 ### 3) Harden Content Security Policy (CSP)
