@@ -1,6 +1,6 @@
-import * as React from 'react';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
+import * as React from 'react';
 import {
   Controller,
   ControllerProps,
@@ -10,14 +10,14 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 const Form = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   name: TName;
 };
@@ -28,7 +28,7 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
@@ -42,14 +42,26 @@ const FormField = <
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
-  const { getFieldState, formState } = useFormContext();
+  const formContext = useFormContext();
 
-  const fieldState = getFieldState(fieldContext.name, formState);
+  // Provide safe defaults when used outside of a <FormProvider>
+  let getFieldState: (name: string, formState?: unknown) => any = () => ({
+    error: undefined,
+  });
+  let formState: unknown = undefined;
+
+  if (formContext) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fc: any = formContext;
+    getFieldState = fc.getFieldState;
+    formState = fc.formState;
+  }
 
   if (!fieldContext) {
     throw new Error('useFormField should be used within <FormField>');
   }
 
+  const fieldState = getFieldState(fieldContext.name as string, formState);
   const { id } = itemContext;
 
   return {
@@ -84,9 +96,8 @@ const FormItem = React.forwardRef<
 });
 FormItem.displayName = 'FormItem';
 
-interface FormLabelProps extends React.ComponentPropsWithoutRef<
-  typeof LabelPrimitive.Root
-> {
+interface FormLabelProps
+  extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
   required?: boolean;
 }
 
@@ -184,6 +195,8 @@ const FormMessage = React.forwardRef<
       className={cn(
         'error-message', // FE-012: Use standardized error message styling
         'text-sm font-medium',
+        // Accessibility: ensure high contrast for error messages
+        'text-danger-contrast',
         className
       )}
       role="alert"
@@ -209,10 +222,10 @@ FormMessage.displayName = 'FormMessage';
 
 export {
   Form,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
-  FormMessage,
   FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 };

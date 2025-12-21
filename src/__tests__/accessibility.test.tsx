@@ -64,7 +64,11 @@ describe('Accessibility Tests', () => {
   describe('Keyboard Navigation', () => {
     it('should be able to navigate with keyboard', async () => {
       const user = userEvent.setup();
-      render(<Login />);
+      render(
+        <Providers>
+          <Login />
+        </Providers>
+      );
 
       const emailInput = screen.getByRole('textbox', {
         name: /email address/i,

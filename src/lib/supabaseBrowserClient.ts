@@ -4,6 +4,7 @@
 // Security is enforced via Row Level Security (RLS) policies, not by hiding this key
 
 import type { Database } from '@/integrations/supabase/types';
+import { SecureStorage } from '@/lib/secureStorage';
 import { createClient } from '@supabase/supabase-js';
 
 /**
@@ -63,8 +64,13 @@ const SUPABASE_PUBLISHABLE_KEY = getRequiredEnvVar(
 // Validate configuration
 validateSupabaseUrl(SUPABASE_URL);
 
+// Initialize secure storage for enhanced security
+const secureStorage = new SecureStorage();
+
 /**
- * Supabase client instance for browser usage with optimized configuration.
+ * Supabase client instance for browser usage with PKCE flow and secure storage.
+ * Replaces implicit flow with PKCE for enhanced security and uses encrypted
+ * storage instead of plain localStorage.
  *
  * @export
  * @type {SupabaseClient<Database>}
@@ -74,11 +80,11 @@ export const supabase = createClient<Database>(
   SUPABASE_PUBLISHABLE_KEY,
   {
     auth: {
-      storage: localStorage,
+      storage: secureStorage,
       persistSession: true,
       autoRefreshToken: true,
-      // Use 'implicit' flow to avoid lock contention issues
-      flowType: 'implicit',
+      // Use PKCE flow for enhanced security (replaces implicit flow)
+      flowType: 'pkce',
       // Disable debug mode in production
       debug: false,
     },
@@ -86,6 +92,9 @@ export const supabase = createClient<Database>(
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
       },
     },
   }

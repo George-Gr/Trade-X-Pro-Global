@@ -14,7 +14,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Documentation (optional - remove if you want to format docs)
-docs/
+# docs/
 
 # Test reports
 playwright-report/

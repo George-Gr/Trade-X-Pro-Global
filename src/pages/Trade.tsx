@@ -18,9 +18,9 @@ import { ProModeOnly, ViewModeToggle } from '@/components/ui/ViewModeToggle';
 import { useViewModeSafe } from '@/contexts/ViewModeContext';
 import { useToast } from '@/hooks/use-toast';
 import { HelpCircle, Menu, X } from 'lucide-react';
-import { Suspense, lazy, useRef, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 
-// Lazy load heavy components for better bundle splitting
+// Lazy load heavy components for better bundle splitting with priority
 const EnhancedWatchlist = lazy(
   () => import('@/components/trading/EnhancedWatchlist')
 );

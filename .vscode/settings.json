@@ -25,7 +25,7 @@
   "github.copilot.chat.agent": true,
   "github.copilot.chat.codesearch": true,
   "github.copilot.chat.monitoringLevel": "standard",
-  
+
   /* TypeScript Context - Balanced for Performance & Quality */
   "github.copilot.chat.languageContext.typescript": "smart",
   "github.copilot.chat.languageContext.fix.typescript": true,
@@ -36,7 +36,7 @@
   "github.copilot.chat.newWorkspace.useContext7": true,
   "github.copilot.chat.tools.memory": true,
   "github.copilot.chat.contextRelevancy": "medium",
-  
+
   /* Disable aggressive token consumption */
   "github.copilot.chat.includeSlashCommandSuggestions": false,
 
@@ -45,7 +45,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.useWorkspaceTypeScriptVersion": true,
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  
+
   /* TypeScript Server Memory & Performance */
   "typescript.tsserver.maxTsServerMemory": 3072,
   "typescript.tsserver.enableTracing": false,
@@ -64,12 +64,12 @@
   "typescript.autoClosingTags": true,
   "typescript.completeFunctionCalls": true,
   "typescript.quickSuggestionsDelay": 100,
-  
+
   /* TypeScript Code Navigation */
   "typescript.implementationsCodeLens.enabled": true,
   "typescript.referencesCodeLens.enabled": true,
   "typescript.referencesCodeLens.showOnAllFunctions": true,
-  
+
   /* TypeScript Editor Settings */
   "typescript.check.npmIsInstalled": false,
   "typescript.disableAutomaticTypeAcquisition": false,
@@ -209,5 +209,7 @@
 
   /* ========== Telemetry & Diagnostics ========== */
   "telemetry.telemetryLevel": "error",
-  "redhat.telemetry.enabled": false
+  "redhat.telemetry.enabled": false,
+  "markdown.validate.enabled": true,
+  "coderabbit.agentType": "Roo"
 }

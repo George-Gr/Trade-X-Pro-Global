@@ -50,9 +50,14 @@ const ChartContainer = React.forwardRef<
 
   React.useEffect(() => {
     let mounted = true;
-    import('recharts').then((m) => {
-      if (mounted) setRecharts(m);
-    });
+    import('recharts')
+      .then((m) => {
+        if (mounted) setRecharts(m);
+      })
+      .catch((error) => {
+        console.warn('Failed to load recharts:', error);
+        if (mounted) setRecharts(null);
+      });
     return () => {
       mounted = false;
     };
@@ -463,9 +468,9 @@ function getPayloadConfigFromPayload(
 
 export {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  ChartTooltip,
+  ChartTooltipContent,
 };

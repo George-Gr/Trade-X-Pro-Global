@@ -267,27 +267,59 @@ export default defineConfig(() => ({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      react: path.resolve(__dirname, 'node_modules/react'),
+      // Optimize React imports to use specific entry points
+      'react': path.resolve(__dirname, 'node_modules/react'),
       'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
       'react/jsx-runtime': path.resolve(
         __dirname,
         'node_modules/react/jsx-runtime.js'
       ),
+      // Preload critical components
+      'react-dom/client': path.resolve(__dirname, 'node_modules/react-dom/client'),
+      'react-dom/server': path.resolve(__dirname, 'node_modules/react-dom/server'),
     },
     // Force single React instance across app and deps
     dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
   },
-  // Ensure a single prebundled copy in dev server
+  // Ensure a single prebundled copy in dev server with optimized includes
   optimizeDeps: {
     include: [
+      // Core React stack only
       'react',
       'react-dom',
       'react/jsx-runtime',
+      'react-dom/client',
+      'react-dom/server',
+      
+      // Essential UI components only
       '@radix-ui/react-tooltip',
-      '@radix-ui/react-hover-card',
+      '@radix-ui/react-dialog',
+      
+      // Essential state management
+      '@tanstack/react-query',
+      'react-hook-form',
+      
+      // Essential utilities
+      'zod',
+      'clsx',
+      'class-variance-authority',
     ],
     // Force re-optimization to fix dependency issues
     force: true,
+    
+    // Exclude heavy chart libraries and other large dependencies from prebundling
+    exclude: [
+      'recharts',
+      '@supabase/supabase-js',
+      'framer-motion',
+      'sonner',
+      'lucide-react',
+      'lightweight-charts',
+      'date-fns',
+      'dompurify',
+      '@sentry/react',
+      'web-vitals',
+    ],
   },
   build: {
     // Reduced from 600 to 400 - encourages better code splitting
@@ -299,62 +331,100 @@ export default defineConfig(() => ({
     // Optimize chunk size
     chunkSize: 500,
 
-    // Additional PWA optimizations
+    // Enhanced code splitting and bundle optimization
     rollupOptions: {
       output: {
-        // Optimized manual chunks for better bundle splitting
-        // Each vendor chunk is split separately to enable parallel loading
+        // Improved manual chunks for better parallel loading and caching
         manualChunks: (id) => {
-          // Vendor chunks - split charts into separate chunks
+          // Core framework chunks
           if (id.includes('node_modules')) {
+            // Chart libraries - split into separate chunks
             if (id.includes('lightweight-charts'))
-              return 'vendor-lightweight-charts';
-            // Split recharts into smaller chunks based on specific components
-            if (id.includes('recharts') && id.includes('cartesian'))
-              return 'vendor-recharts-cartesian';
-            if (id.includes('recharts') && id.includes('pie'))
-              return 'vendor-recharts-pie';
-            if (id.includes('recharts') && id.includes('bar'))
-              return 'vendor-recharts-bar';
-            if (id.includes('recharts') && id.includes('line'))
-              return 'vendor-recharts-line';
-            if (id.includes('recharts')) return 'vendor-recharts-core';
-            if (id.includes('@supabase')) return 'vendor-supabase';
-            if (id.includes('@radix-ui')) return 'vendor-ui';
-            if (id.includes('react-hook-form') || id.includes('zod'))
-              return 'vendor-forms';
-            if (id.includes('@tanstack')) return 'vendor-query';
-            if (id.includes('@sentry')) return 'vendor-monitoring';
-            if (id.includes('date-fns')) return 'vendor-date';
-            if (id.includes('lucide-react')) return 'vendor-icons';
-            if (id.includes('react')) return 'vendor-react';
+              return 'vendor-charts-lightweight';
+            if (id.includes('recharts')) {
+              // Split recharts by functionality
+              if (id.includes('cartesian')) return 'vendor-charts-recharts-cartesian';
+              if (id.includes('pie')) return 'vendor-charts-recharts-pie';
+              if (id.includes('bar')) return 'vendor-charts-recharts-bar';
+              if (id.includes('line')) return 'vendor-charts-recharts-line';
+              if (id.includes('radial')) return 'vendor-charts-recharts-radial';
+              return 'vendor-charts-recharts-core';
+            }
+            
+            // UI and component libraries
+            if (id.includes('@radix-ui')) return 'vendor-ui-radix';
+            if (id.includes('lucide-react')) return 'vendor-icons-lucide';
+            if (id.includes('class-variance-authority')) return 'vendor-ui-cva';
+            if (id.includes('clsx')) return 'vendor-ui-clsx';
+            
+            // State management and data fetching
+            if (id.includes('@tanstack')) return 'vendor-state-query';
+            if (id.includes('react-hook-form')) return 'vendor-forms-hook';
+            if (id.includes('zod')) return 'vendor-forms-validation';
+            
+            // Database and API
+            if (id.includes('@supabase')) return 'vendor-database-supabase';
+            if (id.includes('dompurify')) return 'vendor-security-dompurify';
+            
+            // Date and utilities
+            if (id.includes('date-fns')) return 'vendor-utils-date';
+            if (id.includes('framer-motion')) return 'vendor-animation-framer';
+            if (id.includes('sonner')) return 'vendor-notifications-sonner';
+            
+            // Core React
             if (id.includes('react-dom')) return 'vendor-react-dom';
+            if (id.includes('react')) return 'vendor-react-core';
+            
+            // Monitoring and analytics
+            if (id.includes('@sentry')) return 'vendor-monitoring-sentry';
+            if (id.includes('web-vitals')) return 'vendor-monitoring-vitals';
           }
           return undefined;
         },
-        // Ensure chunks are optimized for caching
-        chunkFileNames: 'chunks/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        // Optimize chunk naming for better caching
+        chunkFileNames: 'chunks/[name]-[hash:8].js',
+        entryFileNames: 'assets/[name]-[hash:8].js',
+        assetFileNames: 'assets/[name]-[hash:8].[ext]',
+        
+        // Optimize chunk size and parallel loading
+        minifyInternalExports: true,
+      },
+      
+      // Optimize chunk size limits
+      maxChunkSize: 200000, // 200KB max per chunk
+      minChunkSize: 5000,   // 5KB min per chunk
+      
+      // Enable treeshake options
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
       },
     },
 
-    // Compression for better PWA performance
+    // Enhanced compression and optimization
     target: 'es2015',
     cssTarget: 'chrome61',
     minify: true,
     cssCodeSplit: true,
-
+    
     // Source map configuration for Sentry
     sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : true,
-
+    
     // Clear dist directory before build to ensure fresh builds
     emptyOutDir: true,
-
+    
     // Prevent chunk file cache issues by using content-based hashing
     preserveEntrySignatures: 'exports-only',
-
-    // Ensure consistent asset processing
-    assetsInlineLimit: 0, // Inline assets as separate files
+    
+    // Optimize asset processing
+    assetsInlineLimit: 4096, // Inline small assets (4KB)
+    
+    // Optimize chunk size warnings
+    chunkSizeWarningLimit: 150, // Reduce from 200 to 150KB
+    
+    // Optimize for production
+    reportCompressedSize: true,
+    cssMinify: true,
   },
 }));

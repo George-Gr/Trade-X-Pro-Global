@@ -69,11 +69,7 @@ const Login = () => {
     localStorage.setItem('demoBannerDismissed', 'true');
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  const { register, handleSubmit } = form;
 
   // Redirect if already logged in
   useEffect(() => {
@@ -128,7 +124,7 @@ const Login = () => {
 
         {/* Animated gradient orbs */}
         <motion.div
-          className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold/30 to-transparent blur-3xl"
+          className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-linear-to-br from-gold/30 to-transparent blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -137,7 +133,7 @@ const Login = () => {
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-accent/30 to-transparent blur-3xl"
+          className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-linear-to-br from-accent/30 to-transparent blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.4, 0.2, 0.4],
@@ -146,7 +142,7 @@ const Login = () => {
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-primary-glow/20 to-transparent blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-gradient-radial from-primary-glow/20 to-transparent blur-3xl"
           animate={{
             scale: [1, 1.1, 1],
             rotate: [0, 180, 360],
@@ -168,7 +164,7 @@ const Login = () => {
           >
             <div className="flex items-start space-x-3">
               <AlertCircle
-                className="h-5 w-5 text-gold mt-0.5 flex-shrink-0"
+                className="h-5 w-5 text-gold mt-0.5 shrink-0"
                 aria-hidden="true"
               />
               <div className="flex-1">

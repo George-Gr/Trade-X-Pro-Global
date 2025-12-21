@@ -3,29 +3,57 @@ import { usePortfolioData } from '@/hooks/usePortfolioData';
 import type { FC } from 'react';
 import React, { Suspense } from 'react';
 import type { PieProps } from 'recharts';
-// Dynamic import wrapper for recharts components
+// Dynamic import wrapper for recharts components with error handling
 const DynamicPieChart = React.lazy(() =>
-  import('recharts').then((m) => ({
-    default: m.PieChart,
-  }))
+  import('recharts')
+    .then((m) => ({
+      default: m.PieChart,
+    }))
+    .catch((error) => {
+      console.warn('Failed to load recharts PieChart:', error);
+      return {
+        default: () => <div className="h-64 bg-muted rounded animate-pulse" />,
+      };
+    })
 );
 
 const DynamicPie = React.lazy(() =>
-  import('recharts').then((m) => ({
-    default: m.Pie as React.ComponentType<PieProps>,
-  }))
+  import('recharts')
+    .then((m) => ({
+      default: m.Pie as React.ComponentType<PieProps>,
+    }))
+    .catch((error) => {
+      console.warn('Failed to load recharts Pie:', error);
+      return {
+        default: () => null,
+      };
+    })
 );
 
 const DynamicCell = React.lazy(() =>
-  import('recharts').then((m) => ({
-    default: m.Cell,
-  }))
+  import('recharts')
+    .then((m) => ({
+      default: m.Cell,
+    }))
+    .catch((error) => {
+      console.warn('Failed to load recharts Cell:', error);
+      return {
+        default: () => null,
+      };
+    })
 );
 
 const DynamicTooltip = React.lazy(() =>
-  import('recharts').then((m) => ({
-    default: m.Tooltip,
-  }))
+  import('recharts')
+    .then((m) => ({
+      default: m.Tooltip,
+    }))
+    .catch((error) => {
+      console.warn('Failed to load recharts Tooltip:', error);
+      return {
+        default: () => null,
+      };
+    })
 );
 
 const DynamicResponsiveContainer = React.lazy(() =>
