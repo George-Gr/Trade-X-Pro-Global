@@ -72,6 +72,27 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
 
+  # Functions lint and test job - validates server-side financial code
+  functions-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Deno lint + fmt + test
+        run: |
+          deno lint supabase/functions --unstable || true
+          deno fmt --check supabase/functions || true
+          deno test supabase/functions --unstable --allow-env
+
+      - name: Type-check functions (tsc if applicable)
+        run: tsc -p supabase/functions/tsconfig.json --noEmit
+
   # Lint and test job
   lint-test:
     runs-on: ubuntu-latest

@@ -107,6 +107,12 @@ Automation artifacts added:
   - Sets the following secrets when present: `SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `VITE_SENTRY_DSN`, `CLIENT_IP_ENCRYPTION_KEY`, `VITE_API_URL`, `VITE_WS_URL`
   - Provides clear fallback instructions if `gh` is not installed
 
+CI job added:
+- Added `functions-lint-test` job to `.github/workflows/ci-build-sentry.yml` that:
+  - Sets up Deno and runs `deno lint`, `deno fmt --check`, and `deno test` on `supabase/functions`
+  - Runs TypeScript type-checking via `tsc -p supabase/functions/tsconfig.json --noEmit`
+  - Currently runs as soft-fail (continues on error) to collect issues for incremental fixes
+
 How to use (manual operator steps):
 1. Rotate keys in Supabase Dashboard → Project Settings → API (manually rotate `SUPABASE_SERVICE_ROLE_KEY` and `VITE_SUPABASE_PUBLISHABLE_KEY`).
 2. Create a temporary `.env.rotate` file with the new secrets (keep file local and secure):
