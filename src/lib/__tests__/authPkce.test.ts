@@ -59,9 +59,9 @@ const mockCrypto: MockCrypto = {
       .fn()
       .mockImplementation(
         (
-          algorithm: { name: string; iv?: BufferSource; tagLength?: number },
-          key: MockCryptoKey,
-          data: BufferSource
+          _algorithm: { name: string; iv?: BufferSource; tagLength?: number },
+          _key: MockCryptoKey,
+          _data: BufferSource
         ) => {
           // Return mock decrypted data based on the input
           return Promise.resolve(new ArrayBuffer(32));

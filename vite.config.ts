@@ -101,10 +101,16 @@ const cspNonceMiddleware = (): Plugin => ({
       
       // Store nonce in async local storage for access by transformIndexHtml hook
       asyncLocalStorage.run({ nonce }, () => {
-        // Set CSP header with nonce (report-only mode for development)
+        // Determine CSP header based on environment
+        const isProduction = process.env.NODE_ENV === 'production';
+        const cspHeader = isProduction 
+          ? 'Content-Security-Policy'
+          : 'Content-Security-Policy-Report-Only';
+        
+        // Set CSP header with nonce (report-only mode for development, strict for production)
         res.setHeader(
-          'Content-Security-Policy-Report-Only',
-          `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com; report-uri /csp-report; report-to csp-endpoint`
+          cspHeader,
+          `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://api.tradingview.com https://s3.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content; report-uri /csp-report; report-to csp-endpoint`
         );
         
         next();
@@ -303,6 +309,7 @@ export default defineConfig(() => ({
       'zod',
       'clsx',
       'class-variance-authority',
+      'hoist-non-react-statics',
     ],
     // Force re-optimization to fix dependency issues
     force: true,
@@ -330,6 +337,12 @@ export default defineConfig(() => ({
 
     // Optimize chunk size
     chunkSize: 500,
+
+    // Fix CommonJS modules like hoist-non-react-statics
+    commonjsOptions: {
+      transformMixedEsModules: true,
+      include: [/node_modules/],
+    },
 
     // Enhanced code splitting and bundle optimization
     rollupOptions: {
@@ -419,9 +432,6 @@ export default defineConfig(() => ({
     
     // Optimize asset processing
     assetsInlineLimit: 4096, // Inline small assets (4KB)
-    
-    // Optimize chunk size warnings
-    chunkSizeWarningLimit: 150, // Reduce from 200 to 150KB
     
     // Optimize for production
     reportCompressedSize: true,

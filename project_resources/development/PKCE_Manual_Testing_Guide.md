@@ -98,12 +98,20 @@ console.log('Feature flags:', flags);
    - Non-sensitive keys should be plain JSON
 
 3. **Test Data Retrieval**
-   ```javascript
-   // Test retrieving data
-   const secureStorage = new SecureStorage();
-   const accessToken = secureStorage.getItem('access_token');
-   console.log('Access token retrieved:', accessToken ? 'Success' : 'Failed');
-   ```
+
+   **Note:** The `SecureStorage` class is not available on the global `window` object by default. Here are three ways to access it for browser-console testing:
+
+   1. **Import from module** (Recommended for module-enabled consoles or devtools snippets): `import { SecureStorage } from './src/lib/secureStorage.ts';`
+
+      Then use: `const secureStorage = new SecureStorage(); const accessToken = secureStorage.getItem('access_token'); console.log('Access token retrieved:', accessToken ? 'Success' : 'Failed');`
+
+   2. **Temporarily expose in development** (Recommended for quick testing): In your app bootstrap, add `window.SecureStorage = SecureStorage;` then refresh the page.
+
+      Then use: `const secureStorage = new window.SecureStorage(); const accessToken = secureStorage.getItem('access_token'); console.log('Access token retrieved:', accessToken ? 'Success' : 'Failed');`
+
+   3. **Inspect underlying storage directly**: Use localStorage/sessionStorage to check keys with your secure prefix.
+
+      Example: `Object.keys(localStorage).filter(k => k.startsWith('secure_auth_')).forEach(k => console.log(k, localStorage.getItem(k)));`
 
 #### Expected Results:
 
@@ -359,7 +367,8 @@ console.log(
   )
 );
 
-// Test secure storage
+// Test secure storage (see Secure Storage Verification section for access methods)
+import { SecureStorage } from './src/lib/secureStorage.ts';
 const storage = new SecureStorage();
 console.log(
   'Storage test:',

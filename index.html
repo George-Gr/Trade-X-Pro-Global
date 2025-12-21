@@ -3,31 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <!-- Preload critical chunks for better performance -->
-    <link
-      rel="preload"
-      href="/assets/vendor-react-core-*.js"
-      as="script"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="/assets/vendor-react-dom-*.js"
-      as="script"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="/assets/vendor-ui-radix-*.js"
-      as="script"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="/assets/vendor-forms-hook-*.js"
-      as="script"
-      crossorigin="anonymous"
-    />
     <!-- Conditionally load manifest only in production or when not in auth flow -->
     <script nonce="{CSP_NONCE}">
       // Only load manifest if not being redirected for auth
@@ -40,27 +15,6 @@
         link.href = '/manifest.json';
         link.crossOrigin = 'use-credentials';
         document.head.appendChild(link);
-      }
-
-      // Preload critical chunks dynamically
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          const criticalChunks = [
-            '/assets/vendor-react-core-',
-            '/assets/vendor-react-dom-',
-            '/assets/vendor-ui-radix-',
-            '/assets/vendor-forms-hook-',
-          ];
-
-          criticalChunks.forEach((chunk) => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'script';
-            link.href = chunk;
-            link.crossOrigin = 'anonymous';
-            document.head.appendChild(link);
-          });
-        });
       }
     </script>
     <meta

@@ -37,8 +37,12 @@ class FeatureFlagManager {
         const parsed = JSON.parse(stored);
         return { ...this.DEFAULT_FLAGS, ...parsed };
       }
-    } catch (error) {
-      logger.warn('Failed to load feature flags', { error });
+    } catch (error: unknown) {
+      logger.warn('Failed to load feature flags', {
+        metadata: {
+          error: error instanceof Error ? error.message : String(error),
+        },
+      });
     }
     return { ...this.DEFAULT_FLAGS };
   }
@@ -49,8 +53,12 @@ class FeatureFlagManager {
   private saveFlags(): void {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.flags));
-    } catch (error) {
-      logger.warn('Failed to save feature flags', { error });
+    } catch (error: unknown) {
+      logger.warn('Failed to save feature flags', {
+        metadata: {
+          error: error instanceof Error ? error.message : String(error),
+        },
+      });
     }
   }
 
@@ -166,6 +174,18 @@ class FeatureFlagManager {
   }
 }
 
+/**
+ * Singleton instance that manages feature flags across the application.
+ * Provides methods to check, enable, disable, and reset feature flags.
+ * Persists flag states in localStorage for consistency across sessions.
+ * @type {FeatureFlagManager}
+ * @example
+ * import { featureFlags } from './lib/featureFlags';
+ * if (featureFlags.isPkceAuthFlowEnabled()) {
+ *   // Enable PKCE authentication flow
+ * }
+ * @see {@link project_resources/security/AUTH_UPGRADE_PLAN.md}
+ */
 // Export singleton instance
 export const featureFlags = new FeatureFlagManager();
 

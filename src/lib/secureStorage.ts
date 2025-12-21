@@ -191,21 +191,9 @@ export class SecureStorage {
         ? encoder.encode(plaintext)
         : encoder.encode(String(plaintext));
 
-    // Create nonce as Uint8Array (use tweetnacl.randomBytes if available)
-    let nonce: Uint8Array;
-    try {
-      nonce = (nacl as any).randomBytes
-        ? (nacl as any).randomBytes(nacl.secretbox.nonceLength)
-        : new Uint8Array(nacl.secretbox.nonceLength);
-      if (nonce.length !== nacl.secretbox.nonceLength) {
-        nonce = new Uint8Array(nacl.secretbox.nonceLength);
-        crypto.getRandomValues(nonce);
-      }
-    } catch (e) {
-      // Fallback to crypto.getRandomValues
-      nonce = new Uint8Array(nacl.secretbox.nonceLength);
-      crypto.getRandomValues(nonce);
-    }
+    // Create nonce as Uint8Array
+    const nonce = new Uint8Array(nacl.secretbox.nonceLength);
+    crypto.getRandomValues(nonce);
 
     // Ensure symmetricKey is Uint8Array
     const key = new Uint8Array(this.symmetricKey!);
@@ -333,14 +321,6 @@ export class SecureStorage {
   }
 
   /**
-   * Utility: Convert string to ArrayBuffer
-   */
-  private stringToArrayBuffer(str: string): ArrayBuffer {
-    const encoder = new TextEncoder();
-    return encoder.encode(str);
-  }
-
-  /**
    * Utility: Convert ArrayBuffer to base64 string
    */
   private arrayBufferToBase64(buffer: ArrayBuffer): string {
@@ -361,7 +341,10 @@ export class SecureStorage {
   private bytesToBase64(bytes: Uint8Array): string {
     let binary = '';
     for (let i = 0; i < bytes.length; i++) {
-      binary += String.fromCharCode(bytes[i]);
+      const byte = bytes[i];
+      if (byte !== undefined) {
+        binary += String.fromCharCode(byte);
+      }
     }
     return btoa(binary);
   }
@@ -371,13 +354,7 @@ export class SecureStorage {
    */
   private base64ToArrayBuffer(base64: string): ArrayBuffer {
     const binary = atob(base64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-      const charCode = binary.charCodeAt(i);
-      if (charCode !== undefined) {
-        bytes[i] = charCode;
-      }
-    }
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
     return bytes.buffer;
   }
 

@@ -1,6 +1,7 @@
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
+import type { UseFormReturn } from 'react-hook-form';
 import {
   Controller,
   ControllerProps,
@@ -45,14 +46,13 @@ const useFormField = () => {
   const formContext = useFormContext();
 
   // Provide safe defaults when used outside of a <FormProvider>
-  let getFieldState: (name: string, formState?: unknown) => any = () => ({
+  let getFieldState: UseFormReturn<FieldValues>['getFieldState'] = () => ({
     error: undefined,
   });
   let formState: unknown = undefined;
 
   if (formContext) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fc: any = formContext;
+    const fc = formContext as UseFormReturn<FieldValues>;
     getFieldState = fc.getFieldState;
     formState = fc.formState;
   }

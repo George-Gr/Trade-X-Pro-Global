@@ -1,78 +1,118 @@
+<!-- markdownlint-disable -->
 # Security Headers (applied to all routes)
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  # CSP Report-Only mode for safe rollout (monitor violations before enforcement)
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-{CSP_NONCE}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com; report-uri /csp-report; report-to csp-endpoint
-
-# After 72 hours of monitoring violations, replace the above with strict CSP:
-# Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-{CSP_NONCE}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP Policy - Strict enforcement
+  Content-Security-Policy: default-src 'self';
+    script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com
+      https://www.tradingview.com https://cdn.jsdelivr.net https://unpkg.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
+      https://cdn.jsdelivr.net;
+    font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https://*.supabase.co wss://*.supabase.co
+      https://finnhub.io https://api.nowpayments.io https://api.tradingview.com
+      https://s3.tradingview.com;
+    frame-src https://www.tradingview.com https://s.tradingview.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+    block-all-mixed-content;
+    report-uri /csp-report;
+    report-to csp-endpoint
+  Report-To: {"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"/csp-report"}]}
 
 # Static Asset Caching - Immutable hashed files (1 year)
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for assets during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-{CSP_NONCE}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for assets
+  Content-Security-Policy: default-src 'self';
+    script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com
+      https://www.tradingview.com https://cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
+      https://cdn.jsdelivr.net;
+    font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https://*.supabase.co wss://*.supabase.co
+      https://finnhub.io https://api.nowpayments.io https://api.tradingview.com
+      https://s3.tradingview.com;
+    report-uri /csp-report;
+    report-to csp-endpoint
 
 # JavaScript/CSS bundles with hash (1 year, immutable)
 /*.*.js
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for JS during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for JS
+  Content-Security-Policy: default-src 'self';
+    script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com
+      https://www.tradingview.com https://cdn.jsdelivr.net;
+    connect-src 'self' https://*.supabase.co wss://*.supabase.co
+      https://finnhub.io https://api.nowpayments.io https://api.tradingview.com
+      https://s3.tradingview.com;
+    report-uri /csp-report;
+    report-to csp-endpoint
 /*.*.css
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for CSS during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; style-src 'self' 'nonce-{CSP_NONCE}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for CSS
+  Content-Security-Policy: default-src 'self';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
+      https://cdn.jsdelivr.net;
+    font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+    report-uri /csp-report;
+    report-to csp-endpoint
 
 # Images (30 days with stale-while-revalidate)
 /images/*
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for images during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for images
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
 /*.png
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for PNG during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for PNG
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
 /*.jpg
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for JPG during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for JPG
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
 /*.jpeg
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for JPEG during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for JPEG
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
 /*.svg
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for SVG during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: https: blob:; style-src 'self' 'nonce-{CSP_NONCE}'; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for SVG
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: blob:; style-src 'self' 'unsafe-inline'; report-uri /csp-report; report-to csp-endpoint
 /*.webp
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for WebP during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for WebP
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: blob:; report-uri /csp-report; report-to csp-endpoint
 /*.ico
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  # CSP Report-Only for ICO during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data:; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for ICO
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; report-uri /csp-report; report-to csp-endpoint
 
 # Fonts (1 year, immutable)
 /*.woff
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for WOFF during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for WOFF
+  Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
 /*.woff2
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for WOFF2 during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for WOFF2
+  Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
 /*.ttf
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for TTF during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for TTF
+  Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
 /*.eot
   Cache-Control: public, max-age=31536000, immutable
-  # CSP Report-Only for EOT during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
+  # Production CSP for EOT
+  Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; report-uri /csp-report; report-to csp-endpoint
 
 # HTML (no cache - always serve fresh for SPA routing)
 /*.html
@@ -82,7 +122,18 @@
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate
   # CSP Report-Only for HTML files during rollout
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com https://www.tradingview.com https://cdn.jsdelivr.net; style-src 'self' 'nonce-{CSP_NONCE}' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://finnhub.io https://api.nowpayments.io https://*.tradingview.com; frame-src https://www.tradingview.com https://s.tradingview.com; report-uri /csp-report; report-to csp-endpoint
+  Content-Security-Policy-Report-Only: default-src 'self';
+    script-src 'self' 'nonce-{CSP_NONCE}' https://s3.tradingview.com
+      https://www.tradingview.com https://cdn.jsdelivr.net;
+    style-src 'self' 'nonce-{CSP_NONCE}' https://fonts.googleapis.com
+      https://cdn.jsdelivr.net;
+    font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https://*.supabase.co wss://*.supabase.co
+      https://finnhub.io https://api.nowpayments.io https://*.tradingview.com;
+    frame-src https://www.tradingview.com https://s.tradingview.com;
+    report-uri /csp-report;
+    report-to csp-endpoint
 
 # Service Worker (always fresh for update detection)
 /sw.js
