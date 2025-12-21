@@ -199,28 +199,89 @@ Key security improvements:
   - Sets `Content-Security-Policy-Report-Only` header with actual nonce value per request
   - Active in development for safe testing and monitoring
   
-- Implemented `htmlNonceTransformMiddleware` in vite.config.ts (lines 125–156):
-  - Intercepts HTML responses and replaces `{CSP_NONCE}` placeholders with actual nonce
-  - Handles both direct HTML files and root `/` requests
-  - Ensures nonce sync between CSP header and HTML attributes
+- Implemented `cspNonceMiddleware` in vite.config.ts with `transformIndexHtml` hook:
+  - Uses Node.js AsyncLocalStorage from `async_hooks` for reliable per-request nonce tracking
+  - Generates one unique 16-byte base64 nonce per request in middleware
+  - Stores nonce in async context for access by transformIndexHtml hook
+  - Nonce sync guaranteed: same nonce used for both CSP header and HTML injection
+  - transformIndexHtml hook (order: 'post') processes all SPA routes and index.html requests
+  - Replaces all `{CSP_NONCE}` placeholders with actual nonce value in HTML
   
-- **Verification**: Dev server started successfully with both middlewares active
-  - Commit: `db392ea` — "feat(csp): add server-side nonce generation middleware"
+- **Verification**: Dev server started successfully with transformIndexHtml hook
+  - Commit: `b7fe37f` — "refactor(csp): improve nonce generation with transformIndexHtml hook"
   - No TypeScript or Vite errors during startup
+  - Refactored to remove unreliable res.send interception and URL suffix checks
+  - Proper Vite hook integration ensures reliable nonce injection across all routes
+
+**✅ Task 3.1 — Staging Deployment Preparation (COMPLETED)**
+
+Staging deployment checklist:
+- Code changes committed and pushed to origin/main (commit `b7fe37f`)
+- CSP headers configured in `public/_headers` with report-only mode
+- Nonce generation middleware fully implemented with transformIndexHtml hook
+- Dev server verified working with nonce middleware active
+
+**Next: Task 3.2 — Deploy to Staging Environment**
+
+Deployment steps:
+1. **Create staging branch** (if needed):
+   ```bash
+   git checkout -b staging
+   # Or if already exists: git checkout staging && git merge main
+   git push origin staging
+   ```
+
+2. **Deploy to staging environment**:
+   - If using Vercel: Push to `staging` branch → Vercel auto-deploys staging environment
+   - If using Netlify: Connect `staging` branch to Netlify preview deployment
+   - If using other platform: Follow platform-specific deployment process for staging
+
+3. **Verify staging deployment**:
+   ```bash
+   # Test that staging site loads and CSP headers are present
+   curl -I https://staging.<domain> | grep -i "content-security-policy"
+   
+   # Expected output (report-only mode):
+   # Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'nonce-ABC123...'
+   ```
+
+4. **Verify nonce injection in HTML**:
+   ```bash
+   # Check that nonce is injected into index.html
+   curl https://staging.<domain> | grep -o "nonce-[A-Za-z0-9/+=]\{20,\}" | head -3
+   
+   # Expected: Multiple nonce values matching the CSP header nonce
+   ```
+
+5. **Configure CSP violation reporting** (if not already configured):
+   - Set up endpoint to receive CSP violation reports at `/csp-report` 
+   - Recommended: Use Sentry or similar service to aggregate CSP violations
+   - Log all violations for analysis during 72-hour monitoring period
+
+6. **Enable monitoring** (72-hour period):
+   - Check Sentry / logs / CSP reports for any violations
+   - Document any violations found (if any):
+     - Script/style violations → add nonce to inline content
+     - Font/image violations → may need to add domains to CSP allowlist
+     - Connect violations → check for API calls to new domains not in allow-list
+   - Common violations to watch for:
+     - "Refused to execute inline script because it violates CSP" → missing nonce
+     - "Refused to apply style from X because of CSP" → missing nonce or domain not allowed
+     - "Refused to connect to X because it violates CSP" → domain not in connect-src
 
 **Remaining Workflow Steps**:
-1. **Deploy to staging**: Push updated code to staging environment for real-world testing
-2. **Monitor violations (72h)**: Deploy and monitor CSP violation reports for browser compatibility and missed directives
-3. **Fix violations**: Address any reported violations by:
+1. **Monitor violations (72h)**: Deploy to staging and monitor CSP violation reports for browser compatibility and missed directives
+2. **Fix violations**: Address any reported violations by:
    - Adding additional nonces to unhandled inline content
    - Adjusting CSP directives if legitimate needs exist
    - Validating third-party integrations comply with CSP
-4. **Enable strict enforcement**: After successful monitoring, replace `Content-Security-Policy-Report-Only` with `Content-Security-Policy` in production headers
-5. **Remove report-only headers**: Clean up `Content-Security-Policy-Report-Only` once strict CSP is active and verified stable
+3. **Enable strict enforcement**: After successful monitoring, replace `Content-Security-Policy-Report-Only` with `Content-Security-Policy` in production headers
+4. **Remove report-only headers**: Clean up `Content-Security-Policy-Report-Only` once strict CSP is active and verified stable in production
 
 Implementation notes:
-- The current implementation uses `{CSP_NONCE}` as a placeholder - this must be replaced with actual nonce values generated per request
-- For Vite/React apps, consider using a middleware or server plugin to inject nonces into the HTML
+- The nonce value is now generated securely per request using `crypto.randomBytes(16).toString('base64')`
+- AsyncLocalStorage ensures nonce is available throughout the request lifecycle
+- transformIndexHtml hook is the Vite-recommended pattern for HTML transformations (avoids res.send issues)
 - TradingView widgets and external scripts are explicitly allowed in connect-src and frame-src
 - Supabase WebSocket connections are properly configured in connect-src
 
