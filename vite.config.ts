@@ -1,31 +1,72 @@
-import { defineConfig } from 'vite';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import type { Plugin } from 'vite';
-import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { defineConfig } from 'vite';
 
-// CORS middleware for development - handles cross-origin requests
+// CORS middleware for development - handles cross-origin requests securely
 const corsMiddleware = (): Plugin => ({
   name: 'cors-middleware',
   apply: 'serve',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
-      // Conditional CORS: * in dev, whitelisted in prod
+      // Secure CORS configuration with explicit origin allowlists
+      const origin = req.headers.origin;
       const isProd = process.env.NODE_ENV === 'production';
-      res.setHeader(
-        'Access-Control-Allow-Origin',
-        isProd ? 'https://tradepro.vercel.app,https://*.vercel.app' : '*'
-      );
+      
+      let allowedOrigins: string[] = [];
+      
+      if (isProd) {
+        // Production: Strict allowlist
+        allowedOrigins = [
+          'https://tradepro.vercel.app',
+          'https://www.tradepro.vercel.app'
+        ];
+      } else {
+        // Development: Common development origins only
+        allowedOrigins = [
+          'http://localhost:5173',  // Vite dev server
+          'http://127.0.0.1:5173',
+          'http://localhost:3000',  // Common React dev server
+          'http://127.0.0.1:3000',
+          'http://localhost:8080',  // Common custom port
+          'http://127.0.0.1:8080'
+        ];
+      }
+
+      // Check if origin is allowed
+      const isOriginAllowed = origin && allowedOrigins.includes(origin);
+      
+      if (isOriginAllowed) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      } else if (!isProd) {
+        // In development, allow localhost origins by default for convenience
+        // but log warnings for unknown origins
+        const isLocalhost = origin && (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1'));
+        if (isLocalhost) {
+          res.setHeader('Access-Control-Allow-Origin', origin);
+        } else {
+          console.warn(`⚠️  CORS: Unknown origin blocked: ${origin}`);
+          res.setHeader('Access-Control-Allow-Origin', 'null');
+        }
+      }
+
       res.setHeader(
         'Access-Control-Allow-Methods',
         'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
       );
       res.setHeader(
         'Access-Control-Allow-Headers',
-        'Content-Type,Authorization,Accept,Origin,X-Requested-With'
+        'Content-Type,Authorization,Accept,Origin,X-Requested-With,X-Requested-By'
       );
-      res.setHeader('Access-Control-Max-Age', '3600');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+
+      // Security headers
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
       if (req.method === 'OPTIONS') {
         res.writeHead(204);
@@ -49,110 +90,8 @@ let componentTaggerPlugin: Plugin | undefined = undefined;
   }
 })();
 
-// PWA Configuration
-const PWA_CONFIG = {
-  name: 'TradeX Pro - Multi Asset CFD Trading Platform',
-  shortName: 'TradeX Pro',
-  description:
-    'Practice CFD trading risk-free with virtual funds on a professional trading platform.',
-  themeColor: '#3b82f6',
-  backgroundColor: '#0a0a0a',
-
-  icons: [
-    {
-      src: '/icons/icon-72x72.png',
-      sizes: '72x72',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-96x96.png',
-      sizes: '96x96',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-128x128.png',
-      sizes: '128x128',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-144x144.png',
-      sizes: '144x144',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-152x152.png',
-      sizes: '152x152',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-192x192.png',
-      sizes: '192x192',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-384x384.png',
-      sizes: '384x384',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-    {
-      src: '/icons/icon-512x512.png',
-      sizes: '512x512',
-      type: 'image/png',
-      purpose: 'any maskable',
-    },
-  ],
-
-  workbox: {
-    globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-    maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
-    runtimeCaching: [
-      {
-        urlPattern: /^https:\/\/api\.tradexpro\.com\//,
-        handler: 'NetworkFirst',
-        options: {
-          cacheName: 'api-cache',
-          expiration: {
-            maxEntries: 100,
-            maxAgeSeconds: 300, // 5 minutes
-          },
-          networkTimeoutSeconds: 10,
-        },
-      },
-      {
-        urlPattern: /\.(css|js)$/,
-        handler: 'StaleWhileRevalidate',
-        options: {
-          cacheName: 'static-resources',
-          expiration: {
-            maxEntries: 100,
-            maxAgeSeconds: 86400, // 24 hours
-          },
-        },
-      },
-      {
-        urlPattern: /\.(png|jpg|jpeg|svg|ico|woff|woff2)$/,
-        handler: 'CacheFirst',
-        options: {
-          cacheName: 'static-assets',
-          expiration: {
-            maxEntries: 200,
-            maxAgeSeconds: 2592000, // 30 days
-          },
-        },
-      },
-    ],
-  },
-};
-
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   server: {
     host: '0.0.0.0',
     port: 8080,
@@ -183,6 +122,66 @@ export default defineConfig(({ mode }) => ({
     react(),
     corsMiddleware(),
     componentTaggerPlugin,
+    // Bundle size monitoring and budgets
+    {
+      name: 'bundle-size-checker',
+      generateBundle(_options: any, bundle: any) {
+        if (process.env.NODE_ENV === 'production') {
+          const sizes: Record<string, number> = {};
+          
+          Object.keys(bundle).forEach(fileName => {
+        const chunk = bundle[fileName];
+        if (chunk.type === 'chunk') {
+          const code = chunk.code || '';
+          sizes[fileName] = Buffer.byteLength(code, 'utf8');
+        } else if (chunk.type === 'asset') {
+          const source = chunk.source;
+          let byteLength: number;
+          
+          if (typeof source === 'string') {
+            byteLength = Buffer.byteLength(source, 'utf8');
+          } else if (source instanceof Buffer) {
+            byteLength = source.length;
+          } else if (source instanceof Uint8Array) {
+            byteLength = source.byteLength;
+          } else if (ArrayBuffer.isView(source)) {
+            // Handle other typed arrays (Uint16Array, Uint32Array, etc.)
+            byteLength = source.byteLength;
+          } else if (source instanceof ArrayBuffer) {
+            byteLength = source.byteLength;
+          } else {
+            // Fallback: try to convert to Buffer
+            try {
+              byteLength = Buffer.from(source).length;
+            } catch {
+              // If all else fails, assume 0 bytes
+              byteLength = 0;
+            }
+          }
+          
+          sizes[fileName] = byteLength;
+        }
+          });
+          
+          // Log bundle sizes
+          console.log('\n📦 Bundle Size Report:');
+          Object.entries(sizes).forEach(([file, size]) => {
+        const sizeKB = (size / 1024).toFixed(2);
+        console.log(`  ${file}: ${sizeKB} KB`);
+          });
+          
+          // Check size budgets
+          const mainBundle = Object.values(sizes).reduce((acc, size) => acc + size, 0);
+          const mainBundleMB = mainBundle / (1024 * 1024);
+          
+          if (mainBundleMB > 2) {
+        console.warn(`⚠️  Bundle size warning: ${mainBundleMB.toFixed(2)}MB exceeds 2MB budget`);
+          } else {
+        console.log(`✅ Bundle size within budget: ${mainBundleMB.toFixed(2)}MB`);
+          }
+        }
+      },
+    },
     // Bundle analyzer - run with ANALYZE=true npm run build
     process.env.ANALYZE &&
       visualizer({
@@ -283,6 +282,7 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('react')) return 'vendor-react';
             if (id.includes('react-dom')) return 'vendor-react-dom';
           }
+          return undefined;
         },
         // Ensure chunks are optimized for caching
         chunkFileNames: 'chunks/[name]-[hash].js',

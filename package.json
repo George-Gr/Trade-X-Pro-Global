@@ -23,6 +23,8 @@
     "preview": "vite preview",
     "test:e2e": "playwright test",
     "type:strict": "tsc -p tsconfig.strict.json --noEmit",
+    "type:check": "tsc --noEmit",
+    "build:check": "npm run type:check && npm run lint && npm run test",
     "validate:design-system": "node scripts/validate-design-system.js",
     "convert:webp": "node scripts/convert-to-webp.js",
     "supabase:link": "supabase link",
