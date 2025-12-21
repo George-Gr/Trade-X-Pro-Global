@@ -1,6 +1,6 @@
 # AI Coding Agent Instructions for TradePro v10
 
-**Version:** 3.0 (Updated Dec 2025)  
+**Version:** 3.1 (Updated Dec 21, 2025)  
 **Purpose:** Guide AI agents to be immediately productive on this CFD trading simulation platform
 
 ---
@@ -22,6 +22,17 @@
    - `npm run dev` (dev server), `npm run lint`, `npm run test`
    - `npm run supabase:pull` (regenerate types after schema changes)
    - `npm run supabase:push` (deploy migrations)
+
+## Developer workflows & scripts 🔧
+
+- Dev server: `npm run dev` — runs `scripts/setup-node-env.js` and sets `FORCE_NODE_POLYFILL_NAVIGATOR=1`. Use `npm run dev:clean`, `npm run dev:fresh`, or `npm run dev:rebuild` for clean rebuilds when local cache causes strange behaviour.
+- Build & releases: `npm run build` (use `npm run build:analyze` to generate a bundle visualizer). `npm run build:production` requires `SENTRY_DSN`; `npm run build:sentry` uploads sourcemaps via `sentry-cli` (ensure `sentry-cli` is installed and auth configured).
+- Linting & types: `npm run lint` / `npm run lint:fix` / `npm run lint:fast` (fast uses `eslint.config.dev.js`). Run `npm run type:check` for a quick check or `npm run type:strict` (uses `tsconfig.strict.json`) for stricter CI-style checks. The combined check is `npm run build:check`.
+- Tests: Unit tests use Vitest (`npm run test`). Use `vi.mock()` to stub hooks and modules (see tests in `src/**/__tests__/`). Run `npm run test:ui` for the Vitest UI. End-to-end tests run with Playwright: `npm run test:e2e` — results and trace artifacts appear under `playwright-report/` and `playwright.config.ts` contains configuration.
+- Supabase workflow: migrations live in `supabase/migrations/`. After schema/migration edits run `npm run supabase:pull` to regenerate types in `src/integrations/supabase/`. Apply changes with `npm run supabase:push` and review RLS policies (CRITICAL).
+- Diagnostics & Copilot: `npm run copilot:config` runs `scripts/copilot-config.js` to check your VS Code Copilot settings and provide recommendations. Use `npm run diagnose:terminal` and `npm run health:check` for environment/terminal troubleshooting.
+
+> Tip: When touching the DB schema, always run `npm run supabase:pull` then `npm run type:check` and `npm run test` locally before opening a PR.
 
 ---
 
