@@ -14,7 +14,7 @@ import { ViewModeProvider } from '@/contexts/ViewModeContext';
 import { initializeSentry, logger } from '@/lib/logger';
 import { accessibilityStyles } from '@/styles/accessibilityStyles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Suspense, lazy, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 const Index = lazy(() => import('./pages/Index'));
 const Register = lazy(() => import('./pages/Register'));
@@ -88,10 +88,10 @@ const App = () => {
   // Initialize Sentry and monitoring on app load (production only)
   useEffect(() => {
     initializeSentry();
-    logger.info('App initialized', { action: 'app_startup' });
+    logger.info('Application initialized', { action: 'app_startup' });
 
     // Initialize breadcrumb tracking
-    logger.info('Breadcrumb tracker initialized', {
+    logger.info('Breadcrumb tracking initialized', {
       action: 'breadcrumb_tracker_init',
     });
   }, []);

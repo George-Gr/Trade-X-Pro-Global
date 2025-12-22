@@ -29,8 +29,8 @@ public/
 # Scripts (some may be generated or not need formatting)
 scripts/
 
-# Supabase functions (may have specific formatting needs)
-supabase/functions/
+# Supabase functions (formatting enabled)
+# supabase/functions/
 
 # Git and IDE
 .git/

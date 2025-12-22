@@ -77,7 +77,7 @@ function createSupabaseClient(): SupabaseClient<Database> {
   const useSecureStorage = featureFlags.isSecureStorageEnabled();
   const useEnhancedHeaders = featureFlags.isEnhancedSecurityHeadersEnabled();
 
-  logger.info('Creating Supabase client', {
+  logger.info('Supabase client created', {
     pkceFlow: usePkceFlow,
     secureStorage: useSecureStorage,
     enhancedHeaders: useEnhancedHeaders,
@@ -89,7 +89,7 @@ function createSupabaseClient(): SupabaseClient<Database> {
   if (useSecureStorage) {
     try {
       storage = new SecureStorage();
-      logger.info('Using secure storage for authentication');
+      logger.info('Secure storage enabled for authentication');
     } catch (error) {
       logger.error(
         'Failed to initialize secure storage, falling back to localStorage:',
@@ -119,7 +119,7 @@ function createSupabaseClient(): SupabaseClient<Database> {
 
   if (usePkceFlow) {
     authOptions.flowType = 'pkce';
-    logger.info('Using PKCE authentication flow');
+    logger.info('PKCE authentication flow enabled');
   } else {
     authOptions.flowType = 'implicit';
     logger.info('Using implicit authentication flow');

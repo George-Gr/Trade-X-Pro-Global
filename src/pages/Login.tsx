@@ -39,11 +39,15 @@ const Login = () => {
     },
   });
 
-  // Check localStorage for demo banner preference
+  // Check SecureStorage for demo banner preference
   useEffect(() => {
-    const bannerDismissed = localStorage.getItem('demoBannerDismissed');
-    if (bannerDismissed === 'true') {
-      setShowDemoBanner(false);
+    try {
+      const bannerDismissed = sessionStorage.getItem('demoBannerDismissed');
+      if (bannerDismissed === 'true') {
+        setShowDemoBanner(false);
+      }
+    } catch (error) {
+      console.warn('Failed to read demo banner preference:', error);
     }
   }, []);
 
@@ -66,7 +70,7 @@ const Login = () => {
   // Dismiss demo banner
   const handleDismissBanner = () => {
     setShowDemoBanner(false);
-    localStorage.setItem('demoBannerDismissed', 'true');
+    sessionStorage.setItem('demoBannerDismissed', 'true');
   };
 
   const { register, handleSubmit } = form;

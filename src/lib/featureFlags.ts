@@ -18,8 +18,8 @@ class FeatureFlagManager {
   private flags: FeatureFlags;
   private readonly STORAGE_KEY = 'trade_x_pro_feature_flags';
   private readonly DEFAULT_FLAGS: FeatureFlags = {
-    pkceAuthFlow: false, // Start with implicit flow disabled
-    secureStorage: false,
+    pkceAuthFlow: true, // Force PKCE authentication (remove implicit fallback)
+    secureStorage: true, // Force secure storage for sensitive data
     enhancedSecurityHeaders: true, // This is safe to enable immediately
   };
 
@@ -93,12 +93,14 @@ class FeatureFlagManager {
   }
 
   /**
-   * Disable PKCE auth flow (rollback to implicit)
+   * Disable PKCE auth flow (rollback to implicit) - DEPRECATED
+   * PKCE is now mandatory for security compliance
    */
   disablePkceAuthFlow(): void {
-    this.flags.pkceAuthFlow = false;
-    this.saveFlags();
-    logger.warn('PKCE auth flow disabled, rolling back to implicit flow');
+    logger.error(
+      'Cannot disable PKCE auth flow - PKCE is now mandatory for security compliance'
+    );
+    throw new Error('PKCE authentication is required for security compliance');
   }
 
   /**
@@ -111,12 +113,14 @@ class FeatureFlagManager {
   }
 
   /**
-   * Disable secure storage (rollback to localStorage)
+   * Disable secure storage (rollback to localStorage) - DEPRECATED
+   * Secure storage is now mandatory for sensitive data protection
    */
   disableSecureStorage(): void {
-    this.flags.secureStorage = false;
-    this.saveFlags();
-    logger.warn('Secure storage disabled, rolling back to localStorage');
+    logger.error(
+      'Cannot disable secure storage - secure storage is now mandatory for sensitive data protection'
+    );
+    throw new Error('Secure storage is required for sensitive data protection');
   }
 
   /**
@@ -150,7 +154,9 @@ class FeatureFlagManager {
   resetToDefaults(): void {
     this.flags = { ...this.DEFAULT_FLAGS };
     this.saveFlags();
-    logger.warn('Feature flags reset to defaults');
+    logger.info(
+      'Feature flags reset to security-compliant defaults (PKCE and secure storage enforced)'
+    );
   }
 
   /**
@@ -160,17 +166,20 @@ class FeatureFlagManager {
     this.flags.pkceAuthFlow = true;
     this.flags.secureStorage = true;
     this.saveFlags();
-    logger.warn('All PKCE features enabled');
+    logger.info('All PKCE features enabled (already enforced by default)');
   }
 
   /**
-   * Disable all PKCE-related features (full rollback)
+   * Disable all PKCE-related features (full rollback) - DEPRECATED
+   * PKCE and secure storage are now mandatory
    */
   disableAllPkceFeatures(): void {
-    this.flags.pkceAuthFlow = false;
-    this.flags.secureStorage = false;
-    this.saveFlags();
-    logger.warn('All PKCE features disabled');
+    logger.error(
+      'Cannot disable PKCE features - PKCE and secure storage are now mandatory for security compliance'
+    );
+    throw new Error(
+      'PKCE authentication and secure storage are required for security compliance'
+    );
   }
 }
 

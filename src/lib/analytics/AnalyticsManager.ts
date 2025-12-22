@@ -324,9 +324,9 @@ export class AnalyticsManager {
   }
 
   private getCurrentUserId(): string | undefined {
-    // Get user ID from local storage or cookie
+    // Get user ID from session storage (more secure than localStorage)
     try {
-      return localStorage.getItem('user_id') || undefined;
+      return sessionStorage.getItem('user_id') || undefined;
     } catch {
       return undefined;
     }

@@ -137,16 +137,6 @@ const isDevelopment = import.meta.env.MODE === 'development';
 const isProduction = import.meta.env.MODE === 'production';
 
 /**
- * Production noop - all console methods become silent in production
- * Only Sentry integration remains active for error tracking
- */
-const noop = () => {};
-const noopWithReturn =
-  <T>(returnValue: T) =>
-  () =>
-    returnValue;
-
-/**
  * Track whether Sentry has been initialized
  */
 let sentryInitialized = false;
@@ -402,20 +392,32 @@ export const logger = {
       if (error instanceof Error) {
         Sentry.captureException(error, {
           tags: {
-            component: fullContext.component,
-            action: fullContext.action,
-            page: fullContext.page,
-            userId: fullContext.userId,
+            ...(fullContext.component !== undefined && {
+              component: fullContext.component,
+            }),
+            ...(fullContext.action !== undefined && {
+              action: fullContext.action,
+            }),
+            ...(fullContext.page !== undefined && { page: fullContext.page }),
+            ...(fullContext.userId !== undefined && {
+              userId: fullContext.userId,
+            }),
           },
           contexts: {
             application: {
-              userId: fullContext.userId,
-              page: fullContext.page,
-              action: fullContext.action,
-              component: fullContext.component,
+              ...(fullContext.userId !== undefined && {
+                userId: fullContext.userId,
+              }),
+              ...(fullContext.page !== undefined && { page: fullContext.page }),
+              ...(fullContext.action !== undefined && {
+                action: fullContext.action,
+              }),
+              ...(fullContext.component !== undefined && {
+                component: fullContext.component,
+              }),
             },
           },
-          extra: fullContext.metadata,
+          ...(fullContext.metadata && { extra: fullContext.metadata }),
         });
       } else {
         Sentry.captureMessage(`${message}: ${JSON.stringify(error)}`, 'error');
@@ -538,9 +540,9 @@ export const logger = {
       method,
       url,
       duration,
-      status,
+      ...(status !== undefined && { status }),
       success: Boolean(!error && status && status < 400),
-      error,
+      ...(error !== undefined && { error }),
     };
 
     // Add to history
@@ -634,8 +636,8 @@ export const logger = {
       operation,
       duration,
       success,
-      error,
-      rowsAffected,
+      ...(error !== undefined && { error }),
+      ...(rowsAffected !== undefined && { rowsAffected }),
     };
 
     // Add to history
@@ -716,7 +718,7 @@ export const logger = {
     const riskEvent: RiskEventInfo = {
       type,
       severity,
-      userId,
+      ...(userId !== undefined && { userId }),
       details,
       timestamp: getTimestamp(),
     };
@@ -784,7 +786,7 @@ export const logger = {
       value,
       unit,
       timestamp: getTimestamp(),
-      context,
+      ...(context !== undefined && { context }),
     };
 
     // Add to history
@@ -915,7 +917,9 @@ export const logger = {
    * End a user action timing
    */
   endUserAction(actionId: string, action: string, context?: LogContext): void {
-    const startTime = parseFloat(actionId.split('-')[1]);
+    const parts = actionId.split('-');
+    if (parts.length < 2) return;
+    const startTime = parseFloat(parts[1]!);
     if (isNaN(startTime)) return;
 
     const duration = performance.now() - startTime;
