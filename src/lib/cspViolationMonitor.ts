@@ -314,7 +314,7 @@ class CSPViolationMonitor {
         ? window.location.hostname
         : process.env.HOSTNAME || '';
     return (
-      uri.includes(hostname) ||
+      (hostname !== '' && uri.includes(hostname)) ||
       uri.startsWith('/') ||
       uri.startsWith('./') ||
       uri.startsWith('../')
@@ -373,9 +373,19 @@ class CSPViolationMonitor {
 
     // Limit memory usage
     if (this.violations.size > this.MAX_VIOLATIONS) {
-      const oldestKey = this.violations.keys().next().value;
-      if (oldestKey) {
-        this.violations.delete(oldestKey);
+      let minKey: string | null = null;
+      let minTimestamp: string | null = null;
+
+      for (const [key, violation] of this.violations.entries()) {
+        const lastSeen = violation.lastSeen;
+        if (lastSeen && (minTimestamp === null || lastSeen < minTimestamp)) {
+          minTimestamp = lastSeen;
+          minKey = key;
+        }
+      }
+
+      if (minKey) {
+        this.violations.delete(minKey);
       }
     }
   }
@@ -557,11 +567,19 @@ class CSPViolationMonitor {
         ],
       };
 
-      await fetch(process.env.SLACK_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+      try {
+        await fetch(process.env.SLACK_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
     } catch (error) {
       logger.error('Failed to send Slack alert:', error);
     }
@@ -572,14 +590,20 @@ class CSPViolationMonitor {
    */
   private async sendWebhookAlert(message: AlertMessage): Promise<void> {
     for (const webhookUrl of this.alertConfig.alertChannels.webhook) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
       try {
         await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(message),
+          signal: controller.signal,
         });
       } catch (error) {
         logger.error(`Failed to send webhook alert to ${webhookUrl}:`, error);
+      } finally {
+        clearTimeout(timeoutId);
       }
     }
   }
@@ -805,6 +829,7 @@ let _instance: CSPViolationMonitor | null = null;
 export function getCspViolationMonitor(): CSPViolationMonitor {
   if (!_instance) {
     _instance = new CSPViolationMonitor();
+    _instance.start();
   }
   return _instance;
 }

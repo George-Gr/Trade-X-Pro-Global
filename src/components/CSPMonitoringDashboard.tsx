@@ -14,6 +14,7 @@ import {
   CSPViolationReport,
   cspMonitoringUtils,
 } from '@/lib/cspViolationMonitor';
+import { logger } from '@/lib/logger';
 import {
   Activity,
   AlertTriangle,
@@ -111,6 +112,9 @@ export const CSPMonitoringDashboard: React.FC<CSPDashboardProps> = ({
       const stats = cspMonitoringUtils.getStats(timeRange);
       setReport(stats);
     } catch (err) {
+      logger.error('Failed to fetch CSP violation data', err, {
+        component: 'CSPMonitoringDashboard',
+      });
       setError('Failed to fetch violation data');
       // Error is displayed to user via error state
     } finally {
@@ -330,7 +334,11 @@ export const CSPMonitoringDashboard: React.FC<CSPDashboardProps> = ({
                   <span className="font-medium">{severity.value}</span>
                 </div>
                 <Progress
-                  value={(severity.value / metrics.totalViolations) * 100}
+                  value={
+                    metrics.totalViolations > 0
+                      ? (severity.value / metrics.totalViolations) * 100
+                      : 0
+                  }
                   className={severity.color}
                 />
               </div>

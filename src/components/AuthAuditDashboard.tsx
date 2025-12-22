@@ -29,6 +29,94 @@ import { MetricsCards } from './auth-audit/MetricsCards';
 import { SeverityDistribution } from './auth-audit/SeverityDistribution';
 import { AuthMetrics } from './auth-audit/types';
 
+// Helper functions moved outside component for better performance
+function calculateRiskLevel(
+  events: AuditEvent[]
+): 'low' | 'medium' | 'high' | 'critical' {
+  const critical = events.filter((e) => e.severity === 'critical').length;
+  const warning = events.filter((e) => e.severity === 'warning').length;
+  const suspicious = events.filter(
+    (e) => e.eventType === 'AUTH_SUSPICIOUS_ACTIVITY'
+  ).length;
+  const geoAnomalies = events.filter(
+    (e) => e.eventType === 'AUTH_GEOLOCATION_ANOMALY'
+  ).length;
+  const failedLogins = events.filter(
+    (e) => e.eventType === 'AUTH_LOGIN_FAILED'
+  ).length;
+
+  if (critical > 0 || suspicious > 0 || geoAnomalies > 0) return 'critical';
+  if (warning > 5 || failedLogins > 10) return 'high';
+  if (warning > 0 || failedLogins > 5) return 'medium';
+  return 'low';
+}
+
+const getRiskColor = (level: string): string => {
+  switch (level) {
+    case 'critical':
+      return 'text-red-600';
+    case 'high':
+      return 'text-orange-600';
+    case 'medium':
+      return 'text-yellow-600';
+    case 'low':
+      return 'text-green-600';
+    default:
+      return 'text-gray-600';
+  }
+};
+
+const getRiskIcon = (level: string) => {
+  switch (level) {
+    case 'critical':
+      return <AlertTriangle className="h-5 w-5" />;
+    case 'high':
+      return <AlertTriangle className="h-5 w-5" />;
+    case 'medium':
+      return <Eye className="h-5 w-5" />;
+    case 'low':
+      return <Shield className="h-5 w-5" />;
+    default:
+      return <Shield className="h-5 w-5" />;
+  }
+};
+
+const getEventTypeIcon = (eventType: AuditEventType) => {
+  switch (eventType) {
+    case 'AUTH_LOGIN_SUCCESS':
+      return <LogIn className="h-4 w-4" />;
+    case 'AUTH_LOGIN_FAILED':
+      return <LogOut className="h-4 w-4" />;
+    case 'AUTH_LOGOUT':
+      return <LogOut className="h-4 w-4" />;
+    case 'AUTH_SUSPICIOUS_ACTIVITY':
+      return <AlertTriangle className="h-4 w-4" />;
+    case 'AUTH_SESSION_TIMEOUT':
+      return <Clock className="h-4 w-4" />;
+    case 'AUTH_MULTIPLE_SESSIONS':
+      return <Users className="h-4 w-4" />;
+    case 'AUTH_GEOLOCATION_ANOMALY':
+      return <MapPin className="h-4 w-4" />;
+    default:
+      return <Activity className="h-4 w-4" />;
+  }
+};
+
+const getSeverityColor = (severity: string): string => {
+  switch (severity) {
+    case 'critical':
+      return 'bg-red-500';
+    case 'error':
+      return 'bg-red-500';
+    case 'warning':
+      return 'bg-orange-500';
+    case 'info':
+      return 'bg-blue-500';
+    default:
+      return 'bg-gray-500';
+  }
+};
+
 interface AuthAuditDashboardProps {
   autoRefresh?: boolean;
   refreshInterval?: number; // milliseconds
@@ -45,7 +133,7 @@ export const AuthAuditDashboard: React.FC<AuthAuditDashboardProps> = ({
   const [selectedEventType, setSelectedEventType] = useState<string>('all');
 
   // Fetch audit events from Supabase `admin_audit_log` table
-  const fetchAuditEvents = async () => {
+  const fetchAuditEvents = React.useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -76,11 +164,15 @@ export const AuthAuditDashboard: React.FC<AuthAuditDashboardProps> = ({
 
       setEvents(payload.events || []);
     } catch (err) {
-      setError(String(err));
+      // Log the full error for debugging
+      console.error('Failed to fetch audit logs:', err);
+
+      // Set a generic, user-friendly error message
+      setError('An unexpected error occurred while loading audit logs');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Initialize fetch + realtime subscription on mount and optional polling when `autoRefresh` is enabled
   React.useEffect(() => {
@@ -98,7 +190,7 @@ export const AuthAuditDashboard: React.FC<AuthAuditDashboardProps> = ({
     return () => {
       if (pollId) clearInterval(pollId);
     };
-  }, [autoRefresh, refreshInterval]);
+  }, [autoRefresh, refreshInterval, fetchAuditEvents]);
 
   // Filter events based on time range and type (use state `events`)
   const filteredEvents = useMemo(() => {
@@ -153,98 +245,6 @@ export const AuthAuditDashboard: React.FC<AuthAuditDashboardProps> = ({
       riskLevel,
     };
   }, [filteredEvents]);
-
-  // Calculate risk level
-  function calculateRiskLevel(
-    events: AuditEvent[]
-  ): 'low' | 'medium' | 'high' | 'critical' {
-    const critical = events.filter((e) => e.severity === 'critical').length;
-    const warning = events.filter((e) => e.severity === 'warning').length;
-    const suspicious = events.filter(
-      (e) => e.eventType === 'AUTH_SUSPICIOUS_ACTIVITY'
-    ).length;
-    const geoAnomalies = events.filter(
-      (e) => e.eventType === 'AUTH_GEOLOCATION_ANOMALY'
-    ).length;
-    const failedLogins = events.filter(
-      (e) => e.eventType === 'AUTH_LOGIN_FAILED'
-    ).length;
-
-    if (critical > 0 || suspicious > 0 || geoAnomalies > 0) return 'critical';
-    if (warning > 5 || failedLogins > 10) return 'high';
-    if (warning > 0 || failedLogins > 5) return 'medium';
-    return 'low';
-  }
-
-  // Get risk level color
-  const getRiskColor = (level: string): string => {
-    switch (level) {
-      case 'critical':
-        return 'text-red-600';
-      case 'high':
-        return 'text-orange-600';
-      case 'medium':
-        return 'text-yellow-600';
-      case 'low':
-        return 'text-green-600';
-      default:
-        return 'text-gray-600';
-    }
-  };
-
-  // Get risk level icon
-  const getRiskIcon = (level: string) => {
-    switch (level) {
-      case 'critical':
-        return <AlertTriangle className="h-5 w-5" />;
-      case 'high':
-        return <AlertTriangle className="h-5 w-5" />;
-      case 'medium':
-        return <Eye className="h-5 w-5" />;
-      case 'low':
-        return <Shield className="h-5 w-5" />;
-      default:
-        return <Shield className="h-5 w-5" />;
-    }
-  };
-
-  // Get event type icon
-  const getEventTypeIcon = (eventType: AuditEventType) => {
-    switch (eventType) {
-      case 'AUTH_LOGIN_SUCCESS':
-        return <LogIn className="h-4 w-4" />;
-      case 'AUTH_LOGIN_FAILED':
-        return <LogOut className="h-4 w-4" />;
-      case 'AUTH_LOGOUT':
-        return <LogOut className="h-4 w-4" />;
-      case 'AUTH_SUSPICIOUS_ACTIVITY':
-        return <AlertTriangle className="h-4 w-4" />;
-      case 'AUTH_SESSION_TIMEOUT':
-        return <Clock className="h-4 w-4" />;
-      case 'AUTH_MULTIPLE_SESSIONS':
-        return <Users className="h-4 w-4" />;
-      case 'AUTH_GEOLOCATION_ANOMALY':
-        return <MapPin className="h-4 w-4" />;
-      default:
-        return <Activity className="h-4 w-4" />;
-    }
-  };
-
-  // Get severity color
-  const getSeverityColor = (severity: string): string => {
-    switch (severity) {
-      case 'critical':
-        return 'bg-red-500';
-      case 'error':
-        return 'bg-red-500';
-      case 'warning':
-        return 'bg-orange-500';
-      case 'info':
-        return 'bg-blue-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
 
   if (loading) {
     return (

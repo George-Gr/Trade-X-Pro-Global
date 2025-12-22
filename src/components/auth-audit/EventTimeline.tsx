@@ -15,6 +15,23 @@ export const EventTimeline: React.FC<EventTimelineProps> = ({
   getEventTypeIcon,
   getSeverityColor,
 }) => {
+  const extractEventMetadata = (
+    metadata: unknown
+  ): { message: string; detailsString: string | null } => {
+    const meta = metadata as Record<string, unknown>;
+    const message =
+      typeof meta.message === 'string'
+        ? meta.message
+        : meta.message
+        ? String(meta.message)
+        : '';
+    const details = meta.details;
+    const detailsString = details
+      ? JSON.stringify(details as Record<string, unknown>)
+      : null;
+    return { message, detailsString };
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -27,17 +44,9 @@ export const EventTimeline: React.FC<EventTimelineProps> = ({
         {filteredEvents.length > 0 ? (
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {filteredEvents.slice(0, 20).map((event, index) => {
-              const meta = event.metadata as Record<string, unknown>;
-              const message =
-                typeof meta.message === 'string'
-                  ? meta.message
-                  : meta.message
-                  ? String(meta.message)
-                  : '';
-              const details = meta.details;
-              const detailsString = details
-                ? JSON.stringify(details as Record<string, unknown>)
-                : null;
+              const { message, detailsString } = extractEventMetadata(
+                event.metadata
+              );
 
               return (
                 <div
@@ -54,7 +63,9 @@ export const EventTimeline: React.FC<EventTimelineProps> = ({
                             : 'default'
                         }
                       >
-                        {event.eventType.replace('AUTH_', '').replace('_', ' ')}
+                        {event.eventType
+                          .replace('AUTH_', '')
+                          .replaceAll('_', ' ')}
                       </Badge>
                       <Badge variant="outline">{event.severity}</Badge>
                       {event.userId && (

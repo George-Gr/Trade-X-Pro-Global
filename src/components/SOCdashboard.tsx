@@ -64,6 +64,12 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
     riskScore: Math.floor(Math.random() * 100),
   }));
 
+  // Generate stable mock previous values for trend calculations
+  const [mockPreviousMetrics] = useState(() => ({
+    authEvents: Math.floor(Math.random() * 1000),
+    blockedIPs: Math.floor(Math.random() * 10),
+  }));
+
   // Mock security data for demonstration
   const mockIncidents: SecurityIncident[] = useMemo(
     () => [
@@ -169,13 +175,44 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
     };
   }, [filteredIncidents, mockMetrics]);
 
+  /**
+   * Calculate trend percentage with proper formatting and fallback handling
+   */
+  const calculateTrend = (current: number, previous: number): string => {
+    if (previous === 0 || previous === null || previous === undefined) {
+      return '—';
+    }
+
+    const change = ((current - previous) / previous) * 100;
+
+    if (isNaN(change) || !isFinite(change)) {
+      return '—';
+    }
+
+    const sign = change >= 0 ? '+' : '';
+    const formattedChange = Math.abs(change).toFixed(1);
+
+    return `${sign}${formattedChange}% from last hour`;
+  };
+
   // Fetch security data
   const fetchSecurityData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Data is computed from filteredIncidents and mockMetrics for demonstration
+      // Trigger re-computation of filtered incidents and security metrics
+      // The actual computation happens in the useMemo hooks that depend on timeRange
+      // This function serves as the entry point for data fetching and error handling
+
+      // In a real implementation, this would fetch data from APIs:
+      // const response = await fetch(`/api/security-data?timeRange=${timeRange}`);
+      // const data = await response.json();
+      // setSecurityMetrics(data.metrics);
+      // setFilteredIncidents(data.incidents);
+
+      // For now, we rely on the useMemo hooks that compute data based on timeRange
+      // The computation is triggered by the dependency on timeRange in the useMemo hooks
     } catch (err) {
       setError('Failed to fetch security data');
       logger.error('SOC dashboard error', err, {
@@ -418,7 +455,12 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
             </p>
             <div className="mt-2 flex items-center space-x-2 text-xs text-green-600">
               <TrendingUp className="h-3 w-3" />
-              <span>+12% from last hour</span>
+              <span>
+                {calculateTrend(
+                  securityMetrics.authEvents,
+                  mockPreviousMetrics.authEvents
+                )}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -440,7 +482,12 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
             </p>
             <div className="mt-2 flex items-center space-x-2 text-xs text-red-600">
               <TrendingDown className="h-3 w-3" />
-              <span>-5% from last hour</span>
+              <span>
+                {calculateTrend(
+                  securityMetrics.blockedIPs,
+                  mockPreviousMetrics.blockedIPs
+                )}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -467,7 +514,31 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
             <p className="text-sm text-muted-foreground">Incidents resolved</p>
             <div className="mt-2 flex items-center space-x-2 text-xs text-blue-600">
               <TrendingUp className="h-3 w-3" />
-              <span>+8% from last hour</span>
+              <span>
+                {(() => {
+                  const currentRate =
+                    securityMetrics.totalIncidents > 0
+                      ? (securityMetrics.resolvedIncidents /
+                          securityMetrics.totalIncidents) *
+                        100
+                      : 0;
+
+                  // Mock previous resolution rate calculation
+                  const mockPreviousTotal = Math.max(
+                    1,
+                    Math.floor(securityMetrics.totalIncidents * 0.8)
+                  );
+                  const mockPreviousResolved = Math.floor(
+                    securityMetrics.resolvedIncidents * 0.9
+                  );
+                  const previousRate =
+                    mockPreviousTotal > 0
+                      ? (mockPreviousResolved / mockPreviousTotal) * 100
+                      : 0;
+
+                  return calculateTrend(currentRate, previousRate);
+                })()}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -498,7 +569,7 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
                             : 'default'
                         }
                       >
-                        {incident.type.replace('_', ' ')}
+                        {incident.type.replace(/_/g, ' ')}
                       </Badge>
                       <Badge variant="outline">
                         {incident.severity.toUpperCase()}
@@ -574,9 +645,7 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
-                {securityMetrics.totalIncidents -
-                  securityMetrics.criticalIncidents -
-                  securityMetrics.resolvedIncidents}
+                {securityMetrics.activeIncidents}
               </div>
               <div className="text-sm text-gray-600">Active</div>
             </div>

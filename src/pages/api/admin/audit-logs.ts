@@ -43,6 +43,14 @@ const validEventTypes = new Set<AuditEvent['eventType']>([
   'AUTH_GEOLOCATION_ANOMALY',
 ]);
 
+/**
+ * Audit Logs API Handler
+ *
+ * Returns audit logs for admin users. Supports GET requests with optional 'limit' query parameter.
+ *
+ * @param {Request} req - The incoming HTTP request object containing headers and query parameters.
+ * @returns {Promise<Response>} A Response with JSON payload containing audit events on success (200), or error details (405 for unsupported method, 500 for server errors).
+ */
 export default async function handler(req: Request) {
   try {
     if (req.method !== 'GET') {
@@ -121,7 +129,7 @@ export default async function handler(req: Request) {
         'id, action, created_at, details, ip_address, user_agent, target_user_id, admin_user_id'
       )
       .order('created_at', { ascending: false })
-      .limit(limit as number);
+      .limit(limit);
 
     if (error) {
       logger.error('Failed to fetch audit logs', error);

@@ -62,6 +62,7 @@ export interface AlertChannel {
   type: 'email' | 'slack' | 'webhook' | 'sms' | 'pagerduty';
   config: {
     webhookUrl?: string;
+    timeout?: number;
     [key: string]: unknown;
   };
   enabled: boolean;
@@ -122,6 +123,8 @@ export class SecurityIncidentAlertSystem {
   private alertChannels: Map<string, AlertChannel> = new Map();
   private config: SecurityAlertConfig;
   private readonly CLEANUP_INTERVAL = 60 * 60 * 1000; // 1 hour
+  private readonly MAX_ENTRIES_PER_KEY = 100;
+  private readonly MAX_KEYS = 10000;
   private cleanupTimer: NodeJS.Timeout | null = null;
   private cooldowns: Map<string, number> = new Map();
   private authFailureTimestamps: Map<string, number[]> = new Map();
@@ -261,19 +264,29 @@ export class SecurityIncidentAlertSystem {
     if (!this.config.enabled) return;
 
     try {
+      // Update counters first
+      if (event.eventType === 'AUTH_LOGIN_FAILED' && event.userId) {
+        let timestamps = this.authFailureTimestamps.get(event.userId);
+        if (!timestamps) {
+          if (this.authFailureTimestamps.size >= this.MAX_KEYS) {
+            const firstKey = this.authFailureTimestamps.keys().next().value;
+            this.authFailureTimestamps.delete(firstKey);
+          }
+          timestamps = [];
+        }
+        if (timestamps.length >= this.MAX_ENTRIES_PER_KEY) {
+          timestamps.shift();
+        }
+        timestamps.push(Date.now());
+        this.authFailureTimestamps.set(event.userId, timestamps);
+      }
+
       // Analyze event for security patterns
       const incidents = await this.analyzeAuthEvent(event);
 
       // Create and process incidents
       for (const incident of incidents) {
         await this.createSecurityIncident(incident);
-      }
-
-      // Update counters
-      if (event.eventType === 'AUTH_LOGIN_FAILED' && event.userId) {
-        const timestamps = this.authFailureTimestamps.get(event.userId) || [];
-        timestamps.push(Date.now());
-        this.authFailureTimestamps.set(event.userId, timestamps);
       }
     } catch (error) {
       logger.error('Failed to process auth event:', error);
@@ -287,24 +300,33 @@ export class SecurityIncidentAlertSystem {
     if (!this.config.enabled) return;
 
     try {
+      // Update counters first
+      if (
+        (violation.category === 'xss_attempt' ||
+          violation.category === 'malicious_script') &&
+        violation.clientIP
+      ) {
+        let timestamps = this.xssAttemptTimestamps.get(violation.clientIP);
+        if (!timestamps) {
+          if (this.xssAttemptTimestamps.size >= this.MAX_KEYS) {
+            const firstKey = this.xssAttemptTimestamps.keys().next().value;
+            this.xssAttemptTimestamps.delete(firstKey);
+          }
+          timestamps = [];
+        }
+        if (timestamps.length >= this.MAX_ENTRIES_PER_KEY) {
+          timestamps.shift();
+        }
+        timestamps.push(Date.now());
+        this.xssAttemptTimestamps.set(violation.clientIP, timestamps);
+      }
+
       // Analyze violation for security patterns
       const incidents = await this.analyzeCSPViolation(violation);
 
       // Create and process incidents
       for (const incident of incidents) {
         await this.createSecurityIncident(incident);
-      }
-
-      // Update counters
-      if (
-        (violation.category === 'xss_attempt' ||
-          violation.category === 'malicious_script') &&
-        violation.clientIP
-      ) {
-        const timestamps =
-          this.xssAttemptTimestamps.get(violation.clientIP) || [];
-        timestamps.push(Date.now());
-        this.xssAttemptTimestamps.set(violation.clientIP, timestamps);
       }
     } catch (error) {
       logger.error('Failed to process CSP violation:', error);
@@ -567,69 +589,85 @@ export class SecurityIncidentAlertSystem {
   ): Promise<void> {
     if (!process.env.SLACK_WEBHOOK_URL) return;
 
-    try {
-      const payload = {
-        text: message.title,
-        attachments: [
-          {
-            color: this.getSeverityColor(message.severity),
-            fields: [
-              { title: 'Incident ID', value: message.incidentId, short: true },
-              { title: 'Type', value: message.type, short: true },
-              {
-                title: 'Severity',
-                value: message.severity.toUpperCase(),
-                short: true,
-              },
-              {
-                title: 'Affected Users',
-                value: message.affectedUsers.join(', ') || 'None',
-                short: true,
-              },
-              {
-                title: 'Source IPs',
-                value: message.sourceIPs.join(', '),
-                short: false,
-              },
-              {
-                title: 'Description',
-                value: message.description,
-                short: false,
-              },
-            ],
-            footer: 'TradePro Security Monitoring',
-            ts: Math.floor(Date.now() / 1000),
-          },
-        ],
-      };
+    const payload = {
+      text: message.title,
+      attachments: [
+        {
+          color: this.getSeverityColor(message.severity),
+          fields: [
+            { title: 'Incident ID', value: message.incidentId, short: true },
+            { title: 'Type', value: message.type, short: true },
+            {
+              title: 'Severity',
+              value: message.severity.toUpperCase(),
+              short: true,
+            },
+            {
+              title: 'Affected Users',
+              value: message.affectedUsers.join(', ') || 'None',
+              short: true,
+            },
+            {
+              title: 'Source IPs',
+              value: message.sourceIPs.join(', '),
+              short: false,
+            },
+            {
+              title: 'Description',
+              value: message.description,
+              short: false,
+            },
+          ],
+          footer: 'TradePro Security Monitoring',
+          ts: Math.floor(Date.now() / 1000),
+        },
+      ],
+    };
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+    try {
       await fetch(process.env.SLACK_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       });
     } catch (error) {
       logger.error('Failed to send Slack alert:', error);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
-  /**
-   * Send webhook alert
-   */
   private async sendWebhookAlert(
     channel: AlertChannel,
     message: AlertMessage
   ): Promise<void> {
     if (!channel.config.webhookUrl) return;
 
+    const timeout = channel.config.timeout || 10000; // Default to 10 seconds
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
     try {
       await fetch(channel.config.webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message),
+        signal: controller.signal,
       });
     } catch (error) {
-      logger.error('Failed to send webhook alert:', error);
+      if (error instanceof Error && error.name === 'AbortError') {
+        logger.warn(
+          `Webhook alert request timed out after ${timeout}ms for channel: ${channel.type}`
+        );
+      } else {
+        logger.error('Failed to send webhook alert:', error);
+      }
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
@@ -702,6 +740,22 @@ export class SecurityIncidentAlertSystem {
   }
 
   /**
+   * Check if mitigation should abort due to approval requirement
+   */
+  private shouldAbortForApproval(
+    action: SecurityAction,
+    incident: SecurityIncident
+  ): boolean {
+    if (action.requiresApproval) {
+      logger.warn('Approval required for mitigation action:', {
+        metadata: { incidentId: incident.id, action },
+      });
+      return action.type !== 'alert_only';
+    }
+    return false;
+  }
+
+  /**
    * Execute specific mitigation action
    */
   private async executeMitigationAction(
@@ -712,41 +766,19 @@ export class SecurityIncidentAlertSystem {
       metadata: { incidentId: incident.id, action },
     });
 
+    if (this.shouldAbortForApproval(action, incident)) return;
+
     switch (action.type) {
       case 'block_ip':
-        if (action.requiresApproval) {
-          logger.warn('Approval required for mitigation action:', {
-            metadata: { incidentId: incident.id, action },
-          });
-          return;
-        }
         await this.blockIPs(incident.sourceIPs);
         break;
       case 'lock_account':
-        if (action.requiresApproval) {
-          logger.warn('Approval required for mitigation action:', {
-            metadata: { incidentId: incident.id, action },
-          });
-          return;
-        }
         await this.lockAccounts(incident.affectedUsers);
         break;
       case 'force_logout':
-        if (action.requiresApproval) {
-          logger.warn('Approval required for mitigation action:', {
-            metadata: { incidentId: incident.id, action },
-          });
-          return;
-        }
         await this.forceLogoutUsers(incident.affectedUsers);
         break;
       case 'disable_user':
-        if (action.requiresApproval) {
-          logger.warn('Approval required for mitigation action:', {
-            metadata: { incidentId: incident.id, action },
-          });
-          return;
-        }
         await this.disableUsers(incident.affectedUsers);
         break;
       case 'alert_only':
@@ -1033,39 +1065,54 @@ export class SecurityIncidentAlertSystem {
 }
 
 /**
- * Singleton instance of SecurityIncidentAlertSystem
+ * Lazy-initialized instance of SecurityIncidentAlertSystem
  */
-export const securityAlertSystem = new SecurityIncidentAlertSystem();
+let _securityAlertSystem: SecurityIncidentAlertSystem | null = null;
 
 /**
  * Security alerting utilities
  */
 export const securityAlertUtils = {
   /**
-   * Initialize security alerting
+   * Initialize security alerting (lazy initialization)
    */
-  init(config?: Partial<SecurityAlertConfig>): void {
-    securityAlertSystem.updateConfig(config || {});
+  init(config?: Partial<SecurityAlertConfig>): SecurityIncidentAlertSystem {
+    if (!_securityAlertSystem) {
+      _securityAlertSystem = new SecurityIncidentAlertSystem(config);
+    }
+    return _securityAlertSystem;
+  },
+
+  /**
+   * Get the initialized security alert system instance
+   */
+  get instance(): SecurityIncidentAlertSystem {
+    if (!_securityAlertSystem) {
+      throw new Error(
+        'Security alert system not initialized. Call init() first.'
+      );
+    }
+    return _securityAlertSystem;
   },
 
   /**
    * Get security incidents report
    */
   getReport(hours: number = 24): SecurityReport {
-    return securityAlertSystem.getIncidentsReport(hours);
+    return this.instance.getIncidentsReport(hours);
   },
 
   /**
    * Process authentication event
    */
   async processAuthEvent(event: AuditEvent): Promise<void> {
-    await securityAlertSystem.processAuthEvent(event);
+    await this.instance.processAuthEvent(event);
   },
 
   /**
    * Process CSP violation
    */
   async processCSPViolation(violation: CSPViolation): Promise<void> {
-    await securityAlertSystem.processCSPViolation(violation);
+    await this.instance.processCSPViolation(violation);
   },
 };

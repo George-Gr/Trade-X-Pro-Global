@@ -45,23 +45,23 @@ interface MultiStepProgressProps {
   animated?: boolean;
 }
 
+const sizeClasses = {
+  sm: { container: 'h-8', circle: 'w-6 h-6', line: 'h-1', text: 'text-xs' },
+  md: { container: 'h-12', circle: 'w-8 h-8', line: 'h-2', text: 'text-sm' },
+  lg: {
+    container: 'h-16',
+    circle: 'w-10 h-10',
+    line: 'h-3',
+    text: 'text-base',
+  },
+};
+
 export const MultiStepProgress: React.FC<MultiStepProgressProps> = ({
   steps,
   className,
   size = 'md',
   animated = true,
 }) => {
-  const sizeClasses = {
-    sm: { container: 'h-8', circle: 'w-6 h-6', line: 'h-1', text: 'text-xs' },
-    md: { container: 'h-12', circle: 'w-8 h-8', line: 'h-2', text: 'text-sm' },
-    lg: {
-      container: 'h-16',
-      circle: 'w-10 h-10',
-      line: 'h-3',
-      text: 'text-base',
-    },
-  };
-
   const getStatusClasses = (status: Step['status']) => {
     switch (status) {
       case 'completed':

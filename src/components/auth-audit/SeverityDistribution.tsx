@@ -4,6 +4,24 @@ import { BarChart3 } from 'lucide-react';
 import React from 'react';
 import { AuthMetrics } from './types';
 
+const SEVERITY_CONFIG = [
+  {
+    label: 'Critical',
+    color: 'bg-red-500',
+    key: 'critical',
+  },
+  {
+    label: 'Warning',
+    color: 'bg-orange-500',
+    key: 'warning',
+  },
+  {
+    label: 'Info',
+    color: 'bg-blue-500',
+    key: 'info',
+  },
+] as const;
+
 interface SeverityDistributionProps {
   metrics: AuthMetrics;
 }
@@ -20,37 +38,39 @@ export const SeverityDistribution: React.FC<SeverityDistributionProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {[
-          {
-            label: 'Critical',
-            value: metrics.criticalEvents,
-            color: 'bg-red-500',
-          },
-          {
-            label: 'Warning',
-            value: metrics.warningEvents,
-            color: 'bg-orange-500',
-          },
-          {
-            label: 'Info',
-            value:
-              metrics.totalEvents -
-              metrics.criticalEvents -
-              metrics.warningEvents,
-            color: 'bg-blue-500',
-          },
-        ].map((severity) => (
-          <div key={severity.label} className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>{severity.label}</span>
-              <span className="font-medium">{severity.value}</span>
+        {SEVERITY_CONFIG.map((config) => {
+          let value: number;
+          switch (config.key) {
+            case 'critical':
+              value = metrics.criticalEvents;
+              break;
+            case 'warning':
+              value = metrics.warningEvents;
+              break;
+            case 'info':
+              value =
+                metrics.totalEvents -
+                metrics.criticalEvents -
+                metrics.warningEvents;
+              break;
+          }
+          return (
+            <div key={config.label} className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>{config.label}</span>
+                <span className="font-medium">{value}</span>
+              </div>
+              <Progress
+                value={
+                  metrics.totalEvents > 0
+                    ? (value / metrics.totalEvents) * 100
+                    : 0
+                }
+                indicatorClassName={config.color}
+              />
             </div>
-            <Progress
-              value={(severity.value / metrics.totalEvents) * 100}
-              indicatorClassName={severity.color}
-            />
-          </div>
-        ))}
+          );
+        })}
       </CardContent>
     </Card>
   );

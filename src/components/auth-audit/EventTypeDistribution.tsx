@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AuditEvent, AuditEventType } from '@/lib/authAuditLogger';
 import { PieChart } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 interface EventTypeDistributionProps {
   filteredEvents: AuditEvent[];
@@ -13,6 +13,14 @@ export const EventTypeDistribution: React.FC<EventTypeDistributionProps> = ({
   filteredEvents,
   getEventTypeIcon,
 }) => {
+  const eventTypeCounts = useMemo(() => {
+    const counts = filteredEvents.reduce((acc, event) => {
+      acc[event.eventType] = (acc[event.eventType] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    return Object.entries(counts);
+  }, [filteredEvents]);
+
   return (
     <Card>
       <CardHeader>
@@ -23,15 +31,10 @@ export const EventTypeDistribution: React.FC<EventTypeDistributionProps> = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          {Object.entries(
-            filteredEvents.reduce((acc, event) => {
-              acc[event.eventType] = (acc[event.eventType] || 0) + 1;
-              return acc;
-            }, {} as Record<string, number>)
-          ).map(([eventType, count]) => (
+          {eventTypeCounts.map(([eventType, count]) => (
             <div
               key={eventType}
-              className="flex items-center justify-between p-2 bg-gray-50 rounded"
+              className="flex items-center justify-between p-2 bg-[hsl(var(--muted))] rounded"
             >
               <div className="flex items-center space-x-2">
                 {getEventTypeIcon(eventType as AuditEventType)}
