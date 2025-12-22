@@ -18,7 +18,6 @@ yarn-error.log*
 
 # Test reports
 playwright-report/
-e2e/
 
 # Project resources (mostly documentation)
 project_resources/

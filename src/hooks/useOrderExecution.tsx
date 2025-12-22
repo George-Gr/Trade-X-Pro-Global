@@ -8,7 +8,9 @@ import {
 import { logger } from '@/lib/logger';
 import { checkRateLimit, rateLimiter } from '@/lib/rateLimiter';
 import { sanitizeNumber, sanitizeSymbol } from '@/lib/sanitize';
-import { useCallback, useState } from 'react';
+import { orderSecurity } from '@/lib/security/orderSecurity';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Request payload for executing a trading order
@@ -24,11 +26,11 @@ export interface OrderRequest {
   /** Number of lots to trade */
   quantity: number;
   /** Price for limit/stop orders (optional for market orders) */
-  price?: number;
+  price?: number | undefined;
   /** Stop loss price level */
-  stop_loss?: number;
+  stop_loss?: number | undefined;
   /** Take profit price level */
-  take_profit?: number;
+  take_profit?: number | undefined;
 }
 
 /**
@@ -38,6 +40,8 @@ export interface OrderRequest {
 export interface OrderResult {
   /** Unique identifier of the executed order */
   order_id: string;
+  /** Unique identifier of the created position (if executed) */
+  position_id?: string;
   /** Trading symbol */
   symbol: string;
   /** Trade direction */
@@ -46,18 +50,14 @@ export interface OrderResult {
   quantity: number;
   /** Actual execution price */
   execution_price: number;
-  /** Fill price after slippage */
-  fill_price: number;
   /** Commission charged */
   commission: number;
-  /** Margin required for the position */
-  margin_required: number;
+  /** Total cost including commission */
+  total_cost: number;
   /** Order status */
   status: string;
-  /** Updated account balance */
-  new_balance: number;
-  /** Updated margin level percentage */
-  new_margin_level: number;
+  /** Timestamp of execution */
+  timestamp: string;
 }
 
 /**
@@ -69,6 +69,7 @@ export interface OrderResult {
  * - Idempotency keys to prevent duplicate orders from retries
  * - Input sanitization for security
  * - Comprehensive error handling with user-friendly messages
+ * - Automatic cache invalidation for positions and orders
  *
  * @example
  * ```tsx
@@ -97,7 +98,34 @@ export interface OrderResult {
  */
 export const useOrderExecution = () => {
   const [isExecuting, setIsExecuting] = useState(false);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Initialize CSRF token
+  useEffect(() => {
+    const initializeCSRF = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          // Generate CSRF token for order operations
+          const token = orderSecurity.generateCSRFToken({
+            userId: session.user.id,
+            sessionId: session.access_token,
+            orderContext: 'order_execution',
+          });
+          setCsrfToken(token);
+        }
+      } catch (error) {
+        logger.error('Failed to initialize CSRF token:', error);
+      }
+    };
+
+    initializeCSRF();
+  }, []);
 
   /**
    * Execute a trading order
@@ -167,6 +195,9 @@ export const useOrderExecution = () => {
             side: sanitizedRequest.side,
             quantity: sanitizedRequest.quantity,
             order_type: sanitizedRequest.order_type,
+            price: sanitizedRequest.price,
+            stop_loss: sanitizedRequest.stop_loss,
+            take_profit: sanitizedRequest.take_profit,
           }
         );
 
@@ -184,6 +215,7 @@ export const useOrderExecution = () => {
                     body: {
                       ...sanitizedRequest,
                       idempotency_key: idempotencyKey,
+                      csrf_token: csrfToken,
                     },
                   }
                 );
@@ -192,8 +224,9 @@ export const useOrderExecution = () => {
                   throw error;
                 }
 
-                if (data.error) {
-                  throw new Error(data.error);
+                if (!data.success) {
+                  // Pass the structured error directly
+                  throw data.error;
                 }
 
                 return data;
@@ -204,43 +237,52 @@ export const useOrderExecution = () => {
         );
 
         // Extract order data from edge function response
-        const orderData = result.data;
-        if (!orderData || !orderData.success) {
-          toast({
-            title: 'Order Failed',
-            description: orderData?.error || 'Order execution failed',
-            variant: 'destructive',
-          });
-          return null;
+        const responseData = result.data;
+        const executionResult = responseData.data;
+
+        if (!executionResult || !executionResult.execution_details) {
+          throw new Error('Invalid response structure from order execution');
         }
 
         toast({
-          title: 'Order Executed',
+          title:
+            executionResult.status === 'executed'
+              ? 'Order Executed'
+              : 'Order Pending',
           description: `${orderRequest.side.toUpperCase()} ${
             orderRequest.quantity
-          } ${orderRequest.symbol} at ${orderData.execution_price.toFixed(4)}`,
+          } ${orderRequest.symbol} at ${
+            executionResult.execution_details.execution_price
+          }`,
         });
 
         logger.info('Order executed successfully', {
           metadata: {
-            orderId: orderData.order_id,
-            symbol: orderData.symbol,
-            side: orderData.side,
+            orderId: executionResult.order_id,
+            symbol: orderRequest.symbol,
+            side: orderRequest.side,
+            status: executionResult.status,
           },
         });
 
+        // Invalidate queries to refresh UI
+        queryClient.invalidateQueries({ queryKey: ['positions'] });
+        queryClient.invalidateQueries({ queryKey: ['orders'] });
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+
         return {
-          order_id: orderData.order_id,
-          symbol: orderData.symbol,
-          side: orderData.side,
-          quantity: orderData.quantity,
-          execution_price: parseFloat(orderData.execution_price),
-          fill_price: parseFloat(orderData.fill_price),
-          commission: parseFloat(orderData.commission),
-          margin_required: parseFloat(orderData.margin_required),
-          status: orderData.status,
-          new_balance: parseFloat(orderData.new_balance),
-          new_margin_level: parseFloat(orderData.new_margin_level),
+          order_id: executionResult.order_id,
+          position_id: executionResult.position_id,
+          symbol: orderRequest.symbol,
+          side: orderRequest.side,
+          quantity: orderRequest.quantity,
+          execution_price: parseFloat(
+            executionResult.execution_details.execution_price
+          ),
+          commission: parseFloat(executionResult.execution_details.commission),
+          total_cost: parseFloat(executionResult.execution_details.total_cost),
+          status: executionResult.status,
+          timestamp: executionResult.execution_details.timestamp,
         } as OrderResult;
       } catch (error) {
         const errorMessage =
@@ -256,10 +298,12 @@ export const useOrderExecution = () => {
             variant: 'destructive',
           });
         } else {
+          // Use our enhanced error message service
           const actionableError = formatToastError(error, 'order_submission');
           toast({
-            ...actionableError,
-            variant: actionableError.variant as 'default' | 'destructive',
+            title: actionableError.title,
+            description: actionableError.description,
+            variant: actionableError.variant,
           });
         }
 
@@ -269,7 +313,7 @@ export const useOrderExecution = () => {
         setIsExecuting(false);
       }
     },
-    [toast]
+    [toast, queryClient, csrfToken]
   );
 
   /**

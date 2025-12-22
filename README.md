@@ -195,6 +195,11 @@ Create `.env.local` in the project root with:
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+
+# Allowed Origins for API Security (comma-separated)
+# Example: ALLOWED_ORIGINS=https://your-domain.com,https://your-app.vercel.app,http://localhost:3000
+# Defaults to localhost only if not specified
+ALLOWED_ORIGINS=https://your-domain.com,https://your-app.vercel.app
 ```
 
 Get these from your [Supabase project settings](https://supabase.com/dashboard/).

@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,9 +14,64 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Plus, Minus, Info, ChevronUp, ChevronDown } from 'lucide-react';
-import { OrderType } from './OrderTypeSelector';
+import { formatFieldError } from '@/lib/errorMessageService';
 import { cn } from '@/lib/utils';
+import { ChevronDown, ChevronUp, Info, Minus, Plus } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { z } from 'zod';
+import { OrderType } from './OrderTypeSelector';
+
+// Zod schema for order form validation
+const orderFormSchema = z.object({
+  volume: z.string().refine(
+    (val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num > 0;
+    },
+    {
+      message: 'Invalid volume',
+    }
+  ),
+  limitPrice: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        const num = parseFloat(val);
+        return !isNaN(num);
+      },
+      {
+        message: 'Invalid price',
+      }
+    ),
+  stopPrice: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        const num = parseFloat(val);
+        return !isNaN(num);
+      },
+      {
+        message: 'Invalid price',
+      }
+    ),
+  trailingDistance: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        const num = parseFloat(val);
+        return !isNaN(num) && num >= 1;
+      },
+      {
+        message: 'Invalid trailing distance',
+      }
+    ),
+});
 
 export interface OrderFormData {
   symbol: string;
@@ -43,14 +97,15 @@ interface OrderFormProps {
   assetLeverage?: number;
 }
 
-export const OrderForm = ({
+export const OrderForm: React.FC<OrderFormProps> = ({
   symbol,
   orderType,
   onSubmit,
   isLoading = false,
+  error = null,
   currentPrice,
   assetLeverage = 100,
-}: OrderFormProps) => {
+}) => {
   const [volume, setVolume] = useState('0.01');
   const [limitPrice, setLimitPrice] = useState('');
   const [stopPrice, setStopPrice] = useState('');
@@ -61,6 +116,7 @@ export const OrderForm = ({
     'GTC'
   );
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const marginRequired = useMemo(() => {
     const qty = parseFloat(volume) || 0;
@@ -83,6 +139,7 @@ export const OrderForm = ({
     const current = parseFloat(volume) || 0;
     const newValue = Math.max(0.01, Math.min(100, current + delta));
     setVolume(newValue.toFixed(2));
+    setFieldErrors((prev) => ({ ...prev, volume: '' })); // Clear error
   };
 
   const applyTPPreset = (percent: number) => {
@@ -95,22 +152,53 @@ export const OrderForm = ({
     setStopLoss((currentPrice - movement).toFixed(5));
   };
 
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+
+    // Validate base fields using Zod schema
+    const validationResult = orderFormSchema.safeParse({
+      volume,
+      limitPrice:
+        orderType === 'limit' || orderType === 'stop_limit'
+          ? limitPrice
+          : undefined,
+      stopPrice:
+        orderType === 'stop' || orderType === 'stop_limit'
+          ? stopPrice
+          : undefined,
+      trailingDistance:
+        orderType === 'trailing_stop' ? trailingDistance : undefined,
+    });
+
+    if (!validationResult.success) {
+      // Convert Zod validation errors to field errors
+      validationResult.error.errors.forEach((error) => {
+        const field = error.path[0] as string;
+        errors[field] = formatFieldError(error.message, field);
+      });
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (side: 'buy' | 'sell') => {
+    if (!validateForm()) return;
+
     const qty = parseFloat(volume);
-    if (isNaN(qty) || qty <= 0) return;
 
     const formData: OrderFormData = {
       symbol,
       side,
       quantity: qty,
       type: orderType,
-      limitPrice: limitPrice ? parseFloat(limitPrice) : undefined,
-      stopPrice: stopPrice ? parseFloat(stopPrice) : undefined,
-      trailingDistance: trailingDistance
-        ? parseFloat(trailingDistance)
-        : undefined,
-      takeProfitPrice: takeProfit ? parseFloat(takeProfit) : undefined,
-      stopLossPrice: stopLoss ? parseFloat(stopLoss) : undefined,
+      ...(limitPrice ? { limitPrice: parseFloat(limitPrice) } : {}),
+      ...(stopPrice ? { stopPrice: parseFloat(stopPrice) } : {}),
+      ...(trailingDistance
+        ? { trailingDistance: parseFloat(trailingDistance) }
+        : {}),
+      ...(takeProfit ? { takeProfitPrice: parseFloat(takeProfit) } : {}),
+      ...(stopLoss ? { stopLossPrice: parseFloat(stopLoss) } : {}),
       timeInForce,
     };
 
@@ -120,6 +208,13 @@ export const OrderForm = ({
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 space-y-4 overflow-y-auto pb-4">
+        {/* Global Error Message */}
+        {error && (
+          <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20 animate-in fade-in slide-in-from-top-2">
+            {error}
+          </div>
+        )}
+
         {/* Volume Section */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -149,16 +244,24 @@ export const OrderForm = ({
             >
               <Minus className="h-4 w-4" />
             </Button>
-            <Input
-              type="number"
-              value={volume}
-              onChange={(e) => setVolume(e.target.value)}
-              step="0.01"
-              min="0.01"
-              max="100"
-              disabled={isLoading}
-              className="text-center font-mono text-lg h-10 bg-muted/30"
-            />
+            <div className="flex-1">
+              <Input
+                type="number"
+                value={volume}
+                onChange={(e) => {
+                  setVolume(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, volume: '' }));
+                }}
+                step="0.01"
+                min="0.01"
+                max="100"
+                disabled={isLoading}
+                className={cn(
+                  'text-center font-mono text-lg h-10 bg-muted/30',
+                  fieldErrors.volume && 'border-destructive ring-destructive/20'
+                )}
+              />
+            </div>
             <Button
               type="button"
               variant="outline"
@@ -170,6 +273,11 @@ export const OrderForm = ({
               <Plus className="h-4 w-4" />
             </Button>
           </div>
+          {fieldErrors.volume && (
+            <p className="text-xs text-destructive mt-1">
+              {fieldErrors.volume}
+            </p>
+          )}
 
           <p className="text-xs text-muted-foreground">
             Pip value:{' '}
@@ -212,12 +320,24 @@ export const OrderForm = ({
             <Input
               type="number"
               value={limitPrice}
-              onChange={(e) => setLimitPrice(e.target.value)}
+              onChange={(e) => {
+                setLimitPrice(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, limitPrice: '' }));
+              }}
               step="0.0001"
               placeholder={currentPrice.toFixed(5)}
               disabled={isLoading}
-              className="font-mono h-10 bg-muted/30"
+              className={cn(
+                'font-mono h-10 bg-muted/30',
+                fieldErrors.limitPrice &&
+                  'border-destructive ring-destructive/20'
+              )}
             />
+            {fieldErrors.limitPrice && (
+              <p className="text-xs text-destructive mt-1">
+                {fieldErrors.limitPrice}
+              </p>
+            )}
           </div>
         )}
 
@@ -229,12 +349,24 @@ export const OrderForm = ({
             <Input
               type="number"
               value={stopPrice}
-              onChange={(e) => setStopPrice(e.target.value)}
+              onChange={(e) => {
+                setStopPrice(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, stopPrice: '' }));
+              }}
               step="0.0001"
               placeholder={currentPrice.toFixed(5)}
               disabled={isLoading}
-              className="font-mono h-10 bg-muted/30"
+              className={cn(
+                'font-mono h-10 bg-muted/30',
+                fieldErrors.stopPrice &&
+                  'border-destructive ring-destructive/20'
+              )}
             />
+            {fieldErrors.stopPrice && (
+              <p className="text-xs text-destructive mt-1">
+                {fieldErrors.stopPrice}
+              </p>
+            )}
           </div>
         )}
 

@@ -7,6 +7,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Position } from '@/types/position';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from './useAuth';
 
@@ -205,6 +206,7 @@ export function useRealtimePositions(
   } = options;
 
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   // State management
   const [positions, setPositions] = useState<Position[]>([]);
@@ -323,6 +325,9 @@ export function useRealtimePositions(
       setError(null);
       setIsLoading(false);
 
+      // Invalidate React Query cache to keep other components in sync
+      queryClient.setQueryData(['positions', userId], loadedPositions);
+
       if (onUpdate) {
         onUpdate(loadedPositions);
       }
@@ -340,11 +345,22 @@ export function useRealtimePositions(
 
       return [];
     }
-  }, [userId, filterSymbol, onUpdate, onError]);
+  }, [userId, filterSymbol, onUpdate, onError, queryClient]);
 
   const handlePositionUpdate = useCallback(
     (payload: RealtimePositionUpdate, filter?: string) => {
       const { type, new: newRecord, old: oldRecord } = payload;
+
+      // Invalidate React Query caches for related data
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ['profile', userId] });
+        queryClient.invalidateQueries({ queryKey: ['orders'] });
+
+        // For significant changes, invalidate the main positions query
+        if (type === 'INSERT' || type === 'DELETE') {
+          queryClient.invalidateQueries({ queryKey: ['positions', userId] });
+        }
+      }
 
       // Calculate position delta for UPDATE events
       const calculateDelta = (oldPos: unknown, newPos: unknown) => {
@@ -394,6 +410,12 @@ export function useRealtimePositions(
               updated[index] = newRecord;
             }
             positionsRef.current = updated;
+
+            // Update React Query cache
+            if (userId) {
+              queryClient.setQueryData(['positions', userId], updated);
+            }
+
             if (onUpdate) {
               onUpdate(updated);
             }
@@ -419,13 +441,19 @@ export function useRealtimePositions(
             break;
 
           case 'DELETE':
-            if (newRecord && (!filter || newRecord.symbol === filter)) {
-              updated = updated.filter((p) => p.id !== newRecord.id);
+            if (oldRecord && (!filter || oldRecord.symbol === filter)) {
+              updated = updated.filter((p) => p.id !== oldRecord.id);
             }
             break;
         }
 
         positionsRef.current = updated;
+
+        // Update React Query cache
+        if (userId) {
+          queryClient.setQueryData(['positions', userId], updated);
+        }
+
         return updated;
       });
 
@@ -433,7 +461,7 @@ export function useRealtimePositions(
         onUpdate(positionsRef.current);
       }
     },
-    [onUpdate, debounceMs]
+    [onUpdate, debounceMs, userId, queryClient]
   );
 
   const handleSubscriptionError = useCallback(() => {
