@@ -270,7 +270,9 @@ export class SecurityIncidentAlertSystem {
         if (!timestamps) {
           if (this.authFailureTimestamps.size >= this.MAX_KEYS) {
             const firstKey = this.authFailureTimestamps.keys().next().value;
-            this.authFailureTimestamps.delete(firstKey);
+            if (firstKey !== undefined) {
+              this.authFailureTimestamps.delete(firstKey);
+            }
           }
           timestamps = [];
         }
@@ -309,8 +311,14 @@ export class SecurityIncidentAlertSystem {
         let timestamps = this.xssAttemptTimestamps.get(violation.clientIP);
         if (!timestamps) {
           if (this.xssAttemptTimestamps.size >= this.MAX_KEYS) {
-            const firstKey = this.xssAttemptTimestamps.keys().next().value;
-            this.xssAttemptTimestamps.delete(firstKey);
+            const iteratorResult = this.xssAttemptTimestamps.keys().next();
+            if (
+              iteratorResult &&
+              iteratorResult.value !== undefined &&
+              iteratorResult.value !== null
+            ) {
+              this.xssAttemptTimestamps.delete(iteratorResult.value);
+            }
           }
           timestamps = [];
         }
@@ -741,6 +749,7 @@ export class SecurityIncidentAlertSystem {
 
   /**
    * Check if mitigation should abort due to approval requirement
+   * Alert-only mitigations are allowed without approval, but all other actions must abort when requiresApproval is set
    */
   private shouldAbortForApproval(
     action: SecurityAction,
@@ -750,7 +759,11 @@ export class SecurityIncidentAlertSystem {
       logger.warn('Approval required for mitigation action:', {
         metadata: { incidentId: incident.id, action },
       });
-      return action.type !== 'alert_only';
+      // Explicitly abort for non-alert-only actions, allow alert-only actions to proceed
+      if (action.type !== 'alert_only') {
+        return true; // Abort non-alert-only actions
+      }
+      return false; // Allow alert-only actions to proceed
     }
     return false;
   }

@@ -97,12 +97,24 @@ export interface AlertMessage extends Record<string, unknown> {
   details: Record<string, unknown>;
 }
 
+// LRU Entry for efficient eviction
+interface LRUEntry {
+  key: string;
+  prev: LRUEntry | null;
+  next: LRUEntry | null;
+}
+
 class CSPViolationMonitor {
   private violations: Map<string, CSPViolation> = new Map();
   private alertConfig: AlertConfig;
   private readonly CLEANUP_INTERVAL = 60 * 60 * 1000; // 1 hour
   private readonly MAX_VIOLATIONS = 10000;
   private cleanupTimer: NodeJS.Timeout | null = null;
+
+  // LRU eviction support: doubly-linked list for O(1) eviction
+  private lruHead: LRUEntry | null = null;
+  private lruTail: LRUEntry | null = null;
+  private lruMap: Map<string, LRUEntry> = new Map();
 
   constructor(config?: Partial<AlertConfig>) {
     this.alertConfig = {
@@ -124,6 +136,58 @@ class CSPViolationMonitor {
       },
       ...config,
     };
+  }
+
+  // LRU helper methods for O(1) eviction
+  private addToLRU(key: string): void {
+    const entry: LRUEntry = { key, prev: null, next: null };
+
+    if (!this.lruHead) {
+      this.lruHead = this.lruTail = entry;
+    } else {
+      // Move to head (most recently used)
+      entry.next = this.lruHead;
+      this.lruHead.prev = entry;
+      this.lruHead = entry;
+    }
+
+    this.lruMap.set(key, entry);
+  }
+
+  private moveToHead(key: string): void {
+    const entry = this.lruMap.get(key);
+    if (!entry || entry === this.lruHead) return;
+
+    // Remove from current position
+    if (entry.prev) entry.prev.next = entry.next;
+    if (entry.next) entry.next.prev = entry.prev;
+    if (entry === this.lruTail) this.lruTail = entry.prev;
+
+    // Move to head
+    entry.prev = null;
+    entry.next = this.lruHead;
+    if (this.lruHead) this.lruHead.prev = entry;
+    this.lruHead = entry;
+
+    if (!this.lruTail) this.lruTail = entry;
+  }
+
+  private removeTail(): string | null {
+    if (!this.lruTail) return null;
+
+    const key = this.lruTail.key;
+    const newTail = this.lruTail.prev;
+
+    if (newTail) {
+      newTail.next = null;
+    } else {
+      this.lruHead = null;
+    }
+
+    this.lruTail = newTail;
+    this.lruMap.delete(key);
+
+    return key;
   }
 
   /**
@@ -364,28 +428,25 @@ class CSPViolationMonitor {
       existing.occurrences.push(newTimestamp);
       existing.lastSeen = newTimestamp;
       existing.count++;
+      this.violations.set(violation.id, existing);
+
+      // Move to head of LRU list since it was just accessed
+      this.moveToHead(violation.id);
     } else {
       violation.occurrences = [violation.timestamp];
       violation.lastSeen = violation.timestamp;
       violation.count = 1;
       this.violations.set(violation.id, violation);
+
+      // Add to head of LRU list as new entry
+      this.addToLRU(violation.id);
     }
 
-    // Limit memory usage
+    // Limit memory usage using LRU eviction (O(1) instead of O(n))
     if (this.violations.size > this.MAX_VIOLATIONS) {
-      let minKey: string | null = null;
-      let minTimestamp: string | null = null;
-
-      for (const [key, violation] of this.violations.entries()) {
-        const lastSeen = violation.lastSeen;
-        if (lastSeen && (minTimestamp === null || lastSeen < minTimestamp)) {
-          minTimestamp = lastSeen;
-          minKey = key;
-        }
-      }
-
-      if (minKey) {
-        this.violations.delete(minKey);
+      const oldestKey = this.removeTail();
+      if (oldestKey) {
+        this.violations.delete(oldestKey);
       }
     }
   }
@@ -581,7 +642,13 @@ class CSPViolationMonitor {
         clearTimeout(timeoutId);
       }
     } catch (error) {
-      logger.error('Failed to send Slack alert:', error);
+      if (error instanceof Error && error.name === 'AbortError') {
+        logger.warn('Slack webhook send timed out after 5s', {
+          metadata: { message },
+        });
+      } else {
+        logger.error('Failed to send Slack alert:', error);
+      }
     }
   }
 
@@ -601,7 +668,13 @@ class CSPViolationMonitor {
           signal: controller.signal,
         });
       } catch (error) {
-        logger.error(`Failed to send webhook alert to ${webhookUrl}:`, error);
+        if (error instanceof Error && error.name === 'AbortError') {
+          logger.warn(`Webhook send timed out after 5s for ${webhookUrl}`, {
+            metadata: { message },
+          });
+        } else {
+          logger.error(`Failed to send webhook alert to ${webhookUrl}:`, error);
+        }
       } finally {
         clearTimeout(timeoutId);
       }
@@ -772,11 +845,25 @@ class CSPViolationMonitor {
   private cleanupOldViolations(): void {
     const cutoffTime = Date.now() - 24 * 60 * 60 * 1000; // 24 hours
 
-    for (const [id, violation] of this.violations.entries()) {
+    // Convert to array to avoid downlevelIteration issues
+    const entries = Array.from(this.violations.entries());
+    for (const [id, violation] of entries) {
       if (
         violation.occurrences.every((ts) => new Date(ts).getTime() < cutoffTime)
       ) {
         this.violations.delete(id);
+        // Also remove from LRU structures
+        const lruEntry = this.lruMap.get(id);
+        if (lruEntry) {
+          // Remove from LRU linked list
+          if (lruEntry.prev) lruEntry.prev.next = lruEntry.next;
+          if (lruEntry.next) lruEntry.next.prev = lruEntry.prev;
+          if (lruEntry === this.lruHead) this.lruHead = lruEntry.next;
+          if (lruEntry === this.lruTail) this.lruTail = lruEntry.prev;
+
+          // Remove from LRU map
+          this.lruMap.delete(id);
+        }
       }
     }
   }

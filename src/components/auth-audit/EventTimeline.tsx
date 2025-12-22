@@ -10,28 +10,28 @@ interface EventTimelineProps {
   getSeverityColor: (severity: string) => string;
 }
 
+const extractEventMetadata = (
+  metadata: unknown
+): { message: string; detailsString: string | null } => {
+  const meta = metadata as Record<string, unknown>;
+  const message =
+    typeof meta.message === 'string'
+      ? meta.message
+      : meta.message
+      ? String(meta.message)
+      : '';
+  const details = meta.details;
+  const detailsString = details
+    ? JSON.stringify(details as Record<string, unknown>)
+    : null;
+  return { message, detailsString };
+};
+
 export const EventTimeline: React.FC<EventTimelineProps> = ({
   filteredEvents,
   getEventTypeIcon,
   getSeverityColor,
 }) => {
-  const extractEventMetadata = (
-    metadata: unknown
-  ): { message: string; detailsString: string | null } => {
-    const meta = metadata as Record<string, unknown>;
-    const message =
-      typeof meta.message === 'string'
-        ? meta.message
-        : meta.message
-        ? String(meta.message)
-        : '';
-    const details = meta.details;
-    const detailsString = details
-      ? JSON.stringify(details as Record<string, unknown>)
-      : null;
-    return { message, detailsString };
-  };
-
   return (
     <Card>
       <CardHeader>

@@ -195,24 +195,33 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
     return `${sign}${formattedChange}% from last hour`;
   };
 
+  /**
+   * Compute resolution trend for security incidents
+   */
+  const computeResolutionTrend = (metrics: SecurityMetrics): string => {
+    const currentRate =
+      metrics.totalIncidents > 0
+        ? (metrics.resolvedIncidents / metrics.totalIncidents) * 100
+        : 0;
+    const mockPreviousTotal = Math.max(
+      1,
+      Math.floor(metrics.totalIncidents * 0.8)
+    );
+    const mockPreviousResolved = Math.floor(metrics.resolvedIncidents * 0.9);
+    const previousRate =
+      mockPreviousTotal > 0
+        ? (mockPreviousResolved / mockPreviousTotal) * 100
+        : 0;
+    return calculateTrend(currentRate, previousRate);
+  };
+
   // Fetch security data
   const fetchSecurityData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Trigger re-computation of filtered incidents and security metrics
-      // The actual computation happens in the useMemo hooks that depend on timeRange
-      // This function serves as the entry point for data fetching and error handling
-
-      // In a real implementation, this would fetch data from APIs:
-      // const response = await fetch(`/api/security-data?timeRange=${timeRange}`);
-      // const data = await response.json();
-      // setSecurityMetrics(data.metrics);
-      // setFilteredIncidents(data.incidents);
-
-      // For now, we rely on the useMemo hooks that compute data based on timeRange
-      // The computation is triggered by the dependency on timeRange in the useMemo hooks
+      // TODO: Implement real API calls for security data
     } catch (err) {
       setError('Failed to fetch security data');
       logger.error('SOC dashboard error', err, {
@@ -514,31 +523,7 @@ export const SOCDashboard: React.FC<SOCDashboardProps> = ({
             <p className="text-sm text-muted-foreground">Incidents resolved</p>
             <div className="mt-2 flex items-center space-x-2 text-xs text-blue-600">
               <TrendingUp className="h-3 w-3" />
-              <span>
-                {(() => {
-                  const currentRate =
-                    securityMetrics.totalIncidents > 0
-                      ? (securityMetrics.resolvedIncidents /
-                          securityMetrics.totalIncidents) *
-                        100
-                      : 0;
-
-                  // Mock previous resolution rate calculation
-                  const mockPreviousTotal = Math.max(
-                    1,
-                    Math.floor(securityMetrics.totalIncidents * 0.8)
-                  );
-                  const mockPreviousResolved = Math.floor(
-                    securityMetrics.resolvedIncidents * 0.9
-                  );
-                  const previousRate =
-                    mockPreviousTotal > 0
-                      ? (mockPreviousResolved / mockPreviousTotal) * 100
-                      : 0;
-
-                  return calculateTrend(currentRate, previousRate);
-                })()}
-              </span>
+              <span>{computeResolutionTrend(securityMetrics)}</span>
             </div>
           </CardContent>
         </Card>

@@ -3,7 +3,22 @@ import type { AuditEvent } from '@/lib/authAuditLogger';
 import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabaseServerClient';
 
-const actionToEventType: Record<string, AuditEvent['eventType']> = {
+/**
+ * Type guard to check if a value is an array of role objects
+ */
+function isRolesArray(value: unknown): value is { role: string }[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) =>
+        typeof item === 'object' &&
+        item !== null &&
+        typeof item.role === 'string'
+    )
+  );
+}
+
+const ACTION_TO_EVENT_TYPE: Record<string, AuditEvent['eventType']> = {
   login_success: 'AUTH_LOGIN_SUCCESS',
   login_failed: 'AUTH_LOGIN_FAILED',
   logout: 'AUTH_LOGOUT',
@@ -20,7 +35,7 @@ const actionToEventType: Record<string, AuditEvent['eventType']> = {
   token_theft_detected: 'AUTH_TOKEN_THEFT_DETECTED',
 };
 
-const validEventTypes = new Set<AuditEvent['eventType']>([
+const VALID_EVENT_TYPES = new Set<AuditEvent['eventType']>([
   'AUTH_LOGIN_SUCCESS',
   'AUTH_LOGIN_FAILED',
   'AUTH_LOGOUT',
@@ -106,8 +121,7 @@ export default async function handler(req: Request) {
     }
 
     const isAdmin =
-      Array.isArray(roles) &&
-      (roles as { role: string }[]).some((r) => r.role === 'admin');
+      isRolesArray(roles) && roles.some((r) => r.role === 'admin');
     if (!isAdmin) {
       return new Response(
         JSON.stringify({ success: false, message: 'Forbidden' }),
@@ -145,17 +159,23 @@ export default async function handler(req: Request) {
     const rows = (data ||
       []) as Database['public']['Tables']['admin_audit_log']['Row'][];
 
+    // Map database rows to AuditEvent objects with proper type conversion and validation
     const events = rows
       .map((row) => {
         const action = String(row.action || '').toLowerCase();
         if (!action) return null;
 
+        // Resolve eventType using action -> eventType mapping with fallback hierarchy:
+        // 1. Check ACTION_TO_EVENT_TYPE map for direct mapping
+        // 2. For auth_ actions, treat as canonical event types if valid
+        // 3. For other actions, prefix with "AUTH_" and check validity
+        // 4. Fall back to AUTH_SUSPICIOUS_ACTIVITY with warning
         let eventType: AuditEvent['eventType'];
-        if (actionToEventType[action]) {
-          eventType = actionToEventType[action]!;
+        if (ACTION_TO_EVENT_TYPE[action]) {
+          eventType = ACTION_TO_EVENT_TYPE[action]!;
         } else if (action.startsWith('auth_')) {
           const candidate = action.toUpperCase();
-          if (validEventTypes.has(candidate as AuditEvent['eventType'])) {
+          if (VALID_EVENT_TYPES.has(candidate as AuditEvent['eventType'])) {
             eventType = candidate as AuditEvent['eventType'];
           } else {
             eventType = 'AUTH_SUSPICIOUS_ACTIVITY';
@@ -165,7 +185,7 @@ export default async function handler(req: Request) {
           }
         } else {
           const candidate = `AUTH_${action.toUpperCase()}`;
-          if (validEventTypes.has(candidate as AuditEvent['eventType'])) {
+          if (VALID_EVENT_TYPES.has(candidate as AuditEvent['eventType'])) {
             eventType = candidate as AuditEvent['eventType'];
           } else {
             eventType = 'AUTH_SUSPICIOUS_ACTIVITY';
@@ -175,9 +195,13 @@ export default async function handler(req: Request) {
           }
         }
 
+        // Extract and normalize metadata/details from database row
         const details = (row.details || {}) as Record<string, unknown>;
 
-        // Heuristic severity mapping
+        // Determine severity using regex-based heuristics with priority order:
+        // 1. Critical: suspicious, anomaly, theft, critical, breach patterns
+        // 2. Warning: failed, error, invalid, locked patterns
+        // 3. Default: info severity
         let severity: AuditEvent['severity'] = 'info';
         if (/suspicious|anomaly|theft|critical|breach/i.test(action))
           severity = 'critical';
