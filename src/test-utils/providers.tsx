@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, RenderOptions } from '@testing-library/react';
+import { RenderOptions, render } from '@testing-library/react';
 import React, { ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -37,4 +37,8 @@ const customRender = (
 
 // Re-export everything
 export * from '@testing-library/react';
-export { AllTheProviders, createTestQueryClient, customRender as render };
+export {
+  AllTheProviders as Providers,
+  createTestQueryClient,
+  customRender as render,
+};
