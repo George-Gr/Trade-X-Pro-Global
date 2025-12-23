@@ -89,7 +89,7 @@ class FeatureFlagManager {
   enablePkceAuthFlow(): void {
     this.flags.pkceAuthFlow = true;
     this.saveFlags();
-    logger.warn('PKCE auth flow enabled');
+    logger.info('PKCE auth flow enabled');
   }
 
   /**
@@ -109,7 +109,7 @@ class FeatureFlagManager {
   enableSecureStorage(): void {
     this.flags.secureStorage = true;
     this.saveFlags();
-    logger.warn('Secure storage enabled');
+    logger.info('Secure storage enabled');
   }
 
   /**
@@ -129,7 +129,7 @@ class FeatureFlagManager {
   enableEnhancedSecurityHeaders(): void {
     this.flags.enhancedSecurityHeaders = true;
     this.saveFlags();
-    logger.warn('Enhanced security headers enabled');
+    logger.info('Enhanced security headers enabled');
   }
 
   /**
@@ -138,7 +138,7 @@ class FeatureFlagManager {
   disableEnhancedSecurityHeaders(): void {
     this.flags.enhancedSecurityHeaders = false;
     this.saveFlags();
-    logger.warn('Enhanced security headers disabled');
+    logger.info('Enhanced security headers disabled');
   }
 
   /**

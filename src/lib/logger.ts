@@ -334,6 +334,7 @@ export const logger = {
 
     if (isDevelopment) {
       const formatted = formatLogMessage('INFO', message, fullContext);
+
       console.warn(formatted, fullContext.metadata || {});
     }
 
@@ -353,6 +354,7 @@ export const logger = {
 
     if (isDevelopment) {
       const formatted = formatLogMessage('WARN', message, fullContext);
+
       console.warn(formatted, fullContext.metadata || {});
     }
 
@@ -608,7 +610,7 @@ export const logger = {
     }
 
     if (isDevelopment) {
-      const logLevel = apiCall.success ? 'warn' : 'error';
+      const logLevel = apiCall.success ? 'info' : 'error';
       // eslint-disable-next-line no-console
       console[logLevel](`[API] ${message}`, {
         method,
@@ -693,7 +695,7 @@ export const logger = {
     this.addBreadcrumb('supabase', message, success ? 'info' : 'error');
 
     if (isDevelopment) {
-      const logLevel = success ? 'warn' : 'error';
+      const logLevel = success ? 'info' : 'error';
       // eslint-disable-next-line no-console
       console[logLevel](`[SUPABASE] ${message}`, {
         table,
