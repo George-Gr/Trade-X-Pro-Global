@@ -75,6 +75,7 @@ export default [
       'src/__tests__/**/*.{ts,tsx}',
       'src/**/__tests__/**/*.{ts,tsx}',
       'src/**/*.test.{ts,tsx}',
+      'src/test-utils/**/*.{ts,tsx}',
     ],
     languageOptions: {
       parser: tsParser,
@@ -115,6 +116,7 @@ export default [
       'src/lib/**/*.{ts,tsx}',
       'src/contexts/**/*.tsx',
       'src/hooks/**/*.{ts,tsx}',
+      'src/test-utils/**/*.{ts,tsx}',
     ],
     rules: {
       'react-refresh/only-export-components': 'off',
