@@ -3,7 +3,7 @@
  * Provides debounced updates for chart data to improve performance
  */
 
-import { useCallback, useRef, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface DebounceConfig {
   delay: number;
@@ -17,18 +17,24 @@ export const useDebouncedChartUpdate = <T>(
   config: DebounceConfig = { delay: 300 }
 ) => {
   const { delay, maxWait = 0, leading = false, trailing = true } = config;
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>();
-  const maxTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>();
-  const lastCallTimeRef = useRef<number>();
-  const lastInvokeTimeRef = useRef<number>();
-  const lastArgsRef = useRef<T[]>();
-  const lastThisRef = useRef<unknown>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  const maxTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  const lastCallTimeRef = useRef<number | undefined>(undefined);
+  const lastInvokeTimeRef = useRef<number | undefined>(undefined);
+  const lastArgsRef = useRef<T[] | undefined>(undefined);
+  const lastThisRef = useRef<unknown>(undefined);
 
   // Core functions - order matters due to dependencies
   const shouldInvoke = useCallback(
     (time: number) => {
-      const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
-      const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
+      const lastCallTime = lastCallTimeRef.current ?? 0;
+      const lastInvokeTime = lastInvokeTimeRef.current ?? 0;
+      const timeSinceLastCall = time - lastCallTime;
+      const timeSinceLastInvoke = time - lastInvokeTime;
 
       return (
         lastCallTimeRef.current === undefined ||
@@ -50,8 +56,10 @@ export const useDebouncedChartUpdate = <T>(
 
   const getRemainingWait = useCallback(
     (time: number) => {
-      const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
-      const timeSinceLastInvoke = time - (lastInvokeTimeRef.current || 0);
+      const lastCallTime = lastCallTimeRef.current ?? 0;
+      const lastInvokeTime = lastInvokeTimeRef.current ?? 0;
+      const timeSinceLastCall = time - lastCallTime;
+      const timeSinceLastInvoke = time - lastInvokeTime;
 
       const timeWaiting =
         maxWait > 0
@@ -71,7 +79,7 @@ export const useDebouncedChartUpdate = <T>(
       if (trailing && lastArgsRef.current) {
         return invokeFunc(...args);
       }
-      lastArgsRef.current = undefined;
+      lastArgsRef.current = undefined as T[] | undefined;
       lastThisRef.current = undefined;
       return undefined;
     },
@@ -160,13 +168,13 @@ export const useDebouncedChartUpdate = <T>(
   const cancel = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = undefined;
     }
     if (maxTimeoutRef.current) {
       clearTimeout(maxTimeoutRef.current);
+      maxTimeoutRef.current = undefined;
     }
 
-    timeoutRef.current = undefined;
-    maxTimeoutRef.current = undefined;
     lastCallTimeRef.current = undefined;
     lastInvokeTimeRef.current = undefined;
     lastArgsRef.current = undefined;
@@ -196,7 +204,9 @@ export const useDebouncedChartUpdate = <T>(
  */
 export const useChartUpdateBatcher = (batchSize: number = 10) => {
   const updatesRef = useRef<unknown[]>([]);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
   const callbackRef = useRef<((updates: unknown[]) => void) | null>(null);
 
   const setCallback = useCallback((callback: (updates: unknown[]) => void) => {

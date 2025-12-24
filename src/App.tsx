@@ -29,6 +29,9 @@ const KYC = lazy(() => import('./pages/KYC'));
 const Admin = lazy(() => import('./pages/Admin'));
 const RiskManagement = lazy(() => import('./pages/RiskManagement'));
 const AdminRiskDashboard = lazy(() => import('./pages/AdminRiskDashboard'));
+const PerformanceMonitorDashboard = lazy(() =>
+  import('@/components/dashboard/PerformanceMonitorDashboard')
+);
 const Notifications = lazy(() => import('./pages/Notifications'));
 const Wallet = lazy(() => import('./pages/Wallet'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -83,8 +86,6 @@ const MobileBottomNavigation = lazy(() =>
     default: module.MobileBottomNavigation,
   }))
 );
-
-import { PerformanceMonitorDashboard } from './components/dashboard/PerformanceMonitorDashboard';
 
 const App = () => {
   // Initialize Sentry and monitoring on app load (production only)

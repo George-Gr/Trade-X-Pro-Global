@@ -10,7 +10,7 @@ import { z } from 'zod';
  */
 const tradeSchema = z
   .object({
-    symbol: z.enum(['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA']).default('AAPL'),
+    symbol: z.enum(['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA']),
     quantity: z
       .string()
       .min(1, 'Quantity is required')
@@ -18,12 +18,12 @@ const tradeSchema = z
         (val) => /^\d+$/.test(val) && parseInt(val) > 0,
         'Quantity must be greater than 0'
       ),
-    price: z.string().optional().default(''),
-    orderType: z.enum(['market', 'limit', 'stop']).default('market'),
-    timeInForce: z.enum(['day', 'gtc', 'ioc', 'fok']).default('day'),
-    stopLoss: z.string().optional().default(''),
-    takeProfit: z.string().optional().default(''),
-    notes: z.string().optional().default(''),
+    price: z.string().optional(),
+    orderType: z.enum(['market', 'limit', 'stop']),
+    timeInForce: z.enum(['day', 'gtc', 'ioc', 'fok']),
+    stopLoss: z.string().optional(),
+    takeProfit: z.string().optional(),
+    notes: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -97,15 +97,15 @@ type TradeData = z.infer<typeof tradeSchema>;
  * Used for initialization and reset operations
  */
 // eslint-disable-next-line react-refresh/only-export-components
-export const DEFAULT_FORM_VALUES: TradeData = {
-  symbol: 'AAPL',
+export const DEFAULT_FORM_VALUES = {
+  symbol: 'AAPL' as const,
   quantity: '',
-  price: '',
-  orderType: 'market',
-  timeInForce: 'day',
-  stopLoss: '',
-  takeProfit: '',
-  notes: '',
+  price: undefined,
+  orderType: 'market' as const,
+  timeInForce: 'day' as const,
+  stopLoss: undefined,
+  takeProfit: undefined,
+  notes: undefined,
 };
 
 /**
@@ -129,6 +129,7 @@ export const TradingForm: FC = () => {
   } = useForm<TradeData>({
     resolver: zodResolver(tradeSchema),
     defaultValues: DEFAULT_FORM_VALUES,
+    mode: 'onChange',
   });
 
   const [submitMessage, setSubmitMessage] = useState('');
@@ -199,7 +200,7 @@ export const TradingForm: FC = () => {
     return parseFloat(quantity) * parseFloat(price);
   };
 
-  const onSubmit = async (_data: TradeData) => {
+  const onSubmit = async (data: TradeData) => {
     setSubmitMessage('Submitting order...');
     announceToScreenReader('Submitting order');
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Hook: usePriceStream
@@ -120,8 +120,8 @@ export const usePriceStream = ({
                 open: Number(priceInfo.o) || 0,
                 previousClose: Number(priceInfo.pc) || 0,
                 timestamp: Number(priceInfo.t) || Date.now(),
-                provider: priceInfo.provider,
-                cached: priceInfo.cached,
+                provider: priceInfo.provider || 'unknown',
+                cached: priceInfo.cached || false,
               });
             }
             setPrices(newPrices);

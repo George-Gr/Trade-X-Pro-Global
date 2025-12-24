@@ -159,7 +159,8 @@ export class PerformanceBoundary extends React.Component<
           </div>
         ));
 
-      return <FallbackComponent error={this.state.error} />;
+      const fallbackProps = this.state.error ? { error: this.state.error } : {};
+      return <FallbackComponent {...fallbackProps} />;
     }
 
     return this.props.children;

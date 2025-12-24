@@ -5,6 +5,22 @@ import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
  * Optimized for high-frequency market data updates
  */
 
+/**
+ * Price data for a market instrument
+ * @property symbol - Trading symbol identifier
+ * @property currentPrice - Current market price
+ * @property bid - Current bid price
+ * @property ask - Current ask price
+ * @property change - Price change from previous close
+ * @property changePercent - Percentage price change
+ * @property high - Daily high price
+ * @property low - Daily low price
+ * @property open - Opening price
+ * @property previousClose - Previous day's closing price
+ * @property timestamp - Price update timestamp
+ * @property provider - Data source provider (optional)
+ * @property cached - Whether data is from cache (optional)
+ */
 export interface PriceData {
   symbol: string;
   currentPrice: number;
@@ -158,7 +174,12 @@ export const usePriceStreamConcurrent = ({
     }
 
     try {
-      const projectRef = 'oaegicsinxhpilsihjxv';
+      const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_REF;
+      if (!projectRef) {
+        throw new Error(
+          'Missing VITE_SUPABASE_PROJECT_REF environment variable'
+        );
+      }
       const wsUrl = `wss://${projectRef}.supabase.co/functions/v1/price-stream`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -231,7 +252,10 @@ export const usePriceStreamConcurrent = ({
             updatePricesConcurrently(newPrices);
           }
         } catch (err) {
-          // Error parsing price message - logged internally, update skipped
+          // Optionally notify caller of parse errors for debugging
+          if (onError && err instanceof Error) {
+            onError(err);
+          }
         }
       };
 
@@ -272,14 +296,14 @@ export const usePriceStreamConcurrent = ({
       clearTimeout(reconnectTimeoutRef.current);
       reconnectTimeoutRef.current = null;
     }
-
-    if (batchUpdateTimerRef.current) {
-      clearTimeout(batchUpdateTimerRef.current);
-      batchUpdateTimerRef.current = null;
-    }
-
     if (wsRef.current) {
-      wsRef.current.send(JSON.stringify({ type: 'unsubscribe' }));
+      try {
+        if (wsRef.current.readyState === WebSocket.OPEN) {
+          wsRef.current.send(JSON.stringify({ type: 'unsubscribe' }));
+        }
+      } catch (error) {
+        // Ignore send errors during cleanup
+      }
       wsRef.current.close();
       wsRef.current = null;
     }

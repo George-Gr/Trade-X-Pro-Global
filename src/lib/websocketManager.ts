@@ -378,11 +378,27 @@ class WebSocketManager {
     if (payload && payload.commit_timestamp) {
       try {
         const commitTime = new Date(payload.commit_timestamp).getTime();
-        // Only valid if clocks are reasonably synced or for relative comparison
-        // Better to use a ping/pong mechanism for true latency, but this gives processing time
-        // Since client/server clock skew exists, we'll focus on processing frequency
+        // Only record latency if commitTime is a valid number (not NaN)
+        if (!isNaN(commitTime) && commitTime > 0) {
+          const e2eLatency = receiveTime - commitTime;
+          // Only record positive latencies (protects against clock skew issues)
+          if (e2eLatency >= 0) {
+            performanceMonitoring.recordCustomTiming(
+              'WebSocketE2ELatency',
+              0,
+              e2eLatency
+            );
+            performanceMonitoring.markUserAction(`ws-e2e-latency-${table}`);
+          }
+        }
       } catch (e) {
-        // Ignore date parsing errors
+        // Ignore date parsing errors and continue with message frequency tracking
+        logger.debug(
+          'Failed to parse commit_timestamp for E2E latency calculation',
+          {
+            metadata: { commit_timestamp: payload.commit_timestamp, table },
+          }
+        );
       }
     }
 

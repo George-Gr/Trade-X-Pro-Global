@@ -132,8 +132,19 @@ This analysis identified **7 major version jumps** requiring careful production 
 
 **Target:** Type definitions, build tools, CSS utilities
 
+**IMPORTANT: Save rollback point before starting:**
+
 ```bash
+# Save rollback point first
+./scripts/save-rollback-point.sh phase1
+
+# Then execute Phase 1
 ./scripts/update-phase1.sh
+
+# If rollback needed:
+./scripts/rollback-to-phase.sh phase1
+# OR manually:
+# git checkout rollback-before-phase1 && npm install
 ```
 
 **Updates:**
@@ -156,8 +167,19 @@ This analysis identified **7 major version jumps** requiring careful production 
 
 **Target:** Form validation, utilities, UI components
 
+**IMPORTANT: Save rollback point before starting:**
+
 ```bash
+# Save rollback point first
+./scripts/save-rollback-point.sh phase2
+
+# Then execute Phase 2
 ./scripts/update-phase2.sh
+
+# If rollback needed:
+./scripts/rollback-to-phase.sh phase2
+# OR manually:
+# git checkout rollback-before-phase2 && npm install
 ```
 
 **Updates:**
@@ -181,8 +203,19 @@ This analysis identified **7 major version jumps** requiring careful production 
 
 **Target:** React 19, React Router v7
 
+**IMPORTANT: Save rollback point before starting:**
+
 ```bash
+# Save rollback point first
+./scripts/save-rollback-point.sh phase3
+
+# Then execute Phase 3
 ./scripts/update-phase3.sh
+
+# If rollback needed:
+./scripts/rollback-to-phase.sh phase3
+# OR manually:
+# git checkout rollback-before-phase3 && npm install
 ```
 
 **Updates:**
@@ -256,30 +289,121 @@ npm run build:analyze    # Bundle analysis
 
 ## 🔄 Rollback Strategy
 
+### Pre-Phase Rollback Preparation
+
+**CRITICAL:** Before executing any phase, you MUST create a rollback point using one of these methods:
+
+#### Method 1: Git Tags (Recommended)
+
+```bash
+# Before Phase 1
+git tag -f rollback-before-phase1
+
+# Execute Phase 1
+./scripts/update-phase1.sh
+
+# If rollback needed
+git checkout rollback-before-phase1
+npm install
+```
+
+#### Method 2: Commit SHA Recording
+
+```bash
+# Before Phase 1 - Record the current SHA
+echo "rollback-before-phase1:$(git rev-parse HEAD)" >> rollback-manifest.txt
+git add rollback-manifest.txt
+git commit -m "Record rollback point before Phase 1"
+
+# Execute Phase 1
+./scripts/update-phase1.sh
+
+# If rollback needed - Extract and checkout the recorded SHA
+ROLLBACK_SHA=$(grep "rollback-before-phase1:" rollback-manifest.txt | cut -d':' -f2)
+git checkout $ROLLBACK_SHA
+npm install
+```
+
+#### Method 3: Automated Rollback Script
+
+Create a rollback script that handles both tag and manifest approaches:
+
+```bash
+# save-rollback-point.sh
+#!/bin/bash
+PHASE=$1
+TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+CURRENT_SHA=$(git rev-parse HEAD)
+
+# Create git tag
+echo "Creating rollback tag: rollback-before-$PHASE"
+git tag -f "rollback-before-$PHASE"
+
+# Update manifest file
+echo "rollback-before-$PHASE:$CURRENT_SHA:$TIMESTAMP" >> rollback-manifest.txt
+
+echo "✅ Rollback point saved for Phase $PHASE"
+echo "   Tag: rollback-before-$PHASE"
+echo "   SHA: $CURRENT_SHA"
+echo "   Time: $TIMESTAMP"
+```
+
 ### Emergency Rollback Commands
 
 **Phase 1 Rollback:**
 
 ```bash
-# If issues after Phase 1
-git checkout $(git log --oneline -1 scripts/update-phase1.sh | cut -d' ' -f1)
+# Method 1: Using git tag
+git checkout rollback-before-phase1
+npm install
+
+# Method 2: Using recorded SHA from manifest
+ROLLBACK_SHA=$(grep "rollback-before-phase1:" rollback-manifest.txt | tail -1 | cut -d':' -f2)
+git checkout $ROLLBACK_SHA
 npm install
 ```
 
 **Phase 2 Rollback:**
 
 ```bash
-# If issues after Phase 2
-git checkout $(git log --oneline -1 scripts/update-phase2.sh | cut -d' ' -f1)
+# Method 1: Using git tag
+git checkout rollback-before-phase2
+npm install
+
+# Method 2: Using recorded SHA from manifest
+ROLLBACK_SHA=$(grep "rollback-before-phase2:" rollback-manifest.txt | tail -1 | cut -d':' -f2)
+git checkout $ROLLBACK_SHA
 npm install
 ```
 
 **Phase 3 Rollback:**
 
 ```bash
-# If issues after Phase 3
-git checkout $(git log --oneline -1 scripts/update-phase3.sh | cut -d' ' -f1)
+# Method 1: Using git tag
+git checkout rollback-before-phase3
 npm install
+
+# Method 2: Using recorded SHA from manifest
+ROLLBACK_SHA=$(grep "rollback-before-phase3:" rollback-manifest.txt | tail -1 | cut -d':' -f2)
+git checkout $ROLLBACK_SHA
+npm install
+```
+
+### Complete Rollback Workflow
+
+```bash
+# 1. Before any phase, save rollback point
+./save-rollback-point.sh phase1
+
+# 2. Execute the phase
+./scripts/update-phase1.sh
+
+# 3. If issues occur, perform rollback
+./rollback-to-phase1.sh  # Or use manual commands above
+
+# 4. Verify rollback
+npm run build
+npm run test
 ```
 
 ### Rollback Decision Matrix

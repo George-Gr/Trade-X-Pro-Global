@@ -1,7 +1,6 @@
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import type { Json } from '@/integrations/supabase/types';
 import { logger } from '@/lib/logger';
 import {
   AlertCircle,
@@ -24,7 +23,7 @@ interface RiskEvent {
   event_type: string;
   severity: string;
   description: string;
-  details: Json | null;
+  details: Record<string, unknown> | null;
   created_at: string;
   resolved: boolean;
   resolved_at?: string;

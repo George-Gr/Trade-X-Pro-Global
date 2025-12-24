@@ -7,9 +7,9 @@ import { useCallback, useEffect, useState } from 'react';
  * Onboarding tour step configuration
  */
 interface TourStep {
-  element?: string;
+  element?: string | undefined;
   intro: string;
-  title?: string;
+  title?: string | undefined;
   position?: 'top' | 'bottom' | 'left' | 'right' | 'auto';
 }
 
@@ -255,18 +255,29 @@ export const OnboardingTour = ({
       const intro = introJs();
 
       intro.setOptions({
-        steps: steps.map((step) => ({
-          element: step.element
-            ? document.querySelector(step.element) || undefined
-            : undefined,
-          intro: step.intro,
-          title: step.title,
-          position: (step.position === 'auto' ? 'bottom' : step.position) as
-            | 'top'
-            | 'bottom'
-            | 'left'
-            | 'right',
-        })),
+        steps: steps.map((step) => {
+          const introStep: any = {
+            intro: step.intro,
+            position: (step.position === 'auto' ? 'bottom' : step.position) as
+              | 'top'
+              | 'bottom'
+              | 'left'
+              | 'right',
+          };
+
+          if (step.element) {
+            const element = document.querySelector(step.element);
+            if (element) {
+              introStep.element = element;
+            }
+          }
+
+          if (step.title) {
+            introStep.title = step.title;
+          }
+
+          return introStep;
+        }),
         showProgress: true,
         showBullets: true,
         exitOnOverlayClick: false,

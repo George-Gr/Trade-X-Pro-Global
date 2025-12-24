@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getBundleAnalysis, type BundleSize } from '@/lib/bundleAnalysis';
 import {
   PerformanceAlert,
   TimeSeriesPoint,
@@ -19,6 +20,13 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import {
+  MetricCard,
+  BundleBar,
+  ResourceMetricCard,
+  getResourceStatus,
+  getMetricStatus,
+} from './PerformanceMonitorComponents';
 
 // Type definitions for WebSocket status
 interface WebSocketStatus {
@@ -61,6 +69,8 @@ export const PerformanceMonitorDashboard: React.FC = () => {
   const [alerts, setAlerts] = useState<PerformanceAlert[]>([]);
   const [wsStatus, setWsStatus] = useState<WebSocketStatus | null>(null);
   const [memoryUsage, setMemoryUsage] = useState<number>(0);
+  const [bundleData, setBundleData] = useState<BundleSize[] | null>(null);
+  const [isUsingRealData, setIsUsingRealData] = useState(false);
 
   // Refresh data periodically
   useEffect(() => {
@@ -81,7 +91,18 @@ export const PerformanceMonitorDashboard: React.FC = () => {
       }
     };
 
+    const loadBundleData = async () => {
+      try {
+        const analysisData = await getBundleAnalysis();
+        setBundleData(analysisData.bundles);
+        setIsUsingRealData(analysisData.isRealData);
+      } catch (error) {
+        console.warn('Failed to load bundle data:', error);
+      }
+    };
+
     updateData(); // Initial load
+    loadBundleData(); // Load bundle data
     const interval = setInterval(updateData, 2000); // Update every 2s for smooth charts
 
     return () => clearInterval(interval);
@@ -139,25 +160,25 @@ export const PerformanceMonitorDashboard: React.FC = () => {
               title="LCP"
               value={`${getLatestValue('LCP').toFixed(0)}ms`}
               status={getMetricStatus('LCP', getLatestValue('LCP'))}
-              trend={metrics['LCP'] || undefined}
+              trend={metrics['LCP']}
             />
             <MetricCard
               title="INP"
               value={`${getLatestValue('FID').toFixed(0)}ms`}
               status={getMetricStatus('FID', getLatestValue('FID'))}
-              trend={metrics['FID'] || undefined}
+              trend={metrics['FID']}
             />
             <MetricCard
               title="CLS"
               value={getLatestValue('CLS').toFixed(3)}
               status={getMetricStatus('CLS', getLatestValue('CLS'))}
-              trend={metrics['CLS'] || undefined}
+              trend={metrics['CLS']}
             />
             <MetricCard
               title="TTFB"
               value={`${getLatestValue('TTFB').toFixed(0)}ms`}
               status={getMetricStatus('TTFB', getLatestValue('TTFB'))}
-              trend={metrics['TTFB'] || undefined}
+              trend={metrics['TTFB']}
             />
           </div>
 
@@ -205,15 +226,36 @@ export const PerformanceMonitorDashboard: React.FC = () => {
 
             <Card className="col-span-3">
               <CardHeader>
-                <CardTitle>Bundle Analysis</CardTitle>
+                <CardTitle>
+                  Bundle Analysis
+                  {!isUsingRealData && (
+                    <Badge variant="outline" className="ml-2 text-xs">
+                      Baseline Data
+                    </Badge>
+                  )}
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {isUsingRealData
+                    ? 'Real-time bundle sizes from build artifacts'
+                    : 'Baseline/target values shown when build data unavailable'}
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <BundleBar name="React Core" size={145} limit={150} />
-                  <BundleBar name="Charts" size={480} limit={500} />
-                  <BundleBar name="TanStack Query" size={85} limit={100} />
-                  <BundleBar name="UI Libs" size={180} limit={200} />
-                  <BundleBar name="Main Entry" size={250} limit={300} />
+                  {bundleData && bundleData.length > 0 ? (
+                    bundleData.map((bundle) => (
+                      <BundleBar
+                        key={bundle.name}
+                        name={bundle.name}
+                        size={bundle.size}
+                        limit={bundle.limit}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      Loading bundle analysis...
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -301,115 +343,209 @@ export const PerformanceMonitorDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="resources" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <ResourceMetricCard
+              title="Memory Usage"
+              value={`${memoryUsage.toFixed(1)} MB`}
+              status={getResourceStatus('memory', memoryUsage)}
+              icon="💾"
+              description="JavaScript Heap Size"
+            />
+            <ResourceMetricCard
+              title="Active Connections"
+              value={wsStatus?.totalConnections?.toString() || '0'}
+              status={getResourceStatus(
+                'connections',
+                wsStatus?.totalConnections || 0
+              )}
+              icon="🔗"
+              description="WebSocket Connections"
+            />
+            <ResourceMetricCard
+              title="Total Subscriptions"
+              value={wsStatus?.totalSubscriptions?.toString() || '0'}
+              status={getResourceStatus(
+                'subscriptions',
+                wsStatus?.totalSubscriptions || 0
+              )}
+              icon="📡"
+              description="Database Subscriptions"
+            />
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Resource Usage Trends</CardTitle>
+            </CardHeader>
+            <CardContent className="h-100">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={metrics['MemoryUsage']?.slice(-50) || []}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                  <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={formatTime}
+                    stroke="#888888"
+                    fontSize={12}
+                  />
+                  <YAxis stroke="#888888" fontSize={12} />
+                  <Tooltip
+                    labelFormatter={formatTime}
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      borderColor: 'hsl(var(--border))',
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#f97316"
+                    name="Memory (MB)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Connection Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-60">
+                  <div className="space-y-3">
+                    {wsStatus?.connections?.length === 0 ? (
+                      <p className="text-muted-foreground text-center py-4">
+                        No active connections
+                      </p>
+                    ) : (
+                      wsStatus?.connections?.map((conn) => (
+                        <div
+                          key={conn.id}
+                          className="p-3 rounded-lg border bg-card"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-medium text-sm">
+                              {conn.id.slice(0, 8)}...
+                            </span>
+                            <Badge
+                              variant={
+                                conn.state === 'connected'
+                                  ? 'default'
+                                  : conn.state === 'error'
+                                  ? 'destructive'
+                                  : 'secondary'
+                              }
+                              className="text-xs"
+                            >
+                              {conn.state}
+                            </Badge>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            <div>Subscriptions: {conn.subscriptionCount}</div>
+                            <div>Retries: {conn.retryCount}</div>
+                          </div>
+                          {conn.tables.length > 0 && (
+                            <div className="mt-2">
+                              <div className="text-xs text-muted-foreground mb-1">
+                                Tables:
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {conn.tables.slice(0, 3).map((table) => (
+                                  <Badge
+                                    key={table}
+                                    variant="outline"
+                                    className="text-xs"
+                                  >
+                                    {table}
+                                  </Badge>
+                                ))}
+                                {conn.tables.length > 3 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{conn.tables.length - 3} more
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Total Alerts</span>
+                    <Badge
+                      variant={alerts.length > 0 ? 'destructive' : 'default'}
+                    >
+                      {alerts.length}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Bundle Analysis</span>
+                    <Badge variant={!isUsingRealData ? 'outline' : 'default'}>
+                      {isUsingRealData ? 'Live Data' : 'Baseline'}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Update Frequency</span>
+                    <span className="text-xs text-muted-foreground">2s</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Data Points</span>
+                    <span className="text-xs text-muted-foreground">
+                      {Math.max(
+                        metrics['LCP']?.length || 0,
+                        metrics['FID']?.length || 0,
+                        metrics['CLS']?.length || 0
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
 };
 
-// Helper Components
-const MetricCard = ({
-  title,
-  value,
-  status,
-  trend,
-}: {
+// Type definitions for components
+interface MetricCardProps {
   title: string;
   value: string;
   status: 'good' | 'warning' | 'critical';
   trend?: TimeSeriesPoint[] | undefined;
-}) => (
-  <Card>
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-sm font-medium">{title}</CardTitle>
-      <div
-        className={`h-2 w-2 rounded-full ${
-          status === 'good'
-            ? 'bg-green-500'
-            : status === 'warning'
-            ? 'bg-yellow-500'
-            : 'bg-red-500'
-        }`}
-      />
-    </CardHeader>
-    <CardContent>
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="h-10 mt-2">
-        {trend && trend.length > 0 && (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trend.slice(-20)}>
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke={
-                  status === 'good'
-                    ? '#22c55e'
-                    : status === 'warning'
-                    ? '#eab308'
-                    : '#ef4444'
-                }
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
-      </div>
-    </CardContent>
-  </Card>
-);
+}
 
-const BundleBar = ({
-  name,
-  size,
-  limit,
-}: {
+interface BundleBarProps {
   name: string;
   size: number;
   limit: number;
-}) => {
-  const percentage = Math.min((size / limit) * 100, 100);
-  const isOver = size > limit;
+}
 
-  return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-sm">
-        <span>{name}</span>
-        <span
-          className={
-            isOver ? 'text-red-500 font-medium' : 'text-muted-foreground'
-          }
-        >
-          {size}KB / {limit}KB
-        </span>
-      </div>
-      <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-        <div
-          className={`h-full transition-all duration-500 ${
-            isOver
-              ? 'bg-red-500'
-              : percentage > 80
-              ? 'bg-yellow-500'
-              : 'bg-green-500'
-          }`}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
-  );
-};
+interface ResourceMetricCardProps {
+  title: string;
+  value: string;
+  status: 'good' | 'warning' | 'critical';
+  icon: string;
+  description: string;
+}
 
-const getMetricStatus = (
-  metric: string,
-  value: number
-): 'good' | 'warning' | 'critical' => {
-  // Simplified logic, should use PerformanceMonitoring budgets
-  if (metric === 'LCP')
-    return value > 4000 ? 'critical' : value > 2500 ? 'warning' : 'good';
-  if (metric === 'FID')
-    return value > 300 ? 'critical' : value > 100 ? 'warning' : 'good';
-  if (metric === 'CLS')
-    return value > 0.25 ? 'critical' : value > 0.1 ? 'warning' : 'good';
-  return 'good';
-};
+
 
 export default PerformanceMonitorDashboard;

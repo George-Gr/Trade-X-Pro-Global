@@ -1,11 +1,6 @@
 import { useToast } from '@/hooks/use-toast';
 import { performanceMonitoring } from '@/lib/performance/performanceMonitoring';
-import {
-  startTransition,
-  useDeferredValue,
-  useState,
-  useTransition,
-} from 'react';
+import { useDeferredValue, useState, useTransition } from 'react';
 
 /**
  * React 19 useTransition hooks for trading UI responsiveness
@@ -130,8 +125,12 @@ export function useTradingFormTransitions(
         );
 
         if (updateTime > 16) {
-          // Warn if update takes > 16ms (60fps threshold)
-          console.warn(`Slow form update: ${updateTime.toFixed(2)}ms`);
+          // Record slow update as performance metric
+          console.warn(
+            `Slow form update detected: ${updateTime.toFixed(
+              2
+            )}ms (threshold: 16ms)`
+          );
         }
       } catch (error) {
         const err =
@@ -147,30 +146,31 @@ export function useTradingFormTransitions(
    * Calculate risk metrics with useTransition
    * Non-blocking risk calculations during form updates
    */
-  const calculateRiskMetrics = async (updates: Partial<TradingFormState>) => {
+  const calculateRiskMetrics = (updates: Partial<TradingFormState>) => {
     const calculationStartTime = performance.now();
 
-    startRiskTransition(async () => {
+    startRiskTransition(() => {
       try {
-        // Simulate complex risk calculation (would be actual calculation in production)
         const newState = { ...formState, ...updates };
 
-        // Complex risk calculations would go here
-        // For demo purposes, using simplified calculations
+        // Guard against undefined price
+        const price = newState.price ?? 0;
+        if (price === 0) return;
+
         const marginRequired =
-          (newState.quantity * newState.price! * newState.leverage) / 100;
+          (newState.quantity * price * newState.leverage) / 100;
         const availableMargin = 10000; // Would come from user profile
         const marginLevel =
           availableMargin > 0 ? (availableMargin / marginRequired) * 100 : 0;
-        const riskAmount = newState.quantity * newState.price! * 0.02; // 2% risk example
+        const riskAmount = newState.quantity * price * 0.02; // 2% risk example
         const potentialPnL =
           newState.side === 'buy'
-            ? (newState.price! - newState.price! * 0.95) * newState.quantity // 5% potential gain
-            : (newState.price! * 1.05 - newState.price!) * newState.quantity; // 5% potential gain
+            ? (price - price * 0.95) * newState.quantity // 5% potential gain
+            : (price * 1.05 - price) * newState.quantity; // 5% potential gain
         const liquidationPrice =
           newState.side === 'buy'
-            ? newState.price! * (1 - 1 / newState.leverage)
-            : newState.price! * (1 + 1 / newState.leverage);
+            ? price * (1 - 1 / newState.leverage)
+            : price * (1 + 1 / newState.leverage);
         const riskPercentage = (riskAmount / availableMargin) * 100;
 
         const calculationTime = performance.now() - calculationStartTime;
@@ -202,13 +202,6 @@ export function useTradingFormTransitions(
             variant: 'destructive',
           });
         }
-
-        if (calculationTime > 100) {
-          // Warn if calculation takes > 100ms
-          console.warn(
-            `Slow risk calculation: ${calculationTime.toFixed(2)}ms`
-          );
-        }
       } catch (error) {
         const err =
           error instanceof Error
@@ -222,42 +215,47 @@ export function useTradingFormTransitions(
   /**
    * Optimized form submission with concurrent state management
    */
-  const submitOrder = async () => {
+  const submitOrder = () => {
     const submissionStartTime = performance.now();
 
+    // Validate form state
+    if (!formState.symbol || !formState.quantity || !formState.price) {
+      const err = new Error('Missing required form fields');
+      onError?.(err);
+      toast({
+        title: 'Order Failed',
+        description: err.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (showLoadingState) {
+      toast({
+        title: 'Processing Order',
+        description: 'Please wait while we process your order...',
+      });
+    }
+
+    // Start transition for non-blocking order submission
     startFormTransition(async () => {
       try {
-        // Validate form state
-        if (!formState.symbol || !formState.quantity || !formState.price) {
-          throw new Error('Missing required form fields');
-        }
+        // Simulate order submission process
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-        // Start transition for non-blocking order submission
-        startTransition(async () => {
-          // Simulate order submission process
-          await new Promise((resolve) => setTimeout(resolve, 100));
+        const submissionTime = performance.now() - submissionStartTime;
+        performanceMonitoring.recordCustomTiming(
+          'order-submission',
+          submissionStartTime,
+          submissionTime
+        );
 
-          const submissionTime = performance.now() - submissionStartTime;
-          performanceMonitoring.recordCustomTiming(
-            'order-submission',
-            submissionStartTime,
-            submissionTime
-          );
-
-          toast({
-            title: 'Order Submitted',
-            description: `${formState.side.toUpperCase()} ${
-              formState.quantity
-            } ${formState.symbol}`,
-          });
+        toast({
+          title: 'Order Submitted',
+          description: `${formState.side.toUpperCase()} ${formState.quantity} ${
+            formState.symbol
+          }`,
         });
-
-        if (showLoadingState) {
-          toast({
-            title: 'Processing Order',
-            description: 'Please wait while we process your order...',
-          });
-        }
       } catch (error) {
         const err =
           error instanceof Error ? error : new Error('Order submission failed');
@@ -332,13 +330,15 @@ export function usePositionTransitions() {
    */
   const updatePositions = (newPositions: TradingPosition[]) => {
     startPositionTransition(() => {
+      const updateStart = performance.now();
       setPositions(newPositions);
 
       // Track update performance
+      const updateEnd = performance.now();
       performanceMonitoring.recordCustomTiming(
         'position-update-concurrent',
-        performance.now(),
-        0
+        updateStart,
+        updateEnd - updateStart
       );
     });
   };
@@ -348,13 +348,15 @@ export function usePositionTransitions() {
    */
   const selectPosition = (positionId: string | null) => {
     startSelectionTransition(() => {
+      const selectionStart = performance.now();
       setSelectedPosition(positionId);
 
       // Track selection performance
+      const selectionEnd = performance.now();
       performanceMonitoring.recordCustomTiming(
         'position-selection',
-        performance.now(),
-        0
+        selectionStart,
+        selectionEnd - selectionStart
       );
     });
   };
@@ -410,13 +412,15 @@ export function useMarginMonitoring() {
    */
   const updateMarginData = (updates: Partial<MarginData>) => {
     startMarginTransition(() => {
+      const marginStart = performance.now();
       setMarginData((prev) => ({ ...prev, ...updates }));
 
       // Track margin update performance
+      const marginEnd = performance.now();
       performanceMonitoring.recordCustomTiming(
         'margin-update-concurrent',
-        performance.now(),
-        0
+        marginStart,
+        marginEnd - marginStart
       );
     });
   };

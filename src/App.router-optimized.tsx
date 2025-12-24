@@ -112,7 +112,14 @@ const MobileBottomNavigation = React.lazy(() =>
 );
 
 // Performance monitoring
-import { PerformanceMonitorDashboard } from './components/dashboard/PerformanceMonitorDashboard';
+// Performance monitoring - lazy loaded
+const PerformanceMonitorDashboard = React.lazy(() =>
+  import('./components/dashboard/PerformanceMonitorDashboard').then(
+    (module) => ({
+      default: module.PerformanceMonitorDashboard,
+    })
+  )
+);
 
 // Query client configuration optimized for trading platform
 const queryClient = new QueryClient({
@@ -135,14 +142,14 @@ const EnhancedRouteWrapper: React.FC<{
   children: React.ReactNode;
   path: string;
   requireAuth?: boolean;
-  requireKYC?: boolean;
   adminOnly?: boolean;
+  requireKYC?: boolean;
 }> = ({
   children,
   path,
   requireAuth = false,
-  requireKYC = false,
   adminOnly = false,
+  requireKYC = false,
 }) => {
   const location = useLocation();
   const { getRouteErrorBoundary, getRouteLoadingComponent } =
@@ -182,15 +189,32 @@ const ProgressiveLoadingWrapper: React.FC<{
   const [currentStage, setCurrentStage] = React.useState(0);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
+    let isMounted = true;
+
     const loadStage = (stageIndex: number) => {
-      if (stageIndex < stages.length) {
-        setCurrentStage(stageIndex);
-        setTimeout(() => loadStage(stageIndex + 1), 200);
+      if (!isMounted || stageIndex >= stages.length) {
+        return;
       }
+
+      setCurrentStage(stageIndex);
+      timeoutId = setTimeout(() => {
+        if (isMounted) {
+          loadStage(stageIndex + 1);
+        }
+      }, 200);
     };
 
     loadStage(0);
-  }, [stages]);
+
+    // Cleanup function to clear timeout and prevent memory leaks
+    return () => {
+      isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [stages.length]);
 
   if (currentStage < stages.length) {
     return (
@@ -203,27 +227,6 @@ const ProgressiveLoadingWrapper: React.FC<{
   }
 
   return <>{children}</>;
-};
-
-// Route groups for optimized loading strategies
-const routeGroups = {
-  // Critical trading routes - highest priority
-  trading: ['/dashboard', '/trade', '/portfolio', '/history'],
-
-  // Admin routes - high priority for admin users
-  admin: ['/admin', '/admin/risk', '/admin/performance'],
-
-  // Multi-step workflows - progressive loading
-  workflows: ['/kyc', '/register', '/settings', '/wallet'],
-
-  // Market data and analysis - medium priority
-  markets: ['/markets/*', '/education/*', '/trading/*'],
-
-  // Static content - low priority
-  static: ['/company/*', '/legal/*'],
-
-  // Development and testing - low priority
-  dev: ['/dev/*'],
 };
 
 // Main App component with enhanced routing

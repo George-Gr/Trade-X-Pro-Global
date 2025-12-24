@@ -14,7 +14,7 @@ import * as React from 'react';
 interface MarginLevelCardProps {
   loading?: boolean;
   marginLevel?: number;
-  trend?: number[];
+  trend?: number[] | undefined;
 }
 
 /**
@@ -88,7 +88,7 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
 
   if (loading) {
     return (
-      <Card elevation="1" className="min-h-[200px] p-6">
+      <Card elevation="1" className="min-h-50 p-6">
         <CardHeader className="space-y-2">
           <Skeleton variant="heading" className="w-3/4" />
           <Skeleton variant="text" className="w-1/2" />
@@ -108,7 +108,7 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
 
   if (!trend || trend.length === 0) {
     return (
-      <Card elevation="1" className="min-h-[200px] p-6">
+      <Card elevation="1" className="min-h-50 p-6">
         <CardHeader>
           <CardTitle className="typography-h4 text-primary-contrast">
             Margin Level
@@ -128,7 +128,7 @@ export const MarginLevelCard: React.FC<MarginLevelCardProps> = ({
   }
 
   return (
-    <Card elevation="1" className="min-h-[200px] p-6">
+    <Card elevation="1" className="min-h-50 p-6">
       <CardHeader>
         <CardTitle className="typography-h4 text-primary-contrast">
           Margin Level

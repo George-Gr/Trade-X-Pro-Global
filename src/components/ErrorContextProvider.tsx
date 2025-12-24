@@ -1,6 +1,7 @@
-import { useCallback, ReactNode } from 'react';
-import { logger, LogContext } from '@/lib/logger';
 import { ErrorContext, ErrorContextType } from '@/contexts/ErrorContext';
+import { LogContext, logger } from '@/lib/logger';
+import type { ReactElement } from 'react';
+import { ReactNode, useCallback } from 'react';
 
 /**
  * Provider component for error tracking context
@@ -15,7 +16,7 @@ import { ErrorContext, ErrorContextType } from '@/contexts/ErrorContext';
  */
 export function ErrorContextProvider({
   children,
-}: { children?: ReactNode } = {}): JSX.Element {
+}: { children?: ReactNode } = {}): ReactElement {
   const setContext = useCallback((context: Partial<LogContext>) => {
     logger.setGlobalContext(context);
   }, []);

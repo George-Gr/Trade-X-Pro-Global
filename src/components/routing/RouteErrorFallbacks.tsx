@@ -15,16 +15,16 @@ import { useNavigate } from 'react-router-dom';
 // Error fallback component props
 interface ErrorFallbackProps {
   error: Error | null;
-  errorInfo: React.ErrorInfo | null;
   onRetry: () => void;
-  routeName: string;
 }
 
-// Trading-specific error fallback
+/**
+ * TradingErrorFallback component - Displays error details and provides retry/navigation for trading interface errors
+ * @param props - ErrorFallbackProps containing error object and onRetry callback
+ */
 export const TradingErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   onRetry,
-  routeName,
 }) => {
   const navigate = useNavigate();
 
@@ -50,11 +50,20 @@ export const TradingErrorFallback: React.FC<ErrorFallbackProps> = ({
 
           {error && (
             <details className="text-sm">
-              <summary className="cursor-pointer text-muted-foreground">
-                Error Details
+              <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
+                Show Details
               </summary>
-              <div className="mt-2 p-2 bg-muted rounded text-xs font-mono">
-                {error.message}
+              <div className="mt-2 space-y-2">
+                <div className="p-3 bg-muted rounded text-xs font-mono border border-border/50">
+                  <div className="font-semibold text-red-700 mb-1 text-[10px] uppercase tracking-wide">Message:</div>
+                  <div className="text-foreground leading-relaxed">{error.message}</div>
+                </div>
+                {error.stack && (
+                  <div className="p-3 bg-muted rounded text-xs font-mono border border-border/50">
+                    <div className="font-semibold text-red-700 mb-1 text-[10px] uppercase tracking-wide">Stack Trace:</div>
+                    <pre className="text-foreground whitespace-pre-wrap overflow-x-auto max-h-32 overflow-y-auto leading-relaxed text-[10px]">{error.stack}</pre>
+                  </div>
+                )}
               </div>
             </details>
           )}
@@ -79,11 +88,13 @@ export const TradingErrorFallback: React.FC<ErrorFallbackProps> = ({
   );
 };
 
-// Portfolio-specific error fallback
+/**
+ * PortfolioErrorFallback component - Displays error details and provides retry/navigation for portfolio data errors
+ * @param props - ErrorFallbackProps containing error object and onRetry callback
+ */
 export const PortfolioErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   onRetry,
-  routeName,
 }) => {
   const navigate = useNavigate();
 
@@ -107,6 +118,26 @@ export const PortfolioErrorFallback: React.FC<ErrorFallbackProps> = ({
             </AlertDescription>
           </Alert>
 
+          {error && (
+            <details className="text-sm">
+              <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
+                Show Details
+              </summary>
+              <div className="mt-2 space-y-2">
+                <div className="p-3 bg-muted rounded text-xs font-mono border border-border/50">
+                  <div className="font-semibold text-red-700 mb-1 text-[10px] uppercase tracking-wide">Message:</div>
+                  <div className="text-foreground leading-relaxed">{error.message}</div>
+                </div>
+                {error.stack && (
+                  <div className="p-3 bg-muted rounded text-xs font-mono border border-border/50">
+                    <div className="font-semibold text-red-700 mb-1 text-[10px] uppercase tracking-wide">Stack Trace:</div>
+                    <pre className="text-foreground whitespace-pre-wrap overflow-x-auto max-h-32 overflow-y-auto leading-relaxed text-[10px]">{error.stack}</pre>
+                  </div>
+                )}
+              </div>
+            </details>
+          )}
+
           <div className="flex gap-2">
             <Button onClick={onRetry} className="flex-1">
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -127,11 +158,13 @@ export const PortfolioErrorFallback: React.FC<ErrorFallbackProps> = ({
   );
 };
 
-// KYC-specific error fallback
+/**
+ * KYCErrorFallback component - Displays error details and provides retry/navigation for KYC verification errors
+ * @param props - ErrorFallbackProps containing error object and onRetry callback
+ */
 export const KYCErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   onRetry,
-  routeName,
 }) => {
   const navigate = useNavigate();
 
@@ -175,11 +208,13 @@ export const KYCErrorFallback: React.FC<ErrorFallbackProps> = ({
   );
 };
 
-// Admin-specific error fallback
+/**
+ * AdminErrorFallback component - Displays error details and provides retry/navigation for admin interface errors
+ * @param props - ErrorFallbackProps containing error object and onRetry callback
+ */
 export const AdminErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   onRetry,
-  routeName,
 }) => {
   const navigate = useNavigate();
 
@@ -221,11 +256,13 @@ export const AdminErrorFallback: React.FC<ErrorFallbackProps> = ({
   );
 };
 
-// Dashboard-specific error fallback
+/**
+ * DashboardErrorFallback component - Displays error details and provides retry/navigation for dashboard errors
+ * @param props - ErrorFallbackProps containing error object and onRetry callback
+ */
 export const DashboardErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   onRetry,
-  routeName,
 }) => {
   const navigate = useNavigate();
 

@@ -7,8 +7,11 @@ import {
   TradingPageLoading,
 } from './RouteLoadingComponents';
 
-// Route-specific loading fallback constants
-export const routeLoadingFallbacks = {
+/**
+ * Route-specific loading fallback constants
+ * Maps route paths to their corresponding loading components for progressive loading
+ */
+export const ROUTE_LOADING_FALLBACKS = {
   '/dashboard': DashboardPageLoading,
   '/trade': TradingPageLoading,
   '/portfolio': PortfolioPageLoading,
@@ -20,4 +23,8 @@ export const routeLoadingFallbacks = {
   default: DefaultRouteLoading,
 } as const;
 
-export type RouteLoadingFallbacks = typeof routeLoadingFallbacks;
+/**
+ * Type definition for route loading fallbacks
+ * Represents the shape of the ROUTE_LOADING_FALLBACKS constant
+ */
+export type RouteLoadingFallbacks = typeof ROUTE_LOADING_FALLBACKS;

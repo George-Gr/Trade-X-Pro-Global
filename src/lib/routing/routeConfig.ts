@@ -1,19 +1,39 @@
-import { performanceMonitoring } from '../performance/performanceMonitoring';
+import { performanceMonitoring } from '@/lib/performance/performanceMonitoring';
+import { logger } from '../logger';
+
+import type React from 'react';
 
 // Generic component type to replace 'any'
 export type GenericComponent = React.ComponentType<Record<string, unknown>>;
 
+// Placeholder component for missing routes
+export const PlaceholderComponent: GenericComponent = () => null;
+
 // Route-based code splitting configuration
+/**
+ * Configuration interface for route-based code splitting and lazy loading.
+ * Defines properties for route paths, components, preload strategies, and performance optimization.
+ */
 export interface RouteConfig {
+  /** Route path pattern or exact match string */
   path: string;
+  /** Dynamic import function that returns a Promise resolving to the route component */
   component: () => Promise<GenericComponent>;
+  /** Whether to preload this route (default: false) */
   preload?: boolean;
+  /** Route loading priority level (default: 'normal') */
   priority?: 'critical' | 'high' | 'normal' | 'low';
+  /** Error boundary component name for this route */
   errorBoundary?: string;
+  /** Loading component name to show while route loads */
   loadingComponent?: string;
+  /** Route loading timeout in milliseconds (default: 10000ms) */
   timeout?: number;
+  /** Delay before preloading in milliseconds (default: 100ms) */
   preloadDelay?: number;
+  /** Bundle chunk names for code splitting optimization */
   chunks?: string[];
+  /** Route dependencies that should be loaded first */
   dependencies?: string[];
 }
 
@@ -52,7 +72,11 @@ export class RoutePerformanceTracker {
       this.routeTimings.delete(routeId);
     }
 
-    console.error(`Route loading error for ${routeId}:`, error);
+    logger.error(`Route loading failed for ${routeId}`, error, {
+      action: 'route_loading',
+      component: `RoutePerformanceTracker-${routeId}`,
+      timestamp: new Date().toISOString(),
+    });
   }
 }
 
@@ -143,7 +167,7 @@ export const routeChunks = {
 export function createRouteConfig(config: Partial<RouteConfig>): RouteConfig {
   return {
     path: '',
-    component: () => Promise.resolve({} as GenericComponent),
+    component: () => Promise.resolve(PlaceholderComponent),
     priority: 'normal',
     timeout: 10000,
     preloadDelay: 100,
@@ -155,7 +179,7 @@ export function createRouteConfig(config: Partial<RouteConfig>): RouteConfig {
 
 // Route preloader utility
 export class RoutePreloader {
-  private static preloadedRoutes = new Set<string>();
+  private static preloadedRoutes = new Map<string, GenericComponent>();
   private static preloadPromises = new Map<string, Promise<GenericComponent>>();
 
   static preload(
@@ -163,7 +187,7 @@ export class RoutePreloader {
     importFn: () => Promise<GenericComponent>
   ): Promise<GenericComponent> {
     if (this.preloadedRoutes.has(routeId)) {
-      return Promise.resolve({} as GenericComponent);
+      return Promise.resolve(this.preloadedRoutes.get(routeId)!);
     }
 
     if (this.preloadPromises.has(routeId)) {
@@ -172,7 +196,7 @@ export class RoutePreloader {
 
     const preloadPromise = importFn()
       .then((module: GenericComponent) => {
-        this.preloadedRoutes.add(routeId);
+        this.preloadedRoutes.set(routeId, module);
         this.preloadPromises.delete(routeId);
         return module;
       })

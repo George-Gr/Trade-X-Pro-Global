@@ -10,6 +10,148 @@ import { defineConfig } from 'vite';
 // Async local storage for per-request nonce tracking
 const asyncLocalStorage = new AsyncLocalStorage<{ nonce: string }>();
 
+// Bundle size budgets for monitoring and alerts (in bytes)
+export const BUDGETS = {
+  'vendor-react-core': 150 * 1024,       // 150KB for React core
+  'vendor-charts-lightweight': 300 * 1024, // 300KB for Charts (reduced)
+  'vendor-state-query': 80 * 1024,       // 80KB for TanStack Query (reduced)
+  'vendor-ui-radix': 150 * 1024,         // 150KB for UI components (reduced)
+  'vendor-database-supabase': 120 * 1024, // 120KB for Supabase (new)
+  'vendor-icons-lucide': 50 * 1024,      // 50KB for icons (new)
+  'vendor-forms-hook': 40 * 1024,       // 40KB for forms (new)
+  'vendor-utils-date': 30 * 1024,        // 30KB for date utils (new)
+  'vendor-animation-framer': 100 * 1024, // 100KB for animations (new)
+  'vendor-notifications-sonner': 20 * 1024, // 20KB for notifications (new)
+  'index': 250 * 1024,                   // 250KB for main entry (reduced)
+  'total': 2 * 1024 * 1024,              // 2MB total bundle budget
+};
+
+/**
+ * Generate bundle size data from Vite bundle output
+ */
+function generateBundleSizesData(bundle: any) {
+  const sizes: Record<string, number> = {};
+  const chunkGroups: Record<string, number> = {};
+  
+  Object.keys(bundle).forEach(fileName => {
+    const chunk = bundle[fileName];
+    let byteLength = 0;
+    
+    if (chunk.type === 'chunk') {
+      const code = chunk.code || '';
+      byteLength = Buffer.byteLength(code, 'utf8');
+      
+      // Group sizes by chunk name prefix
+      const chunkName = chunk.name || 'unknown';
+      chunkGroups[chunkName] = (chunkGroups[chunkName] || 0) + byteLength;
+      
+    } else if (chunk.type === 'asset') {
+      const source = chunk.source;
+      
+      if (typeof source === 'string') {
+        byteLength = Buffer.byteLength(source, 'utf8');
+      } else if (source instanceof Buffer) {
+        byteLength = source.length;
+      } else if (source instanceof Uint8Array) {
+        byteLength = source.byteLength;
+      } else if (ArrayBuffer.isView(source)) {
+        byteLength = source.byteLength;
+      } else if (source instanceof ArrayBuffer) {
+        byteLength = source.byteLength;
+      } else {
+        try {
+          byteLength = Buffer.from(source).length;
+        } catch {
+          byteLength = 0;
+        }
+      }
+    }
+    
+    sizes[fileName] = byteLength;
+  });
+  
+  // Convert to KB and map to dashboard categories
+  const dashboardBundles = [
+    {
+      name: 'React Core',
+      size: Math.round((chunkGroups['vendor-react-core'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-react-core'] / 1024),
+      group: 'vendor-react-core'
+    },
+    {
+      name: 'Charts',
+      size: Math.round((chunkGroups['vendor-charts-lightweight'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-charts-lightweight'] / 1024),
+      group: 'vendor-charts-lightweight'
+    },
+    {
+      name: 'TanStack Query',
+      size: Math.round((chunkGroups['vendor-state-query'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-state-query'] / 1024),
+      group: 'vendor-state-query'
+    },
+    {
+      name: 'UI Libs',
+      size: Math.round((chunkGroups['vendor-ui-radix'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-ui-radix'] / 1024),
+      group: 'vendor-ui-radix'
+    },
+    {
+      name: 'Supabase',
+      size: Math.round((chunkGroups['vendor-database-supabase'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-database-supabase'] / 1024),
+      group: 'vendor-database-supabase'
+    },
+    {
+      name: 'Icons',
+      size: Math.round((chunkGroups['vendor-icons-lucide'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-icons-lucide'] / 1024),
+      group: 'vendor-icons-lucide'
+    },
+    {
+      name: 'Forms',
+      size: Math.round((chunkGroups['vendor-forms-hook'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-forms-hook'] / 1024),
+      group: 'vendor-forms-hook'
+    },
+    {
+      name: 'Date Utils',
+      size: Math.round((chunkGroups['vendor-utils-date'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-utils-date'] / 1024),
+      group: 'vendor-utils-date'
+    },
+    {
+      name: 'Animations',
+      size: Math.round((chunkGroups['vendor-animation-framer'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-animation-framer'] / 1024),
+      group: 'vendor-animation-framer'
+    },
+    {
+      name: 'Notifications',
+      size: Math.round((chunkGroups['vendor-notifications-sonner'] || 0) / 1024),
+      limit: Math.round(BUDGETS['vendor-notifications-sonner'] / 1024),
+      group: 'vendor-notifications-sonner'
+    },
+    {
+      name: 'Main Entry',
+      size: Math.round((chunkGroups['index'] || 0) / 1024),
+      limit: Math.round(BUDGETS['index'] / 1024),
+      group: 'index'
+    }
+  ];
+  
+  return {
+    bundles: dashboardBundles,
+    metadata: {
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      source: 'build-artifacts',
+      totalSize: dashboardBundles.reduce((sum, bundle) => sum + bundle.size, 0),
+      totalLimit: dashboardBundles.reduce((sum, bundle) => sum + bundle.limit, 0)
+    }
+  };
+}
+
 // CORS middleware for development - handles cross-origin requests securely
 const corsMiddleware = (): Plugin => ({
   name: 'cors-middleware',
@@ -172,16 +314,7 @@ export default defineConfig(() => ({
     },
   },
   plugins: [
-    react({
-      // Enable React 19 features
-      babel: {
-        plugins: [
-          // React 19 concurrent features
-          ['@babel/plugin-syntax-explicit-resource-management'],
-          ['@babel/plugin-transform-react-jsx-development'],
-        ],
-      },
-    }),
+    react(),
     corsMiddleware(),
     cspNonceMiddleware(),
     componentTaggerPlugin,
@@ -193,14 +326,7 @@ export default defineConfig(() => ({
           const sizes: Record<string, number> = {};
           const chunkGroups: Record<string, number> = {};
           
-          // Define budgets for specific chunk groups (in bytes)
-          const BUDGETS = {
-            'vendor-react-core': 150 * 1024,       // 150KB for React core
-            'vendor-charts-lightweight': 500 * 1024, // 500KB for Charts
-            'vendor-state-query': 100 * 1024,      // 100KB for TanStack Query
-            'vendor-ui-radix': 200 * 1024,         // 200KB for UI components
-            'index': 300 * 1024,                   // 300KB for main entry
-          };
+          // Use hoisted BUDGETS constant for chunk group monitoring
           
           Object.keys(bundle).forEach(fileName => {
             const chunk = bundle[fileName];
@@ -271,11 +397,13 @@ export default defineConfig(() => ({
           // Check total size budget
           const mainBundle = Object.values(sizes).reduce((acc, size) => acc + size, 0);
           const mainBundleMB = mainBundle / (1024 * 1024);
+          const totalBudgetMB = (BUDGETS.total || 2 * 1024 * 1024) / (1024 * 1024);
           
-          if (mainBundleMB > 2) {
-            console.warn(`\n⚠️  Total Bundle: ${mainBundleMB.toFixed(2)}MB exceeds 2MB budget`);
+          if (mainBundleMB > totalBudgetMB) {
+            console.warn(`\n⚠️  Total Bundle: ${mainBundleMB.toFixed(2)}MB exceeds ${totalBudgetMB}MB budget`);
+            hasBudgetViolations = true;
           } else {
-            console.log(`\n✅ Total Bundle: ${mainBundleMB.toFixed(2)}MB (within 2MB budget)`);
+            console.log(`\n✅ Total Bundle: ${mainBundleMB.toFixed(2)}MB (within ${totalBudgetMB}MB budget)`);
           }
         }
       },
@@ -289,6 +417,7 @@ export default defineConfig(() => ({
         brotliSize: true,
         template: 'treemap', // treemap, sunburst, or network
       }),
+
     // Sentry source map upload plugin (production only)
     process.env.NODE_ENV === 'production'
       ? sentryVitePlugin({
@@ -373,14 +502,14 @@ export default defineConfig(() => ({
     ],
   },
   build: {
-    // Reduced from 600 to 400 - encourages better code splitting
-    chunkSizeWarningLimit: 400,
+    // Aggressive chunk size limits to enforce code splitting
+    chunkSizeWarningLimit: 250,
 
     // Limit the number of parallel requests during runtime
-    chunkLimit: 10,
+    chunkLimit: 15,
 
-    // Optimize chunk size
-    chunkSize: 500,
+    // Optimize chunk size for better caching
+    chunkSize: 200,
 
     // Fix CommonJS modules like hoist-non-react-statics
     commonjsOptions: {
@@ -435,6 +564,13 @@ export default defineConfig(() => ({
             // Monitoring and analytics
             if (id.includes('@sentry')) return 'vendor-monitoring-sentry';
             if (id.includes('web-vitals')) return 'vendor-monitoring-vitals';
+            
+            // Heavy libraries that should be lazy-loaded
+            if (id.includes('react-window')) return 'vendor-virtualization';
+            if (id.includes('embla-carousel')) return 'vendor-carousel';
+            if (id.includes('intro.js')) return 'vendor-onboarding';
+            if (id.includes('yup')) return 'vendor-forms-yup';
+            if (id.includes('tweetnacl')) return 'vendor-crypto';
           }
           return undefined;
         },

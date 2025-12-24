@@ -15,7 +15,7 @@ interface SkeletonLoaderProps {
   variant?: 'default' | 'portfolio' | 'positions' | 'charts' | 'orders';
 }
 
-// Type definitions for data fetchingmn n  
+// Type definitions for data fetching
 interface PortfolioData {
   portfolio: string;
 }
@@ -172,6 +172,56 @@ const TradingErrorFallback: React.FC<ErrorFallbackProps> = ({
   </div>
 );
 
+// ErrorBoundary component to catch render errors and invoke onError callback
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  onError?: ((error: Error) => void) | undefined;
+  fallback?: React.ComponentType<ErrorFallbackProps>;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    // Update state so the next render will show the fallback UI
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Log error details for debugging
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+
+    // Call the onError callback if provided
+    if (this.props.onError) {
+      this.props.onError(error);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      const fallback = this.props.fallback || TradingErrorFallback;
+      return React.createElement(fallback, {
+        error: this.state.error as Error,
+        resetErrorBoundary: () =>
+          this.setState({ hasError: false, error: null }),
+      });
+    }
+
+    return this.props.children;
+  }
+}
+
 // High-priority Suspense boundary for critical trading data
 export const CriticalTradingSuspense: React.FC<{
   children: React.ReactNode;
@@ -179,25 +229,26 @@ export const CriticalTradingSuspense: React.FC<{
   onError?: (error: Error) => void;
 }> = ({ children, fallback: Fallback, onError }) => {
   return (
-    <Suspense
-      fallback={
-        Fallback ? (
-          React.createElement(Fallback)
-        ) : (
-          <div className="flex items-center justify-center p-8">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-              <p className="text-sm text-gray-600">Loading trading data...</p>
+    <ErrorBoundary onError={onError}>
+      <Suspense
+        fallback={
+          Fallback ? (
+            React.createElement(Fallback)
+          ) : (
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                <p className="text-sm text-gray-600">Loading trading data...</p>
+              </div>
             </div>
-          </div>
-        )
-      }
-    >
-      {children}
-    </Suspense>
+          )
+        }
+      >
+        {children}
+      </Suspense>
+    </ErrorBoundary>
   );
 };
-
 // Mock components for demonstration (would be actual components in production)
 const MockComponent: React.FC = () => <div>Component loaded successfully</div>;
 
@@ -316,21 +367,38 @@ export class SuspensePrefetcher {
 // Internal hook for managing Suspense boundaries
 function useSuspenseBoundary() {
   const [isPending, setIsPending] = React.useState(false);
-
+  
   const withSuspense = <T extends ComponentType<unknown>>(
     Component: T,
     fallback?: React.ComponentType<unknown>
   ): ComponentType<unknown> => {
-    const WrappedComponent = (props: unknown) => (
-      <Suspense
-        fallback={
-          fallback ? React.createElement(fallback) : <TradingSkeletonLoader />
-        }
-      >
-        {/* @ts-expect-error - Dynamic component props */}
-        <Component {...props} />
-      </Suspense>
-    );
+    const WrappedComponent = (props: unknown) => {
+      const [isComponentPending, setIsComponentPending] = React.useState(false);
+      
+      React.useEffect(() => {
+        setIsComponentPending(true);
+        setIsPending(true);
+        
+        // Simulate async component loading
+        const timer = setTimeout(() => {
+          setIsComponentPending(false);
+          setIsPending(false);
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      }, []);
+      
+      return (
+        <Suspense
+          fallback={
+            fallback ? React.createElement(fallback) : <TradingSkeletonLoader />
+          }
+        >
+          {/* @ts-expect-error - Dynamic component props */}
+          <Component {...props} />
+        </Suspense>
+      );
+    };
 
     return WrappedComponent as ComponentType<unknown>;
   };

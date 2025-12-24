@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { performanceMonitoring } from '@/lib/performance/performanceMonitoring';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -5,6 +6,23 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * React 19 Automatic Batching for Risk Calculations
  * Optimized for high-frequency risk management updates with automatic batching
  */
+
+/**
+ * Utility function to convert severity level to numeric value
+ * Used for comparing severity levels in margin call monitoring
+ */
+export function getSeverityLevel(severity: 'low' | 'medium' | 'high'): number {
+  switch (severity) {
+    case 'low':
+      return 1;
+    case 'medium':
+      return 2;
+    case 'high':
+      return 3;
+    default:
+      return 0;
+  }
+}
 
 export interface RiskCalculationInput {
   position: {
@@ -54,12 +72,22 @@ export interface RiskMetrics {
   optimalSize: number;
 }
 
+/**
+ * Represents a risk alert generated during risk calculations
+ * Used for notifying users about potential risk conditions in trading positions
+ */
 export interface RiskAlert {
+  /** Alert severity level - determines how the alert should be displayed and prioritized */
   type: 'warning' | 'critical' | 'info';
+  /** The metric being monitored (e.g., 'margin_level', 'risk_percentage', 'value_at_risk') */
   metric: string;
+  /** Current value of the metric being monitored */
   value: number;
+  /** Threshold value that triggered this alert */
   threshold: number;
+  /** Human-readable message describing the alert condition */
   message: string;
+  /** Timestamp in epoch milliseconds when the alert was generated */
   timestamp: number;
 }
 
@@ -185,19 +213,17 @@ export function useRiskCalculationsBatched(
     if (pendingUpdatesRef.current.size === 0) return;
 
     const calculationStart = performance.now();
-    setState((prev) => ({
-      ...prev,
-      isCalculating: true,
-      batchSize: pendingUpdatesRef.current.size,
-    }));
+    let calculationTime = 0;
 
-    try {
-      // Process all pending updates in a single batch
-      const newCalculations = new Map(state.calculations);
-      const newAlerts: RiskAlert[] = [...state.alerts];
-      const batchResults: Array<{ symbol: string; metrics: RiskMetrics }> = [];
+    setState((prev) => {
+      const calculationStartTime = performance.now();
+      let batchResults: Array<{ symbol: string; metrics: RiskMetrics }> = [];
 
-      // Process each calculation
+      // Create new calculations from current state to avoid stale closure
+      const newCalculations = new Map(prev.calculations);
+      const newAlerts: RiskAlert[] = [...prev.alerts];
+
+      // Process each calculation using the current state
       pendingUpdatesRef.current.forEach((input, symbol) => {
         const metrics = calculateRiskMetrics(input);
         newCalculations.set(symbol, metrics);
@@ -211,17 +237,87 @@ export function useRiskCalculationsBatched(
       // Clear pending updates
       pendingUpdatesRef.current.clear();
 
-      const calculationTime = performance.now() - calculationStart;
+      calculationTime = performance.now() - calculationStartTime;
 
       // Track performance
       performanceMonitoring.recordCustomTiming(
         'risk-calculation-batch',
-        calculationStart,
+        calculationStartTime,
         calculationTime
       );
 
-      // Update state with automatic batching
-      setState((prev) => ({
+      // Record performance metrics via structured logger
+      logger.recordMetric(
+        'risk_calculation_batch_time',
+        calculationTime,
+        'ms',
+        {
+          operation: 'batch_risk_calculation',
+          batchSize: batchResults.length,
+          calculationTime,
+          symbolsProcessed: batchResults.map((r) => r.symbol),
+        }
+      );
+
+      logger.recordMetric(
+        'risk_calculation_batch_size',
+        batchResults.length,
+        'count',
+        {
+          operation: 'batch_risk_calculation',
+          batchSize: batchResults.length,
+          calculationTime,
+        }
+      );
+
+      // Log slow batches after processing
+      setTimeout(() => {
+        if (calculationTime > 100) {
+          logger.warn('Slow risk calculation batch detected', {
+            component: 'useRiskCalculationsBatched',
+            action: 'slow_batch_processing',
+            metadata: {
+              calculationTime,
+              batchResultsLength: batchResults.length,
+              operation: 'batch_risk_calculation',
+              symbolsProcessed: batchResults.map((r) => r.symbol),
+              threshold: 100,
+              performanceImpact: 'high',
+            },
+          });
+
+          logger.logRiskEvent('slow_batch_calculation', 'medium', {
+            calculationTime,
+            batchSize: batchResults.length,
+            operation: 'batch_risk_calculation',
+            threshold: 100,
+          });
+        }
+
+        if (calculationTime > 500) {
+          logger.error(
+            'Critical slow risk calculation batch detected',
+            new Error(
+              `Risk calculation batch took ${calculationTime.toFixed(2)}ms`
+            ),
+            {
+              component: 'useRiskCalculationsBatched',
+              action: 'critical_slow_batch_processing',
+              metadata: {
+                calculationTime,
+                batchResultsLength: batchResults.length,
+                operation: 'batch_risk_calculation',
+                symbolsProcessed: batchResults.map((r) => r.symbol),
+                threshold: 500,
+                performanceImpact: 'critical',
+              },
+            }
+          );
+        }
+      }, 0);
+
+      // Return updated state
+      return {
         ...prev,
         calculations: newCalculations,
         alerts: newAlerts.slice(-50), // Keep last 50 alerts
@@ -229,21 +325,9 @@ export function useRiskCalculationsBatched(
         isCalculating: false,
         batchSize: 0,
         pendingUpdates: 0,
-      }));
-
-      // Log performance warnings for slow calculations
-      if (calculationTime > 100) {
-        console.warn(
-          `Slow risk calculation batch: ${calculationTime.toFixed(2)}ms for ${
-            batchResults.length
-          } positions`
-        );
-      }
-    } catch (error) {
-      console.error('Error in batched risk calculations:', error);
-      setState((prev) => ({ ...prev, isCalculating: false }));
-    }
-  }, [state.calculations, state.alerts, calculateRiskMetrics]);
+      };
+    });
+  }, [calculateRiskMetrics]);
 
   /**
    * Queue risk calculation for batching
@@ -460,19 +544,6 @@ export function useMarginCallMonitoring() {
       return prev;
     });
   }, []);
-
-  const getSeverityLevel = (severity: 'low' | 'medium' | 'high'): number => {
-    switch (severity) {
-      case 'low':
-        return 1;
-      case 'medium':
-        return 2;
-      case 'high':
-        return 3;
-      default:
-        return 0;
-    }
-  };
 
   /**
    * Clear resolved margin calls

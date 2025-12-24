@@ -334,6 +334,180 @@
     --sidebar-width: 17rem;
     --sidebar-width-icon: 4.5rem;
   }
+
+  /* Dark mode theme overrides */
+  .dark {
+    /* === DARK MODE - Neo-Digital Premium === */
+    --background: 225 25% 8%;
+    --background-surface: 225 20% 12%;
+    --background-elevated: 225 18% 15%;
+    --foreground: 220 15% 95%;
+    --foreground-secondary: 220 10% 80%;
+    --foreground-tertiary: 220 8% 70%;
+    --foreground-muted: 220 6% 65%;
+
+    --card: 225 20% 12%;
+    --card-foreground: 220 15% 95%;
+
+    --popover: 225 20% 12%;
+    --popover-foreground: 220 15% 95%;
+
+    /* Primary - Electric Violet (adjusted for dark) */
+    --primary: 258 90% 66%;
+    --primary-foreground: 220 15% 95%;
+    --primary-glow: 258 90% 76%;
+
+    /* Secondary - Cyan Blue (adjusted for dark) */
+    --secondary: 195 100% 65%;
+    --secondary-foreground: 220 15% 95%;
+
+    /* Gold/Accent - Warm Amber (adjusted for dark) */
+    --gold: 38 100% 45%;
+    --gold-hover: 38 100% 40%;
+    --gold-foreground: 0 0% 100%;
+
+    --muted: 225 15% 18%;
+    --muted-foreground: 220 8% 65%;
+    --placeholder-foreground: 220 6% 55%;
+
+    /* Success - Emerald (adjusted for dark) */
+    --success: 158 72% 55%;
+    --success-foreground: 0 0% 100%;
+    --accent: 158 72% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Warning - Amber (adjusted for dark) */
+    --warning: 38 92% 60%;
+    --warning-foreground: 220 15% 95%;
+
+    /* Danger - Rose Red (adjusted for dark) */
+    --destructive: 350 85% 68%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders - Subtle with hint of primary (adjusted for dark) */
+    --border: 225 15% 25%;
+    --border-subtle: 225 12% 30%;
+    --border-glow: 258 90% 66%;
+    --input: 225 15% 25%;
+    --ring: 258 90% 66%;
+
+    /* Focus ring colors - WCAG AA compliant for dark */
+    --focus-color: 258 90% 66%;
+
+    /* High-contrast variants for accessibility (dark mode) */
+    --gold-contrast: 38 100% 35%;
+    --text-high-contrast: 220 15% 95%;
+    --focus-ring-color: 258 90% 66%;
+
+    /* Sidebar colors (dark mode) */
+    --sidebar: 225 20% 12%;
+    --sidebar-foreground: 220 15% 95%;
+    --sidebar-primary: 258 90% 66%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 225 15% 18%;
+    --sidebar-accent-foreground: 220 15% 95%;
+    --sidebar-border: 225 15% 25%;
+    --sidebar-ring: 258 90% 66%;
+
+    /* Trading specific colors (dark mode) */
+    --buy: 158 72% 55%;
+    --buy-hover: 158 72% 60%;
+    --buy-foreground: 0 0% 100%;
+
+    --sell: 350 85% 68%;
+    --sell-hover: 350 85% 72%;
+    --sell-foreground: 0 0% 100%;
+
+    --profit: 158 72% 55%;
+    --loss: 350 85% 68%;
+
+    --panel-bg: 225 20% 12%;
+    --panel-border: 225 15% 25%;
+
+    /* Status indicator colors (dark mode) */
+    --status-safe: 158 72% 25%;
+    --status-safe-foreground: 158 72% 85%;
+    --status-safe-border: 158 72% 45%;
+
+    --status-warning: 38 92% 25%;
+    --status-warning-foreground: 38 92% 85%;
+    --status-warning-border: 38 92% 45%;
+
+    --status-critical: 16 92% 25%;
+    --status-critical-foreground: 16 92% 85%;
+    --status-critical-border: 16 92% 45%;
+
+    --status-error: 350 85% 25%;
+    --status-error-foreground: 350 85% 85%;
+    --status-error-border: 350 85% 45%;
+
+    --status-info: 195 100% 25%;
+    --status-info-foreground: 195 100% 85%;
+    --status-info-border: 195 100% 45%;
+
+    --status-neutral: 225 6% 25%;
+    --status-neutral-foreground: 225 8% 85%;
+    --status-neutral-border: 225 8% 45%;
+
+    /* Price change indicators (dark mode) */
+    --price-up: 158 72% 55%;
+    --price-down: 350 85% 68%;
+    --price-neutral: 220 8% 65%;
+
+    /* Chart colors (dark mode) */
+    --chart-grid: 225 15% 25%;
+    --chart-line: 258 90% 66%;
+
+    /* Elevation system (dark mode shadows) */
+    --shadow-xs: 0 1px 2px hsl(220 15% 95% / 0.04);
+    --shadow-sm: 0 2px 4px hsl(220 15% 95% / 0.06),
+      0 1px 2px hsl(220 15% 95% / 0.04);
+    --shadow-md: 0 4px 8px hsl(220 15% 95% / 0.08),
+      0 2px 4px hsl(220 15% 95% / 0.04);
+    --shadow-lg: 0 12px 24px hsl(220 15% 95% / 0.1),
+      0 4px 8px hsl(220 15% 95% / 0.06);
+    --shadow-xl: 0 24px 48px hsl(220 15% 95% / 0.12),
+      0 8px 16px hsl(220 15% 95% / 0.06);
+    --shadow-2xl: 0 32px 64px hsl(220 15% 95% / 0.16);
+    --shadow-glow: 0 0 24px hsl(258 90% 66% / 0.35),
+      0 4px 16px hsl(220 15% 95% / 0.15);
+    --shadow-glow-sm: 0 0 12px hsl(258 90% 66% / 0.25);
+    --shadow-glow-lg: 0 0 48px hsl(258 90% 66% / 0.45),
+      0 8px 32px hsl(220 15% 95% / 0.2);
+    --shadow-glow-cyan: 0 0 24px hsl(195 100% 65% / 0.35);
+    --quick-actions: 225 20% 12%;
+
+    /* WCAG AA Compliant Accessibility Colors - Dark Mode */
+    --primary-contrast: 220 15% 95%;
+    --primary-contrast-light: 225 25% 8%;
+    --secondary-contrast: 220 10% 75%;
+    --secondary-contrast-light: 220 8% 65%;
+    --tertiary-contrast: 220 8% 70%;
+    --tertiary-contrast-light: 220 6% 60%;
+    --muted-contrast: 220 6% 65%;
+    --muted-contrast-light: 220 6% 55%;
+    --success-contrast: 158 72% 45%;
+    --warning-contrast: 38 92% 48%;
+    --danger-contrast: 350 85% 52%;
+    --contrast-auto-high: 220 15% 98%;
+    --contrast-auto-bg-high: 225 25% 8%;
+
+    /* WCAG AA Compliant Accessibility Color Combinations (dark mode) */
+    --primary-contrast-bg: 225 20% 12%;
+    --primary-contrast-fg: 220 15% 95%;
+
+    --secondary-contrast-bg: 225 15% 18%;
+    --secondary-contrast-fg: 220 10% 80%;
+
+    --success-contrast-bg: 158 72% 55%;
+    --success-contrast-fg: 0 0% 100%;
+
+    --warning-contrast-bg: 38 92% 60%;
+    --warning-contrast-fg: 220 15% 95%;
+
+    --danger-contrast-bg: 350 85% 68%;
+    --danger-contrast-fg: 0 0% 100%;
+  }
 }
 
 @layer base {

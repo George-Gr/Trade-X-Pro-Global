@@ -766,14 +766,51 @@ export const TradingSuspenseBoundaries = {
 
   // Charts with low priority (can load later)
   Charts: ({ children }) => (
-    <Suspense
-      fallback={<ChartSkeletonLoader />}
-      maxDuration={5000} // Allow up to 5 seconds for chart loading
-    >
-      {children}
-    </Suspense>
+     <Suspense fallback={<ChartSkeletonLoader />}> // Use standard Suspense API
+       {children}
+     </Suspense>
+  ),
+
+  // For delayed fallbacks, use a wrapper component pattern:
+  DelayedCharts: ({ children }) => (
+  <DelayedFallbackWrapper delay={5000} fallback={<ChartSkeletonLoader />}>
+  {children}
+  </DelayedFallbackWrapper>
   ),
 };
+
+### Delayed Fallback Wrapper Component
+
+For implementing delayed fallbacks (equivalent to the non-existent `maxDuration` prop), use this pattern:
+
+```typescript
+// DelayedFallbackWrapper component implementation
+export const DelayedFallbackWrapper = ({
+  children,
+  fallback,
+  delay = 3000,
+}: {
+  children: React.ReactNode;
+  fallback: React.ReactNode;
+  delay?: number;
+}) => {
+  const [showFallback, setShowFallback] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFallback(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  return showFallback ? fallback : <>{children}</>;
+};
+
+// Usage example
+const ChartWithDelayedFallback = () => (
+  <Suspense fallback={<div>Loading chart...</div>}>
+    <DelayedFallbackWrapper delay={5000} fallback={<ErrorState message="Chart loading took too long" />}>
 ```
 
 ### Performance Monitoring Hook

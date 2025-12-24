@@ -348,6 +348,10 @@ export const ProgressiveLoadingIndicator = ({
           {stage === 'security' && (
             <Shield className="h-16 w-16 text-primary animate-pulse" />
           )}
+          {(stage === 'loading' ||
+            !['trading', 'data', 'portfolio', 'security'].includes(stage)) && (
+            <div className="h-16 w-16 rounded-full bg-primary/20 animate-pulse" />
+          )}
         </div>
         <ShimmerEffect className="absolute inset-0 rounded-full" />
       </div>
@@ -359,7 +363,7 @@ export const ProgressiveLoadingIndicator = ({
           {stage === 'data' && 'Fetching market data...'}
           {stage === 'portfolio' && 'Calculating portfolio metrics...'}
           {stage === 'security' && 'Verifying security clearance...'}
-          {stage === 'default' && 'Loading page...'}
+          {(stage === 'loading' || stage === 'default') && 'Loading...'}
         </div>
 
         <div className="w-full bg-muted rounded-full h-2">

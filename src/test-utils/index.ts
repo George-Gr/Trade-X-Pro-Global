@@ -1,3 +1,8 @@
-export { render, renderHook, screen, fireEvent, waitFor } from "@testing-library/react";
-export { jest } from "@jest/globals";
-export * from "./providers";
+export {
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+} from '@testing-library/react';
+export * from './providers';

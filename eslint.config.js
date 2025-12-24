@@ -64,9 +64,16 @@ export default [
       ecmaVersion: 2020,
       sourceType: 'module',
       parserOptions: {
-        // Type-aware linting with project reference for better type checking
+        // Type-aware linting with project service for better performance
         // Uses dedicated tsconfig.eslint.json that only includes src files
-        project: ['./tsconfig.eslint.json', './tsconfig.eslint.hooks.json'],
+        projectService: {
+          defaultProject: './tsconfig.eslint.json',
+          allowDefaultProjectForFiles: [
+            './src/**/*.{ts,tsx}',
+            './tsconfig.eslint.json',
+            './tsconfig.eslint.hooks.json',
+          ],
+        },
         tsconfigRootDir: __dirname,
       },
       globals: {

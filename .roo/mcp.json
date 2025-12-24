@@ -1,1 +1,36 @@
-{"mcpServers":{"context7":{"type":"streamable-http","url":"https://mcp.context7.com/mcp"},"filesystem":{"command":"npx","args":["-y","@modelcontextprotocol/server-filesystem@2025.12.18","."],"alwaysAllow":["create_directory","read_text_file","edit_file","read_file"]},"sequentialthinking":{"command":"npx","args":["-y","@modelcontextprotocol/server-sequential-thinking@2025.12.18"]},"git":{"command":"npx","args":["@cyanheads/git-mcp-server@2.6.5","--repository","https://github.com/George-Gr/Trade-X-Pro-Global.git"]},"puppeteer":{"command":"npx","args":["-y","@modelcontextprotocol/server-puppeteer@2025.5.12"]},"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory@2025.11.25"]}}}
+{
+  "mcpServers": {
+    "context7": {
+      "type": "streamable-http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem@2025.12.18", "."],
+      "alwaysAllow": ["create_directory", "read_text_file", "edit_file"]
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking@2025.12.18"
+      ]
+    },
+    "git": {
+      "command": "npx",
+      "args": [
+        "@cyanheads/git-mcp-server@2.6.5",
+        "--repository",
+        "https://github.com/George-Gr/Trade-X-Pro-Global.git"
+      ]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer@2025.5.12"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory@2025.11.25"]
+    }
+  }
+}

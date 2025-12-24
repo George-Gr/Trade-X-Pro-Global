@@ -208,7 +208,7 @@
   "editor.largeFileOptimizations": true,
   "editor.maxTokenizationLineLength": 10000,
   "editor.wordBasedSuggestions": "off",
-  "editor.inlineSuggest.enabled": false,
+
   "editor.inlineCompletions.enabled": false,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -227,7 +227,7 @@
   "telemetry.telemetryLevel": "error",
   "redhat.telemetry.enabled": false,
   "markdown.validate.enabled": false,
-  "coderabbit.agentType": "Native",
+  "coderabbit.agentType": "Roo",
 
   /* ========== File Associations ========== */
   "files.associations": {

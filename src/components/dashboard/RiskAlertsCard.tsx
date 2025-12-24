@@ -1,15 +1,15 @@
-import * as React from 'react';
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from '@/components/ui/card';
-import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import * as React from 'react';
 
 interface AlertItem {
   id: string;
@@ -20,7 +20,7 @@ interface AlertItem {
 
 interface RiskAlertsCardProps {
   loading?: boolean;
-  alerts?: AlertItem[];
+  alerts?: AlertItem[] | undefined;
 }
 
 const LevelBadge: React.FC<{ level: AlertItem['level'] }> = ({ level }) => {
@@ -44,7 +44,7 @@ export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({
 }) => {
   if (loading) {
     return (
-      <Card elevation="1" className="min-h-[160px]">
+      <Card elevation="1" className="min-h-40">
         <CardContent>
           <div className="flex items-start justify-between">
             <div className="w-3/4">
@@ -62,7 +62,7 @@ export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({
 
   if (!alerts || alerts.length === 0) {
     return (
-      <Card elevation="1" className="min-h-[160px]">
+      <Card elevation="1" className="min-h-40">
         <CardHeader>
           <CardTitle>Risk Alerts</CardTitle>
           <CardDescription>
@@ -81,7 +81,7 @@ export const RiskAlertsCard: React.FC<RiskAlertsCardProps> = ({
   }
 
   return (
-    <Card elevation="1" className="min-h-[160px]">
+    <Card elevation="1" className="min-h-40">
       <CardHeader>
         <CardTitle>Risk Alerts</CardTitle>
         <CardDescription>Critical account notifications</CardDescription>

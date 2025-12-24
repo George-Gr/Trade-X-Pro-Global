@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { trackCustomMetric } from '../../hooks/useWebVitalsEnhanced';
+import { logger } from '../logger';
 
 export interface PerformanceBaseline {
   timestamp: Date;
@@ -34,8 +35,17 @@ export interface PerformanceBudget {
   enabled: boolean;
 }
 
+/**
+ * Represents a single time-series data point for performance metrics
+ * Used for tracking metric values over time in performance monitoring
+ *
+ * @export
+ * @interface TimeSeriesPoint
+ */
 export interface TimeSeriesPoint {
+  /** Timestamp in milliseconds since epoch when the metric was recorded */
   timestamp: number;
+  /** Numeric value of the performance metric at the given timestamp */
   value: number;
 }
 
@@ -247,7 +257,7 @@ export class PerformanceMonitoring {
       const mainContent = document.querySelector('main');
       if (mainContent) {
         const observer = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
+          if (entries[0]?.isIntersecting) {
             performance.mark('main-content-visible');
             observer.disconnect();
           }
@@ -358,18 +368,54 @@ export class PerformanceMonitoring {
         recentValues.length
     );
 
-    // If current value is more than 2 standard deviations from average, flag as regression
-    if (currentValue > avg + 2 * stdDev && currentValue > avg * 1.2) {
-      // Also ensure at least 20% increase
+    // Constants to prevent false positives and division by zero
+    const MIN_ABSOLUTE_INCREASE = 10; // Minimum absolute increase to consider as regression
+    const MIN_RELATIVE_STD_FACTOR = 0.1; // 10% of average for stdDev adjustment
+    const MIN_PERCENT_INCREASE = 0.2; // 20% minimum relative increase
+    const EPSILON = 0.001; // Small epsilon for zero comparisons
+
+    // Guard 1: Handle case when avg is 0
+    if (avg === 0) {
+      if (currentValue > MIN_ABSOLUTE_INCREASE) {
+        this.createAlert(
+          'warning',
+          metric,
+          currentValue,
+          MIN_ABSOLUTE_INCREASE,
+          `Performance Regression: ${metric} increased by ${currentValue.toFixed(
+            1
+          )} (from zero baseline)`
+        );
+      }
+      return;
+    }
+
+    // Guard 2: Prevent stdDev == 0 false positives by adjusting with relative factor
+    const adjustedStdDev = Math.max(
+      stdDev,
+      avg * MIN_RELATIVE_STD_FACTOR,
+      EPSILON
+    );
+    const threshold = avg + 2 * adjustedStdDev;
+
+    // Guard 3: Require both relative threshold and adjusted stdDev-based threshold
+    const percentIncrease = (currentValue - avg) / avg;
+    const hasRelativeIncrease = percentIncrease >= MIN_PERCENT_INCREASE;
+    const hasAbsoluteIncrease = currentValue > threshold;
+
+    if (hasRelativeIncrease && hasAbsoluteIncrease) {
+      // Compute percent increase safely (only when avg > 0)
+      const safePercentIncrease =
+        ((currentValue - avg) / Math.max(avg, EPSILON)) * 100;
+
       this.createAlert(
         'warning',
         metric,
         currentValue,
-        avg + 2 * stdDev,
-        `Performance Regression: ${metric} increased by ${(
-          ((currentValue - avg) / avg) *
-          100
-        ).toFixed(1)}%`
+        threshold,
+        `Performance Regression: ${metric} increased by ${safePercentIncrease.toFixed(
+          1
+        )}% (from ${avg.toFixed(1)} to ${currentValue.toFixed(1)})`
       );
     }
   }
@@ -454,11 +500,48 @@ export class PerformanceMonitoring {
     // Send alert to monitoring service
     this.sendAlert(alert);
 
-    // Log critical alerts
-    if (type === 'critical') {
-      console.error('Performance Alert:', alert);
-    } else {
-      console.warn('Performance Warning:', alert);
+    // Log alerts using structured logging with safe fallback
+    try {
+      if (type === 'critical') {
+        logger.error('Performance Alert', undefined, {
+          component: 'PerformanceMonitoring',
+          action: 'performance_alert_critical',
+          metadata: {
+            alertType: type,
+            metric: alert.metric,
+            value: alert.value,
+            threshold: alert.threshold,
+            message: alert.message,
+            timestamp: alert.timestamp,
+            url: alert.url,
+            userAgent: alert.userAgent,
+            performanceImpact: 'critical',
+          },
+        });
+      } else {
+        logger.warn('Performance Warning', {
+          component: 'PerformanceMonitoring',
+          action: 'performance_alert_warning',
+          metadata: {
+            alertType: type,
+            metric: alert.metric,
+            value: alert.value,
+            threshold: alert.threshold,
+            message: alert.message,
+            timestamp: alert.timestamp,
+            url: alert.url,
+            userAgent: alert.userAgent,
+            performanceImpact: 'warning',
+          },
+        });
+      }
+    } catch (error) {
+      // Safe fallback to console if logger is not initialized
+      if (type === 'critical') {
+        console.error('Performance Alert:', alert, error);
+      } else {
+        console.warn('Performance Warning:', alert, error);
+      }
     }
   }
 

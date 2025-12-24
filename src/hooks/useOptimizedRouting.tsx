@@ -1,15 +1,24 @@
-import { routeErrorBoundaries } from '@/components/routing/RouteErrorBoundaries';
-import { routeLoadingFallbacks } from '@/components/routing/routeLoadingConstants';
+import {
+  DefaultRouteErrorBoundary,
+  routeErrorBoundaries,
+} from '@/components/routing/RouteErrorBoundaries';
+import { ROUTE_LOADING_FALLBACKS } from '@/components/routing/routeLoadingConstants';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { performanceMonitoring } from '@/lib/performance/performanceMonitoring';
 import {
   RoutePerformanceTracker,
   RoutePreloader,
   preloadStrategies,
 } from '@/lib/routing/routeConfig';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useLocation, useNavigate, useRouteError } from 'react-router-dom';
-import { useToast } from './use-toast';
-import { useAuth } from './useAuth';
 
 // Route loading state interface
 interface RouteLoadingState {
@@ -71,6 +80,7 @@ export const useOptimizedRouting = () => {
   const [preloadedRoutes, setPreloadedRoutes] = useState<Set<string>>(
     new Set()
   );
+  const preloadedRoutesRef = useRef<Set<string>>(new Set());
 
   // Performance tracking for current route
   const currentRoute = useMemo(() => {
@@ -96,13 +106,16 @@ export const useOptimizedRouting = () => {
 
   // Preload critical routes based on user context
   useEffect(() => {
-    if (user && preloadedRoutes.size === 0) {
+    if (user && !preloadedRoutesRef.current.has('critical')) {
+      // Only preload critical user routes once per session — guard by ref flag
       // Preload user-specific critical routes
       const userRouteImports = getUserRouteImports();
       RoutePreloader.preloadCriticalRoutes(userRouteImports);
+      preloadedRoutesRef.current.add('critical');
+      // Update state for any UI that depends on it
       setPreloadedRoutes((prev) => new Set(prev).add('critical'));
     }
-  }, [user, preloadedRoutes]);
+  }, [user]);
 
   // Navigate to route with optimizations
   const navigateToRoute = useCallback(
@@ -155,7 +168,6 @@ export const useOptimizedRouting = () => {
           duration
         );
       } catch (error) {
-        console.error('Navigation error:', error);
         setRouteState((prev) => ({ ...prev, isLoading: false }));
 
         // Track navigation error
@@ -187,7 +199,7 @@ export const useOptimizedRouting = () => {
           setPreloadedRoutes((prev) => new Set(prev).add(routeId));
           performanceMonitoring.markUserAction(`route-preloaded-${routeId}`);
         } catch (error) {
-          console.error(`Failed to preload route ${path}:`, error);
+          // Preload failure is non-critical; route will load on navigation
         }
       }
     },
@@ -197,16 +209,16 @@ export const useOptimizedRouting = () => {
   // Get route-specific loading component
   const getRouteLoadingComponent = useCallback((path: string) => {
     return (
-      routeLoadingFallbacks[path as keyof typeof routeLoadingFallbacks] ||
-      routeLoadingFallbacks.default
+      ROUTE_LOADING_FALLBACKS[path as keyof typeof ROUTE_LOADING_FALLBACKS] ||
+      ROUTE_LOADING_FALLBACKS.default
     );
   }, []);
 
   // Get route-specific error boundary
   const getRouteErrorBoundary = useCallback((path: string) => {
-    const ErrorBoundary =
+    const SpecificErrorBoundary =
       routeErrorBoundaries[path as keyof typeof routeErrorBoundaries];
-    return ErrorBoundary || React.Component;
+    return SpecificErrorBoundary || DefaultRouteErrorBoundary;
   }, []);
 
   // Progressive loading for complex routes
@@ -310,7 +322,6 @@ export const useTradingRouteOptimization = () => {
 // KYC workflow optimization hook
 export const useKYCWorkflowOptimization = () => {
   const { navigateToRoute, startProgressiveLoading } = useOptimizedRouting();
-  const { user } = useAuth();
 
   // Progressive KYC loading with step-by-step validation
   const startKYCWorkflow = useCallback(async () => {
@@ -387,24 +398,23 @@ function getUserRouteImports(): Record<
 > {
   return {
     dashboard: () =>
-      import('../pages/Dashboard').then((module) => module.default),
-    trade: () => import('../pages/Trade').then((module) => module.default),
+      import('@/pages/Dashboard').then((module) => module.default),
+    trade: () => import('@/pages/Trade').then((module) => module.default),
     portfolio: () =>
-      import('../pages/Portfolio').then((module) => module.default),
-    history: () => import('../pages/History').then((module) => module.default),
-    settings: () =>
-      import('../pages/Settings').then((module) => module.default),
-    kyc: () => import('../pages/KYC').then((module) => module.default),
-    admin: () => import('../pages/Admin').then((module) => module.default),
+      import('@/pages/Portfolio').then((module) => module.default),
+    history: () => import('@/pages/History').then((module) => module.default),
+    settings: () => import('@/pages/Settings').then((module) => module.default),
+    kyc: () => import('@/pages/KYC').then((module) => module.default),
+    admin: () => import('@/pages/Admin').then((module) => module.default),
     adminrisk: () =>
-      import('../pages/AdminRiskDashboard').then((module) => module.default),
+      import('@/pages/AdminRiskDashboard').then((module) => module.default),
     riskmanagement: () =>
-      import('../pages/RiskManagement').then((module) => module.default),
+      import('@/pages/RiskManagement').then((module) => module.default),
     notifications: () =>
-      import('../pages/Notifications').then((module) => module.default),
-    wallet: () => import('../pages/Wallet').then((module) => module.default),
+      import('@/pages/Notifications').then((module) => module.default),
+    wallet: () => import('@/pages/Wallet').then((module) => module.default),
     pendingorders: () =>
-      import('../pages/PendingOrders').then((module) => module.default),
+      import('@/pages/PendingOrders').then((module) => module.default),
   };
 }
 
@@ -415,8 +425,7 @@ export const useRouteErrorHandler = () => {
 
   useEffect(() => {
     if (error) {
-      console.error('Route error:', error);
-
+      performanceMonitoring.markUserAction('route-error');
       performanceMonitoring.markUserAction('route-error');
 
       toast({

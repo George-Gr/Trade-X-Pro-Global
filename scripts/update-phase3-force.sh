@@ -45,7 +45,7 @@ fi
 
 echo ""
 echo "📊 Checking current package versions..."
-npm outdated --json > npm-outdated-phase3.json 2>/dev/null || echo '{"error": "No outdated packages"}' > npm-outdated-phase3.json
+npm outdated --json > npm-outdated-phase3.json 2>/dev/null || echo '{"status": "success", "message": "No outdated packages"}' > npm-outdated-phase3.json
 
 echo ""
 echo "🔄 Installing Phase 3 packages (Major Framework Updates)..."

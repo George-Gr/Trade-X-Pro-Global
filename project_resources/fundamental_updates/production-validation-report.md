@@ -18,10 +18,11 @@
 
 - **Current Version:** `react-router-dom: ^7.11.0`
 - **Implementation:** Standard `BrowserRouter` with `Routes` and `Route` components
-- **Location:** `src/App.tsx` lines 125-450
+- **Location:** `src/App.tsx` — App component router configuration
 
 ```tsx
-// Current implementation is v7 compatible
+// App component router configuration (src/App.tsx)
+// Main BrowserRouter setup with React Router v7 future flags
 <BrowserRouter
   future={{
     v7_fetcherPersist: true,
@@ -326,15 +327,7 @@ const pnLColor = getPnLColor(totalPnL);
 
 #### 1. Monitoring & Observability
 
-```tsx
 // Add production monitoring for React 19 concurrent features
-const DEBUG_REALTIME = process.env.NODE_ENV === 'development';
-if (DEBUG_REALTIME) {
-  console.warn(
-    `📥 Subscribed to positions realtime ${subscriptionIdRef.current}`
-  );
-}
-```
 
 #### 2. Error Boundary Enhancement
 

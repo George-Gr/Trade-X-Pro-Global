@@ -186,7 +186,7 @@ export const createHeading = (
   content: string,
   className?: string
 ): string => {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as const;
   const classNames = [getHeadingClass(level), className]
     .filter(Boolean)
     .join(' ');

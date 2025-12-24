@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import App from './App';
 import './index.css';
 import { initializeSentry, logger } from './lib/logger';
 
