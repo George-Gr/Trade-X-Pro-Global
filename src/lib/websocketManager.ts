@@ -8,6 +8,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { logger } from './logger';
+import { performanceMonitoring } from './performance/performanceMonitoring';
 
 // Connection states
 type ConnectionState =
@@ -35,6 +36,18 @@ interface PooledConnection {
   lastActivity: Date;
   retryCount: number;
   tables: Set<string>;
+  latency?: number;
+}
+
+// Supabase realtime payload type
+interface RealtimePayload {
+  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+  new: Record<string, unknown> | null;
+  old: Record<string, unknown> | null;
+  schema: string;
+  table: string;
+  commit_timestamp?: string;
+  [key: string]: unknown;
 }
 
 // Subscription entry
@@ -81,6 +94,9 @@ class WebSocketManager {
   private connectionStateListeners = new Set<
     (state: ConnectionState, connectionId: string) => void
   >();
+
+  // Performance tracking
+  private messageTimestamps = new Map<string, number>();
 
   constructor(options: Partial<WebSocketManagerOptions> = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
@@ -184,6 +200,9 @@ class WebSocketManager {
     this.connections.set(connectionId, connection);
     this.notifyStateChange('connecting', connectionId);
 
+    // Start tracking connection time
+    performance.mark(`ws-connect-start-${connectionId}`);
+
     // Subscribe to connection
     channel.subscribe((status) => {
       if (status === 'SUBSCRIBED') {
@@ -191,6 +210,29 @@ class WebSocketManager {
         connection.retryCount = 0;
         connection.lastActivity = new Date();
         this.notifyStateChange('connected', connectionId);
+
+        // Record connection time
+        performance.mark(`ws-connect-end-${connectionId}`);
+        try {
+          performance.measure(
+            `ws-connect-${connectionId}`,
+            `ws-connect-start-${connectionId}`,
+            `ws-connect-end-${connectionId}`
+          );
+          const entries = performance.getEntriesByName(
+            `ws-connect-${connectionId}`
+          );
+          if (entries.length > 0 && entries[0]) {
+            performanceMonitoring.recordCustomTiming(
+              'WebSocketConnectionTime',
+              0,
+              entries[0].duration
+            );
+          }
+        } catch (e) {
+          // Ignore measurement errors
+        }
+
         logger.info('WebSocket connection established', {
           metadata: {
             connectionId,
@@ -201,6 +243,8 @@ class WebSocketManager {
         connection.state = 'error';
         this.notifyStateChange('error', connectionId);
         this.scheduleReconnect(connectionId);
+
+        performanceMonitoring.recordCustomTiming('WebSocketError', 0, 1);
       } else if (status === 'CLOSED') {
         connection.state = 'disconnected';
         this.notifyStateChange('disconnected', connectionId);
@@ -288,7 +332,11 @@ class WebSocketManager {
             table: sub.table,
             ...(sub.filter ? { filter: sub.filter } : {}),
           } as never,
-          sub.callback as never
+          // Wrap callback to measure latency
+          (payload: RealtimePayload) => {
+            this.measureMessageLatency(sub.table, payload);
+            sub.callback(payload);
+          }
         );
       }
 
@@ -321,6 +369,44 @@ class WebSocketManager {
   }
 
   /**
+   * Measure message processing latency
+   */
+  private measureMessageLatency(table: string, payload: RealtimePayload): void {
+    const receiveTime = performance.now();
+
+    // Check if payload has a timestamp from server to calculate e2e latency
+    if (payload && payload.commit_timestamp) {
+      try {
+        const commitTime = new Date(payload.commit_timestamp).getTime();
+        // Only valid if clocks are reasonably synced or for relative comparison
+        // Better to use a ping/pong mechanism for true latency, but this gives processing time
+        // Since client/server clock skew exists, we'll focus on processing frequency
+      } catch (e) {
+        // Ignore date parsing errors
+      }
+    }
+
+    // Track message frequency per table
+    const key = `ws-msg-${table}`;
+    const lastTime = this.messageTimestamps.get(key) || 0;
+
+    if (lastTime > 0) {
+      const interval = receiveTime - lastTime;
+      // If messages are coming too fast (< 50ms), log warning
+      if (interval < 50) {
+        performanceMonitoring.recordCustomTiming(
+          'WebSocketHighFrequency',
+          0,
+          interval
+        );
+      }
+    }
+
+    this.messageTimestamps.set(key, receiveTime);
+    performanceMonitoring.markUserAction(`ws-message-${table}`);
+  }
+
+  /**
    * Subscribe to database changes
    */
   subscribe(
@@ -334,7 +420,7 @@ class WebSocketManager {
       .toString(36)
       .slice(2, 8)}`;
 
-    // Add subscription to channel
+    // Add subscription to channel with latency tracking wrapper
     connection.channel.on(
       'postgres_changes' as never,
       {
@@ -343,7 +429,10 @@ class WebSocketManager {
         table,
         ...(filter ? { filter } : {}),
       } as never,
-      callback as never
+      (payload: RealtimePayload) => {
+        this.measureMessageLatency(table, payload);
+        callback(payload);
+      }
     );
 
     // Track subscription
@@ -463,6 +552,9 @@ class WebSocketManager {
           this.scheduleReconnect(connectionId);
         }
       }
+
+      // Ping for latency check (via custom event if needed)
+      // Since supabase-js manages heartbeats internally, we rely on connection state
     }
   }
 
@@ -540,6 +632,7 @@ class WebSocketManager {
 
     this.subscriptions.clear();
     this.connectionStateListeners.clear();
+    this.messageTimestamps.clear();
     logger.info('WebSocket manager destroyed');
   }
 }

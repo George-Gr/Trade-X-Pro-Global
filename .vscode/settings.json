@@ -47,7 +47,7 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
 
   /* TypeScript Server Memory & Performance */
-  "typescript.tsserver.maxTsServerMemory": 3072,
+  "typescript.tsserver.maxTsServerMemory": 4096,
   "typescript.tsserver.enableTracing": false,
   "typescript.tsserver.logVerbosity": "off",
   "typescript.tsserver.log": "off",
@@ -72,7 +72,7 @@
 
   /* TypeScript Editor Settings */
   "typescript.check.npmIsInstalled": false,
-  "typescript.disableAutomaticTypeAcquisition": false,
+  "typescript.disableAutomaticTypeAcquisition": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.extension.nightly.autoUpdate": false,
   "typescript.preferGoToSourceDefinition": true,
@@ -149,7 +149,6 @@
   /* ========== Editor Inline Suggestions Configuration ========== */
   "editor.inlineSuggest.enabled": true,
   "editor.inlineSuggest.mode": "blocksInline",
-  "editor.inlineCompletions.enabled": true,
 
   /* ========== Editor Suggestions Configuration ========== */
   "editor.suggest.enabled": true,
@@ -170,7 +169,12 @@
     "**/build/**": true,
     "**/.vscode/**": true,
     "**/.next/**": true,
-    "**/coverage/**": true
+    "**/coverage/**": true,
+    "**/.roo/**": true,
+    "**/.agent/**": true,
+    "**/.devcontainer/**": true,
+    "**/.husky/**": true,
+    "**/.github/**": true
   },
   "files.exclude": {
     "**/.git": true,
@@ -178,7 +182,12 @@
     "**/node_modules": true,
     "**/.next": true,
     "**/dist": true,
-    "**/build": true
+    "**/build": true,
+    "**/.roo": true,
+    "**/.agent": true,
+    "**/.devcontainer": true,
+    "**/.husky": true,
+    "**/.github": true
   },
   "search.followSymlinks": false,
   "search.quickOpen.includeSymbols": false,
@@ -187,20 +196,27 @@
     "**/dist": true,
     "**/build": true,
     "**/.next": true,
-    "**/.parcel-cache": true
+    "**/.parcel-cache": true,
+    "**/.roo": true,
+    "**/.agent": true,
+    "**/.devcontainer": true,
+    "**/.husky": true,
+    "**/.github": true
   },
 
   /* ========== Editor Performance Optimization ========== */
   "editor.largeFileOptimizations": true,
-  "editor.maxTokenizationLineLength": 20000,
-  "editor.wordBasedSuggestions": "matchingDocuments",
+  "editor.maxTokenizationLineLength": 10000,
+  "editor.wordBasedSuggestions": "off",
+  "editor.inlineSuggest.enabled": false,
+  "editor.inlineCompletions.enabled": false,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
 
   /* ========== Extension Management ========== */
   "extensions.autoCheckUpdates": false,
   "extensions.autoUpdate": false,
-  "extensions.ignoreRecommendations": false,
+  "extensions.ignoreRecommendations": true,
 
   /* ========== Workspace Settings ========== */
   "workbench.editor.closeOnFileDelete": true,
@@ -210,11 +226,12 @@
   /* ========== Telemetry & Diagnostics ========== */
   "telemetry.telemetryLevel": "error",
   "redhat.telemetry.enabled": false,
-  "markdown.validate.enabled": true,
+  "markdown.validate.enabled": false,
   "coderabbit.agentType": "Native",
 
   /* ========== File Associations ========== */
   "files.associations": {
     "public/_headers": "plaintext"
-  }
+  },
+  "markdown.validate.ignoredLinks": []
 }

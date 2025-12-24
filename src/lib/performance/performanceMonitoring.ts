@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { trackCustomMetric } from '../../hooks/useWebVitalsEnhanced';
 
 export interface PerformanceBaseline {
@@ -34,11 +34,17 @@ export interface PerformanceBudget {
   enabled: boolean;
 }
 
+export interface TimeSeriesPoint {
+  timestamp: number;
+  value: number;
+}
+
 export class PerformanceMonitoring {
   private static instance: PerformanceMonitoring;
   private baselines: PerformanceBaseline[] = [];
   private alerts: PerformanceAlert[] = [];
   private budgets: PerformanceBudget[] = [];
+  private timeSeriesData: Map<string, TimeSeriesPoint[]> = new Map();
   private monitoringEnabled = true;
   private sampleRate = 0.1; // 10% of users
 
@@ -319,6 +325,57 @@ export class PerformanceMonitoring {
 
     // Track custom metric
     trackCustomMetric(metric.toLowerCase(), value, 'Performance');
+
+    // Store time-series data
+    this.recordTimeSeriesData(metric, value);
+
+    // Check for regression
+    this.detectRegression(metric, value);
+  }
+
+  private recordTimeSeriesData(metric: string, value: number) {
+    if (!this.timeSeriesData.has(metric)) {
+      this.timeSeriesData.set(metric, []);
+    }
+    const series = this.timeSeriesData.get(metric)!;
+    series.push({ timestamp: Date.now(), value });
+
+    // Keep last 100 data points
+    if (series.length > 100) {
+      series.shift();
+    }
+  }
+
+  private detectRegression(metric: string, currentValue: number) {
+    const series = this.timeSeriesData.get(metric);
+    if (!series || series.length < 10) return;
+
+    // Calculate moving average of last 10 points excluding current
+    const recentValues = series.slice(-11, -1).map((p) => p.value);
+    const avg = recentValues.reduce((a, b) => a + b, 0) / recentValues.length;
+    const stdDev = Math.sqrt(
+      recentValues.map((x) => Math.pow(x - avg, 2)).reduce((a, b) => a + b, 0) /
+        recentValues.length
+    );
+
+    // If current value is more than 2 standard deviations from average, flag as regression
+    if (currentValue > avg + 2 * stdDev && currentValue > avg * 1.2) {
+      // Also ensure at least 20% increase
+      this.createAlert(
+        'warning',
+        metric,
+        currentValue,
+        avg + 2 * stdDev,
+        `Performance Regression: ${metric} increased by ${(
+          ((currentValue - avg) / avg) *
+          100
+        ).toFixed(1)}%`
+      );
+    }
+  }
+
+  public getTimeSeriesData(metric: string): TimeSeriesPoint[] {
+    return this.timeSeriesData.get(metric) || [];
   }
 
   private recordResourceLoadTime(type: string, time: number) {
@@ -352,7 +409,9 @@ export class PerformanceMonitoring {
         metric,
         value,
         budget.warning,
-        `${metric} ${alertType}: ${value}ms (budget: ${budget.warning}ms)`
+        `${metric} ${alertType}: ${value.toFixed(2)}${budget.unit} (budget: ${
+          budget.warning
+        }${budget.unit})`
       );
     }
   }
@@ -364,6 +423,16 @@ export class PerformanceMonitoring {
     threshold: number,
     message: string
   ) {
+    // Dedup alerts - check if we had similar alert in last 10 seconds
+    const existingAlert = this.alerts.find(
+      (a) =>
+        a.metric === metric &&
+        a.type === type &&
+        new Date().getTime() - a.timestamp.getTime() < 10000
+    );
+
+    if (existingAlert) return;
+
     const alert: PerformanceAlert = {
       type,
       metric,
@@ -488,15 +557,22 @@ export class PerformanceMonitoring {
     alerts: PerformanceAlert[];
     budgets: PerformanceBudget[];
     recommendations: string[];
+    timeSeries: Record<string, TimeSeriesPoint[]>;
   } {
     const currentBaseline = this.baselines[this.baselines.length - 1] || null;
     const recommendations = this.generateRecommendations();
+    const timeSeriesObj: Record<string, TimeSeriesPoint[]> = {};
+
+    this.timeSeriesData.forEach((points, metric) => {
+      timeSeriesObj[metric] = points;
+    });
 
     return {
       baseline: currentBaseline,
       alerts: [...this.alerts],
       budgets: [...this.budgets],
       recommendations,
+      timeSeries: timeSeriesObj,
     };
   }
 
@@ -572,7 +648,7 @@ export const performanceMonitoring = PerformanceMonitoring.getInstance();
  * @returns The wrapped function with the same type as the input function
  */
 export function withPerformanceTracking<
-  T extends (...args: unknown[]) => unknown,
+  T extends (...args: unknown[]) => unknown
 >(fn: T, name: string): T {
   return ((...args: unknown[]) => {
     const start = performance.now();

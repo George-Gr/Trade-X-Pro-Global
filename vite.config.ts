@@ -172,7 +172,16 @@ export default defineConfig(() => ({
     },
   },
   plugins: [
-    react(),
+    react({
+      // Enable React 19 features
+      babel: {
+        plugins: [
+          // React 19 concurrent features
+          ['@babel/plugin-syntax-explicit-resource-management'],
+          ['@babel/plugin-transform-react-jsx-development'],
+        ],
+      },
+    }),
     corsMiddleware(),
     cspNonceMiddleware(),
     componentTaggerPlugin,
@@ -182,56 +191,91 @@ export default defineConfig(() => ({
       generateBundle(_options: any, bundle: any) {
         if (process.env.NODE_ENV === 'production') {
           const sizes: Record<string, number> = {};
+          const chunkGroups: Record<string, number> = {};
+          
+          // Define budgets for specific chunk groups (in bytes)
+          const BUDGETS = {
+            'vendor-react-core': 150 * 1024,       // 150KB for React core
+            'vendor-charts-lightweight': 500 * 1024, // 500KB for Charts
+            'vendor-state-query': 100 * 1024,      // 100KB for TanStack Query
+            'vendor-ui-radix': 200 * 1024,         // 200KB for UI components
+            'index': 300 * 1024,                   // 300KB for main entry
+          };
           
           Object.keys(bundle).forEach(fileName => {
-        const chunk = bundle[fileName];
-        if (chunk.type === 'chunk') {
-          const code = chunk.code || '';
-          sizes[fileName] = Buffer.byteLength(code, 'utf8');
-        } else if (chunk.type === 'asset') {
-          const source = chunk.source;
-          let byteLength: number;
-          
-          if (typeof source === 'string') {
-            byteLength = Buffer.byteLength(source, 'utf8');
-          } else if (source instanceof Buffer) {
-            byteLength = source.length;
-          } else if (source instanceof Uint8Array) {
-            byteLength = source.byteLength;
-          } else if (ArrayBuffer.isView(source)) {
-            // Handle other typed arrays (Uint16Array, Uint32Array, etc.)
-            byteLength = source.byteLength;
-          } else if (source instanceof ArrayBuffer) {
-            byteLength = source.byteLength;
-          } else {
-            // Fallback: try to convert to Buffer
-            try {
-              byteLength = Buffer.from(source).length;
-            } catch {
-              // If all else fails, assume 0 bytes
-              byteLength = 0;
+            const chunk = bundle[fileName];
+            let byteLength = 0;
+            
+            if (chunk.type === 'chunk') {
+              const code = chunk.code || '';
+              byteLength = Buffer.byteLength(code, 'utf8');
+              
+              // Group sizes by chunk name prefix
+              const chunkName = chunk.name || 'unknown';
+              chunkGroups[chunkName] = (chunkGroups[chunkName] || 0) + byteLength;
+              
+            } else if (chunk.type === 'asset') {
+              const source = chunk.source;
+              
+              if (typeof source === 'string') {
+                byteLength = Buffer.byteLength(source, 'utf8');
+              } else if (source instanceof Buffer) {
+                byteLength = source.length;
+              } else if (source instanceof Uint8Array) {
+                byteLength = source.byteLength;
+              } else if (ArrayBuffer.isView(source)) {
+                byteLength = source.byteLength;
+              } else if (source instanceof ArrayBuffer) {
+                byteLength = source.byteLength;
+              } else {
+                try {
+                  byteLength = Buffer.from(source).length;
+                } catch {
+                  byteLength = 0;
+                }
+              }
             }
-          }
-          
-          sizes[fileName] = byteLength;
-        }
+            
+            sizes[fileName] = byteLength;
           });
           
           // Log bundle sizes
           console.log('\n📦 Bundle Size Report:');
-          Object.entries(sizes).forEach(([file, size]) => {
-        const sizeKB = (size / 1024).toFixed(2);
-        console.log(`  ${file}: ${sizeKB} KB`);
+          Object.entries(sizes).sort((a, b) => b[1] - a[1]).slice(0, 15).forEach(([file, size]) => {
+            const sizeKB = (size / 1024).toFixed(2);
+            console.log(`  ${file}: ${sizeKB} KB`);
+          });
+
+          console.log('\n📊 Chunk Group Analysis:');
+          let hasBudgetViolations = false;
+          
+          Object.entries(chunkGroups).forEach(([group, size]) => {
+            const sizeKB = (size / 1024).toFixed(2);
+            const budget = BUDGETS[group as keyof typeof BUDGETS];
+            
+            if (budget) {
+              const budgetKB = (budget / 1024).toFixed(2);
+              const percent = ((size / budget) * 100).toFixed(0);
+              
+              if (size > budget) {
+                console.warn(`⚠️  ${group}: ${sizeKB} KB (Budget: ${budgetKB} KB) - ${percent}% used`);
+                hasBudgetViolations = true;
+              } else {
+                console.log(`✅ ${group}: ${sizeKB} KB (Budget: ${budgetKB} KB) - ${percent}% used`);
+              }
+            } else if (size > 100 * 1024) { // Report large chunks without specific budget
+               console.log(`ℹ️  ${group}: ${sizeKB} KB`);
+            }
           });
           
-          // Check size budgets
+          // Check total size budget
           const mainBundle = Object.values(sizes).reduce((acc, size) => acc + size, 0);
           const mainBundleMB = mainBundle / (1024 * 1024);
           
           if (mainBundleMB > 2) {
-        console.warn(`⚠️  Bundle size warning: ${mainBundleMB.toFixed(2)}MB exceeds 2MB budget`);
+            console.warn(`\n⚠️  Total Bundle: ${mainBundleMB.toFixed(2)}MB exceeds 2MB budget`);
           } else {
-        console.log(`✅ Bundle size within budget: ${mainBundleMB.toFixed(2)}MB`);
+            console.log(`\n✅ Total Bundle: ${mainBundleMB.toFixed(2)}MB (within 2MB budget)`);
           }
         }
       },

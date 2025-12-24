@@ -84,6 +84,8 @@ const MobileBottomNavigation = lazy(() =>
   }))
 );
 
+import { PerformanceMonitorDashboard } from './components/dashboard/PerformanceMonitorDashboard';
+
 const App = () => {
   // Initialize Sentry and monitoring on app load (production only)
   useEffect(() => {
@@ -122,12 +124,7 @@ const App = () => {
                 >
                   <AccessibilityProvider>
                     <style>{accessibilityStyles}</style>
-                    <BrowserRouter
-                      future={{
-                        v7_startTransition: true,
-                        v7_relativeSplatPath: true,
-                      }}
-                    >
+                    <BrowserRouter>
                       <Suspense
                         fallback={
                           <div className="min-h-screen flex items-center justify-center bg-background">
@@ -383,6 +380,18 @@ const App = () => {
                                   <ProtectedRoute adminOnly>
                                     <AuthenticatedLayoutProvider>
                                       <AdminRiskDashboard />
+                                    </AuthenticatedLayoutProvider>
+                                  </ProtectedRoute>
+                                </ErrorBoundary>
+                              }
+                            />
+                            <Route
+                              path="/admin/performance"
+                              element={
+                                <ErrorBoundary>
+                                  <ProtectedRoute adminOnly>
+                                    <AuthenticatedLayoutProvider>
+                                      <PerformanceMonitorDashboard />
                                     </AuthenticatedLayoutProvider>
                                   </ProtectedRoute>
                                 </ErrorBoundary>
