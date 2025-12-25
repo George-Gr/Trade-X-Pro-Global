@@ -67,6 +67,11 @@ import Security from '../pages/company/Security';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { AuthenticatedLayoutProvider } from '../contexts/AuthenticatedLayoutProvider';
 
+/**
+ * Main application routes configuration component.
+ * Defines all public and protected routes with appropriate guards and layouts.
+ * @returns The Routes component containing all application route definitions.
+ */
 export const AppRoutes = () => {
   return (
     <Routes>

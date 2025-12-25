@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/h"
+
+# Prevent accidental commits of build artifacts or local env files
+STAGED=$(git diff --cached --name-only || true)
+
+echo "$STAGED" | grep -E '(^dist/|\.env\.local$|\.backup\.tsx$)' && echo "Please remove build artifacts or local env files before committing." && exit 1 || exit 0

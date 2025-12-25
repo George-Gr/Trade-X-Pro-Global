@@ -1,0 +1,463 @@
+src/__tests__/components/RiskAlertsCard.test.tsx(237,37): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/__tests__/sidebar-focus-rings.test.tsx(370,22): error TS2345: Argument of type 'HTMLElement | undefined' is not assignable to parameter of type 'Element'.
+  Type 'undefined' is not assignable to type 'Element'.
+src/__tests__/trading-form-focus-rings.test.tsx(105,9): error TS2532: Object is possibly 'undefined'.
+src/components/common/OptimizedBackgroundImage.tsx(73,15): error TS2339: Property 'fetchPriority' does not exist on type 'HTMLImageElement'.
+src/components/common/OptimizedHeroSection.tsx(38,13): error TS2353: Object literal may only specify known properties, and 'imageKey' does not exist in type 'LogContext'.
+src/components/common/OptimizedHeroSection.tsx(60,11): error TS2353: Object literal may only specify known properties, and 'imageKey' does not exist in type 'LogContext'.
+src/components/dashboard/AssetAllocation.tsx(8,3): error TS2322: Type 'Promise<{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; } | { ...; }>' is not assignable to type 'Promise<{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; }>'.
+  Type '{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; } | { ...; }' is not assignable to type '{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; }'.
+    Type '{ default: () => JSX.Element; }' is not assignable to type '{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; }'.
+      Types of property 'default' are incompatible.
+        Property '$$typeof' is missing in type '() => JSX.Element' but required in type 'ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>'.
+src/components/dashboard/AssetAllocation.tsx(130,17): error TS2322: Type '(value: number | string | (number | string)[]) => string' is not assignable to type 'Formatter<ValueType, NameType>'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'ValueType | undefined' is not assignable to type 'string | number | (string | number)[]'.
+      Type 'undefined' is not assignable to type 'string | number | (string | number)[]'.
+src/components/integrations/TradeXOptimizationSuite.tsx(198,15): error TS2322: Type '{ children: (false | Element)[]; enableAnalytics: true; enableHeatMapping: boolean; enableFunnelTracking: boolean; userId: string; }' is not assignable to type 'IntrinsicAttributes & AnalyticsIntegrationProps'.
+  Property 'enableHeatMapping' does not exist on type 'IntrinsicAttributes & AnalyticsIntegrationProps'.
+src/components/risk/RiskAlerts.tsx(8,36): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'number | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/components/routing/EnhancedRouteWrapper.tsx(9,10): error TS2614: Module '"@/components/auth/ProtectedRoute"' has no exported member 'ProtectedRoute'. Did you mean to use 'import ProtectedRoute from "@/components/auth/ProtectedRoute"' instead?
+src/components/trading/__tests__/EnhancedTradingComponents.test.tsx(192,12): error TS2532: Object is possibly 'undefined'.
+src/components/trading/__tests__/EnhancedTradingComponents.test.tsx(193,12): error TS2532: Object is possibly 'undefined'.
+src/components/trading/__tests__/EnhancedTradingComponents.test.tsx(211,23): error TS2345: Argument of type 'HTMLElement | undefined' is not assignable to parameter of type 'Element | Node | Document | Window'.
+  Type 'undefined' is not assignable to type 'Element | Node | Document | Window'.
+src/components/trading/__tests__/OrderComponents.test.tsx(32,27): error TS2345: Argument of type 'HTMLElement | undefined' is not assignable to parameter of type 'Element'.
+  Type 'undefined' is not assignable to type 'Element'.
+src/components/trading/__tests__/OrderComponents.test.tsx(259,9): error TS2375: Type '{ takeProfitPrice: undefined; stopLossPrice: undefined; symbol: string; side: "buy"; quantity: number; leverage: number; type: OrderType; }' is not assignable to type 'Partial<OrderFormData>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'takeProfitPrice' are incompatible.
+    Type 'undefined' is not assignable to type 'number'.
+src/components/trading/EnhancedPortfolioDashboard.tsx(31,7): error TS2345: Argument of type '(pos: { [key: string]: unknown; entry_price: number; current_price: number; side: string; margin_used: number; }) => { entryPrice: number; currentPrice: number; side: "long" | "short"; margin_required: number; entry_price: number; current_price: number; margin_used: number; }' is not assignable to parameter of type '(value: PositionWithPnL, index: number, array: PositionWithPnL[]) => { entryPrice: number; currentPrice: number; side: "long" | "short"; margin_required: number; entry_price: number; current_price: number; margin_used: number; }'.
+  Types of parameters 'pos' and 'value' are incompatible.
+    Type 'PositionWithPnL' is not assignable to type '{ [key: string]: unknown; entry_price: number; current_price: number; side: string; margin_used: number; }'.
+      Index signature for type 'string' is missing in type 'PositionWithPnL'.
+src/components/trading/EnhancedPortfolioDashboard.tsx(60,5): error TS2345: Argument of type '{ entryPrice: number; currentPrice: number; side: "long" | "short"; margin_required: number; entry_price: number; current_price: number; margin_used: number; }[]' is not assignable to parameter of type 'PnLPosition[]'.
+  Type '{ entryPrice: number; currentPrice: number; side: "long" | "short"; margin_required: number; entry_price: number; current_price: number; margin_used: number; }' is missing the following properties from type 'PnLPosition': id, symbol, quantity
+src/components/trading/EnhancedPortfolioDashboard.tsx(163,12): error TS2375: Type '{ label: string; value: string; valueClassName: string | undefined; tooltip: string; }' is not assignable to type 'MetricItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'valueClassName' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/trading/EnhancedWatchlist.tsx(260,12): error TS2375: Type '{ children: (Element | Element[])[]; value: string | undefined; onValueChange: Dispatch<SetStateAction<string | null>>; className: string; }' is not assignable to type 'TabsProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'value' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/trading/ModifyOrderDialog.tsx(135,16): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'SetStateAction<string | null>'.
+  Type 'undefined' is not assignable to type 'SetStateAction<string | null>'.
+src/components/trading/OrdersTable.tsx(147,9): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: OrderTableItem | Order, index: number, array: (OrderTableItem | Order)[]) => value is OrderTableItem | Order, thisArg?: any): (OrderTableItem | Order)[]', gave the following error.
+    Argument of type '(o: {    realized_pnl: number | undefined;}) => boolean' is not assignable to parameter of type '(value: OrderTableItem | Order, index: number, array: (OrderTableItem | Order)[]) => value is OrderTableItem | Order'.
+      Types of parameters 'o' and 'value' are incompatible.
+        Type 'OrderTableItem | Order' is not assignable to type '{ realized_pnl: number | undefined; }'.
+          Type 'OrderTableItem' is not assignable to type '{ realized_pnl: number | undefined; }'.
+            Types of property 'realized_pnl' are incompatible.
+              Type 'number | null' is not assignable to type 'number | undefined'.
+                Type 'null' is not assignable to type 'number | undefined'.
+  Overload 2 of 2, '(predicate: (value: OrderTableItem | Order, index: number, array: (OrderTableItem | Order)[]) => unknown, thisArg?: any): (OrderTableItem | Order)[]', gave the following error.
+    Argument of type '(o: {    realized_pnl: number | undefined;}) => boolean' is not assignable to parameter of type '(value: OrderTableItem | Order, index: number, array: (OrderTableItem | Order)[]) => unknown'.
+      Types of parameters 'o' and 'value' are incompatible.
+        Type 'OrderTableItem | Order' is not assignable to type '{ realized_pnl: number | undefined; }'.
+          Type 'OrderTableItem' is not assignable to type '{ realized_pnl: number | undefined; }'.
+src/components/trading/OrdersTable.tsx(151,9): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(callbackfn: (previousValue: OrderTableItem | Order, currentValue: OrderTableItem | Order, currentIndex: number, array: (OrderTableItem | Order)[]) => OrderTableItem | Order, initialValue: OrderTableItem | Order): OrderTableItem | Order', gave the following error.
+    Argument of type '(sum: number, o: {    realized_pnl: number;}) => number' is not assignable to parameter of type '(previousValue: OrderTableItem | Order, currentValue: OrderTableItem | Order, currentIndex: number, array: (OrderTableItem | Order)[]) => OrderTableItem | Order'.
+      Types of parameters 'sum' and 'previousValue' are incompatible.
+        Type 'OrderTableItem | Order' is not assignable to type 'number'.
+          Type 'OrderTableItem' is not assignable to type 'number'.
+  Overload 2 of 3, '(callbackfn: (previousValue: number, currentValue: OrderTableItem | Order, currentIndex: number, array: (OrderTableItem | Order)[]) => number, initialValue: number): number', gave the following error.
+    Argument of type '(sum: number, o: {    realized_pnl: number;}) => number' is not assignable to parameter of type '(previousValue: number, currentValue: OrderTableItem | Order, currentIndex: number, array: (OrderTableItem | Order)[]) => number'.
+      Types of parameters 'o' and 'currentValue' are incompatible.
+        Type 'OrderTableItem | Order' is not assignable to type '{ realized_pnl: number; }'.
+          Type 'OrderTableItem' is not assignable to type '{ realized_pnl: number; }'.
+            Types of property 'realized_pnl' are incompatible.
+              Type 'number | null' is not assignable to type 'number'.
+                Type 'null' is not assignable to type 'number'.
+src/components/trading/OrdersTable.tsx(211,11): error TS2322: Type '{ filled: number; open: number; cancelled: number; totalPnL: OrderTableItem | Order; }' is not assignable to type '{ filled: number; open: number; cancelled: number; totalPnL: number; }'.
+  Types of property 'totalPnL' are incompatible.
+    Type 'OrderTableItem | Order' is not assignable to type 'number'.
+      Type 'OrderTableItem' is not assignable to type 'number'.
+src/components/trading/OrdersTable.tsx(259,14): error TS2375: Type '{ orders: Order[]; onModify: ((order: Order) => void) | undefined; onCancel: (order: Order) => void; onViewDetails: ((order: Order) => void) | undefined; }' is not assignable to type 'OrdersTableMobileProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onModify' are incompatible.
+    Type '((order: Order) => void) | undefined' is not assignable to type '(order: Order) => void'.
+      Type 'undefined' is not assignable to type '(order: Order) => void'.
+src/components/trading/OrdersTable.tsx(303,16): error TS2367: This comparison appears to be unintentional because the types 'OrderTableItem | Order' and 'number' have no overlap.
+src/components/trading/OrdersTable.tsx(312,25): error TS2365: Operator '>' cannot be applied to types 'OrderTableItem | Order' and 'number'.
+src/components/trading/OrdersTable.tsx(317,22): error TS2365: Operator '>' cannot be applied to types 'OrderTableItem | Order' and 'number'.
+src/components/trading/OrdersTable.tsx(317,69): error TS2339: Property 'toFixed' does not exist on type 'OrderTableItem | Order'.
+  Property 'toFixed' does not exist on type 'OrderTableItem'.
+src/components/trading/PositionRow.tsx(82,35): error TS2379: Argument of type '{ position_id: string; quantity: number | undefined; }' is not assignable to parameter of type 'ClosePositionRequest' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'quantity' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/components/trading/TradingViewWatchlist.tsx(161,22): error TS18048: 'entry' is possibly 'undefined'.
+src/components/trading/TradingViewWatchlist.tsx(162,13): error TS18048: 'entry' is possibly 'undefined'.
+src/components/trading/WatchlistItems.tsx(60,14): error TS2375: Type '{ key: string; id: string; symbol: string; priceData: { currentPrice: number; change: number; changePercent: number; } | undefined; onSymbolClick: (symbol: string) => void; onQuickTrade: (symbol: string, side: "buy" | "sell", e: MouseEvent<...>) => void; onRemove: (e: MouseEvent<...>) => void; }' is not assignable to type 'WatchlistRowProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'priceData' are incompatible.
+    Type '{ currentPrice: number; change: number; changePercent: number; } | undefined' is not assignable to type '{ currentPrice: number; change: number; changePercent: number; }'.
+      Type 'undefined' is not assignable to type '{ currentPrice: number; change: number; changePercent: number; }'.
+src/components/trading/WatchlistTabs.tsx(41,6): error TS2375: Type '{ children: (Element | Element[])[]; value: string | undefined; onValueChange: (id: string) => void; className: string; }' is not assignable to type 'TabsProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'value' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/TradingViewErrorBoundary.tsx(93,12): error TS2375: Type '{ error: Error; onRetry: () => void; widgetType: string | undefined; }' is not assignable to type '{ error: Error; onRetry: () => void; widgetType?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'widgetType' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/ui/breadcrumb.tsx(244,20): error TS2379: Argument of type '{ path: string | undefined; title: string; icon?: React.ComponentType<{ className?: string; }>; hideInBreadcrumb?: boolean; }' is not assignable to parameter of type 'BreadcrumbItemConfig & { path?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ path: string | undefined; title: string; icon?: React.ComponentType<{ className?: string; }>; hideInBreadcrumb?: boolean; }' is not assignable to type 'BreadcrumbItemConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'path' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+src/components/ui/chart.tsx(227,34): error TS18048: 'item' is possibly 'undefined'.
+src/components/ui/chart.tsx(227,50): error TS18048: 'item' is possibly 'undefined'.
+src/components/ui/context-menu.tsx(94,4): error TS2375: Type '{ children: (Element | ReactNode)[]; slot?: string | undefined; style?: CSSProperties | undefined; title?: string | undefined; dir?: string | undefined; ... 265 more ...; checked: CheckedState | undefined; }' is not assignable to type 'ContextMenuCheckboxItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'checked' are incompatible.
+    Type 'CheckedState | undefined' is not assignable to type 'CheckedState'.
+src/components/ui/dropdown-menu.tsx(97,4): error TS2375: Type '{ children: (Element | ReactNode)[]; slot?: string | undefined; style?: CSSProperties | undefined; title?: string | undefined; dir?: string | undefined; ... 265 more ...; checked: CheckedState | undefined; }' is not assignable to type 'DropdownMenuCheckboxItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'checked' are incompatible.
+    Type 'CheckedState | undefined' is not assignable to type 'CheckedState'.
+      Type 'undefined' is not assignable to type 'CheckedState'.
+src/components/ui/EmptyState.tsx(90,4): error TS2375: Type '{ title: string; description: string; action: { label: string; onClick: () => void; } | undefined; variant: "minimal"; }' is not assignable to type 'EmptyStateProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'action' are incompatible.
+    Type '{ label: string; onClick: () => void; } | undefined' is not assignable to type '{ label: string; onClick: () => void; }'.
+      Type 'undefined' is not assignable to type '{ label: string; onClick: () => void; }'.
+src/components/ui/ErrorState.tsx(179,4): error TS2375: Type '{ error: unknown; context: string; onRetry: (() => void) | undefined; onContactSupport: (() => void) | undefined; showRetry: true; showSupport: true; className: string | undefined; }' is not assignable to type 'ErrorStateProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onRetry' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+src/components/ui/ErrorState.tsx(195,4): error TS2375: Type '{ error: unknown; context: string; onRetry: (() => void) | undefined; showRetry: true; showSupport: false; variant: "minimal"; className: string | undefined; }' is not assignable to type 'ErrorStateProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onRetry' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+src/components/ui/ErrorState.tsx(212,4): error TS2375: Type '{ error: unknown; context: string; onRetry: (() => void) | undefined; onContactSupport: (() => void) | undefined; showRetry: true; showSupport: true; className: string | undefined; }' is not assignable to type 'ErrorStateProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onRetry' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+src/components/ui/form.tsx(49,74): error TS2739: Type '{ error: undefined; }' is missing the following properties from type '{ invalid: boolean; isDirty: boolean; isTouched: boolean; isValidating: boolean; error?: FieldError; }': invalid, isDirty, isTouched, isValidating
+src/components/ui/form.tsx(64,65): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'FormState<FieldValues> | undefined'.
+src/components/ui/input-otp.tsx(36,11): error TS2339: Property 'char' does not exist on type 'SlotProps | undefined'.
+src/components/ui/input-otp.tsx(36,17): error TS2339: Property 'hasFakeCaret' does not exist on type 'SlotProps | undefined'.
+src/components/ui/input-otp.tsx(36,31): error TS2339: Property 'isActive' does not exist on type 'SlotProps | undefined'.
+src/components/ui/menubar.tsx(130,4): error TS2375: Type '{ children: (Element | ReactNode)[]; slot?: string | undefined; style?: CSSProperties | undefined; title?: string | undefined; dir?: string | undefined; ... 265 more ...; checked: CheckedState | undefined; }' is not assignable to type 'MenubarCheckboxItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'checked' are incompatible.
+    Type 'CheckedState | undefined' is not assignable to type 'CheckedState'.
+src/components/ui/NumberCounter.tsx(43,13): error TS18048: 'entry' is possibly 'undefined'.
+src/components/ui/Placeholder.tsx(16,8): error TS2375: Type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; title: string; description: string | undefined; variant: "default"; }' is not assignable to type 'EmptyStateProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'description' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/ui/SidebarErrorBoundary.tsx(117,19): error TS2345: Argument of type '{ hasError: false; error: undefined; errorInfo: undefined; }' is not assignable to parameter of type 'SidebarErrorBoundaryState | ((prevState: Readonly<SidebarErrorBoundaryState>, props: Readonly<SidebarErrorBoundaryProps>) => SidebarErrorBoundaryState | ... 1 more ... | null) | Pick<...> | null'.
+  Type '{ hasError: false; error: undefined; errorInfo: undefined; }' is not assignable to type 'Pick<SidebarErrorBoundaryState, "error" | "hasError" | "errorInfo">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'error' are incompatible.
+      Type 'undefined' is not assignable to type 'Error'.
+src/components/ui/SidebarErrorBoundary.tsx(134,12): error TS2375: Type '{ error: Error | undefined; onRetry: () => void; }' is not assignable to type '{ error?: Error; onRetry?: () => void; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'Error | undefined' is not assignable to type 'Error'.
+      Type 'undefined' is not assignable to type 'Error'.
+src/components/ui/SidebarErrorBoundary.tsx(143,10): error TS2375: Type '{ error: Error | undefined; onRetry: () => void; }' is not assignable to type '{ error?: Error; onRetry?: () => void; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'Error | undefined' is not assignable to type 'Error'.
+      Type 'undefined' is not assignable to type 'Error'.
+src/components/ui/toaster.tsx(25,12): error TS2375: Type '{ children: (Element | ToastActionElement | undefined)[]; duration: number | undefined; slot?: string | undefined; style?: CSSProperties | undefined; ... 273 more ...; forceMount?: true; }' is not assignable to type 'Omit<ToastProps & RefAttributes<HTMLLIElement>, "ref">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'duration' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/components/wallet/__tests__/withdrawal-form.test.ts(232,26): error TS18048: 'limits' is possibly 'undefined'.
+src/components/wallet/__tests__/withdrawal-form.test.ts(232,58): error TS18048: 'limits' is possibly 'undefined'.
+src/components/wallet/__tests__/withdrawal.test.ts(155,25): error TS18048: 'min' is possibly 'undefined'.
+src/components/wallet/__tests__/withdrawal.test.ts(326,14): error TS2532: Object is possibly 'undefined'.
+src/components/wallet/__tests__/withdrawal.test.ts(327,14): error TS2532: Object is possibly 'undefined'.
+src/components/wallet/__tests__/withdrawal.test.ts(486,40): error TS2532: Object is possibly 'undefined'.
+src/components/wallet/TransactionHistory.tsx(101,23): error TS18048: 'config' is possibly 'undefined'.
+src/components/wallet/TransactionHistory.tsx(102,10): error TS18048: 'config' is possibly 'undefined'.
+src/components/wallet/TransactionHistory.tsx(103,10): error TS18048: 'config' is possibly 'undefined'.
+src/contexts/LoadingContext.tsx(48,20): error TS2379: Argument of type '{ id: string; message: string | undefined; progress: number; timestamp: number; }' is not assignable to parameter of type 'LoadingOperation' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'message' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/hooks/__tests__/useErrorContext.test.tsx(170,14): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useErrorContext.test.tsx(171,14): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useOrderExecution.test.tsx(225,24): error TS2339: Property 'new_balance' does not exist on type 'OrderResult'.
+src/hooks/__tests__/usePnLCalculations.test.tsx(55,3): error TS2375: Type '{ margin_required: number | undefined; entry_price: number; current_price: number; id: string; symbol: string; side: "long" | "short"; quantity: number; entryPrice: number; currentPrice: number; marginRequired?: number; }' is not assignable to type 'MockPnLPosition' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'margin_required' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/hooks/__tests__/usePnLCalculations.test.tsx(268,55): error TS2345: Argument of type 'MockPnLPosition | undefined' is not assignable to parameter of type 'PnLPosition'.
+  Type 'undefined' is not assignable to type 'PnLPosition'.
+src/hooks/__tests__/usePnLCalculations.test.tsx(317,55): error TS2345: Argument of type 'MockPnLPosition | undefined' is not assignable to parameter of type 'PnLPosition'.
+  Type 'undefined' is not assignable to type 'PnLPosition'.
+src/hooks/__tests__/useSLTPMonitoring.test.tsx(104,12): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useSLTPMonitoring.test.tsx(105,12): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useSLTPMonitoring.test.tsx(106,12): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useSLTPMonitoring.test.tsx(107,12): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useSLTPMonitoring.test.tsx(108,12): error TS2532: Object is possibly 'undefined'.
+src/hooks/__tests__/useSLTPMonitoring.test.tsx(109,12): error TS2532: Object is possibly 'undefined'.
+src/hooks/use-toast.ts(229,45): error TS2345: Argument of type '{ type: "DISMISS_TOAST"; toastId: string | undefined; }' is not assignable to parameter of type 'Action'.
+  Type '{ type: "DISMISS_TOAST"; toastId: string | undefined; }' is not assignable to type '{ type: "DISMISS_TOAST"; toastId?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'toastId' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+src/hooks/useAccessibilityPreferences.ts(3,3): error TS2724: '"../components/accessibility/WCAGAAAEnhancer"' has no exported member named 'wcagAAAEnhancer'. Did you mean 'WCAGAAAEnhancer'?
+src/hooks/useHapticFeedbackFixed.ts(130,47): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'LogContext | undefined'.
+src/hooks/useKycTrading.tsx(170,29): error TS2339: Property 'kyc_status' does not exist on type 'SelectQueryError<"column 'kyc_rejected_at' does not exist on 'profiles'.">'.
+src/hooks/useKycTrading.tsx(171,34): error TS2339: Property 'kyc_rejected_at' does not exist on type 'SelectQueryError<"column 'kyc_rejected_at' does not exist on 'profiles'.">'.
+src/hooks/useKycTrading.tsx(172,34): error TS2339: Property 'kyc_approved_at' does not exist on type 'SelectQueryError<"column 'kyc_rejected_at' does not exist on 'profiles'.">'.
+src/hooks/useKycTrading.tsx(173,39): error TS2339: Property 'kyc_rejection_reason' does not exist on type 'SelectQueryError<"column 'kyc_rejected_at' does not exist on 'profiles'.">'.
+src/hooks/useOrdersTable.tsx(101,26): error TS2339: Property 'filled_quantity' does not exist on type '{ commission: number | null; created_at: string | null; fill_price: number | null; filled_at: string | null; id: string; idempotency_key: string; order_type: "stop" | "market" | "limit" | "stop_limit"; ... 7 more ...; user_id: string; }'.
+src/hooks/useOrdersTable.tsx(102,23): error TS2339: Property 'filled_quantity' does not exist on type '{ commission: number | null; created_at: string | null; fill_price: number | null; filled_at: string | null; id: string; idempotency_key: string; order_type: "stop" | "market" | "limit" | "stop_limit"; ... 7 more ...; user_id: string; }'.
+src/hooks/useOrdersTable.tsx(103,30): error TS2339: Property 'filled_quantity' does not exist on type '{ commission: number | null; created_at: string | null; fill_price: number | null; filled_at: string | null; id: string; idempotency_key: string; order_type: "stop" | "market" | "limit" | "stop_limit"; ... 7 more ...; user_id: string; }'.
+src/hooks/useOrdersTable.tsx(218,9): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '"postgres_changes"' is not assignable to parameter of type '"system"'.
+src/hooks/usePagination.ts(228,13): error TS18048: 'e' is possibly 'undefined'.
+src/hooks/usePositionUpdate.tsx(212,15): error TS2375: Type '{ current_price: number; unrealized_pnl: number; margin_level: number; margin_status: "SAFE" | "WARNING" | "CRITICAL" | "LIQUIDATION"; position_id?: string; symbol?: string; side?: "long" | "short"; ... 4 more ...; take_profit?: number; }' is not assignable to type 'PositionMetrics' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Property 'position_id' is optional in type '{ current_price: number; unrealized_pnl: number; margin_level: number; margin_status: "SAFE" | "WARNING" | "CRITICAL" | "LIQUIDATION"; position_id?: string; symbol?: string; side?: "long" | "short"; ... 4 more ...; take_profit?: number; }' but required in type 'PositionMetrics'.
+src/hooks/usePriceUpdates.tsx(119,27): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/hooks/usePriceUpdatesOptimized.tsx(102,21): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/hooks/useProfitLossData.tsx(111,13): error TS2532: Object is possibly 'undefined'.
+src/hooks/useProfitLossData.tsx(113,17): error TS2532: Object is possibly 'undefined'.
+src/hooks/useProfitLossData.tsx(119,13): error TS2532: Object is possibly 'undefined'.
+src/hooks/useProfitLossData.tsx(120,14): error TS2532: Object is possibly 'undefined'.
+src/hooks/useProfitLossData.tsx(125,13): error TS2532: Object is possibly 'undefined'.
+src/hooks/useProfitLossData.tsx(126,14): error TS2532: Object is possibly 'undefined'.
+src/hooks/useProfitLossData.tsx(284,9): error TS2345: Argument of type '{ opened_at: string; closed_at: string | undefined; current_price: number; realized_pnl: number; unrealized_pnl: number; status: "open" | "closed"; entry_price: number; highest_price: number | null; ... 9 more ...; user_id: string; }[]' is not assignable to parameter of type 'Position[]'.
+  Type '{ opened_at: string; closed_at: string | undefined; current_price: number; realized_pnl: number; unrealized_pnl: number; status: "open" | "closed"; entry_price: number; highest_price: number | null; ... 9 more ...; user_id: string; }' is not assignable to type 'Position' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'closed_at' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+src/hooks/useProfitLossData.tsx(302,9): error TS2345: Argument of type '{ opened_at: string; closed_at: string | undefined; current_price: number; realized_pnl: number; unrealized_pnl: number; status: "open" | "closed"; entry_price: number; highest_price: number | null; ... 9 more ...; user_id: string; }[]' is not assignable to parameter of type 'Position[]'.
+  Type '{ opened_at: string; closed_at: string | undefined; current_price: number; realized_pnl: number; unrealized_pnl: number; status: "open" | "closed"; entry_price: number; highest_price: number | null; ... 9 more ...; user_id: string; }' is not assignable to type 'Position' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'closed_at' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+src/hooks/usePullToRefresh.ts(85,27): error TS2532: Object is possibly 'undefined'.
+src/hooks/usePullToRefresh.ts(86,29): error TS2532: Object is possibly 'undefined'.
+src/hooks/usePullToRefresh.ts(98,24): error TS2532: Object is possibly 'undefined'.
+src/hooks/useSLTPMonitoring.tsx(192,17): error TS2322: Type 'TriggerType | null' is not assignable to type 'TriggerType'.
+  Type 'null' is not assignable to type 'TriggerType'.
+src/hooks/useTradingData.ts(178,24): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string | null'.
+src/hooks/useTradingHistory.tsx(301,24): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/hooks/useTradingTransitions.tsx(241,25): error TS2345: Argument of type '() => Promise<void>' is not assignable to parameter of type 'TransitionFunction'.
+  Type 'Promise<void>' is not assignable to type 'VoidOrUndefinedOnly'.
+src/hooks/useWatchlists.tsx(47,30): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(74,14): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(75,14): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(85,14): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(86,14): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(87,14): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(98,14): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/logger.test.ts(252,14): error TS18048: 'lastBreadcrumb' is possibly 'undefined'.
+src/lib/__tests__/navigationConfig.test.ts(65,48): error TS2532: Object is possibly 'undefined'.
+src/lib/__tests__/navigationConfig.test.ts(125,31): error TS2345: Argument of type '{ id: string; path: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; requiredRoles: string[]; order: number; isVisible: boolean; } | undefined' is not assignable to parameter of type 'NavigationItem'.
+  Type 'undefined' is not assignable to type 'NavigationItem'.
+src/lib/__tests__/navigationConfig.test.ts(128,31): error TS2345: Argument of type '{ id: string; path: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; requiredRoles: string[]; order: number; isVisible: boolean; } | undefined' is not assignable to parameter of type 'NavigationItem'.
+  Type 'undefined' is not assignable to type 'NavigationItem'.
+src/lib/ab-testing/experimentManager.ts(164,5): error TS2322: Type 'ExperimentVariant | undefined' is not assignable to type 'ExperimentVariant'.
+  Type 'undefined' is not assignable to type 'ExperimentVariant'.
+src/lib/analytics/AnalyticsManager.ts(148,25): error TS2379: Argument of type '{ element: EventTarget; type: string; handler: EventListener; options: boolean | AddEventListenerOptions | undefined; }' is not assignable to parameter of type '{ element: EventTarget; type: string; handler: EventListener; options?: boolean | AddEventListenerOptions; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'options' are incompatible.
+    Type 'boolean | AddEventListenerOptions | undefined' is not assignable to type 'boolean | AddEventListenerOptions'.
+      Type 'undefined' is not assignable to type 'boolean | AddEventListenerOptions'.
+src/lib/analytics/AnalyticsManager.ts(221,5): error TS2375: Type '{ id: string; userId: string | undefined; startTime: number; duration: number; pageViews: number; events: never[]; conversions: never[]; bounceRate: number; scrollDepth: number; clickHeatMap: never[]; deviceInfo: DeviceInfo; referrer: string; landingPage: string; }' is not assignable to type 'SessionData' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'userId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/analytics/AnalyticsManager.ts(237,34): error TS2345: Argument of type 'SessionData | null' is not assignable to parameter of type 'SessionData'.
+  Type 'null' is not assignable to type 'SessionData'.
+src/lib/analytics/AnalyticsManager.ts(341,5): error TS2375: Type '{ userAgent: string; screenResolution: string; viewportSize: string; devicePixelRatio: number; connectionType: string | undefined; deviceMemory: number | undefined; hardwareConcurrency: number; platform: string; isMobile: boolean; isTablet: boolean; isDesktop: boolean; }' is not assignable to type 'DeviceInfo' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'connectionType' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/analytics/AnalyticsManager.ts(365,11): error TS2375: Type '{ id: string; timestamp: number; type: "click" | "scroll" | "hover" | "form_submit" | "page_view" | "exit_intent" | "conversion"; target?: string; x?: number; y?: number; value?: number; metadata?: Record<...>; sessionId: string; userId: string | undefined; page: string; referrer?: string; }' is not assignable to type 'UserEvent' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'userId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/analytics/AnalyticsManager.ts(512,20): error TS2379: Argument of type '{ x: number; y: number; intensity: number; clicks: number; element: string | undefined; }' is not assignable to parameter of type 'HeatMapData' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'element' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/breadcrumbTracker.ts(264,11): error TS2375: Type '{ type: "navigation" | "error" | "click" | "session" | "form_submit" | "trade_action" | "api_call"; target: string; timestamp: number; metadata: Record<string, unknown> | undefined; }' is not assignable to type 'UserInteraction' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'metadata' are incompatible.
+    Type 'Record<string, unknown> | undefined' is not assignable to type 'Record<string, unknown>'.
+      Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+src/lib/cacheConfig.ts(269,26): error TS2532: Object is possibly 'undefined'.
+src/lib/colorContrastVerification.tsx(88,23): error TS18048: 'rs' is possibly 'undefined'.
+src/lib/colorContrastVerification.tsx(88,37): error TS18048: 'gs' is possibly 'undefined'.
+src/lib/colorContrastVerification.tsx(88,51): error TS18048: 'bs' is possibly 'undefined'.
+src/lib/completeAriaLabeling.tsx(219,15): error TS2375: Type '{ id: string; label: string; description: string; required: boolean; readonly: boolean; disabled: boolean; autocomplete: string | undefined; pattern: string | undefined; minlength: number | undefined; maxlength: number | undefined; }' is not assignable to type 'FormFieldAria' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'autocomplete' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/errorHandling.tsx(22,10): error TS2375: Type '{ error: string; title: string | undefined; description: string | undefined; onRetry: (() => void) | undefined; }' is not assignable to type 'ErrorUIProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onRetry' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+src/lib/errorService.ts(220,3): error TS2375: Type '{ originalError: unknown; message: string; userMessage: string; severity: ErrorSeverity; category: ErrorCategory; recoveryAction: RecoveryAction; retryable: boolean; code: string | undefined; details: Record<...> | undefined; }' is not assignable to type 'ClassifiedError' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'code' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/errorService.ts(256,22): error TS2379: Argument of type '{ id: string; email: string | undefined; }' is not assignable to parameter of type 'User' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'email' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/imageOptimization.ts(132,3): error TS2322: Type 'ImageVariant | undefined' is not assignable to type 'ImageVariant'.
+  Type 'undefined' is not assignable to type 'ImageVariant'.
+src/lib/risk/__tests__/riskDashboard.test.ts(330,14): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/__tests__/riskDashboard.test.ts(331,14): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(304,18): error TS18048: 'peak' is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(309,22): error TS18048: 'peak' is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(317,5): error TS18048: 'peakEquity' is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(317,37): error TS18048: 'peakEquity' is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(322,5): error TS2322: Type 'number | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+src/lib/risk/portfolioMetrics.ts(323,5): error TS2322: Type 'number | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+src/lib/risk/portfolioMetrics.ts(419,5): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(420,5): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/portfolioMetrics.ts(421,5): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/positionAnalysis.ts(315,37): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/positionAnalysis.ts(360,9): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/positionAnalysis.ts(362,9): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/positionAnalysis.ts(372,40): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/risk/positionAnalysis.ts(373,40): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/risk/positionAnalysis.ts(376,7): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/positionAnalysis.ts(377,7): error TS2532: Object is possibly 'undefined'.
+src/lib/risk/positionAnalysis.ts(380,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/risk/positionAnalysis.ts(381,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/risk/riskMetrics.ts(191,3): error TS2375: Type '{ readonly level: "safe"; readonly description: "Your account is in good standing with healthy margin levels"; readonly color: "text-status-safe"; readonly backgroundColor: "bg-status-safe"; readonly warningMessage: undefined; readonly recommendedAction: "Continue monitoring your positions"; } | { ...; } | { ...; } ...' is not assignable to type 'RiskLevelDetails' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ readonly level: "safe"; readonly description: "Your account is in good standing with healthy margin levels"; readonly color: "text-status-safe"; readonly backgroundColor: "bg-status-safe"; readonly warningMessage: undefined; readonly recommendedAction: "Continue monitoring your positions"; }' is not assignable to type 'RiskLevelDetails' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'warningMessage' are incompatible.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/seo/SEOManager.ts(161,5): error TS2375: Type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' is not assignable to type 'SEOConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Property 'title' is optional in type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' but required in type 'SEOConfig'.
+src/lib/seo/SEOManager.ts(164,25): error TS2379: Argument of type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' is not assignable to parameter of type 'SEOConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/lib/seo/SEOManager.ts(167,30): error TS2379: Argument of type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' is not assignable to parameter of type 'SEOConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/lib/seo/SEOManager.ts(170,32): error TS2379: Argument of type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' is not assignable to parameter of type 'SEOConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/lib/seo/SEOManager.ts(173,33): error TS2379: Argument of type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' is not assignable to parameter of type 'SEOConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/lib/seo/SEOManager.ts(176,29): error TS2379: Argument of type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' is not assignable to parameter of type 'SEOConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/lib/seo/SEOManager.ts(265,5): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/seo/SEOManager.ts(265,20): error TS2532: Object is possibly 'undefined'.
+src/lib/sidebarErrorHandling.tsx(23,8): error TS2375: Type '{ children: Element; onError: ((error: Error, errorInfo: ErrorInfo) => void) | undefined; }' is not assignable to type 'Readonly<SidebarErrorBoundaryProps>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onError' are incompatible.
+    Type '((error: Error, errorInfo: ErrorInfo) => void) | undefined' is not assignable to type '(error: Error, errorInfo: ErrorInfo) => void'.
+      Type 'undefined' is not assignable to type '(error: Error, errorInfo: ErrorInfo) => void'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(314,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(315,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(316,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(648,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(649,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(650,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(651,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(652,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/commissionCalculation.test.ts(653,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/liquidationEngine.test.ts(140,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/liquidationEngine.test.ts(198,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCalculations.test.ts(271,14): error TS18048: 'aapl' is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallDetection.test.ts(404,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallDetection.test.ts(688,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallDetection.test.ts(689,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallDetection.test.ts(690,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallLiquidationSystem.test.ts(112,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallLiquidationSystem.test.ts(171,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallLiquidationSystem.test.ts(210,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginCallLiquidationSystem.test.ts(252,14): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginMonitoring.test.ts(227,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/marginMonitoring.test.ts(246,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/pnlCalculation.test.ts(265,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/pnlCalculation.test.ts(321,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/pnlCalculation.test.ts(559,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/pnlCalculation.test.ts(597,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionClosureEngine.test.ts(111,41): error TS2379: Argument of type '{ take_profit_level: undefined; }' is not assignable to parameter of type 'Partial<Position>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'take_profit_level' are incompatible.
+    Type 'undefined' is not assignable to type 'number'.
+src/lib/trading/__tests__/positionClosureEngine.test.ts(210,41): error TS2379: Argument of type '{ trailing_stop_distance: number; trailing_stop_peak_price: undefined; }' is not assignable to parameter of type 'Partial<Position>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'trailing_stop_peak_price' are incompatible.
+    Type 'undefined' is not assignable to type 'number'.
+src/lib/trading/__tests__/positionClosureEngine.test.ts(793,41): error TS2379: Argument of type '{ trailing_stop_distance: undefined; }' is not assignable to parameter of type 'Partial<Position>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'trailing_stop_distance' are incompatible.
+    Type 'undefined' is not assignable to type 'number'.
+src/lib/trading/__tests__/positionUpdate.test.ts(469,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(470,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(471,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(487,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(488,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(504,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(505,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(506,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(602,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(827,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(828,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(839,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/positionUpdate.test.ts(841,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(87,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(163,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(174,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(175,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(214,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(215,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(216,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(237,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(238,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(325,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(538,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(539,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(540,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(555,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(556,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/__tests__/useRealtimePositions.test.ts(573,12): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/commissionCalculation.ts(359,3): error TS2375: Type '{ symbol: string; assetClass: AssetClass; quantity: number; executionPrice: number; baseCommission: number; tierMultiplier: number; totalCommission: number; commissionType: "fixed" | ... 3 more ... | "per_contract"; notes: string | undefined; }' is not assignable to type 'CommissionResult' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/trading/orderMatching.ts(132,3): error TS2375: Type '{ matched: true; executionPrice: undefined; executedQuantity: number; }' is not assignable to type 'MatchingResult' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'executionPrice' are incompatible.
+    Type 'undefined' is not assignable to type 'number'.
+src/lib/trading/orderValidation.ts(20,5): error TS2412: Type 'string | undefined' is not assignable to type 'string' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/trading/pnlCalculation.ts(468,23): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/trading/pnlCalculation.ts(469,20): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/trading/pnlCalculation.ts(471,18): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/trading/pnlCalculation.ts(555,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(556,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(557,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(558,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(559,7): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(566,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(567,18): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(568,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(569,18): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(570,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(571,18): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(572,5): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/pnlCalculation.ts(573,18): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/positionClosureEngine.ts(542,5): error TS2375: Type '{ success: false; position_id: string; reason: ClosureReason; status: ClosureStatus.FAILED; entry_price: number; exit_price: number; quantity_closed: number; realized_pnl: number; ... 8 more ...; error: string | undefined; }' is not assignable to type 'ClosureResult' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/trading/riskThresholdMonitoring.ts(264,11): error TS2532: Object is possibly 'undefined'.
+src/lib/trading/riskThresholdMonitoring.ts(264,33): error TS2532: Object is possibly 'undefined'.
+src/pages/Portfolio.tsx(294,32): error TS2375: Type '{ positionId: string; symbol: string; side: "buy" | "sell"; currentPrice: number; trailingStopEnabled: boolean; trailingStopDistance: number | undefined; }' is not assignable to type 'TrailingStopDialogProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'trailingStopDistance' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/workers/chartWorker.ts(37,20): error TS18048: 'lastValue' is possibly 'undefined'.
+src/workers/chartWorker.ts(37,32): error TS18048: 'firstValue' is possibly 'undefined'.
+src/workers/chartWorker.ts(37,55): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+src/workers/chartWorker.ts(75,3): error TS2322: Type '{ date: string; value: number; label: string | undefined; }[]' is not assignable to type '{ date: string; value: number; label?: string; }[]'.
+  Type '{ date: string; value: number; label: string | undefined; }' is not assignable to type '{ date: string; value: number; label?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'label' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.

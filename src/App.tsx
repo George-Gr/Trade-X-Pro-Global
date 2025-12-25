@@ -11,11 +11,11 @@ import { LoadingProvider } from '@/contexts/LoadingContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ViewModeProvider } from '@/contexts/ViewModeContext';
 import { initializeSentry, logger } from '@/lib/logger';
+import { AppRoutes } from '@/routes/routesConfig';
 import { accessibilityStyles } from '@/styles/accessibilityStyles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AppRoutes } from './routes/routesConfig';
 
 const queryClient = new QueryClient();
 

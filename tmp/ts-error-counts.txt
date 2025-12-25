@@ -1,0 +1,208 @@
+  16 rc/lib/trading/pnlCalculation.ts
+  16 rc/lib/trading/__tests__/useRealtimePositions.test.ts
+  16       Type 'undefined' is not assignable to type 'string'.
+  15     Type 'string | undefined' is not assignable to type 'string'.
+  13 rc/lib/trading/__tests__/positionUpdate.test.ts
+  12   Type 'undefined' is not assignable to type 'string'.
+   9 rc/lib/trading/__tests__/commissionCalculation.test.ts
+   9 rc/lib/risk/positionAnalysis.ts
+   9 rc/lib/risk/portfolioMetrics.ts
+   8 rc/lib/seo/SEOManager.ts
+   8 rc/hooks/useProfitLossData.tsx
+   8 rc/components/trading/OrdersTable.tsx
+   7 rc/lib/__tests__/logger.test.ts
+   6 rc/lib/analytics/AnalyticsManager.ts
+   6 rc/hooks/__tests__/useSLTPMonitoring.test.tsx
+   6     Type '
+   6       Type 'undefined' is not assignable to type '
+   5     Type 'undefined' is not assignable to type 'number'.
+   5       Type 'string | undefined' is not assignable to type 'string'.
+   5         Type 'undefined' is not assignable to type 'string'.
+   4 rc/workers/chartWorker.ts
+   4 rc/lib/trading/__tests__/pnlCalculation.test.ts
+   4 rc/lib/trading/__tests__/marginCallLiquidationSystem.test.ts
+   4 rc/lib/trading/__tests__/marginCallDetection.test.ts
+   4 rc/hooks/useOrdersTable.tsx
+   4 rc/hooks/useKycTrading.tsx
+   4 rc/components/wallet/__tests__/withdrawal.test.ts
+   4   Types of property 'onRetry' are incompatible.
+   4     Type 'number | undefined' is not assignable to type 'number'.
+   4     Argument of type '
+   4       Type 'undefined' is not assignable to type 'number'.
+   3 rc/lib/trading/__tests__/positionClosureEngine.test.ts
+   3 rc/lib/colorContrastVerification.tsx
+   3 rc/lib/__tests__/navigationConfig.test.ts
+   3 rc/hooks/usePullToRefresh.ts
+   3 rc/hooks/__tests__/usePnLCalculations.test.tsx
+   3 rc/components/wallet/TransactionHistory.tsx
+   3 rc/components/ui/SidebarErrorBoundary.tsx
+   3 rc/components/ui/input-otp.tsx
+   3 rc/components/ui/ErrorState.tsx
+   3 rc/components/trading/EnhancedPortfolioDashboard.tsx
+   3 rc/components/trading/__tests__/EnhancedTradingComponents.test.tsx
+   3   Types of property 'error' are incompatible.
+   3   Types of property 'checked' are incompatible.
+   3   Type 'undefined' is not assignable to type 'number'.
+   3     Type 'CheckedState | undefined' is not assignable to type 'CheckedState'.
+   3       Type 'undefined' is not assignable to type 'Error'.
+   2 rc/lib/trading/riskThresholdMonitoring.ts
+   2 rc/lib/trading/__tests__/marginMonitoring.test.ts
+   2 rc/lib/trading/__tests__/liquidationEngine.test.ts
+   2 rc/lib/risk/__tests__/riskDashboard.test.ts
+   2 rc/lib/errorService.ts
+   2 rc/hooks/__tests__/useErrorContext.test.tsx
+   2 rc/components/wallet/__tests__/withdrawal-form.test.ts
+   2 rc/components/ui/form.tsx
+   2 rc/components/ui/chart.tsx
+   2 rc/components/trading/TradingViewWatchlist.tsx
+   2 rc/components/trading/__tests__/OrderComponents.test.tsx
+   2 rc/components/dashboard/AssetAllocation.tsx
+   2 rc/components/common/OptimizedHeroSection.tsx
+   2   Types of property 'value' are incompatible.
+   2   Types of property 'userId' are incompatible.
+   2   Type 'undefined' is not assignable to type 'PnLPosition'.
+   2   Type 'undefined' is not assignable to type 'NavigationItem'.
+   2   Type 'undefined' is not assignable to type 'Element'.
+   2   Type '{ opened_at: string; closed_at: string | undefined; current_price: number; realized_pnl: number; unrealized_pnl: number; status: "open" | "closed"; entry_price: number; highest_price: number | null; ... 9 more ...; user_id: string; }' is not assignable to type 'Position' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+   2     Types of property 'closed_at' are incompatible.
+   2     Type 'Error | undefined' is not assignable to type 'Error'.
+   2       Types of parameters 'o' and 'value' are incompatible.
+   2         Type 'OrderTableItem | Order' is not assignable to type '{ realized_pnl: number | undefined; }'.
+   2           Type 'OrderTableItem' is not assignable to type '{ realized_pnl: number | undefined; }'.
+   2             Types of property 'realized_pnl' are incompatible.
+   1 rc/pages/Portfolio.tsx
+   1 rc/lib/trading/positionClosureEngine.ts
+   1 rc/lib/trading/orderValidation.ts
+   1 rc/lib/trading/orderMatching.ts
+   1 rc/lib/trading/commissionCalculation.ts
+   1 rc/lib/trading/__tests__/marginCalculations.test.ts
+   1 rc/lib/sidebarErrorHandling.tsx
+   1 rc/lib/risk/riskMetrics.ts
+   1 rc/lib/imageOptimization.ts
+   1 rc/lib/errorHandling.tsx
+   1 rc/lib/completeAriaLabeling.tsx
+   1 rc/lib/cacheConfig.ts
+   1 rc/lib/breadcrumbTracker.ts
+   1 rc/lib/ab-testing/experimentManager.ts
+   1 rc/hooks/useWatchlists.tsx
+   1 rc/hooks/useTradingTransitions.tsx
+   1 rc/hooks/useTradingHistory.tsx
+   1 rc/hooks/useTradingData.ts
+   1 rc/hooks/useSLTPMonitoring.tsx
+   1 rc/hooks/usePriceUpdatesOptimized.tsx
+   1 rc/hooks/usePriceUpdates.tsx
+   1 rc/hooks/usePositionUpdate.tsx
+   1 rc/hooks/usePagination.ts
+   1 rc/hooks/useHapticFeedbackFixed.ts
+   1 rc/hooks/useAccessibilityPreferences.ts
+   1 rc/hooks/use-toast.ts
+   1 rc/hooks/__tests__/useOrderExecution.test.tsx
+   1 rc/contexts/LoadingContext.tsx
+   1 rc/components/ui/toaster.tsx
+   1 rc/components/ui/Placeholder.tsx
+   1 rc/components/ui/NumberCounter.tsx
+   1 rc/components/ui/menubar.tsx
+   1 rc/components/ui/EmptyState.tsx
+   1 rc/components/ui/dropdown-menu.tsx
+   1 rc/components/ui/context-menu.tsx
+   1 rc/components/ui/breadcrumb.tsx
+   1 rc/components/TradingViewErrorBoundary.tsx
+   1 rc/components/trading/WatchlistTabs.tsx
+   1 rc/components/trading/WatchlistItems.tsx
+   1 rc/components/trading/PositionRow.tsx
+   1 rc/components/trading/ModifyOrderDialog.tsx
+   1 rc/components/trading/EnhancedWatchlist.tsx
+   1 rc/components/routing/EnhancedRouteWrapper.tsx
+   1 rc/components/risk/RiskAlerts.tsx
+   1 rc/components/integrations/TradeXOptimizationSuite.tsx
+   1 rc/components/common/OptimizedBackgroundImage.tsx
+   1 rc/__tests__/trading-form-focus-rings.test.tsx
+   1 rc/__tests__/sidebar-focus-rings.test.tsx
+   1 rc/__tests__/components/RiskAlertsCard.test.tsx
+   1   Types of property 'widgetType' are incompatible.
+   1   Types of property 'valueClassName' are incompatible.
+   1   Types of property 'trailingStopDistance' are incompatible.
+   1   Types of property 'trailing_stop_peak_price' are incompatible.
+   1   Types of property 'trailing_stop_distance' are incompatible.
+   1   Types of property 'totalPnL' are incompatible.
+   1   Types of property 'takeProfitPrice' are incompatible.
+   1   Types of property 'take_profit_level' are incompatible.
+   1   Types of property 'quantity' are incompatible.
+   1   Types of property 'priceData' are incompatible.
+   1   Types of property 'options' are incompatible.
+   1   Types of property 'onModify' are incompatible.
+   1   Types of property 'onError' are incompatible.
+   1   Types of property 'notes' are incompatible.
+   1   Types of property 'metadata' are incompatible.
+   1   Types of property 'message' are incompatible.
+   1   Types of property 'margin_required' are incompatible.
+   1   Types of property 'executionPrice' are incompatible.
+   1   Types of property 'email' are incompatible.
+   1   Types of property 'element' are incompatible.
+   1   Types of property 'duration' are incompatible.
+   1   Types of property 'description' are incompatible.
+   1   Types of property 'connectionType' are incompatible.
+   1   Types of property 'code' are incompatible.
+   1   Types of property 'autocomplete' are incompatible.
+   1   Types of property 'action' are incompatible.
+   1   Types of parameters 'value' and 'value' are incompatible.
+   1   Types of parameters 'pos' and 'value' are incompatible.
+   1   Type 'undefined' is not assignable to type 'string | null'.
+   1   Type 'undefined' is not assignable to type 'SetStateAction<string | null>'.
+   1   Type 'undefined' is not assignable to type 'ImageVariant'.
+   1   Type 'undefined' is not assignable to type 'ExperimentVariant'.
+   1   Type 'undefined' is not assignable to type 'Element | Node | Document | Window'.
+   1   Type 'string' is not assignable to type 'number'.
+   1   Type 'Promise<void>' is not assignable to type 'VoidOrUndefinedOnly'.
+   1   Type 'null' is not assignable to type 'TriggerType'.
+   1   Type 'null' is not assignable to type 'SessionData'.
+   1   Type '{ type: "DISMISS_TOAST"; toastId: string | undefined; }' is not assignable to type '{ type: "DISMISS_TOAST"; toastId?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+   1   Type '{ readonly level: "safe"; readonly description: "Your account is in good standing with healthy margin levels"; readonly color: "text-status-safe"; readonly backgroundColor: "bg-status-safe"; readonly warningMessage: undefined; readonly recommendedAction: "Continue monitoring your positions"; }' is not assignable to type 'RiskLevelDetails' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+   1   Type '{ path: string | undefined; title: string; icon?: React.ComponentType<{ className?: string; }>; hideInBreadcrumb?: boolean; }' is not assignable to type 'BreadcrumbItemConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+   1   Type '{ hasError: false; error: undefined; errorInfo: undefined; }' is not assignable to type 'Pick<SidebarErrorBoundaryState, "error" | "hasError" | "errorInfo">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+   1   Type '{ entryPrice: number; currentPrice: number; side: "long" | "short"; margin_required: number; entry_price: number; current_price: number; margin_used: number; }' is missing the following properties from type 'PnLPosition': id, symbol, quantity
+   1   Type '{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; } | { ...; }' is not assignable to type '{ default: ForwardRefExoticComponent<PolarChartProps & RefAttributes<SVGSVGElement>>; }'.
+   1   Type '{ date: string; value: number; label: string | undefined; }' is not assignable to type '{ date: string; value: number; label?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+   1   The last overload gave the following error.
+   1   Property 'toFixed' does not exist on type 'OrderTableItem'.
+   1   Property 'title' is optional in type '{ title?: string; description?: string; keywords?: string[]; image?: string; url?: string; type?: "article" | "website" | "product" | "service"; locale?: string; siteName?: string; author?: string; publishedTime?: string; ... 7 more ...; category?: string; }' but required in type 'SEOConfig'.
+   1   Property 'position_id' is optional in type '{ current_price: number; unrealized_pnl: number; margin_level: number; margin_status: "SAFE" | "WARNING" | "CRITICAL" | "LIQUIDATION"; position_id?: string; symbol?: string; side?: "long" | "short"; ... 4 more ...; take_profit?: number; }' but required in type 'PositionMetrics'.
+   1   Property 'enableHeatMapping' does not exist on type 'IntrinsicAttributes & AnalyticsIntegrationProps'.
+   1   Overload 2 of 3, '
+   1   Overload 2 of 2, '
+   1   Overload 1 of 3, '
+   1   Overload 1 of 2, '
+   1     Types of property 'warningMessage' are incompatible.
+   1     Types of property 'toastId' are incompatible.
+   1     Types of property 'path' are incompatible.
+   1     Types of property 'label' are incompatible.
+   1     Types of property 'error' are incompatible.
+   1     Type 'ValueType | undefined' is not assignable to type 'string | number | 
+   1     Type 'Record<string, unknown> | undefined' is not assignable to type 'Record<string, unknown>'.
+   1     Type 'PositionWithPnL' is not assignable to type '{ [key: string]: unknown; entry_price: number; current_price: number; side: string; margin_used: number; }'.
+   1     Type 'OrderTableItem | Order' is not assignable to type 'number'.
+   1     Type 'boolean | AddEventListenerOptions | undefined' is not assignable to type 'boolean | AddEventListenerOptions'.
+   1     Type '{ label: string; onClick: 
+   1     Type '{ default: 
+   1     Type '{ currentPrice: number; change: number; changePercent: number; } | undefined' is not assignable to type '{ currentPrice: number; change: number; changePercent: number; }'.
+   1     Argument of type '"postgres_changes"' is not assignable to parameter of type '"system"'.
+   1       Types of property 'default' are incompatible.
+   1       Types of parameters 'sum' and 'previousValue' are incompatible.
+   1       Types of parameters 'o' and 'currentValue' are incompatible.
+   1       Type 'undefined' is not assignable to type 'string | number | 
+   1       Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+   1       Type 'undefined' is not assignable to type 'CheckedState'.
+   1       Type 'undefined' is not assignable to type 'boolean | AddEventListenerOptions'.
+   1       Type 'undefined' is not assignable to type '{ label: string; onClick: 
+   1       Type 'undefined' is not assignable to type '{ currentPrice: number; change: number; changePercent: number; }'.
+   1       Type 'OrderTableItem' is not assignable to type 'number'.
+   1       Index signature for type 'string' is missing in type 'PositionWithPnL'.
+   1         Type 'OrderTableItem | Order' is not assignable to type 'number'.
+   1         Type 'OrderTableItem | Order' is not assignable to type '{ realized_pnl: number; }'.
+   1         Property '$$typeof' is missing in type '
+   1           Type 'OrderTableItem' is not assignable to type 'number'.
+   1           Type 'OrderTableItem' is not assignable to type '{ realized_pnl: number; }'.
+   1               Type 'number | null' is not assignable to type 'number'.
+   1               Type 'number | null' is not assignable to type 'number | undefined'.
+   1                 Type 'null' is not assignable to type 'number'.
+   1                 Type 'null' is not assignable to type 'number | undefined'.

@@ -4,18 +4,15 @@ import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 
-// Simple CORS middleware for development
 const corsMiddleware = () => ({
   name: 'cors-middleware',
-  apply: 'serve',
   configureServer(server: any) {
     server.middlewares.use((req: any, res: any, next: any) => {
       const origin = req.headers.origin;
       const isProd = process.env.NODE_ENV === 'production';
       
-      // Simple CORS configuration
       if (isProd) {
-        res.setHeader('Access-Control-Allow-Origin', 'https://tradepro.vercel.app');
+        res.setHeader('Access-Control-Allow-Origin', process.env.VITE_PRODUCTION_URL);
       } else {
         res.setHeader('Access-Control-Allow-Origin', origin || '*');
       }
@@ -35,19 +32,14 @@ const corsMiddleware = () => ({
   },
 });
 
-// Simple CSP middleware
+// CSP middleware for development only
 const cspMiddleware = () => ({
   name: 'csp-middleware',
   apply: 'serve',
   configureServer(server: any) {
     server.middlewares.use((req: any, res: any, next: any) => {
-      const isProduction = process.env.NODE_ENV === 'production';
-      const cspHeader = isProduction 
-        ? 'Content-Security-Policy'
-        : 'Content-Security-Policy-Report-Only';
-      
       res.setHeader(
-        cspHeader,
+        'Content-Security-Policy-Report-Only',
         "default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com https://www.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src https://www.tradingview.com; object-src 'none'; base-uri 'self';"
       );
       

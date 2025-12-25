@@ -2,7 +2,7 @@ import type { PriceData } from '@/hooks/usePriceStreamConcurrent';
 import type { RiskMetrics } from '@/hooks/useRiskCalculationsBatched';
 import type { TradingFormState } from '@/hooks/useTradingTransitions';
 import { performanceMonitoring } from '@/lib/performance/performanceMonitoring';
-import React from 'react';
+import type React from 'react';
 
 interface LiveMetricsPanelProps {
   prices: Map<string, PriceData>;
