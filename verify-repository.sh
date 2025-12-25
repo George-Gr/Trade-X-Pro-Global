@@ -93,7 +93,9 @@ verify_remote_branches() {
     fi
     
     # Check for Dependabot branches
-    dependabot_count=$(echo "$remote_branches" | grep -c "^dependabot/" || echo "0")
+    dependabot_count=$(echo "$remote_branches" | grep -c "^dependabot/" || true)
+    dependabot_count=$(echo "$dependabot_count" | tr -d '[:space:]')
+    if [ -z "$dependabot_count" ]; then dependabot_count=0; fi
     print_info "Found $dependabot_count Dependabot branches"
     
     if [ "$dependabot_count" -eq 0 ]; then
@@ -159,13 +161,16 @@ generate_final_report() {
     # Repository status summary
     current_branch=$(git branch --show-current 2>/dev/null || git rev-parse --abbrev-ref HEAD 2>/dev/null)
     remote_branches=$(git ls-remote --heads origin 2>/dev/null | grep -o 'refs/heads/.*' | sed 's|refs/heads/||' || echo "")
-    dependabot_count=$(echo "$remote_branches" | grep -c "^dependabot/" || echo "0")
+    remote_branch_count=$(echo "$remote_branches" | grep -c . || echo "0")
+    dependabot_count=$(echo "$remote_branches" | grep -c "^dependabot/" || true)
+    dependabot_count=$(echo "$dependabot_count" | tr -d '[:space:]')
+    if [ -z "$dependabot_count" ]; then dependabot_count=0; fi
     commit_count=$(git rev-list --count HEAD 2>/dev/null || echo "0")
     
     echo -e "${BLUE}Repository Status:${NC}"
     echo "  Current Branch: $current_branch"
     echo "  Total Commits: $commit_count"
-    echo "  Remote Branches: $(echo "$remote_branches" | wc -l)"
+    echo "  Remote Branches: $remote_branch_count"
     echo "  Dependabot Branches: $dependabot_count"
     echo ""
     
