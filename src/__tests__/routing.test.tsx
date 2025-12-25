@@ -1,34 +1,40 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 // Import the refactored components
-import { AppRoutes } from '@/routes/routesConfig';
 import { EnhancedRouteWrapper } from '@/components/routing/EnhancedRouteWrapper';
 import { ProgressiveLoadingWrapper } from '@/components/routing/ProgressiveLoadingWrapper';
+import { AppRoutes } from '@/routes/routesConfig';
 
 // Mock the lazy-loaded components
-jest.mock('@/pages/Index', () => ({
+vi.mock('@/pages/Index', () => ({
   default: () => <div>Index Page</div>,
 }));
 
-jest.mock('@/pages/Register', () => ({
+vi.mock('@/pages/Register', () => ({
   default: () => <div>Register Page</div>,
 }));
 
-jest.mock('@/pages/Login', () => ({
+vi.mock('@/pages/Login', () => ({
   default: () => <div>Login Page</div>,
 }));
 
-jest.mock('@/components/auth/ProtectedRoute', () => ({
-  default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+vi.mock('@/components/auth/ProtectedRoute', () => ({
+  default: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
-jest.mock('@/contexts/AuthenticatedLayoutProvider', () => ({
-  AuthenticatedLayoutProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+vi.mock('@/contexts/AuthenticatedLayoutProvider', () => ({
+  AuthenticatedLayoutProvider: ({
+    children,
+  }: {
+    children: React.ReactNode;
+  }) => <div>{children}</div>,
 }));
 
-jest.mock('@/components/layout/MobileBottomNavigation', () => ({
+vi.mock('@/components/layout/MobileBottomNavigation', () => ({
   MobileBottomNavigation: () => <div>Mobile Navigation</div>,
 }));
 
