@@ -226,7 +226,7 @@
   /* ========== Telemetry & Diagnostics ========== */
   "telemetry.telemetryLevel": "error",
   "redhat.telemetry.enabled": false,
-  "markdown.validate.enabled": false,
+  "markdown.validate.enabled": true,
   "coderabbit.agentType": "Roo",
 
   /* ========== File Associations ========== */

@@ -1,491 +1,300 @@
-import React from 'react';
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-// Lazy-loaded page components with optimized chunking
-const Index = React.lazy(() => import('../pages/Index'));
-const Register = React.lazy(() => import('../pages/Register'));
-const Login = React.lazy(() => import('../pages/Login'));
-
-// Trading pages with route-based code splitting
-const Dashboard = React.lazy(() => import('../pages/Dashboard'));
-const Trade = React.lazy(() => import('../pages/Trade'));
-const Portfolio = React.lazy(() => import('../pages/Portfolio'));
-const History = React.lazy(() => import('../pages/History'));
-const PendingOrders = React.lazy(() => import('../pages/PendingOrders'));
-
-// Workflow pages with progressive loading
-const Settings = React.lazy(() => import('../pages/Settings'));
-const KYC = React.lazy(() => import('../pages/KYC'));
-const Wallet = React.lazy(() => import('../pages/Wallet'));
-const Notifications = React.lazy(() => import('../pages/Notifications'));
-
-// Admin pages with role-based loading
-const Admin = React.lazy(() => import('../pages/Admin'));
-const AdminRiskDashboard = React.lazy(() => import('../pages/AdminRiskDashboard'));
-const RiskManagement = React.lazy(() => import('../pages/RiskManagement'));
-
-// Static pages with lower priority loading
-const NotFound = React.lazy(() => import('../pages/NotFound'));
-const DevSentryTest = React.lazy(() => import('../pages/DevSentryTest'));
-const ProtectedRoute = React.lazy(() => import('../components/auth/ProtectedRoute'));
-
-// Legal and company pages (static content)
-const PrivacyPolicy = React.lazy(() => import('../pages/legal/PrivacyPolicy'));
-const Terms = React.lazy(() => import('../pages/legal/Terms'));
-const RiskDisclosure = React.lazy(() => import('../pages/legal/RiskDisclosure'));
-const CookiePolicy = React.lazy(() => import('../pages/legal/CookiePolicy'));
-const AMLPolicy = React.lazy(() => import('../pages/legal/AMLPolicy'));
-
-// Trading information pages
-const TradingInstruments = React.lazy(() => import('../pages/trading/TradingInstruments'));
-const TradingPlatforms = React.lazy(() => import('../pages/trading/TradingPlatforms'));
-const AccountTypes = React.lazy(() => import('../pages/trading/AccountTypes'));
-const TradingConditions = React.lazy(() => import('../pages/trading/TradingConditions'));
-const TradingTools = React.lazy(() => import('../pages/trading/TradingTools'));
-
-// Markets pages
-const Commodities = React.lazy(() => import('../pages/markets/Commodities'));
-const Cryptocurrencies = React.lazy(() => import('../pages/markets/Cryptocurrencies'));
-const Forex = React.lazy(() => import('../pages/markets/Forex'));
-const Indices = React.lazy(() => import('../pages/markets/Indices'));
-const Stocks = React.lazy(() => import('../pages/markets/Stocks'));
-
-// Education pages
-const Certifications = React.lazy(() => import('../pages/education/Certifications'));
-const Glossary = React.lazy(() => import('../pages/education/Glossary'));
-const Mentorship = React.lazy(() => import('../pages/education/Mentorship'));
-const Tutorials = React.lazy(() => import('../pages/education/Tutorials'));
-const Webinar = React.lazy(() => import('../pages/education/Webinar'));
-
-// Company pages
-const AboutUs = React.lazy(() => import('../pages/company/AboutUs'));
-const ContactUs = React.lazy(() => import('../pages/company/ContactUs'));
-const Partners = React.lazy(() => import('../pages/company/Partners'));
-const Regulation = React.lazy(() => import('../pages/company/Regulation'));
-const Security = React.lazy(() => import('../pages/company/Security'));
-
-// Mobile navigation with lazy loading
-const MobileBottomNavigation = React.lazy(() =>
-  import('../components/layout/MobileBottomNavigation').then((module) => ({
-    default: module.MobileBottomNavigation,
-  }))
+// Lazy-loaded page components
+const Index = lazy(() => import('../pages/Index'));
+const Register = lazy(() => import('../pages/Register'));
+const Login = lazy(() => import('../pages/Login'));
+const Dashboard = lazy(() => import('../pages/Dashboard'));
+const Trade = lazy(() => import('../pages/Trade'));
+const Portfolio = lazy(() => import('../pages/Portfolio'));
+const History = lazy(() => import('../pages/History'));
+const PendingOrders = lazy(() => import('../pages/PendingOrders'));
+const Settings = lazy(() => import('../pages/Settings'));
+const KYC = lazy(() => import('../pages/KYC'));
+const Admin = lazy(() => import('../pages/Admin'));
+const RiskManagement = lazy(() => import('../pages/RiskManagement'));
+const AdminRiskDashboard = lazy(() => import('../pages/AdminRiskDashboard'));
+const PerformanceMonitorDashboard = lazy(
+  () => import('../components/dashboard/PerformanceMonitorDashboard')
 );
+const Notifications = lazy(() => import('../pages/Notifications'));
+const Wallet = lazy(() => import('../pages/Wallet'));
+const NotFound = lazy(() => import('../pages/NotFound'));
+const DevSentryTest = lazy(() => import('../pages/DevSentryTest'));
+const ProtectedRoute = lazy(() => import('../components/auth/ProtectedRoute'));
 
-// Performance monitoring with lazy loading
-const PerformanceMonitorDashboard = React.lazy(() =>
-  import('../components/dashboard/PerformanceMonitorDashboard')
-);
+// Legal Pages
+import AMLPolicy from '../pages/legal/AMLPolicy';
+import CookiePolicy from '../pages/legal/CookiePolicy';
+import PrivacyPolicy from '../pages/legal/PrivacyPolicy';
+import RiskDisclosure from '../pages/legal/RiskDisclosure';
+import Terms from '../pages/legal/Terms';
 
-// Import wrapper components
-import { EnhancedRouteWrapper } from '../components/routing/EnhancedRouteWrapper';
-import { ProgressiveLoadingWrapper } from '../components/routing/ProgressiveLoadingWrapper';
+// Accessibility Components
+import { AccessibilityTestingSuite } from '../components/accessibility/AccessibilityTestingSuite';
+import { AdvancedAccessibilityDashboard } from '../components/accessibility/AdvancedAccessibilityDashboard';
 
-// Routes configuration component
-export const AppRoutes: React.FC = () => {
+// Trading Pages
+import AccountTypes from '../pages/trading/AccountTypes';
+import TradingConditions from '../pages/trading/TradingConditions';
+import TradingInstruments from '../pages/trading/TradingInstruments';
+import TradingPlatforms from '../pages/trading/TradingPlatforms';
+import TradingTools from '../pages/trading/TradingTools';
+
+// Markets Pages
+import Commodities from '../pages/markets/Commodities';
+import Cryptocurrencies from '../pages/markets/Cryptocurrencies';
+import Forex from '../pages/markets/Forex';
+import Indices from '../pages/markets/Indices';
+import Stocks from '../pages/markets/Stocks';
+
+// Education Pages
+import Certifications from '../pages/education/Certifications';
+import Glossary from '../pages/education/Glossary';
+import Mentorship from '../pages/education/Mentorship';
+import Tutorials from '../pages/education/Tutorials';
+import Webinar from '../pages/education/Webinar';
+
+// Company Pages
+import AboutUs from '../pages/company/AboutUs';
+import ContactUs from '../pages/company/ContactUs';
+import Partners from '../pages/company/Partners';
+import Regulation from '../pages/company/Regulation';
+import Security from '../pages/company/Security';
+
+// Layout Components
+import ErrorBoundary from '../components/ErrorBoundary';
+import { AuthenticatedLayoutProvider } from '../contexts/AuthenticatedLayoutProvider';
+
+export const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public routes */}
-      <Route
-        path="/"
-        element={
-          <EnhancedRouteWrapper path="/">
-            <Index />
-          </EnhancedRouteWrapper>
-        }
-      />
+      <Route path="/" element={<Index />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/register"
-        element={
-          <ProgressiveLoadingWrapper
-            stages={['security', 'data', 'portfolio']}
-            route="/register"
-          >
-            <EnhancedRouteWrapper path="/register">
-              <Register />
-            </EnhancedRouteWrapper>
-          </ProgressiveLoadingWrapper>
-        }
-      />
-
-      <Route
-        path="/login"
-        element={
-          <EnhancedRouteWrapper path="/login">
-            <Login />
-          </EnhancedRouteWrapper>
-        }
-      />
-
-      {/* Legal Pages - Static content with lazy loading */}
-      <Route
-        path="/legal/privacy-policy"
-        element={
-          <EnhancedRouteWrapper path="/legal/privacy-policy">
-            <PrivacyPolicy />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/legal/terms"
-        element={
-          <EnhancedRouteWrapper path="/legal/terms">
-            <Terms />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/legal/risk-disclosure"
-        element={
-          <EnhancedRouteWrapper path="/legal/risk-disclosure">
-            <RiskDisclosure />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/legal/cookie-policy"
-        element={
-          <EnhancedRouteWrapper path="/legal/cookie-policy">
-            <CookiePolicy />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/legal/aml-policy"
-        element={
-          <EnhancedRouteWrapper path="/legal/aml-policy">
-            <AMLPolicy />
-          </EnhancedRouteWrapper>
-        }
-      />
+      {/* Legal Pages */}
+      <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/legal/terms" element={<Terms />} />
+      <Route path="/legal/risk-disclosure" element={<RiskDisclosure />} />
+      <Route path="/legal/cookie-policy" element={<CookiePolicy />} />
+      <Route path="/legal/aml-policy" element={<AMLPolicy />} />
 
       {/* Public Trading Pages */}
-      <Route
-        path="/trading/instruments"
-        element={
-          <EnhancedRouteWrapper path="/trading/instruments">
-            <TradingInstruments />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/trading/platforms"
-        element={
-          <EnhancedRouteWrapper path="/trading/platforms">
-            <TradingPlatforms />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/trading/account-types"
-        element={
-          <EnhancedRouteWrapper path="/trading/account-types">
-            <AccountTypes />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/trading/conditions"
-        element={
-          <EnhancedRouteWrapper path="/trading/conditions">
-            <TradingConditions />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/trading/tools"
-        element={
-          <EnhancedRouteWrapper path="/trading/tools">
-            <TradingTools />
-          </EnhancedRouteWrapper>
-        }
-      />
+      <Route path="/trading/instruments" element={<TradingInstruments />} />
+      <Route path="/trading/platforms" element={<TradingPlatforms />} />
+      <Route path="/trading/account-types" element={<AccountTypes />} />
+      <Route path="/trading/conditions" element={<TradingConditions />} />
+      <Route path="/trading/tools" element={<TradingTools />} />
 
       {/* Markets Pages */}
-      <Route
-        path="/markets/forex"
-        element={
-          <EnhancedRouteWrapper path="/markets/forex">
-            <Forex />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/markets/stocks"
-        element={
-          <EnhancedRouteWrapper path="/markets/stocks">
-            <Stocks />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/markets/indices"
-        element={
-          <EnhancedRouteWrapper path="/markets/indices">
-            <Indices />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/markets/commodities"
-        element={
-          <EnhancedRouteWrapper path="/markets/commodities">
-            <Commodities />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/markets/cryptocurrencies"
-        element={
-          <EnhancedRouteWrapper path="/markets/cryptocurrencies">
-            <Cryptocurrencies />
-          </EnhancedRouteWrapper>
-        }
-      />
+      <Route path="/markets/forex" element={<Forex />} />
+      <Route path="/markets/stocks" element={<Stocks />} />
+      <Route path="/markets/indices" element={<Indices />} />
+      <Route path="/markets/commodities" element={<Commodities />} />
+      <Route path="/markets/cryptocurrencies" element={<Cryptocurrencies />} />
 
       {/* Education Pages */}
-      <Route
-        path="/education/webinar"
-        element={
-          <EnhancedRouteWrapper path="/education/webinar">
-            <Webinar />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/education/certifications"
-        element={
-          <EnhancedRouteWrapper path="/education/certifications">
-            <Certifications />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/education/tutorials"
-        element={
-          <EnhancedRouteWrapper path="/education/tutorials">
-            <Tutorials />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/education/mentorship"
-        element={
-          <EnhancedRouteWrapper path="/education/mentorship">
-            <Mentorship />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/education/glossary"
-        element={
-          <EnhancedRouteWrapper path="/education/glossary">
-            <Glossary />
-          </EnhancedRouteWrapper>
-        }
-      />
+      <Route path="/education/webinar" element={<Webinar />} />
+      <Route path="/education/certifications" element={<Certifications />} />
+      <Route path="/education/tutorials" element={<Tutorials />} />
+      <Route path="/education/mentorship" element={<Mentorship />} />
+      <Route path="/education/glossary" element={<Glossary />} />
 
       {/* Company Pages */}
-      <Route
-        path="/company/about"
-        element={
-          <EnhancedRouteWrapper path="/company/about">
-            <AboutUs />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/company/regulation"
-        element={
-          <EnhancedRouteWrapper path="/company/regulation">
-            <Regulation />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/company/security"
-        element={
-          <EnhancedRouteWrapper path="/company/security">
-            <Security />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/company/partners"
-        element={
-          <EnhancedRouteWrapper path="/company/partners">
-            <Partners />
-          </EnhancedRouteWrapper>
-        }
-      />
-      <Route
-        path="/company/contact"
-        element={
-          <EnhancedRouteWrapper path="/company/contact">
-            <ContactUs />
-          </EnhancedRouteWrapper>
-        }
-      />
+      <Route path="/company/about" element={<AboutUs />} />
+      <Route path="/company/regulation" element={<Regulation />} />
+      <Route path="/company/security" element={<Security />} />
+      <Route path="/company/partners" element={<Partners />} />
+      <Route path="/company/contact" element={<ContactUs />} />
 
-      {/* Protected Trading Routes - Critical priority */}
+      {/* Protected Routes with Mobile-Optimized Layout */}
       <Route
         path="/dashboard"
         element={
-          <EnhancedRouteWrapper path="/dashboard" requireAuth>
-            <Dashboard />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <Dashboard />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/trade"
         element={
-          <ProgressiveLoadingWrapper
-            stages={['trading', 'data', 'portfolio']}
-            route="/trade"
-          >
-            <EnhancedRouteWrapper path="/trade" requireAuth requireKYC>
-              <Trade />
-            </EnhancedRouteWrapper>
-          </ProgressiveLoadingWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <Trade />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/portfolio"
         element={
-          <EnhancedRouteWrapper path="/portfolio" requireAuth requireKYC>
-            <Portfolio />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <Portfolio />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/history"
         element={
-          <EnhancedRouteWrapper path="/history" requireAuth>
-            <History />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <History />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
-      {/* Protected Workflow Routes - Progressive loading */}
       <Route
         path="/pending-orders"
         element={
-          <EnhancedRouteWrapper path="/pending-orders" requireAuth>
-            <PendingOrders />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <PendingOrders />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/wallet"
         element={
-          <EnhancedRouteWrapper path="/wallet" requireAuth requireKYC>
-            <Wallet />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <Wallet />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/settings"
         element={
-          <EnhancedRouteWrapper path="/settings" requireAuth>
-            <Settings />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <Settings />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/kyc"
         element={
-          <ProgressiveLoadingWrapper
-            stages={['security', 'data', 'portfolio']}
-            route="/kyc"
-          >
-            <EnhancedRouteWrapper path="/kyc" requireAuth>
-              <KYC />
-            </EnhancedRouteWrapper>
-          </ProgressiveLoadingWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <KYC />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
-      <Route
-        path="/notifications"
-        element={
-          <EnhancedRouteWrapper path="/notifications" requireAuth>
-            <Notifications />
-          </EnhancedRouteWrapper>
-        }
-      />
-
-      {/* Admin Routes - Role-based loading */}
       <Route
         path="/admin"
         element={
-          <EnhancedRouteWrapper path="/admin" requireAuth adminOnly>
-            <Admin />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute adminOnly>
+              <AuthenticatedLayoutProvider>
+                <Admin />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/admin/risk"
         element={
-          <EnhancedRouteWrapper path="/admin/risk" requireAuth adminOnly>
-            <AdminRiskDashboard />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute adminOnly>
+              <AuthenticatedLayoutProvider>
+                <AdminRiskDashboard />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/admin/performance"
         element={
-          <EnhancedRouteWrapper
-            path="/admin/performance"
-            requireAuth
-            adminOnly
-          >
-            <PerformanceMonitorDashboard />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute adminOnly>
+              <AuthenticatedLayoutProvider>
+                <PerformanceMonitorDashboard />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
       <Route
         path="/risk-management"
         element={
-          <EnhancedRouteWrapper
-            path="/risk-management"
-            requireAuth
-            requireKYC
-          >
-            <RiskManagement />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <RiskManagement />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
-
-      {/* Development routes */}
-      {import.meta.env.DEV && (
-        <Route
-          path="/dev/sentry-test"
-          element={
-            <EnhancedRouteWrapper path="/dev/sentry-test">
-              <DevSentryTest />
-            </EnhancedRouteWrapper>
-          }
-        />
-      )}
-
-      {/* Catch-all route */}
       <Route
-        path="*"
+        path="/notifications"
         element={
-          <EnhancedRouteWrapper path="/404">
-            <NotFound />
-          </EnhancedRouteWrapper>
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <Notifications />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
         }
       />
+      <Route
+        path="/accessibility"
+        element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <AccessibilityTestingSuite />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/accessibility/dashboard"
+        element={
+          <ErrorBoundary>
+            <ProtectedRoute>
+              <AuthenticatedLayoutProvider>
+                <AdvancedAccessibilityDashboard />
+              </AuthenticatedLayoutProvider>
+            </ProtectedRoute>
+          </ErrorBoundary>
+        }
+      />
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      {import.meta.env.DEV && (
+        <Route path="/dev/sentry-test" element={<DevSentryTest />} />
+      )}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
