@@ -1,0 +1,188 @@
+{
+  "timestamp": "2025-12-27T11:36:16.803Z",
+  "summary": {
+    "totalFiles": 57,
+    "totalSize": "341.07 KB",
+    "totalSizeBytes": 349255,
+    "protectedFiles": 1
+  },
+  "categories": {
+    "installerFiles": {
+      "count": 21,
+      "totalSize": "93.09 KB",
+      "totalSizeBytes": 95322,
+      "files": [
+        {
+          "path": "QUICK_REFERENCE.sh",
+          "size": "5.1 KB",
+          "sizeBytes": 5219,
+          "modified": "2025-12-22T23:49:38.132Z",
+          "accessed": "2025-12-26T18:18:26.845Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "check-codespaces.sh",
+          "size": "1.93 KB",
+          "sizeBytes": 1980,
+          "modified": "2025-12-17T11:19:56.897Z",
+          "accessed": "2025-12-26T18:18:26.845Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "clean-dev-env.sh",
+          "size": "893 Bytes",
+          "sizeBytes": 893,
+          "modified": "2025-12-04T00:15:19.195Z",
+          "accessed": "2025-12-26T18:18:26.845Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "complete-automation.sh",
+          "size": "10.59 KB",
+          "sizeBytes": 10843,
+          "modified": "2025-12-25T13:04:51.891Z",
+          "accessed": "2025-12-26T18:18:26.845Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "comprehensive-testing.sh",
+          "size": "7.43 KB",
+          "sizeBytes": 7605,
+          "modified": "2025-12-24T20:48:56.020Z",
+          "accessed": "2025-12-26T18:18:26.845Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "deployment-verification.sh",
+          "size": "4.19 KB",
+          "sizeBytes": 4290,
+          "modified": "2025-12-22T23:49:38.133Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "enhanced-cleanup-script.sh",
+          "size": "6.47 KB",
+          "sizeBytes": 6630,
+          "modified": "2025-12-25T13:04:51.892Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "fix-typescript-compilation.sh",
+          "size": "6.32 KB",
+          "sizeBytes": 6471,
+          "modified": "2025-12-24T20:48:56.075Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "generate-client-ip-key.sh",
+          "size": "330 Bytes",
+          "sizeBytes": 330,
+          "modified": "2025-12-22T23:49:38.133Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "quick-typescript-fix.sh",
+          "size": "1.35 KB",
+          "sizeBytes": 1386,
+          "modified": "2025-12-24T20:48:56.075Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "rollback-to-phase.sh",
+          "size": "4.14 KB",
+          "sizeBytes": 4244,
+          "modified": "2025-12-25T13:04:51.892Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "run-automation.sh",
+          "size": "617 Bytes",
+          "sizeBytes": 617,
+          "modified": "2025-12-25T13:04:51.892Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "save-rollback-point.sh",
+          "size": "2.17 KB",
+          "sizeBytes": 2224,
+          "modified": "2025-12-25T13:04:51.892Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "update-github-secrets.sh",
+          "size": "2.82 KB",
+          "sizeBytes": 2892,
+          "modified": "2025-12-22T23:49:38.134Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "update-phase1.sh",
+          "size": "4.3 KB",
+          "sizeBytes": 4401,
+          "modified": "2025-12-24T20:48:56.020Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "update-phase2-force.sh",
+          "size": "5.55 KB",
+          "sizeBytes": 5685,
+          "modified": "2025-12-24T20:48:56.134Z",
+          "accessed": "2025-12-26T18:18:26.846Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "update-phase2.sh",
+          "size": "5.01 KB",
+          "sizeBytes": 5134,
+          "modified": "2025-12-24T20:48:56.020Z",
+          "accessed": "2025-12-26T18:18:26.847Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "update-phase3.sh",
+          "size": "7.06 KB",
+          "sizeBytes": 7230,
+          "modified": "2025-12-24T20:48:56.020Z",
+          "accessed": "2025-12-26T18:18:26.847Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "validate-copilot-typescript.sh",
+          "size": "6.87 KB",
+          "sizeBytes": 7035,
+          "modified": "2025-12-22T23:49:38.135Z",
+          "accessed": "2025-12-26T18:18:26.847Z",
+          "extension": ".sh"
+        },
+        {
+          "path": "verify-injection-detection.cjs",
+          "size": "3.84 KB",
+          "sizeBytes": 3931,
+          "modified": "2025-12-22T23:49:38.135Z",
+          "accessed": "2025-12-26T18:18:26.847Z",
+          "extension": ".cjs"
+        },
+        {
+          "path": "vscode-maintenance.sh",
+          "size": "6.13 KB",
+          "sizeBytes": 6282,
+          "modified": "2025-12-22T23:49:38.135Z",
+          "accessed": "2025-12-26T18:18:26.847Z",
+          "extension": ".sh"
+        }
+      ]
+    }
+  },
+  "duplicateGroups": [],
+  "recommendations": []
+}

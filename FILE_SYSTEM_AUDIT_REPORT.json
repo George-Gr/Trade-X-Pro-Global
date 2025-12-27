@@ -1,0 +1,269 @@
+{
+  "timestamp": "2025-12-27T12:40:42.206Z",
+  "summary": {
+    "totalFiles": 1158,
+    "totalSize": "44.96 MB",
+    "totalSizeBytes": 47148135,
+    "protectedFiles": 1119
+  },
+  "categories": {
+    "duplicateFiles": {
+      "count": 17,
+      "totalSize": "28.39 KB",
+      "totalSizeBytes": 29073,
+      "files": [
+        {
+          "path": ".roo/.roomodes",
+          "size": "6.02 KB",
+          "sizeBytes": 6166,
+          "modified": "2025-12-22T23:49:38.056Z",
+          "accessed": "2025-12-26T18:18:26.773Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/commit-msg",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-19T21:33:17.304Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/post-applypatch",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-18T05:13:47.890Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/post-checkout",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.832Z",
+          "accessed": "2025-12-19T17:29:59.831Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/post-commit",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-19T21:33:17.446Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/post-merge",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.832Z",
+          "accessed": "2025-12-25T15:36:24.269Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/post-rewrite",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-25T13:04:47.674Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/pre-applypatch",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-18T05:13:47.890Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/pre-auto-gc",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.832Z",
+          "accessed": "2025-12-25T15:35:11.872Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/pre-commit",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-19T21:33:17.182Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/pre-merge-commit",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-25T15:36:23.317Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/pre-push",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.832Z",
+          "accessed": "2025-12-19T21:33:40.448Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/pre-rebase",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-24T20:48:55.623Z",
+          "extension": ""
+        },
+        {
+          "path": ".husky/_/prepare-commit-msg",
+          "size": "39 Bytes",
+          "sizeBytes": 39,
+          "modified": "2025-12-09T07:38:30.831Z",
+          "accessed": "2025-12-19T21:33:17.260Z",
+          "extension": ""
+        },
+        {
+          "path": "docs/archives/task_reports/dependencies-before.txt",
+          "size": "0 Bytes",
+          "sizeBytes": 0,
+          "modified": "2025-12-22T23:49:38.063Z",
+          "accessed": "2025-12-22T23:49:38.063Z",
+          "extension": ".txt"
+        },
+        {
+          "path": "scripts/TEST_RESULTS.json",
+          "size": "0 Bytes",
+          "sizeBytes": 0,
+          "modified": "2025-12-27T11:31:13.243Z",
+          "accessed": "2025-12-27T11:31:14.819Z",
+          "extension": ".json"
+        },
+        {
+          "path": "src/App.router-optimized.tsx",
+          "size": "21.88 KB",
+          "sizeBytes": 22400,
+          "modified": "2025-12-25T13:04:51.893Z",
+          "accessed": "2025-12-26T18:18:26.847Z",
+          "extension": ".tsx"
+        }
+      ]
+    }
+  },
+  "duplicateGroups": [
+    {
+      "hash": "11346e68683eaa0f455438e4dd88ce58",
+      "count": 2,
+      "totalSize": "12.04 KB",
+      "files": [
+        {
+          "path": ".agent/.roomodes",
+          "size": "6.02 KB"
+        },
+        {
+          "path": ".roo/.roomodes",
+          "size": "6.02 KB"
+        }
+      ]
+    },
+    {
+      "hash": "0b71c2e7d39daa010985d529f1320b37",
+      "count": 14,
+      "totalSize": "546 Bytes",
+      "files": [
+        {
+          "path": ".husky/_/applypatch-msg",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/commit-msg",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/post-applypatch",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/post-checkout",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/post-commit",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/post-merge",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/post-rewrite",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/pre-applypatch",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/pre-auto-gc",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/pre-commit",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/pre-merge-commit",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/pre-push",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/pre-rebase",
+          "size": "39 Bytes"
+        },
+        {
+          "path": ".husky/_/prepare-commit-msg",
+          "size": "39 Bytes"
+        }
+      ]
+    },
+    {
+      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "count": 3,
+      "totalSize": "0 Bytes",
+      "files": [
+        {
+          "path": "TEST_RESULTS.json",
+          "size": "0 Bytes"
+        },
+        {
+          "path": "docs/archives/task_reports/dependencies-before.txt",
+          "size": "0 Bytes"
+        },
+        {
+          "path": "scripts/TEST_RESULTS.json",
+          "size": "0 Bytes"
+        }
+      ]
+    },
+    {
+      "hash": "1748781c8cd1555570bb2bdf0f18e85f",
+      "count": 2,
+      "totalSize": "43.75 KB",
+      "files": [
+        {
+          "path": "archive/backups/App.router-optimized.backup.tsx",
+          "size": "21.88 KB"
+        },
+        {
+          "path": "src/App.router-optimized.tsx",
+          "size": "21.88 KB"
+        }
+      ]
+    }
+  ],
+  "recommendations": []
+}

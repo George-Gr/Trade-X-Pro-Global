@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-12-25T20:00:59.308Z",
+  "configuration": {
+    "method": "standard",
+    "passes": 1,
+    "verifyDeletion": true,
+    "preservePermissions": true,
+    "backupMetadata": false
+  },
+  "summary": {
+    "totalFiles": 1,
+    "successful": 0,
+    "failed": 1,
+    "totalSizeDeleted": 0,
+    "totalSizeFormatted": "0 Bytes"
+  },
+  "successfulDeletions": [],
+  "failedDeletions": [
+    "test-deletion.txt"
+  ],
+  "errors": [
+    {
+      "path": "test-deletion.txt",
+      "error": "fs.close is not a function",
+      "timestamp": "2025-12-25T20:00:59.308Z"
+    }
+  ],
+  "deletionLog": [],
+  "recommendations": [
+    {
+      "type": "Failed Deletions",
+      "priority": "medium",
+      "description": "1 files could not be deleted",
+      "action": "Manually review and delete failed files"
+    },
+    {
+      "type": "Security Enhancement",
+      "priority": "low",
+      "description": "Consider using NIST method or more passes for sensitive data",
+      "action": "Upgrade to NIST method for better security"
+    }
+  ]
+}
