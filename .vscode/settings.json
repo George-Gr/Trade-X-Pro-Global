@@ -210,7 +210,6 @@
   "editor.wordBasedSuggestions": "off",
 
   "editor.inlineCompletions.enabled": false,
-  "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
 
   /* ========== Extension Management ========== */

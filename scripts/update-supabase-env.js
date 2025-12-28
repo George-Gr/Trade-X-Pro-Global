@@ -49,7 +49,7 @@ if (process.argv.length >= 4) {
   const publishableKey = process.argv[3];
   
   const envContent = `# Local environment variables — DO NOT COMMIT
-# Replace the placeholders below with your actual Supabase credentials
+# Credentials configured via update-supabase-env.js script
 VITE_SUPABASE_URL=${supabaseUrl}
 VITE_SUPABASE_PUBLISHABLE_KEY=${publishableKey}
 

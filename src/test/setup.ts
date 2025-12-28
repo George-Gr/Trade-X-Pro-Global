@@ -10,7 +10,7 @@
 import '@testing-library/jest-dom/vitest';
 
 // Use globalThis for browser/Node compatibility
-const globalObj = globalThis as unknown as Record<string, any>;
+const globalObj = globalThis as unknown as Record<string, unknown>;
 const win = globalThis as unknown as { matchMedia?: unknown };
 
 // Mock matchMedia for responsive tests
@@ -47,12 +47,16 @@ globalObj.IntersectionObserver = vi.fn().mockImplementation(() => ({
 }));
 
 // Mock requestAnimationFrame
-globalObj.requestAnimationFrame = (callback: any): number => {
-  return (globalThis as any).setTimeout(() => callback(Date.now()), 0);
+globalObj.requestAnimationFrame = (callback: FrameRequestCallback): number => {
+  return globalThis.setTimeout(() => callback(Date.now()), 0);
 };
 
 globalObj.cancelAnimationFrame = (id: number): void => {
-  (globalThis as any).clearTimeout(id);
+  (
+    globalThis as unknown as typeof globalThis & {
+      clearTimeout: typeof clearTimeout;
+    }
+  ).clearTimeout(id);
 };
 
 // Mock requestIdleCallback

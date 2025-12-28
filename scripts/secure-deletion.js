@@ -117,7 +117,6 @@ class SecureDeletion {
     async standardOverwrite(filePath, config) {
         const stats = await fs.stat(filePath);
         const fd = await fs.open(filePath, 'r+');
-        
         try {
             // Overwrite with zeros, then ones, then random data
             const patterns = [Buffer.alloc(1, 0), Buffer.alloc(1, 1)];
@@ -127,26 +126,24 @@ class SecureDeletion {
             if (config.passes > 3) {
                 patterns.push(Buffer.alloc(1, 0x55));
             }
-            
             for (let pass = 0; pass < Math.min(config.passes, patterns.length); pass++) {
                 await this.overwriteWithPatternWithFD(fd, stats.size, patterns[pass]);
                 await fs.fsync(fd); // Ensure data is written to disk
             }
-            
             // Additional random passes if requested
             for (let pass = patterns.length; pass < config.passes; pass++) {
                 await this.overwriteWithRandomWithFD(fd, stats.size);
                 await fs.fsync(fd);
             }
-            
         } catch (error) {
             throw error;
         } finally {
-            if (fd && typeof fd.close === 'function') {
+            try {
                 await fd.close();
+            } catch (closeErr) {
+                console.error(`[SECURE DELETION] Failed to close file handle for ${filePath}:`, closeErr);
             }
         }
-        
         // Finally delete the file
         await fs.unlink(filePath);
     }
@@ -155,30 +152,27 @@ class SecureDeletion {
         // NIST 800-88 Clear method
         const stats = await fs.stat(filePath);
         const fd = await fs.open(filePath, 'r+');
-        
         try {
             // Pass 1: All zeros
             await this.overwriteWithPatternWithFD(fd, stats.size, Buffer.alloc(1, 0));
             await fs.fsync(fd);
-            
             // Pass 2: All ones
             await this.overwriteWithPatternWithFD(fd, stats.size, Buffer.alloc(1, 1));
             await fs.fsync(fd);
-            
             // Pass 3: Random data (if passes > 2)
             if (config.passes > 2) {
                 await this.overwriteWithRandomWithFD(fd, stats.size);
                 await fs.fsync(fd);
             }
-            
         } catch (error) {
             throw error;
         } finally {
-            if (fd && typeof fd.close === 'function') {
+            try {
                 await fd.close();
+            } catch (closeErr) {
+                console.error(`[SECURE DELETION] Failed to close file handle for ${filePath}:`, closeErr);
             }
         }
-        
         // Delete the file
         await fs.unlink(filePath);
     }
@@ -186,45 +180,42 @@ class SecureDeletion {
     async randomOverwrite(filePath, config) {
         const stats = await fs.stat(filePath);
         const fd = await fs.open(filePath, 'r+');
-        
         try {
             for (let pass = 0; pass < config.passes; pass++) {
                 await this.overwriteWithRandomWithFD(fd, stats.size);
                 await fs.fsync(fd);
             }
-            
         } catch (error) {
             throw error;
         } finally {
-            if (fd && typeof fd.close === 'function') {
+            try {
                 await fd.close();
+            } catch (closeErr) {
+                console.error(`[SECURE DELETION] Failed to close file handle for ${filePath}:`, closeErr);
             }
         }
-        
         await fs.unlink(filePath);
     }
 
     async customOverwrite(filePath, config) {
         const stats = await fs.stat(filePath);
         const fd = await fs.open(filePath, 'r+');
-        
         try {
             // Custom pattern based on file type
             const pattern = this.getCustomPattern(filePath, stats);
-            
             for (let pass = 0; pass < config.passes; pass++) {
                 await this.overwriteWithPatternWithFD(fd, stats.size, pattern);
                 await fs.fsync(fd);
             }
-            
         } catch (error) {
             throw error;
         } finally {
-            if (fd && typeof fd.close === 'function') {
+            try {
                 await fd.close();
+            } catch (closeErr) {
+                console.error(`[SECURE DELETION] Failed to close file handle for ${filePath}:`, closeErr);
             }
         }
-        
         await fs.unlink(filePath);
     }
 

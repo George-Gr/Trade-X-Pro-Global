@@ -22,8 +22,6 @@ export default defineConfig({
       exclude: ['node_modules/', 'src/test/', '**/*.d.ts', '**/*.config.*'],
     },
     // Enable proper mocking support
-    mockReset: true,
-    clearMocks: true,
     restoreMocks: true,
   },
   resolve: {

@@ -1,12 +1,54 @@
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/lib/logger';
-import { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const typedSupabase = supabase as any;
-/* eslint-enable @typescript-eslint/no-explicit-any */
+/**
+ * Creates a friendly error with the original error attached as a non-enumerable property
+ *
+ * @param message - The user-friendly error message
+ * @param name - The error name/type
+ * @param originalError - Optional original error to attach
+ * @returns A configured Error instance
+ */
+const createAuthError = (
+  message: string,
+  name: string,
+  originalError?: unknown
+): Error => {
+  const error = new Error(message);
+  error.name = name;
 
+  if (originalError) {
+    Object.defineProperty(error, 'originalError', {
+      value: originalError,
+      enumerable: false,
+      writable: false,
+    });
+  }
+
+  return error;
+};
+
+/**
+ * Authentication hook that manages user authentication state and provides auth methods
+ *
+ * @returns An object containing:
+ * - `user` (User | null) - The currently authenticated user or null
+ * - `loading` (boolean) - Whether the auth state is being loaded
+ * - `isAdmin` (boolean) - Whether the current user has admin privileges
+ * - `setUser` - Internal setter for user state (not exposed)
+ * - `signIn` (email, password) => Promise - Sign in with email and password
+ * - `signUp` (email, password, fullName) => Promise - Create a new user account
+ * - `signOut` () => Promise - Sign out the current user
+ *
+ * @example
+ * const { user, loading, isAdmin, signIn, signOut } = useAuth();
+ *
+ * if (loading) return <LoadingSpinner />;
+ * if (!user) return <LoginForm onSubmit={signIn} />;
+ * return <Dashboard user={user} isAdmin={isAdmin} onLogout={signOut} />;
+ */
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +56,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Get initial session
-    typedSupabase.auth
+    supabase.auth
       .getSession()
       .then(({ data: { session } }: { data: { session: Session | null } }) => {
         setUser(session?.user ?? null);
@@ -23,12 +65,16 @@ export const useAuth = () => {
         } else {
           setLoading(false);
         }
+      })
+      .catch((err: unknown) => {
+        logger.error('Failed to get session', err);
+        setLoading(false);
       });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = typedSupabase.auth.onAuthStateChange(
+    } = supabase.auth.onAuthStateChange(
       (_event: AuthChangeEvent, session: Session | null) => {
         setUser(session?.user ?? null);
         if (session?.user) {
@@ -46,7 +92,7 @@ export const useAuth = () => {
   const checkAdminRole = async (userId: string) => {
     try {
       // First try to get user's roles
-      const { data: rolesData, error: rolesError } = await typedSupabase
+      const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId);
@@ -59,8 +105,9 @@ export const useAuth = () => {
 
       // Check if user has admin role
       const isAdminRole =
-        rolesData?.some((role: { role: string }) => role.role === 'admin') ||
-        false;
+        (rolesData as { role: string }[] | null)?.some(
+          (role) => role.role === 'admin'
+        ) || false;
       setIsAdmin(isAdminRole);
     } catch (error) {
       logger.error('Error checking admin role', error);
@@ -73,9 +120,12 @@ export const useAuth = () => {
   const signIn = async (
     email: string,
     password: string
-  ): Promise<{ data: Session | null; error: Error | null }> => {
+  ): Promise<{
+    data: { user: User | null; session: Session | null } | null;
+    error: Error | null;
+  }> => {
     try {
-      const { data, error } = await typedSupabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -107,18 +157,31 @@ export const useAuth = () => {
             'Connection error. Please check your internet connection and try again.';
         }
 
-        return { data, error: { ...error, message: friendlyMessage } };
+        // Create a proper Error instance with original error details
+        const friendlyError = createAuthError(
+          friendlyMessage,
+          'AuthError',
+          error
+        );
+
+        return {
+          data: null,
+          error: friendlyError,
+        };
       }
 
-      return { data, error };
+      return { data, error: null };
     } catch (error) {
       logger.error('Unexpected authentication error', error);
+      const unexpectedError = createAuthError(
+        'An unexpected error occurred. Please try again.',
+        'UnexpectedAuthError',
+        error instanceof Error ? error : undefined
+      );
+
       return {
         data: null,
-        error: {
-          message: 'An unexpected error occurred. Please try again.',
-          name: 'UnexpectedError',
-        },
+        error: unexpectedError,
       };
     }
   };
@@ -127,28 +190,70 @@ export const useAuth = () => {
     email: string,
     password: string,
     fullName: string
-  ): Promise<{ data: Session | null; error: Error | null }> => {
-    const { data, error } = await typedSupabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-        data: {
-          full_name: fullName,
+  ): Promise<{
+    data: { user: User | null; session: Session | null } | null;
+    error: Error | null;
+  }> => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
-    if (error) {
-      return { data: null, error: new Error('Sign-up failed') };
+      });
+
+      if (error) {
+        const signUpError = createAuthError(
+          'Sign-up failed',
+          'SignUpError',
+          error
+        );
+
+        return { data: null, error: signUpError };
+      }
+
+      return { data, error: null };
+    } catch (error) {
+      logger.error('Unexpected sign-up error', error);
+      const unexpectedError = createAuthError(
+        'An unexpected error occurred during sign-up. Please try again.',
+        'UnexpectedSignUpError',
+        error instanceof Error ? error : undefined
+      );
+
+      return { data: null, error: unexpectedError };
     }
-    return { data, error: null };
   };
 
   const signOut = async (): Promise<{
-    error: { message: string; name?: string } | null;
+    error: Error | null;
   }> => {
-    const { error } = await typedSupabase.auth.signOut();
-    return { error };
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        const signOutError = createAuthError(
+          error.message,
+          'SignOutError',
+          error
+        );
+
+        return { error: signOutError };
+      }
+      return { error: null };
+    } catch (error: unknown) {
+      logger.error('Sign out error', error);
+      const unexpectedError = createAuthError(
+        'Sign out failed',
+        'UnexpectedSignOutError',
+        error instanceof Error ? error : undefined
+      );
+
+      return { error: unexpectedError };
+    }
   };
 
   return {

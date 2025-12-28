@@ -1,7 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    /* Language and Environment */
     "target": "ES2022",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "module": "ESNext",
@@ -12,12 +11,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": false,
 
-    /* Type Checking */
     "strict": true,
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
@@ -30,7 +27,6 @@
     "noImplicitOverride": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* Path mapping */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
@@ -48,9 +44,7 @@
       "@/workers/*": ["./src/workers/*"]
     },
 
-    /* Completeness */
-    "skipDefaultLibCheck": true,
-    "types": ["node", "vitest"]
+    "types": ["node", "vitest", "react", "react-dom"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "build"]

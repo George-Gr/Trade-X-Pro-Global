@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-25T20:00:59.308Z",
+  "timestamp": "2025-12-28T08:56:58.640Z",
   "configuration": {
     "method": "standard",
     "passes": 1,
@@ -15,12 +15,14 @@
     "totalSizeFormatted": "0 Bytes"
   },
   "successfulDeletions": [],
-  "failedDeletions": ["test-deletion.txt"],
+  "failedDeletions": [
+    "/Users/usha/Desktop/Krishan/Trade-X-Pro-Global/src/__tests__/test-close-error.txt"
+  ],
   "errors": [
     {
-      "path": "test-deletion.txt",
-      "error": "fs.close is not a function",
-      "timestamp": "2025-12-25T20:00:59.308Z"
+      "path": "/Users/usha/Desktop/Krishan/Trade-X-Pro-Global/src/__tests__/test-close-error.txt",
+      "error": "__vite_ssr_import_0__.default.write is not a function",
+      "timestamp": "2025-12-28T08:56:58.640Z"
     }
   ],
   "deletionLog": [],
@@ -28,7 +30,7 @@
     {
       "type": "Failed Deletions",
       "priority": "medium",
-      "description": "1 file could not be deleted",
+      "description": "1 files could not be deleted",
       "action": "Manually review and delete failed files"
     },
     {

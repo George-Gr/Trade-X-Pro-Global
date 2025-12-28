@@ -4,19 +4,24 @@
 // a lightweight fallback until the resolver can be upgraded.
 
 declare module '@supabase/supabase-js' {
+  // Ambient type definition for SupabaseClient to avoid circular dependency.
+  // We define a minimal shape with the generic parameter as a fallback.
+  export interface SupabaseClient<T = unknown> {
+    [key: string]: any;
+  }
+
   export function createClient<T = unknown>(
     url: string,
     key: string,
     opts?: unknown
   ): SupabaseClient<T>;
-  export type SupabaseClient<T = unknown> = unknown;
 
   // Enhanced types for authentication
   export interface User {
     id: string;
     email?: string;
-    user_metadata?: Record<string, any>;
-    app_metadata?: Record<string, any>;
+    user_metadata?: Record<string, unknown>;
+    app_metadata?: Record<string, unknown>;
     created_at?: string;
     updated_at?: string;
   }

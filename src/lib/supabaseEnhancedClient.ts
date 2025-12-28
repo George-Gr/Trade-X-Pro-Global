@@ -118,17 +118,24 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 const createUnavailableClientProxy = <T = unknown>() => {
   const message =
     'Supabase client unavailable due to missing or invalid configuration. See docs/SUPABASE_SETUP_GUIDE.md';
-  return new Proxy(
-    {},
-    {
-      get: () => {
-        return () => {
+
+  const createRecursiveProxy = (): unknown => {
+    return new Proxy(
+      () => {
+        logger.error(message);
+        throw new Error(message);
+      },
+      {
+        get: () => createRecursiveProxy(),
+        apply: () => {
           logger.error(message);
           throw new Error(message);
-        };
-      },
-    }
-  ) as T;
+        },
+      }
+    );
+  };
+
+  return createRecursiveProxy() as T;
 };
 
 /**
@@ -222,7 +229,7 @@ function createSupabaseClient(): SupabaseClient<Database> {
  * @export
  * @type {SupabaseClient<Database>}
  */
-export let supabase: SupabaseClient<Database> = _invalidSupabaseConfig
+export const supabase: SupabaseClient<Database> = _invalidSupabaseConfig
   ? createUnavailableClientProxy<SupabaseClient<Database>>()
   : createSupabaseClient();
 
@@ -235,32 +242,11 @@ export type TypedSupabaseClient = SupabaseClient<Database>;
  * recreate the client with the new settings. This function clears secure
  * storage keys and reassigns the exported supabase client to a new instance.
  */
+// recreateSupabaseClient is now a no-op. If runtime recreation is needed, refactor to use a factory or context.
 export function recreateSupabaseClient(): void {
-  logger.info('Recreating Supabase client with updated feature flags');
-
-  // Clean up any existing secure storage instances if they exist
-  if (
-    typeof globalThis !== 'undefined' &&
-    (globalThis as unknown as { localStorage?: BrowserStorage }).localStorage
-  ) {
-    const ls = (globalThis as unknown as { localStorage: BrowserStorage })
-      .localStorage;
-    if (ls.length !== undefined && ls.key) {
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < ls.length; i++) {
-        const key = ls.key(i);
-        if (key?.startsWith('secure_auth_')) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach((key) => ls.removeItem(key));
-    }
-  }
-
-  // Recreate the client with current feature flags
-  supabase = _invalidSupabaseConfig
-    ? createUnavailableClientProxy<SupabaseClient<Database>>()
-    : createSupabaseClient();
+  logger.info(
+    'Recreation of Supabase client at runtime is not supported with const export. Use a factory or context if dynamic recreation is required.'
+  );
 }
 
 export type { Database } from '@/integrations/supabase/types';
