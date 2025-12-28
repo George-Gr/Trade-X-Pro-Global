@@ -245,7 +245,7 @@ export class OrderSecurityValidator {
     const sanitized = symbol
       .toUpperCase()
       .trim()
-      .replace(/[^A-Z0-9_/:-]/g, ''); // Allow alphanumeric, underscore, slash, colon, hyphen
+      .replace(/[^A-Z0-9_/]/g, ''); // Allow alphanumeric, underscore, slash
 
     if (sanitized.length === 0) {
       errors.push('Symbol cannot be empty after sanitization');

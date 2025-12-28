@@ -108,7 +108,7 @@ describe('Order Security Tests', () => {
     // Reset time
     resetTime();
     mockDate = new Date('2025-12-22T20:40:57.072Z');
-    vi.setSystemTime(mockDateNow);
+    vi.setSystemTime(mockDate);
 
     // Create fresh instances for each test
     const config = {

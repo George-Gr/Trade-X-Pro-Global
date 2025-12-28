@@ -16,9 +16,22 @@ const getRequiredEnvVar = (key: string): string => {
   if (!value) {
     throw new Error(
       `Missing required environment variable: ${key}. ` +
-        'Please ensure .env.local is properly configured with your Supabase credentials.'
+        'Please ensure .env.local is properly configured with your Supabase credentials. ' +
+        'Get these values from your Supabase project settings > API.'
     );
   }
+
+  // Check for placeholder values
+  if (
+    value.includes('your-project') ||
+    value.includes('your-publishable-key')
+  ) {
+    throw new Error(
+      `Invalid ${key}: Please replace placeholder values in .env.local with your actual Supabase credentials. ` +
+        'Get your project URL and publishable key from Supabase dashboard > Settings > API.'
+    );
+  }
+
   return value;
 };
 

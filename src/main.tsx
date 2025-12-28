@@ -34,6 +34,16 @@ console.warn = function (this: typeof console, ...args: unknown[]) {
     return;
   }
 
+  // Sentry: Suppress "Sentry not configured (no DSN)" warning in development
+  if (message.includes('Sentry not configured (no DSN)')) {
+    return;
+  }
+
+  // Logger: Suppress "[Logger] Sentry is configured and logger is active" warning
+  if (message.includes('[Logger] Sentry is configured and logger is active')) {
+    return;
+  }
+
   originalWarn.apply(this, args as Parameters<typeof console.warn>);
 };
 

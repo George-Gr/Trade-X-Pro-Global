@@ -117,13 +117,15 @@ export default defineConfig(() => {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'hoist-non-react-statics'],
     },
     
     optimizeDeps: {
       include: [
         'react',
         'react-dom',
+        'react/jsx-runtime',
+        'hoist-non-react-statics',
         '@tanstack/react-query',
         'react-hook-form',
         'zod',

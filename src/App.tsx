@@ -64,7 +64,12 @@ const App = () => {
                 >
                   <AccessibilityProvider>
                     <style>{accessibilityStyles}</style>
-                    <BrowserRouter>
+                    <BrowserRouter
+                      future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                      }}
+                    >
                       <Suspense
                         fallback={
                           <div className="min-h-screen flex items-center justify-center bg-background">

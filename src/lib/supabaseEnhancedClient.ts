@@ -12,19 +12,39 @@ import { logger } from '@/lib/logger';
 import { SecureStorage } from '@/lib/secureStorage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
+// Minimal browser-local-storage interface used to avoid requiring DOM 'Storage' type
+type BrowserStorage = {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+  key?(index: number): string | null;
+  length?: number;
+};
+
 /**
- * Get required environment variable with validation
- * Throws error if variable is missing to prevent fallback credentials
+ * Read environment variable from Vite's import.meta.env with a fallback to process.env
+ * Returns undefined when the variable is not set (so we can handle it gracefully at runtime)
  */
-const getRequiredEnvVar = (key: string): string => {
-  const value = (import.meta.env as Record<string, string>)?.[key];
-  if (!value) {
-    throw new Error(
-      `Missing required environment variable: ${key}. ` +
-        'Please ensure .env.local is properly configured with your Supabase credentials.'
-    );
+const getEnvVar = (key: string): string | undefined => {
+  // Try Vite's environment first (available in the browser / during Vite dev/build)
+  try {
+    const meta =
+      (import.meta.env as unknown as Record<string, string | undefined>) || {};
+    const val = meta[key] as string | undefined;
+    if (val) return val;
+  } catch (e) {
+    // import.meta may not exist in some runtime/test environments; fallback below
   }
-  return value;
+
+  // Fallback to Node's process.env for server-side / test environments
+  if (typeof process !== 'undefined' && process.env) {
+    // Accept both VITE_* and non-prefixed env vars to make testing easier
+    return (process.env[key] || process.env[key.replace(/^VITE_/, '')]) as
+      | string
+      | undefined;
+  }
+
+  return undefined;
 };
 
 /**
@@ -61,18 +81,68 @@ const validateSupabaseUrl = (url: string): void => {
   }
 };
 
-const SUPABASE_URL = getRequiredEnvVar('VITE_SUPABASE_URL');
-const SUPABASE_PUBLISHABLE_KEY = getRequiredEnvVar(
-  'VITE_SUPABASE_PUBLISHABLE_KEY'
-);
+let SUPABASE_URL: string | undefined;
+let SUPABASE_PUBLISHABLE_KEY: string | undefined;
+let _invalidSupabaseConfig = false;
 
-// Validate configuration
-validateSupabaseUrl(SUPABASE_URL);
+// Read env vars with a fallback strategy; be forgiving during import so tests/SSR don't fail
+SUPABASE_URL = getEnvVar('VITE_SUPABASE_URL');
+SUPABASE_PUBLISHABLE_KEY = getEnvVar('VITE_SUPABASE_PUBLISHABLE_KEY');
+
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  _invalidSupabaseConfig = true;
+  const message =
+    'Supabase configuration is invalid. Please set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in .env.local. See docs/SUPABASE_SETUP_GUIDE.md for details.';
+
+  // Log as a warning so it is visible but doesn't throw during import
+  logger.warn(message);
+  if (import.meta.env.DEV) {
+    // Use console.warn in dev so it is noticeable but less disruptive in test/CI logs
+    console.warn(message);
+  }
+} else {
+  try {
+    validateSupabaseUrl(SUPABASE_URL);
+  } catch (error) {
+    _invalidSupabaseConfig = true;
+    logger.error('Supabase configuration error:', error);
+    if (import.meta.env.DEV) {
+      console.warn(
+        'Invalid Supabase URL:',
+        error instanceof Error ? error.message : error
+      );
+    }
+  }
+}
+
+const createUnavailableClientProxy = <T = unknown>() => {
+  const message =
+    'Supabase client unavailable due to missing or invalid configuration. See docs/SUPABASE_SETUP_GUIDE.md';
+  return new Proxy(
+    {},
+    {
+      get: () => {
+        return () => {
+          logger.error(message);
+          throw new Error(message);
+        };
+      },
+    }
+  ) as T;
+};
 
 /**
  * Create Supabase client with feature flag support
  */
 function createSupabaseClient(): SupabaseClient<Database> {
+  // If configuration was found invalid during import, return an unavailable proxy
+  if (_invalidSupabaseConfig) {
+    logger.warn(
+      'Supabase client unavailable due to invalid or missing configuration'
+    );
+    return createUnavailableClientProxy<SupabaseClient<Database>>();
+  }
+
   const usePkceFlow = featureFlags.isPkceAuthFlowEnabled();
   const useSecureStorage = featureFlags.isSecureStorageEnabled();
   const useEnhancedHeaders = featureFlags.isEnhancedSecurityHeadersEnabled();
@@ -84,7 +154,7 @@ function createSupabaseClient(): SupabaseClient<Database> {
   } as Record<string, boolean>);
 
   // Initialize storage based on feature flags
-  let storage: Storage | SecureStorage;
+  let storage: SecureStorage | unknown;
 
   if (useSecureStorage) {
     try {
@@ -95,16 +165,18 @@ function createSupabaseClient(): SupabaseClient<Database> {
         'Failed to initialize secure storage, falling back to localStorage:',
         error
       );
-      storage = localStorage;
+      storage = (globalThis as unknown as { localStorage?: BrowserStorage })
+        .localStorage;
     }
   } else {
-    storage = localStorage;
+    storage = (globalThis as unknown as { localStorage?: BrowserStorage })
+      .localStorage;
     logger.info('Using localStorage for authentication');
   }
 
   // Configure auth options based on feature flags
   const authOptions: {
-    storage: Storage | SecureStorage;
+    storage: unknown;
     persistSession: boolean;
     autoRefreshToken: boolean;
     debug: boolean;
@@ -131,7 +203,7 @@ function createSupabaseClient(): SupabaseClient<Database> {
     Accept: 'application/json',
   };
 
-  return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  return createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
     auth: authOptions,
     global: {
       headers: globalHeaders,
@@ -150,7 +222,11 @@ function createSupabaseClient(): SupabaseClient<Database> {
  * @export
  * @type {SupabaseClient<Database>}
  */
-export let supabase = createSupabaseClient();
+export let supabase: SupabaseClient<Database> = _invalidSupabaseConfig
+  ? createUnavailableClientProxy<SupabaseClient<Database>>()
+  : createSupabaseClient();
+
+export type TypedSupabaseClient = SupabaseClient<Database>;
 
 /**
  * Force recreation of Supabase client with current feature flag settings
@@ -163,15 +239,28 @@ export function recreateSupabaseClient(): void {
   logger.info('Recreating Supabase client with updated feature flags');
 
   // Clean up any existing secure storage instances if they exist
-  if (typeof window !== 'undefined' && window.localStorage) {
-    const keys = Object.keys(localStorage).filter((key) =>
-      key.startsWith('secure_auth_')
-    );
-    keys.forEach((key) => {
-      localStorage.removeItem(key);
-    });
+  if (
+    typeof globalThis !== 'undefined' &&
+    (globalThis as unknown as { localStorage?: BrowserStorage }).localStorage
+  ) {
+    const ls = (globalThis as unknown as { localStorage: BrowserStorage })
+      .localStorage;
+    if (ls.length !== undefined && ls.key) {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < ls.length; i++) {
+        const key = ls.key(i);
+        if (key?.startsWith('secure_auth_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((key) => ls.removeItem(key));
+    }
   }
 
   // Recreate the client with current feature flags
-  supabase = createSupabaseClient();
+  supabase = _invalidSupabaseConfig
+    ? createUnavailableClientProxy<SupabaseClient<Database>>()
+    : createSupabaseClient();
 }
+
+export type { Database } from '@/integrations/supabase/types';

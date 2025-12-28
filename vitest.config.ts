@@ -1,7 +1,7 @@
-import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import type { Plugin } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react() as unknown as Plugin],
@@ -21,6 +21,10 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'src/test/', '**/*.d.ts', '**/*.config.*'],
     },
+    // Enable proper mocking support
+    mockReset: true,
+    clearMocks: true,
+    restoreMocks: true,
   },
   resolve: {
     alias: {

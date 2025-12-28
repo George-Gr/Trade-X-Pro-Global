@@ -4,19 +4,17 @@
  * Global test configuration and mocks
  */
 
-import '@testing-library/jest-dom';
+/// <reference types="vitest/globals" />
+/// <reference types="jsdom" />
+
+import '@testing-library/jest-dom/vitest';
 
 // Use globalThis for browser/Node compatibility
-const globalObj = globalThis as typeof globalThis & {
-  ResizeObserver: typeof ResizeObserver;
-  IntersectionObserver: typeof IntersectionObserver;
-  requestAnimationFrame: typeof requestAnimationFrame;
-  cancelAnimationFrame: typeof cancelAnimationFrame;
-  requestIdleCallback: typeof requestIdleCallback;
-};
+const globalObj = globalThis as unknown as Record<string, any>;
+const win = globalThis as unknown as { matchMedia?: unknown };
 
 // Mock matchMedia for responsive tests
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(win, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -31,38 +29,35 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock ResizeObserver
-globalObj.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-};
+globalObj.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: () => {},
+  unobserve: () => {},
+  disconnect: () => {},
+}));
 
 // Mock IntersectionObserver
-globalObj.IntersectionObserver = class IntersectionObserver {
-  constructor(_callback: IntersectionObserverCallback) {}
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-  root = null;
-  rootMargin = '';
-  thresholds: number[] = [];
-  takeRecords(): IntersectionObserverEntry[] {
-    return [];
-  }
-};
+globalObj.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: () => {},
+  unobserve: () => {},
+  disconnect: () => {},
+  root: null,
+  rootMargin: '',
+  thresholds: [],
+  takeRecords: () => [],
+}));
 
 // Mock requestAnimationFrame
-globalObj.requestAnimationFrame = (callback: FrameRequestCallback): number => {
-  return window.setTimeout(() => callback(Date.now()), 0);
+globalObj.requestAnimationFrame = (callback: any): number => {
+  return (globalThis as any).setTimeout(() => callback(Date.now()), 0);
 };
 
 globalObj.cancelAnimationFrame = (id: number): void => {
-  window.clearTimeout(id);
+  (globalThis as any).clearTimeout(id);
 };
 
 // Mock requestIdleCallback
-globalObj.requestIdleCallback = (callback: IdleRequestCallback): number => {
-  return window.setTimeout(
+globalObj.requestIdleCallback = (callback: any): number => {
+  return (globalThis as any).setTimeout(
     () =>
       callback({
         didTimeout: false,

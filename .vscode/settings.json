@@ -11,7 +11,7 @@
   /* ========== GitHub Copilot Configuration ========== */
   "github.copilot.enable": {
     "*": true,
-    "plaintext": false,
+    "plaintext": true,
     "markdown": true,
     "scminput": false
   },
@@ -227,7 +227,7 @@
   "telemetry.telemetryLevel": "error",
   "redhat.telemetry.enabled": false,
   "markdown.validate.enabled": true,
-  "coderabbit.agentType": "Roo",
+  "coderabbit.agentType": "Native",
 
   /* ========== File Associations ========== */
   "files.associations": {
