@@ -27,3 +27,6 @@ dist-ssr
 
 # TypeScript build cache
 tsconfig.tsbuildinfo
+
+# Audit reports - contains local filesystem paths
+audit-reports/
