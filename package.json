@@ -94,7 +94,7 @@
     "react-window": "^1.8.10",
     "recharts": "^3.6.0",
     "sonner": "^1.7.4",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "tweetnacl": "^1.0.3",
     "vaul": "^0.9.9",
