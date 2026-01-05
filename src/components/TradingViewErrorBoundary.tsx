@@ -6,9 +6,10 @@
  * Note: Error notifications are displayed via the UI fallback, not toast.
  */
 
-import React from 'react';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { logger } from '@/lib/logger';
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
+import React from 'react';
 
 interface TradingViewErrorBoundaryState {
   hasError: boolean;
@@ -44,7 +45,9 @@ class TradingViewErrorBoundary extends React.Component<
     error: Error
   ): Partial<TradingViewErrorBoundaryState> {
     // Generate unique error ID for tracking
-    const errorId = `tv-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const errorId = `tv-${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 8)}`;
 
     return {
       hasError: true,
@@ -55,11 +58,14 @@ class TradingViewErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error for debugging and monitoring
-    console.error(
-      'TradingView Error Boundary caught an error:',
-      error,
-      errorInfo
-    );
+    logger.error('TradingView Error Boundary caught an error', error, {
+      component: 'TradingViewErrorBoundary',
+      metadata: {
+        widgetType: this.props.widgetType,
+        errorId: this.state.errorId,
+        stack: errorInfo.componentStack,
+      },
+    });
 
     // Call custom error handler if provided (e.g., for logging services)
     if (this.props.onError) {
@@ -93,7 +99,9 @@ class TradingViewErrorBoundary extends React.Component<
           <FallbackComponent
             error={this.state.error}
             onRetry={this.handleRetry}
-            widgetType={this.props.widgetType}
+            {...(this.props.widgetType
+              ? { widgetType: this.props.widgetType }
+              : {})}
           />
         );
       }
@@ -149,7 +157,7 @@ class TradingViewErrorBoundary extends React.Component<
                   Technical Details
                 </summary>
                 <div className="bg-[hsl(var(--status-error))] dark:bg-[hsl(var(--status-error-dark))] rounded-lg p-4 mt-2">
-                  <p className="font-mono text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] break-words">
+                  <p className="font-mono text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] wrap-break-word">
                     <strong>Error:</strong> {this.state.error.toString()}
                   </p>
                   {this.state.error

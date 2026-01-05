@@ -5,19 +5,19 @@
  * Provides real-time P&L updates and historical data for charts
  */
 
-import * as React from 'react';
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useAuth } from './useAuth';
-import type {
-  Position,
-  Order,
-  Fill,
-} from '@/integrations/supabase/types/tables';
+import { useAuth } from '@/hooks/useAuth';
+import type { Position } from '@/integrations/supabase/types/tables';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import('@/lib/supabaseBrowserClient');
+  const { supabase } = await import('@/integrations/supabase/client');
   return supabase;
+};
+
+const getLogger = async () => {
+  const { logger } = await import('@/lib/logger');
+  return logger;
 };
 
 interface DailyPnLData {
@@ -58,6 +58,11 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
   const [dailyData, setDailyData] = useState<DailyPnLData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Real-time channel refs for proper cleanup
+  const profileChannelRef = useRef<RealtimeChannel | null>(null);
+  const positionsChannelRef = useRef<RealtimeChannel | null>(null);
+  const fillsChannelRef = useRef<RealtimeChannel | null>(null);
 
   // Calculate the number of days based on time range
   const daysCount = useMemo(() => {
@@ -105,25 +110,25 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       const totalPnL = totalRealizedPnL + totalUnrealizedPnL;
 
       // Calculate changes
-      const initialEquity = 50000;
+
       const dailyChange =
         dailyData.length > 0
-          ? dailyData[dailyData.length - 1].totalPnL -
+          ? (dailyData[dailyData.length - 1]?.totalPnL ?? 0) -
             (dailyData.length > 1
-              ? dailyData[dailyData.length - 2].totalPnL
+              ? dailyData[dailyData.length - 2]?.totalPnL ?? 0
               : 0)
           : 0;
 
       const weeklyChange =
-        daysCount >= 7
-          ? dailyData[dailyData.length - 1].totalPnL -
-            (dailyData[Math.max(0, dailyData.length - 7)].totalPnL || 0)
+        daysCount >= 7 && dailyData.length > 0
+          ? (dailyData[dailyData.length - 1]?.totalPnL ?? 0) -
+            (dailyData[Math.max(0, dailyData.length - 7)]?.totalPnL ?? 0)
           : 0;
 
       const monthlyChange =
-        daysCount >= 30
-          ? dailyData[dailyData.length - 1].totalPnL -
-            (dailyData[Math.max(0, dailyData.length - 30)].totalPnL || 0)
+        daysCount >= 30 && dailyData.length > 0
+          ? (dailyData[dailyData.length - 1]?.totalPnL ?? 0) -
+            (dailyData[Math.max(0, dailyData.length - 30)]?.totalPnL ?? 0)
           : 0;
 
       // Win rate calculation
@@ -208,8 +213,8 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
         }, 0);
 
         // Estimate equity for this day (simplified calculation)
-        const baseEquity = 50000; // Starting balance
-        const equity = baseEquity + realizedPnL + unrealizedPnLValue;
+        const BASE_EQUITY = 50000; // Starting balance
+        const equity = BASE_EQUITY + realizedPnL + unrealizedPnLValue;
 
         dailyData.push({
           date: date.toLocaleDateString('en-US', {
@@ -281,14 +286,25 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
         startDate,
         daysCount,
         fillsData || [],
-        positionsData?.map((p) => ({
-          ...p,
-          opened_at: (p.opened_at ?? new Date().toISOString()) as string,
-          closed_at: (p.closed_at ?? undefined) as string | undefined,
+        positionsData?.map((p: Position) => ({
+          id: p.id,
+          user_id: p.user_id,
+          symbol: p.symbol,
+          side: p.side,
+          quantity: p.quantity,
+          entry_price: p.entry_price,
           current_price: p.current_price ?? 0,
-          realized_pnl: p.realized_pnl ?? 0,
-          unrealized_pnl: p.unrealized_pnl ?? 0,
-          status: (p.status ?? 'open') as 'open' | 'closed',
+          unrealized_pnl: p.unrealized_pnl,
+          margin_used: p.margin_used,
+          margin_level: 0, // Not available in Position type
+          opened_at: p.opened_at,
+          leverage: 1, // Not available in Position type
+          status: p.status,
+          created_at: p.opened_at, // Using opened_at as created_at
+          updated_at: p.closed_at ?? p.opened_at, // Using closed_at or opened_at
+          risk_reward_ratio: 0, // Not available in Position type
+          stop_loss: 0, // Not available in Position type
+          take_profit: 0, // Not available in Position type
         })) || []
       );
       setDailyData(calculatedDailyData);
@@ -299,14 +315,25 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       // Calculate profit/loss metrics
       const calculatedMetrics = calculateProfitLossMetrics(
         profileData,
-        positionsData?.map((p) => ({
-          ...p,
-          opened_at: (p.opened_at ?? new Date().toISOString()) as string,
-          closed_at: (p.closed_at ?? undefined) as string | undefined,
+        positionsData?.map((p: Position) => ({
+          id: p.id,
+          user_id: p.user_id,
+          symbol: p.symbol,
+          side: p.side,
+          quantity: p.quantity,
+          entry_price: p.entry_price,
           current_price: p.current_price ?? 0,
-          realized_pnl: p.realized_pnl ?? 0,
-          unrealized_pnl: p.unrealized_pnl ?? 0,
-          status: (p.status ?? 'open') as 'open' | 'closed',
+          unrealized_pnl: p.unrealized_pnl,
+          margin_used: p.margin_used,
+          margin_level: 0, // Not available in Position type
+          opened_at: p.opened_at,
+          leverage: 1, // Not available in Position type
+          status: p.status,
+          created_at: p.opened_at, // Using opened_at as created_at
+          updated_at: p.closed_at ?? p.opened_at, // Using closed_at or opened_at
+          risk_reward_ratio: 0, // Not available in Position type
+          stop_loss: 0, // Not available in Position type
+          take_profit: 0, // Not available in Position type
         })) || [],
         fillsData || [],
         calculatedDailyData
@@ -324,11 +351,15 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
       }
 
       setError(message);
-      console.error('Profit/loss data error:', {
-        message,
-        error: detailedError,
-        userId: user?.id,
-        timestamp: new Date().toISOString(),
+      const logger = await getLogger();
+      logger.error('Profit/loss data error', err, {
+        component: 'useProfitLossData',
+        action: 'fetch_pnl_data',
+        metadata: {
+          message,
+          userId: user?.id,
+          timestamp: new Date().toISOString(),
+        },
       });
 
       // Set default empty data on error
@@ -342,9 +373,6 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
   // Set up real-time subscriptions
   useEffect(() => {
     let isMounted = true;
-    let profileChannel: RealtimeChannel | null = null;
-    let positionsChannel: RealtimeChannel | null = null;
-    let fillsChannel: RealtimeChannel | null = null;
 
     const setup = async () => {
       if (!user) return;
@@ -355,7 +383,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
         if (!isMounted) return;
 
         // Subscribe to profile changes
-        profileChannel = supabase
+        profileChannelRef.current = supabase
           .channel(`pnl-profile-${user.id}`)
           .on(
             'postgres_changes',
@@ -372,7 +400,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
           .subscribe();
 
         // Subscribe to position changes
-        positionsChannel = supabase
+        positionsChannelRef.current = supabase
           .channel(`pnl-positions-${user.id}`)
           .on(
             'postgres_changes',
@@ -389,7 +417,7 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
           .subscribe();
 
         // Subscribe to fill changes
-        fillsChannel = supabase
+        fillsChannelRef.current = supabase
           .channel(`pnl-fills-${user.id}`)
           .on(
             'postgres_changes',
@@ -405,7 +433,12 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
           )
           .subscribe();
       } catch (error) {
-        console.error('Failed to set up profit/loss subscriptions', error);
+        const logger = await getLogger();
+        logger.error('Failed to set up profit/loss subscriptions', error, {
+          component: 'useProfitLossData',
+          action: 'setup_subscriptions',
+          metadata: { userId: user.id },
+        });
       }
     };
 
@@ -413,9 +446,18 @@ export const useProfitLossData = (timeRange: '7d' | '30d' | '90d' = '7d') => {
 
     return () => {
       isMounted = false;
-      profileChannel?.unsubscribe();
-      positionsChannel?.unsubscribe();
-      fillsChannel?.unsubscribe();
+      if (profileChannelRef.current) {
+        profileChannelRef.current.unsubscribe();
+        profileChannelRef.current = null;
+      }
+      if (positionsChannelRef.current) {
+        positionsChannelRef.current.unsubscribe();
+        positionsChannelRef.current = null;
+      }
+      if (fillsChannelRef.current) {
+        fillsChannelRef.current.unsubscribe();
+        fillsChannelRef.current = null;
+      }
     };
   }, [user, fetchProfitLossData, timeRange]);
 

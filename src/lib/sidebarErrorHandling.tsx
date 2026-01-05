@@ -1,11 +1,6 @@
-import {
-  useState,
-  type FC,
-  type ComponentType,
-  type ErrorInfo,
-  type ReactNode,
-} from 'react';
 import { SidebarErrorBoundary } from '@/components/ui/SidebarErrorBoundary';
+import type { ComponentType, ErrorInfo, FC, ReactNode } from 'react';
+import { useState } from 'react';
 
 /**
  * HOC to wrap components with sidebar error boundary
@@ -41,7 +36,13 @@ export const NavigationItemErrorBoundary: FC<{
     setHasError(true);
 
     // Log the specific navigation item error
-    console.error(`Navigation item "${itemName}" error:`, error, errorInfo);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.error(`Navigation item "${itemName}" error`, error, {
+        component: 'NavigationItemErrorBoundary',
+        action: 'handle_error',
+        metadata: { itemName, ...errorInfo },
+      });
+    });
 
     if (onError) {
       onError(error, itemName);

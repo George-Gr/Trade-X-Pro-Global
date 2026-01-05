@@ -3,6 +3,7 @@ import KycUploader from '@/components/kyc/KycUploader';
 import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { toast } from '@/hooks/use-toast';
 import {
   Card,
   CardContent,
@@ -21,6 +22,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import type { KYCDocument } from '@/integrations/supabase/types/tables';
+import { logger } from '@/lib/logger';
 import {
   AlertCircle,
   CheckCircle,
@@ -31,6 +33,21 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * KYC Verification Page Component
+ * 
+ * A comprehensive KYC (Know Your Customer) verification interface that allows users to:
+ * - Submit identity documents for verification
+ * - Track verification status and document review progress
+ * - View resubmission countdown when verification is rejected
+ * - Monitor submitted documents with real-time status updates
+ * 
+ * Uses React hooks for state management (kycStatus, documents, loading states),
+ * Supabase for data fetching and real-time subscriptions, and integrates with
+ * authentication context. Automatically re-fetches data on successful submissions.
+ * 
+ * This is the default exported page component for the KYC verification route.
+ */
 const KYC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -69,12 +86,28 @@ const KYC = () => {
       if (!error && data) {
         setDocuments(data as KYCDocument[]);
       } else if (error) {
-        console.error('Failed to fetch KYC documents:', error);
-        // Consider showing a toast notification to the user
+        logger.error('Failed to fetch KYC documents', error, {
+          component: 'KYC',
+          action: 'fetch_documents',
+          metadata: { userId: user.id },
+        });
+        toast({
+          variant: 'destructive',
+          title: 'Failed to load documents',
+          description: error.message || 'Unable to fetch your verification documents. Please try again.',
+        });
       }
     } catch (err) {
-      console.error('Unexpected error fetching KYC documents:', err);
-      // Consider showing a toast notification to the user
+      logger.error('Unexpected error fetching KYC documents', err, {
+        component: 'KYC',
+        action: 'fetch_documents_unexpected',
+        metadata: { userId: user.id },
+      });
+      toast({
+        variant: 'destructive',
+        title: 'Failed to load documents',
+        description: 'An unexpected error occurred while fetching your documents. Please try again.',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -96,11 +129,10 @@ const KYC = () => {
             table: 'profiles',
             filter: `id=eq.${user.id}`,
           },
-          (payload) => {
-            setKycStatus(
-              (payload.new as unknown as Record<string, unknown>)
-                .kyc_status as string
-            );
+          () => {
+            // Re-fetch from server to ensure data consistency with database
+            // rather than relying solely on notification payload
+            fetchKYCStatus();
           }
         )
         .subscribe();

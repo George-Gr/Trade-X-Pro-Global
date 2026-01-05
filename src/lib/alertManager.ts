@@ -300,11 +300,22 @@ export class AlertManager {
   ): Promise<void> {
     this.lastAlertTime.set(rule.id, Date.now());
 
-    console.warn(`[ALERT] ${rule.severity.toUpperCase()}: ${rule.name}`, {
-      rule,
-      metrics,
-      context,
-      timestamp: new Date().toISOString(),
+    import('@/lib/logger').then(({ logger }) => {
+      logger.logRiskEvent(
+        `ALERT: ${rule.name}`,
+        rule.severity === AlertSeverity.CRITICAL
+          ? 'critical'
+          : rule.severity === AlertSeverity.HIGH
+          ? 'high'
+          : rule.severity === AlertSeverity.MEDIUM
+          ? 'medium'
+          : 'low',
+        {
+          ruleId: rule.id,
+          metrics,
+          context,
+        }
+      );
     });
 
     // Send notifications to configured channels
@@ -380,7 +391,13 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
     message: string
   ): Promise<void> {
     // In a real implementation, this would send to configured email addresses
-    console.warn('[ALERT] Email notification sent:', rule.name);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info(`[ALERT] Email notification sent: ${rule.name}`, {
+        component: 'AlertManager',
+        action: 'send_email_alert',
+        metadata: { ruleId: rule.id },
+      });
+    });
   }
 
   /**
@@ -391,7 +408,13 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
     message: string
   ): Promise<void> {
     // In a real implementation, this would send to configured Slack channels
-    console.warn('[ALERT] Slack notification sent:', rule.name);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info(`[ALERT] Slack notification sent: ${rule.name}`, {
+        component: 'AlertManager',
+        action: 'send_slack_alert',
+        metadata: { ruleId: rule.id },
+      });
+    });
   }
 
   /**
@@ -402,7 +425,13 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
     message: string
   ): Promise<void> {
     // In a real implementation, this would send to PagerDuty
-    console.warn('[ALERT] PagerDuty notification sent:', rule.name);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info(`[ALERT] PagerDuty notification sent: ${rule.name}`, {
+        component: 'AlertManager',
+        action: 'send_pagerduty_alert',
+        metadata: { ruleId: rule.id },
+      });
+    });
   }
 
   /**
@@ -413,7 +442,13 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
     message: string
   ): Promise<void> {
     // In a real implementation, this would send to configured webhooks
-    console.warn('[ALERT] Webhook notification sent:', rule.name);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info(`[ALERT] Webhook notification sent: ${rule.name}`, {
+        component: 'AlertManager',
+        action: 'send_webhook_alert',
+        metadata: { ruleId: rule.id },
+      });
+    });
   }
 
   /**
@@ -439,7 +474,13 @@ ${context ? `📋 Context:\n${JSON.stringify(context, null, 2)}` : ''}
     const rule = CRITICAL_ALERT_RULES.find((r) => r.id === ruleId);
     if (rule) {
       Object.assign(rule, updates);
-      console.warn(`[ALERT] Updated rule: ${ruleId}`, updates);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.info(`[ALERT] Updated rule: ${ruleId}`, {
+          component: 'AlertManager',
+          action: 'update_rule',
+          metadata: { updates },
+        });
+      });
     }
   }
 

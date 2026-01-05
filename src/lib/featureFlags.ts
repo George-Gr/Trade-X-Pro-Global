@@ -35,7 +35,19 @@ class FeatureFlagManager {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        return { ...this.DEFAULT_FLAGS, ...parsed };
+        const flags = { ...this.DEFAULT_FLAGS, ...parsed };
+
+        // Enforce strict security capabilities in production
+        if (import.meta.env.MODE === 'production') {
+          return {
+            ...flags,
+            pkceAuthFlow: true,
+            secureStorage: true,
+            enhancedSecurityHeaders: true,
+          };
+        }
+
+        return flags;
       }
     } catch (error: unknown) {
       logger.warn('Failed to load feature flags', {
@@ -66,6 +78,7 @@ class FeatureFlagManager {
    * Check if PKCE auth flow is enabled
    */
   isPkceAuthFlowEnabled(): boolean {
+    if (import.meta.env.MODE === 'production') return true;
     return this.flags.pkceAuthFlow;
   }
 
@@ -73,6 +86,7 @@ class FeatureFlagManager {
    * Check if secure storage is enabled
    */
   isSecureStorageEnabled(): boolean {
+    if (import.meta.env.MODE === 'production') return true;
     return this.flags.secureStorage;
   }
 
@@ -80,6 +94,7 @@ class FeatureFlagManager {
    * Check if enhanced security headers are enabled
    */
   isEnhancedSecurityHeadersEnabled(): boolean {
+    if (import.meta.env.MODE === 'production') return true;
     return this.flags.enhancedSecurityHeaders;
   }
 
@@ -93,14 +108,22 @@ class FeatureFlagManager {
   }
 
   /**
-   * Disable PKCE auth flow (rollback to implicit) - DEPRECATED
-   * PKCE is now mandatory for security compliance
+   * Disable PKCE auth flow (rollback to implicit)
+   * PKCE is mandatory in production
    */
   disablePkceAuthFlow(): void {
-    logger.error(
-      'Cannot disable PKCE auth flow - PKCE is now mandatory for security compliance'
-    );
-    throw new Error('PKCE authentication is required for security compliance');
+    if (import.meta.env.MODE === 'production') {
+      logger.error(
+        'Cannot disable PKCE auth flow - PKCE is mandatory in production'
+      );
+      throw new Error(
+        'PKCE authentication is required for security compliance'
+      );
+    }
+
+    this.flags.pkceAuthFlow = false;
+    this.saveFlags();
+    logger.warn('PKCE auth flow disabled (DEV/TEST ONLY)');
   }
 
   /**
@@ -113,14 +136,22 @@ class FeatureFlagManager {
   }
 
   /**
-   * Disable secure storage (rollback to localStorage) - DEPRECATED
-   * Secure storage is now mandatory for sensitive data protection
+   * Disable secure storage (rollback to localStorage)
+   * Secure storage is mandatory in production
    */
   disableSecureStorage(): void {
-    logger.error(
-      'Cannot disable secure storage - secure storage is now mandatory for sensitive data protection'
-    );
-    throw new Error('Secure storage is required for sensitive data protection');
+    if (import.meta.env.MODE === 'production') {
+      logger.error(
+        'Cannot disable secure storage - secure storage is mandatory in production'
+      );
+      throw new Error(
+        'Secure storage is required for sensitive data protection'
+      );
+    }
+
+    this.flags.secureStorage = false;
+    this.saveFlags();
+    logger.warn('Secure storage disabled (DEV/TEST ONLY)');
   }
 
   /**
@@ -143,9 +174,14 @@ class FeatureFlagManager {
 
   /**
    * Get current feature flag state
+   * Returns effective flag values (consistent with individual getter methods)
    */
   getFlags(): FeatureFlags {
-    return { ...this.flags };
+    return {
+      pkceAuthFlow: this.isPkceAuthFlowEnabled(),
+      secureStorage: this.isSecureStorageEnabled(),
+      enhancedSecurityHeaders: this.isEnhancedSecurityHeadersEnabled(),
+    };
   }
 
   /**
@@ -170,16 +206,23 @@ class FeatureFlagManager {
   }
 
   /**
-   * Disable all PKCE-related features (full rollback) - DEPRECATED
-   * PKCE and secure storage are now mandatory
+   * Disable all PKCE-related features (full rollback)
+   * PKCE and secure storage are mandatory in production
    */
   disableAllPkceFeatures(): void {
-    logger.error(
-      'Cannot disable PKCE features - PKCE and secure storage are now mandatory for security compliance'
-    );
-    throw new Error(
-      'PKCE authentication and secure storage are required for security compliance'
-    );
+    if (import.meta.env.MODE === 'production') {
+      logger.error(
+        'Cannot disable PKCE features - PKCE and secure storage are mandatory in production'
+      );
+      throw new Error(
+        'PKCE authentication and secure storage are required for security compliance'
+      );
+    }
+
+    this.flags.pkceAuthFlow = false;
+    this.flags.secureStorage = false;
+    this.saveFlags();
+    logger.warn('All PKCE features disabled (DEV/TEST ONLY)');
   }
 }
 

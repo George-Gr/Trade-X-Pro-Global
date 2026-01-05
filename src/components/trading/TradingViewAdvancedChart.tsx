@@ -1,4 +1,6 @@
-import { useEffect, useRef, memo } from 'react';
+import { logger } from '@/lib/logger';
+import type React from 'react';
+import { memo, useEffect, useRef } from 'react';
 
 /**
  * Minimal compatibility initializer for the TradingView widget script.
@@ -20,9 +22,17 @@ interface TradingViewAdvancedChartProps {
   symbol: string;
 }
 
-const TradingViewAdvancedChart = ({
+/**
+ * Renders an embedded TradingView advanced chart with technical indicators and
+ * dynamically loads the TradingView library.
+ *
+ * @param props - The component props
+ * @param props.symbol - The trading symbol to display (e.g., "NASDAQ:AAPL")
+ * @returns JSX.Element - A chart container div
+ */
+const TradingViewAdvancedChart: React.FC<TradingViewAdvancedChartProps> = ({
   symbol,
-}: TradingViewAdvancedChartProps) => {
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,15 +79,27 @@ const TradingViewAdvancedChart = ({
             });
           }
         } catch (error) {
-          // keep as console.error here for diagnostics
-
-          console.error('TradingView widget initialization error:', error);
+          logger.error('TradingView widget initialization error', error, {
+            component: 'TradingViewAdvancedChart',
+            action: 'init_widget',
+            metadata: { symbol },
+          });
         }
       }, 100);
     };
 
     script.onerror = (error) => {
-      console.error('Failed to load TradingView script:', error);
+      logger.error(
+        'Failed to load TradingView script',
+        typeof error === 'string'
+          ? new Error(error)
+          : new Error('Script load failed'),
+        {
+          component: 'TradingViewAdvancedChart',
+          action: 'load_script',
+          metadata: { src: script.src },
+        }
+      );
     };
 
     const uniqueId = `tradingview_${Math.random().toString(36).substring(7)}`;

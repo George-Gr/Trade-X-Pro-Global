@@ -17,6 +17,38 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from './useAuth';
 
 // ============================================================================
+// TYPE GUARDS AND VALIDATION
+// ============================================================================
+
+/**
+ * Type guard to validate margin status values
+ * @param status - The margin status to validate
+ * @returns true if the status is one of the allowed values
+ */
+function isValidMarginStatus(
+  status: string
+): status is PositionMetrics['margin_status'] {
+  return ['SAFE', 'WARNING', 'CRITICAL', 'LIQUIDATION'].includes(status);
+}
+
+/**
+ * Safely converts string to margin status with fallback
+ * @param status - The margin status string to convert
+ * @param fallback - Fallback value if status is invalid
+ * @returns Valid margin status or fallback
+ */
+function safeMarginStatus(
+  status: string,
+  fallback: PositionMetrics['margin_status'] = 'SAFE'
+): PositionMetrics['margin_status'] {
+  if (isValidMarginStatus(status)) {
+    return status;
+  }
+
+  return fallback;
+}
+
+// ============================================================================
 // TYPES
 // ============================================================================
 
@@ -41,7 +73,7 @@ export interface PositionUpdate {
   current_price: number;
   unrealized_pnl: number;
   margin_level: number;
-  margin_status: string;
+  margin_status: 'SAFE' | 'WARNING' | 'CRITICAL' | 'LIQUIDATION';
   updated_at: string;
 }
 
@@ -94,7 +126,9 @@ export function usePositionUpdate(
   const [error, setError] = useState<Error | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const realtimeChannelRef = useRef<unknown>(null);
+  const realtimeChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(
+    null
+  );
   const refreshIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // =========================================================================
@@ -209,14 +243,21 @@ export function usePositionUpdate(
             );
 
             if (index >= 0) {
+              const current = updated[index];
+
+              // Safe margin status validation with fallback
+              const validatedMarginStatus = safeMarginStatus(
+                payload.payload.margin_status,
+                current?.margin_status || 'SAFE' // Use current status or 'SAFE' as fallback
+              );
+
               updated[index] = {
-                ...updated[index],
+                ...current,
                 current_price: payload.payload.current_price,
                 unrealized_pnl: payload.payload.unrealized_pnl,
                 margin_level: payload.payload.margin_level,
-                margin_status: payload.payload
-                  .margin_status as PositionMetrics['margin_status'],
-              };
+                margin_status: validatedMarginStatus,
+              } as PositionMetrics;
             }
 
             return updated;
@@ -225,7 +266,7 @@ export function usePositionUpdate(
           setLastUpdated(new Date());
         }
       )
-      .subscribe((status) => {
+      .subscribe((status: string) => {
         if (status === 'SUBSCRIBED') {
           // Subscription established successfully
         } else if (status === 'CHANNEL_ERROR') {

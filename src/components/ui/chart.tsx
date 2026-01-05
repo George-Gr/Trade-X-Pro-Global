@@ -4,6 +4,7 @@ import * as React from 'react';
 // bundle small.
 // We avoid top-level imports of `recharts` to allow code-splitting.
 
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
@@ -55,7 +56,11 @@ const ChartContainer = React.forwardRef<
         if (mounted) setRecharts(m);
       })
       .catch((error) => {
-        console.warn('Failed to load recharts:', error);
+        logger.warn('Failed to load recharts', {
+          component: 'ChartContainer',
+          action: 'load_recharts',
+          metadata: { error },
+        });
         if (mounted) setRecharts(null);
       });
     return () => {
@@ -224,6 +229,8 @@ const ChartTooltipContent = React.forwardRef<
       }
 
       const [item] = payload;
+      if (!item) return null; // Guard against undefined item to satisfy TS
+
       const key = `${labelKey || item.dataKey || item.name || 'value'}`;
       const itemConfig = getPayloadConfigFromPayload(config, item, key);
       const value =

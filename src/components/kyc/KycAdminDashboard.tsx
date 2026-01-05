@@ -40,7 +40,7 @@ import {
   Loader2,
   X,
 } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 interface KycDocument {
   id: string;
@@ -82,7 +82,19 @@ type FilterStatus =
   | 'rejected'
   | 'manual_review';
 
-const KycAdminDashboard: React.FC = () => {
+// KYC action status mapping for admin operations
+const KYC_ACTION_STATUS_MAP = {
+  approve: 'approved',
+  reject: 'rejected',
+  request_more_info: 'submitted',
+} as const;
+
+/**
+ * Exported admin dashboard component for reviewing and managing KYC submissions.
+ * Displays KYC requests queue, statistics, and admin actions for approval/rejection.
+ * @returns JSX.Element
+ */
+const KycAdminDashboard: FC = () => {
   const { user, isAdmin, loading } = useAuth();
   const [requests, setRequests] = useState<
     (KycRequest & { userProfile?: UserProfile; kycDocuments?: KycDocument[] })[]
@@ -124,12 +136,11 @@ const KycAdminDashboard: React.FC = () => {
 
       // Fetch user profiles for each request
       const enrichedRequests = await Promise.all(
-        (requestsData || []).map(async (req) => {
-          const r = req as Record<string, unknown>;
+        (requestsData || []).map(async (req: Record<string, unknown>) => {
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('id, email, full_name, phone, kyc_status')
-            .eq('id', String(r.user_id))
+            .eq('id', String(req.user_id))
             .single();
 
           if (profileError) {
@@ -137,9 +148,9 @@ const KycAdminDashboard: React.FC = () => {
           }
 
           return {
-            ...r,
+            ...req,
             userProfile: profile,
-            kycDocuments: (r.kyc_documents as KycDocument[]) || [],
+            kycDocuments: (req.kyc_documents as KycDocument[]) || [],
           } as KycRequest & {
             userProfile?: UserProfile;
             kycDocuments?: KycDocument[];
@@ -187,12 +198,6 @@ const KycAdminDashboard: React.FC = () => {
         throw new Error('Failed to get user session token');
       }
 
-      const statusMap = {
-        approve: 'approved',
-        reject: 'rejected',
-        request_more_info: 'submitted',
-      };
-
       const resp = await fetch('/supabase/functions/admin/kyc-review', {
         method: 'POST',
         headers: {
@@ -202,7 +207,7 @@ const KycAdminDashboard: React.FC = () => {
         body: JSON.stringify({
           kycRequestId,
           action,
-          statusAfter: statusMap[action],
+          statusAfter: KYC_ACTION_STATUS_MAP[action],
           notes: notes || `Admin action: ${action}`,
         }),
       });
@@ -218,7 +223,7 @@ const KycAdminDashboard: React.FC = () => {
           r.id === kycRequestId
             ? {
                 ...r,
-                status: statusMap[action],
+                status: KYC_ACTION_STATUS_MAP[action],
                 updated_at: new Date().toISOString(),
               }
             : r

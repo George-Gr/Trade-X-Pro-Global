@@ -164,8 +164,12 @@ export const AuthAuditDashboard: React.FC<AuthAuditDashboardProps> = ({
 
       setEvents(payload.events || []);
     } catch (err) {
-      // Log the full error for debugging
-      console.error('Failed to fetch audit logs:', err);
+      // Log the full error for debugging with centralized logger
+      const { logger } = await import('@/lib/logger');
+      logger.error('Failed to fetch audit logs', err, {
+        component: 'AuthAuditDashboard',
+        action: 'fetch_audit_logs',
+      });
 
       // Set a generic, user-friendly error message
       setError('An unexpected error occurred while loading audit logs');

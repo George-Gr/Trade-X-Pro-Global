@@ -1,11 +1,8 @@
 // Dynamic import utilities for code splitting and bundle optimization
 import {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
   createElement,
+  useEffect,
+  useState,
   type ComponentProps,
   type ComponentType,
 } from 'react';
@@ -197,7 +194,12 @@ export class DynamicImportManager {
         const defaultResult = {} as T;
         return defaultResult;
       } catch (fallbackError) {
-        console.error('Fallback also failed:', fallbackError);
+        try {
+          const { logger: fallbackLogger } = await import('@/lib/logger');
+          fallbackLogger.error('Fallback also failed:', fallbackError);
+        } catch {
+          // Logger unavailable - fail silently
+        }
       }
     }
 
@@ -256,7 +258,7 @@ export class DynamicImportManager {
 
   /**
    * Preloads a module and caches it for future use.
-   * Silently ignores preload failures with a console warning.
+   * Silently ignores preload failures with a logger warning.
    * @param path The module path to preload
    * @returns Promise that resolves when preload completes or fails (never throws)
    */
@@ -273,7 +275,12 @@ export class DynamicImportManager {
         timestamp: Date.now(),
       });
     } catch (error) {
-      console.warn(`Failed to preload module ${path}:`, error);
+      const { logger: preloadLogger } = await import('@/lib/logger');
+      preloadLogger.warn(`Failed to preload module ${path}`, {
+        component: 'DynamicImportManager',
+        action: 'preload_module',
+        metadata: { path, error },
+      });
     }
   }
 
@@ -500,7 +507,7 @@ export function useDynamicImport<T = unknown>(
 
 // HOC for dynamic component loading
 export function withDynamicImport<
-  T extends ComponentType<Record<string, unknown>>,
+  T extends ComponentType<Record<string, unknown>>
 >(importFunc: () => Promise<{ default: T }>, fallback?: ComponentType) {
   return function DynamicComponent(props: ComponentProps<T>) {
     const [Component, setComponent] = useState<T | null>(null);
@@ -516,8 +523,9 @@ export function withDynamicImport<
             setLoading(false);
           }
         })
-        .catch((error) => {
-          console.error('Failed to load dynamic component:', error);
+        .catch(async (error) => {
+          const { logger: loaderLogger } = await import('@/lib/logger');
+          loaderLogger.error('Failed to load dynamic component', error);
           if (!isCancelled) {
             setLoading(false);
           }

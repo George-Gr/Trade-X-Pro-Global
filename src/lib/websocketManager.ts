@@ -6,9 +6,9 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 import { logger } from './logger';
 import { performanceMonitoring } from './performance/performanceMonitoring';
+type RealtimeChannel = ReturnType<typeof supabase.channel>;
 
 // Connection states
 type ConnectionState =
@@ -49,6 +49,9 @@ interface RealtimePayload {
   commit_timestamp?: string;
   [key: string]: unknown;
 }
+
+// Channel status type for better type safety
+type ChannelStatus = 'SUBSCRIBED' | 'CHANNEL_ERROR' | 'TIMED_OUT' | 'CLOSED';
 
 // Subscription entry
 interface Subscription {
@@ -204,7 +207,7 @@ class WebSocketManager {
     performance.mark(`ws-connect-start-${connectionId}`);
 
     // Subscribe to connection
-    channel.subscribe((status) => {
+    channel.subscribe((status: ChannelStatus) => {
       if (status === 'SUBSCRIBED') {
         connection.state = 'connected';
         connection.retryCount = 0;
@@ -340,7 +343,7 @@ class WebSocketManager {
         );
       }
 
-      newChannel.subscribe((status) => {
+      newChannel.subscribe((status: ChannelStatus) => {
         if (status === 'SUBSCRIBED') {
           connection.state = 'connected';
           connection.retryCount = 0;

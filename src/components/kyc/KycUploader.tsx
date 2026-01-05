@@ -12,6 +12,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import {
   AlertCircle,
   CheckCircle,
@@ -206,13 +207,32 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         )
       );
 
+      // Get session for authentication
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+      if (sessionError || !sessionData.session?.access_token) {
+        throw new Error('Authentication required. Please sign in again.');
+      }
+
       // Request signed upload URL
       const submitResp = await fetch('/supabase/functions/submit-kyc', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionData.session.access_token}`,
+        },
         body: JSON.stringify({ type: upload.type }),
-        credentials: 'include',
       });
+
+      if (submitResp.status === 429) {
+        const err = await submitResp.json().catch(() => ({}));
+        const resetIn = err.reset_in_seconds
+          ? `${err.reset_in_seconds} seconds`
+          : 'a few moments';
+        throw new Error(
+          `Too many KYC submissions. Please wait ${resetIn} before trying again.`
+        );
+      }
 
       if (!submitResp.ok) {
         const err = await submitResp.json().catch(() => ({}));
@@ -446,7 +466,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
                   {/* Upload Area */}
                   <div
-                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-[280px] flex flex-col items-center justify-center ${
+                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all duration-200 min-h-70 flex flex-col items-center justify-center ${
                       isDragActive
                         ? 'border-primary bg-primary/5 scale-105'
                         : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/2'
@@ -468,7 +488,7 @@ const KycUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
                             <img
                               src={upload.thumbnail}
                               alt={upload.file.name}
-                              className="max-w-[120px] max-h-[120px] rounded-lg border border-muted-foreground/20 shadow-sm object-cover"
+                              className="max-w-30 max-h-30 rounded-lg border border-muted-foreground/20 shadow-sm object-cover"
                             />
                           </div>
                         ) : (

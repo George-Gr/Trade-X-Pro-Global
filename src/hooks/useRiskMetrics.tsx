@@ -5,21 +5,25 @@
  * Provides margin level, capital at risk, risk classification, and alerts
  */
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useAuth } from './useAuth';
-import {
-  calculateRiskMetrics,
-  assessPortfolioRisk,
-  classifyRiskLevel,
-  RiskMetrics,
-  PortfolioRiskAssessment,
-} from '@/lib/risk/riskMetrics';
 import type { Position } from '@/integrations/supabase/types/tables';
+import {
+  PortfolioRiskAssessment,
+  RiskMetrics,
+  assessPortfolioRisk,
+  calculateRiskMetrics,
+} from '@/lib/risk/riskMetrics';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuth } from './useAuth';
 
 const getSupabaseClient = async () => {
   const { supabase } = await import('@/lib/supabaseBrowserClient');
   return supabase;
+};
+
+const getLogger = async () => {
+  const { logger } = await import('@/lib/logger');
+  return logger;
 };
 
 // Interface for position risk data
@@ -93,12 +97,22 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
           .order('triggered_at', { ascending: true });
 
         if (callEventsError) {
-          console.warn('Failed to fetch margin call events:', callEventsError);
+          const logger = await getLogger();
+          logger.warn('Failed to fetch margin call events', {
+            component: 'useRiskMetrics',
+            action: 'fetch_margin_call_events',
+            metadata: { error: callEventsError, userId: user.id },
+          });
         } else {
           marginHistoryData = callEventsData || [];
         }
       } catch (err) {
-        console.warn('Error fetching margin history:', err);
+        const logger = await getLogger();
+        logger.warn('Error fetching margin history', {
+          component: 'useRiskMetrics',
+          action: 'fetch_margin_history',
+          metadata: { error: err, userId: user.id },
+        });
       }
 
       // Convert positions to format needed for calculations
@@ -168,7 +182,12 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
       const message =
         err instanceof Error ? err.message : 'Failed to fetch risk metrics';
       setError(message);
-      console.error('Risk metrics error:', message);
+      const logger = await getLogger();
+      logger.error('Risk metrics error', err, {
+        component: 'useRiskMetrics',
+        action: 'fetch_risk_data',
+        metadata: { userId: user?.id, message },
+      });
     } finally {
       setLoading(false);
     }
@@ -222,7 +241,12 @@ export const useRiskMetrics = (): UseRiskMetricsReturn => {
           )
           .subscribe();
       } catch (error) {
-        console.error('Failed to set up risk metrics subscriptions', error);
+        const logger = await getLogger();
+        logger.error('Failed to set up risk metrics subscriptions', error, {
+          component: 'useRiskMetrics',
+          action: 'setup_subscriptions',
+          metadata: { userId: user.id },
+        });
       }
     };
 

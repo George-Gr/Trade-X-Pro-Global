@@ -13,22 +13,53 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Activity, AlertCircle, AlertTriangle } from 'lucide-react';
+import { z } from 'zod';
 
-import type { Database } from '@/integrations/supabase/types';
-type MarginCallEventWithProfiles =
-  Database['public']['Tables']['margin_call_events']['Row'] & {
-    profiles?: {
-      email: string;
-      full_name: string | null;
-      equity: number;
-      margin_used: number;
-    };
-  };
+// Zod validation schemas
+const profileSchema = z.object({
+  email: z.string(),
+  full_name: z.string().nullable(),
+  equity: z.number(),
+  margin_used: z.number(),
+});
 
+const marginCallEventSchema = z.object({
+  id: z.string(),
+  user_id: z.string(),
+  margin_level: z.number(),
+  severity: z.enum([
+    'WARNING',
+    'MARGIN_CALL',
+    'CRITICAL',
+    'LIQUIDATION_TRIGGER',
+  ]),
+  status: z.enum(['pending', 'notified', 'escalated', 'resolved']),
+  triggered_at: z.string(),
+  profiles: profileSchema.optional(),
+});
+
+const marginCallEventsSchema = z.array(marginCallEventSchema);
+
+type MarginCallEventWithProfiles = z.infer<typeof marginCallEventSchema>;
+
+/**
+ * Admin Risk Dashboard component for monitoring and managing user risk
+ *
+ * @component
+ * @description Provides real-time monitoring of margin calls and risk events for admin users.
+ * Displays active margin calls with severity levels, user information, and risk metrics.
+ * Includes automatic data refresh every 10 seconds and manual refresh capability.
+ *
+ * @returns {JSX.Element} The rendered admin risk dashboard with margin call management interface
+ *
+ * @requiresRole admin - This component is restricted to admin users only
+ * @sideEffects - Makes real-time queries to Supabase for margin call data
+ * @context Uses React Query for data fetching and caching
+ */
 const AdminRiskDashboard = () => {
   const queryClient = useQueryClient();
 
-  const { data: marginCalls } = useQuery({
+  const { data: marginCalls } = useQuery<MarginCallEventWithProfiles[]>({
     queryKey: ['admin-margin-calls'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -37,14 +68,17 @@ const AdminRiskDashboard = () => {
         .in('status', ['pending', 'notified', 'escalated'])
         .order('triggered_at', { ascending: false });
       if (error) throw error;
-      return data;
+
+      // Validate and parse the returned data using Zod
+      const parsedData = marginCallEventsSchema.parse(data);
+      return parsedData;
     },
     refetchInterval: 10000,
   });
 
   const criticalCount =
     marginCalls?.filter(
-      (mc) =>
+      (mc: MarginCallEventWithProfiles) =>
         mc.severity === 'CRITICAL' || mc.severity === 'LIQUIDATION_TRIGGER'
     ).length || 0;
 

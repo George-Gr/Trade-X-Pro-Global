@@ -61,10 +61,13 @@ export const useChartWorker = <T>() => {
           });
         };
       } catch (error) {
-        console.warn(
-          'Web Worker not supported or failed to initialize:',
-          error
-        );
+        import('@/lib/logger').then(({ logger }) => {
+          logger.warn('Web Worker not supported or failed to initialize', {
+            component: 'useChartWorker',
+            action: 'initialize',
+            metadata: { error },
+          });
+        });
       }
     }
 
@@ -84,7 +87,9 @@ export const useChartWorker = <T>() => {
           return;
         }
 
-        const id = `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const id = `${type}_${Date.now()}_${Math.random()
+          .toString(36)
+          .substr(2, 9)}`;
 
         setPendingRequests((prev) => new Set(prev).add(id));
 

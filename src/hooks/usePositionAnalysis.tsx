@@ -16,7 +16,12 @@ import {
   runStressTests,
   StressTestResults,
 } from '@/lib/risk/positionAnalysis';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+const getLogger = async () => {
+  const { logger } = await import('@/lib/logger');
+  return logger;
+};
 
 interface UsePositionAnalysisReturn {
   concentration: ConcentrationAnalysis | null;
@@ -42,6 +47,11 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
     useState<DiversificationMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Ref to hold the subscription channel to prevent stale-closure issues
+  const positionsChannelRef = useRef<ReturnType<
+    typeof supabase.channel
+  > | null>(null);
 
   const fetchAnalysis = useCallback(async () => {
     if (!user) {
@@ -83,7 +93,8 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
       // Calculate total portfolio value
       const totalPortfolioValue =
         positions.reduce(
-          (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
+          (sum: number, p: Position) =>
+            sum + (p.quantity || 0) * (p.current_price || 0),
           0
         ) + (profileData?.equity || 0);
 
@@ -97,9 +108,11 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
 
       // Create symbol to asset class mapping
       const symbolToAssetClass: Record<string, string> = {};
-      assetSpecs?.forEach((spec) => {
-        symbolToAssetClass[spec.symbol] = spec.asset_class || 'Other';
-      });
+      assetSpecs?.forEach(
+        (spec: { symbol: string; asset_class: string | null }) => {
+          symbolToAssetClass[spec.symbol] = spec.asset_class || 'Other';
+        }
+      );
 
       // Analyze concentration
       const concentrationData = analyzeConcentration(
@@ -152,13 +165,17 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
         // For now, we'll skip correlation as it requires historical data
         setCorrelation(null);
       }
-
-      setError(null);
+      setError(null); // Clear any previous errors
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to analyze positions';
       setError(message);
-      console.error('Position analysis error:', message);
+      const logger = await getLogger();
+      logger.error('Position analysis error', err, {
+        component: 'usePositionAnalysis',
+        action: 'fetch_analysis',
+        metadata: { userId: user?.id, message },
+      });
     } finally {
       setLoading(false);
     }
@@ -170,7 +187,8 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
 
     if (!user) return;
 
-    const positionsChannel = supabase
+    // Create and store the subscription channel in ref
+    positionsChannelRef.current = supabase
       .channel(`position-analysis-${user.id}`)
       .on(
         'postgres_changes',
@@ -187,7 +205,11 @@ export const usePositionAnalysis = (): UsePositionAnalysisReturn => {
       .subscribe();
 
     return () => {
-      positionsChannel.unsubscribe();
+      // Clean up subscription using ref to avoid stale-closure issues
+      if (positionsChannelRef.current) {
+        positionsChannelRef.current.unsubscribe();
+        positionsChannelRef.current = null;
+      }
     };
   }, [user, fetchAnalysis]);
 

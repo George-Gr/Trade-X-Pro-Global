@@ -225,7 +225,7 @@ export function useInfiniteScroll<T = unknown>(
     if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting && hasMore && !loadingMore) loadMore();
+        if (e?.isIntersecting && hasMore && !loadingMore) loadMore();
       },
       { threshold }
     );

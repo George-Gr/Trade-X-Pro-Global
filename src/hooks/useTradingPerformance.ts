@@ -150,6 +150,9 @@ export function useTradingPerformance(
     // Component Mount
     performanceMonitoring.markUserAction(`mount-${componentName}`);
 
+    // Capture current memory samples to avoid stale closure in cleanup
+    const currentMemorySamples = memorySamples.current.slice();
+
     if (trackMemory) {
       memoryStartTime.current = performance.now();
       // Initial memory sample
@@ -181,10 +184,10 @@ export function useTradingPerformance(
       if (
         trackMemory &&
         memoryStartTime.current > 0 &&
-        memorySamples.current.length > 0
+        currentMemorySamples.length > 0
       ) {
-        // Capture current samples to avoid stale closure
-        const samples = [...memorySamples.current];
+        // Use captured samples from effect start
+        const samples = currentMemorySamples;
         const firstSample = samples[0];
         const lastSample = samples[samples.length - 1];
         if (firstSample && lastSample) {

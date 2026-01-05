@@ -174,7 +174,18 @@ const TradingViewChart = ({ symbol }: TradingViewChartProps) => {
           if (chart) chart.remove();
         };
       })
-      .catch(console.error);
+      .catch(async (err) => {
+        const { logger } = await import('@/lib/logger');
+        logger.error(
+          'Failed to initialize TradingView lightweight charts',
+          err,
+          {
+            component: 'TradingViewChart',
+            action: 'init_chart',
+            metadata: { symbol },
+          }
+        );
+      });
 
     return () => {
       mounted = false;

@@ -1,17 +1,24 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Home } from 'lucide-react';
+import { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
+/**
+ * NotFound component displays a 404 error page when users navigate to non-existent routes.
+ * Logs the attempted route access for monitoring purposes.
+ */
 const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
     document.title = '404 - Page Not Found | TradeX Pro';
-    console.error(
-      '404 Error: User attempted to access non-existent route:',
-      location.pathname
-    );
+    import('@/lib/logger').then(({ logger }) => {
+      logger.warn('404 Error: User attempted to access non-existent route', {
+        component: 'NotFound',
+        action: 'report_404',
+        metadata: { path: location.pathname },
+      });
+    });
   }, [location.pathname]);
 
   return (

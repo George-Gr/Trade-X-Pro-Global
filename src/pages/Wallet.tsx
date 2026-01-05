@@ -16,6 +16,7 @@ import { TransactionHistory } from '@/components/wallet/TransactionHistory';
 import { WithdrawalDialog } from '@/components/wallet/WithdrawalDialog';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowDownLeft,
@@ -28,6 +29,37 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
+type CryptoTransaction =
+  Database['public']['Tables']['crypto_transactions']['Row'];
+
+/**
+ * Cryptocurrency wallet management interface component
+ * 
+ * Provides a comprehensive dashboard for managing cryptocurrency deposits and withdrawals,
+ * displaying wallet balances, transaction history, and funding operations.
+ * 
+ * Features:
+ * - Real-time balance display (total, held, pending operations)
+ * - Cryptocurrency deposit functionality with multiple supported assets
+ * - Withdrawal interface (currently disabled via feature flag)
+ * - Transaction history with filtering and detailed views
+ * - Responsive design with tabbed interface for different operations
+ * 
+ * Hooks Used:
+ * - useAuth: Provides authenticated user context
+ * - useToast: Enables notification system
+ * - useState: Manages component state (dialogs, active tabs)
+ * - useQuery: Handles data fetching for profile and transaction data
+ * 
+ * Side Effects:
+ * - Fetches user profile data on mount
+ * - Fetches cryptocurrency transaction history
+ * - Manages modal dialog states for deposits/withdrawals
+ * - Implements manual refresh functionality for data updates
+ * 
+ * @returns {JSX.Element} The wallet management interface with balance cards,
+ * deposit/withdrawal forms, and transaction history tabs
+ */
 const Wallet = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -87,8 +119,9 @@ const Wallet = () => {
   // Implement withdrawal request form, validation, and processing workflow
 
   const pendingTransactions =
-    transactions?.filter((t) => ['pending', 'confirming'].includes(t.status))
-      .length || 0;
+    transactions?.filter((t: CryptoTransaction) =>
+      ['pending', 'confirming'].includes(t.status)
+    ).length || 0;
 
   const handleRefresh = () => {
     refetchProfile();
@@ -291,14 +324,15 @@ const Wallet = () => {
 
                 <TabsContent value="deposits" className="mt-6">
                   <TransactionHistory
-                    transactions={
-                      transactions
-                        ?.filter((t) => t.transaction_type === 'deposit')
-                        .map((t) => ({
-                          ...t,
-                          confirmations: t.confirmations ?? 0,
-                        })) || []
-                    }
+                    transactions={(transactions || [])
+                      .filter(
+                        (t: CryptoTransaction) =>
+                          t.transaction_type === 'deposit'
+                      )
+                      .map((t: CryptoTransaction) => ({
+                        ...t,
+                        confirmations: t.confirmations ?? 0,
+                      }))}
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>
@@ -313,12 +347,12 @@ const Wallet = () => {
 
                 <TabsContent value="all" className="mt-6">
                   <TransactionHistory
-                    transactions={
-                      transactions?.map((t) => ({
+                    transactions={(transactions || []).map(
+                      (t: CryptoTransaction) => ({
                         ...t,
                         confirmations: t.confirmations ?? 0,
-                      })) || []
-                    }
+                      })
+                    )}
                     isLoading={transactionsLoading}
                   />
                 </TabsContent>

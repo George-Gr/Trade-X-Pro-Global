@@ -78,7 +78,13 @@ export function useRoleGuard(
         return;
       }
 
-      const userRoles = (roles || []).map((r) => r.role as AppRole);
+      const isValidRole = (role: string): role is AppRole => {
+        return role === 'admin' || role === 'user';
+      };
+
+      const userRoles = (roles || [])
+        .map((r: { role: string }) => r.role)
+        .filter(isValidRole);
       const hasRequiredRole = requiredRole
         ? userRoles.includes(requiredRole)
         : true;
@@ -170,12 +176,18 @@ export function useIsAdmin(): { isAdmin: boolean; isLoading: boolean } {
           return;
         }
 
-        const { data: roles } = await supabase
+        const { data: roles, error: rolesError } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)
           .eq('role', 'admin')
           .maybeSingle();
+
+        if (rolesError) {
+          logger.error('Failed to fetch admin role', rolesError);
+          setIsAdmin(false);
+          return;
+        }
 
         setIsAdmin(!!roles);
       } catch (error) {

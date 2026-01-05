@@ -312,7 +312,11 @@ export function calculateCorrelation(
   // Calculate covariance
   const covariance =
     pricesSeries1.reduce((sum, val, i) => {
-      return sum + (val - mean1) * (pricesSeries2[i] - mean2);
+      if (i < pricesSeries2.length) {
+        const price2 = pricesSeries2[i]!;
+        return sum + (val - mean1) * (price2 - mean2);
+      }
+      return sum;
     }, 0) / n;
 
   // Calculate correlation
@@ -354,14 +358,15 @@ export function buildCorrelationMatrix(
 
   // Initialize matrix
   for (let i = 0; i < n; i++) {
-    matrix[i] = [];
+    const row: number[] = [];
     for (let j = 0; j < n; j++) {
       if (i === j) {
-        matrix[i][j] = 1; // Perfect correlation with self
+        row[j] = 1; // Perfect correlation with self
       } else {
-        matrix[i][j] = 0;
+        row[j] = 0;
       }
     }
+    matrix[i] = row;
   }
 
   // Calculate correlations
@@ -369,12 +374,20 @@ export function buildCorrelationMatrix(
     for (let j = i + 1; j < n; j++) {
       const symbol1 = symbols[i];
       const symbol2 = symbols[j];
+
+      if (!symbol1 || !symbol2) continue;
+
       const prices1 = symbolPrices.get(symbol1) || [];
       const prices2 = symbolPrices.get(symbol2) || [];
 
       const correlation = calculateCorrelation(prices1, prices2);
-      matrix[i][j] = correlation;
-      matrix[j][i] = correlation;
+      const rowI = matrix[i];
+      const rowJ = matrix[j];
+
+      if (rowI && rowJ) {
+        rowI[j] = correlation;
+        rowJ[i] = correlation;
+      }
 
       correlationPairs.push({
         symbol1,
@@ -475,7 +488,9 @@ export function simulateStressScenario(
 
   return {
     name: `${priceMovement > 0 ? '+' : ''}${priceMovement}% Movement`,
-    description: `All positions move ${priceMovement > 0 ? 'up' : 'down'} by ${Math.abs(priceMovement)}%`,
+    description: `All positions move ${
+      priceMovement > 0 ? 'up' : 'down'
+    } by ${Math.abs(priceMovement)}%`,
     priceMovement,
     liquidatedPositions,
     estimatedLoss: Math.round(estimatedLoss * 100) / 100,

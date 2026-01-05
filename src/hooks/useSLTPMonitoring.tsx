@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSlTpExecution, TriggerType } from './useSlTpExecution';
-import { usePositionUpdate, PositionMetrics } from './usePositionUpdate';
-import { usePriceStream, PriceData } from './usePriceStream';
-import type { Position } from '@/types/position';
+import type { PositionMetrics } from '@/hooks/usePositionUpdate';
+import { usePositionUpdate } from '@/hooks/usePositionUpdate';
+import { usePriceStream } from '@/hooks/usePriceStream';
+import type { TriggerType } from '@/hooks/useSlTpExecution';
+import { useSlTpExecution } from '@/hooks/useSlTpExecution';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Tracks a position that has been triggered by SL/TP
@@ -186,6 +187,7 @@ export const useSLTPMonitoring = () => {
           .then(() => {
             // Mark as triggered
             setState((prev) => {
+              if (!triggerType) return prev;
               const newTriggered = new Map(prev.triggeredPositions);
               newTriggered.set(position.position_id, {
                 positionId: position.position_id,
@@ -198,11 +200,21 @@ export const useSLTPMonitoring = () => {
               };
             });
           })
-          .catch((error) => {
-            // Silently log error; don't break monitoring
-            console.error(
-              `Failed to execute ${triggerType} for position ${position.position_id}:`,
-              error
+          .catch(async (error) => {
+            // Log error with centralized logger
+            const { logger } = await import('@/lib/logger');
+            logger.error(
+              `Failed to execute ${triggerType} for position ${position.position_id}`,
+              error,
+              {
+                component: 'useSLTPMonitoring',
+                action: 'execute_trigger',
+                metadata: {
+                  positionId: position.position_id,
+                  triggerType,
+                  currentPrice,
+                },
+              }
             );
             // Keep monitoring despite error
           });
@@ -221,27 +233,24 @@ export const useSLTPMonitoring = () => {
    * Clear triggered positions older than 1 hour
    */
   useEffect(() => {
-    const cleanupInterval = setInterval(
-      () => {
-        setState((prev) => {
-          const now = Date.now();
-          const oneHourMs = 60 * 60 * 1000;
-          const cleaned = new Map(prev.triggeredPositions);
+    const cleanupInterval = setInterval(() => {
+      setState((prev) => {
+        const now = Date.now();
+        const oneHourMs = 60 * 60 * 1000;
+        const cleaned = new Map(prev.triggeredPositions);
 
-          cleaned.forEach((triggered, positionId) => {
-            if (now - triggered.timestamp > oneHourMs) {
-              cleaned.delete(positionId);
-            }
-          });
-
-          if (cleaned.size !== prev.triggeredPositions.size) {
-            return { ...prev, triggeredPositions: cleaned };
+        cleaned.forEach((triggered, positionId) => {
+          if (now - triggered.timestamp > oneHourMs) {
+            cleaned.delete(positionId);
           }
-          return prev;
         });
-      },
-      5 * 60 * 1000
-    ); // Clean up every 5 minutes
+
+        if (cleaned.size !== prev.triggeredPositions.size) {
+          return { ...prev, triggeredPositions: cleaned };
+        }
+        return prev;
+      });
+    }, 5 * 60 * 1000); // Clean up every 5 minutes
 
     return () => clearInterval(cleanupInterval);
   }, []);

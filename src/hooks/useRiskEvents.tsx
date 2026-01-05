@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface RiskEvent {
   id: string;
@@ -16,6 +16,7 @@ export const useRiskEvents = (limit = 5) => {
   const { user } = useAuth();
   const [events, setEvents] = useState<RiskEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -36,7 +37,12 @@ export const useRiskEvents = (limit = 5) => {
         .limit(limit);
 
       if (error) {
-        console.error('Failed to fetch risk events:', error);
+        const { logger } = await import('@/lib/logger');
+        logger.error('Failed to fetch risk events', error, {
+          component: 'useRiskEvents',
+          action: 'fetch_events',
+          metadata: { userId: user.id },
+        });
         if (mounted) setEvents([]);
       } else {
         if (mounted) setEvents((data as RiskEvent[]) || []);
@@ -46,7 +52,7 @@ export const useRiskEvents = (limit = 5) => {
 
     fetchEvents();
 
-    const channel = supabase
+    channelRef.current = supabase
       .channel(`risk-events:${user.id}`)
       .on(
         'postgres_changes',
@@ -56,7 +62,7 @@ export const useRiskEvents = (limit = 5) => {
           table: 'risk_events',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
+        (payload: { new: RiskEvent; old?: RiskEvent | null }) => {
           setEvents((prev) =>
             [payload.new as RiskEvent, ...prev].slice(0, limit)
           );
@@ -67,7 +73,8 @@ export const useRiskEvents = (limit = 5) => {
     return () => {
       mounted = false;
       try {
-        supabase.removeChannel(channel);
+        channelRef.current?.unsubscribe();
+        channelRef.current = null;
       } catch (err) {
         // ignore
       }

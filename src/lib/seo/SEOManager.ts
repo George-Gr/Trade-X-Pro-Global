@@ -55,6 +55,48 @@ export interface TwitterCardData {
   'twitter:player:height'?: string;
 }
 
+// SEO Configuration Constants
+const SEO_CONFIG = {
+  // Theme colors
+  THEME_COLOR: '#3b82f6',
+  MS_APPLICATION_TILE_COLOR: '#3b82f6',
+
+  // Asset paths
+  DEFAULT_OG_IMAGE: '/assets/og-image.jpg',
+  DEFAULT_TWITTER_IMAGE: '/assets/twitter-image.jpg',
+  LOGO_PATH: '/assets/logo.png',
+
+  // Social media handles
+  TWITTER_HANDLE: '@TradeXPro',
+  TWITTER_CREATOR: '@TradeXPro',
+
+  // SEO Scoring constants
+  INITIAL_SCORE: 100,
+  TITLE_MIN_LENGTH: 30,
+  TITLE_MAX_LENGTH: 60,
+  DESCRIPTION_MIN_LENGTH: 120,
+  DESCRIPTION_MAX_LENGTH: 160,
+  TITLE_MISSING_PENALTY: 10,
+  TITLE_LENGTH_PENALTY: 5,
+  DESCRIPTION_MISSING_PENALTY: 10,
+  DESCRIPTION_LENGTH_PENALTY: 5,
+  VIEWPORT_MISSING_PENALTY: 5,
+  OPENGRAPH_MISSING_PENALTY: 5,
+  STRUCTURED_DATA_MISSING_PENALTY: 5,
+  CANONICAL_URL_MISSING_PENALTY: 3,
+
+  // Timing constants
+  ROUTE_CHANGE_DELAY_MS: 100,
+
+  // Schema.org URLs
+  SCHEMA_ORG_BASE_URL: 'https://schema.org',
+
+  // Default values
+  DEFAULT_LOCALE: 'en_US',
+  DEFAULT_LANGUAGE: 'en-US',
+  DEFAULT_REVISIT_AFTER: '7 days',
+} as const;
+
 export class SEOManager {
   private static instance: SEOManager;
   private currentConfig: SEOConfig | null = null;
@@ -85,7 +127,7 @@ export class SEOManager {
 
     // Listen for route changes
     window.addEventListener('popstate', () => {
-      setTimeout(() => this.updatePageSEO(), 100);
+      setTimeout(() => this.updatePageSEO(), SEO_CONFIG.ROUTE_CHANGE_DELAY_MS);
     });
   }
 
@@ -106,6 +148,8 @@ export class SEOManager {
         ],
         type: 'website' as const,
         siteName: 'TradeX Pro',
+        author: 'TradeX Pro',
+        locale: 'en-US',
       },
       '/signup': {
         title: 'Create Account - TradeX Pro | Start Trading Today',
@@ -119,6 +163,8 @@ export class SEOManager {
         ],
         type: 'website' as const,
         siteName: 'TradeX Pro',
+        author: 'TradeX Pro',
+        locale: 'en-US',
       },
       '/trade': {
         title: 'Trading Platform - TradeX Pro | Advanced Charts & Tools',
@@ -132,6 +178,8 @@ export class SEOManager {
         ],
         type: 'service' as const,
         siteName: 'TradeX Pro',
+        author: 'TradeX Pro',
+        locale: 'en-US',
       },
       '/portfolio': {
         title: 'Portfolio Management - TradeX Pro | Track Your Performance',
@@ -145,6 +193,8 @@ export class SEOManager {
         ],
         type: 'service' as const,
         siteName: 'TradeX Pro',
+        author: 'TradeX Pro',
+        locale: 'en-US',
       },
     };
   }
@@ -155,7 +205,28 @@ export class SEOManager {
     const pathname = window.location.pathname;
     const baseConfig =
       this.defaultConfigs[pathname] || this.defaultConfigs['/'];
-    const finalConfig = { ...baseConfig, ...config };
+
+    if (!baseConfig) {
+      throw new Error('No default SEO configuration found');
+    }
+
+    // Helper function to merge configs safely
+    const mergeConfigs = (
+      base: SEOConfig,
+      override?: Partial<SEOConfig>
+    ): SEOConfig => {
+      const result = { ...base };
+
+      // Override fields if provided
+      if (override) {
+        Object.assign(result, override);
+      }
+
+      return result;
+    };
+
+    // Merge configs ensuring all required fields are present
+    const finalConfig: SEOConfig = mergeConfigs(baseConfig, config);
 
     // Update current config
     this.currentConfig = finalConfig;
@@ -194,8 +265,11 @@ export class SEOManager {
       'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
     );
     this.updateMetaTag('author', config.author || 'TradeX Pro');
-    this.updateMetaTag('language', config.locale || 'en-US');
-    this.updateMetaTag('revisit-after', '7 days');
+    this.updateMetaTag(
+      'language',
+      config.locale || SEO_CONFIG.DEFAULT_LANGUAGE
+    );
+    this.updateMetaTag('revisit-after', SEO_CONFIG.DEFAULT_REVISIT_AFTER);
 
     // Mobile optimization
     this.updateMetaTag('viewport', 'width=device-width, initial-scale=1.0');
@@ -204,19 +278,22 @@ export class SEOManager {
     this.updateMetaTag('apple-mobile-web-app-status-bar-style', 'default');
 
     // Theme color for mobile browsers
-    this.updateMetaTag('theme-color', '#3b82f6');
-    this.updateMetaTag('msapplication-TileColor', '#3b82f6');
+    this.updateMetaTag('theme-color', SEO_CONFIG.THEME_COLOR);
+    this.updateMetaTag(
+      'msapplication-TileColor',
+      SEO_CONFIG.MS_APPLICATION_TILE_COLOR
+    );
   }
 
   private updateOpenGraphTags(config: SEOConfig) {
     const ogData: OpenGraphData = {
       'og:title': config.title,
       'og:description': config.description,
-      'og:image': config.image || '/assets/og-image.jpg',
+      'og:image': config.image || SEO_CONFIG.DEFAULT_OG_IMAGE,
       'og:url': config.url || window.location.href,
       'og:type': config.type || 'website',
       'og:site_name': config.siteName || 'TradeX Pro',
-      'og:locale': config.locale || 'en_US',
+      'og:locale': config.locale || SEO_CONFIG.DEFAULT_LOCALE,
     };
 
     // Add product-specific tags if applicable
@@ -244,11 +321,11 @@ export class SEOManager {
   private updateTwitterCardTags(config: SEOConfig) {
     const twitterData: TwitterCardData = {
       'twitter:card': 'summary_large_image',
-      'twitter:site': '@TradeXPro',
-      'twitter:creator': '@TradeXPro',
+      'twitter:site': SEO_CONFIG.TWITTER_HANDLE,
+      'twitter:creator': SEO_CONFIG.TWITTER_CREATOR,
       'twitter:title': config.title,
       'twitter:description': config.description,
-      'twitter:image': config.image || '/assets/twitter-image.jpg',
+      'twitter:image': config.image || SEO_CONFIG.DEFAULT_TWITTER_IMAGE,
       'twitter:image:alt': config.title,
     };
 
@@ -259,10 +336,18 @@ export class SEOManager {
   }
 
   private updateCanonicalURL(config: SEOConfig) {
-    let canonicalUrl = config.url || window.location.href;
+    let canonicalUrl: string = config.url || window.location.href || '';
 
     // Remove query parameters and fragments for canonical URL
-    canonicalUrl = canonicalUrl.split('?')[0].split('#')[0];
+    const queryIndex = canonicalUrl.indexOf('?');
+    if (queryIndex !== -1) {
+      canonicalUrl = canonicalUrl.substring(0, queryIndex);
+    }
+
+    const hashIndex = canonicalUrl.indexOf('#');
+    if (hashIndex !== -1) {
+      canonicalUrl = canonicalUrl.substring(0, hashIndex);
+    }
 
     // Ensure HTTPS
     canonicalUrl = canonicalUrl.replace('http://', 'https://');
@@ -329,7 +414,7 @@ export class SEOManager {
 
   private createStructuredData(config: SEOConfig): RichSnippetData {
     const baseData = {
-      '@context': 'https://schema.org',
+      '@context': SEO_CONFIG.SCHEMA_ORG_BASE_URL,
       '@type': this.getSchemaType(config.type),
       name: config.title,
       description: config.description,
@@ -344,7 +429,7 @@ export class SEOManager {
         name: config.siteName || 'TradeX Pro',
         logo: {
           '@type': 'ImageObject',
-          url: '/assets/logo.png',
+          url: SEO_CONFIG.LOGO_PATH,
         },
       },
       datePublished: config.publishedTime,
@@ -416,7 +501,7 @@ export class SEOManager {
             price: config.price,
             priceCurrency: config.currency || 'USD',
             availability: config.availability
-              ? `https://schema.org/${config.availability}`
+              ? `${SEO_CONFIG.SCHEMA_ORG_BASE_URL}/${config.availability}`
               : undefined,
             seller: {
               '@type': 'Organization',
@@ -446,7 +531,7 @@ export class SEOManager {
     breadcrumbs: Array<{ name: string; url: string }>
   ) {
     const structuredData = {
-      '@context': 'https://schema.org',
+      '@context': SEO_CONFIG.SCHEMA_ORG_BASE_URL,
       '@type': 'BreadcrumbList',
       itemListElement: breadcrumbs.map((crumb, index) => ({
         '@type': 'ListItem',
@@ -463,7 +548,7 @@ export class SEOManager {
     faqs: Array<{ question: string; answer: string }>
   ) {
     const structuredData = {
-      '@context': 'https://schema.org',
+      '@context': SEO_CONFIG.SCHEMA_ORG_BASE_URL,
       '@type': 'FAQPage',
       mainEntity: faqs.map((faq) => ({
         '@type': 'Question',
@@ -487,7 +572,7 @@ export class SEOManager {
     }>
   ) {
     const structuredData = {
-      '@context': 'https://schema.org',
+      '@context': SEO_CONFIG.SCHEMA_ORG_BASE_URL,
       '@type': 'Product',
       review: reviews.map((review) => ({
         '@type': 'Review',
@@ -577,7 +662,7 @@ export class SEOManager {
   } {
     const issues: string[] = [];
     const recommendations: string[] = [];
-    let score = 100;
+    let score = SEO_CONFIG.INITIAL_SCORE;
 
     // Check for required meta tags
     const title = document.querySelector('title')?.textContent;
@@ -590,23 +675,33 @@ export class SEOManager {
 
     if (!title) {
       issues.push('Missing page title');
-      score -= 10;
-    } else if (title.length < 30 || title.length > 60) {
-      issues.push('Page title should be 30-60 characters');
-      score -= 5;
+      score -= SEO_CONFIG.TITLE_MISSING_PENALTY;
+    } else if (
+      title.length < SEO_CONFIG.TITLE_MIN_LENGTH ||
+      title.length > SEO_CONFIG.TITLE_MAX_LENGTH
+    ) {
+      issues.push(
+        `Page title should be ${SEO_CONFIG.TITLE_MIN_LENGTH}-${SEO_CONFIG.TITLE_MAX_LENGTH} characters`
+      );
+      score -= SEO_CONFIG.TITLE_LENGTH_PENALTY;
     }
 
     if (!description) {
       issues.push('Missing meta description');
-      score -= 10;
-    } else if (description.length < 120 || description.length > 160) {
-      issues.push('Meta description should be 120-160 characters');
-      score -= 5;
+      score -= SEO_CONFIG.DESCRIPTION_MISSING_PENALTY;
+    } else if (
+      description.length < SEO_CONFIG.DESCRIPTION_MIN_LENGTH ||
+      description.length > SEO_CONFIG.DESCRIPTION_MAX_LENGTH
+    ) {
+      issues.push(
+        `Meta description should be ${SEO_CONFIG.DESCRIPTION_MIN_LENGTH}-${SEO_CONFIG.DESCRIPTION_MAX_LENGTH} characters`
+      );
+      score -= SEO_CONFIG.DESCRIPTION_LENGTH_PENALTY;
     }
 
     if (!viewport) {
       issues.push('Missing viewport meta tag');
-      score -= 5;
+      score -= SEO_CONFIG.VIEWPORT_MISSING_PENALTY;
     }
 
     // Check for Open Graph tags
@@ -622,7 +717,7 @@ export class SEOManager {
 
     if (!ogTitle || !ogDescription || !ogImage) {
       issues.push('Missing Open Graph tags');
-      score -= 5;
+      score -= SEO_CONFIG.OPENGRAPH_MISSING_PENALTY;
       recommendations.push(
         'Add complete Open Graph tags for better social media sharing'
       );
@@ -634,7 +729,7 @@ export class SEOManager {
     );
     if (structuredData.length === 0) {
       issues.push('No structured data found');
-      score -= 5;
+      score -= SEO_CONFIG.STRUCTURED_DATA_MISSING_PENALTY;
       recommendations.push(
         'Add structured data for better search engine understanding'
       );
@@ -646,7 +741,7 @@ export class SEOManager {
       ?.getAttribute('href');
     if (!canonical) {
       issues.push('Missing canonical URL');
-      score -= 3;
+      score -= SEO_CONFIG.CANONICAL_URL_MISSING_PENALTY;
     }
 
     // Additional recommendations

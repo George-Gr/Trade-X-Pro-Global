@@ -1,13 +1,8 @@
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { NotificationContext } from './notificationContextHelpers';
 
@@ -30,10 +25,11 @@ export function NotificationProvider({
         .eq('user_id', user.id);
 
       if (error) {
-        console.error('Failed to mark notification as read', {
-          id,
-          userId: user.id,
-          error,
+        const { logger } = await import('@/lib/logger');
+        logger.error('Failed to mark notification as read', error, {
+          component: 'NotificationContext',
+          action: 'mark_as_read',
+          metadata: { id, userId: user.id },
         });
         // Optionally, surface user feedback here (e.g., toast({ ... }))
         return;
@@ -125,8 +121,8 @@ export function NotificationProvider({
           table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          const notification = payload.new as SupabaseNotification;
+        (payload: { new: SupabaseNotification; old: SupabaseNotification }) => {
+          const notification = payload.new;
 
           // Show toast notification (uses default duration based on variant)
           toast({
@@ -145,8 +141,8 @@ export function NotificationProvider({
           table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          const notification = payload.new as SupabaseNotification;
+        (payload: { new: SupabaseNotification; old: SupabaseNotification }) => {
+          const notification = payload.new;
           if (notification.read) {
             setUnreadCount((prev) => Math.max(0, prev - 1));
           }
@@ -165,8 +161,8 @@ export function NotificationProvider({
           table: 'orders',
           filter: `user_id=eq.${user.id}`,
         },
-        async (payload) => {
-          const order = payload.new as SupabaseOrder;
+        async (payload: { new: SupabaseOrder; old: SupabaseOrder }) => {
+          const order = payload.new;
           if (order.status === 'filled') {
             await supabase.functions.invoke('send-notification', {
               body: {
@@ -199,9 +195,9 @@ export function NotificationProvider({
           table: 'positions',
           filter: `user_id=eq.${user.id}`,
         },
-        async (payload) => {
-          const position = payload.new as SupabasePosition;
-          const oldPosition = payload.old as SupabasePosition;
+        async (payload: { new: SupabasePosition; old: SupabasePosition }) => {
+          const position = payload.new;
+          const oldPosition = payload.old;
 
           // Notify on position close
           if (oldPosition.status === 'open' && position.status === 'closed') {
@@ -239,9 +235,9 @@ export function NotificationProvider({
           table: 'kyc_documents',
           filter: `user_id=eq.${user.id}`,
         },
-        async (payload) => {
-          const doc = payload.new as SupabaseKycDoc;
-          const oldDoc = payload.old as SupabaseKycDoc;
+        async (payload: { new: SupabaseKycDoc; old: SupabaseKycDoc }) => {
+          const doc = payload.new;
+          const oldDoc = payload.old;
 
           if (oldDoc.status !== doc.status) {
             await supabase.functions.invoke('send-notification', {
@@ -274,8 +270,8 @@ export function NotificationProvider({
           table: 'risk_events',
           filter: `user_id=eq.${user.id}`,
         },
-        async (payload) => {
-          const event = payload.new as SupabaseRiskEvent;
+        async (payload: { new: SupabaseRiskEvent; old: SupabaseRiskEvent }) => {
+          const event = payload.new;
 
           await supabase.functions.invoke('send-notification', {
             body: {

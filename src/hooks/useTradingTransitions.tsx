@@ -126,11 +126,13 @@ export function useTradingFormTransitions(
 
         if (updateTime > 16) {
           // Record slow update as performance metric
-          console.warn(
-            `Slow form update detected: ${updateTime.toFixed(
-              2
-            )}ms (threshold: 16ms)`
-          );
+          import('@/lib/logger').then(({ logger }) => {
+            logger.warn('Slow form update detected', {
+              component: 'useTradingFormTransitions',
+              action: 'update_form_state',
+              metadata: { updateTime, threshold: 16 },
+            });
+          });
         }
       } catch (error) {
         const err =
@@ -238,35 +240,41 @@ export function useTradingFormTransitions(
     }
 
     // Start transition for non-blocking order submission
-    startFormTransition(async () => {
-      try {
-        // Simulate order submission process
-        await new Promise((resolve) => setTimeout(resolve, 100));
+    startFormTransition(() => {
+      const executeSubmission = async () => {
+        try {
+          // Simulate order submission process
+          await new Promise((resolve) => setTimeout(resolve, 100));
 
-        const submissionTime = performance.now() - submissionStartTime;
-        performanceMonitoring.recordCustomTiming(
-          'order-submission',
-          submissionStartTime,
-          submissionTime
-        );
+          const submissionTime = performance.now() - submissionStartTime;
+          performanceMonitoring.recordCustomTiming(
+            'order-submission',
+            submissionStartTime,
+            submissionTime
+          );
 
-        toast({
-          title: 'Order Submitted',
-          description: `${formState.side.toUpperCase()} ${formState.quantity} ${
-            formState.symbol
-          }`,
-        });
-      } catch (error) {
-        const err =
-          error instanceof Error ? error : new Error('Order submission failed');
-        onError?.(err);
+          toast({
+            title: 'Order Submitted',
+            description: `${formState.side.toUpperCase()} ${
+              formState.quantity
+            } ${formState.symbol}`,
+          });
+        } catch (error) {
+          const err =
+            error instanceof Error
+              ? error
+              : new Error('Order submission failed');
+          onError?.(err);
 
-        toast({
-          title: 'Order Failed',
-          description: err.message,
-          variant: 'destructive',
-        });
-      }
+          toast({
+            title: 'Order Failed',
+            description: err.message,
+            variant: 'destructive',
+          });
+        }
+      };
+
+      executeSubmission();
     });
   };
 

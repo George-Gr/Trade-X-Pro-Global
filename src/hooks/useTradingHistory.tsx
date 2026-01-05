@@ -1,4 +1,9 @@
 import { supabase } from '@/integrations/supabase/client';
+import type {
+  LedgerEntry as DbLedgerEntry,
+  Order,
+  Position,
+} from '@/integrations/supabase/types/tables';
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './useAuth';
 import { useRealtimeOrders } from './useRealtimeOrders';
@@ -205,35 +210,48 @@ export const useTradingHistory = () => {
       if (ledgerError) throw ledgerError;
 
       // Process closed positions into trade history
-      const trades: TradeHistoryItem[] = (positionsData || []).map((pos) => ({
-        id: pos.id,
-        symbol: pos.symbol,
-        side: pos.side === 'buy' || pos.side === 'sell' ? pos.side : 'buy',
-        quantity: pos.quantity,
-        entry_price: pos.entry_price,
-        exit_price: (pos.current_price ?? pos.entry_price) as number,
-        realized_pnl: pos.realized_pnl ?? 0,
-        commission: 0,
-        opened_at: pos.opened_at ?? new Date().toISOString(),
-        closed_at: (pos.closed_at ??
-          pos.opened_at ??
-          new Date().toISOString()) as string,
-        margin_used: pos.margin_used,
-      }));
+      const trades: TradeHistoryItem[] = (positionsData || []).map(
+        (pos: Position) => ({
+          id: pos.id,
+          symbol: pos.symbol,
+          side: pos.side as 'buy' | 'sell',
+          quantity: pos.quantity,
+          entry_price: pos.entry_price,
+          exit_price: pos.current_price ?? pos.entry_price,
+          realized_pnl: pos.realized_pnl ?? 0,
+          commission: 0,
+          opened_at: pos.opened_at,
+          closed_at: pos.closed_at ?? pos.opened_at,
+          margin_used: pos.margin_used,
+        })
+      );
 
       // Calculate statistics
       const stats = calculateStatistics(trades);
 
       setClosedPositions(trades);
-      const typedOrders = (ordersData || []).map((o) => ({
-        ...o,
-        price: o.fill_price ?? o.price,
-        commission: o.commission ?? 0,
+      const typedOrders = (ordersData || []).map((o: Order) => ({
+        id: o.id,
+        symbol: o.symbol,
+        order_type: o.order_type,
         side: o.side === 'buy' || o.side === 'sell' ? o.side : 'buy',
+        quantity: o.quantity,
+        price: o.price ?? undefined,
+        fill_price: o.fill_price ?? undefined,
+        status: o.status,
+        commission: o.commission ?? 0,
+        created_at: o.created_at,
+        filled_at: o.filled_at ?? undefined,
       })) as OrderHistoryItem[];
-      const typedLedger = (ledgerData || []).map((l) => ({
-        ...l,
+      const typedLedger = (ledgerData || []).map((l: DbLedgerEntry) => ({
+        id: l.id,
+        transaction_type: l.transaction_type,
+        amount: l.amount,
+        balance_before: l.balance_before,
+        balance_after: l.balance_after,
         description: l.description ?? '',
+        created_at: l.created_at,
+        reference_id: l.reference_id ?? undefined,
       })) as LedgerEntry[];
       setOrders(typedOrders);
       setLedger(typedLedger);
@@ -298,7 +316,7 @@ export const useTradingHistory = () => {
   }, [user, fetchTradingHistory]);
 
   // Set up real-time subscriptions using dedicated hooks
-  useRealtimePositions(user?.id, fetchTradingHistory);
+  useRealtimePositions(user?.id ?? null, { onUpdate: fetchTradingHistory });
   useRealtimeOrders(user?.id, fetchTradingHistory);
 
   return {

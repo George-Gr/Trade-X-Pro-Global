@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -7,15 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Clock,
-  CheckCircle2,
-  XCircle,
   AlertCircle,
+  ArrowDownRight,
+  ArrowUpRight,
+  CheckCircle2,
+  Clock,
+  XCircle,
 } from 'lucide-react';
 
 interface Transaction {
@@ -95,7 +95,10 @@ export function TransactionHistory({
       },
     };
 
-    const config = statusConfig[status] || statusConfig.pending;
+    const config =
+      statusConfig[status] ?? statusConfig['pending'] ?? statusConfig.pending;
+
+    if (!config) return null;
 
     return (
       <Badge variant={config.variant} className="flex items-center w-fit">

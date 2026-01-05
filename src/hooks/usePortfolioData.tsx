@@ -61,7 +61,7 @@ export const usePortfolioData = () => {
 
       setProfile(profileData);
       setPositions(
-        positionsData?.map((pos) => ({
+        positionsData?.map((pos: Position) => ({
           ...pos,
           opened_at: (() => {
             if (!pos.opened_at) {

@@ -8,6 +8,9 @@ import React, { useEffect, useState } from 'react';
 interface AnalyticsIntegrationProps {
   children: React.ReactNode;
   enableAnalytics?: boolean;
+  enableHeatMapping?: boolean;
+  enableFunnelTracking?: boolean;
+  userId?: string;
 }
 
 export function AnalyticsIntegration({

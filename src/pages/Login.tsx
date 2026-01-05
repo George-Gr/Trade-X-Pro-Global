@@ -13,18 +13,34 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { validationRules } from '@/lib/validationRules';
+import { logger } from '@/lib/logger';
 import { motion } from 'framer-motion';
 import { AlertCircle, ArrowRight, Sparkles, TrendingUp, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+// Zod schema for login form validation
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters long'),
+});
 
+// Type inference from Zod schema
+type LoginFormData = z.infer<typeof loginSchema>;
+
+/**
+ * Login component that renders a secure authentication form for user login.
+ * 
+ * This component displays a styled login form with email and password fields,
+ * includes demo account functionality, and handles user authentication.
+ * Features animated backgrounds, accessibility support, and integration with
+ * the authentication system.
+ * 
+ * @returns JSX.Element - The rendered login page with form and UI elements
+ */
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showDemoBanner, setShowDemoBanner] = useState(true);
@@ -32,7 +48,8 @@ const Login = () => {
   const { toast } = useToast();
   const { signIn, user, isAdmin } = useAuth();
 
-  const form = useForm({
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -47,7 +64,11 @@ const Login = () => {
         setShowDemoBanner(false);
       }
     } catch (error) {
-      console.warn('Failed to read demo banner preference:', error);
+      logger.warn('Failed to read demo banner preference', {
+        component: 'Login',
+        action: 'read_preference',
+        metadata: { error },
+      });
     }
   }, []);
 
@@ -253,7 +274,7 @@ const Login = () => {
                             id="email"
                             type="email"
                             placeholder="Enter your email"
-                            {...register('email', validationRules.email)}
+                            {...register('email')}
                             disabled={isLoading}
                           />
                         </FormControl>
@@ -281,7 +302,7 @@ const Login = () => {
                             id="password"
                             type="password"
                             placeholder="Enter your password"
-                            {...register('password', validationRules.password)}
+                            {...register('password')}
                             disabled={isLoading}
                           />
                         </FormControl>

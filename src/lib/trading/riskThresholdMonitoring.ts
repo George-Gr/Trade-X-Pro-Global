@@ -260,9 +260,14 @@ export function estimatePortfolioCorrelation(positions: Position[]): number {
 
   for (let i = 0; i < positions.length; i++) {
     for (let j = i + 1; j < positions.length; j++) {
-      totalPairs++;
-      if (positions[i].side === positions[j].side) {
-        sameSideCount++;
+      const posI = positions[i];
+      const posJ = positions[j];
+
+      if (posI && posJ) {
+        totalPairs++;
+        if (posI.side === posJ.side) {
+          sameSideCount++;
+        }
       }
     }
   }

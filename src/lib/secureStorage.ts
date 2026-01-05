@@ -57,11 +57,21 @@ export class SecureStorage {
           this.startKeyRotation(keyRotationInterval);
           this.startCleanup(cleanupInterval);
         })
-        .catch((error) => {
-          console.warn(
-            'Failed to initialize encryption, falling back to plain storage:',
-            error
-          );
+        .catch((error: unknown) => {
+          import('@/lib/logger')
+            .then(({ logger }) => {
+              logger.warn(
+                'Failed to initialize encryption, falling back to plain storage',
+                {
+                  component: 'SecureStorage',
+                  action: 'initialize_encryption',
+                  metadata: { error },
+                }
+              );
+            })
+            .catch(() => {
+              // Silently ignore logger import failures in error path
+            });
           this.ENCRYPTION_ENABLED = false;
         });
     } else {
@@ -123,8 +133,18 @@ export class SecureStorage {
     this.keyRotationTimer = setInterval(() => {
       try {
         this.rotateKey();
-      } catch (error) {
-        console.warn('Key rotation failed:', error);
+      } catch (error: unknown) {
+        import('@/lib/logger')
+          .then(({ logger }) => {
+            logger.warn('Key rotation failed', {
+              component: 'SecureStorage',
+              action: 'rotate_key',
+              metadata: { error },
+            });
+          })
+          .catch(() => {
+            // Silently ignore logger import failures in error path
+          });
       }
     }, interval) as unknown as number;
   }
@@ -167,11 +187,21 @@ export class SecureStorage {
           // Decrypt with old key (synchronously)
           const decrypted = this.decryptWithKeySync(encryptedData, oldKey);
           // Encrypt with new key
-          const newEncrypted = this.encryptSync(decrypted);
-          localStorage.setItem(key, JSON.stringify(newEncrypted));
+          const reEncrypted = this.encryptSync(decrypted);
+          localStorage.setItem(key, JSON.stringify(reEncrypted));
         }
-      } catch (error) {
-        console.warn(`Failed to re-encrypt key ${key}:`, error);
+      } catch (error: unknown) {
+        import('@/lib/logger')
+          .then(({ logger }) => {
+            logger.warn(`Failed to re-encrypt key ${key}`, {
+              component: 'SecureStorage',
+              action: 're_encrypt',
+              metadata: { key, error },
+            });
+          })
+          .catch(() => {
+            // Silently ignore logger import failures in error path
+          });
       }
     }
   }
@@ -373,30 +403,48 @@ export class SecureStorage {
       if (data.data && data.iv && typeof data.timestamp === 'number') {
         if (!this.ENCRYPTION_ENABLED || !this.symmetricKey) {
           // Fallback: return raw encrypted payload if encryption is disabled or key missing
-          return data.data;
+          return item;
         }
-
         return this.decryptSync(data);
       }
 
-      // Plain data (non-sensitive)
+      // Return plain data
       return data;
-    } catch (error) {
-      console.warn(`Failed to get item ${key}:`, error);
+    } catch (error: unknown) {
+      import('@/lib/logger')
+        .then(({ logger }) => {
+          logger.warn(`Failed to get item ${key}`, {
+            component: 'SecureStorage',
+            action: 'get_item',
+            metadata: { key, error },
+          });
+        })
+        .catch(() => {
+          // Silently ignore logger import failures in error path
+        });
       return null;
     }
   }
-
   async setItem(key: string, value: string): Promise<void> {
     await this._initPromise;
     const fullKey = `${this.NAMESPACE}${key}`;
 
-    if (this.shouldEncrypt(key) && this.ENCRYPTION_ENABLED) {
+    if (this.shouldEncrypt(key)) {
       try {
         const encrypted = this.encryptSync(value);
         localStorage.setItem(fullKey, JSON.stringify(encrypted));
-      } catch (error) {
-        console.warn(`Failed to encrypt item ${key}, storing plain:`, error);
+      } catch (error: unknown) {
+        import('@/lib/logger')
+          .then(({ logger }) => {
+            logger.warn(`Failed to encrypt item ${key}, storing plain`, {
+              component: 'SecureStorage',
+              action: 'set_item',
+              metadata: { key, error },
+            });
+          })
+          .catch(() => {
+            // Silently ignore logger import failures in error path
+          });
         localStorage.setItem(fullKey, JSON.stringify(value));
       }
     } else {

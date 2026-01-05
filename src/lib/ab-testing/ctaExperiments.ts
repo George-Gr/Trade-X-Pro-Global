@@ -82,8 +82,16 @@ function createCTAExperiment(
       metadata: {},
     });
   } catch (error) {
-    const errorMessage = `Failed to create CTA experiment "${name}": ${error instanceof Error ? error.message : 'Unknown error'}`;
-    console.error(errorMessage);
+    const errorMessage = `Failed to create CTA experiment "${name}": ${
+      error instanceof Error ? error.message : 'Unknown error'
+    }`;
+    import('@/lib/logger').then(({ logger }) => {
+      logger.error(errorMessage, error, {
+        component: 'ctaExperiments',
+        action: 'create_experiment',
+        metadata: { name },
+      });
+    });
     throw new Error(errorMessage);
   }
 }

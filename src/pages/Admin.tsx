@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { logger } from '@/lib/logger';
 import {
   FileCheck,
   LogOut,
@@ -48,7 +49,10 @@ const Admin = () => {
       await signOut();
       navigate('/login');
     } catch (error) {
-      console.error('Logout failed:', error);
+      logger.error('Logout failed', error, {
+        action: 'admin_logout',
+        component: 'Admin',
+      });
       toast({
         title: 'Logout failed',
         description:

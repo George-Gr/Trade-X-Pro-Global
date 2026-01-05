@@ -1,5 +1,6 @@
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { QuerySchemas, validateQueryParam } from '@/lib/queryValidation';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Watchlist {
@@ -74,10 +75,17 @@ export const useWatchlists = () => {
   const fetchWatchlistItems = useCallback(
     async (watchlistId: string) => {
       try {
+        // Validate watchlist ID to prevent injection
+        const validatedId = validateQueryParam(
+          QuerySchemas.uuid,
+          watchlistId,
+          'watchlistId'
+        );
+
         const { data, error } = await supabase
           .from('watchlist_items')
           .select('*')
-          .eq('watchlist_id', watchlistId)
+          .eq('watchlist_id', validatedId)
           .order('order_index', { ascending: true });
 
         if (error) throw error;
@@ -105,9 +113,16 @@ export const useWatchlists = () => {
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Validate watchlist name to prevent injection
+      const validatedName = validateQueryParam(
+        QuerySchemas.watchlistName,
+        name,
+        'name'
+      );
+
       const { data, error } = await supabase
         .from('watchlists')
-        .insert({ name, user_id: user.id })
+        .insert({ name: validatedName, user_id: user.id })
         .select()
         .single();
 
@@ -133,13 +148,19 @@ export const useWatchlists = () => {
 
   const deleteWatchlist = async (id: string) => {
     try {
-      const { error } = await supabase.from('watchlists').delete().eq('id', id);
+      // Validate ID to prevent injection
+      const validatedId = validateQueryParam(QuerySchemas.uuid, id, 'id');
+
+      const { error } = await supabase
+        .from('watchlists')
+        .delete()
+        .eq('id', validatedId);
 
       if (error) throw error;
 
-      setWatchlists((prev) => prev.filter((w) => w.id !== id));
-      if (activeWatchlistId === id) {
-        const remaining = watchlists.filter((w) => w.id !== id);
+      setWatchlists((prev) => prev.filter((w) => w.id !== validatedId));
+      if (activeWatchlistId === validatedId) {
+        const remaining = watchlists.filter((w) => w.id !== validatedId);
         setActiveWatchlistId(remaining[0]?.id || null);
       }
 
@@ -159,13 +180,25 @@ export const useWatchlists = () => {
 
   const addSymbolToWatchlist = async (watchlistId: string, symbol: string) => {
     try {
-      const items = watchlistItems[watchlistId] || [];
-      const exists = items.find((item) => item.symbol === symbol);
+      // Validate inputs to prevent injection
+      const validatedId = validateQueryParam(
+        QuerySchemas.uuid,
+        watchlistId,
+        'watchlistId'
+      );
+      const validatedSymbol = validateQueryParam(
+        QuerySchemas.symbol,
+        symbol,
+        'symbol'
+      );
+
+      const items = watchlistItems[validatedId] || [];
+      const exists = items.find((item) => item.symbol === validatedSymbol);
 
       if (exists) {
         toast({
           title: 'Symbol already in watchlist',
-          description: `${symbol} is already in this watchlist.`,
+          description: `${validatedSymbol} is already in this watchlist.`,
           variant: 'destructive',
         });
         return;
@@ -174,8 +207,8 @@ export const useWatchlists = () => {
       const { data, error } = await supabase
         .from('watchlist_items')
         .insert({
-          watchlist_id: watchlistId,
-          symbol,
+          watchlist_id: validatedId,
+          symbol: validatedSymbol,
           order_index: items.length,
         })
         .select()
@@ -207,17 +240,29 @@ export const useWatchlists = () => {
     itemId: string
   ) => {
     try {
+      // Validate IDs to prevent injection
+      const validatedWatchlistId = validateQueryParam(
+        QuerySchemas.uuid,
+        watchlistId,
+        'watchlistId'
+      );
+      const validatedItemId = validateQueryParam(
+        QuerySchemas.uuid,
+        itemId,
+        'itemId'
+      );
+
       const { error } = await supabase
         .from('watchlist_items')
         .delete()
-        .eq('id', itemId);
+        .eq('id', validatedItemId);
 
       if (error) throw error;
 
       setWatchlistItems((prev) => ({
         ...prev,
-        [watchlistId]: (prev[watchlistId] || []).filter(
-          (item) => item.id !== itemId
+        [validatedWatchlistId]: (prev[validatedWatchlistId] || []).filter(
+          (item) => item.id !== validatedItemId
         ),
       }));
     } catch (err: unknown) {

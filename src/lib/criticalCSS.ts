@@ -72,10 +72,13 @@ export class CriticalCSSExtractor {
         }
       });
     } catch (error) {
-      // Fallback to console if logger is not available
-      if (typeof console !== 'undefined') {
-        console.warn('Failed to extract CSS rules:', error);
-      }
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Failed to extract CSS rules', {
+          component: 'CriticalCSSExtractor',
+          action: 'extract_all_rules',
+          metadata: { error },
+        });
+      });
     }
   }
 

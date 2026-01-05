@@ -48,6 +48,42 @@ const getEnvVar = (key: string): string | undefined => {
 };
 
 /**
+ * Redact Supabase URL to protect project structure information
+ * @param url - The full Supabase URL
+ * @returns Redacted URL string that hides project identifier
+ */
+const redactSupabaseUrl = (url: string): string => {
+  try {
+    const urlObj = new URL(url);
+    
+    // Skip redaction for localhost/development URLs
+    if (
+      urlObj.hostname === 'localhost' ||
+      urlObj.hostname === '127.0.0.1' ||
+      urlObj.hostname === '::1'
+    ) {
+      return 'localhost:supabase'; // Generic localhost indicator
+    }
+
+    // Extract hostname without project ID for production URLs
+    if (
+      urlObj.hostname.endsWith('.supabase.co') ||
+      urlObj.hostname.endsWith('.supabase.in')
+    ) {
+      // Get the domain part (supabase.co or supabase.in)
+      const domain = urlObj.hostname.split('.').slice(-2).join('.');
+      return `*.${domain}`; // Return masked domain
+    }
+
+    // Fallback for any other hostname format
+    return 'REDACTED_URL';
+  } catch (error) {
+    // If URL parsing fails, return a generic redacted value
+    return 'INVALID_URL';
+  }
+};
+
+/**
  * Validate Supabase URL format
  */
 const validateSupabaseUrl = (url: string): void => {
@@ -95,23 +131,24 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     'Supabase configuration is invalid. Please set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in .env.local. See docs/SUPABASE_SETUP_GUIDE.md for details.';
 
   // Log as a warning so it is visible but doesn't throw during import
-  logger.warn(message);
-  if (import.meta.env.DEV) {
-    // Use console.warn in dev so it is noticeable but less disruptive in test/CI logs
-    console.warn(message);
-  }
+  logger.warn(message, {
+    action: 'supabase_config_check',
+    metadata: {
+      environment: import.meta.env.MODE,
+    },
+  });
 } else {
   try {
     validateSupabaseUrl(SUPABASE_URL);
   } catch (error) {
     _invalidSupabaseConfig = true;
-    logger.error('Supabase configuration error:', error);
-    if (import.meta.env.DEV) {
-      console.warn(
-        'Invalid Supabase URL:',
-        error instanceof Error ? error.message : error
-      );
-    }
+    logger.error('Supabase configuration error', error, {
+      action: 'supabase_url_validation',
+      metadata: {
+        url: redactSupabaseUrl(SUPABASE_URL || ''),
+        hasUrl: !!SUPABASE_URL,
+      },
+    });
   }
 }
 

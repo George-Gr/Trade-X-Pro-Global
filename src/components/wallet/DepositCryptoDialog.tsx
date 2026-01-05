@@ -131,7 +131,12 @@ export function DepositCryptoDialog({
           'Send crypto to the address below to complete your deposit',
       });
     } catch (err: unknown) {
-      console.error('Error creating payment:', err);
+      const { logger } = await import('@/lib/logger');
+      logger.error('Error creating cryptocurrency payment', err, {
+        component: 'DepositCryptoDialog',
+        action: 'create_payment',
+        metadata: { amount: amt, currency: curr },
+      });
       const message = err instanceof Error ? err.message : String(err);
       toast({
         title: 'Payment Failed',

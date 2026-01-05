@@ -93,7 +93,13 @@ class BundleAnalysisService {
         return realData;
       }
     } catch (error) {
-      console.warn('Failed to fetch real bundle data, using baseline:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Failed to fetch real bundle data, using baseline', {
+          component: 'bundleAnalysis',
+          action: 'get_bundle_analysis',
+          metadata: { error },
+        });
+      });
     }
 
     // Fallback to baseline data
@@ -145,7 +151,13 @@ class BundleAnalysisService {
         isRealData: true,
       };
     } catch (error) {
-      console.warn('Bundle sizes JSON file unavailable:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Bundle sizes JSON file unavailable', {
+          component: 'bundleAnalysis',
+          action: 'fetch_real_bundle_data',
+          metadata: { error },
+        });
+      });
       return null;
     }
   }

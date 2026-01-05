@@ -65,6 +65,11 @@ import {
 } from '@/lib/risk/portfolioMetrics';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from './useAuth';
+
+const getLogger = async () => {
+  const { logger } = await import('@/lib/logger');
+  return logger;
+};
 type Position = Database['public']['Tables']['positions']['Row'];
 
 interface UsePortfolioMetricsReturn {
@@ -91,12 +96,12 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
   const [error, setError] = useState<string | null>(null);
 
   // Refs for subscription channels to prevent re-subscription issues
-  const profileChannelRef = useRef<
-    import('@supabase/supabase-js').RealtimeChannel | null
-  >(null);
-  const positionsChannelRef = useRef<
-    import('@supabase/supabase-js').RealtimeChannel | null
-  >(null);
+  const profileChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(
+    null
+  );
+  const positionsChannelRef = useRef<ReturnType<
+    typeof supabase.channel
+  > | null>(null);
 
   const fetchPortfolioMetrics = useCallback(async () => {
     if (!user) {
@@ -178,13 +183,14 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
 
       // Calculate unrealized P&L from open positions
       const unrealizedPnL = (positionsData as Position[]).reduce(
-        (sum, p) => sum + (p.unrealized_pnl || 0),
+        (sum: number, p: Position) => sum + (p.unrealized_pnl || 0),
         0
       );
 
       // Calculate realized P&L from closed positions
       const realizedPnL = (closedPositions || []).reduce(
-        (sum, p) => sum + (p.realized_pnl || 0),
+        (sum: number, p: { realized_pnl: number | null }) =>
+          sum + (p.realized_pnl || 0),
         0
       );
 
@@ -214,7 +220,8 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
       const positionValues = positionsData as Position[];
       const totalPortfolioValue =
         positionValues.reduce(
-          (sum, p) => sum + (p.quantity || 0) * (p.current_price || 0),
+          (sum: number, p: Position) =>
+            sum + (p.quantity || 0) * (p.current_price || 0),
           0
         ) + profileData.equity;
 
@@ -252,7 +259,12 @@ export const usePortfolioMetrics = (): UsePortfolioMetricsReturn => {
           ? err.message
           : 'Failed to fetch portfolio metrics';
       setError(message);
-      console.error('Portfolio metrics error:', message);
+      const logger = await getLogger();
+      logger.error('Portfolio metrics error', err, {
+        component: 'usePortfolioMetrics',
+        action: 'fetch_metrics',
+        metadata: { userId: user?.id, message },
+      });
     } finally {
       setLoading(false);
     }
@@ -383,9 +395,9 @@ export const useDrawdownAnalysis = () => {
   const [loading, setLoading] = useState(true);
 
   // Ref for subscription channel to prevent re-subscription issues
-  const drawdownSubscriptionRef = useRef<
-    import('@supabase/supabase-js').RealtimeChannel | null
-  >(null);
+  const drawdownSubscriptionRef = useRef<ReturnType<
+    typeof supabase.channel
+  > | null>(null);
 
   useEffect(() => {
     if (!user) {

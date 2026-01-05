@@ -56,7 +56,11 @@ declare module '@supabase/supabase-js' {
   }
 
   // Realtime types
-  export type RealtimeChannel = unknown;
+  export interface RealtimeChannel {
+    unsubscribe(): void;
+    on(event: string, filter: unknown, callback: unknown): RealtimeChannel;
+    subscribe(): RealtimeChannel;
+  }
   export type RealtimePostgresChangesPayload = unknown;
   export type RealtimeSubscription = unknown;
 

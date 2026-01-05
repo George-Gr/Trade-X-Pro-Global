@@ -15,6 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useRef } from 'react';
 import { useToast } from './use-toast';
 import { useAuth } from './useAuth';
+import type { RealtimeChannel } from '@supabase/realtime-js';
 
 interface NotificationPayload {
   kyc_status?: string;
@@ -27,6 +28,7 @@ export const useKycNotifications = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const lastStatusRef = useRef<string | null>(null);
+  const subscriptionRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -47,7 +49,7 @@ export const useKycNotifications = () => {
     getInitialStatus();
 
     // Subscribe to profile changes
-    const subscription = supabase
+    subscriptionRef.current = supabase
       .channel(`kyc-notifications-${user.id}`)
       .on(
         'postgres_changes',
@@ -57,7 +59,7 @@ export const useKycNotifications = () => {
           table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        (payload) => {
+        (payload: { new: NotificationPayload; old: NotificationPayload }) => {
           const newData = payload.new as NotificationPayload;
           const oldStatus = lastStatusRef.current;
           const newStatus = newData.kyc_status;
@@ -127,20 +129,33 @@ export const useKycNotifications = () => {
       .subscribe();
 
     return () => {
-      subscription.unsubscribe();
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+        subscriptionRef.current = null;
+      }
     };
   }, [user?.id, toast]);
 };
 
 /**
- * Create an in-app notification via edge function
+ * Creates and sends a KYC notification to the user via edge function.
+ *
+ * This helper function sends KYC-related notifications through the Supabase
+ * edge function system for in-app notification display.
+ *
+ * @param userId - The unique identifier of the user to notify
+ * @param title - The notification title
+ * @param message - The notification message content
+ * @param type - The notification type (approval, rejection, or info)
+ * @returns Promise<void>
+ * @throws Error when the notification creation fails
  */
 async function createKycNotification(
   userId: string,
   title: string,
   message: string,
   type: 'approval' | 'rejection' | 'info'
-) {
+): Promise<void> {
   try {
     await supabase.functions.invoke('send-notification', {
       body: {
@@ -151,6 +166,11 @@ async function createKycNotification(
       },
     });
   } catch (err) {
-    console.error('Failed to create KYC notification:', err);
+    const { logger } = await import('@/lib/logger');
+    logger.error('Failed to create KYC notification', err, {
+      component: 'useKycNotifications',
+      action: 'create_notification',
+      metadata: { userId, title, type },
+    });
   }
 }

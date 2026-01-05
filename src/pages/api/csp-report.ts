@@ -92,12 +92,6 @@ export default async function handler(req: Request) {
     if (process.env.NODE_ENV === 'production') {
       // TODO: Send to security monitoring service (e.g., Datadog, Splunk, custom SIEM)
       // await sendToSecurityMonitoring();
-
-      // For now, log to console in production
-      console.warn(
-        'CSP Violation (Production):',
-        JSON.stringify(violationData, null, 2)
-      );
     }
 
     // Return success response

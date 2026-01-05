@@ -13,15 +13,15 @@ export interface UserEvent {
     | 'page_view'
     | 'exit_intent'
     | 'conversion';
-  target?: string;
-  x?: number;
-  y?: number;
-  value?: number;
-  metadata?: Record<string, unknown>;
+  target?: string | undefined;
+  x?: number | undefined;
+  y?: number | undefined;
+  value?: number | undefined;
+  metadata?: Record<string, unknown> | undefined;
   sessionId: string;
-  userId?: string;
+  userId?: string | undefined;
   page: string;
-  referrer?: string;
+  referrer?: string | undefined;
 }
 
 export interface HeatMapData {
@@ -29,7 +29,7 @@ export interface HeatMapData {
   y: number;
   intensity: number;
   clicks: number;
-  element?: string;
+  element?: string | undefined;
 }
 
 export interface ConversionFunnel {
@@ -45,7 +45,7 @@ export interface FunnelStep {
   id: string;
   name: string;
   event: string;
-  target?: string;
+  target?: string | undefined;
   expectedCount: number;
   actualCount: number;
   dropOffRate: number;
@@ -53,9 +53,9 @@ export interface FunnelStep {
 
 export interface SessionData {
   id: string;
-  userId?: string;
+  userId?: string | undefined;
   startTime: number;
-  endTime?: number;
+  endTime?: number | undefined;
   duration: number;
   pageViews: number;
   events: UserEvent[];
@@ -64,9 +64,9 @@ export interface SessionData {
   scrollDepth: number;
   clickHeatMap: HeatMapData[];
   deviceInfo: DeviceInfo;
-  referrer?: string;
+  referrer?: string | undefined;
   landingPage: string;
-  exitPage?: string;
+  exitPage?: string | undefined;
 }
 
 export interface DeviceInfo {
@@ -74,9 +74,9 @@ export interface DeviceInfo {
   screenResolution: string;
   viewportSize: string;
   devicePixelRatio: number;
-  connectionType?: string;
-  deviceMemory?: number;
-  hardwareConcurrency?: number;
+  connectionType?: string | undefined;
+  deviceMemory?: number | undefined;
+  hardwareConcurrency?: number | undefined;
   platform: string;
   isMobile: boolean;
   isTablet: boolean;
@@ -103,7 +103,7 @@ export class AnalyticsManager {
     element: EventTarget;
     type: string;
     handler: EventListener;
-    options?: AddEventListenerOptions | boolean;
+    options?: AddEventListenerOptions | boolean | undefined;
   }> = [];
   private sessions: Map<string, SessionData> = new Map();
   private currentSession: SessionData | null = null;
@@ -142,7 +142,7 @@ export class AnalyticsManager {
     element: EventTarget,
     type: string,
     handler: EventListener,
-    options?: AddEventListenerOptions | boolean
+    options?: AddEventListenerOptions | boolean | undefined
   ): void {
     element.addEventListener(type, handler, options);
     this.listeners.push({ element, type, handler, options });
@@ -861,12 +861,22 @@ export class AnalyticsManager {
 
   public startRecording() {
     this.isRecording = true;
-    console.warn('Analytics recording started');
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info('Analytics recording started', {
+        component: 'AnalyticsManager',
+        action: 'start_recording',
+      });
+    });
   }
 
   public stopRecording() {
     this.isRecording = false;
-    console.warn('Analytics recording stopped');
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info('Analytics recording stopped', {
+        component: 'AnalyticsManager',
+        action: 'stop_recording',
+      });
+    });
   }
 
   public isRecordingActive(): boolean {
@@ -906,7 +916,13 @@ export class AnalyticsManager {
 
   private sendCorrelationToAnalytics(correlation: unknown) {
     // In real implementation, send to data warehouse
-    console.warn('Performance correlation:', correlation);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info('Performance correlation updated', {
+        component: 'AnalyticsManager',
+        action: 'correlate_performance',
+        metadata: { correlation },
+      });
+    });
   }
 
   // Cleanup

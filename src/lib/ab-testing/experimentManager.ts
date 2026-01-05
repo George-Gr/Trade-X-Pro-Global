@@ -66,7 +66,13 @@ export class ExperimentManager {
         });
       }
     } catch (error) {
-      console.warn('Failed to load experiments from storage:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Failed to load experiments from storage', {
+          component: 'ExperimentManager',
+          action: 'load_from_storage',
+          metadata: { error },
+        });
+      });
     }
   }
 
@@ -78,7 +84,13 @@ export class ExperimentManager {
       });
       localStorage.setItem('ab_experiments', JSON.stringify(data));
     } catch (error) {
-      console.warn('Failed to save experiments to storage:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Failed to save experiments to storage', {
+          component: 'ExperimentManager',
+          action: 'save_to_storage',
+          metadata: { error },
+        });
+      });
     }
   }
 
@@ -161,7 +173,7 @@ export class ExperimentManager {
     }
 
     // Fallback to first variant
-    return variants[0];
+    return variants[0]!;
   }
 
   private hashString(str: string): number {
@@ -361,7 +373,13 @@ export class ExperimentManager {
     };
 
     // Store report (in real implementation, would send to analytics service)
-    console.warn('Experiment Report:', report);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info(`Experiment Report: ${experiment.name}`, {
+        component: 'ExperimentManager',
+        action: 'generate_report',
+        metadata: { report },
+      });
+    });
     trackCustomMetric('experiment_completed', 1, 'A/B Testing');
   }
 

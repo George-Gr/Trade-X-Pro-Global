@@ -6,30 +6,26 @@
  * Implements graceful degradation and recovery mechanisms.
  */
 
-import * as React from 'react';
-import { AlertTriangle, RefreshCw, Home, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { useToast, toast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
+import { AlertTriangle, RefreshCw, Settings } from 'lucide-react';
+import * as React from 'react';
 // Re-export navigation item helper boundary for compatibility with existing imports/tests
 export { NavigationItemErrorBoundary } from '@/lib/sidebarErrorHandling';
 
 interface SidebarErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
+  error?: Error | undefined;
+  errorInfo?: React.ErrorInfo | undefined;
 }
 
 interface SidebarErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ComponentType<{ error?: Error; onRetry?: () => void }>;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  fallback?: React.ComponentType<{
+    error?: Error | undefined;
+    onRetry?: () => void;
+  }>;
+  onError?: ((error: Error, errorInfo: React.ErrorInfo) => void) | undefined;
   enableLogging?: boolean;
 }
 
@@ -99,8 +95,17 @@ export class SidebarErrorBoundary extends React.Component<
 
     // Example: Send to console (replace with actual error tracking service)
     if (typeof window !== 'undefined') {
-      // In production, replace this with your error tracking service
-      console.error('🚨 Sidebar Error Report:', errorData);
+      import('@/lib/logger')
+        .then(({ logger }) => {
+          logger.error('🚨 Sidebar Error Report:', error, {
+            component: 'SidebarErrorBoundary',
+            action: 'report_error',
+            metadata: errorData,
+          });
+        })
+        .catch((importError) => {
+          // Fallback if logger fails to load - silently handle to prevent unhandled rejections
+        });
     }
   };
 
@@ -155,11 +160,11 @@ export class SidebarErrorBoundary extends React.Component<
  * Default fallback UI for sidebar errors
  */
 const SidebarErrorFallback: React.FC<{
-  error?: Error;
+  error?: Error | undefined;
   onRetry?: () => void;
 }> = ({ error, onRetry }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-6 text-center min-h-[200px]">
+    <div className="flex flex-col items-center justify-center p-6 text-center min-h-50">
       <div className="text-destructive mb-3">
         <AlertTriangle className="h-12 w-12 mx-auto mb-2" />
       </div>
@@ -210,7 +215,7 @@ const SidebarErrorFallback: React.FC<{
  * Minimal fallback for critical errors that still shows essential navigation
  */
 export const SidebarMinimalFallback: React.FC<{
-  error?: Error;
+  error?: Error | undefined;
   onRetry?: () => void;
 }> = ({ error, onRetry }) => {
   return (

@@ -42,7 +42,7 @@ CREATE OR REPLACE FUNCTION public.check_rate_limit(
   p_max_requests INT,
   p_window_seconds INT
 )
-RETURNS BOOLEAN
+RETURNS JSON
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
@@ -50,11 +50,16 @@ AS $$
 DECLARE
   v_window_start TIMESTAMP WITH TIME ZONE;
   v_current_count INT;
+  v_reset_at TIMESTAMP WITH TIME ZONE;
 BEGIN
   -- Calculate window start (truncate to window boundary)
-  v_window_start := DATE_TRUNC('minute', NOW()) - 
-    (EXTRACT(EPOCH FROM DATE_TRUNC('minute', NOW()) - DATE_TRUNC('minute', NOW() - INTERVAL '1 hour'))::INT % p_window_seconds) * INTERVAL '1 second';
+  v_window_start := TO_TIMESTAMP(
+    FLOOR(EXTRACT(EPOCH FROM NOW()) / p_window_seconds) * p_window_seconds
+  );
   
+  -- Calculate reset time (end of current window)
+  v_reset_at := v_window_start + (p_window_seconds * INTERVAL '1 second');
+
   -- Try to get or create rate limit record
   INSERT INTO public.rate_limits (user_id, endpoint, window_start, request_count)
   VALUES (p_user_id, p_endpoint, v_window_start, 1)
@@ -63,11 +68,12 @@ BEGIN
     request_count = rate_limits.request_count + 1
   RETURNING request_count INTO v_current_count;
   
-  -- Check if under limit
-  IF v_current_count <= p_max_requests THEN
-    RETURN TRUE;
-  ELSE
-    RETURN FALSE;
-  END IF;
+  -- Return result as JSON
+  RETURN json_build_object(
+    'allowed', v_current_count <= p_max_requests,
+    'current_count', v_current_count,
+    'max_requests', p_max_requests,
+    'reset_at', v_reset_at
+  );
 END;
 $$;

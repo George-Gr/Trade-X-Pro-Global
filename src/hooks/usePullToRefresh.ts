@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface PullToRefreshConfig {
   onRefresh: () => Promise<void> | void;
@@ -21,6 +21,28 @@ export interface PullToRefreshReturn {
   canRefresh: boolean;
 }
 
+/**
+ * Custom hook implementing pull-to-refresh functionality for mobile interfaces.
+ * Provides touch event handlers and state management for creating a pull-to-refresh
+ * experience similar to native mobile apps.
+ *
+ * @param config - Configuration object for pull-to-refresh behavior
+ * @param config.onRefresh - Async or sync function called when refresh is triggered
+ * @param [config.threshold=80] - Distance in pixels needed to trigger refresh
+ * @param [config.resistance=0.5] - Resistance factor for pull movement (0-1)
+ * @param [config.disabled=false] - Whether pull-to-refresh is disabled
+ * @param [config.className=''] - Additional CSS class names for the container
+ *
+ * @returns {PullToRefreshReturn} Object containing container props and state
+ * @returns {React.RefObject<HTMLDivElement>} containerProps.ref - Ref for the scrollable container
+ * @returns {React.TouchEventHandler<HTMLDivElement>} containerProps.onTouchStart - Touch start event handler
+ * @returns {React.TouchEventHandler<HTMLDivElement>} containerProps.onTouchMove - Touch move event handler  
+ * @returns {React.TouchEventHandler<HTMLDivElement>} containerProps.onTouchEnd - Touch end event handler
+ * @returns {string} containerProps.className - Combined CSS class names for styling
+ * @returns {boolean} isRefreshing - Whether refresh operation is currently in progress
+ * @returns {number} pullDistance - Current pull distance in pixels
+ * @returns {boolean} canRefresh - Whether pull distance exceeds threshold
+ */
 export const usePullToRefresh = (
   config: PullToRefreshConfig
 ): PullToRefreshReturn => {
@@ -64,7 +86,11 @@ export const usePullToRefresh = (
     try {
       await onRefresh();
     } catch (error) {
-      console.error('Pull to refresh failed:', error);
+      const { logger } = await import('@/lib/logger');
+      logger.error('Pull to refresh failed', error, {
+        component: 'usePullToRefresh',
+        action: 'refresh',
+      });
     } finally {
       // Wait a bit before resetting to show refresh complete
       setTimeout(() => {
@@ -82,8 +108,11 @@ export const usePullToRefresh = (
       const target = e.currentTarget;
       if (target.scrollTop > 0) return;
 
-      startYRef.current = e.touches[0].pageY;
-      currentYRef.current = e.touches[0].pageY;
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      startYRef.current = touch.pageY;
+      currentYRef.current = touch.pageY;
     },
     [disabled, isRefreshing]
   );
@@ -95,7 +124,10 @@ export const usePullToRefresh = (
       const target = e.currentTarget;
       if (target.scrollTop > 0) return;
 
-      const currentY = e.touches[0].pageY;
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      const currentY = touch.pageY;
       const deltaY = currentY - startYRef.current;
 
       // Only allow downward pull
@@ -216,7 +248,14 @@ export const usePullToRefresh = (
   };
 };
 
-// Hook for easy integration into specific screens
+/**
+ * Pre-configured pull-to-refresh hook optimized for dashboard screens.
+ * Uses dashboard-specific threshold (80px) and resistance (0.6) values.
+ *
+ * @param onRefresh - Async or sync function called when refresh is triggered
+ *
+ * @returns {PullToRefreshReturn} Pull-to-refresh state and handlers configured for dashboard use
+ */
 export const useDashboardPullToRefresh = (
   onRefresh: () => Promise<void> | void
 ) => {
@@ -228,6 +267,14 @@ export const useDashboardPullToRefresh = (
   });
 };
 
+/**
+ * Pre-configured pull-to-refresh hook optimized for portfolio screens.
+ * Uses portfolio-specific threshold (70px) and resistance (0.5) values.
+ *
+ * @param onRefresh - Async or sync function called when refresh is triggered
+ *
+ * @returns {PullToRefreshReturn} Pull-to-refresh state and handlers configured for portfolio use
+ */
 export const usePortfolioPullToRefresh = (
   onRefresh: () => Promise<void> | void
 ) => {
@@ -239,6 +286,14 @@ export const usePortfolioPullToRefresh = (
   });
 };
 
+/**
+ * Pre-configured pull-to-refresh hook optimized for trading screens.
+ * Uses trading-specific threshold (60px) and resistance (0.4) values for quick refresh.
+ *
+ * @param onRefresh - Async or sync function called when refresh is triggered
+ *
+ * @returns {PullToRefreshReturn} Pull-to-refresh state and handlers configured for trading use
+ */
 export const useTradePullToRefresh = (
   onRefresh: () => Promise<void> | void
 ) => {

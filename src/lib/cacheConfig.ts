@@ -266,7 +266,10 @@ export async function limitCacheSize(cacheName: string): Promise<void> {
     entries.sort((a, b) => a.time - b.time);
 
     for (let i = 0; i < entries.length - maxSize; i++) {
-      await cache.delete(entries[i].request);
+      const entry = entries[i];
+      if (entry && entry.request) {
+        await cache.delete(entry.request);
+      }
     }
   }
 }

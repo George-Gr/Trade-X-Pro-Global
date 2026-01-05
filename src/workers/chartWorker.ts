@@ -32,8 +32,16 @@ const calculateTrend = (
     };
   }
 
-  const firstValue = values[0];
-  const lastValue = values[values.length - 1];
+  const firstValue = values[0] ?? 0;
+  const lastValue = values[values.length - 1] ?? 0;
+
+  if (firstValue === 0)
+    return {
+      changePercentage: 0,
+      direction: 'neutral',
+      color: 'hsl(var(--foreground-tertiary))',
+    };
+
   const change = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
 
   let direction = 'neutral';
@@ -72,15 +80,21 @@ const generateSparkline = (
   values: number[],
   labels?: string[]
 ): Array<{ date: string; value: number; label?: string }> => {
-  return values.map((value, index) => ({
-    date:
-      labels?.[index] ||
-      new Date(
-        Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000
-      ).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }),
-    value,
-    label: labels?.[index],
-  }));
+  return values.map((value, index) => {
+    const item: { date: string; value: number; label?: string } = {
+      date:
+        labels?.[index] ||
+        new Date(
+          Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000
+        ).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }),
+      value,
+    };
+    const label = labels?.[index];
+    if (label) {
+      item.label = label;
+    }
+    return item;
+  });
 };
 
 const optimizeLargeDataset = (

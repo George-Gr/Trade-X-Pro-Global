@@ -6,6 +6,8 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
+import { QuerySchemas, safeValidateQueryParam } from '@/lib/queryValidation';
 import type { Position } from '@/types/position';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -54,9 +56,14 @@ class WebSocketConnectionManager {
     });
 
     if (DEBUG_REALTIME) {
-      console.warn(
-        `🔗 Registered WebSocket connection ${id}. Active: ${this.connections.size}/${this.connectionLimit}`
-      );
+      logger.debug(`🔗 Registered WebSocket connection ${id}`, {
+        component: 'WebSocketConnectionManager',
+        action: 'register_connection',
+        metadata: {
+          active: this.connections.size,
+          limit: this.connectionLimit,
+        },
+      });
     }
   }
 
@@ -79,23 +86,32 @@ class WebSocketConnectionManager {
         supabase.removeChannel(conn.connection);
         conn.isClosed = true;
         if (DEBUG_REALTIME) {
-          console.warn(`🔌 Closed WebSocket connection ${id}`);
+          logger.debug(`🔌 Closed WebSocket connection ${id}`, {
+            component: 'WebSocketConnectionManager',
+            action: 'close_connection',
+          });
         }
       } catch (error) {
         if (DEBUG_REALTIME) {
-          console.warn(
-            `⚠️  Failed to close WebSocket connection ${id}:`,
-            error
-          );
+          logger.warn(`⚠️  Failed to close WebSocket connection ${id}`, {
+            component: 'WebSocketConnectionManager',
+            action: 'close_connection_failed',
+            metadata: { error },
+          });
         }
       }
     }
 
     this.connections.delete(id);
     if (DEBUG_REALTIME) {
-      console.warn(
-        `🔌 Unregistered WebSocket connection ${id}. Active: ${this.connections.size}/${this.connectionLimit}`
-      );
+      logger.debug(`🔌 Unregistered WebSocket connection ${id}`, {
+        component: 'WebSocketConnectionManager',
+        action: 'unregister_connection',
+        metadata: {
+          active: this.connections.size,
+          limit: this.connectionLimit,
+        },
+      });
     }
   }
 
@@ -115,8 +131,12 @@ class WebSocketConnectionManager {
 
       if (conn && conn.connection && !conn.isClosed) {
         if (DEBUG_REALTIME) {
-          console.warn(
-            `⚠️  Closing oldest WebSocket connection ${oldestId} to make room for new connection`
+          logger.debug(
+            `⚠️  Closing oldest WebSocket connection ${oldestId} to make room for new connection`,
+            {
+              component: 'WebSocketConnectionManager',
+              action: 'cleanup_oldest',
+            }
           );
         }
 
@@ -125,15 +145,23 @@ class WebSocketConnectionManager {
           supabase.removeChannel(conn.connection);
           conn.isClosed = true;
           if (DEBUG_REALTIME) {
-            console.warn(
-              `🔌 Successfully closed WebSocket connection ${oldestId}`
+            logger.debug(
+              `🔌 Successfully closed WebSocket connection ${oldestId}`,
+              {
+                component: 'WebSocketConnectionManager',
+                action: 'cleanup_oldest_success',
+              }
             );
           }
         } catch (error) {
           if (DEBUG_REALTIME) {
-            console.warn(
-              `⚠️  Failed to close WebSocket connection ${oldestId}:`,
-              error
+            logger.warn(
+              `⚠️  Failed to close WebSocket connection ${oldestId}`,
+              {
+                component: 'WebSocketConnectionManager',
+                action: 'cleanup_oldest_failed',
+                metadata: { error },
+              }
             );
           }
         }
@@ -142,8 +170,16 @@ class WebSocketConnectionManager {
       // Directly remove from connections map and emit debug logs
       this.connections.delete(oldestId);
       if (DEBUG_REALTIME) {
-        console.warn(
-          `🔌 Removed WebSocket connection ${oldestId} from tracking. Active: ${this.connections.size}/${this.connectionLimit}`
+        logger.debug(
+          `🔌 Removed WebSocket connection ${oldestId} from tracking`,
+          {
+            component: 'WebSocketConnectionManager',
+            action: 'cleanup_oldest_removed',
+            metadata: {
+              active: this.connections.size,
+              limit: this.connectionLimit,
+            },
+          }
         );
       }
     }
@@ -239,21 +275,37 @@ export function useRealtimePositions(
     if (subscriptionRef.current) {
       const currentSubscriptionId = subscriptionIdRef.current;
       if (DEBUG_REALTIME) {
-        console.warn(
-          `⚠️  Subscription cleanup verification failed for ${currentSubscriptionId}`
+        logger.warn(
+          `⚠️  Subscription cleanup verification failed for ${currentSubscriptionId}`,
+          {
+            component: 'useRealtimePositions',
+            action: 'cleanup_verification_failed',
+          }
         );
-        console.warn(
+        logger.debug(
           `Subscription has been active for ${
             Date.now() - subscriptionStartTimeRef.current
-          }ms`
+          }ms`,
+          {
+            component: 'useRealtimePositions',
+            action: 'subscription_duration',
+            metadata: {
+              duration: Date.now() - subscriptionStartTimeRef.current,
+            },
+          }
         );
       }
 
       // Force cleanup if subscription is still active after 5 minutes
       if (Date.now() - subscriptionStartTimeRef.current > 300000) {
         if (DEBUG_REALTIME) {
-          console.error(
-            `🚨 Force unsubscribing stale subscription ${currentSubscriptionId}`
+          logger.error(
+            `🚨 Force unsubscribing stale subscription ${currentSubscriptionId}`,
+            undefined,
+            {
+              component: 'useRealtimePositions',
+              action: 'force_unsubscribe_stale',
+            }
           );
         }
         try {
@@ -262,7 +314,10 @@ export function useRealtimePositions(
           );
         } catch (err) {
           if (DEBUG_REALTIME) {
-            console.error('Failed to force unsubscribe:', err);
+            logger.error('Failed to force unsubscribe', err, {
+              component: 'useRealtimePositions',
+              action: 'force_unsubscribe_failed',
+            });
           }
         }
         subscriptionRef.current = null;
@@ -286,7 +341,20 @@ export function useRealtimePositions(
         .order('opened_at', { ascending: false });
 
       if (filterSymbol) {
-        query = query.eq('symbol', filterSymbol);
+        // Validate symbol to prevent injection - use safe validation to avoid breaking on invalid input
+        const validatedSymbol = safeValidateQueryParam(
+          QuerySchemas.symbol,
+          filterSymbol,
+          'filterSymbol'
+        );
+        if (validatedSymbol) {
+          query = query.eq('symbol', validatedSymbol);
+        } else {
+          logger.warn('Invalid filter symbol provided', {
+            action: 'filter_positions',
+            metadata: { filterSymbol },
+          });
+        }
       }
 
       const { data, error: queryError } = await query;
@@ -347,9 +415,20 @@ export function useRealtimePositions(
     }
   }, [userId, filterSymbol, onUpdate, onError, queryClient]);
 
+  // Buffer for pending updates to prevent data loss during debouncing
+  const updateBufferRef = useRef<Map<string, Position>>(new Map());
+
   const handlePositionUpdate = useCallback(
     (payload: RealtimePositionUpdate, filter?: string) => {
       const { type, new: newRecord, old: oldRecord } = payload;
+
+      if (DEBUG_REALTIME) {
+        logger.debug(`⚡ Realtime event: ${type}`, {
+          component: 'useRealtimePositions',
+          action: 'realtime_event',
+          metadata: { type, id: newRecord?.id || oldRecord?.id },
+        });
+      }
 
       // Invalidate React Query caches for related data
       if (userId) {
@@ -362,103 +441,95 @@ export function useRealtimePositions(
         }
       }
 
-      // Calculate position delta for UPDATE events
-      const calculateDelta = (oldPos: unknown, newPos: unknown) => {
-        const old = oldPos as Record<string, unknown>;
-        const newP = newPos as Record<string, unknown>;
-        if (!old || !newP) return null;
+      // Handle INSERT and DELETE immediately (no debouncing for structural changes)
+      if (type === 'INSERT' || type === 'DELETE') {
+        setPositions((prev) => {
+          let updated = [...prev];
 
-        return {
-          pnl_change:
-            ((newP.unrealized_pnl as number) || 0) -
-            ((old.unrealized_pnl as number) || 0),
-          price_change:
-            ((newP.current_price as number) || 0) -
-            ((old.current_price as number) || 0),
-          margin_change:
-            ((newP.margin_used as number) || 0) -
-            ((old.margin_used as number) || 0),
-        };
-      };
+          switch (type) {
+            case 'INSERT':
+              if (newRecord && (!filter || newRecord.symbol === filter)) {
+                const exists = updated.some((p) => p.id === newRecord.id);
+                if (!exists) {
+                  updated = [newRecord, ...updated];
+                }
+              }
+              break;
 
-      // Debounce rapid updates for UPDATE events
+            case 'DELETE':
+              if (oldRecord && (!filter || oldRecord.symbol === filter)) {
+                updated = updated.filter((p) => p.id !== oldRecord.id);
+              }
+              break;
+          }
+
+          positionsRef.current = updated;
+          if (userId) {
+            queryClient.setQueryData(['positions', userId], updated);
+          }
+          if (onUpdate) onUpdate(updated);
+          return updated;
+        });
+        return;
+      }
+
+      // Handle UPDATE events with buffering and debouncing
       if (type === 'UPDATE' && newRecord) {
-        const delta = calculateDelta(oldRecord, newRecord);
+        // Validation check: ensure we don't apply an update for a filtered symbol
+        if (filter && newRecord.symbol !== filter) return;
 
-        // Only process significant updates (> 0.01% PnL change or > 0.1% price change)
-        const shouldUpdate =
-          !delta ||
-          Math.abs(delta.pnl_change) > 0.01 ||
-          Math.abs(delta.price_change / (oldRecord?.current_price || 1)) >
-            0.001;
-
-        if (!shouldUpdate) {
-          return; // Skip insignificant updates
-        }
+        // Add to buffer
+        updateBufferRef.current.set(newRecord.id, newRecord);
 
         // Clear existing debounce timer
         if (debounceTimerRef.current) {
           clearTimeout(debounceTimerRef.current);
         }
 
-        // Debounce the update
+        // Debounce the update application
         debounceTimerRef.current = setTimeout(() => {
+          const bufferedUpdates = new Map(updateBufferRef.current);
+          updateBufferRef.current.clear();
+
+          if (bufferedUpdates.size === 0) return;
+
           setPositions((prev) => {
             const updated = [...prev];
-            const index = updated.findIndex((p) => p.id === newRecord.id);
-            if (index >= 0) {
-              updated[index] = newRecord;
-            }
-            positionsRef.current = updated;
+            let changed = false;
 
-            // Update React Query cache
+            bufferedUpdates.forEach((newPos, id) => {
+              const index = updated.findIndex((p) => p.id === id);
+              if (index >= 0) {
+                const currentPos = updated[index];
+                if (currentPos) {
+                  // version check using updated_at
+                  const currentUpdate = new Date(
+                    currentPos.updated_at || 0
+                  ).getTime();
+                  const newUpdate = new Date(newPos.updated_at || 0).getTime();
+
+                  if (newUpdate >= currentUpdate) {
+                    updated[index] = newPos;
+                    changed = true;
+                  }
+                }
+              } else {
+                // If it's not in our list but should be, add it
+                updated.push(newPos);
+                changed = true;
+              }
+            });
+
+            if (!changed) return prev;
+
+            positionsRef.current = updated;
             if (userId) {
               queryClient.setQueryData(['positions', userId], updated);
             }
-
-            if (onUpdate) {
-              onUpdate(updated);
-            }
+            if (onUpdate) onUpdate(updated);
             return updated;
           });
         }, debounceMs);
-
-        return;
-      }
-
-      // Handle INSERT and DELETE immediately (no debouncing)
-      setPositions((prev) => {
-        let updated = [...prev];
-
-        switch (type) {
-          case 'INSERT':
-            if (newRecord && (!filter || newRecord.symbol === filter)) {
-              const exists = updated.some((p) => p.id === newRecord.id);
-              if (!exists) {
-                updated = [newRecord, ...updated];
-              }
-            }
-            break;
-
-          case 'DELETE':
-            if (oldRecord && (!filter || oldRecord.symbol === filter)) {
-              updated = updated.filter((p) => p.id !== oldRecord.id);
-            }
-            break;
-        }
-
-        positionsRef.current = updated;
-
-        // Update React Query cache
-        if (userId) {
-          queryClient.setQueryData(['positions', userId], updated);
-        }
-
-        return updated;
-      });
-
-      if (onUpdate) {
-        onUpdate(positionsRef.current);
       }
     },
     [onUpdate, debounceMs, userId, queryClient]
@@ -510,8 +581,12 @@ export function useRealtimePositions(
     if (subscriptionRef.current) {
       try {
         if (DEBUG_REALTIME) {
-          console.warn(
-            `📤 Unsubscribing from positions realtime ${subscriptionIdRef.current}`
+          logger.debug(
+            `📤 Unsubscribing from positions realtime ${subscriptionIdRef.current}`,
+            {
+              component: 'useRealtimePositions',
+              action: 'unsubscribe',
+            }
           );
         }
         await supabase.removeChannel(
@@ -537,15 +612,23 @@ export function useRealtimePositions(
         connectionManager.unregisterConnection(subscriptionIdRef.current);
 
         if (DEBUG_REALTIME) {
-          console.warn(
-            `✅ Successfully unsubscribed from positions realtime ${subscriptionIdRef.current}`
+          logger.debug(
+            `✅ Successfully unsubscribed from positions realtime ${subscriptionIdRef.current}`,
+            {
+              component: 'useRealtimePositions',
+              action: 'unsubscribe_success',
+            }
           );
         }
       } catch (err) {
         if (DEBUG_REALTIME) {
-          console.error(
-            `❌ Failed to unsubscribe from positions realtime ${subscriptionIdRef.current}:`,
-            err
+          logger.error(
+            `❌ Failed to unsubscribe from positions realtime ${subscriptionIdRef.current}`,
+            err,
+            {
+              component: 'useRealtimePositions',
+              action: 'unsubscribe_failed',
+            }
           );
         }
         setError(err instanceof Error ? err : new Error(String(err)));
@@ -606,12 +689,17 @@ export function useRealtimePositions(
                   Date.now() - subscriptionStartTimeRef.current;
                 if (activeTime > 1800000) {
                   if (DEBUG_REALTIME) {
-                    console.warn(
+                    logger.warn(
                       `⚠️  Position subscription ${
                         subscriptionIdRef.current
                       } has been active for ${Math.floor(
                         activeTime / 60000
-                      )} minutes`
+                      )} minutes`,
+                      {
+                        component: 'useRealtimePositions',
+                        action: 'subscription_long_duration',
+                        metadata: { activeTime },
+                      }
                     );
                   }
                 }
@@ -629,8 +717,12 @@ export function useRealtimePositions(
               );
 
               if (DEBUG_REALTIME) {
-                console.warn(
-                  `📥 Subscribed to positions realtime ${subscriptionIdRef.current}`
+                logger.debug(
+                  `📥 Subscribed to positions realtime ${subscriptionIdRef.current}`,
+                  {
+                    component: 'useRealtimePositions',
+                    action: 'subscribed',
+                  }
                 );
               }
             } else if (status === 'CHANNEL_ERROR') {
@@ -689,16 +781,23 @@ export function useRealtimePositions(
 
       unsubscribe().catch((err) => {
         if (DEBUG_REALTIME) {
-          console.error(`❌ Error during cleanup of subscription:`, err);
+          logger.error(`❌ Error during cleanup of subscription`, err, {
+            component: 'useRealtimePositions',
+            action: 'cleanup_error',
+          });
         }
       });
 
       // Call verifySubscriptionCleanup to ensure proper cleanup
       verifySubscriptionCleanup().catch((err) => {
         if (DEBUG_REALTIME) {
-          console.error(
-            `❌ Error during subscription cleanup verification:`,
-            err
+          logger.error(
+            `❌ Error during subscription cleanup verification`,
+            err,
+            {
+              component: 'useRealtimePositions',
+              action: 'cleanup_verification_error',
+            }
           );
         }
       });

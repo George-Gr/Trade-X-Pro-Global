@@ -199,8 +199,20 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error details for debugging
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Log error details for debugging with centralized logger
+    import('@/lib/logger')
+      .then(({ logger }) => {
+        logger.error('ErrorBoundary caught an error', error, {
+          component: 'TradingErrorBoundary',
+          action: 'render_error',
+          metadata: {
+            componentStack: errorInfo.componentStack,
+          },
+        });
+      })
+      .catch((loggerError) => {
+        console.error('Failed to log error:', loggerError);
+      });
 
     // Call the onError callback if provided
     if (this.props.onError) {
@@ -208,7 +220,7 @@ class ErrorBoundary extends React.Component<
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.hasError) {
       const fallback = this.props.fallback || TradingErrorFallback;
       return React.createElement(fallback, {
@@ -367,27 +379,27 @@ export class SuspensePrefetcher {
 // Internal hook for managing Suspense boundaries
 function useSuspenseBoundary() {
   const [isPending, setIsPending] = React.useState(false);
-  
+
   const withSuspense = <T extends ComponentType<unknown>>(
     Component: T,
     fallback?: React.ComponentType<unknown>
   ): ComponentType<unknown> => {
     const WrappedComponent = (props: unknown) => {
       const [isComponentPending, setIsComponentPending] = React.useState(false);
-      
+
       React.useEffect(() => {
         setIsComponentPending(true);
         setIsPending(true);
-        
+
         // Simulate async component loading
         const timer = setTimeout(() => {
           setIsComponentPending(false);
           setIsPending(false);
         }, 100);
-        
+
         return () => clearTimeout(timer);
       }, []);
-      
+
       return (
         <Suspense
           fallback={

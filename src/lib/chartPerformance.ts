@@ -233,7 +233,12 @@ export class ChartPool {
   release(key: string, instance: unknown): void {
     const poolId = (instance as { _poolId?: string })?._poolId;
     if (!poolId) {
-      console.warn('Attempting to release non-pooled instance');
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Attempting to release non-pooled instance', {
+          component: 'ChartPool',
+          action: 'release',
+        });
+      });
       return;
     }
 

@@ -267,7 +267,13 @@ export const logTypographyDiagnostics = (): void => {
     console.table(variables);
     console.warn('✓ Typography system is properly configured');
   } else {
-    console.error('✗ Typography system has errors:', validation.errors);
+    import('@/lib/logger').then(({ logger }) => {
+      logger.error('Typography system has errors', undefined, {
+        component: 'TypographyUtils',
+        action: 'validate_typography',
+        metadata: { errors: validation.errors },
+      });
+    });
   }
 
   console.groupEnd();

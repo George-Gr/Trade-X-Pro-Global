@@ -464,11 +464,14 @@ export function calculateDailyPnL(fills: OrderFill[]): DailyPnLBreakdown[] {
   // Group fills by date
   for (const fill of fills) {
     if (!fill.timestamp) continue;
-    const dateKey = fill.timestamp.toISOString().split('T')[0];
+    const dateKey = fill.timestamp.toISOString().split('T')[0] || '1970-01-01';
     if (!dailyMap.has(dateKey)) {
       dailyMap.set(dateKey, []);
     }
-    dailyMap.get(dateKey)!.push(fill);
+    const dayFills = dailyMap.get(dateKey);
+    if (dayFills) {
+      dayFills.push(fill);
+    }
   }
 
   const dailyMetrics: DailyPnLBreakdown[] = [];
@@ -530,6 +533,7 @@ export function calculatePnLByAssetClass(
   prices: Map<string, number>
 ): PnLByAssetClass {
   const result: PnLByAssetClass = {};
+  const baseCosts: Record<string, number> = {};
 
   for (const position of positions) {
     const assetClass = position.assetClass || 'Unknown';
@@ -542,35 +546,45 @@ export function calculatePnLByAssetClass(
       position.side as 'long' | 'short'
     );
 
-    if (!result[assetClass]) {
-      result[assetClass] = {
+    let metrics = result[assetClass];
+    if (!metrics) {
+      metrics = {
         unrealizedPnL: 0,
         realizedPnL: 0,
         grossPnL: 0,
         positionCount: 0,
         pnlPercentage: 0,
       };
+      result[assetClass] = metrics;
+      baseCosts[assetClass] = 0;
     }
 
-    result[assetClass].unrealizedPnL += unrealizedResult.pnl;
-    result[assetClass].grossPnL += unrealizedResult.pnl;
-    result[assetClass].positionCount += 1;
-    result[assetClass].pnlPercentage = calculatePnLPercentage(
-      result[assetClass].grossPnL,
-      position.entryPrice * position.quantity
-    );
+    metrics.unrealizedPnL += unrealizedResult.pnl;
+    metrics.grossPnL += unrealizedResult.pnl;
+    metrics.positionCount += 1;
+    baseCosts[assetClass] += position.entryPrice * position.quantity;
+  }
+
+  // Calculate percentages after accumulating all positions
+  for (const assetClass of Object.keys(result)) {
+    const metrics = result[assetClass];
+    if (metrics) {
+      metrics.pnlPercentage = calculatePnLPercentage(
+        metrics.grossPnL,
+        baseCosts[assetClass] || 0
+      );
+    }
   }
 
   // Round all values to 4 decimals
   for (const assetClass of Object.keys(result)) {
-    result[assetClass].unrealizedPnL =
-      Math.round(result[assetClass].unrealizedPnL * 10000) / 10000;
-    result[assetClass].realizedPnL =
-      Math.round(result[assetClass].realizedPnL * 10000) / 10000;
-    result[assetClass].grossPnL =
-      Math.round(result[assetClass].grossPnL * 10000) / 10000;
-    result[assetClass].pnlPercentage =
-      Math.round(result[assetClass].pnlPercentage * 10000) / 10000;
+    const metrics = result[assetClass];
+    if (metrics) {
+      metrics.unrealizedPnL = Math.round(metrics.unrealizedPnL * 10000) / 10000;
+      metrics.realizedPnL = Math.round(metrics.realizedPnL * 10000) / 10000;
+      metrics.grossPnL = Math.round(metrics.grossPnL * 10000) / 10000;
+      metrics.pnlPercentage = Math.round(metrics.pnlPercentage * 10000) / 10000;
+    }
   }
 
   return result;

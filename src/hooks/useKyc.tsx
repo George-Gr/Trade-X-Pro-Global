@@ -1,5 +1,6 @@
 // useKyc: Hook for KYC status and actions
 import { supabase } from '@/integrations/supabase/client';
+import { checkRateLimit } from '@/lib/rateLimiter';
 import { useCallback, useEffect, useState } from 'react';
 
 export interface KycRequestData {
@@ -23,6 +24,50 @@ export interface KycDocumentData {
   reviewed_at?: string;
 }
 
+/**
+ * Custom React hook for managing KYC (Know Your Customer) status and operations
+ *
+ * This hook provides functionality to fetch KYC status, submit KYC requests,
+ * upload documents, and validate uploaded documents for a given user.
+ *
+ * @param userId - Optional user ID string. When provided, automatically fetches
+ *                 KYC status for that user on mount. If undefined, operations
+ *                 will be no-ops until a userId is supplied.
+ * @returns Object containing:
+ *   - kycStatus: Current KYC status ('pending', 'submitted', 'approved', 'rejected', etc.)
+ *   - kycRequest: Latest KYC request data object or null
+ *   - documents: Array of uploaded KYC documents with metadata
+ *   - loading: Boolean indicating if any async operation is in progress
+ *   - error: Error message string or null
+ *   - submitKycRequest: Function to initiate KYC submission flow
+ *   - uploadDocument: Function to upload document after receiving signed URL
+ *   - validateDocument: Function to validate uploaded document via server
+ *   - refresh: Function to manually refresh KYC status data
+ *
+ * @example
+ * ```typescript
+ * const { kycStatus, loading, error, submitKycRequest, refresh } = useKyc(userId);
+ *
+ * // Check status
+ * if (kycStatus === 'pending') {
+ *   // Show upload UI
+ * }
+ *
+ * // Submit new request
+ * await submitKycRequest('passport');
+ *
+ * // Refresh manually
+ * refresh();
+ * ```
+ *
+ * @throws Error when userId is required but not provided for operations like submission
+ *
+ * @remarks
+ * - Automatically fetches KYC status when userId is provided on mount
+ * - Uses rate limiting to prevent excessive submissions (max 3 per minute)
+ * - Maintains real-time subscriptions for status updates
+ * - When userId is undefined, functions will throw errors requiring user context
+ */
 export function useKyc(userId?: string) {
   const [kycStatus, setKycStatus] = useState<string>('pending');
   const [kycRequest, setKycRequest] = useState<KycRequestData | null>(null);
@@ -84,26 +129,59 @@ export function useKyc(userId?: string) {
   // Submit a KYC request (initiate the flow)
   const submitKycRequest = useCallback(
     async (documentType: string) => {
+      // Check rate limit before submitting KYC (3 submissions per minute)
+      const rateCheck = checkRateLimit('kyc');
+      if (!rateCheck.allowed) {
+        const error = new Error(
+          `Too many KYC submissions. Please wait ${Math.ceil(
+            rateCheck.resetIn / 1000
+          )} seconds before trying again.`
+        );
+        setError(error.message);
+        throw error;
+      }
+
       setError(null);
       try {
         if (!userId) throw new Error('No user context');
 
-        const resp = await fetch('/supabase/functions/submit-kyc', {
+        // Request signed upload URL
+        const submitResp = await fetch('/supabase/functions/submit-kyc', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ documentType }),
-          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${
+              (
+                await supabase.auth.getSession()
+              ).data.session?.access_token
+            }`,
+          },
+          body: JSON.stringify({ type: documentType }),
         });
 
-        if (!resp.ok) {
-          const body = await resp.json().catch(() => ({}));
-          throw new Error(body?.error || 'Failed to submit KYC request');
+        if (submitResp.status === 429) {
+          const err = await submitResp.json().catch(() => ({}));
+          const resetIn = err.reset_in_seconds
+            ? `${err.reset_in_seconds} seconds`
+            : 'a few moments';
+          throw new Error(
+            `Too many KYC submissions. Please wait ${resetIn} before trying again.`
+          );
         }
 
-        const result = await resp.json();
-        setKycRequest(result.kycRequest);
-        setKycStatus('submitted');
-        return result;
+        if (!submitResp.ok) {
+          const err = await submitResp.json().catch(() => ({}));
+          throw new Error(err?.error || 'Failed to request upload URL');
+        }
+
+        const submitJson = await submitResp.json();
+        const uploadInfo = submitJson.upload || {};
+        const signedUrl = uploadInfo.signedUrl;
+        const filePath = uploadInfo.filePath;
+
+        setKycRequest(submitJson.kycRequest); // Assuming kycRequest is part of the response
+        setKycStatus('submitted'); // Or a more specific status like 'awaiting_upload'
+        return { signedUrl, filePath, kycRequest: submitJson.kycRequest };
       } catch (err: unknown) {
         // Submit KYC error
         setError(

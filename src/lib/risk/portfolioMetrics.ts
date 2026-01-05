@@ -295,10 +295,10 @@ export function calculateMaxDrawdown(equityHistory: number[]): {
       troughEquity: 0,
     };
 
-  let peak = equityHistory[0];
+  let peak = equityHistory[0] ?? 0;
   let maxDrawdown = 0;
-  let peakEquity = equityHistory[0];
-  let troughEquity = equityHistory[0];
+  let peakEquity = equityHistory[0] ?? 0;
+  let troughEquity = equityHistory[0] ?? 0;
 
   for (const equity of equityHistory) {
     if (equity > peak) {
@@ -406,19 +406,18 @@ export function breakdownByAssetClass(
     const assetClass = position.assetClass || 'Other';
     const positionValue = position.quantity * position.currentPrice;
 
-    if (!breakdown[assetClass]) {
-      breakdown[assetClass] = {
-        positions: 0,
-        totalValue: 0,
-        unrealizedPnL: 0,
-        percentageOfPortfolio: 0,
-        pnlPercentage: 0,
-      };
-    }
+    breakdown[assetClass] ||= {
+      positions: 0,
+      totalValue: 0,
+      unrealizedPnL: 0,
+      percentageOfPortfolio: 0,
+      pnlPercentage: 0,
+    };
+    const data = breakdown[assetClass]!;
 
-    breakdown[assetClass].positions += 1;
-    breakdown[assetClass].totalValue += positionValue;
-    breakdown[assetClass].unrealizedPnL += position.unrealizedPnL;
+    data.positions += 1;
+    data.totalValue += positionValue;
+    data.unrealizedPnL += position.unrealizedPnL;
   }
 
   // Calculate percentages

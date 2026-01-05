@@ -40,7 +40,7 @@ export const NumberCounter: React.FC<NumberCounterProps> = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsInView(true);
         }
       },
@@ -146,7 +146,7 @@ export const LargeNumberCounter: React.FC<NumberCounterProps> = (props) => {
     <NumberCounter
       {...props}
       className={cn(
-        'text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent',
+        'text-4xl md:text-6xl font-extrabold bg-linear-to-r from-primary to-primary/80 bg-clip-text text-transparent',
         props.className
       )}
     />

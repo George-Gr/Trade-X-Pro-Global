@@ -143,7 +143,7 @@ export function useTradingData(): TradingDataReturn {
 
       setProfile(profileRes.data);
       setPositions(
-        (positionsRes.data || []).map((pos) => ({
+        (positionsRes.data || []).map((pos: DBPosition) => ({
           ...pos,
           opened_at: pos.opened_at ?? new Date().toISOString(),
           closed_at: pos.closed_at ?? undefined,
@@ -175,7 +175,7 @@ export function useTradingData(): TradingDataReturn {
 
   // Set up real-time subscriptions using dedicated hooks
   useRealtimeProfile(user?.id, fetchData);
-  useRealtimePositions(user?.id, fetchData);
+  useRealtimePositions(user?.id ?? null, { onUpdate: fetchData });
 
   // Calculate unrealized PnL for a position
   const calculateUnrealizedPnL = useCallback(
@@ -193,7 +193,7 @@ export function useTradingData(): TradingDataReturn {
   const updatePositionPrices = useCallback(
     (pricesMap: Map<string, { currentPrice: number }>) => {
       setPositions((prev) =>
-        prev.map((pos) => {
+        prev.map((pos: PositionWithPnL) => {
           const priceData = pricesMap.get(pos.symbol);
           if (priceData) {
             const unrealized_pnl = calculateUnrealizedPnL(
@@ -215,13 +215,22 @@ export function useTradingData(): TradingDataReturn {
 
   // Computed: Total unrealized PnL
   const totalUnrealizedPnL = useMemo(
-    () => positions.reduce((sum, pos) => sum + (pos.unrealized_pnl || 0), 0),
+    () =>
+      positions.reduce(
+        (sum: number, pos: PositionWithPnL) => sum + (pos.unrealized_pnl || 0),
+        0
+      ),
     [positions]
   );
 
   // Computed: Total realized PnL
   const totalRealizedPnL = useMemo(
-    () => closedTrades.reduce((sum, t) => sum + (t.realized_pnl || 0), 0),
+    () =>
+      closedTrades.reduce(
+        (sum: number, t: { realized_pnl: number | null }) =>
+          sum + (t.realized_pnl || 0),
+        0
+      ),
     [closedTrades]
   );
 
@@ -252,11 +261,14 @@ export function useTradingData(): TradingDataReturn {
     const losing = positions.filter((p) => (p.unrealized_pnl || 0) < 0);
 
     const profitSum = profitable.reduce(
-      (s, p) => s + (p.unrealized_pnl || 0),
+      (s: number, p: PositionWithPnL) => s + (p.unrealized_pnl || 0),
       0
     );
     const lossSum = Math.abs(
-      losing.reduce((s, p) => s + (p.unrealized_pnl || 0), 0)
+      losing.reduce(
+        (s: number, p: PositionWithPnL) => s + (p.unrealized_pnl || 0),
+        0
+      )
     );
 
     return {
@@ -285,7 +297,7 @@ export function useTradingData(): TradingDataReturn {
   const risk = useMemo((): RiskMetrics => {
     const ml = marginLevel === Infinity ? 9999 : marginLevel;
     const capitalAtRisk = positions.reduce(
-      (s, p) => s + Math.abs(p.unrealized_pnl || 0),
+      (s: number, p: PositionWithPnL) => s + Math.abs(p.unrealized_pnl || 0),
       0
     );
 
@@ -312,12 +324,16 @@ export function useTradingData(): TradingDataReturn {
     (): PortfolioSummary => ({
       positionCount: positions.length,
       totalExposure: positions.reduce(
-        (s, p) => s + p.quantity * (p.current_price || 0) * CONTRACT_SIZE,
+        (s: number, p: PositionWithPnL) =>
+          s + p.quantity * (p.current_price || 0) * CONTRACT_SIZE,
         0
       ),
       avgEntryPrice:
         positions.length > 0
-          ? positions.reduce((s, p) => s + p.entry_price, 0) / positions.length
+          ? positions.reduce(
+              (s: number, p: PositionWithPnL) => s + p.entry_price,
+              0
+            ) / positions.length
           : 0,
       totalMarginUsed: profile?.margin_used || 0,
     }),

@@ -101,7 +101,7 @@ describe('SecureStorage', () => {
     const sensitiveKey = 'access_token';
     const sensitiveValue = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
 
-    storage.setItem(sensitiveKey, sensitiveValue);
+    await storage.setItem(sensitiveKey, sensitiveValue);
 
     const stored = localStorage.getItem('secure_auth_access_token');
     expect(stored).toBeTruthy();
@@ -112,11 +112,11 @@ describe('SecureStorage', () => {
     expect(parsed.timestamp).toBeTruthy();
   });
 
-  it('should store non-sensitive data as plain text', () => {
+  it('should store non-sensitive data as plain text', async () => {
     const nonSensitiveKey = 'some_config';
     const nonSensitiveValue = 'config_value';
 
-    storage.setItem(nonSensitiveKey, nonSensitiveValue);
+    await storage.setItem(nonSensitiveKey, nonSensitiveValue);
 
     const stored = localStorage.getItem('secure_auth_some_config');
     expect(stored).toBe(JSON.stringify(nonSensitiveValue));
@@ -126,13 +126,13 @@ describe('SecureStorage', () => {
     const sensitiveKey = 'refresh_token';
     const sensitiveValue = 'refresh_token_value_123';
 
-    storage.setItem(sensitiveKey, sensitiveValue);
-    const retrieved = storage.getItem(sensitiveKey);
+    await storage.setItem(sensitiveKey, sensitiveValue);
+    const retrieved = await storage.getItem(sensitiveKey);
 
     expect(retrieved).toBe(sensitiveValue);
   });
 
-  it('should handle encryption failures gracefully', () => {
+  it('should handle encryption failures gracefully', async () => {
     // Mock encryption to throw error using test-scoped spy
     const encryptSpy = vi
       .spyOn(mockCrypto.subtle, 'encrypt')
@@ -144,8 +144,8 @@ describe('SecureStorage', () => {
     const sensitiveValue = 'token_value';
 
     // Should not throw and should store as plain text
-    expect(() => {
-      storageNoEncryption.setItem(sensitiveKey, sensitiveValue);
+    await expect(async () => {
+      await storageNoEncryption.setItem(sensitiveKey, sensitiveValue);
     }).not.toThrow();
 
     const stored = localStorage.getItem('secure_auth_access_token');
@@ -155,21 +155,21 @@ describe('SecureStorage', () => {
     encryptSpy.mockRestore();
   });
 
-  it('should remove items correctly', () => {
+  it('should remove items correctly', async () => {
     const key = 'test_key';
     const value = 'test_value';
 
-    storage.setItem(key, value);
-    expect(storage.getItem(key)).toBe(value);
+    await storage.setItem(key, value);
+    expect(await storage.getItem(key)).toBe(value);
 
     storage.removeItem(key);
-    expect(storage.getItem(key)).toBeNull();
+    expect(await storage.getItem(key)).toBeNull();
   });
 
-  it('should clear all items correctly', () => {
-    storage.setItem('key1', 'value1');
-    storage.setItem('key2', 'value2');
-    storage.setItem('key3', 'value3');
+  it('should clear all items correctly', async () => {
+    await storage.setItem('key1', 'value1');
+    await storage.setItem('key2', 'value2');
+    await storage.setItem('key3', 'value3');
 
     expect(storage.length()).toBe(3);
 
@@ -188,13 +188,13 @@ describe('FeatureFlags', () => {
   });
 
   it('should have default flags', () => {
-    expect(featureFlags.isPkceAuthFlowEnabled()).toBe(false);
-    expect(featureFlags.isSecureStorageEnabled()).toBe(false);
+    expect(featureFlags.isPkceAuthFlowEnabled()).toBe(true);
+    expect(featureFlags.isSecureStorageEnabled()).toBe(true);
     expect(featureFlags.isEnhancedSecurityHeadersEnabled()).toBe(true);
   });
 
   it('should enable and disable PKCE auth flow', () => {
-    expect(featureFlags.isPkceAuthFlowEnabled()).toBe(false);
+    expect(featureFlags.isPkceAuthFlowEnabled()).toBe(true);
 
     featureFlags.enablePkceAuthFlow();
     expect(featureFlags.isPkceAuthFlowEnabled()).toBe(true);
@@ -204,7 +204,7 @@ describe('FeatureFlags', () => {
   });
 
   it('should enable and disable secure storage', () => {
-    expect(featureFlags.isSecureStorageEnabled()).toBe(false);
+    expect(featureFlags.isSecureStorageEnabled()).toBe(true);
 
     featureFlags.enableSecureStorage();
     expect(featureFlags.isSecureStorageEnabled()).toBe(true);
@@ -235,8 +235,8 @@ describe('FeatureFlags', () => {
 
     featureFlags.resetToDefaults();
 
-    expect(featureFlags.isPkceAuthFlowEnabled()).toBe(false);
-    expect(featureFlags.isSecureStorageEnabled()).toBe(false);
+    expect(featureFlags.isPkceAuthFlowEnabled()).toBe(true);
+    expect(featureFlags.isSecureStorageEnabled()).toBe(true);
   });
 });
 
@@ -305,9 +305,13 @@ describe('AuthMigration', () => {
     expect(localStorage.getItem('sb-expires_at')).toBeNull();
 
     // New data should be in secure storage
-    expect(secureStorage.getItem('access_token')).toBe('legacy_access_token');
-    expect(secureStorage.getItem('refresh_token')).toBe('legacy_refresh_token');
-    expect(secureStorage.getItem('expires_at')).toBe('1234567890');
+    expect(await secureStorage.getItem('access_token')).toBe(
+      'legacy_access_token'
+    );
+    expect(await secureStorage.getItem('refresh_token')).toBe(
+      'legacy_refresh_token'
+    );
+    expect(await secureStorage.getItem('expires_at')).toBe('1234567890');
   });
 
   it('should handle migration errors gracefully', async () => {
@@ -338,8 +342,8 @@ describe('AuthMigration', () => {
 
   it('should rollback migration', async () => {
     // Set up new data in secure storage
-    secureStorage.setItem('access_token', 'new_access_token');
-    secureStorage.setItem('refresh_token', 'new_refresh_token');
+    await secureStorage.setItem('access_token', 'new_access_token');
+    await secureStorage.setItem('refresh_token', 'new_refresh_token');
 
     // Complete migration state
     localStorage.setItem(
@@ -368,8 +372,8 @@ describe('AuthMigration', () => {
     expect(localStorage.getItem('sb-refresh_token')).toBe('new_refresh_token');
 
     // Secure storage should be empty
-    expect(secureStorage.getItem('access_token')).toBeNull();
-    expect(secureStorage.getItem('refresh_token')).toBeNull();
+    expect(await secureStorage.getItem('access_token')).toBeNull();
+    expect(await secureStorage.getItem('refresh_token')).toBeNull();
   });
 });
 
@@ -405,8 +409,8 @@ describe('Integration Tests', () => {
 
     // 6. Verify data is migrated
     const secureStorage = new SecureStorage();
-    expect(secureStorage.getItem('access_token')).toBe('legacy_token');
-    expect(secureStorage.getItem('user')).toBe(
+    expect(await secureStorage.getItem('access_token')).toBe('legacy_token');
+    expect(await secureStorage.getItem('user')).toBe(
       JSON.stringify({ id: 'user123' })
     );
 

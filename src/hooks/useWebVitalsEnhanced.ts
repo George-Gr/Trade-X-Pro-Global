@@ -40,7 +40,12 @@ export function useWebVitalsEnhanced() {
   useEffect(() => {
     // Core Web Vitals monitoring
     onCLS((metric: WebVitalMetric) => {
-      console.warn('CLS:', metric);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.recordMetric('CLS', metric.value, 'custom', {
+          rating: metric.rating,
+          id: metric.id,
+        });
+      });
       sendToGtag('web_vital', {
         event_category: 'Performance',
         event_label: 'CLS',
@@ -50,7 +55,12 @@ export function useWebVitalsEnhanced() {
     });
 
     onINP((metric: WebVitalMetric) => {
-      console.warn('INP:', metric);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.recordMetric('INP', metric.value, 'millisecond', {
+          rating: metric.rating,
+          id: metric.id,
+        });
+      });
       sendToGtag('web_vital', {
         event_category: 'Performance',
         event_label: 'INP',
@@ -60,7 +70,12 @@ export function useWebVitalsEnhanced() {
     });
 
     onFCP((metric: WebVitalMetric) => {
-      console.warn('FCP:', metric);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.recordMetric('FCP', metric.value, 'millisecond', {
+          rating: metric.rating,
+          id: metric.id,
+        });
+      });
       sendToGtag('web_vital', {
         event_category: 'Performance',
         event_label: 'FCP',
@@ -70,7 +85,12 @@ export function useWebVitalsEnhanced() {
     });
 
     onLCP((metric: WebVitalMetric) => {
-      console.warn('LCP:', metric);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.recordMetric('LCP', metric.value, 'millisecond', {
+          rating: metric.rating,
+          id: metric.id,
+        });
+      });
       sendToGtag('web_vital', {
         event_category: 'Performance',
         event_label: 'LCP',
@@ -80,7 +100,12 @@ export function useWebVitalsEnhanced() {
     });
 
     onTTFB((metric: WebVitalMetric) => {
-      console.warn('TTFB:', metric);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.recordMetric('TTFB', metric.value, 'millisecond', {
+          rating: metric.rating,
+          id: metric.id,
+        });
+      });
       sendToGtag('web_vital', {
         event_category: 'Performance',
         event_label: 'TTFB',
@@ -108,7 +133,16 @@ export function useWebVitalsEnhanced() {
             entry.name.includes('tradingview')
           ) {
             tradingMetrics.chartLoadTime = entry.duration;
-            console.warn('Chart Load Time:', entry.duration);
+            import('@/lib/logger').then(({ logger }) => {
+              logger.recordMetric(
+                'chart_load_time',
+                entry.duration,
+                'millisecond',
+                {
+                  entryName: entry.name,
+                }
+              );
+            });
           }
         });
       }
@@ -122,7 +156,16 @@ export function useWebVitalsEnhanced() {
         entries.forEach((entry: PerformanceEntry) => {
           if (entry.name.includes('order') || entry.name.includes('execute')) {
             tradingMetrics.orderExecutionTime = entry.duration;
-            console.warn('Order Execution Time:', entry.duration);
+            import('@/lib/logger').then(({ logger }) => {
+              logger.recordMetric(
+                'order_execution_time',
+                entry.duration,
+                'millisecond',
+                {
+                  entryName: entry.name,
+                }
+              );
+            });
           }
         });
       }

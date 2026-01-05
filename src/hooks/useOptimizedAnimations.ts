@@ -154,9 +154,13 @@ export function useOptimizedAnimations(config: AnimationConfig = {}) {
 
           // Alert if animation is too slow
           if (entry.duration > 100) {
-            console.warn(
-              `Slow animation detected: ${entry.name} took ${entry.duration}ms`
-            );
+            import('@/lib/logger').then(({ logger }) => {
+              logger.warn(`Slow animation detected: ${entry.name}`, {
+                component: 'useOptimizedAnimations',
+                action: 'performance_observe',
+                metadata: { duration: entry.duration, name: entry.name },
+              });
+            });
           }
         }
       });

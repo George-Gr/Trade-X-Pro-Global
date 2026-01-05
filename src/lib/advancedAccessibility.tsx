@@ -43,7 +43,13 @@ export function useScreenReaderTesting() {
         newResults[test.id] = await test.testFn();
       } catch (error) {
         newResults[test.id] = false;
-        console.warn(`Screen reader test failed: ${test.name}`, error);
+        import('@/lib/logger').then(({ logger }) => {
+          logger.warn(`Screen reader test failed: ${test.name}`, {
+            component: 'AdvancedAccessibility',
+            action: 'run_screen_reader_test',
+            metadata: { testId: test.id, error },
+          });
+        });
       }
     }
 

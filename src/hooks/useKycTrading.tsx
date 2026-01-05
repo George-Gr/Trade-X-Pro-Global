@@ -228,10 +228,16 @@ export const useKycTrading = (): KycTradingState => {
           table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        (payload) => {
+        (payload: { new: ProfileKycData; old: ProfileKycData }) => {
           // Validate the payload before treating it as ProfileKycData
           if (!isValidProfileKycPayload(payload.new)) {
-            console.warn('Invalid KYC payload received:', payload.new);
+            import('@/lib/logger').then(({ logger }) => {
+              logger.warn('Invalid KYC payload received', {
+                component: 'useKycTrading',
+                action: 'realtime_update',
+                metadata: { payload: payload.new },
+              });
+            });
             return;
           }
 

@@ -82,10 +82,12 @@ export function useColorContrastVerification() {
   const getLuminance = useCallback(
     (r: number, g: number, b: number): number => {
       const [rs, gs, bs] = [r, g, b].map((c) => {
-        c = c / 255;
-        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        const val = c / 255;
+        return val <= 0.03928
+          ? val / 12.92
+          : Math.pow((val + 0.055) / 1.055, 2.4);
       });
-      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+      return 0.2126 * (rs ?? 0) + 0.7152 * (gs ?? 0) + 0.0722 * (bs ?? 0);
     },
     []
   );

@@ -48,11 +48,11 @@ type Action =
     }
   | {
       type: ActionType['DISMISS_TOAST'];
-      toastId?: ToasterToast['id'];
+      toastId?: ToasterToast['id'] | undefined;
     }
   | {
       type: ActionType['REMOVE_TOAST'];
-      toastId?: ToasterToast['id'];
+      toastId?: ToasterToast['id'] | undefined;
     };
 
 interface State {
@@ -163,7 +163,13 @@ function triggerHapticFeedback(variant: string = 'default') {
       navigator.vibrate(pattern);
     } catch (error) {
       // Silently fail if vibration is not supported or blocked
-      console.error('Haptic feedback not available:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Haptic feedback not available', {
+          component: 'use-toast',
+          action: 'trigger_haptic',
+          metadata: { variant, error },
+        });
+      });
     }
   }
 }
@@ -230,4 +236,4 @@ function useToast() {
   };
 }
 
-export { useToast, toast };
+export { toast, useToast };

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 interface BenchmarkResult {
   name: string;
@@ -32,89 +32,149 @@ export const useBenchmarkRunner = (): UseBenchmarkRunnerReturn => {
   const [currentTest, setCurrentTest] = useState<string>('');
   const [metrics, setMetrics] = useState<BenchmarkMetrics | null>(null);
 
-  const calculateMockRisk = useCallback((input: {
-    position: { quantity: number; price: number };
-    account: { balance: number };
-  }) => {
-    return {
-      marginRequired: input.position.quantity * input.position.price * 0.01,
-      riskAmount: input.position.quantity * input.position.price * 0.02,
-      marginLevel:
-        input.account.balance /
-        (input.position.quantity * input.position.price * 0.01),
-    };
-  }, []);
+  const calculateMockRisk = useCallback(
+    (input: {
+      position: { quantity: number; price: number };
+      account: { balance: number };
+    }) => {
+      return {
+        marginRequired: input.position.quantity * input.position.price * 0.01,
+        riskAmount: input.position.quantity * input.position.price * 0.02,
+        marginLevel:
+          input.account.balance /
+          (input.position.quantity * input.position.price * 0.01),
+      };
+    },
+    []
+  );
 
-  const calculateMetrics = useCallback((testResults: BenchmarkResult[]) => {
-    const passedTests = testResults.filter((r) => r.isSignificant).length;
-    const averageImprovement =
-      testResults.reduce((sum, r) => sum + r.improvement, 0) /
-      testResults.length;
+  const generateRecommendations = useCallback(
+    (results: BenchmarkResult[]): string[] => {
+      const recommendations: string[] = [];
 
-    const categoryScoreData: Record<string, number[]> = {};
-    testResults.forEach((result) => {
-      if (!categoryScoreData[result.category]) {
-        categoryScoreData[result.category] = [];
-      }
-      categoryScoreData[result.category]!.push(result.improvement);
-    });
-
-    const categoryScores: Record<string, number> = {};
-    Object.keys(categoryScoreData).forEach((category) => {
-      categoryScores[category] =
-        categoryScoreData[category]!.reduce((a, b) => a + b, 0) /
-        categoryScoreData[category]!.length;
-    });
-
-    const recommendations = generateRecommendations(testResults);
-
-    setMetrics({
-      totalTests: testResults.length,
-      passedTests,
-      averageImprovement,
-      categoryScores,
-      recommendations,
-    });
-  }, []);
-
-  const generateRecommendations = useCallback((results: BenchmarkResult[]): string[] => {
-    const recommendations: string[] = [];
-
-    results.forEach((result) => {
-      if (!result.isSignificant) {
-        switch (result.name) {
-          case 'Concurrent Price Streaming':
-            recommendations.push(
-              'Consider increasing batch size for better price streaming performance'
-            );
-            break;
-          case 'useTransition Performance':
-            recommendations.push(
-              'Optimize form update frequency to maximize useTransition benefits'
-            );
-            break;
-          case 'Suspense Loading Performance':
-            recommendations.push(
-              'Implement better code splitting for Suspense components'
-            );
-            break;
-          case 'Automatic Batching Performance':
-            recommendations.push(
-              'Fine-tune batch size and timeout for risk calculations'
-            );
-            break;
+      results.forEach((result) => {
+        if (!result.isSignificant) {
+          switch (result.name) {
+            case 'Concurrent Price Streaming':
+              recommendations.push(
+                'Consider increasing batch size for better price streaming performance'
+              );
+              break;
+            case 'useTransition Performance':
+              recommendations.push(
+                'Optimize form update frequency to maximize useTransition benefits'
+              );
+              break;
+            case 'Suspense Loading Performance':
+              recommendations.push(
+                'Implement better code splitting for Suspense components'
+              );
+              break;
+            case 'Automatic Batching Performance':
+              recommendations.push(
+                'Fine-tune batch size and timeout for risk calculations'
+              );
+              break;
+          }
         }
+      });
+
+      if (recommendations.length === 0) {
+        recommendations.push(
+          'Excellent performance! All React 19 concurrent features are working optimally.'
+        );
       }
-    });
 
-    if (recommendations.length === 0) {
-      recommendations.push(
-        'Excellent performance! All React 19 concurrent features are working optimally.'
-      );
-    }
+      return recommendations;
+    },
+    []
+  );
 
-    return recommendations;
-  }, []);
+  const calculateMetrics = useCallback(
+    (testResults: BenchmarkResult[]) => {
+      const passedTests = testResults.filter((r) => r.isSignificant).length;
+      const averageImprovement =
+        testResults.reduce((sum, r) => sum + r.improvement, 0) /
+        testResults.length;
+
+      const categoryScoreData: Record<string, number[]> = {};
+      testResults.forEach((result) => {
+        if (!categoryScoreData[result.category]) {
+          categoryScoreData[result.category] = [];
+        }
+        categoryScoreData[result.category]!.push(result.improvement);
+      });
+
+      const categoryScores: Record<string, number> = {};
+      Object.keys(categoryScoreData).forEach((category) => {
+        categoryScores[category] =
+          categoryScoreData[category]!.reduce((a, b) => a + b, 0) /
+          categoryScoreData[category]!.length;
+      });
+
+      const recommendations = generateRecommendations(testResults);
+
+      setMetrics({
+        totalTests: testResults.length,
+        passedTests,
+        averageImprovement,
+        categoryScores,
+        recommendations,
+      });
+    },
+    [generateRecommendations]
+  );
+
+  const testAutomaticBatchingPerformance = useCallback(
+    async (results: BenchmarkResult[]) => {
+      setCurrentTest('Testing Automatic Batching Performance...');
+
+      const CALCULATION_COUNT = 100;
+      const BATCH_SIZE = 20;
+
+      // Non-batched calculations
+      const nonBatchedStart = performance.now();
+      for (let i = 0; i < CALCULATION_COUNT; i++) {
+        // Simulate individual risk calculations
+        const risk = calculateMockRisk({
+          position: { quantity: 1, price: 1.1 },
+          account: { balance: 10000 },
+        });
+        // Each calculation triggers immediate update
+      }
+      const nonBatchedTime = performance.now() - nonBatchedStart;
+
+      // Batched calculations
+      const batchedStart = performance.now();
+      for (let i = 0; i < CALCULATION_COUNT; i += BATCH_SIZE) {
+        const batch = [];
+        for (let j = 0; j < BATCH_SIZE && i + j < CALCULATION_COUNT; j++) {
+          batch.push(
+            calculateMockRisk({
+              position: { quantity: 1, price: 1.1 },
+              account: { balance: 10000 },
+            })
+          );
+        }
+        // Process the batch without artificial delays
+      }
+      const batchedTime = performance.now() - batchedStart;
+
+      const improvement =
+        ((nonBatchedTime - batchedTime) / nonBatchedTime) * 100;
+
+      results.push({
+        name: 'Automatic Batching Performance',
+        description: 'Batched risk calculations for optimal performance',
+        before: nonBatchedTime,
+        after: batchedTime,
+        improvement,
+        category: 'calculations',
+        isSignificant: improvement > 30,
+      });
+    },
+    [calculateMockRisk]
+  );
 
   const runBenchmarks = useCallback(async () => {
     setIsRunning(true);
@@ -141,7 +201,7 @@ export const useBenchmarkRunner = (): UseBenchmarkRunnerReturn => {
     setResults(testResults);
     calculateMetrics(testResults);
     setIsRunning(false);
-  }, [calculateMetrics]);
+  }, [calculateMetrics, testAutomaticBatchingPerformance]);
 
   const testConcurrentPriceStreaming = async (results: BenchmarkResult[]) => {
     setCurrentTest('Testing Concurrent Price Streaming...');
@@ -268,56 +328,6 @@ export const useBenchmarkRunner = (): UseBenchmarkRunnerReturn => {
       improvement,
       category: 'fetching',
       isSignificant: improvement > 25,
-    });
-  };
-
-  const testAutomaticBatchingPerformance = async (
-    results: BenchmarkResult[]
-  ) => {
-    setCurrentTest('Testing Automatic Batching Performance...');
-
-    const calculationCount = 100;
-    const batchSize = 20;
-
-    // Non-batched calculations
-    const nonBatchedStart = performance.now();
-    for (let i = 0; i < calculationCount; i++) {
-      // Simulate individual risk calculations
-      const risk = calculateMockRisk({
-        position: { quantity: 1, price: 1.1 },
-        account: { balance: 10000 },
-      });
-      // Each calculation triggers immediate update
-    }
-    const nonBatchedTime = performance.now() - nonBatchedStart;
-
-    // Batched calculations
-    const batchedStart = performance.now();
-    for (let i = 0; i < calculationCount; i += batchSize) {
-      const batch = [];
-      for (let j = 0; j < batchSize && i + j < calculationCount; j++) {
-        batch.push(
-          calculateMockRisk({
-            position: { quantity: 1, price: 1.1 },
-            account: { balance: 10000 },
-          })
-        );
-      }
-      // Batch processing reduces re-renders
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    }
-    const batchedTime = performance.now() - batchedStart;
-
-    const improvement = ((nonBatchedTime - batchedTime) / nonBatchedTime) * 100;
-
-    results.push({
-      name: 'Automatic Batching Performance',
-      description: 'Batched risk calculations for optimal performance',
-      before: nonBatchedTime,
-      after: batchedTime,
-      improvement,
-      category: 'calculations',
-      isSignificant: improvement > 30,
     });
   };
 

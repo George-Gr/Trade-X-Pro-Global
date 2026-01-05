@@ -40,7 +40,7 @@ class AuthMigrationManager {
 
     // Require persisted feature flag state for migration to avoid accidental
     // migrations triggered by in-memory state that may be stale across sessions.
-    const stored = sessionStorage.getItem('trade_x_pro_feature_flags');
+    const stored = localStorage.getItem('trade_x_pro_feature_flags');
     if (!stored) return false;
 
     try {
@@ -198,7 +198,7 @@ class AuthMigrationManager {
    */
   getMigrationState(): MigrationState | null {
     try {
-      const stored = sessionStorage.getItem(this.STORAGE_KEY);
+      const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         return JSON.parse(stored);
       }
@@ -262,7 +262,7 @@ class AuthMigrationManager {
    */
   private saveMigrationState(state: MigrationState): void {
     try {
-      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
     } catch (error) {
       logger.warn(
         'Failed to save migration state: ' +
@@ -289,7 +289,7 @@ class AuthMigrationManager {
     }
 
     // Clear migration state
-    sessionStorage.removeItem(this.STORAGE_KEY);
+    localStorage.removeItem(this.STORAGE_KEY);
 
     logger.info('Cleared all authentication data');
   }

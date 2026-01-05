@@ -146,8 +146,15 @@ export const usePriceAlerts = (): UsePriceAlertsReturn => {
           // ignore subscribe errors
         }
       } catch (error) {
-        // Handle setup errors silently
-        console.error('Error setting up realtime subscription:', error);
+        const { logger } = await import('@/lib/logger');
+        logger.error(
+          'Error setting up price alerts realtime subscription',
+          error,
+          {
+            component: 'usePriceAlerts',
+            action: 'setup_subscription',
+          }
+        );
       }
     };
 

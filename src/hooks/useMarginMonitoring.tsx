@@ -61,6 +61,70 @@ interface MarginMonitoringState {
   lastUpdated: Date | null;
 }
 
+interface MarginStateInput {
+  equity: number | null;
+  margin_used: number | null;
+  margin_level: number | null;
+}
+
+interface CalculatedMarginState {
+  marginLevel: number;
+  marginStatus: MarginStatus;
+  accountEquity: number;
+  marginUsed: number;
+  isWarning: boolean;
+  isCritical: boolean;
+  isLiquidationRisk: boolean;
+  timeToLiquidation: number | null;
+  recommendedActions: MarginAction[];
+}
+
+/**
+ * Calculate margin state from raw margin data
+ */
+function calculateMarginState({
+  equity,
+  margin_used,
+  margin_level,
+}: MarginStateInput): CalculatedMarginState {
+  // Calculate current margin level if not provided
+  let currentMarginLevel = margin_level;
+  if (currentMarginLevel === null && equity && margin_used) {
+    currentMarginLevel = calculateMarginLevel(equity, margin_used);
+  }
+
+  // Validate we have sufficient data
+  if (currentMarginLevel === null) {
+    // Return a safe default state when data is unavailable
+    return {
+      marginLevel: 0,
+      marginStatus: MarginStatus.SAFE,
+      accountEquity: equity ?? 0,
+      marginUsed: margin_used ?? 0,
+      isWarning: false,
+      isCritical: false,
+      isLiquidationRisk: false,
+      timeToLiquidation: null,
+      recommendedActions: [],
+    };
+  }
+
+  const status = getMarginStatus(currentMarginLevel ?? 0);
+  const marginLevel = Number(currentMarginLevel ?? 0);
+
+  return {
+    marginLevel,
+    marginStatus: status,
+    accountEquity: equity ?? 0,
+    marginUsed: margin_used ?? 0,
+    isWarning: isMarginWarning(marginLevel),
+    isCritical: isMarginCritical(marginLevel),
+    isLiquidationRisk: isLiquidationRisk(marginLevel),
+    timeToLiquidation: estimateTimeToLiquidation(marginLevel),
+    recommendedActions: getMarginActionRequired(status),
+  };
+}
+
 interface UseMarginMonitoringOptions {
   refreshInterval?: number; // ms between auto-refresh (null = no auto-refresh)
   enabled?: boolean; // Enable/disable monitoring
@@ -115,42 +179,30 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
       if (error) throw error;
 
       if (data) {
-        // Calculate current margin level if not in DB
-        let currentMarginLevel = data.margin_level;
-        if (currentMarginLevel === null && data.equity && data.margin_used) {
-          currentMarginLevel = calculateMarginLevel(
-            data.equity,
-            data.margin_used
-          );
-        }
+        const calculatedState = calculateMarginState({
+          equity: data.equity,
+          margin_used: data.margin_used,
+          margin_level: data.margin_level,
+        });
 
-        const status = getMarginStatus(currentMarginLevel ?? 0);
         const previousStatus = previousStatusRef.current;
 
         // Check if status changed
-        if (status !== previousStatus) {
-          previousStatusRef.current = status;
-          onStatusChange?.(status, previousStatus);
+        if (calculatedState.marginStatus !== previousStatus) {
+          previousStatusRef.current = calculatedState.marginStatus;
+          onStatusChange?.(calculatedState.marginStatus, previousStatus);
 
           // Call specific handlers for critical states
-          if (status === MarginStatus.CRITICAL) {
+          if (calculatedState.marginStatus === MarginStatus.CRITICAL) {
             onCritical?.();
           }
-          if (status === MarginStatus.LIQUIDATION) {
+          if (calculatedState.marginStatus === MarginStatus.LIQUIDATION) {
             onLiquidationRisk?.();
           }
         }
 
         setState({
-          marginLevel: currentMarginLevel,
-          marginStatus: status,
-          accountEquity: data.equity,
-          marginUsed: data.margin_used,
-          isWarning: isMarginWarning(currentMarginLevel ?? 0),
-          isCritical: isMarginCritical(currentMarginLevel ?? 0),
-          isLiquidationRisk: isLiquidationRisk(currentMarginLevel ?? 0),
-          timeToLiquidation: estimateTimeToLiquidation(currentMarginLevel ?? 0),
-          recommendedActions: getMarginActionRequired(status),
+          ...calculatedState,
           isLoading: false,
           error: null,
           lastUpdated: new Date(),
@@ -213,51 +265,38 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
           table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        (payload) => {
+        (payload: {
+          new: Record<string, unknown>;
+          old: Record<string, unknown>;
+        }) => {
           if (payload.new) {
-            const newData = payload.new as Record<string, unknown>;
-            let currentMarginLevel = newData.margin_level;
+            const newData = payload.new;
+            const calculatedState = calculateMarginState({
+              equity: newData.equity ? Number(newData.equity) : null,
+              margin_used: newData.margin_used
+                ? Number(newData.margin_used)
+                : null,
+              margin_level: newData.margin_level
+                ? Number(newData.margin_level)
+                : null,
+            });
 
-            if (
-              currentMarginLevel === null &&
-              newData.equity &&
-              newData.margin_used
-            ) {
-              currentMarginLevel = calculateMarginLevel(
-                Number(newData.equity),
-                Number(newData.margin_used)
-              ) as number;
-            }
-
-            const status = getMarginStatus(Number(currentMarginLevel ?? 0));
             const previousStatus = previousStatusRef.current;
 
-            if (status !== previousStatus) {
-              previousStatusRef.current = status;
-              onStatusChange?.(status, previousStatus);
+            if (calculatedState.marginStatus !== previousStatus) {
+              previousStatusRef.current = calculatedState.marginStatus;
+              onStatusChange?.(calculatedState.marginStatus, previousStatus);
 
-              if (status === MarginStatus.CRITICAL) {
+              if (calculatedState.marginStatus === MarginStatus.CRITICAL) {
                 onCritical?.();
               }
-              if (status === MarginStatus.LIQUIDATION) {
+              if (calculatedState.marginStatus === MarginStatus.LIQUIDATION) {
                 onLiquidationRisk?.();
               }
             }
 
             setState({
-              marginLevel: Number(currentMarginLevel ?? 0),
-              marginStatus: status,
-              accountEquity: Number(newData.equity),
-              marginUsed: Number(newData.margin_used),
-              isWarning: isMarginWarning(Number(currentMarginLevel ?? 0)),
-              isCritical: isMarginCritical(Number(currentMarginLevel ?? 0)),
-              isLiquidationRisk: isLiquidationRisk(
-                Number(currentMarginLevel ?? 0)
-              ),
-              timeToLiquidation: estimateTimeToLiquidation(
-                Number(currentMarginLevel ?? 0)
-              ),
-              recommendedActions: getMarginActionRequired(status),
+              ...calculatedState,
               isLoading: false,
               error: null,
               lastUpdated: new Date(),

@@ -21,11 +21,11 @@ import {
   YAxis,
 } from 'recharts';
 import {
-  MetricCard,
   BundleBar,
+  MetricCard,
   ResourceMetricCard,
-  getResourceStatus,
   getMetricStatus,
+  getResourceStatus,
 } from './PerformanceMonitorComponents';
 
 // Type definitions for WebSocket status
@@ -97,7 +97,13 @@ export const PerformanceMonitorDashboard: React.FC = () => {
         setBundleData(analysisData.bundles);
         setIsUsingRealData(analysisData.isRealData);
       } catch (error) {
-        console.warn('Failed to load bundle data:', error);
+        import('@/lib/logger').then(({ logger }) => {
+          logger.warn('Failed to load bundle data', {
+            component: 'PerformanceMonitorDashboard',
+            action: 'load_bundle_data',
+            metadata: { error },
+          });
+        });
       }
     };
 
@@ -545,7 +551,5 @@ interface ResourceMetricCardProps {
   icon: string;
   description: string;
 }
-
-
 
 export default PerformanceMonitorDashboard;

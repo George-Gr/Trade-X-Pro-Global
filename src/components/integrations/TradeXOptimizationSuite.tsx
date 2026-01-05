@@ -69,35 +69,79 @@ export function TradeXOptimizationSuite({
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const initializeOptimizationSystems = React.useCallback(() => {
-    console.warn('🚀 Initializing TradeX Pro Optimization Suite...');
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info('Initializing TradeX Pro Optimization Suite', {
+        component: 'TradeXOptimizationSuite',
+        action: 'initialize',
+      });
+    });
 
     // Initialize A/B testing experiments
     if (customConfig.abTesting?.autoInitializeExperiments !== false) {
       try {
         const experimentIds = initializeCTAExperiments();
-        console.warn('✅ A/B Testing experiments initialized:', experimentIds);
+        import('@/lib/logger').then(({ logger }) => {
+          logger.info('A/B Testing experiments initialized', {
+            component: 'TradeXOptimizationSuite',
+            action: 'init_ab_testing',
+            metadata: { experimentIds },
+          });
+        });
       } catch (error) {
-        console.warn('⚠️ A/B Testing initialization failed:', error);
+        import('@/lib/logger').then(({ logger }) => {
+          logger.warn('A/B Testing initialization failed', {
+            component: 'TradeXOptimizationSuite',
+            action: 'init_ab_testing',
+            metadata: { error },
+          });
+        });
       }
     }
 
     // Initialize analytics
     try {
       // Analytics will be automatically initialized by the AnalyticsIntegration component
-      console.warn('✅ Analytics system ready');
+      import('@/lib/logger').then(({ logger }) => {
+        logger.info('Analytics system ready', {
+          component: 'TradeXOptimizationSuite',
+          action: 'init_analytics',
+        });
+      });
     } catch (error) {
-      console.warn('⚠️ Analytics initialization failed:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Analytics initialization failed', {
+          component: 'TradeXOptimizationSuite',
+          action: 'init_analytics',
+          metadata: { error },
+        });
+      });
     }
 
     // Initialize accessibility features
     try {
       // Accessibility features will be automatically initialized by the AccessibilityIntegration component
-      console.warn('✅ Accessibility features ready');
+      import('@/lib/logger').then(({ logger }) => {
+        logger.info('Accessibility features ready', {
+          component: 'TradeXOptimizationSuite',
+          action: 'init_accessibility',
+        });
+      });
     } catch (error) {
-      console.warn('⚠️ Accessibility initialization failed:', error);
+      import('@/lib/logger').then(({ logger }) => {
+        logger.warn('Accessibility initialization failed', {
+          component: 'TradeXOptimizationSuite',
+          action: 'init_accessibility',
+          metadata: { error },
+        });
+      });
     }
 
-    console.warn('🎯 TradeX Pro Optimization Suite fully initialized');
+    import('@/lib/logger').then(({ logger }) => {
+      logger.info('TradeX Pro Optimization Suite fully initialized', {
+        component: 'TradeXOptimizationSuite',
+        action: 'initialize_complete',
+      });
+    });
   }, [customConfig.abTesting?.autoInitializeExperiments]);
 
   useEffect(() => {

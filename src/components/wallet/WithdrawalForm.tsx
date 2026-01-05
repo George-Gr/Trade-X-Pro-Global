@@ -32,6 +32,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { validationRules } from '@/lib/validationRules';
 import { useQuery } from '@tanstack/react-query';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -40,7 +42,7 @@ import {
   Loader2,
   Shield,
 } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 interface WithdrawalFormProps {
@@ -48,12 +50,15 @@ interface WithdrawalFormProps {
   balance: number;
 }
 
-interface WithdrawalFormData {
-  currency: string;
-  address: string;
-  amount: string;
-  twoFACode: string;
-}
+// Zod schema for withdrawal form validation
+const withdrawalSchema = z.object({
+  currency: z.string().min(1, 'Currency is required'),
+  address: z.string().min(1, 'Withdrawal address is required'),
+  amount: z.string().min(1, 'Amount is required'),
+  twoFACode: z.string().length(6, '2FA code must be exactly 6 digits'),
+});
+
+type WithdrawalFormData = z.infer<typeof withdrawalSchema>;
 
 const SUPPORTED_CRYPTOS = [
   {
@@ -106,15 +111,23 @@ const WITHDRAWAL_LIMITS = {
   monthly: 50000,
 };
 
-export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
+/**
+ * WithdrawalForm component for handling cryptocurrency withdrawals
+ * 
+ * @param props.onSuccess - Optional callback function called after successful withdrawal
+ * @param props.balance - Available balance for withdrawal
+ * @returns JSX element containing the withdrawal form
+ */
+export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({ onSuccess, balance }) => {
   const { user } = useAuth();
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const form = useForm({
+  const form = useForm<WithdrawalFormData>({
     mode: 'onChange',
+    resolver: zodResolver(withdrawalSchema),
     defaultValues: {
       currency: 'BTC',
       address: '',
@@ -184,7 +197,11 @@ export function WithdrawalForm({ onSuccess, balance }: WithdrawalFormProps) {
   );
   const networkFee = parseFloat(selectedCrypto?.networkFee || '0');
   const todayTotal =
-    todayWithdrawals?.reduce((sum, t) => sum + (t.usd_amount || 0), 0) || 0;
+    todayWithdrawals?.reduce(
+      (sum: number, t: { usd_amount: number | null }) =>
+        sum + (t.usd_amount || 0),
+      0
+    ) || 0;
   const remainingDailyLimit = WITHDRAWAL_LIMITS.daily - todayTotal;
 
   const validateAddress = (addr: string, curr: string): boolean => {

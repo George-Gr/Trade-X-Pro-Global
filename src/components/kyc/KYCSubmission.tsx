@@ -136,7 +136,14 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
         .eq('id', user.id)
         .neq('kyc_status', 'pending');
 
-      if (profileError) console.warn('Profile update warning:', profileError);
+      if (profileError) {
+        const { logger } = await import('@/lib/logger');
+        logger.warn('Profile update warning during KYC submission', {
+          component: 'KYCSubmission',
+          action: 'update_profile',
+          metadata: { userId: user.id, profileError },
+        });
+      }
 
       setSubmitted(true);
       toast({
@@ -146,7 +153,12 @@ const KYCSubmission = ({ onSuccess }: KYCSubmissionProps) => {
 
       onSuccess?.();
     } catch (err: unknown) {
-      console.error('KYC submission error:', err);
+      const { logger } = await import('@/lib/logger');
+      logger.error('KYC submission error', err, {
+        component: 'KYCSubmission',
+        action: 'submit',
+        metadata: { userId: user.id, documentType: data.documentType },
+      });
       const message = err instanceof Error ? err.message : String(err);
       toast({
         title: 'Submission failed',

@@ -88,8 +88,14 @@ function fixDataViewSymbolToStringTag(): void {
         enumerable: false,
       });
     }
-  } catch (error) {
-    console.warn('TradingView compatibility fix failed:', error);
+  } catch (error: unknown) {
+    import('@/lib/logger').then(({ logger }) => {
+      logger.warn('TradingView compatibility fix failed', {
+        component: 'TradingViewCompatibility',
+        action: 'fix_dataview_symbol',
+        metadata: { error },
+      });
+    });
     // Fallback: at least try to prevent the error from propagating
   } finally {
     // Restore original descriptor if needed

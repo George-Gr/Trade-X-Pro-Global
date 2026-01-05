@@ -47,7 +47,17 @@ export function PerformanceIntegration({
 
       // Track initial page load performance
       const report = performanceMonitoring.getPerformanceReport();
-      console.warn('Initial Performance Report:', report);
+      import('@/lib/logger')
+        .then(({ logger }) => {
+          logger.info('Initial Performance Report', {
+            component: 'PerformanceIntegration',
+            action: 'page_load',
+            metadata: { report },
+          });
+        })
+        .catch((error) => {
+          console.error('Failed to load logger:', error);
+        });
     }
 
     // Initialize Web Vitals tracking
@@ -71,11 +81,18 @@ export function PerformanceIntegration({
             _observer: PerformanceObserver
           ) => {
             const entries = list.getEntries();
-            entries.forEach((entry: PerformanceEntry) => {
-              if (entry.entryType === 'largest-contentful-paint') {
-                // Correlate LCP with user behavior
-                console.warn('LCP correlated with user engagement');
-              }
+            entries.forEach((entry) => {
+              import('@/lib/logger')
+                .then(({ logger }) => {
+                  logger.info('LCP correlated with user engagement', {
+                    component: 'PerformanceIntegration',
+                    action: 'lcp_correlation',
+                    metadata: { entry },
+                  });
+                })
+                .catch((error) => {
+                  console.error('Failed to load logger:', error);
+                });
             });
           }
         );

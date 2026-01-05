@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/lib/logger';
+import { checkRateLimit } from '@/lib/rateLimiter';
 import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
@@ -124,6 +125,27 @@ export const useAuth = () => {
     data: { user: User | null; session: Session | null } | null;
     error: Error | null;
   }> => {
+    // Check rate limit before attempting login
+    const rateCheck = checkRateLimit('login');
+    if (!rateCheck.allowed) {
+      const rateLimitError = createAuthError(
+        `Too many login attempts. Please wait ${Math.ceil(
+          rateCheck.resetIn / 1000
+        )} seconds before trying again.`,
+        'RateLimitError'
+      );
+      logger.warn('Login rate limit exceeded', {
+        metadata: {
+          remaining: rateCheck.remaining,
+          resetIn: rateCheck.resetIn,
+        },
+      });
+      return {
+        data: null,
+        error: rateLimitError,
+      };
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -194,6 +216,27 @@ export const useAuth = () => {
     data: { user: User | null; session: Session | null } | null;
     error: Error | null;
   }> => {
+    // Check rate limit before attempting registration
+    const rateCheck = checkRateLimit('register');
+    if (!rateCheck.allowed) {
+      const rateLimitError = createAuthError(
+        `Too many registration attempts. Please wait ${Math.ceil(
+          rateCheck.resetIn / 1000
+        )} seconds before trying again.`,
+        'RateLimitError'
+      );
+      logger.warn('Registration rate limit exceeded', {
+        metadata: {
+          remaining: rateCheck.remaining,
+          resetIn: rateCheck.resetIn,
+        },
+      });
+      return {
+        data: null,
+        error: rateLimitError,
+      };
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email,

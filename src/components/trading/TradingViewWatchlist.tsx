@@ -1,7 +1,7 @@
-import { useEffect, useRef, memo, useState, useCallback } from 'react';
-import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
 import { useDebouncedChartUpdate } from '@/hooks/useDebouncedChartUpdate';
 import { ProgressiveDataLoader } from '@/lib/chartPerformance';
+import { initTradingViewCompatibility } from '@/lib/tradingViewCompatibility';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface TradingViewConfig {
   width: string;
@@ -158,9 +158,11 @@ const TradingViewWatchlist = () => {
     // Initial check
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-        if (entry.isIntersecting) {
-          debouncedUpdate();
+        if (entry) {
+          setIsVisible(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            debouncedUpdate();
+          }
         }
       },
       { threshold: 0.1 }

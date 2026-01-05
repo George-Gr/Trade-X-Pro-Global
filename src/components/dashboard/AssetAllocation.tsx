@@ -2,63 +2,41 @@ import { Card } from '@/components/ui/card';
 import { usePortfolioData } from '@/hooks/usePortfolioData';
 import type { FC } from 'react';
 import React, { Suspense } from 'react';
-import type { PieProps } from 'recharts';
-// Dynamic import wrapper for recharts components with error handling
+
+// Dynamic import wrapper for recharts components
 const DynamicPieChart = React.lazy(() =>
-  import('recharts')
-    .then((m) => ({
-      default: m.PieChart,
-    }))
-    .catch((error) => {
-      console.warn('Failed to load recharts PieChart:', error);
-      return {
-        default: () => <div className="h-64 bg-muted rounded animate-pulse" />,
-      };
-    })
+  import('recharts').then((m) => ({
+    default: m.PieChart as React.ComponentType<
+      React.ComponentProps<typeof m.PieChart>
+    >,
+  }))
 );
 
 const DynamicPie = React.lazy(() =>
-  import('recharts')
-    .then((m) => ({
-      default: m.Pie as React.ComponentType<PieProps>,
-    }))
-    .catch((error) => {
-      console.warn('Failed to load recharts Pie:', error);
-      return {
-        default: () => null,
-      };
-    })
+  import('recharts').then((m) => ({
+    default: m.Pie as React.ComponentType<React.ComponentProps<typeof m.Pie>>,
+  }))
 );
 
 const DynamicCell = React.lazy(() =>
-  import('recharts')
-    .then((m) => ({
-      default: m.Cell,
-    }))
-    .catch((error) => {
-      console.warn('Failed to load recharts Cell:', error);
-      return {
-        default: () => null,
-      };
-    })
+  import('recharts').then((m) => ({
+    default: m.Cell as React.ComponentType<React.ComponentProps<typeof m.Cell>>,
+  }))
 );
 
 const DynamicTooltip = React.lazy(() =>
-  import('recharts')
-    .then((m) => ({
-      default: m.Tooltip,
-    }))
-    .catch((error) => {
-      console.warn('Failed to load recharts Tooltip:', error);
-      return {
-        default: () => null,
-      };
-    })
+  import('recharts').then((m) => ({
+    default: m.Tooltip as React.ComponentType<
+      React.ComponentProps<typeof m.Tooltip>
+    >,
+  }))
 );
 
 const DynamicResponsiveContainer = React.lazy(() =>
   import('recharts').then((m) => ({
-    default: m.ResponsiveContainer,
+    default: m.ResponsiveContainer as React.ComponentType<
+      React.ComponentProps<typeof m.ResponsiveContainer>
+    >,
   }))
 );
 
@@ -127,11 +105,12 @@ export const AssetAllocation: FC = () => {
                 ))}
               </DynamicPie>
               <DynamicTooltip
-                formatter={(value: number | string | (number | string)[]) => {
+                formatter={(value: unknown) => {
+                  if (value === undefined || value === null) return '';
                   if (Array.isArray(value)) return value.join(', ');
                   return typeof value === 'number'
-                    ? `$${value.toLocaleString()}`
-                    : value;
+                    ? `${value.toLocaleString()}`
+                    : String(value);
                 }}
               />
             </DynamicPieChart>

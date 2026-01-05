@@ -11,7 +11,7 @@ export interface RateLimitStatus {
   endpoints: Record<string, { remaining: number; resetIn: number }>;
 }
 
-interface RateLimitConfig {
+export interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
   retryAfterMs?: number;
@@ -33,15 +33,16 @@ interface QueuedRequest<T> {
 }
 
 // Default rate limits per endpoint type
-const DEFAULT_LIMITS: Record<string, RateLimitConfig> = {
+export const DEFAULT_RATES: Record<string, RateLimitConfig> = {
   order: { maxRequests: 10, windowMs: 60000 }, // 10 orders per minute
   login: { maxRequests: 5, windowMs: 60000 }, // 5 login attempts per minute
   register: { maxRequests: 3, windowMs: 60000 }, // 3 registrations per minute
+  kyc: { maxRequests: 3, windowMs: 60000 }, // 3 KYC submissions per minute
   price: { maxRequests: 60, windowMs: 60000 }, // 60 price requests per minute
   default: { maxRequests: 100, windowMs: 60000 }, // 100 requests per minute default
 };
 
-class RateLimiter {
+export class RateLimiter {
   private requestHistory: RequestRecord[] = [];
   private requestQueue: QueuedRequest<unknown>[] = [];
   private isProcessing = false;
@@ -228,7 +229,7 @@ class RateLimiter {
     return {
       queueLength: this.requestQueue.length,
       isProcessing: this.isProcessing,
-      endpoints: Object.keys(DEFAULT_LIMITS).reduce((acc, endpoint) => {
+      endpoints: Object.keys(DEFAULT_RATES).reduce((acc, endpoint) => {
         acc[endpoint] = {
           remaining: this.getRemainingRequests(endpoint),
           resetIn: this.getResetTime(endpoint),
@@ -254,8 +255,8 @@ class RateLimiter {
   private getConfig(endpoint: string): RateLimitConfig {
     // Extract endpoint type from full endpoint path
     const endpointType = endpoint.split('/')[0] || endpoint;
-    const config = DEFAULT_LIMITS[endpointType];
-    return config ?? DEFAULT_LIMITS['default']!;
+    const config = DEFAULT_RATES[endpointType];
+    return config ?? DEFAULT_RATES['default']!;
   }
 
   private sleep(ms: number): Promise<void> {
