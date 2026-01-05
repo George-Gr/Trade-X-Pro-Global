@@ -151,7 +151,7 @@ class TradingViewErrorBoundary extends React.Component<
             )}
 
             {/* Error details in development */}
-            {import.meta.env.MODE === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <details className="mt-4 text-xs">
                 <summary className="cursor-pointer text-[hsl(var(--status-error-foreground))] dark:text-[hsl(var(--status-error-dark-foreground))] font-semibold">
                   Technical Details

@@ -8,6 +8,10 @@ import {
   TimeSeriesPoint,
   performanceMonitoring,
 } from '@/lib/performance/performanceMonitoring';
+import {
+  getMetricStatus,
+  getResourceStatus,
+} from '@/lib/performance/performanceUtils';
 import { getWebSocketManager } from '@/lib/websocketManager';
 import React, { useEffect, useState } from 'react';
 import {
@@ -24,8 +28,6 @@ import {
   BundleBar,
   MetricCard,
   ResourceMetricCard,
-  getMetricStatus,
-  getResourceStatus,
 } from './PerformanceMonitorComponents';
 
 // Type definitions for WebSocket status
@@ -97,13 +99,17 @@ export const PerformanceMonitorDashboard: React.FC = () => {
         setBundleData(analysisData.bundles);
         setIsUsingRealData(analysisData.isRealData);
       } catch (error) {
-        import('@/lib/logger').then(({ logger }) => {
-          logger.warn('Failed to load bundle data', {
-            component: 'PerformanceMonitorDashboard',
-            action: 'load_bundle_data',
-            metadata: { error },
+        import('@/lib/logger')
+          .then(({ logger }) => {
+            logger.warn('Failed to load bundle data', {
+              component: 'PerformanceMonitorDashboard',
+              action: 'load_bundle_data',
+              metadata: { error },
+            });
+          })
+          .catch((importError) => {
+            console.error('Failed to import logger:', importError);
           });
-        });
       }
     };
 

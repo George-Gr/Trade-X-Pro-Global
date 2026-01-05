@@ -6,8 +6,8 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { logger } from './logger';
-import { performanceMonitoring } from './performance/performanceMonitoring';
+import { logger } from '@/lib/logger';
+import { performanceMonitoring } from '@/lib/performance/performanceMonitoring';
 type RealtimeChannel = ReturnType<typeof supabase.channel>;
 
 // Connection states

@@ -104,7 +104,9 @@ export class SidebarErrorBoundary extends React.Component<
           });
         })
         .catch((importError) => {
-          // Fallback if logger fails to load - silently handle to prevent unhandled rejections
+          // Fallback if logger fails to load - use console to prevent unhandled rejections
+          console.error('Failed to load logger:', importError);
+          console.error('Original sidebar error:', error, errorData);
         });
     }
   };

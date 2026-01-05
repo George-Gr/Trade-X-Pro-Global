@@ -300,7 +300,8 @@ export class AlertManager {
   ): Promise<void> {
     this.lastAlertTime.set(rule.id, Date.now());
 
-    import('@/lib/logger').then(({ logger }) => {
+    try {
+      const { logger } = await import('@/lib/logger');
       logger.logRiskEvent(
         `ALERT: ${rule.name}`,
         rule.severity === AlertSeverity.CRITICAL
@@ -316,7 +317,42 @@ export class AlertManager {
           context,
         }
       );
-    });
+    } catch (error) {
+      // Handle both import and logging errors
+      const errorMessage = `Failed to log risk event for alert ${rule.name} (${
+        rule.id
+      }): ${error instanceof Error ? error.message : 'Unknown error'}`;
+
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(errorMessage);
+      }
+
+      // Record the failure with a descriptive message
+      import('@/lib/logger')
+        .then(({ logger }) => {
+          logger.error(errorMessage, {
+            component: 'AlertManager',
+            action: 'trigger_alert',
+            metadata: {
+              ruleId: rule.id,
+              ruleName: rule.name,
+              originalError: error,
+            },
+          });
+        })
+        .catch((importError) => {
+          // If even the fallback logging fails, use console as last resort
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(
+              `Failed to log alert failure: ${
+                importError instanceof Error
+                  ? importError.message
+                  : 'Unknown error'
+              }`
+            );
+          }
+        });
+    }
 
     // Send notifications to configured channels
     await Promise.allSettled(

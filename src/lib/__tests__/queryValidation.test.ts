@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import {
   QuerySchemas,
   safeValidateQueryParam,
@@ -408,9 +409,7 @@ describe('Query Validation', () => {
       }
 
       // Check that the logger.error was called
-      expect(
-        vi.mocked(vi.importMock('@/lib/logger').logger).error
-      ).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 

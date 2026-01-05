@@ -272,13 +272,15 @@ export function useMarginMonitoring(options: UseMarginMonitoringOptions = {}) {
           if (payload.new) {
             const newData = payload.new;
             const calculatedState = calculateMarginState({
-              equity: newData.equity ? Number(newData.equity) : null,
-              margin_used: newData.margin_used
-                ? Number(newData.margin_used)
-                : null,
-              margin_level: newData.margin_level
-                ? Number(newData.margin_level)
-                : null,
+              equity: newData.equity != null ? Number(newData.equity) : null,
+              margin_used:
+                newData.margin_used != null
+                  ? Number(newData.margin_used)
+                  : null,
+              margin_level:
+                newData.margin_level != null
+                  ? Number(newData.margin_level)
+                  : null,
             });
 
             const previousStatus = previousStatusRef.current;

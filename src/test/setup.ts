@@ -48,7 +48,10 @@ globalObj.IntersectionObserver = vi.fn().mockImplementation(() => ({
 
 // Mock requestAnimationFrame
 globalObj.requestAnimationFrame = (callback: FrameRequestCallback): number => {
-  return globalThis.setTimeout(() => callback(Date.now()), 0);
+  return globalThis.setTimeout(
+    () => callback(Date.now()),
+    0
+  ) as unknown as number;
 };
 
 globalObj.cancelAnimationFrame = (id: number): void => {
@@ -56,19 +59,19 @@ globalObj.cancelAnimationFrame = (id: number): void => {
     globalThis as unknown as typeof globalThis & {
       clearTimeout: typeof clearTimeout;
     }
-  ).clearTimeout(id);
+  ).clearTimeout(id as unknown as NodeJS.Timeout);
 };
 
 // Mock requestIdleCallback
-globalObj.requestIdleCallback = (callback: any): number => {
-  return (globalThis as any).setTimeout(
+globalObj.requestIdleCallback = (callback: IdleRequestCallback): number => {
+  return globalThis.setTimeout(
     () =>
       callback({
         didTimeout: false,
         timeRemaining: () => 50,
       }),
     0
-  );
+  ) as unknown as number;
 };
 
 // Suppress console errors in tests unless debugging

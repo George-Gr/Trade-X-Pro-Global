@@ -94,8 +94,10 @@ export const useBenchmarkRunner = (): UseBenchmarkRunnerReturn => {
     (testResults: BenchmarkResult[]) => {
       const passedTests = testResults.filter((r) => r.isSignificant).length;
       const averageImprovement =
-        testResults.reduce((sum, r) => sum + r.improvement, 0) /
-        testResults.length;
+        testResults.length > 0
+          ? testResults.reduce((sum, r) => sum + r.improvement, 0) /
+            testResults.length
+          : 0;
 
       const categoryScoreData: Record<string, number[]> = {};
       testResults.forEach((result) => {
@@ -108,8 +110,10 @@ export const useBenchmarkRunner = (): UseBenchmarkRunnerReturn => {
       const categoryScores: Record<string, number> = {};
       Object.keys(categoryScoreData).forEach((category) => {
         categoryScores[category] =
-          categoryScoreData[category]!.reduce((a, b) => a + b, 0) /
-          categoryScoreData[category]!.length;
+          categoryScoreData[category]!.length > 0
+            ? categoryScoreData[category]!.reduce((a, b) => a + b, 0) /
+              categoryScoreData[category]!.length
+            : 0;
       });
 
       const recommendations = generateRecommendations(testResults);
@@ -135,31 +139,25 @@ export const useBenchmarkRunner = (): UseBenchmarkRunnerReturn => {
       // Non-batched calculations
       const nonBatchedStart = performance.now();
       for (let i = 0; i < CALCULATION_COUNT; i++) {
-        // Simulate individual risk calculations
-        const risk = calculateMockRisk({
+        // Simulate individual risk calculations (result intentionally unused for timing)
+        calculateMockRisk({
           position: { quantity: 1, price: 1.1 },
           account: { balance: 10000 },
         });
-        // Each calculation triggers immediate update
       }
       const nonBatchedTime = performance.now() - nonBatchedStart;
 
       // Batched calculations
       const batchedStart = performance.now();
       for (let i = 0; i < CALCULATION_COUNT; i += BATCH_SIZE) {
-        const batch = [];
         for (let j = 0; j < BATCH_SIZE && i + j < CALCULATION_COUNT; j++) {
-          batch.push(
-            calculateMockRisk({
-              position: { quantity: 1, price: 1.1 },
-              account: { balance: 10000 },
-            })
-          );
+          calculateMockRisk({
+            position: { quantity: 1, price: 1.1 },
+            account: { balance: 10000 },
+          });
         }
-        // Process the batch without artificial delays
       }
       const batchedTime = performance.now() - batchedStart;
-
       const improvement =
         ((nonBatchedTime - batchedTime) / nonBatchedTime) * 100;
 

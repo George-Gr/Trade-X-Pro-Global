@@ -35,7 +35,7 @@ const marginCallEventSchema = z.object({
   ]),
   status: z.enum(['pending', 'notified', 'escalated', 'resolved']),
   triggered_at: z.string(),
-  profiles: profileSchema.optional(),
+  profiles: profileSchema.nullable(),
 });
 
 const marginCallEventsSchema = z.array(marginCallEventSchema);

@@ -5,6 +5,7 @@
  * and error handling for file operations.
  */
 
+import { randomFillSync } from 'crypto';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -25,9 +26,9 @@ export default class SecureDeletion {
 
   constructor(config: SecureDeletionConfig) {
     this.config = {
-      method: config.method || 'standard',
-      passes: config.passes || 1,
-      backupMetadata: config.backupMetadata || false,
+      method: config.method ?? 'standard',
+      passes: config.passes ?? 1,
+      backupMetadata: config.backupMetadata ?? false,
     };
   }
 
@@ -53,7 +54,6 @@ export default class SecureDeletion {
             (error as Error).message
           }`;
           errors.push(errorMessage);
-          console.error('Failed to close file handle', error);
         }
       }
 
@@ -120,21 +120,9 @@ export default class SecureDeletion {
         await fd.write(buffer, 0, buffer.length, 0);
         await fd.sync();
       }
-    } catch (error) {
-      // Close file handle before rethrowing
-      try {
-        await fd.close();
-      } catch (closeError) {
-        console.error('Failed to close file handle', closeError);
-      }
-      throw error;
     } finally {
       // Ensure file handle is closed
-      try {
-        await fd.close();
-      } catch (closeError) {
-        console.error('Failed to close file handle', closeError);
-      }
+      await fd.close().catch(() => {});
     }
   }
 
@@ -159,12 +147,10 @@ export default class SecureDeletion {
       await fd.sync();
 
       // Pass 3: Write random data
-      for (let pass = 0; pass < this.config.passes; pass++) {
-        buffer = Buffer.alloc(fileSize);
-        crypto.getRandomValues(buffer);
-        await fd.write(buffer, 0, buffer.length, 0);
-        await fd.sync();
-      }
+      buffer = Buffer.alloc(fileSize);
+      randomFillSync(buffer);
+      await fd.write(buffer, 0, buffer.length, 0);
+      await fd.sync();
     } finally {
       try {
         await fd.close();
@@ -183,7 +169,7 @@ export default class SecureDeletion {
     try {
       for (let pass = 0; pass < this.config.passes; pass++) {
         const buffer = Buffer.alloc(fileSize);
-        crypto.getRandomValues(buffer);
+        randomFillSync(buffer);
         await fd.write(buffer, 0, buffer.length, 0);
         await fd.sync();
       }

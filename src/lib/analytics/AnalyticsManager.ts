@@ -859,24 +859,43 @@ export class AnalyticsManager {
     };
   }
 
+  /**
+   * Starts analytics event recording
+   *
+   * Sets this.isRecording = true and attempts to log the start action using the logger.
+   * If the logger import fails, the method fails silently without writing to console.
+   *
+   * @returns void
+   */
   public startRecording() {
     this.isRecording = true;
-    import('@/lib/logger').then(({ logger }) => {
-      logger.info('Analytics recording started', {
-        component: 'AnalyticsManager',
-        action: 'start_recording',
+    import('@/lib/logger')
+      .then(({ logger }) => {
+        logger.info('Analytics recording started', {
+          component: 'AnalyticsManager',
+          action: 'start_recording',
+        });
+      })
+      .catch(() => {
+        // Silently fail if logger is unavailable
       });
-    });
   }
 
+  /**
+   * Stops analytics event recording
+   */
   public stopRecording() {
     this.isRecording = false;
-    import('@/lib/logger').then(({ logger }) => {
-      logger.info('Analytics recording stopped', {
-        component: 'AnalyticsManager',
-        action: 'stop_recording',
+    import('@/lib/logger')
+      .then(({ logger }) => {
+        logger.info('Analytics recording stopped', {
+          component: 'AnalyticsManager',
+          action: 'stop_recording',
+        });
+      })
+      .catch(() => {
+        // Silently fail if logger is unavailable
       });
-    });
   }
 
   public isRecordingActive(): boolean {
@@ -916,13 +935,17 @@ export class AnalyticsManager {
 
   private sendCorrelationToAnalytics(correlation: unknown) {
     // In real implementation, send to data warehouse
-    import('@/lib/logger').then(({ logger }) => {
-      logger.info('Performance correlation updated', {
-        component: 'AnalyticsManager',
-        action: 'correlate_performance',
-        metadata: { correlation },
+    import('@/lib/logger')
+      .then(({ logger }) => {
+        logger.info('Performance correlation updated', {
+          component: 'AnalyticsManager',
+          action: 'correlate_performance',
+          metadata: { correlation },
+        });
+      })
+      .catch(() => {
+        // Silently fail if logger is unavailable
       });
-    });
   }
 
   // Cleanup

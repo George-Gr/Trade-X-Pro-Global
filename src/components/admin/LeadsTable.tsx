@@ -15,8 +15,9 @@ import {
   getFinancialLabel,
   getStatusColor,
 } from '@/lib/leadUtils';
+import { cn } from '@/lib/utils';
 import { DollarSign, Eye, Loader2, Search } from 'lucide-react';
-import React from 'react';
+import type { FC } from 'react';
 
 interface Lead {
   id: string;
@@ -49,7 +50,22 @@ interface LeadsTableProps {
   onOpenFundDialog: (userId: string) => void;
 }
 
-const LeadsTable: React.FC<LeadsTableProps> = ({
+/**
+ * LeadsTable component displays a filterable table of leads with search and status filtering.
+ * Supports viewing lead details and funding user accounts through action buttons.
+ *
+ * @param props - Component props
+ * @param props.leads - Complete array of all leads
+ * @param props.filteredLeads - Filtered array of leads based on search/status
+ * @param props.isLoading - Loading state indicator
+ * @param props.searchTerm - Current search term
+ * @param props.statusFilter - Current status filter value
+ * @param props.onSearchTermChange - Callback for search term changes
+ * @param props.onStatusFilterChange - Callback for status filter changes
+ * @param props.onOpenDetails - Callback to open lead details
+ * @param props.onOpenFundDialog - Callback to open fund dialog for a user
+ */
+const LeadsTable: FC<LeadsTableProps> = ({
   leads,
   filteredLeads,
   isLoading,
@@ -140,9 +156,10 @@ const LeadsTable: React.FC<LeadsTableProps> = ({
                       <TableCell>
                         <Badge variant="outline" className="capitalize">
                           <span
-                            className={`inline-block w-2 h-2 rounded-full mr-2 ${getStatusColor(
-                              lead.status
-                            )}`}
+                            className={cn(
+                              'inline-block w-2 h-2 rounded-full mr-2',
+                              getStatusColor(lead.status)
+                            )}
                           />
                           {lead.status}
                         </Badge>

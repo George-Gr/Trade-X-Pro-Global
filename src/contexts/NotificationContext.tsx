@@ -121,7 +121,10 @@ export function NotificationProvider({
           table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload: { new: SupabaseNotification; old: SupabaseNotification }) => {
+        (payload: {
+          new: SupabaseNotification;
+          old?: SupabaseNotification;
+        }) => {
           const notification = payload.new;
 
           // Show toast notification (uses default duration based on variant)
@@ -141,7 +144,10 @@ export function NotificationProvider({
           table: 'notifications',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload: { new: SupabaseNotification; old: SupabaseNotification }) => {
+        (payload: {
+          new: SupabaseNotification;
+          old?: SupabaseNotification;
+        }) => {
           const notification = payload.new;
           if (notification.read) {
             setUnreadCount((prev) => Math.max(0, prev - 1));
@@ -270,7 +276,10 @@ export function NotificationProvider({
           table: 'risk_events',
           filter: `user_id=eq.${user.id}`,
         },
-        async (payload: { new: SupabaseRiskEvent; old: SupabaseRiskEvent }) => {
+        async (payload: {
+          new: SupabaseRiskEvent;
+          old?: SupabaseRiskEvent;
+        }) => {
           const event = payload.new;
 
           await supabase.functions.invoke('send-notification', {

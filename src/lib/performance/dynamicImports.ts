@@ -275,12 +275,16 @@ export class DynamicImportManager {
         timestamp: Date.now(),
       });
     } catch (error) {
-      const { logger: preloadLogger } = await import('@/lib/logger');
-      preloadLogger.warn(`Failed to preload module ${path}`, {
-        component: 'DynamicImportManager',
-        action: 'preload_module',
-        metadata: { path, error },
-      });
+      try {
+        const { logger: preloadLogger } = await import('@/lib/logger');
+        preloadLogger.warn(`Failed to preload module ${path}`, {
+          component: 'DynamicImportManager',
+          action: 'preload_module',
+          metadata: { path, error },
+        });
+      } catch {
+        // Logger unavailable - fail silently
+      }
     }
   }
 
@@ -459,7 +463,7 @@ export class DynamicImportManager {
   cleanupPreloadedModules(maxAge: number = 300000): void {
     // 5 minutes default
     const now = Date.now();
-    for (const [path, module] of this.preloadedModules.entries()) {
+    for (const [path, module] of Array.from(this.preloadedModules.entries())) {
       if (now - module.timestamp > maxAge) {
         this.preloadedModules.delete(path);
       }
@@ -519,13 +523,17 @@ export function withDynamicImport<
       importFunc()
         .then(({ default: LoadedComponent }) => {
           if (!isCancelled) {
-            setComponent(() => LoadedComponent);
+            setComponent(LoadedComponent);
             setLoading(false);
           }
         })
-        .catch(async (error) => {
-          const { logger: loaderLogger } = await import('@/lib/logger');
-          loaderLogger.error('Failed to load dynamic component', error);
+        .catch(async (error: unknown) => {
+          try {
+            const { logger: loaderLogger } = await import('@/lib/logger');
+            loaderLogger.error('Failed to load dynamic component', error);
+          } catch {
+            // Logger unavailable - fail silently
+          }
           if (!isCancelled) {
             setLoading(false);
           }

@@ -1,8 +1,5 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { LoadingButton } from '@/components/ui/LoadingButton';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,16 +8,31 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import React from 'react';
 
 interface FundAccountDialogProps {
   open: boolean;
   fundAmount: string;
   isFunding: boolean;
-  onOpenChange: () => void;
+  onOpenChange: (open: boolean) => void;
   onFundAmountChange: (amount: string) => void;
   onFundAccount: () => void;
 }
 
+/**
+ * Dialog component for funding a user's trading account.
+ *
+ * @param props - Component props
+ * @param props.open - Whether the dialog is open
+ * @param props.fundAmount - The amount to fund (as string)
+ * @param props.isFunding - Whether a funding operation is in progress
+ * @param props.onOpenChange - Callback function called when dialog open state changes, receives boolean parameter
+ * @param props.onFundAmountChange - Callback function called when fund amount input changes
+ * @param props.onFundAccount - Callback function called when user confirms funding
+ * @returns The FundAccountDialog component
+ */
 const FundAccountDialog: React.FC<FundAccountDialogProps> = ({
   open,
   fundAmount,
@@ -29,7 +41,8 @@ const FundAccountDialog: React.FC<FundAccountDialogProps> = ({
   onFundAmountChange,
   onFundAccount,
 }) => {
-  const isValidAmount = fundAmount && !isNaN(Number(fundAmount)) && Number(fundAmount) > 0;
+  const isValidAmount =
+    fundAmount && !isNaN(Number(fundAmount)) && Number(fundAmount) > 0;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -58,7 +71,7 @@ const FundAccountDialog: React.FC<FundAccountDialogProps> = ({
         <DialogFooter>
           <Button
             variant="outline"
-            onClick={onOpenChange}
+            onClick={() => onOpenChange(false)}
             disabled={isFunding}
           >
             Cancel

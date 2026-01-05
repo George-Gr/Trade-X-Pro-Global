@@ -18,40 +18,76 @@ import { initializeCTAExperiments } from '@/lib/ab-testing/ctaExperiments';
 import { cn } from '@/lib/utils';
 import React, { useEffect } from 'react';
 
+/**
+ * Async helper function to safely log messages without unhandled promise rejections
+ * @param level - Log level: 'info', 'warn', 'error', 'debug'
+ * @param message - The log message
+ * @param metadata - Optional metadata to include with the log
+ */
+async function safeLog(
+  level: LogLevel,
+  message: string,
+  metadata?: Record<string, unknown>
+): Promise<void> {
+  try {
+    const { logger } = await import('@/lib/logger');
+    logger[level](message, metadata ? { metadata } : undefined);
+  } catch (error) {
+    // Fallback to console.error if logger import fails
+    console.error(
+      `[safeLog] Failed to log ${level}: ${message}`,
+      error,
+      metadata
+    );
+  }
+}
+
+// Enhanced type definitions for better maintainability
+type PageType = 'landing' | 'signup' | 'trade' | 'portfolio' | 'about';
+type TradingType = 'forex' | 'stocks' | 'cfds' | 'crypto';
+type LogLevel = 'info' | 'warn' | 'error' | 'debug';
+
+interface PerformanceThresholds {
+  lcp?: number;
+  fid?: number;
+  cls?: number;
+  ttfb?: number;
+}
+
+interface CustomConfig {
+  performance?: {
+    enableMonitoring?: boolean;
+    enableWebVitals?: boolean;
+    enablePreloading?: boolean;
+    customThresholds?: PerformanceThresholds;
+  };
+  abTesting?: {
+    enableTesting?: boolean;
+    autoInitializeExperiments?: boolean;
+    experimentId?: string;
+  };
+  analytics?: {
+    enableAnalytics?: boolean;
+  };
+  seo?: {
+    enableSEO?: boolean;
+    dynamicMetaTags?: boolean;
+    structuredData?: boolean;
+  };
+  accessibility?: {
+    enableAccessibility?: boolean;
+    enableEnhancedFeatures?: boolean;
+    enableSettingsPanel?: boolean;
+  };
+}
+
 interface TradeXOptimizationSuiteProps {
   children: React.ReactNode;
   userId?: string;
-  pageType?: 'landing' | 'signup' | 'trade' | 'portfolio' | 'about';
-  tradingType?: 'forex' | 'stocks' | 'cfds' | 'crypto';
+  pageType?: PageType;
+  tradingType?: TradingType;
   enableAllOptimizations?: boolean;
-  customConfig?: {
-    performance?: {
-      enableMonitoring?: boolean;
-      enableWebVitals?: boolean;
-      enablePreloading?: boolean;
-      customThresholds?: Record<string, number>;
-    };
-    abTesting?: {
-      enableTesting?: boolean;
-      autoInitializeExperiments?: boolean;
-      experimentId?: string;
-    };
-    analytics?: {
-      enableAnalytics?: boolean;
-      enableHeatMapping?: boolean;
-      enableFunnelTracking?: boolean;
-    };
-    seo?: {
-      enableSEO?: boolean;
-      dynamicMetaTags?: boolean;
-      structuredData?: boolean;
-    };
-    accessibility?: {
-      enableAccessibility?: boolean;
-      enableEnhancedFeatures?: boolean;
-      enableSettingsPanel?: boolean;
-    };
-  };
+  customConfig?: CustomConfig;
   loading?: boolean;
   error?: Error | null;
 }
@@ -68,81 +104,119 @@ export function TradeXOptimizationSuite({
 }: TradeXOptimizationSuiteProps) {
   const [isInitialized, setIsInitialized] = React.useState(false);
 
-  const initializeOptimizationSystems = React.useCallback(() => {
-    import('@/lib/logger').then(({ logger }) => {
-      logger.info('Initializing TradeX Pro Optimization Suite', {
-        component: 'TradeXOptimizationSuite',
-        action: 'initialize',
-      });
-    });
+  const initializeOptimizationSystems = React.useCallback(async () => {
+    const componentId = 'TradeXOptimizationSuite';
 
-    // Initialize A/B testing experiments
-    if (customConfig.abTesting?.autoInitializeExperiments !== false) {
+    try {
+      await safeLog('info', 'Initializing TradeX Pro Optimization Suite', {
+        component: componentId,
+        action: 'initialize',
+        pageType,
+        tradingType,
+        enableAllOptimizations,
+      });
+
+      // Initialize A/B testing experiments with enhanced error handling
+      if (customConfig.abTesting?.autoInitializeExperiments !== false) {
+        try {
+          const experimentIds = await initializeCTAExperiments();
+          await safeLog(
+            'info',
+            'A/B Testing experiments initialized successfully',
+            {
+              component: componentId,
+              action: 'init_ab_testing',
+              experimentIds,
+              experimentCount: Array.isArray(experimentIds)
+                ? experimentIds.length
+                : 0,
+            }
+          );
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : 'Unknown error';
+          await safeLog(
+            'warn',
+            'A/B Testing initialization failed - continuing without A/B testing',
+            {
+              component: componentId,
+              action: 'init_ab_testing',
+              error: errorMessage,
+              stack: error instanceof Error ? error.stack : undefined,
+            }
+          );
+        }
+      }
+
+      // Initialize analytics with graceful degradation
       try {
-        const experimentIds = initializeCTAExperiments();
-        import('@/lib/logger').then(({ logger }) => {
-          logger.info('A/B Testing experiments initialized', {
-            component: 'TradeXOptimizationSuite',
-            action: 'init_ab_testing',
-            metadata: { experimentIds },
-          });
+        await safeLog('info', 'Analytics system ready', {
+          component: componentId,
+          action: 'init_analytics',
         });
       } catch (error) {
-        import('@/lib/logger').then(({ logger }) => {
-          logger.warn('A/B Testing initialization failed', {
-            component: 'TradeXOptimizationSuite',
-            action: 'init_ab_testing',
-            metadata: { error },
-          });
-        });
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
+        await safeLog(
+          'warn',
+          'Analytics initialization failed - continuing without analytics',
+          {
+            component: componentId,
+            action: 'init_analytics',
+            error: errorMessage,
+          }
+        );
       }
-    }
 
-    // Initialize analytics
-    try {
-      // Analytics will be automatically initialized by the AnalyticsIntegration component
-      import('@/lib/logger').then(({ logger }) => {
-        logger.info('Analytics system ready', {
-          component: 'TradeXOptimizationSuite',
-          action: 'init_analytics',
-        });
-      });
-    } catch (error) {
-      import('@/lib/logger').then(({ logger }) => {
-        logger.warn('Analytics initialization failed', {
-          component: 'TradeXOptimizationSuite',
-          action: 'init_analytics',
-          metadata: { error },
-        });
-      });
-    }
-
-    // Initialize accessibility features
-    try {
-      // Accessibility features will be automatically initialized by the AccessibilityIntegration component
-      import('@/lib/logger').then(({ logger }) => {
-        logger.info('Accessibility features ready', {
-          component: 'TradeXOptimizationSuite',
+      // Initialize accessibility features with enhanced error handling
+      try {
+        await safeLog('info', 'Accessibility features ready', {
+          component: componentId,
           action: 'init_accessibility',
         });
-      });
-    } catch (error) {
-      import('@/lib/logger').then(({ logger }) => {
-        logger.warn('Accessibility initialization failed', {
-          component: 'TradeXOptimizationSuite',
-          action: 'init_accessibility',
-          metadata: { error },
-        });
-      });
-    }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
+        await safeLog(
+          'warn',
+          'Accessibility initialization failed - continuing without accessibility features',
+          {
+            component: componentId,
+            action: 'init_accessibility',
+            error: errorMessage,
+          }
+        );
+      }
 
-    import('@/lib/logger').then(({ logger }) => {
-      logger.info('TradeX Pro Optimization Suite fully initialized', {
-        component: 'TradeXOptimizationSuite',
-        action: 'initialize_complete',
-      });
-    });
-  }, [customConfig.abTesting?.autoInitializeExperiments]);
+      await safeLog(
+        'info',
+        'TradeX Pro Optimization Suite initialization completed',
+        {
+          component: componentId,
+          action: 'initialize_complete',
+          timestamp: Date.now(),
+        }
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      await safeLog(
+        'error',
+        'Critical error during optimization suite initialization',
+        {
+          component: componentId,
+          action: 'initialize_critical_error',
+          error: errorMessage,
+          stack: error instanceof Error ? error.stack : undefined,
+        }
+      );
+    }
+  }, [
+    customConfig.abTesting?.autoInitializeExperiments,
+    pageType,
+    tradingType,
+    enableAllOptimizations,
+  ]);
 
   useEffect(() => {
     if (enableAllOptimizations) {
@@ -201,8 +275,6 @@ export function TradeXOptimizationSuite({
     },
     analytics: {
       enableAnalytics: true,
-      enableHeatMapping: true,
-      enableFunnelTracking: true,
       ...customConfig.analytics,
     },
     seo: {
@@ -239,9 +311,6 @@ export function TradeXOptimizationSuite({
           {config.analytics.enableAnalytics && (
             <AnalyticsIntegration
               enableAnalytics={config.analytics.enableAnalytics}
-              enableHeatMapping={config.analytics.enableHeatMapping}
-              enableFunnelTracking={config.analytics.enableFunnelTracking}
-              userId={userId}
             >
               {/* A/B Testing Integration */}
               {config.abTesting.enableTesting && (

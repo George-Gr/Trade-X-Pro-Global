@@ -107,6 +107,18 @@ Deno.serve(async (req: Request) => {
     const { data: uploadInfo, error: uploadError } = await supabase.storage
       .from('kyc-documents')
       .createSignedUploadUrl(filePath);
+
+    if (uploadError || !uploadInfo) {
+      console.error('Upload URL creation error:', uploadError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to create upload URL' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     // 4. Create document record (pending validation)
     const { error: dbError } = await supabase.from('kyc_documents').insert({
       user_id: user.id,
@@ -119,17 +131,6 @@ Deno.serve(async (req: Request) => {
       console.error('Database error:', dbError);
       return new Response(
         JSON.stringify({ error: 'Failed to create document record' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    if (uploadError || !uploadInfo) {
-      console.error('Upload URL creation error:', uploadError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to create upload URL' }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },

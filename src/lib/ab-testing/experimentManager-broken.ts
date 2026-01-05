@@ -1,9 +1,10 @@
-import { trackCustomMetric } from '../../hooks/useWebVitalsEnhanced';
+import { trackCustomMetric } from '@/hooks/useWebVitalsEnhanced';
 
 export interface ExperimentVariant {
   id: string;
   name: string;
   weight: number; // Traffic allocation percentage
+  isControl?: boolean; // Explicit flag to mark control variant (fallback: first variant)
   description?: string;
   config?: Record<string, unknown>;
 }
@@ -43,6 +44,7 @@ export class ExperimentManager {
   private userVariants: Map<string, string> = new Map();
   private conversionData: Map<string, Map<string, number>> = new Map(); // experimentId -> variantId -> conversions
   private participantData: Map<string, Map<string, number>> = new Map(); // experimentId -> variantId -> participants
+  private computedResults: Map<string, ExperimentResult[]> = new Map(); // experimentId -> computed results with improvement and significance
 
   static getInstance(): ExperimentManager {
     if (!ExperimentManager.instance) {
@@ -51,12 +53,12 @@ export class ExperimentManager {
     return ExperimentManager.instance;
   }
 
-  constructor() {
+  private constructor() {
     this.loadFromStorage();
     this.setupEventListeners();
   }
 
-  private loadFromStorage(): void {
+  private loadFromStorage() {
     try {
       const stored = localStorage.getItem('ab_experiments');
       if (stored) {
@@ -80,7 +82,7 @@ export class ExperimentManager {
     }
   }
 
-  private saveToStorage(): void {
+  private saveToStorage() {
     try {
       const data = Object.fromEntries(this.experiments);
       localStorage.setItem('ab_experiments', JSON.stringify(data));
@@ -99,7 +101,7 @@ export class ExperimentManager {
     }
   }
 
-  private setupEventListeners(): void {
+  private setupEventListeners() {
     // Listen for custom events to track conversions
     document.addEventListener('ab-test-conversion', (event: Event) => {
       const customEvent = event as CustomEvent<{
@@ -121,7 +123,9 @@ export class ExperimentManager {
   }
 
   createExperiment(experiment: Omit<Experiment, 'startDate'>): string {
-    const id = `exp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = `exp_${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 11)}`;
     const fullExperiment: Experiment = {
       ...experiment,
       id,
@@ -153,6 +157,11 @@ export class ExperimentManager {
 
     // Assign variant based on weighted random selection
     const variant = this.selectWeightedVariant(experiment.variants, userId);
+    if (!variant) {
+      // No variants available, return null
+      return null;
+    }
+
     this.userVariants.set(cacheKey, variant.id);
 
     // Track participant
@@ -164,24 +173,40 @@ export class ExperimentManager {
   private selectWeightedVariant(
     variants: ExperimentVariant[],
     userId: string
-  ): ExperimentVariant {
+  ): ExperimentVariant | null {
+    // Guard against empty variants array
+    if (!variants || variants.length === 0) {
+      return null;
+    }
+
     // Use user ID for consistent assignment
     const hash = this.hashString(userId);
     const normalizedHash = hash / 0xffffffff; // Normalize to 0-1
 
+    // Compute total weight from variants
+    const totalWeight = variants.reduce(
+      (sum, variant) => sum + variant.weight,
+      0
+    );
+
+    // If total weight is zero or negative, treat as equal distribution
+    if (totalWeight <= 0) {
+      // Equal distribution - return variant based on hash
+      const index = Math.floor(normalizedHash * variants.length);
+      return variants[index] || null;
+    }
+
+    // Normalize weights and use cumulative comparison
     let cumulativeWeight = 0;
     for (const variant of variants) {
-      cumulativeWeight += variant.weight / 100;
+      cumulativeWeight += variant.weight / totalWeight;
       if (normalizedHash <= cumulativeWeight) {
         return variant;
       }
     }
 
-    // Fallback to first variant
-    if (variants.length === 0) {
-      throw new Error('Cannot select variant from empty variants array');
-    }
-    return variants[0]!;
+    // This should not happen with proper normalization, but fallback to first variant
+    return variants[0] || null;
   }
 
   private hashString(str: string): number {
@@ -194,7 +219,7 @@ export class ExperimentManager {
     return Math.abs(hash);
   }
 
-  trackConversion(experimentId: string, variantId: string): void {
+  trackConversion(experimentId: string, variantId: string) {
     const experiment = this.experiments.get(experimentId);
     if (!experiment || experiment.status !== 'active') {
       return;
@@ -211,11 +236,14 @@ export class ExperimentManager {
     // Track conversion event
     trackCustomMetric(`${experimentId}_conversion`, 1, 'A/B Testing');
 
+    // Clear cached computed results since data has changed
+    this.computedResults.delete(experimentId);
+
     // Check for statistical significance
     this.checkSignificance(experimentId);
   }
 
-  private trackParticipant(experimentId: string, variantId: string): void {
+  private trackParticipant(experimentId: string, variantId: string) {
     if (!this.participantData.has(experimentId)) {
       this.participantData.set(experimentId, new Map());
     }
@@ -224,21 +252,50 @@ export class ExperimentManager {
     participants.set(variantId, (participants.get(variantId) || 0) + 1);
   }
 
-  private trackEngagement(): void {
-    // Track time spent on page for engagement metrics
-    const startTime = performance.now();
+  private unloadHandler: (() => void) | null = null;
+  private engagementStartTime: number = 0;
+  private cumulativeEngagement: number = 0;
 
-    window.addEventListener(
-      'beforeunload',
-      () => {
-        const timeSpent = performance.now() - startTime;
-        trackCustomMetric('engagement_time', timeSpent, 'User Behavior');
-      },
-      { once: true }
-    );
+  private trackEngagement() {
+    if (document.hidden) {
+      // Page is becoming hidden - stop timing and add to cumulative
+      if (this.engagementStartTime > 0) {
+        const timeSpent = performance.now() - this.engagementStartTime;
+        this.cumulativeEngagement += timeSpent;
+        this.engagementStartTime = 0;
+      }
+    } else {
+      // Page is becoming visible - start timing if not already started
+      if (this.engagementStartTime === 0) {
+        this.engagementStartTime = performance.now();
+      }
+    }
+
+    // Ensure unload handler is registered (persistent, not once)
+    if (!this.unloadHandler) {
+      this.unloadHandler = () => {
+        // Calculate final engagement time including any in-progress interval
+        let finalEngagementTime = this.cumulativeEngagement;
+        if (this.engagementStartTime > 0) {
+          finalEngagementTime += performance.now() - this.engagementStartTime;
+        }
+        trackCustomMetric(
+          'engagement_time',
+          finalEngagementTime,
+          'User Behavior'
+        );
+      };
+      window.addEventListener('beforeunload', this.unloadHandler);
+    }
   }
 
   getResults(experimentId: string): ExperimentResult[] {
+    // Return cached computed results if available
+    const cachedResults = this.computedResults.get(experimentId);
+    if (cachedResults) {
+      return cachedResults;
+    }
+
     const experiment = this.experiments.get(experimentId);
     if (!experiment) {
       return [];
@@ -247,7 +304,7 @@ export class ExperimentManager {
     const conversions = this.conversionData.get(experimentId) || new Map();
     const participants = this.participantData.get(experimentId) || new Map();
 
-    return experiment.variants.map((variant) => {
+    const baseResults = experiment.variants.map((variant) => {
       const variantConversions = conversions.get(variant.id) || 0;
       const variantParticipants = participants.get(variant.id) || 0;
       const conversionRate =
@@ -266,9 +323,18 @@ export class ExperimentManager {
           variantParticipants
         ),
         improvement: 0, // Will be calculated relative to control
-        significance: 'not_significant',
+        significance: 'not_significant' as const,
       };
     });
+
+    // Calculate and persist improvement and significance
+    const computedResults = this.calculateSignificance(
+      experimentId,
+      baseResults
+    );
+    this.computedResults.set(experimentId, computedResults);
+
+    return computedResults;
   }
 
   private calculateConfidence(
@@ -285,29 +351,82 @@ export class ExperimentManager {
     return Math.min(95, (1 - standardError) * 100);
   }
 
-  private checkSignificance(experimentId: string): void {
-    const results = this.getResults(experimentId);
-    const control = results.find(
-      (r) =>
-        r.variantName.toLowerCase().includes('control') ||
-        r.variantName.toLowerCase().includes('a')
-    );
+  /**
+   * Calculate statistical significance and improvement metrics for experiment results
+   *
+   * @param experimentId - The ID of the experiment
+   * @param results - Array of experiment results to calculate metrics for
+   * @returns Updated results with improvement and significance calculated
+   *
+   * @remarks
+   * Control variant detection:
+   * 1. First tries to find a variant explicitly marked with isControl: true
+   * 2. Falls back to the first variant if no explicit control is found
+   * 3. Logs a warning if no control can be determined
+   *
+   * Improvement is calculated as percentage difference from control:
+   * ((variantRate - controlRate) / controlRate) * 100
+   */
+  private calculateSignificance(
+    experimentId: string,
+    results: ExperimentResult[]
+  ): ExperimentResult[] {
+    // Find the control variant (explicitly marked or first variant as fallback)
+    const control =
+      results.find((r) => {
+        const experiment = this.experiments.get(experimentId);
+        const variant = experiment?.variants.find((v) => v.id === r.variantId);
+        return variant?.isControl === true;
+      }) || results[0]; // Fallback to first variant if no explicit control
 
-    if (!control) return;
+    if (!control) {
+      // Log warning about missing control
+      import('@/lib/logger')
+        .then(({ logger }) => {
+          logger.warn('No control variant found for experiment', {
+            component: 'ExperimentManager',
+            action: 'calculate_significance',
+            metadata: { experimentId },
+          });
+        })
+        .catch(() => {});
+      return results;
+    }
 
-    // Calculate improvement for each variant
-    results.forEach((result) => {
-      if (result.variantId !== control.variantId) {
-        result.improvement =
-          ((result.conversionRate - control.conversionRate) /
-            control.conversionRate) *
-          100;
-        result.significance = this.determineSignificance(
-          result.confidence,
-          result.improvement
-        );
+    // Calculate improvement for each variant and update in place
+    return results.map((result) => {
+      if (result.variantId === control.variantId) {
+        return {
+          ...result,
+          improvement: 0, // Control has no improvement
+          significance: 'not_significant' as const,
+        };
       }
+
+      const improvement =
+        control.conversionRate > 0
+          ? ((result.conversionRate - control.conversionRate) /
+              control.conversionRate) *
+            100
+          : 0;
+
+      const significance = this.determineSignificance(
+        result.confidence,
+        improvement
+      );
+
+      return {
+        ...result,
+        improvement,
+        significance,
+      };
     });
+  }
+
+  private checkSignificance(experimentId: string): void {
+    // Force recalculation of significance by clearing cache and getting fresh results
+    this.computedResults.delete(experimentId);
+    const results = this.getResults(experimentId);
 
     // If significant improvement found, could trigger auto-pause or notification
     const significantVariant = results.find(
@@ -331,7 +450,7 @@ export class ExperimentManager {
       : 'not_significant';
   }
 
-  pauseExperiment(experimentId: string): void {
+  pauseExperiment(experimentId: string) {
     const experiment = this.experiments.get(experimentId);
     if (experiment) {
       experiment.status = 'paused';
@@ -339,7 +458,7 @@ export class ExperimentManager {
     }
   }
 
-  resumeExperiment(experimentId: string): void {
+  resumeExperiment(experimentId: string) {
     const experiment = this.experiments.get(experimentId);
     if (experiment) {
       experiment.status = 'active';
@@ -347,7 +466,7 @@ export class ExperimentManager {
     }
   }
 
-  completeExperiment(experimentId: string): void {
+  completeExperiment(experimentId: string) {
     const experiment = this.experiments.get(experimentId);
     if (experiment) {
       experiment.status = 'completed';
@@ -359,7 +478,7 @@ export class ExperimentManager {
     }
   }
 
-  private generateReport(experimentId: string): void {
+  private generateReport(experimentId: string) {
     const results = this.getResults(experimentId);
     const experiment = this.experiments.get(experimentId);
 
@@ -381,8 +500,11 @@ export class ExperimentManager {
           0
         ),
         bestPerformingVariant: results.reduce(
-          (best: ExperimentResult, current: ExperimentResult) =>
-            current.conversionRate > best.conversionRate ? current : best
+          (best: ExperimentResult | null, current: ExperimentResult) =>
+            !best || current.conversionRate > best.conversionRate
+              ? current
+              : best,
+          null
         ),
       },
     };

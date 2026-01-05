@@ -211,7 +211,10 @@ class ErrorBoundary extends React.Component<
         });
       })
       .catch((loggerError) => {
-        console.error('Failed to log error:', loggerError);
+        // Only log to console in development to avoid production noise
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to log error:', loggerError);
+        }
       });
 
     // Call the onError callback if provided

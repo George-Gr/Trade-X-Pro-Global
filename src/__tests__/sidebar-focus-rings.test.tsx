@@ -254,7 +254,7 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
 
     // Mock active path
     const nav = await import('@/lib/navigationConfig');
-    vi.spyOn(nav, 'isPathActive' as any).mockReturnValue(true as any);
+    vi.spyOn(nav, 'isPathActive').mockReturnValue(true);
 
     render(
       <Providers>
@@ -367,7 +367,8 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
     const settingsButton = settingsButtons[settingsButtons.length - 1];
 
     // Focus on last item
-    await user.click(settingsButton);
+    expect(settingsButton).toBeDefined();
+    await user.click(settingsButton!);
     expect(settingsButton).toHaveFocus();
 
     // Navigate to first item with Home
@@ -375,9 +376,7 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
     expect(dashboardButton).toHaveFocus();
 
     // Navigate to last item with End (logout is the bottom-most action)
-    const logoutButton = screen.getByLabelText(
-      /Sign Out|Sign out/i
-    ) as HTMLElement;
+    const logoutButton = screen.getByLabelText(/Sign Out|Sign out/i);
     await user.keyboard('{End}');
     expect(logoutButton).toHaveFocus();
   });
@@ -390,9 +389,7 @@ describe('Sidebar Navigation Focus Ring Enhancement Tests', () => {
       </Providers>
     );
 
-    const logoutButton = screen.getByLabelText(
-      /Sign Out|Sign out/i
-    ) as HTMLElement;
+    const logoutButton = screen.getByLabelText(/Sign Out|Sign out/i);
 
     await user.click(logoutButton);
     expect(logoutButton).toHaveFocus();

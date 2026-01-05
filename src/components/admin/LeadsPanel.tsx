@@ -122,11 +122,27 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       .select('*')
       .eq('id', lead.user_id)
       .single()
-      .then(({ data: profileData }: { data: Profile | null }) => {
-        if (profileData) {
-          setSelectedProfile(profileData);
+      .then(
+        ({
+          data: profileData,
+          error,
+        }: {
+          data: Profile | null;
+          error: { message: string; code: string } | null;
+        }) => {
+          if (error) {
+            toast({
+              title: 'Error',
+              description: 'Failed to load profile data',
+              variant: 'destructive',
+            });
+            return;
+          }
+          if (profileData) {
+            setSelectedProfile(profileData as Profile);
+          }
         }
-      });
+      );
 
     // Fetch KYC documents
     supabase
@@ -134,11 +150,27 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
       .select('*')
       .eq('user_id', lead.user_id)
       .order('created_at', { ascending: false })
-      .then(({ data: kycData }: { data: KYCDocument[] | null }) => {
-        if (kycData) {
-          setSelectedKYCDocs(kycData);
+      .then(
+        ({
+          data: kycData,
+          error,
+        }: {
+          data: KYCDocument[] | null;
+          error: { message: string; code: string } | null;
+        }) => {
+          if (error) {
+            toast({
+              title: 'Error',
+              description: 'Failed to load KYC documents',
+              variant: 'destructive',
+            });
+            return;
+          }
+          if (kycData) {
+            setSelectedKYCDocs(kycData as KYCDocument[]);
+          }
         }
-      });
+      );
   };
 
   // Handle fund account
@@ -281,9 +313,11 @@ const LeadsPanel: React.FC<LeadsPanelProps> = ({ refreshTrigger }) => {
   };
 
   // Handler for closing fund dialog
-  const handleCloseFundDialog = () => {
-    setFundDialog({ open: false, userId: null });
-    setFundAmount('');
+  const handleCloseFundDialog = (open: boolean) => {
+    if (!open) {
+      setFundDialog({ open: false, userId: null });
+      setFundAmount('');
+    }
   };
 
   return (

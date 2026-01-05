@@ -15,16 +15,41 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Type definitions for mocks
+interface EdgeFunctionResponse {
+  success: boolean;
+  data?: {
+    order_id: string;
+    position_id?: string;
+    status: string;
+    execution_details: {
+      execution_price: string;
+      slippage?: string;
+      commission: string;
+      total_cost: string;
+      timestamp: string;
+      transaction_id?: string;
+    };
+  };
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    status: number;
+  };
+}
+
 type MockExecuteWithIdempotency = (
   key: string,
   endpoint: string,
-  fn: () => Promise<any>
-) => Promise<any>;
+  fn: () => Promise<EdgeFunctionResponse>
+) => Promise<EdgeFunctionResponse>;
+
 type MockRateLimiterExecute = (
   key: string,
-  fn: () => Promise<any>,
+  fn: () => Promise<EdgeFunctionResponse>,
   priority?: number
-) => Promise<any>;
+) => Promise<EdgeFunctionResponse>;
+
 type MockCheckRateLimit = (type: string) => {
   allowed: boolean;
   remaining: number;
@@ -73,7 +98,12 @@ vi.mock('@/hooks/use-toast', () => ({
 }));
 
 // Mock QueryClient instance to be shared between module mock and test assertions
-let mockQueryClient: any;
+interface MockQueryClient {
+  invalidateQueries: ReturnType<typeof vi.fn>;
+  refetchQueries?: ReturnType<typeof vi.fn>;
+  setQueryData?: ReturnType<typeof vi.fn>;
+}
+let mockQueryClient: MockQueryClient;
 
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => mockQueryClient,
@@ -205,7 +235,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
           access_token: 'mock-token',
         },
       },
-    } as any);
+    });
   });
 
   describe('Edge Function Integration with Database', () => {
@@ -216,7 +246,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -266,7 +296,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.limitOrderPending
@@ -309,7 +339,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -356,7 +386,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error('Database constraint violation: duplicate key')
@@ -387,7 +417,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
 
       let callCount = 0;
@@ -434,7 +464,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -463,7 +493,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -498,7 +528,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -540,7 +570,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -571,7 +601,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -606,7 +636,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error('INSUFFICIENT_MARGIN: Insufficient margin for this order')
@@ -660,7 +690,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
 
       let attempt = 0;
@@ -698,7 +728,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -731,7 +761,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -769,7 +799,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -814,7 +844,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error(
@@ -846,7 +876,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
 
       let attempt = 0;
@@ -882,7 +912,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockRejectedValue(
         new Error('SECURITY_VALIDATION_FAILED: Invalid CSRF token')
@@ -914,7 +944,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -945,7 +975,7 @@ describe('Order Execution Edge Function - Integration Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess

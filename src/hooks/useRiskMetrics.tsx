@@ -17,7 +17,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from './useAuth';
 
 const getSupabaseClient = async () => {
-  const { supabase } = await import('@/lib/supabaseBrowserClient');
+  const { supabase } = await import('@/integrations/supabase/client');
   return supabase;
 };
 

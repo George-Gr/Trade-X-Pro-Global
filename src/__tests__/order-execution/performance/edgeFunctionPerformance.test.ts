@@ -3,16 +3,41 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Type definitions for mocks
+interface EdgeFunctionResponse {
+  success: boolean;
+  data?: {
+    order_id: string;
+    position_id?: string;
+    status: string;
+    execution_details: {
+      execution_price: string;
+      slippage?: string;
+      commission: string;
+      total_cost: string;
+      timestamp: string;
+      transaction_id?: string;
+    };
+  };
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    status: number;
+  };
+}
+
 type MockExecuteWithIdempotency = (
   key: string,
   endpoint: string,
-  fn: () => Promise<any>
-) => Promise<any>;
+  fn: () => Promise<EdgeFunctionResponse>
+) => Promise<EdgeFunctionResponse>;
+
 type MockRateLimiterExecute = (
   key: string,
-  fn: () => Promise<any>,
+  fn: () => Promise<EdgeFunctionResponse>,
   priority?: number
-) => Promise<any>;
+) => Promise<EdgeFunctionResponse>;
+
 type MockCheckRateLimit = (type: string) => {
   allowed: boolean;
   remaining: number;
@@ -61,7 +86,12 @@ vi.mock('@/hooks/use-toast', () => ({
 }));
 
 // Mock QueryClient instance to be shared between module mock and test assertions
-let mockQueryClient: any;
+interface MockQueryClient {
+  invalidateQueries: ReturnType<typeof vi.fn>;
+  refetchQueries?: ReturnType<typeof vi.fn>;
+  setQueryData?: ReturnType<typeof vi.fn>;
+}
+let mockQueryClient: MockQueryClient;
 
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => mockQueryClient,
@@ -117,6 +147,12 @@ const { checkRateLimit, rateLimiter } = await import('@/lib/rateLimiter');
 describe('Edge Function Performance Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Initialize the shared mockQueryClient instance
+    mockQueryClient = {
+      invalidateQueries: vi.fn(),
+      refetchQueries: vi.fn(),
+      setQueryData: vi.fn(),
+    };
   });
 
   describe('High-Iteration Performance', () => {
@@ -132,7 +168,7 @@ describe('Edge Function Performance Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -182,7 +218,7 @@ describe('Edge Function Performance Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -231,7 +267,7 @@ describe('Edge Function Performance Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess
@@ -281,7 +317,7 @@ describe('Edge Function Performance Tests', () => {
         resetIn: 0,
       });
       vi.mocked(rateLimiter.execute).mockImplementation(
-        async (_: unknown, fn: () => Promise<any>) => fn()
+        async (_: unknown, fn: () => Promise<EdgeFunctionResponse>) => fn()
       );
       vi.mocked(executeWithIdempotency).mockResolvedValue(
         mockEdgeFunctionResponses.marketOrderSuccess

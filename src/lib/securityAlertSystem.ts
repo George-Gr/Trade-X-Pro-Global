@@ -127,10 +127,14 @@ export class SecurityIncidentAlertSystem {
   private readonly MAX_KEYS = 10000;
   private cleanupTimer: NodeJS.Timeout | null = null;
   private cooldowns: Map<string, number> = new Map();
-  private authFailureTimestamps: Map<string, number[]> = new Map();
-  private xssAttemptTimestamps: Map<string, number[]> = new Map();
+  protected authFailureTimestamps: Map<string, number[]> = new Map();
+  protected xssAttemptTimestamps: Map<string, number[]> = new Map();
 
-  constructor(config?: Partial<SecurityAlertConfig>) {
+  constructor(
+    config?: Partial<SecurityAlertConfig>,
+    initialAuthFailureTimestamps?: Map<string, number[]>,
+    initialXssAttemptTimestamps?: Map<string, number[]>
+  ) {
     this.config = {
       enabled: true,
       rules: [],
@@ -146,6 +150,14 @@ export class SecurityIncidentAlertSystem {
       },
       ...config,
     };
+
+    if (initialAuthFailureTimestamps) {
+      this.authFailureTimestamps = new Map(initialAuthFailureTimestamps);
+    }
+
+    if (initialXssAttemptTimestamps) {
+      this.xssAttemptTimestamps = new Map(initialXssAttemptTimestamps);
+    }
 
     this.initializeDefaultRules();
     this.startCleanupTimer();
@@ -833,18 +845,26 @@ export class SecurityIncidentAlertSystem {
   }
 
   /**
-   * Get recent authentication failures for user
+   * Returns the count of authentication failure timestamps for the given user within the last hour.
+   *
+   * @param userId - The user ID for which to count authentication failures
+   * @returns Promise resolving to the number of authentication failures in the past hour
+   * @internal This method is primarily intended for testing purposes, not part of the stable public API
    */
-  private async getRecentAuthFailures(userId: string): Promise<number> {
+  async getRecentAuthFailures(userId: string): Promise<number> {
     const timestamps = this.authFailureTimestamps.get(userId) || [];
     const oneHourAgo = Date.now() - 60 * 60 * 1000;
     return timestamps.filter((t) => t > oneHourAgo).length;
   }
 
   /**
-   * Get recent XSS attempts from IP
+   * Get the count of recent XSS attempts from an IP address within the last hour.
+   *
+   * @param ip - The IP address to check for XSS attempts
+   * @returns Promise resolving to the count of XSS attempts in the last hour
+   * @internal This method is primarily intended for testing purposes
    */
-  private async getRecentXSSAttempts(ip: string): Promise<number> {
+  async getRecentXSSAttempts(ip: string): Promise<number> {
     const timestamps = this.xssAttemptTimestamps.get(ip) || [];
     const oneHourAgo = Date.now() - 60 * 60 * 1000;
     return timestamps.filter((t) => t > oneHourAgo).length;

@@ -89,6 +89,7 @@ export function useTradingFormTransitions(
 
   const [formState, setFormState] = useState<TradingFormState>(initialState);
   const [isPending, startFormTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [riskState, setRiskState] = useState<RiskCalculationState>({
     marginRequired: 0,
     marginLevel: 0,
@@ -239,43 +240,44 @@ export function useTradingFormTransitions(
       });
     }
 
-    // Start transition for non-blocking order submission
-    startFormTransition(() => {
-      const executeSubmission = async () => {
-        try {
-          // Simulate order submission process
-          await new Promise((resolve) => setTimeout(resolve, 100));
+    // TODO: Implement transition for order submission if synchronous state updates are needed
 
-          const submissionTime = performance.now() - submissionStartTime;
-          performanceMonitoring.recordCustomTiming(
-            'order-submission',
-            submissionStartTime,
-            submissionTime
-          );
+    // Handle async submission outside of transition
+    const executeSubmission = async () => {
+      try {
+        // Simulate order submission process
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-          toast({
-            title: 'Order Submitted',
-            description: `${formState.side.toUpperCase()} ${
-              formState.quantity
-            } ${formState.symbol}`,
-          });
-        } catch (error) {
-          const err =
-            error instanceof Error
-              ? error
-              : new Error('Order submission failed');
-          onError?.(err);
+        const submissionTime = performance.now() - submissionStartTime;
+        performanceMonitoring.recordCustomTiming(
+          'order-submission',
+          submissionStartTime,
+          submissionTime
+        );
 
-          toast({
-            title: 'Order Failed',
-            description: err.message,
-            variant: 'destructive',
-          });
-        }
-      };
+        toast({
+          title: 'Order Submitted',
+          description: `${formState.side.toUpperCase()} ${formState.quantity} ${
+            formState.symbol
+          }`,
+        });
+      } catch (error) {
+        const err =
+          error instanceof Error ? error : new Error('Order submission failed');
+        onError?.(err);
 
-      executeSubmission();
-    });
+        toast({
+          title: 'Order Failed',
+          description: err.message,
+          variant: 'destructive',
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    setIsSubmitting(true);
+    executeSubmission();
   };
 
   /**
@@ -298,6 +300,9 @@ export function useTradingFormTransitions(
     // Risk calculation state with transitions
     riskState: deferredRiskState,
     isCalculatingRisk,
+
+    // Submission state
+    isSubmitting,
 
     // Actions
     updateFormState: handleFormChange,

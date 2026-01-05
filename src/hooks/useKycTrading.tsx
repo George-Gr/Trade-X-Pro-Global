@@ -228,7 +228,7 @@ export const useKycTrading = (): KycTradingState => {
           table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        (payload: { new: ProfileKycData; old: ProfileKycData }) => {
+        (payload: { new?: ProfileKycData; old?: ProfileKycData }) => {
           // Validate the payload before treating it as ProfileKycData
           if (!isValidProfileKycPayload(payload.new)) {
             import('@/lib/logger').then(({ logger }) => {

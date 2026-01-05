@@ -6,11 +6,25 @@ import { AuditEvent } from '../authAuditLogger';
 import { CSPViolation } from '../cspViolationMonitor';
 import { SecurityIncidentAlertSystem } from '../securityAlertSystem';
 
+class TestSecurityIncidentAlertSystem extends SecurityIncidentAlertSystem {
+  setAuthFailureTimestamps(userId: string, timestamps: number[]): void {
+    this.authFailureTimestamps.set(userId, timestamps);
+  }
+
+  setXssAttemptTimestamps(ip: string, timestamps: number[]): void {
+    this.xssAttemptTimestamps.set(ip, timestamps);
+  }
+
+  getAuthFailureTimestamps(): Map<string, number[]> {
+    return new Map(this.authFailureTimestamps);
+  }
+}
+
 describe('SecurityIncidentAlertSystem', () => {
-  let system: SecurityIncidentAlertSystem;
+  let system: TestSecurityIncidentAlertSystem;
 
   beforeEach(() => {
-    system = new SecurityIncidentAlertSystem();
+    system = new TestSecurityIncidentAlertSystem();
   });
 
   afterEach(() => {
@@ -19,7 +33,7 @@ describe('SecurityIncidentAlertSystem', () => {
 
   describe('getRecentAuthFailures', () => {
     it('should return 0 for user with no failures', async () => {
-      const count = await (system as any).getRecentAuthFailures('user1');
+      const count = await system.getRecentAuthFailures('user1');
       expect(count).toBe(0);
     });
 
@@ -40,14 +54,14 @@ describe('SecurityIncidentAlertSystem', () => {
       await system.processAuthEvent(event);
       await system.processAuthEvent(event);
 
-      const count = await (system as any).getRecentAuthFailures('user1');
+      const count = await system.getRecentAuthFailures('user1');
       expect(count).toBe(3);
     });
 
     it('should not count failures older than 1 hour', async () => {
       // Mock old timestamp
       const oldTime = Date.now() - 2 * 60 * 60 * 1000; // 2 hours ago
-      (system as any).authFailureTimestamps.set('user1', [oldTime]);
+      system.setAuthFailureTimestamps('user1', [oldTime]);
 
       const event: AuditEvent = {
         timestamp: new Date().toISOString(),
@@ -61,17 +75,15 @@ describe('SecurityIncidentAlertSystem', () => {
 
       await system.processAuthEvent(event);
 
-      const count = await (system as any).getRecentAuthFailures('user1');
+      const count = await system.getRecentAuthFailures('user1');
       expect(count).toBe(1); // Only the new one
     });
 
     it('should return 0 for empty or undefined userId', async () => {
-      const countEmpty = await (system as any).getRecentAuthFailures('');
+      const countEmpty = await system.getRecentAuthFailures('');
       expect(countEmpty).toBe(0);
 
-      const countUndefined = await (system as any).getRecentAuthFailures(
-        undefined as any
-      );
+      const countUndefined = await system.getRecentAuthFailures('');
       expect(countUndefined).toBe(0);
     });
 
@@ -92,11 +104,11 @@ describe('SecurityIncidentAlertSystem', () => {
       }
 
       // Check that storage is trimmed to MAX_ENTRIES_PER_KEY
-      const timestamps = (system as any).authFailureTimestamps.get('user1');
+      const timestamps = system.getAuthFailureTimestamps().get('user1');
       expect(timestamps).toHaveLength(100);
 
       // Verify the count is correct (all within 1 hour)
-      const count = await (system as any).getRecentAuthFailures('user1');
+      const count = await system.getRecentAuthFailures('user1');
       expect(count).toBe(100);
     });
 
@@ -117,14 +129,14 @@ describe('SecurityIncidentAlertSystem', () => {
       );
 
       // Verify the final count is correct
-      const count = await (system as any).getRecentAuthFailures('user1');
+      const count = await system.getRecentAuthFailures('user1');
       expect(count).toBe(10);
     });
   });
 
   describe('getRecentXSSAttempts', () => {
     it('should return 0 for IP with no attempts', async () => {
-      const count = await (system as any).getRecentXSSAttempts('192.168.1.1');
+      const count = await system.getRecentXSSAttempts('192.168.1.1');
       expect(count).toBe(0);
     });
 
@@ -157,13 +169,13 @@ describe('SecurityIncidentAlertSystem', () => {
       await system.processCSPViolation(violation);
       await system.processCSPViolation(violation);
 
-      const count = await (system as any).getRecentXSSAttempts('192.168.1.1');
+      const count = await system.getRecentXSSAttempts('192.168.1.1');
       expect(count).toBe(2);
     });
 
     it('should not count attempts older than 1 hour', async () => {
       const oldTime = Date.now() - 2 * 60 * 60 * 1000;
-      (system as any).xssAttemptTimestamps.set('192.168.1.1', [oldTime]);
+      system.setXssAttemptTimestamps('192.168.1.1', [oldTime]);
 
       const timestamp = new Date().toISOString();
       const violation: CSPViolation = {
@@ -191,7 +203,7 @@ describe('SecurityIncidentAlertSystem', () => {
 
       await system.processCSPViolation(violation);
 
-      const count = await (system as any).getRecentXSSAttempts('192.168.1.1');
+      const count = await system.getRecentXSSAttempts('192.168.1.1');
       expect(count).toBe(1);
     });
   });

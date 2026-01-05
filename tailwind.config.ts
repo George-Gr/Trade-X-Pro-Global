@@ -75,6 +75,8 @@ const config: Config = {
         '4xl': '64px', // 64px
         '5xl': '80px', // 80px
         '6xl': '96px', // 96px
+        '30': '120px', // 120px
+        '70': '280px', // 280px
       },
 
       colors: {

@@ -145,16 +145,22 @@ export function useKyc(userId?: string) {
       try {
         if (!userId) throw new Error('No user context');
 
+        // Get session and validate
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.getSession();
+        if (sessionError) {
+          throw new Error(`Authentication error: ${sessionError.message}`);
+        }
+        if (!sessionData.session?.access_token) {
+          throw new Error('Not authenticated');
+        }
+
         // Request signed upload URL
         const submitResp = await fetch('/supabase/functions/submit-kyc', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${
-              (
-                await supabase.auth.getSession()
-              ).data.session?.access_token
-            }`,
+            Authorization: `Bearer ${sessionData.session.access_token}`,
           },
           body: JSON.stringify({ type: documentType }),
         });

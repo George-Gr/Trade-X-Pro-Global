@@ -72,13 +72,22 @@ export class CriticalCSSExtractor {
         }
       });
     } catch (error) {
-      import('@/lib/logger').then(({ logger }) => {
-        logger.warn('Failed to extract CSS rules', {
-          component: 'CriticalCSSExtractor',
-          action: 'extract_all_rules',
-          metadata: { error },
+      import('@/lib/logger')
+        .then(({ logger }) => {
+          logger.warn('Failed to extract CSS rules', {
+            component: 'CriticalCSSExtractor',
+            action: 'extract_all_rules',
+            metadata: { error },
+          });
+        })
+        .catch((importError) => {
+          // Handle both the original error and the import error
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('Failed to extract CSS rules:', error);
+            console.warn('Failed to import logger:', importError);
+          }
+          // Don't re-throw - handle errors silently to keep extractAllCSSRules synchronous
         });
-      });
     }
   }
 

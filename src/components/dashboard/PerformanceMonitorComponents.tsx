@@ -1,7 +1,6 @@
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ResponsiveContainer, Line, LineChart } from 'recharts';
 import { TimeSeriesPoint } from '@/lib/performance/performanceMonitoring';
+import { Line, LineChart, ResponsiveContainer } from 'recharts';
 
 // Type definitions for components
 interface MetricCardProps {
@@ -133,37 +132,3 @@ export const ResourceMetricCard: React.FC<ResourceMetricCardProps> = ({
     </CardContent>
   </Card>
 );
-
-// Helper functions
-export const getResourceStatus = (
-  resource: string,
-  value: number
-): 'good' | 'warning' | 'critical' => {
-  switch (resource) {
-    case 'memory':
-      // Warning at 100MB, Critical at 200MB
-      return value > 200 ? 'critical' : value > 100 ? 'warning' : 'good';
-    case 'connections':
-      // Warning at 5 connections, Critical at 10
-      return value > 10 ? 'critical' : value > 5 ? 'warning' : 'good';
-    case 'subscriptions':
-      // Warning at 50 subscriptions, Critical at 100
-      return value > 100 ? 'critical' : value > 50 ? 'warning' : 'good';
-    default:
-      return 'good';
-  }
-};
-
-export const getMetricStatus = (
-  metric: string,
-  value: number
-): 'good' | 'warning' | 'critical' => {
-  // Simplified logic, should use PerformanceMonitoring budgets
-  if (metric === 'LCP')
-    return value > 4000 ? 'critical' : value > 2500 ? 'warning' : 'good';
-  if (metric === 'FID')
-    return value > 300 ? 'critical' : value > 100 ? 'warning' : 'good';
-  if (metric === 'CLS')
-    return value > 0.25 ? 'critical' : value > 0.1 ? 'warning' : 'good';
-  return 'good';
-};

@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+
 /**
  * Bundle Analysis Service
  *
@@ -93,12 +95,12 @@ class BundleAnalysisService {
         return realData;
       }
     } catch (error) {
-      import('@/lib/logger').then(({ logger }) => {
-        logger.warn('Failed to fetch real bundle data, using baseline', {
-          component: 'bundleAnalysis',
-          action: 'get_bundle_analysis',
-          metadata: { error },
-        });
+      logger.warn('Failed to fetch real bundle data, using baseline', {
+        component: 'bundleAnalysis',
+        action: 'get_bundle_analysis',
+        metadata: {
+          error: error instanceof Error ? error.message : String(error),
+        },
       });
     }
 
@@ -151,12 +153,12 @@ class BundleAnalysisService {
         isRealData: true,
       };
     } catch (error) {
-      import('@/lib/logger').then(({ logger }) => {
-        logger.warn('Bundle sizes JSON file unavailable', {
-          component: 'bundleAnalysis',
-          action: 'fetch_real_bundle_data',
-          metadata: { error },
-        });
+      logger.warn('Bundle sizes JSON file unavailable', {
+        component: 'bundleAnalysis',
+        action: 'fetch_real_bundle_data',
+        metadata: {
+          error: error instanceof Error ? error.message : String(error),
+        },
       });
       return null;
     }

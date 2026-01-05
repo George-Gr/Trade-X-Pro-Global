@@ -82,11 +82,9 @@ const generateSparkline = (
 ): Array<{ date: string; value: number; label?: string }> => {
   return values.map((value, index) => {
     const item: { date: string; value: number; label?: string } = {
-      date:
-        labels?.[index] ||
-        new Date(
-          Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000
-        ).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }),
+      date: new Date(
+        Date.now() - (values.length - 1 - index) * 24 * 60 * 60 * 1000
+      ).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }),
       value,
     };
     const label = labels?.[index];

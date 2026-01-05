@@ -402,8 +402,9 @@ export class SecureStorage {
       // Check if this is encrypted data
       if (data.data && data.iv && typeof data.timestamp === 'number') {
         if (!this.ENCRYPTION_ENABLED || !this.symmetricKey) {
-          // Fallback: return raw encrypted payload if encryption is disabled or key missing
-          return item;
+          // Fallback: return raw encrypted payload (base64 string) if encryption is disabled or key missing
+          // This maintains compatibility with existing code that expects the encrypted payload
+          return data.data;
         }
         return this.decryptSync(data);
       }
@@ -429,7 +430,7 @@ export class SecureStorage {
     await this._initPromise;
     const fullKey = `${this.NAMESPACE}${key}`;
 
-    if (this.shouldEncrypt(key)) {
+    if (this.ENCRYPTION_ENABLED && this.shouldEncrypt(key)) {
       try {
         const encrypted = this.encryptSync(value);
         localStorage.setItem(fullKey, JSON.stringify(encrypted));

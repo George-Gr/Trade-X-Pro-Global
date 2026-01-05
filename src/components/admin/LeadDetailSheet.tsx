@@ -245,7 +245,7 @@ const LeadDetailSheet: React.FC<LeadDetailSheetProps> = ({
                       <Card key={doc.id} className="p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium capitalize">
-                            {doc.document_type.replace('_', ' ')}
+                            {doc.document_type.replaceAll('_', ' ')}
                           </span>
                           <Badge variant="outline" className="capitalize">
                             <span
@@ -274,13 +274,14 @@ const LeadDetailSheet: React.FC<LeadDetailSheetProps> = ({
                               size="sm"
                               variant="destructive"
                               className="flex-1"
-                              onClick={() =>
-                                onKYCAction(
-                                  doc.id,
-                                  'rejected',
-                                  'Document not valid'
-                                )
-                              }
+                              onClick={() => {
+                                const reason = window.prompt(
+                                  'Enter rejection reason:'
+                                );
+                                if (reason) {
+                                  onKYCAction(doc.id, 'rejected', reason);
+                                }
+                              }}
                             >
                               Reject
                             </Button>

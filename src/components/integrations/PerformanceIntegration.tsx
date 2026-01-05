@@ -55,8 +55,8 @@ export function PerformanceIntegration({
             metadata: { report },
           });
         })
-        .catch((error) => {
-          console.error('Failed to load logger:', error);
+        .catch(() => {
+          // Silently fail - logger is optional for performance tracking
         });
     }
 

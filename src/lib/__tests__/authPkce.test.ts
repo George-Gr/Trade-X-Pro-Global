@@ -155,6 +155,35 @@ describe('SecureStorage', () => {
     encryptSpy.mockRestore();
   });
 
+  it('should return encrypted payload when encryption is disabled but encrypted data exists', async () => {
+    // First, create a storage instance with encryption enabled to create encrypted data
+    const storageWithEncryption = new SecureStorage({
+      encryptionEnabled: true,
+    });
+    const sensitiveKey = 'access_token';
+    const sensitiveValue = 'encrypted_token_value';
+
+    await storageWithEncryption.setItem(sensitiveKey, sensitiveValue);
+
+    // Get the encrypted data from localStorage
+    const storedEncrypted = localStorage.getItem('secure_auth_access_token');
+    expect(storedEncrypted).toBeTruthy();
+
+    const parsedEncrypted = JSON.parse(storedEncrypted!);
+    expect(parsedEncrypted.data).toBeTruthy();
+    expect(parsedEncrypted.iv).toBeTruthy();
+
+    // Now create a storage instance with encryption disabled
+    const storageNoEncryption = new SecureStorage({ encryptionEnabled: false });
+
+    // When getting the item, it should return the encrypted payload (data.data), not the full object
+    const retrieved = await storageNoEncryption.getItem(sensitiveKey);
+
+    // Should return the encrypted payload (base64 string), not the decrypted value
+    expect(retrieved).toBe(parsedEncrypted.data);
+    expect(retrieved).not.toBe(sensitiveValue);
+  });
+
   it('should remove items correctly', async () => {
     const key = 'test_key';
     const value = 'test_value';

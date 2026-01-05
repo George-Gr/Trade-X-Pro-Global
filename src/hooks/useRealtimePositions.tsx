@@ -270,6 +270,9 @@ export function useRealtimePositions(
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttemptsRef = useRef(5);
 
+  // Buffer for debounced position updates
+  const updateBufferRef = useRef<Map<string, Position>>(new Map());
+
   // Memory leak detection and cleanup verification
   const verifySubscriptionCleanup = useCallback(async () => {
     if (subscriptionRef.current) {
@@ -415,9 +418,6 @@ export function useRealtimePositions(
     }
   }, [userId, filterSymbol, onUpdate, onError, queryClient]);
 
-  // Buffer for pending updates to prevent data loss during debouncing
-  const updateBufferRef = useRef<Map<string, Position>>(new Map());
-
   const handlePositionUpdate = useCallback(
     (payload: RealtimePositionUpdate, filter?: string) => {
       const { type, new: newRecord, old: oldRecord } = payload;
@@ -501,22 +501,30 @@ export function useRealtimePositions(
               const index = updated.findIndex((p) => p.id === id);
               if (index >= 0) {
                 const currentPos = updated[index];
-                if (currentPos) {
+                if (currentPos && newPos) {
+                  // Type assertion with validation for safety
+                  const typedNewPos = newPos as Position;
+
                   // version check using updated_at
                   const currentUpdate = new Date(
                     currentPos.updated_at || 0
                   ).getTime();
-                  const newUpdate = new Date(newPos.updated_at || 0).getTime();
+                  const newUpdate = new Date(
+                    typedNewPos.updated_at || 0
+                  ).getTime();
 
                   if (newUpdate >= currentUpdate) {
-                    updated[index] = newPos;
+                    updated[index] = typedNewPos;
                     changed = true;
                   }
                 }
               } else {
                 // If it's not in our list but should be, add it
-                updated.push(newPos);
-                changed = true;
+                // Type assertion with validation for safety
+                if (newPos) {
+                  updated.push(newPos as Position);
+                  changed = true;
+                }
               }
             });
 

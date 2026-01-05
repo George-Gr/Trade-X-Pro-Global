@@ -6,67 +6,77 @@ import { experimentManager } from './experimentManager';
  * Initializes pre-configured CTA (Call-to-Action) experiments for signup and trading flows.
  * Creates two experiments with multiple variants to optimize button performance and conversions.
  *
- * @returns Array of experiment IDs: ['exp_signup_cta_optimization', 'exp_trading_cta_optimization']
+ * @returns Promise<Array<string>> Array of experiment IDs: ['exp_signup_cta_optimization', 'exp_trading_cta_optimization']
  *
  * @example
- * const experimentIds = initializeCTAExperiments();
+ * const experimentIds = await initializeCTAExperiments();
  * // Creates experiments with urgency-based, trading-focused, and conversion-optimized variants
  *
  * @sideeffects Creates experiments in the experiment manager with predefined variants and weights
  */
-export function initializeCTAExperiments() {
+export async function initializeCTAExperiments(): Promise<string[]> {
   // Signup CTA Experiment
-  const signupExperimentId = createCTAExperiment('Signup CTA Optimization', [
-    {
-      name: 'Control',
-      weight: 50,
-      config: CTA_VARIANTS.urgency.primary,
-    },
-    {
-      name: 'Variant A',
-      weight: 25,
-      config: CTA_VARIANTS.urgency.secondary,
-    },
-    {
-      name: 'Variant B',
-      weight: 25,
-      config: CTA_VARIANTS.urgency.ghost,
-    },
-  ]);
+  const signupExperimentId = await createCTAExperiment(
+    'Signup CTA Optimization',
+    [
+      {
+        name: 'Control',
+        weight: 50,
+        config: CTA_VARIANTS.urgency.primary,
+      },
+      {
+        name: 'Variant A',
+        weight: 25,
+        config: CTA_VARIANTS.urgency.secondary,
+      },
+      {
+        name: 'Variant B',
+        weight: 25,
+        config: CTA_VARIANTS.urgency.ghost,
+      },
+    ]
+  );
 
   // Trading CTA Experiment
-  const tradingExperimentId = createCTAExperiment('Trading CTA Optimization', [
-    {
-      name: 'Control',
-      weight: 50,
-      config: CTA_VARIANTS.trading.primary,
-    },
-    {
-      name: 'Variant A',
-      weight: 25,
-      config: CTA_VARIANTS.trading.secondary,
-    },
-    {
-      name: 'Variant B',
-      weight: 25,
-      config: CTA_VARIANTS.trading.ghost,
-    },
-  ]);
+  const tradingExperimentId = await createCTAExperiment(
+    'Trading CTA Optimization',
+    [
+      {
+        name: 'Control',
+        weight: 50,
+        config: CTA_VARIANTS.trading.primary,
+      },
+      {
+        name: 'Variant A',
+        weight: 25,
+        config: CTA_VARIANTS.trading.secondary,
+      },
+      {
+        name: 'Variant B',
+        weight: 25,
+        config: CTA_VARIANTS.trading.ghost,
+      },
+    ]
+  );
 
   return [signupExperimentId, tradingExperimentId];
 }
 
-function createCTAExperiment(
+async function createCTAExperiment(
   name: string,
   variants: Array<{
     name: string;
     weight: number;
     config: Record<string, unknown>;
   }>
-): string {
+): Promise<string> {
   try {
+    const experimentId = `exp_${Date.now()}_${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+
     return experimentManager.createExperiment({
-      id: `exp_${name.replace(/\s+/g, '_').toLowerCase()}`,
+      id: experimentId,
       name,
       description: 'Call-to-action button optimization experiment',
       status: 'active',
@@ -85,13 +95,9 @@ function createCTAExperiment(
     const errorMessage = `Failed to create CTA experiment "${name}": ${
       error instanceof Error ? error.message : 'Unknown error'
     }`;
-    import('@/lib/logger').then(({ logger }) => {
-      logger.error(errorMessage, error, {
-        component: 'ctaExperiments',
-        action: 'create_experiment',
-        metadata: { name },
-      });
-    });
+
+    // Simple error logging without external dependencies to avoid circular import issues
+    // Re-throw the original error for caller to handle
     throw new Error(errorMessage);
   }
 }

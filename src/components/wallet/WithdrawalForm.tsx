@@ -31,9 +31,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { validationRules } from '@/lib/validationRules';
-import { useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -44,6 +43,7 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 interface WithdrawalFormProps {
   onSuccess?: () => void;
@@ -54,8 +54,16 @@ interface WithdrawalFormProps {
 const withdrawalSchema = z.object({
   currency: z.string().min(1, 'Currency is required'),
   address: z.string().min(1, 'Withdrawal address is required'),
-  amount: z.string().min(1, 'Amount is required'),
-  twoFACode: z.string().length(6, '2FA code must be exactly 6 digits'),
+  amount: z
+    .string()
+    .min(1, 'Amount is required')
+    .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+      message: 'Amount must be a valid positive number',
+    }),
+  twoFACode: z
+    .string()
+    .length(6, '2FA code must be exactly 6 digits')
+    .regex(/^\d{6}$/, '2FA code must contain only digits'),
 });
 
 type WithdrawalFormData = z.infer<typeof withdrawalSchema>;
@@ -113,12 +121,15 @@ const WITHDRAWAL_LIMITS = {
 
 /**
  * WithdrawalForm component for handling cryptocurrency withdrawals
- * 
+ *
  * @param props.onSuccess - Optional callback function called after successful withdrawal
  * @param props.balance - Available balance for withdrawal
  * @returns JSX element containing the withdrawal form
  */
-export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({ onSuccess, balance }) => {
+export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({
+  onSuccess,
+  balance,
+}) => {
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -628,4 +639,4 @@ export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({ onSuccess, balan
       </AlertDialog>
     </div>
   );
-}
+};

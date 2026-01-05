@@ -14,6 +14,16 @@ interface TourStep {
 }
 
 /**
+ * Intro.js step configuration interface
+ */
+interface IntroStepConfig {
+  element?: string | Element | null;
+  intro?: string;
+  title?: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+/**
  * Trading platform onboarding tour steps
  */
 const TRADING_TOUR_STEPS: TourStep[] = [
@@ -255,8 +265,8 @@ export const OnboardingTour = ({
       const intro = introJs();
 
       intro.setOptions({
-        steps: steps.map((step) => {
-          const introStep: any = {
+        steps: steps.map((step): IntroStepConfig => {
+          const introStep: IntroStepConfig = {
             intro: step.intro,
             position: (step.position === 'auto' ? 'bottom' : step.position) as
               | 'top'

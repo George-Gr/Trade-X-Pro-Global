@@ -11,9 +11,7 @@ import {
 /**
  * Type guard to check if performance.memory API is available
  */
-function hasMemoryApi(
-  performance: Performance
-): performance is Performance & {
+function hasMemoryApi(performance: Performance): performance is Performance & {
   memory: {
     usedJSHeapSize: number;
     totalJSHeapSize: number;
@@ -21,8 +19,9 @@ function hasMemoryApi(
   };
 } {
   return (
-    'memory' in performance && 
-    typeof (performance as unknown as { memory: unknown }).memory === 'object' &&
+    'memory' in performance &&
+    typeof (performance as unknown as { memory: unknown }).memory ===
+      'object' &&
     performance.memory !== null
   );
 }
@@ -150,9 +149,6 @@ export function useTradingPerformance(
     // Component Mount
     performanceMonitoring.markUserAction(`mount-${componentName}`);
 
-    // Capture current memory samples to avoid stale closure in cleanup
-    const currentMemorySamples = memorySamples.current.slice();
-
     if (trackMemory) {
       memoryStartTime.current = performance.now();
       // Initial memory sample
@@ -165,6 +161,9 @@ export function useTradingPerformance(
       lastFpsTime.current = performance.now();
       fpsRequestId.current = requestAnimationFrame(trackFrame);
     }
+
+    // Capture current memory samples to avoid stale closure in cleanup
+    const currentMemorySamples = memorySamples.current;
 
     return () => {
       // Component Unmount
