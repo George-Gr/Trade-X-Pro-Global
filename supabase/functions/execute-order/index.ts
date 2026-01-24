@@ -1,8 +1,7 @@
-/// <reference path="./types/deno.d.ts" />
-import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
+/// <reference lib="deno.ns" />
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.89.0';
 
-// Deno type declarations are now in types/deno.d.ts
+// Deno built-in types used via reference directive
 
 import {
   AccountTier,
@@ -169,7 +168,7 @@ async function fetchMarketConditions(
   }
 }
 
-serve((req) => {
+Deno.serve((req: Request) => {
   const startTime = Date.now();
   const requestId = crypto.randomUUID();
   const transactionSteps: TransactionStep[] = [];
@@ -448,12 +447,11 @@ serve((req) => {
         const { count: openPositionsCount, error: positionsError } =
           await supabase
             .from('positions')
-            .select('*', { count: 'exact' })
+            .select('id', { count: 'exact', head: true })
             .eq('user_id', user.id)
-            .eq('status', 'open')
-            .head();
+            .eq('status', 'open');
 
-        const openPositions = openPositionsCount || 0;
+        const openPositions = openPositionsCount ?? 0;
 
         if (positionsError) {
           addStep('risk_validation', false, positionsError.message);

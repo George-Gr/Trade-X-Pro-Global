@@ -1,9 +1,8 @@
 {
   "tasks": {},
   "compilerOptions": {
-    "lib": ["es2021", "dom"],
+    "lib": ["deno.ns", "deno.window", "es2021", "dom"],
     "jsx": "react-jsx",
-    "types": ["https://deno.land/std@0.208.0/types/deno.unstable.d.ts"],
     "strict": true
   },
   "imports": {
