@@ -331,7 +331,11 @@ export function calculateLiquidationMetrics(event: LiquidationEvent): {
   marginRecovery: number;
   executionQuality: number;
 } {
-  const positions = event.details.closedPositions;
+  const positions = event.details.closedPositions as Array<{
+    realizedPnL?: number;
+    pnlPercentage?: number;
+    slippage?: number;
+  }>;
 
   if (positions.length === 0) {
     return {
@@ -348,16 +352,11 @@ export function calculateLiquidationMetrics(event: LiquidationEvent): {
     };
   }
 
-  // @ts-expect-error - Position type inference
   const losses = positions.map(
-    (p: { realizedPnL?: number; pnlPercentage?: number }) =>
-      p.realizedPnL || p.pnlPercentage || 0
+    (p) => p.realizedPnL || p.pnlPercentage || 0
   );
   const totalLoss = losses.reduce((a, b) => a + b, 0);
-  // @ts-expect-error - Position type inference
-  const slippages = positions.map(
-    (p: { slippage?: number }) => p.slippage || 0
-  );
+  const slippages = positions.map((p) => p.slippage || 0);
   const totalSlippage = slippages.reduce((a, b) => a + b, 0);
 
   return {
@@ -373,7 +372,6 @@ export function calculateLiquidationMetrics(event: LiquidationEvent): {
     marginRecovery: event.finalMarginLevel - event.initialMarginLevel,
     executionQuality: 100 - totalSlippage / positions.length, // Inverted quality metric
   };
-}
 
 /**
  * Formats liquidation reason for display

@@ -34,3 +34,4 @@ const ProtectedRoute = ({
 };
 
 export default ProtectedRoute;
+export { ProtectedRoute };
