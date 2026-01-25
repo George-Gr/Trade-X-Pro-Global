@@ -50,8 +50,8 @@ export const buttonVariants = cva(
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-    loading?: boolean;
+    asChild: boolean | undefined;
+    loading: boolean | undefined;
   };
 
 export default buttonVariants;
