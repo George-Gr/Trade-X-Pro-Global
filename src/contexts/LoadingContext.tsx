@@ -7,8 +7,8 @@ import React, { createContext, useContext, useCallback, useState } from 'react';
 
 interface LoadingOperation {
   id: string;
-  message?: string;
-  progress?: number;
+  message: string | undefined;
+  progress: number | undefined;
   timestamp: number;
 }
 
@@ -18,7 +18,7 @@ interface LoadingContextType {
   isLoading: boolean;
 
   // Methods to manage loading states
-  startOperation: (id: string, message?: string) => void;
+  startOperation: (id: string, message: string | undefined) => void;
   updateOperation: (id: string, progress: number) => void;
   endOperation: (id: string) => void;
   cancelOperation: (id: string) => void;

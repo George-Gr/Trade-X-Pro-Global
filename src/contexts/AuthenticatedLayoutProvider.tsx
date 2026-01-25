@@ -11,7 +11,7 @@ import { formatToastError } from '@/lib/errorMessageService';
 // Provider component
 export function AuthenticatedLayoutProvider({
   children,
-}: { children?: React.ReactNode } = {}) {
+}: { children: React.ReactNode | undefined }) {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const { unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const { toast } = useToast();
