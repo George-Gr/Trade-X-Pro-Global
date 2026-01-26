@@ -50,10 +50,20 @@ const createAuthError = (
  * if (!user) return <LoginForm onSubmit={signIn} />;
  * return <Dashboard user={user} isAdmin={isAdmin} onLogout={signOut} />;
  */
-export const useAuth = () => {
+export const useAuth = (): {
+  user: User | null;
+  loading: boolean;
+  isAdmin: boolean;
+  signIn: (email: string, password: string) => Promise<{error: Error | null}>;
+  signUp: (email: string, password: string, metadata?: SignUpMetadata) => Promise<{error: Error | null}>;
+  signOut: () => Promise<{error: Error | null}>;
+  resetPassword: (email: string) => Promise<{error: Error | null}>;
+  require2FA: boolean | undefined;
+} => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [require2FA, setRequire2FA] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     // Get initial session

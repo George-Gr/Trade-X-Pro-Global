@@ -67,27 +67,27 @@ interface PortfolioSummary {
 interface TradingDataReturn {
   // Core data
   profile: ProfileData | null;
-  positions: PositionWithPnL[];
+  positions: PositionWithPnL[] | undefined;
 
   // Computed metrics
-  pnl: PnLMetrics;
-  risk: RiskMetrics;
-  portfolio: PortfolioSummary;
+  pnl: PnLMetrics | undefined;
+  risk: RiskMetrics | undefined;
+  portfolio: PortfolioSummary | undefined;
 
   // Computed values
-  equity: number;
-  freeMargin: number;
-  marginLevel: number;
+  equity: number | undefined;
+  freeMargin: number | undefined;
+  marginLevel: number | undefined;
 
   // State
   loading: boolean;
   error: string | null;
 
   // Actions
-  refresh: () => Promise<void>;
+  refresh: (() => Promise<void>) | undefined;
   updatePositionPrices: (
-    pricesMap: Map<string, { currentPrice: number }>
-  ) => void;
+    ((pricesMap: Map<string, { currentPrice: number }>) => void) | undefined
+  );
 }
 
 // Thresholds
