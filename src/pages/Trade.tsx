@@ -29,7 +29,6 @@ const TradingPanel = lazy(() => import('@/components/trading/TradingPanel'));
 const EnhancedPortfolioDashboard = lazy(
   () => import('@/components/trading/EnhancedPortfolioDashboard')
 );
-const ChartPanel = lazy(() => import('@/components/trading/ChartPanel'));
 const TradingViewMarketsWidget = lazy(
   () => import('@/components/trading/TradingViewMarketsWidget')
 );

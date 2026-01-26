@@ -11,6 +11,10 @@ export interface PnLResult {
   isProfit: boolean;
 }
 
+/**
+ * Interface for position data required for P&L calculations.
+ * Contains the essential fields needed to compute profit and loss.
+ */
 export interface PositionForPnL {
   side: 'buy' | 'sell';
   quantity: number;
@@ -32,6 +36,36 @@ export interface PositionPnLDetails {
   realizedPnL: number;
   totalPnL: number;
   isProfit: boolean;
+}
+
+/**
+ * Interface for a complete position record.
+ * Extends PositionForPnL with additional identifying fields.
+ */
+export interface Position extends PositionForPnL {
+  id: string;
+  symbol: string;
+}
+
+/**
+ * Summary of portfolio P&L metrics across all positions.
+ * Provides aggregated profit/loss statistics and position counts.
+ */
+export interface PortfolioPnLSummary {
+  /** Total unrealized P&L across all positions (can be negative) */
+  totalUnrealizedPnL: number;
+  /** Total realized P&L across all positions (can be negative) */
+  totalRealizedPnL: number;
+  /** Combined total P&L (unrealized + realized, can be negative) */
+  totalPnL: number;
+  /** Total number of positions (non-negative integer) */
+  totalPositions: number;
+  /** Number of positions with positive P&L (non-negative integer) */
+  profitablePositions: number;
+  /** Number of positions with negative P&L (non-negative integer) */
+  losingPositions: number;
+  /** Win rate as percentage (0-100, calculated as profitablePositions/totalPositions * 100) */
+  winRate: number;
 }
 
 /**
@@ -66,6 +100,19 @@ export function calculatePnLPercent(
   const percentChange = (priceDiff / entryPrice) * 100;
   
   return side === 'buy' ? percentChange : -percentChange;
+}
+
+/**
+ * Alias for calculatePnLPercent for backward compatibility
+ */
+export const calculatePnLPercentage = calculatePnLPercent;
+
+/**
+ * Calculate ROI (Return on Investment)
+ */
+export function calculateROI(pnl: number, investment: number): number {
+  if (investment === 0) return 0;
+  return (pnl / investment) * 100;
 }
 
 /**

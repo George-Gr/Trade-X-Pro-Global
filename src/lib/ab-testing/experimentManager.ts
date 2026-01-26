@@ -53,7 +53,7 @@ export function createExperimentManager(): ExperimentManager {
     
     trackEvent: (_experimentId: string, _event: string, _data?: Record<string, unknown>) => {
       // Tracking stub - would integrate with analytics
-      console.debug('[AB Test] Event tracked:', _experimentId, _event);
+      console.warn('[AB Test] Event tracked:', _experimentId, _event);
     },
     
     trackConversion: (experimentId: string, _conversionValue?: number) => {
