@@ -5,10 +5,10 @@ import { AlertTriangle, RotateCcw } from 'lucide-react';
 import React from 'react';
 
 interface Props {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  componentName?: string;
+  children: React.ReactNode | undefined;
+  fallback: React.ReactNode | undefined;
+  onError: ((error: Error, errorInfo: React.ErrorInfo) => void) | undefined;
+  componentName: string | undefined;
 }
 
 interface State {

@@ -8,7 +8,7 @@ import { NotificationContext } from './notificationContextHelpers';
 
 export function NotificationProvider({
   children,
-}: { children?: ReactNode } = {}) {
+}: { children: ReactNode | undefined }) {
   const { toast } = useToast();
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);

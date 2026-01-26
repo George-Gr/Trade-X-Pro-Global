@@ -7,17 +7,17 @@ import { type ButtonProps } from '@/components/ui/buttonVariants';
 import { cn } from '@/lib/utils';
 
 export interface LoadingButtonProps extends ButtonProps {
-  isLoading?: boolean;
-  isSuccess?: boolean;
-  isError?: boolean;
-  loadingText?: string;
-  successText?: string;
-  errorText?: string;
-  loadingIcon?: React.ReactNode;
-  successIcon?: React.ReactNode;
-  errorIcon?: React.ReactNode;
-  showSpinner?: boolean;
-  animationDuration?: number;
+  isLoading: boolean | undefined;
+  isSuccess: boolean | undefined;
+  isError: boolean | undefined;
+  loadingText: string | undefined;
+  successText: string | undefined;
+  errorText: string | undefined;
+  loadingIcon: React.ReactNode | undefined;
+  successIcon: React.ReactNode | undefined;
+  errorIcon: React.ReactNode | undefined;
+  showSpinner: boolean | undefined;
+  animationDuration: number | undefined;
 }
 
 export const LoadingButton = ({

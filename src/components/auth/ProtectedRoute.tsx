@@ -5,7 +5,7 @@ import { AuthenticatedLayoutProvider } from '@/contexts/AuthenticatedLayoutProvi
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  adminOnly?: boolean;
+  adminOnly: boolean | undefined;
 }
 
 const ProtectedRoute = ({

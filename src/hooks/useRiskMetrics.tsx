@@ -36,12 +36,12 @@ interface PositionRiskData {
 interface UseRiskMetricsReturn {
   riskMetrics: RiskMetrics | null;
   portfolioRiskAssessment: PortfolioRiskAssessment | null;
-  marginTrend: number[]; // Last 7 days of margin levels for sparkline
+  marginTrend: number[] | undefined;
   loading: boolean;
   error: string | null;
   isCloseOnlyMode: boolean;
   isLiquidationRisk: boolean;
-  refetch: () => Promise<void>;
+  refetch: (() => Promise<void>) | undefined;
 }
 
 export const useRiskMetrics = (): UseRiskMetricsReturn => {

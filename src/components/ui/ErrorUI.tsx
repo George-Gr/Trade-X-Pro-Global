@@ -20,13 +20,13 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface ErrorUIProps {
-  error?: string | null;
-  onRetry?: () => void;
-  title?: string;
-  description?: string;
-  variant?: 'inline' | 'card' | 'banner';
-  dismissible?: boolean;
-  onDismiss?: () => void;
+  error: string | null | undefined;
+  onRetry: (() => void) | undefined;
+  title: string | undefined;
+  description: string | undefined;
+  variant: 'inline' | 'card' | 'banner' | undefined;
+  dismissible: boolean | undefined;
+  onDismiss: (() => void) | undefined;
 }
 
 /**
